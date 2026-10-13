@@ -157,7 +157,9 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
                     fit: StackFit.expand,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+                        // AppFlowy's editorStyle.padding is applied per block,
+                        // so page-level vertical space belongs outside it.
+                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
                         child: _previewOnly
                             ? _buildEditor()
                             : EditorShortcutToolbar(
@@ -210,7 +212,7 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
           ],
           shrinkWrap: false,
           editorStyle: const EditorStyle.mobile(
-            padding: EdgeInsets.only(top: 8, bottom: 24),
+            padding: EdgeInsets.zero,
             cursorColor: Color(0xFF5B5BD6),
             dragHandleColor: Color(0xFF5B5BD6),
             selectionColor: Color(0x335B5BD6),
@@ -224,6 +226,11 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
 
 final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders = {
   ...standardBlockComponentBuilderMap,
+  ParagraphBlockKeys.type: ParagraphBlockComponentBuilder(
+    configuration: standardBlockComponentBuilderMap[ParagraphBlockKeys.type]!
+        .configuration
+        .copyWith(padding: _paragraphBlockPadding),
+  ),
   // 正式图片复用资源块选区外壳并展示尺寸/题注；离线图片仍使用 AppFlowy 原组件。
   ImageBlockKeys.type: CollabEmbedBlockComponentBuilder(
     kind: CollabEmbedKind.image,
@@ -284,6 +291,10 @@ final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders = {
   ),
 };
 
+/// Reduces the extra gap between body paragraphs while preserving line height.
+EdgeInsets _paragraphBlockPadding(Node node) =>
+    const EdgeInsets.symmetric(vertical: 2);
+
 /// Keeps the wide cover visually separated from the editor title and body.
 EdgeInsets _documentCoverPadding(Node node) =>
     const EdgeInsets.only(top: 4, bottom: 14);
@@ -316,7 +327,7 @@ TextStyle _documentTitlePlaceholderStyle(Node node, {TextSpan? textSpan}) =>
 EdgeInsets _listBlockPadding(Node node) {
   final value = node.attributes[csesBlockIndentAttribute];
   final indent = value is int ? value.clamp(0, 6) : 0;
-  return EdgeInsets.fromLTRB(indent * 28.0, 4, 0, 4);
+  return EdgeInsets.fromLTRB(indent * 28.0, 2, 0, 2);
 }
 
 InlineSpan _collabTextSpanDecorator(

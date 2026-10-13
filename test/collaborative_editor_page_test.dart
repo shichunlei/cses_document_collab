@@ -22,6 +22,61 @@ void main() {
         );
   });
 
+  for (final blockType in [
+    ParagraphBlockKeys.type,
+    NumberedListBlockKeys.type,
+    BulletedListBlockKeys.type,
+    TodoListBlockKeys.type,
+  ]) {
+    testWidgets('$blockType rows stay compact in edit and preview', (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: [
+          for (var i = 0; i < 6; i++)
+            CollabEditorBlock(id: 'row-$i', blockType: blockType, text: '$i'),
+        ],
+        onLocalBlocksChanged: (_) {},
+      );
+      addTearDown(adapter.dispose);
+      final collab = _ReadyCollabController(
+        testEditorState: adapter.editorState,
+      );
+      addTearDown(collab.dispose);
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            AppFlowyEditorLocalizations.delegate,
+          ],
+          home: CollaborativeEditorPage(collab: collab),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      void expectCompactRows() {
+        final nodes = adapter.editorState.document.root.children;
+        for (var i = 1; i < nodes.length; i++) {
+          final previous = tester.getTopLeft(find.byKey(nodes[i - 1].key));
+          final current = tester.getTopLeft(find.byKey(nodes[i].key));
+          // Measure rendered positions: page padding must not repeat per row.
+          expect(current.dy - previous.dy, inInclusiveRange(20, 32));
+        }
+        expect(tester.takeException(), isNull);
+      }
+
+      expectCompactRows();
+      await tester.tap(find.byKey(const ValueKey('editor-mode-toggle')));
+      await tester.pumpAndSettle();
+      expectCompactRows();
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+  }
+
   testWidgets('standalone page owns the full-screen editor UI', (tester) async {
     await tester.binding.setSurfaceSize(const Size(390, 844));
     addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -169,6 +224,13 @@ void main() {
 
 /// 不加载原生库的页面宿主 Fake；只模拟已初始化文档的能力变化。
 class _ReadyCollabController extends CollabController {
+  _ReadyCollabController({this.testEditorState});
+
+  final EditorState? testEditorState;
+
+  @override
+  EditorState get editorState => testEditorState ?? super.editorState;
+
   String? _reason;
 
   /// 页面卸载后不应再持有模式监听，测试通过子类访问受保护状态。
