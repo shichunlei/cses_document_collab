@@ -448,13 +448,47 @@ void main() {
             'rust/tests/fixtures/blockcraft-unknown.update',
           ).readAsBytes(),
         );
-        expect(native.documentReadOnlyReason(), isNotNull);
-        expect(
-          native.currentBlocks().any((block) => block.id == 'cell'),
-          isTrue,
+        expect(native.documentReadOnlyReason(), isNull);
+        final withPlaceholder = native.currentBlocks();
+        expect(withPlaceholder.any((block) => block.id == 'cell'), isFalse);
+        expect(withPlaceholder.last.blockType, csesUnsupportedBlockType);
+        expect(withPlaceholder.last.text, isEmpty);
+        final textBlock = withPlaceholder.firstWhere((b) => b.id == 'p2');
+        withPlaceholder[withPlaceholder.indexOf(
+          textBlock,
+        )] = native.CollabBlock(
+          id: textBlock.id,
+          blockType: textBlock.blockType,
+          text: '${textBlock.text}继续编辑',
+          segments: const [],
+          checked: textBlock.checked,
+          alignment: textBlock.alignment,
+          indent: textBlock.indent,
         );
         expect(
-          () => native.applyBlockSnapshot(blocks: native.currentBlocks()),
+          native.applyBlockSnapshot(blocks: withPlaceholder).v1Update,
+          isNotEmpty,
+        );
+        expect(
+          native.currentBlocks().firstWhere((b) => b.id == 'p2').text,
+          '${textBlock.text}继续编辑',
+        );
+        native.closeDocument();
+        native.openCsesDocument(
+          documentId: 'fixture-doc',
+          cacheDocumentId: 'hashed-cache-key',
+          databasePath: databasePath,
+        );
+        expect(native.documentReadOnlyReason(), isNull);
+        expect(native.currentBlocks().last.blockType, csesUnsupportedBlockType);
+        expect(
+          native.currentBlocks().firstWhere((b) => b.id == 'p2').text,
+          '${textBlock.text}继续编辑',
+        );
+        expect(
+          () => native.applyBlockSnapshot(
+            blocks: withPlaceholder.take(withPlaceholder.length - 1).toList(),
+          ),
           throwsA(anything),
         );
       } finally {

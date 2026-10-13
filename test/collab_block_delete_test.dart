@@ -2,8 +2,33 @@ import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_mobile_collab_demo/src/collab/appflowy_block_editor_adapter.dart';
 import 'package:cses_mobile_collab_demo/src/ui/collab_block_delete.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/widgets.dart';
 
 void main() {
+  test('Backspace cannot merge text across an opaque placeholder', () async {
+    final changes = <List<CollabEditorBlock>>[];
+    final adapter = AppFlowyBlockEditorAdapter(
+      initialBlocks: const [
+        CollabEditorBlock(id: 'before', blockType: 'paragraph', text: '前文'),
+        CollabEditorBlock(
+          id: 'unknown',
+          blockType: csesUnsupportedBlockType,
+          text: '',
+        ),
+        CollabEditorBlock(id: 'after', blockType: 'paragraph', text: '后文'),
+      ],
+      onLocalBlocksChanged: changes.add,
+    );
+    addTearDown(adapter.dispose);
+    final state = adapter.editorState;
+    state.selection = Selection.single(path: [2], startOffset: 0);
+    expect(isProtectedUnsupportedBlockBoundary(state), isTrue);
+    expect(collabBlockBackspaceCommand.handler(state), KeyEventResult.handled);
+    await Future<void>.delayed(Duration.zero);
+    expect(adapter.blocks.map((b) => b.text), ['前文', '', '后文']);
+    expect(changes, isEmpty);
+  });
+
   test(
     'Backspace removes each URL-backed block and retains its paragraph',
     () async {

@@ -1,6 +1,6 @@
 //! 正式 BlockCraft 的 Yrs 适配。`blocks` 中的嵌套共享类型始终是权威数据，
 //! Flutter 快照只是投影；写入只修改明确支持的字段，保留 props/meta/行内未知属性。
-//! 高亮容器按父子关系投影；暂不能完整投影的其他容器、内嵌对象、修订和锁定内容令整篇文档只读，防止扁平 UI 丢数据。
+//! 高亮容器按父子关系投影；未知块/容器仅显示只读占位，原始子树不参与快照写入。
 
 use super::*;
 use std::collections::HashMap;
@@ -8,6 +8,29 @@ use yrs::types::AsPrelim;
 use yrs::{ArrayPrelim, MapPrelim, TextPrelim, TextRef};
 
 pub(super) const ROOT_NAME: &str = "blocks";
+pub(super) const UNSUPPORTED_BLOCK_TYPE: &str = "unsupported";
+
+/// 占位只保存真实身份和已适配父容器；正文、属性和隐藏子树始终留在原共享类型。
+fn placeholder(id: String, parent_id: Option<String>) -> CollabBlock {
+    CollabBlock {
+        id,
+        parent_id,
+        block_type: UNSUPPORTED_BLOCK_TYPE.into(),
+        text: String::new(),
+        segments: Vec::new(),
+        checked: false,
+        alignment: "left".into(),
+        indent: 0,
+        image: None,
+        ordered: None,
+        code: None,
+        replaces_id: None,
+        block_background_color: None,
+        block_border_color: None,
+        callout_prefix: None,
+        block_text_color: None,
+    }
+}
 const AUXILIARY_ROOTS: &[&str] = &["bc:revisions", "bc:revision-decisions", "bc:revision-meta"];
 
 /// Flutter 投影和当前写入边界；reason 为空时才允许从完整快照产生本地操作。
@@ -375,8 +398,7 @@ fn image_projection<T: ReadTxn>(
     }
 }
 
-/// 深度优先展示内容；保留树中真实 blockId，容器输出占位后继续预览后代。
-/// UI 目前是扁平结构，任何容器/未知内容均禁止整篇写入，原嵌套关系不会被改平。
+/// 深度优先投影已适配块；未知块/容器输出一个只读占位，不展开或写入隐藏子树。
 pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
     let txn = doc.transact();
     let mut result = Projection {
@@ -441,15 +463,17 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
         {
             result.reason = Some("文档含锁定块，当前仅可预览".into());
         }
-        let flavour = out_string(block.get(&txn, "flavour")).unwrap_or_default();
         let node_type = out_string(block.get(&txn, "nodeType")).unwrap_or_default();
-        let kind = mobile_type(&block, &props, &txn);
+        let Some(kind) = mobile_type(&block, &props, &txn) else {
+            result.blocks.push(placeholder(id, parent_id));
+            continue;
+        };
         let mut text = String::new();
         let mut segments = Vec::new();
         let mut image = None;
-        let is_media = matches!(kind.as_deref(), Some("image" | "video"));
+        let is_media = matches!(kind.as_str(), "image" | "video");
         match block.get(&txn, "children") {
-            Some(Out::YArray(_)) if kind.as_deref() == Some("callout") && node_type == "block" => {
+            Some(Out::YArray(_)) if kind == "callout" && node_type == "block" => {
                 let ids = children(&block, &txn);
                 ordered.extend(ordered_projection(&blocks, &txn, &ids));
                 for child in ids.into_iter().rev() {
@@ -457,7 +481,7 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                 }
             }
             Some(Out::YText(value))
-                if node_type == "editable" && !is_media && kind.as_deref() != Some("callout") =>
+                if node_type == "editable" && !is_media && kind != "callout" =>
             {
                 text = value.get_string(&txn);
                 segments = text_segments_for_schema(&value, &txn, true);
@@ -470,11 +494,8 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                 }
             }
             Some(Out::YArray(array))
-                if (kind.as_deref() == Some("image")
-                    && matches!(node_type.as_str(), "block" | "void"))
-                    || (kind.as_deref() == Some("video")
-                        && node_type == "void"
-                        && array.len(&txn) == 0) =>
+                if (kind == "image" && matches!(node_type.as_str(), "block" | "void"))
+                    || (kind == "video" && node_type == "void" && array.len(&txn) == 0) =>
             {
                 text = out_string(props.get(&txn, "src")).unwrap_or_default();
                 if !matches!(
@@ -483,7 +504,19 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                 ) {
                     result.reason = Some("媒体资源结构暂不支持，当前仅可预览".into());
                 }
-                if kind.as_deref() == Some("image") {
+                if kind == "image" {
+                    // An image with unadapted children is opaque as a whole;
+                    // exposing those children as root blocks would flatten its native tree.
+                    let has_unadapted_child = children(&block, &txn).iter().any(|child| {
+                        map(&blocks, &txn, child).is_some_and(|caption| {
+                            out_string(caption.get(&txn, "flavour")).as_deref() != Some("caption")
+                                || !matches!(caption.get(&txn, "children"), Some(Out::YText(_)))
+                        })
+                    });
+                    if has_unadapted_child {
+                        result.blocks.push(placeholder(id, parent_id));
+                        continue;
+                    }
                     image = Some(image_projection(
                         &block,
                         &props,
@@ -500,18 +533,10 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                 }
             }
             _ => {
-                result.reason = Some(format!("块 {flavour} 的结构暂不支持，当前仅可预览"));
-                for child in children(&block, &txn).into_iter().rev() {
-                    stack.push((child, depth + 1, parent_id.clone()));
-                }
+                result.blocks.push(placeholder(id, parent_id));
+                continue;
             }
         }
-        if kind.is_none() {
-            result.reason = Some(format!("包含暂不支持的 {flavour} 块，当前仅可预览"));
-            text = format!("［暂不支持的块：{flavour}］{text}");
-            segments.clear();
-        }
-        let kind = kind.unwrap_or_else(|| "paragraph".into());
         result.blocks.push(CollabBlock {
             parent_id,
             callout_prefix: (kind == "callout")
@@ -586,7 +611,22 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
     if let Some(reason) = current.reason {
         return Err(format!("READ_ONLY_DOCUMENT: {reason}"));
     }
+    // 占位必须原样保留；删除父容器、转换或伪造占位也在任何写入前拒绝。
+    let previous: HashMap<_, _> = current.blocks.iter().map(|b| (b.id.as_str(), b)).collect();
+    let desired_by_id: HashMap<_, _> = desired.iter().map(|b| (b.id.as_str(), b)).collect();
+    for old in &current.blocks {
+        if old.block_type == UNSUPPORTED_BLOCK_TYPE
+            && desired_by_id.get(old.id.as_str()).copied() != Some(old)
+        {
+            return Err("READ_ONLY_BLOCK: 未适配的块不可编辑或删除".into());
+        }
+    }
     for block in desired {
+        if block.block_type == UNSUPPORTED_BLOCK_TYPE
+            && previous.get(block.id.as_str()).copied() == Some(block)
+        {
+            continue;
+        }
         if block.id == root_id || formal_type(&block.block_type).is_none() {
             return Err("UNSUPPORTED_BLOCK_TYPE: 正式文档不支持该手机块类型".into());
         }
@@ -599,7 +639,6 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
         _ => return Err("根 children 必须是 Y.Array".into()),
     };
     let ids: Vec<_> = current.blocks.iter().map(|b| b.id.clone()).collect();
-    let previous: HashMap<_, _> = current.blocks.iter().map(|b| (b.id.as_str(), b)).collect();
     let mut desired_ids: HashSet<String> = desired.iter().map(|b| b.id.clone()).collect();
     let mut replaced_ids = HashSet::new();
     let mut replacements = HashMap::new();
@@ -623,6 +662,9 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
                 .get(source.as_str())
                 .copied()
                 .ok_or("INVALID_BLOCK_CONVERSION: 替换来源已经不存在")?;
+            if old.block_type == UNSUPPORTED_BLOCK_TYPE {
+                return Err("READ_ONLY_BLOCK: 未适配的块不可转换".into());
+            }
             let source_block = map(&blocks, &txn, source).unwrap();
             replacements.insert(block.id.clone(), source_block.as_prelim(&txn));
             Some(old)
@@ -1909,11 +1951,160 @@ mod tests {
         assert!(!engine.blocks()[2].checked);
     }
 
-    /// 未知容器、内嵌对象和锁都允许完整接收/保存，但任何本地写入在事务前被拒绝。
+    /// 占位与原始未知子树分离；编辑其他块、同步和缓存恢复均不改写未知内容。
+    #[test]
+    fn unknown_container_is_preserved_while_other_blocks_remain_editable() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-unknown.update");
+        let mut phone = engine(fixture);
+        assert!(project(&phone.doc, "fixture-doc").reason.is_none());
+        let before = phone.blocks();
+        assert_eq!(
+            before.iter().map(|b| b.id.as_str()).collect::<Vec<_>>(),
+            ["p1", "p2", "todo", "table"]
+        );
+        assert_eq!(before.last().unwrap(), &placeholder("table".into(), None));
+        let original = {
+            let txn = phone.doc.transact();
+            let blocks = txn.get_map(ROOT_NAME).unwrap();
+            ["table", "cell"].map(|id| map(&blocks, &txn, id).unwrap().to_json(&txn))
+        };
+        let mut desired = before;
+        desired[1].text.push_str("手机修改");
+        desired[1].segments.clear();
+        desired[2].checked = false;
+        let update = phone
+            .apply_block_snapshot(desired.clone())
+            .unwrap()
+            .v1_update;
+        assert_eq!(phone.blocks(), desired);
+        let mut desktop = engine(fixture);
+        desktop.apply_cses_update(update).unwrap();
+        assert_eq!(desktop.blocks(), desired);
+        {
+            let txn = desktop.doc.transact();
+            let blocks = txn.get_map(ROOT_NAME).unwrap();
+            assert_eq!(
+                original,
+                ["table", "cell"].map(|id| map(&blocks, &txn, id).unwrap().to_json(&txn))
+            );
+        }
+        let mut restored =
+            CollabEngine::open(phone.document_id.clone(), phone.database_path.clone())
+                .unwrap()
+                .0;
+        restored.blockcraft_root_id = Some("fixture-doc".into());
+        assert_eq!(restored.blocks(), desired);
+        assert!(project(&restored.doc, "fixture-doc").reason.is_none());
+        {
+            let txn = restored.doc.transact();
+            let blocks = txn.get_map(ROOT_NAME).unwrap();
+            assert_eq!(
+                original,
+                ["table", "cell"].map(|id| map(&blocks, &txn, id).unwrap().to_json(&txn))
+            );
+        }
+
+        // Deleting/converting/editing an opaque block or reusing its hidden IDs is rejected atomically.
+        let mut attempts = Vec::new();
+        let mut deleted = desired.clone();
+        deleted.pop();
+        attempts.push(deleted);
+        let mut edited = desired.clone();
+        edited.last_mut().unwrap().text = "覆盖".into();
+        attempts.push(edited);
+        let mut converted = desired.clone();
+        converted.last_mut().unwrap().block_type = "paragraph".into();
+        attempts.push(converted);
+        let mut hidden = desired.clone();
+        hidden[1].id = "cell".into();
+        attempts.push(hidden);
+        let mut forged = desired.clone();
+        forged.push(placeholder("fake".into(), None));
+        attempts.push(forged);
+        for mut invalid in attempts {
+            invalid[1].text.push_str("不应写入");
+            let vector = phone.doc.transact().state_vector();
+            assert!(phone.apply_block_snapshot(invalid).is_err());
+            assert_eq!(vector, phone.doc.transact().state_vector());
+            assert_eq!(phone.blocks(), desired);
+        }
+    }
+
+    #[test]
+    fn nested_unknown_blocks_and_incompatible_known_shapes_stay_opaque() {
+        for (fixture, target) in [
+            (
+                include_bytes!("../../tests/fixtures/blockcraft-callout.update").as_slice(),
+                "callout-body",
+            ),
+            (
+                include_bytes!("../../tests/fixtures/blockcraft-image.update").as_slice(),
+                "image-1",
+            ),
+            (
+                include_bytes!("../../tests/fixtures/blockcraft-unknown.update").as_slice(),
+                "table",
+            ),
+        ] {
+            let mut engine = engine(fixture);
+            {
+                let mut txn = engine.doc.transact_mut();
+                let blocks = txn.get_map(ROOT_NAME).unwrap();
+                let id = if target == "image-1" {
+                    "caption-1"
+                } else {
+                    target
+                };
+                let block = map(&blocks, &txn, id).unwrap();
+                block.try_update(
+                    &mut txn,
+                    "flavour",
+                    if target == "table" {
+                        "paragraph"
+                    } else {
+                        "future-block"
+                    },
+                );
+            }
+            let projection = project(&engine.doc, "fixture-doc");
+            assert!(projection.reason.is_none());
+            let opaque = projection.blocks.iter().find(|b| b.id == target).unwrap();
+            assert_eq!(opaque.block_type, UNSUPPORTED_BLOCK_TYPE);
+            assert!(opaque.text.is_empty());
+            assert!(!projection
+                .blocks
+                .iter()
+                .any(|b| b.id == "caption-1" || b.id == "cell"));
+            let mut desired = projection.blocks;
+            desired[1].text.push_str("修改");
+            desired[1].segments.clear();
+            engine.apply_block_snapshot(desired.clone()).unwrap();
+            assert_eq!(engine.blocks(), desired);
+            if target == "callout-body" {
+                assert_eq!(
+                    engine
+                        .blocks()
+                        .iter()
+                        .find(|b| b.id == target)
+                        .unwrap()
+                        .parent_id
+                        .as_deref(),
+                    Some("callout-1")
+                );
+                let mut deleted_parent = engine.blocks();
+                deleted_parent
+                    .retain(|b| b.id != "callout-1" && b.parent_id.as_deref() != Some("callout-1"));
+                assert!(engine
+                    .apply_block_snapshot(deleted_parent)
+                    .unwrap_err()
+                    .contains("READ_ONLY_BLOCK"));
+            }
+        }
+    }
+
     #[test]
     fn unsupported_content_is_preserved_and_read_only() {
         for bytes in [
-            include_bytes!("../../tests/fixtures/blockcraft-unknown.update").as_slice(),
             include_bytes!("../../tests/fixtures/blockcraft-embed.update").as_slice(),
             include_bytes!("../../tests/fixtures/blockcraft-locked.update").as_slice(),
         ] {

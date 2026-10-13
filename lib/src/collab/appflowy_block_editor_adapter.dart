@@ -11,6 +11,7 @@ import 'package:cses_mobile_collab_demo/src/collab/text_delta.dart' as collab;
 typedef LocalEditorBlocksChanged =
     void Function(List<CollabEditorBlock> blocks);
 
+const csesUnsupportedBlockType = 'unsupported';
 const csesCalloutBlockType = 'callout';
 const csesCalloutTargetAttribute = 'cses_callout_target';
 const csesCalloutPrefixAttribute = 'cses_callout_prefix';
@@ -517,7 +518,8 @@ final class AppFlowyBlockEditorAdapter {
               _nodeBlockType(currentNodes[index]) ==
                   targetBlocks[index].blockType &&
               currentBlocks[index].parentId == targetBlocks[index].parentId &&
-              (currentNodes[index].type == csesCalloutBlockType ||
+              (currentNodes[index].type == csesUnsupportedBlockType ||
+                  currentNodes[index].type == csesCalloutBlockType ||
                   currentNodes[index].delta != null ||
                   _isUrlBackedBlock(targetBlocks[index].blockType)),
         ).every((matches) => matches);
@@ -527,6 +529,7 @@ final class AppFlowyBlockEditorAdapter {
       for (var index = 0; index < currentNodes.length; index += 1) {
         final node = currentNodes[index];
         final target = targetBlocks[index];
+        if (node.type == csesUnsupportedBlockType) continue;
         if (_isUrlBackedBlock(target.blockType)) {
           if (currentBlocks[index] != target) {
             // 统一复用创建节点时的协议映射，避免 URL/布局/题注形成两套编码。
@@ -622,7 +625,11 @@ final class AppFlowyBlockEditorAdapter {
       return;
     }
     _applyingRemote = true;
+    final wasEditable = editorState.editable;
     try {
+      // AppFlowy also gates remote transactions on editable. Authoritative
+      // replay must still render while the page is in preview/read-only mode.
+      editorState.editable = true;
       await editorState.apply(
         transaction,
         isRemote: true,
@@ -630,6 +637,7 @@ final class AppFlowyBlockEditorAdapter {
       );
       _lastPublishedBlocks = targetBlocks;
     } finally {
+      editorState.editable = wasEditable;
       _applyingRemote = false;
     }
   }
@@ -645,6 +653,7 @@ final class AppFlowyBlockEditorAdapter {
     }
     if (value.$1 == TransactionTime.before) {
       _resolveNumberingTargets(value.$2);
+      _protectUnsupportedBlocks(value.$2);
       return;
     }
     final numberingNodes = <Node>{};
@@ -674,6 +683,58 @@ final class AppFlowyBlockEditorAdapter {
     }
     _lastPublishedBlocks = List<CollabEditorBlock>.unmodifiable(nextBlocks);
     onLocalBlocksChanged(_lastPublishedBlocks);
+  }
+
+  /// Follow paths through structural operations so range deletion/conversion cannot
+  /// remove a placeholder or its parent. Reject the whole action before history/input.
+  void _protectUnsupportedBlocks(Transaction transaction) {
+    final paths = _flattenNodes(editorState.document.root.children)
+        .where((node) => node.type == csesUnsupportedBlockType)
+        .map((node) => List<int>.from(node.path))
+        .toList();
+    bool containsPlaceholder(Node node) =>
+        node.type == csesUnsupportedBlockType ||
+        node.children.any(containsPlaceholder);
+    bool prefix(Path a, Path b) =>
+        a.length <= b.length &&
+        List.generate(a.length, (i) => a[i] == b[i]).every((v) => v);
+    var blocked = false;
+    for (final operation in transaction.operations) {
+      final path = operation.path;
+      if (operation is InsertOperation) {
+        blocked =
+            operation.nodes.any(containsPlaceholder) ||
+            paths.any((p) => p.length < path.length && prefix(p, path));
+      } else if (operation is DeleteOperation && path.isNotEmpty) {
+        blocked = paths.any(
+          (p) =>
+              p.length >= path.length &&
+              prefix(path.parent, p) &&
+              p[path.length - 1] >= path.last &&
+              p[path.length - 1] < path.last + operation.nodes.length,
+        );
+      } else {
+        blocked = paths.any((p) => prefix(p, path));
+      }
+      if (blocked) break;
+      if (path.isNotEmpty &&
+          (operation is InsertOperation || operation is DeleteOperation)) {
+        final count = operation is InsertOperation
+            ? operation.nodes.length
+            : -(operation as DeleteOperation).nodes.length;
+        for (final p in paths) {
+          if (p.length >= path.length &&
+              prefix(path.parent, p) &&
+              p[path.length - 1] >= path.last) {
+            p[path.length - 1] += count;
+          }
+        }
+      }
+    }
+    if (blocked) {
+      transaction.operations = [];
+      transaction.afterSelection = transaction.beforeSelection;
+    }
   }
 
   /// 在借用的 [transaction] 应用前重定位明确编号操作；AppFlowy 的历史路径可能因远端
@@ -814,6 +875,13 @@ final class AppFlowyBlockEditorAdapter {
   /// 将权威 [block] 转为 AppFlowy 节点，图片保存强类型专属数据的 Map 投影。
   /// 题注留在资源属性而非 AppFlowy children；实际父子关系由 Rust 的共享类型持有。
   static Node _nodeFromBlock(CollabEditorBlock block) {
+    if (block.blockType == csesUnsupportedBlockType) {
+      return Node(
+        type: csesUnsupportedBlockType,
+        id: block.id,
+        attributes: {collabBlockIdAttribute: block.id},
+      );
+    }
     if (block.blockType == csesCalloutBlockType) {
       return Node(
         type: csesCalloutBlockType,
@@ -1077,6 +1145,7 @@ final class AppFlowyBlockEditorAdapter {
   }
 
   static String _nodeBlockType(Node node) {
+    if (node.type == csesUnsupportedBlockType) return csesUnsupportedBlockType;
     if (node.type == csesCalloutBlockType) return csesCalloutBlockType;
     return switch (node.type) {
       HeadingBlockKeys.type =>

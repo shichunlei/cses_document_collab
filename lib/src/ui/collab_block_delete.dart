@@ -33,7 +33,8 @@ final collabBlockBackspaceCommand = CommandShortcutEvent(
       return KeyEventResult.handled;
     }
     if (isProtectedDocumentTitleBoundary(state) ||
-        isProtectedCalloutBoundary(state)) {
+        isProtectedCalloutBoundary(state) ||
+        isProtectedUnsupportedBlockBoundary(state)) {
       return KeyEventResult.handled;
     }
     if (!canDeletePreviousUrlBackedBlock(state)) {
@@ -85,7 +86,8 @@ class CollabBlockBackspaceInterceptor
       }
       return outdentCollabListAtStart(editorState);
     }
-    if (isProtectedCalloutBoundary(editorState) &&
+    if ((isProtectedCalloutBoundary(editorState) ||
+            isProtectedUnsupportedBlockBoundary(editorState)) &&
         deletion.deletedRange.isCollapsed &&
         deletion.deletedRange.start == 0) {
       return true;
@@ -220,4 +222,21 @@ bool isProtectedCalloutBoundary(EditorState editorState) {
   return node?.delta != null &&
       ((node?.parent?.type == csesCalloutBlockType && node?.previous == null) ||
           node?.previous?.type == csesCalloutBlockType);
+}
+
+/// Keep Backspace from jumping over opaque blocks and moving later text before them.
+bool isProtectedUnsupportedBlockBoundary(EditorState editorState) {
+  if (editorState.isDisposed || !editorState.editable) return false;
+  final selection = editorState.selection;
+  if (selection == null ||
+      !selection.isCollapsed ||
+      selection.start.offset != 0) {
+    return false;
+  }
+  final node = editorState.getNodeAtPath(selection.start.path);
+  final previous = node?.previousNodeWhere(
+    (candidate) =>
+        candidate.delta != null || candidate.type == csesUnsupportedBlockType,
+  );
+  return previous?.type == csesUnsupportedBlockType;
 }

@@ -304,7 +304,7 @@ impl CollabEngine {
         &mut self,
         blocks: Vec<CollabBlock>,
     ) -> Result<BlockChangeResult, String> {
-        validate_blocks(&blocks)?;
+        validate_blocks(&blocks, self.blockcraft_root_id.is_some())?;
         if let Some(root_id) = &self.blockcraft_root_id {
             let before = self.doc.transact().state_vector();
             blockcraft::apply(&self.doc, root_id, &blocks)?;
@@ -901,7 +901,7 @@ fn schema_attribute(key: &str, formal: bool) -> &str {
     }
 }
 
-fn validate_blocks(blocks: &[CollabBlock]) -> Result<(), String> {
+fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(), String> {
     let mut ids = HashSet::new();
     let mut ancestors = Vec::<&str>::new();
     for block in blocks {
@@ -931,7 +931,9 @@ fn validate_blocks(blocks: &[CollabBlock]) -> Result<(), String> {
         if block.callout_prefix.as_ref().is_some_and(|v| v.len() > 256) {
             return Err("INVALID_CALLOUT: 表情过长".into());
         }
-        if !is_supported_block_type(&block.block_type) {
+        if !is_supported_block_type(&block.block_type)
+            && !(allow_placeholders && block.block_type == blockcraft::UNSUPPORTED_BLOCK_TYPE)
+        {
             return Err(format!("unsupported block type: {}", block.block_type));
         }
         if !block.segments.is_empty()
@@ -1104,7 +1106,7 @@ pub fn open_cses_document(
 }
 
 /// 返回正式模型的只读原因，None 表示当前已知结构可编辑；不代表服务端业务授权。
-/// 每次应用远端更新后重新查询，锁、修订和未知内容可能随协同状态变化。
+/// 每次应用远端更新后重新查询，锁、修订和行内对象可能随协同状态变化。
 #[flutter_rust_bridge::frb(sync)]
 pub fn document_read_only_reason() -> Result<Option<String>, String> {
     with_engine(|engine| {

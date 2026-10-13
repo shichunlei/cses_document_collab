@@ -79,7 +79,7 @@ class CollabController extends ChangeNotifier with WidgetsBindingObserver {
   /// 当前模型根名称；本地草稿为 Demo 块顺序，CSES 正式文档为 blocks。
   String get sharedTypeName => _sharedTypeName;
 
-  /// Rust 根据当前根、未知块、锁和修订计算的只读原因；null 表示结构可编辑。
+  /// Rust 根据当前根、行内对象、锁和修订计算的只读原因；null 表示结构可编辑。
   /// 此值不代表服务端业务权限，网络断开后仍保留已加载模型的编辑能力。
   String? get readOnlyReason => _readOnlyReason;
 
@@ -300,7 +300,7 @@ class CollabController extends ChangeNotifier with WidgetsBindingObserver {
   }
 
   /// 应用未包帧的远端 V1 [bytes]；Rust 验证正式结构，再更新 Doc/SQLite，不回发。
-  /// 未知块、嵌套容器、行内对象、锁和修订保留原始类型，并重新计算只读能力。
+  /// 未知块和未适配容器仅投影为只读占位，其他块仍可编辑；行内对象、锁和修订继续保护整篇文档。
   /// 协同处理异常向上交给会话统一边界；AppFlowy 投影使用串行任务避免交错覆盖。
   void _applyRemoteUpdate(Uint8List bytes) {
     if (_disposed) return;

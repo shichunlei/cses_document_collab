@@ -4,6 +4,108 @@ import 'package:cses_mobile_collab_demo/src/ui/editor_shortcut_toolbar.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  test('opaque placeholders survive adjacent edits and remote replay', () async {
+    final changes = <List<CollabEditorBlock>>[];
+    final adapter = AppFlowyBlockEditorAdapter(
+      initialBlocks: const [
+        CollabEditorBlock(id: 'before', blockType: 'paragraph', text: '前文'),
+        CollabEditorBlock(
+          id: 'unknown',
+          blockType: csesUnsupportedBlockType,
+          text: '',
+        ),
+        CollabEditorBlock(id: 'after', blockType: 'paragraph', text: '后文'),
+      ],
+      onLocalBlocksChanged: changes.add,
+    );
+    addTearDown(adapter.dispose);
+    final state = adapter.editorState;
+    final placeholder = state.document.nodeAtPath([1])!;
+    expect(placeholder.delta, isNull);
+    await state.apply(
+      state.transaction..insertText(state.document.last!, 2, '修改'),
+    );
+    expect(changes.single[1].blockType, csesUnsupportedBlockType);
+    expect(changes.single[1].text, isEmpty);
+    final remote = List<CollabEditorBlock>.from(adapter.blocks);
+    remote[0] = const CollabEditorBlock(
+      id: 'before',
+      blockType: 'paragraph',
+      text: '远端',
+    );
+    await adapter.replaceFromRemote(remote);
+    expect(state.document.nodeAtPath([1]), same(placeholder));
+    expect(changes.length, 1);
+    // Backspace, a multi-block deletion and type conversion cannot remove it.
+    await state.apply(state.transaction..deleteNode(placeholder));
+    await state.apply(state.transaction..deleteNodesAtPath([0], 3));
+    await state.formatNode(
+      Selection.single(path: [1], startOffset: 0),
+      (node) => paragraphNode(text: '覆盖'),
+    );
+    expect(adapter.blocks, remote);
+    expect(changes.length, 1);
+    await state.apply(
+      state.transaction
+        ..updateNode(placeholder, {'delta': (Delta()..insert('覆盖')).toJson()}),
+    );
+    final shiftedDeletion = state.transaction
+      ..insertNode([0], paragraphNode(text: '不应插入'))
+      ..deleteNode(placeholder);
+    await state.apply(shiftedDeletion);
+    expect(adapter.blocks, remote);
+    expect(changes.length, 1);
+    // Insertion before it shifts paths; the next edit still reaches the right block.
+    await state.apply(
+      state.transaction..insertNode([0], paragraphNode(text: '新增')),
+    );
+    await state.apply(
+      state.transaction..insertText(state.document.last!, 4, '！'),
+    );
+    expect(adapter.blocks[2].id, 'unknown');
+    expect(adapter.blocks.last.text, '后文修改！');
+  });
+
+  test(
+    'range deleting a callout containing a placeholder is rejected atomically',
+    () async {
+      final changes = <List<CollabEditorBlock>>[];
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: const [
+          CollabEditorBlock(
+            id: 'container',
+            blockType: csesCalloutBlockType,
+            text: '',
+          ),
+          CollabEditorBlock(
+            id: 'unknown',
+            parentId: 'container',
+            blockType: csesUnsupportedBlockType,
+            text: '',
+          ),
+          CollabEditorBlock(
+            id: 'body',
+            parentId: 'container',
+            blockType: 'paragraph',
+            text: '正文',
+          ),
+        ],
+        onLocalBlocksChanged: changes.add,
+      );
+      addTearDown(adapter.dispose);
+      final state = adapter.editorState;
+      await state.apply(state.transaction..deleteNode(state.document.first!));
+      expect(adapter.blocks.length, 3);
+      expect(changes, isEmpty);
+      await state.apply(
+        state.transaction
+          ..insertText(state.document.nodeAtPath([0, 1])!, 2, '修改'),
+      );
+      expect(changes.single.last.text, '正文修改');
+      expect(changes.single[1].parentId, 'container');
+    },
+  );
+
   test(
     'remote block colors update in place and survive text editing',
     () async {

@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:cses_mobile_collab_demo/src/ui/collab_unsupported_block.dart';
+
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_mobile_collab_demo/src/ui/collab_block_colors.dart';
 import 'package:cses_mobile_collab_demo/src/collab/appflowy_block_editor_adapter.dart';
@@ -30,7 +32,7 @@ class CollaborativeEditorPage extends StatefulWidget {
   /// 借用 [collab] 展示文档与能力，不创建或关闭其协同会话。
   const CollaborativeEditorPage({super.key, required this.collab});
 
-  /// 宿主持有的协同控制器；未知内容和锁等只读约束由该控制器提供。
+  /// 宿主持有的协同控制器；锁和修订等只读约束由该控制器提供。
   final CollabController collab;
 
   /// 创建页面展示状态及能力监听；释放时只归还编辑模式控制权。
@@ -48,7 +50,7 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
   /// 用户预览和模型只读约束任意一个生效时都使用只读展示。
   bool get _previewOnly => _isPreview || !collab.canEdit;
 
-  /// 注册能力监听，使远端锁定或未知块到达后立即关闭本地输入。
+  /// 注册能力监听，使远端锁定或修订到达后立即关闭本地输入。
   @override
   void initState() {
     super.initState();
@@ -293,6 +295,7 @@ final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders = {
   ),
   csesCodeBlockType: CollabCodeBlockComponentBuilder(),
   csesCalloutBlockType: CollabCalloutBlockComponentBuilder(),
+  csesUnsupportedBlockType: CollabUnsupportedBlockComponentBuilder(),
 };
 
 /// Reduces the extra gap between body paragraphs while preserving line height.

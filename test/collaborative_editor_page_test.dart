@@ -23,6 +23,103 @@ void main() {
   });
 
   testWidgets(
+    'unknown blocks stay opaque while surrounding text remains editable',
+    (tester) async {
+      final changes = <List<CollabEditorBlock>>[];
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: const [
+          CollabEditorBlock(id: 'before', blockType: 'paragraph', text: '前文'),
+          CollabEditorBlock(
+            id: 'unknown',
+            blockType: csesUnsupportedBlockType,
+            text: '',
+          ),
+          CollabEditorBlock(id: 'after', blockType: 'paragraph', text: '后文'),
+        ],
+        onLocalBlocksChanged: changes.add,
+      );
+      addTearDown(adapter.dispose);
+      final collab = _ReadyCollabController(
+        testEditorState: adapter.editorState,
+      );
+      addTearDown(collab.dispose);
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            AppFlowyEditorLocalizations.delegate,
+          ],
+          home: CollaborativeEditorPage(collab: collab),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final state = adapter.editorState;
+      expect(find.text('未适配的块（不可编辑）'), findsOneWidget);
+      expect(find.textContaining('只读：'), findsNothing);
+      expect(state.editable, isTrue);
+      expect(find.byType(EditorShortcutToolbar), findsOneWidget);
+      expect(find.byKey(const ValueKey('editor-undo')), findsOneWidget);
+      expect(
+        tester
+            .widget<TextButton>(
+              find.byKey(const ValueKey('editor-mode-toggle')),
+            )
+            .onPressed,
+        isNotNull,
+      );
+      expect(state.document.nodeAtPath([1])!.delta, isNull);
+      state.selection = Selection.single(path: [2], startOffset: 2);
+      await tester.pump();
+      tester.testTextInput.updateEditingValue(
+        const TextEditingValue(
+          text: '后文修改',
+          selection: TextSelection.collapsed(offset: 4),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(adapter.blocks.last.text, '后文修改');
+      expect(changes.last[1].blockType, csesUnsupportedBlockType);
+      expect(changes.last[1].text, isEmpty);
+      final changeCount = changes.length;
+      await tester.tap(find.byKey(const ValueKey('editor-mode-toggle')));
+      await tester.pumpAndSettle();
+      expect(state.editable, isFalse);
+      await adapter.replaceFromRemote(const [
+        CollabEditorBlock(id: 'before', blockType: 'paragraph', text: '远端前文'),
+        CollabEditorBlock(
+          id: 'unknown',
+          blockType: csesUnsupportedBlockType,
+          text: '',
+        ),
+        CollabEditorBlock(id: 'after', blockType: 'paragraph', text: '后文修改'),
+      ]);
+      await tester.pumpAndSettle();
+      expect(adapter.blocks.first.text, '远端前文');
+      expect(state.editable, isFalse);
+      expect(changes.length, changeCount);
+      await tester.tap(find.byKey(const ValueKey('editor-mode-toggle')));
+      await tester.pumpAndSettle();
+      expect(state.editable, isTrue);
+      state.selection = Selection.single(path: [0], startOffset: 4);
+      await tester.pump();
+      tester.testTextInput.updateEditingValue(
+        const TextEditingValue(
+          text: '远端前文修改',
+          selection: TextSelection.collapsed(offset: 6),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(adapter.blocks.first.text, '远端前文修改');
+      expect(adapter.blocks[1].blockType, csesUnsupportedBlockType);
+      expect(find.text('未适配的块（不可编辑）'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+  );
+
+  testWidgets(
     'desktop quote background and border render in edit and preview',
     (tester) async {
       final adapter = AppFlowyBlockEditorAdapter(
@@ -256,10 +353,10 @@ void main() {
           home: CollaborativeEditorPage(collab: collab),
         ),
       );
-      collab.setReadOnlyReason('包含未知块');
+      collab.setReadOnlyReason('包含锁定块');
       await tester.pumpAndSettle();
       expect(collab.editorState.editable, isFalse);
-      expect(find.text('只读：包含未知块'), findsOneWidget);
+      expect(find.text('只读：包含锁定块'), findsOneWidget);
       expect(find.byType(EditorShortcutToolbar), findsNothing);
       expect(find.byKey(const ValueKey('editor-undo')), findsNothing);
       expect(
