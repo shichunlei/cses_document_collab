@@ -81,6 +81,17 @@ pub struct CollabOrdered {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct CollabCode {
+    pub language: String,
+    pub name: String,
+    pub collapsed: bool,
+    /// lang/blockName/collapse 原值，保留缺失和 null 以支持精确撤销。
+    pub properties: String,
+    /// 仅显式字段事务携带补丁；普通投影恒为 None。
+    pub property_edits: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct CollabBlock {
     pub id: String,
     pub block_type: String,
@@ -93,6 +104,8 @@ pub struct CollabBlock {
     pub image: Option<CollabImage>,
     /// 仅正式 ordered 块携带；普通快照不覆盖设置，显式 numbering_edit 只写 start/continuePrevious。
     pub ordered: Option<CollabOrdered>,
+    /// 代码块头部投影；只有 property_edits 可修改原生属性。
+    pub code: Option<CollabCode>,
     /// 本地类型转换的新身份所替换的旧 ID；成功后投影清空，不进入共享属性。
     pub replaces_id: Option<String>,
     /// 桌面 props.backColor / borderColor；CSS 原值，独立于行内高亮。
@@ -247,6 +260,7 @@ impl CollabEngine {
                     indent,
                     image: None,
                     ordered: None,
+                    code: None,
                     replaces_id: None,
                     block_background_color: out_string(
                         self.block_colors
@@ -553,6 +567,7 @@ impl CollabEngine {
             indent: 0,
             image: None,
             ordered: None,
+            code: None,
             replaces_id: None,
             block_background_color: None,
             block_border_color: None,
@@ -1204,6 +1219,7 @@ mod tests {
             indent: 0,
             image: None,
             ordered: None,
+            code: None,
             replaces_id: None,
             block_background_color: None,
             block_border_color: None,

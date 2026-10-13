@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_mobile_collab_demo/src/collab/collab_code.dart';
 import 'package:cses_mobile_collab_demo/src/collab/collab_block_colors.dart';
 import 'package:cses_mobile_collab_demo/src/collab/collab_image.dart';
 import 'package:cses_mobile_collab_demo/src/collab/collab_ordered.dart';
@@ -126,6 +127,66 @@ Future<bool> changeCollabOrderedNumbering(
           csesOrderedTargetAttribute: blockId,
           csesOrderedNumberingAttribute: value.numbering,
         },
+      ),
+    );
+  await state.apply(
+    transaction,
+    withUpdateSelection: false,
+    skipHistoryDebounce: true,
+  );
+  return true;
+}
+
+Iterable<Node> _codePropertyNodes(Iterable<Node> nodes) sync* {
+  for (final node in nodes) {
+    yield node;
+    yield* _codePropertyNodes(node.children);
+  }
+}
+
+/// Changes one code prop without moving the caret or saving unrelated fields in undo.
+Future<bool> changeCollabCodeProperty(
+  EditorState state,
+  String blockId,
+  String property,
+  Object? value,
+) async {
+  if (state.isDisposed || !state.editable) return false;
+  final attribute = collabCodePropertyAttributes[property];
+  if (attribute == null) return false;
+  if (property == 'lang' &&
+      (value is! String || value.trim().isEmpty || value.length > 80)) {
+    return false;
+  }
+  if (property == 'blockName' &&
+      value != null &&
+      (value is! String || value.length > 256)) {
+    return false;
+  }
+  if (property == 'collapse' && value != null && value is! bool) return false;
+  final node = _codePropertyNodes(state.document.root.children)
+      .where(
+        (node) =>
+            node.type == csesCodeBlockType &&
+            node.attributes[AppFlowyBlockEditorAdapter
+                    .collabBlockIdAttribute] ==
+                blockId,
+      )
+      .firstOrNull;
+  if (node == null) return false;
+  final code = CollabCode.fromAttributes(node.attributes);
+  final before = code.propertyAttribute(property);
+  final after = jsonEncode({'value': value});
+  if (before == after) return false;
+  if (state.undoManager.undoStack.isNonEmpty) {
+    state.undoManager.undoStack.last.seal();
+  }
+  final transaction = state.transaction
+    ..add(
+      UpdateOperation(
+        node.path,
+        {collabCodeTargetAttribute: blockId, attribute: after},
+        {collabCodeTargetAttribute: blockId, attribute: before},
       ),
     );
   await state.apply(
@@ -266,6 +327,7 @@ final class CollabEditorBlock {
     this.indent = 0,
     this.image,
     this.ordered,
+    this.code,
     this.replacesId,
     this.blockBackgroundColor,
     this.blockBorderColor,
@@ -298,6 +360,9 @@ final class CollabEditorBlock {
   /// 正式 ordered 的结构编号，普通块和独立草稿为 null。
   final CollabOrdered? ordered;
 
+  /// Header properties with explicit per-field edits.
+  final CollabCode? code;
+
   /// 本地新块所替换的原块身份，普通编辑和远端投影为 null。
   final String? replacesId;
 
@@ -317,6 +382,7 @@ final class CollabEditorBlock {
     indent,
     image,
     ordered,
+    code,
     replacesId,
     blockBackgroundColor,
     blockBorderColor,
@@ -335,6 +401,7 @@ final class CollabEditorBlock {
         other.indent == indent &&
         other.image == image &&
         other.ordered == ordered &&
+        other.code == code &&
         other.replacesId == replacesId &&
         other.blockBackgroundColor == blockBackgroundColor &&
         other.blockBorderColor == blockBorderColor;
@@ -487,6 +554,7 @@ final class AppFlowyBlockEditorAdapter {
             node.attributes[blockComponentAlign] != target.alignment ||
             node.attributes[csesBlockIndentAttribute] != targetIndent ||
             _readOrdered(node) != target.ordered ||
+            _readCode(node) != target.code ||
             node.attributes[csesReplacementSourceAttribute] !=
                 target.replacesId) {
           transaction.updateNode(node, {
@@ -498,6 +566,9 @@ final class AppFlowyBlockEditorAdapter {
             blockComponentAlign: target.alignment,
             csesBlockIndentAttribute: targetIndent,
             csesOrderedAttribute: target.ordered?.toJson(),
+            collabCodeAttribute: target.code?.toJson(),
+            for (final entry in collabCodePropertyAttributes.entries)
+              entry.value: target.code?.propertyAttribute(entry.key),
             csesOrderedNumberingAttribute: target.ordered?.numbering,
             csesOrderedTargetAttribute: target.ordered == null
                 ? null
@@ -549,7 +620,17 @@ final class AppFlowyBlockEditorAdapter {
       return;
     }
     final numberingNodes = <Node>{};
+    final codeEdits = <Node, Set<String>>{};
     for (final operation in value.$2.operations.whereType<UpdateOperation>()) {
+      final node = editorState.getNodeAtPath(operation.path);
+      if (node != null && node.type == csesCodeBlockType) {
+        for (final entry in collabCodePropertyAttributes.entries) {
+          if (operation.attributes.containsKey(entry.value)) {
+            codeEdits.putIfAbsent(node, () => {}).add(entry.key);
+          }
+        }
+      }
+
       if (operation.attributes.containsKey(csesOrderedNumberingAttribute)) {
         final node = editorState.getNodeAtPath(operation.path);
         if (node != null) numberingNodes.add(node);
@@ -559,6 +640,7 @@ final class AppFlowyBlockEditorAdapter {
       editorState,
       _lastPublishedBlocks,
       numberingNodes: numberingNodes,
+      codeEdits: codeEdits,
     );
     if (_blocksEqual(nextBlocks, _lastPublishedBlocks)) {
       return;
@@ -572,26 +654,51 @@ final class AppFlowyBlockEditorAdapter {
   /// 其他操作保持原状；同步事务 before 通知保证修改发生在节点写入及历史记录之前。
   /// 不创建新事务或资源，也不直接改动原生文档，撤销/重做记录最终实际应用的路径。
   void _resolveNumberingTargets(Transaction transaction) {
+    final codePropertiesOnly =
+        transaction.operations.isNotEmpty &&
+        transaction.operations.every(
+          (operation) =>
+              operation is UpdateOperation &&
+              operation.attributes.containsKey(collabCodeTargetAttribute),
+        );
+    if (codePropertiesOnly) {
+      // Header undo preserves the current caret after reorder or deletion.
+      transaction.beforeSelection = editorState.selection;
+      transaction.afterSelection = editorState.selection;
+    }
     final operations = <Operation>[];
     for (final operation in transaction.operations) {
-      if (operation is! UpdateOperation ||
+      if (operation is! UpdateOperation) {
+        operations.add(operation);
+        continue;
+      }
+      final isCode = operation.attributes.containsKey(
+        collabCodeTargetAttribute,
+      );
+      if (!isCode &&
           !operation.attributes.containsKey(csesOrderedNumberingAttribute)) {
         operations.add(operation);
         continue;
       }
-      var id = operation.attributes[csesOrderedTargetAttribute] as String?;
+      if (isCode && !editorState.editable) continue;
+      var id =
+          operation.attributes[isCode
+                  ? collabCodeTargetAttribute
+                  : csesOrderedTargetAttribute]
+              as String?;
       if (id == null) continue;
       while (_replacementIds.containsKey(id)) {
         id = _replacementIds[id];
       }
-      final node = editorState.document.root.children
+      final node = _codePropertyNodes(editorState.document.root.children)
           .where(
             (n) =>
-                _nodeBlockId(n) == id && n.type == NumberedListBlockKeys.type,
+                _nodeBlockId(n) == id &&
+                n.type ==
+                    (isCode ? csesCodeBlockType : NumberedListBlockKeys.type),
           )
           .firstOrNull;
-      if (node == null) continue;
-      operations.add(operation.copyWith(path: node.path));
+      if (node != null) operations.add(operation.copyWith(path: node.path));
     }
     transaction.operations = operations;
   }
@@ -708,7 +815,7 @@ final class AppFlowyBlockEditorAdapter {
       csesCodeBlockType => (
         csesCodeBlockType,
         blockComponentDelta,
-        <String, Object>{blockComponentBackgroundColor: '0xfff3f4f6'},
+        <String, Object>{},
       ),
       csesDocumentTitleBlockType => (
         csesDocumentTitleBlockType,
@@ -727,6 +834,8 @@ final class AppFlowyBlockEditorAdapter {
       attributes: {
         deltaKey: _deltaFromBlock(block).toJson(),
         collabBlockIdAttribute: block.id,
+        if (block.code != null) collabCodeAttribute: block.code!.toJson(),
+        if (block.code != null) ...block.code!.nodeAttributes,
         if (block.ordered != null)
           csesOrderedAttribute: block.ordered!.toJson(),
         if (block.ordered != null)
@@ -758,6 +867,7 @@ final class AppFlowyBlockEditorAdapter {
     EditorState state,
     List<CollabEditorBlock> previous, {
     Set<Node> numberingNodes = const {},
+    Map<Node, Set<String>> codeEdits = const {},
   }) {
     final nodes = state.document.root.children;
     final explicitIds = nodes
@@ -811,6 +921,7 @@ final class AppFlowyBlockEditorAdapter {
       }
       return CollabEditorBlock(
         id: blockId,
+        code: _readCode(node, editedProperties: codeEdits[node] ?? const {}),
         blockType: _nodeBlockType(node),
         text: _readNodePlainText(node),
         ordered: node.type == NumberedListBlockKeys.type
@@ -857,6 +968,23 @@ final class AppFlowyBlockEditorAdapter {
           ordered.numbering,
       edited: edited,
     );
+  }
+
+  static CollabCode? _readCode(
+    Node node, {
+    Set<String> editedProperties = const {},
+  }) {
+    final value = node.attributes[collabCodeAttribute];
+    return node.type == csesCodeBlockType &&
+            (value is Map ||
+                collabCodePropertyAttributes.values.any(
+                  node.attributes.containsKey,
+                ))
+        ? CollabCode.fromAttributes(
+            node.attributes,
+            editedProperties: editedProperties,
+          )
+        : null;
   }
 
   /// 将手机 [type] 归到正式 flavour；标题级别变化仍是同一 paragraph，不替换身份。

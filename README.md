@@ -16,6 +16,7 @@
 - 块布局菜单支持整块背景色、引用块左侧线条颜色（与桌面 `props.backColor` / `props.borderColor` 双向同步，支持清除及撤销），左/中/右对齐和三种列表的 0～6 级缩进；最外层减少缩进转普通段落，保留光标/选区
 - 行内加粗、斜体、下划线、删除线、行内代码、文字颜色、上标和下标使用 Y.Text 原生 attributes 协同
 - Todo 新建、段落/Todo 转换以及勾选状态实时协同
+- 代码块使用白底细边框和浅色标题栏，支持修改名称、搜索选择语言、折叠/展开、复制完整源码和语法高亮；`props.blockName` / `props.lang` / `props.collapse` 与桌面同步并支持逐字段撤销，预览折叠只影响本机，着色不写入 Y.Text
 - AppBar 撤销/重做；远端 transaction 不进入本机 UndoManager
 - AppFlowy transaction 与 Rust/Yrs 块级 Schema 适配层：离线草稿沿用 Demo 模型，CSES 文档使用正式 BlockCraft 模型
 - `paragraph`、`heading_1`～`heading_9`、`bulleted_list`、

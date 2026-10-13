@@ -617,6 +617,7 @@ impl SseDecode for crate::api::collab::CollabBlock {
         let mut var_indent = <u32>::sse_decode(deserializer);
         let mut var_image = <Option<crate::api::collab::CollabImage>>::sse_decode(deserializer);
         let mut var_ordered = <Option<crate::api::collab::CollabOrdered>>::sse_decode(deserializer);
+        let mut var_code = <Option<crate::api::collab::CollabCode>>::sse_decode(deserializer);
         let mut var_replacesId = <Option<String>>::sse_decode(deserializer);
         let mut var_blockBackgroundColor = <Option<String>>::sse_decode(deserializer);
         let mut var_blockBorderColor = <Option<String>>::sse_decode(deserializer);
@@ -630,9 +631,28 @@ impl SseDecode for crate::api::collab::CollabBlock {
             indent: var_indent,
             image: var_image,
             ordered: var_ordered,
+            code: var_code,
             replaces_id: var_replacesId,
             block_background_color: var_blockBackgroundColor,
             block_border_color: var_blockBorderColor,
+        };
+    }
+}
+
+impl SseDecode for crate::api::collab::CollabCode {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_language = <String>::sse_decode(deserializer);
+        let mut var_name = <String>::sse_decode(deserializer);
+        let mut var_collapsed = <bool>::sse_decode(deserializer);
+        let mut var_properties = <String>::sse_decode(deserializer);
+        let mut var_propertyEdits = <Option<String>>::sse_decode(deserializer);
+        return crate::api::collab::CollabCode {
+            language: var_language,
+            name: var_name,
+            collapsed: var_collapsed,
+            properties: var_properties,
+            property_edits: var_propertyEdits,
         };
     }
 }
@@ -798,6 +818,17 @@ impl SseDecode for Option<String> {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         if (<bool>::sse_decode(deserializer)) {
             return Some(<String>::sse_decode(deserializer));
+        } else {
+            return None;
+        }
+    }
+}
+
+impl SseDecode for Option<crate::api::collab::CollabCode> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(<crate::api::collab::CollabCode>::sse_decode(deserializer));
         } else {
             return None;
         }
@@ -971,6 +1002,7 @@ impl flutter_rust_bridge::IntoDart for crate::api::collab::CollabBlock {
             self.indent.into_into_dart().into_dart(),
             self.image.into_into_dart().into_dart(),
             self.ordered.into_into_dart().into_dart(),
+            self.code.into_into_dart().into_dart(),
             self.replaces_id.into_into_dart().into_dart(),
             self.block_background_color.into_into_dart().into_dart(),
             self.block_border_color.into_into_dart().into_dart(),
@@ -986,6 +1018,30 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::collab::CollabBlock>
     for crate::api::collab::CollabBlock
 {
     fn into_into_dart(self) -> crate::api::collab::CollabBlock {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::collab::CollabCode {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.language.into_into_dart().into_dart(),
+            self.name.into_into_dart().into_dart(),
+            self.collapsed.into_into_dart().into_dart(),
+            self.properties.into_into_dart().into_dart(),
+            self.property_edits.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::collab::CollabCode
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::collab::CollabCode>
+    for crate::api::collab::CollabCode
+{
+    fn into_into_dart(self) -> crate::api::collab::CollabCode {
         self
     }
 }
@@ -1171,9 +1227,21 @@ impl SseEncode for crate::api::collab::CollabBlock {
         <u32>::sse_encode(self.indent, serializer);
         <Option<crate::api::collab::CollabImage>>::sse_encode(self.image, serializer);
         <Option<crate::api::collab::CollabOrdered>>::sse_encode(self.ordered, serializer);
+        <Option<crate::api::collab::CollabCode>>::sse_encode(self.code, serializer);
         <Option<String>>::sse_encode(self.replaces_id, serializer);
         <Option<String>>::sse_encode(self.block_background_color, serializer);
         <Option<String>>::sse_encode(self.block_border_color, serializer);
+    }
+}
+
+impl SseEncode for crate::api::collab::CollabCode {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.language, serializer);
+        <String>::sse_encode(self.name, serializer);
+        <bool>::sse_encode(self.collapsed, serializer);
+        <String>::sse_encode(self.properties, serializer);
+        <Option<String>>::sse_encode(self.property_edits, serializer);
     }
 }
 
@@ -1288,6 +1356,16 @@ impl SseEncode for Option<String> {
         <bool>::sse_encode(self.is_some(), serializer);
         if let Some(value) = self {
             <String>::sse_encode(value, serializer);
+        }
+    }
+}
+
+impl SseEncode for Option<crate::api::collab::CollabCode> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <crate::api::collab::CollabCode>::sse_encode(value, serializer);
         }
     }
 }

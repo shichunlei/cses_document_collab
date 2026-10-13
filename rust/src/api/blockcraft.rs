@@ -160,6 +160,49 @@ fn parse_numbering_edit(value: &str) -> Result<std::sync::Arc<HashMap<String, An
     Ok(values)
 }
 
+fn code_properties<T: ReadTxn>(props: &MapRef, txn: &T) -> String {
+    let mut values = std::collections::BTreeMap::new();
+    for key in ["lang", "blockName", "collapse"] {
+        if let Some(Out::Any(value)) = props.get(txn, key) {
+            values.insert(key, value);
+        }
+    }
+    serde_json::to_string(&values).expect("代码属性可序列化")
+}
+
+/// Validate every patch before any write, including exact remove vs null undo.
+fn parse_code_edit(input: &str) -> Result<HashMap<String, Option<Any>>, String> {
+    let invalid = || "INVALID_CODE_PROPERTIES: 代码属性补丁不合法".to_owned();
+    if input.len() > 16384 {
+        return Err(invalid());
+    }
+    let Any::Map(values) = Any::from_json(input).map_err(|_| invalid())? else {
+        return Err(invalid());
+    };
+    let mut result = HashMap::new();
+    for (key, wrapper) in values.iter() {
+        if !matches!(key.as_str(), "lang" | "blockName" | "collapse") {
+            return Err(invalid());
+        }
+        let Any::Map(wrapper) = wrapper else {
+            return Err(invalid());
+        };
+        if wrapper.keys().any(|k| k != "value") {
+            return Err(invalid());
+        }
+        let value = wrapper.get("value").cloned();
+        match (key.as_str(), &value) {
+            (_, None | Some(Any::Null)) => {}
+            ("lang", Some(Any::String(s))) if !s.trim().is_empty() && s.len() <= 80 => {}
+            ("blockName", Some(Any::String(s))) if s.len() <= 4096 => {}
+            ("collapse", Some(Any::Bool(_))) => {}
+            _ => return Err(invalid()),
+        }
+        result.insert(key.clone(), value);
+    }
+    Ok(result)
+}
+
 /// 只写结构派生的 order；未知 props/meta 和用户配置的 start/ms/continuePrevious 原样保留。
 /// 调用者与正文/根顺序修改共用事务，保证持久化及广播始终包含完整编号结果。
 fn update_ordered_counters(
@@ -461,6 +504,13 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
         }
         let kind = kind.unwrap_or_else(|| "paragraph".into());
         result.blocks.push(CollabBlock {
+            code: (kind == "code").then(|| CollabCode {
+                language: out_string(props.get(&txn, "lang")).unwrap_or_else(|| "PlainText".into()),
+                name: out_string(props.get(&txn, "blockName")).unwrap_or_default(),
+                collapsed: out_bool(props.get(&txn, "collapse")) == Some(true),
+                properties: code_properties(&props, &txn),
+                property_edits: None,
+            }),
             ordered: ordered.get(&id).map(|v| v.0.clone()),
             replaces_id: None,
             block_background_color: out_string(props.get(&txn, "backColor")),
@@ -537,6 +587,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
     let mut replaced_ids = HashSet::new();
     let mut replacements = HashMap::new();
     let mut numbering_edits = HashMap::new();
+    let mut code_edits = HashMap::new();
     // 新 UI 身份不能复用未展示的块或孤立块，避免覆盖隐藏内容。
     for block in desired {
         if !previous.contains_key(block.id.as_str()) && blocks.contains_key(&txn, &block.id) {
@@ -561,6 +612,15 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
         } else {
             previous.get(block.id.as_str()).copied()
         };
+        if let Some(edit) = block.code.as_ref().and_then(|v| v.property_edits.as_ref()) {
+            if block.block_type != "code"
+                || old.is_some_and(|b| b.block_type != "code")
+                || block.replaces_id.is_some()
+            {
+                return Err("INVALID_CODE_PROPERTIES: 属性操作只适用于代码块".into());
+            }
+            code_edits.insert(block.id.clone(), parse_code_edit(edit)?);
+        }
         if let Some(edit) = block
             .ordered
             .as_ref()
@@ -705,6 +765,15 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
             }
             if flavour == "code" {
                 props.insert(&mut txn, "lang", "PlainText");
+            }
+        }
+        if let Some(values) = code_edits.get(&next.id) {
+            for (key, value) in values {
+                if let Some(value) = value {
+                    props.try_update(&mut txn, key.as_str(), value.clone());
+                } else {
+                    props.remove(&mut txn, key);
+                }
             }
         }
         if old.is_none_or(|b| b.block_type != next.block_type) {
@@ -1650,6 +1719,137 @@ mod tests {
         }
     }
 
+    #[test]
+    fn code_header_projects_without_overwriting_desktop_props() {
+        let mut engine = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-code.update"
+        ));
+        let before = engine.blocks();
+        let code = before.last().unwrap();
+        assert_eq!(code.code.as_ref().unwrap().language, "Dart");
+        assert_eq!(code.code.as_ref().unwrap().name, "这是一段dart代码");
+        let mut desired = before;
+        let code = desired.last_mut().unwrap();
+        code.text.push_str("// 手机修改\n");
+        // Display-only projections must never overwrite newer native props.
+        code.code = Some(CollabCode {
+            language: "PlainText".into(),
+            name: "stale".into(),
+            collapsed: true,
+            properties: "{}".into(),
+            property_edits: None,
+        });
+        engine.apply_block_snapshot(desired).unwrap();
+        let after = engine.blocks();
+        let code = after.last().unwrap();
+        assert!(code.text.ends_with("// 手机修改\n"));
+        assert_eq!(code.code.as_ref().unwrap().language, "Dart");
+        assert_eq!(code.code.as_ref().unwrap().name, "这是一段dart代码");
+        let txn = engine.doc.transact();
+        let blocks = txn.get_map(ROOT_NAME).unwrap();
+        let props = map(&map(&blocks, &txn, "code-1").unwrap(), &txn, "props").unwrap();
+        assert_eq!(out_u32(props.get(&txn, "h")), Some(240));
+        assert!(props.contains_key(&txn, "customCode"));
+    }
+
+    #[test]
+    fn code_property_patches_merge_and_undo_only_the_selected_field() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-code.update");
+        let mut a = engine(fixture);
+        let mut b = engine(fixture);
+        let mut left = a.blocks();
+        let mut right = b.blocks();
+        left.last_mut()
+            .unwrap()
+            .code
+            .as_mut()
+            .unwrap()
+            .property_edits =
+            Some(r#"{"blockName":{"value":"手机名称"},"collapse":{"value":true}}"#.into());
+        right
+            .last_mut()
+            .unwrap()
+            .code
+            .as_mut()
+            .unwrap()
+            .property_edits = Some(r#"{"lang":{"value":"Python"}}"#.into());
+        let au = a.apply_block_snapshot(left).unwrap().v1_update;
+        let bu = b.apply_block_snapshot(right).unwrap().v1_update;
+        a.apply_cses_update(bu).unwrap();
+        b.apply_cses_update(au).unwrap();
+        assert_eq!(a.blocks(), b.blocks());
+        let result = a.blocks();
+        let code = result.last().unwrap().code.as_ref().unwrap();
+        assert_eq!(code.name, "手机名称");
+        assert_eq!(code.language, "Python");
+        assert!(code.collapsed);
+        assert!(code.property_edits.is_none());
+        let mut undo = a.blocks();
+        undo.last_mut()
+            .unwrap()
+            .code
+            .as_mut()
+            .unwrap()
+            .property_edits =
+            Some(r#"{"blockName":{"value":"这是一段dart代码"},"collapse":{}}"#.into());
+        let update = a.apply_block_snapshot(undo).unwrap().v1_update;
+        b.apply_cses_update(update).unwrap();
+        assert_eq!(a.blocks(), b.blocks());
+        let result = b.blocks();
+        let code = result.last().unwrap().code.as_ref().unwrap();
+        assert_eq!(code.name, "这是一段dart代码");
+        assert_eq!(code.language, "Python");
+        assert!(!code.collapsed);
+        assert!(!code.properties.contains("collapse"));
+    }
+
+    #[test]
+    fn invalid_code_patch_is_atomic_and_native_null_is_distinct_from_missing() {
+        let mut engine = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-code.update"
+        ));
+        for patch in [
+            r#"{"lang":{"value":false}}"#,
+            r#"{"h":{"value":10}}"#,
+            r#"{"blockName":{"value":"partial"},"collapse":{"value":"true"}}"#,
+        ] {
+            let before = engine.doc.transact().state_vector();
+            let mut desired = engine.blocks();
+            desired
+                .last_mut()
+                .unwrap()
+                .code
+                .as_mut()
+                .unwrap()
+                .property_edits = Some(patch.into());
+            assert!(engine
+                .apply_block_snapshot(desired)
+                .unwrap_err()
+                .contains("INVALID_CODE_PROPERTIES"));
+            assert_eq!(engine.doc.transact().state_vector(), before);
+        }
+        for (patch, present) in [
+            (r#"{"collapse":{"value":null}}"#, true),
+            (r#"{"collapse":{}}"#, false),
+        ] {
+            let mut desired = engine.blocks();
+            desired
+                .last_mut()
+                .unwrap()
+                .code
+                .as_mut()
+                .unwrap()
+                .property_edits = Some(patch.into());
+            engine.apply_block_snapshot(desired).unwrap();
+            let txn = engine.doc.transact();
+            let blocks = txn.get_map(ROOT_NAME).unwrap();
+            let props = map(&map(&blocks, &txn, "code-1").unwrap(), &txn, "props").unwrap();
+            assert_eq!(props.contains_key(&txn, "collapse"), present);
+            assert!(props.contains_key(&txn, "customCode"));
+            assert_eq!(out_u32(props.get(&txn, "h")), Some(240));
+        }
+    }
+
     /// 新增、类型转换、重排和删除只更新正式 children 数组与目标块，不写 Demo 私有根。
     #[test]
     fn structural_edits_and_sqlite_restore_use_formal_schema() {
@@ -1674,6 +1874,7 @@ mod tests {
                 indent: 0,
                 image: None,
                 ordered: None,
+                code: None,
                 replaces_id: None,
                 block_background_color: None,
                 block_border_color: None,
@@ -1771,6 +1972,7 @@ mod tests {
             indent: 0,
             image: None,
             ordered: None,
+            code: None,
             replaces_id: None,
             block_background_color: None,
             block_border_color: None,

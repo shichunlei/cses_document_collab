@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_mobile_collab_demo/src/collab/collab_code.dart';
 import 'package:cses_common/core/collections/objectid.dart';
 import 'package:cses_common/observability/api/log.dart';
 import 'package:cses_mobile_collab_demo/src/collab/appflowy_block_editor_adapter.dart';
@@ -452,6 +453,7 @@ class CollabController extends ChangeNotifier with WidgetsBindingObserver {
             indent: block.indent,
             image: _toEditorImage(block.image),
             ordered: _toEditorOrdered(block.ordered),
+            code: _toEditorCode(block.code),
             replacesId: block.replacesId,
           ),
         )
@@ -491,11 +493,30 @@ class CollabController extends ChangeNotifier with WidgetsBindingObserver {
             indent: block.indent,
             image: _toRustImage(block.image),
             ordered: _toRustOrdered(block.ordered),
+            code: block.code == null
+                ? null
+                : rust.CollabCode(
+                    language: block.code!.language,
+                    name: block.code!.name,
+                    collapsed: block.code!.collapsed,
+                    properties: block.code!.properties,
+                    propertyEdits: block.code!.propertyEdits,
+                  ),
             replacesId: block.replacesId,
           ),
         )
         .toList(growable: false);
   }
+
+  static CollabCode? _toEditorCode(rust.CollabCode? code) => code == null
+      ? null
+      : CollabCode(
+          language: code.language,
+          name: code.name,
+          collapsed: code.collapsed,
+          rawProperties: code.properties,
+          propertyEdits: code.propertyEdits,
+        );
 
   /// 将原生图片 [image] 转为展示投影；null 保留普通块/离线草稿语义，题注不展平。
   static CollabImage? _toEditorImage(rust.CollabImage? image) => image == null
@@ -576,6 +597,7 @@ class CollabController extends ChangeNotifier with WidgetsBindingObserver {
           leftBlock.alignment != rightBlock.alignment ||
           leftBlock.indent != rightBlock.indent ||
           leftBlock.replacesId != rightBlock.replacesId ||
+          _toEditorCode(leftBlock.code) != _toEditorCode(rightBlock.code) ||
           _toEditorOrdered(leftBlock.ordered) !=
               _toEditorOrdered(rightBlock.ordered) ||
           _toEditorImage(leftBlock.image) != _toEditorImage(rightBlock.image) ||

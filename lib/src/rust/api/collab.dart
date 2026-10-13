@@ -8,7 +8,7 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 // These functions are ignored because they are not marked as `pub`: `apply_block_snapshot`, `apply_cses_update`, `apply_remote_update`, `apply_text_segments_for_schema`, `apply_text_segments`, `attribute_enabled`, `attribute_string`, `attributes`, `block_text_name`, `blocks`, `compute_text_delta`, `create_compatible_doc`, `handle_wire_message`, `ignored_message`, `is_indentable_block_type`, `is_styled`, `is_supported_alignment`, `is_supported_block_type`, `load_updates`, `migrate_legacy_text`, `open_result`, `open`, `out_bool`, `out_string`, `out_u32`, `persist_update`, `raw_block_ids`, `reconcile_order`, `schema_attribute`, `sync_step1`, `text_segments_for_schema`, `text_segments`, `utf16_len`, `validate_blocks`, `with_engine_mut`, `with_engine`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `CollabEngine`, `TextDelta`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `assert_fields_are_eq`, `assert_fields_are_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `assert_fields_are_eq`, `assert_fields_are_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`
 
 OpenDocumentResult openDocument({
   required String documentId,
@@ -138,6 +138,9 @@ class CollabBlock {
   /// 仅正式 ordered 块携带；普通快照不覆盖设置，显式 numbering_edit 只写 start/continuePrevious。
   final CollabOrdered? ordered;
 
+  /// 代码块头部投影；只有 property_edits 可修改原生属性。
+  final CollabCode? code;
+
   /// 本地类型转换的新身份所替换的旧 ID；成功后投影清空，不进入共享属性。
   final String? replacesId;
 
@@ -155,6 +158,7 @@ class CollabBlock {
     required this.indent,
     this.image,
     this.ordered,
+    this.code,
     this.replacesId,
     this.blockBackgroundColor,
     this.blockBorderColor,
@@ -171,6 +175,7 @@ class CollabBlock {
       indent.hashCode ^
       image.hashCode ^
       ordered.hashCode ^
+      code.hashCode ^
       replacesId.hashCode ^
       blockBackgroundColor.hashCode ^
       blockBorderColor.hashCode;
@@ -189,9 +194,49 @@ class CollabBlock {
           indent == other.indent &&
           image == other.image &&
           ordered == other.ordered &&
+          code == other.code &&
           replacesId == other.replacesId &&
           blockBackgroundColor == other.blockBackgroundColor &&
           blockBorderColor == other.blockBorderColor;
+}
+
+class CollabCode {
+  final String language;
+  final String name;
+  final bool collapsed;
+
+  /// lang/blockName/collapse 原值，保留缺失和 null 以支持精确撤销。
+  final String properties;
+
+  /// 仅显式字段事务携带补丁；普通投影恒为 None。
+  final String? propertyEdits;
+
+  const CollabCode({
+    required this.language,
+    required this.name,
+    required this.collapsed,
+    required this.properties,
+    this.propertyEdits,
+  });
+
+  @override
+  int get hashCode =>
+      language.hashCode ^
+      name.hashCode ^
+      collapsed.hashCode ^
+      properties.hashCode ^
+      propertyEdits.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CollabCode &&
+          runtimeType == other.runtimeType &&
+          language == other.language &&
+          name == other.name &&
+          collapsed == other.collapsed &&
+          properties == other.properties &&
+          propertyEdits == other.propertyEdits;
 }
 
 /// 图片布局与题注投影。尺寸为可选原始属性，None 不等于自动写入默认值。

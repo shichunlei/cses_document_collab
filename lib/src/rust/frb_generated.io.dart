@@ -28,6 +28,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   bool dco_decode_bool(dynamic raw);
 
   @protected
+  CollabCode dco_decode_box_autoadd_collab_code(dynamic raw);
+
+  @protected
   CollabImage dco_decode_box_autoadd_collab_image(dynamic raw);
 
   @protected
@@ -41,6 +44,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   CollabBlock dco_decode_collab_block(dynamic raw);
+
+  @protected
+  CollabCode dco_decode_collab_code(dynamic raw);
 
   @protected
   CollabImage dco_decode_collab_image(dynamic raw);
@@ -79,6 +85,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   String? dco_decode_opt_String(dynamic raw);
 
   @protected
+  CollabCode? dco_decode_opt_box_autoadd_collab_code(dynamic raw);
+
+  @protected
   CollabImage? dco_decode_opt_box_autoadd_collab_image(dynamic raw);
 
   @protected
@@ -114,6 +123,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   bool sse_decode_bool(SseDeserializer deserializer);
 
   @protected
+  CollabCode sse_decode_box_autoadd_collab_code(SseDeserializer deserializer);
+
+  @protected
   CollabImage sse_decode_box_autoadd_collab_image(SseDeserializer deserializer);
 
   @protected
@@ -129,6 +141,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   CollabBlock sse_decode_collab_block(SseDeserializer deserializer);
+
+  @protected
+  CollabCode sse_decode_collab_code(SseDeserializer deserializer);
 
   @protected
   CollabImage sse_decode_collab_image(SseDeserializer deserializer);
@@ -177,6 +192,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   String? sse_decode_opt_String(SseDeserializer deserializer);
 
   @protected
+  CollabCode? sse_decode_opt_box_autoadd_collab_code(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   CollabImage? sse_decode_opt_box_autoadd_collab_image(
     SseDeserializer deserializer,
   );
@@ -222,6 +242,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_bool(bool self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_collab_code(
+    CollabCode self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_box_autoadd_collab_image(
     CollabImage self,
     SseSerializer serializer,
@@ -241,6 +267,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_collab_block(CollabBlock self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_collab_code(CollabCode self, SseSerializer serializer);
 
   @protected
   void sse_encode_collab_image(CollabImage self, SseSerializer serializer);
@@ -298,6 +327,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_opt_String(String? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_collab_code(
+    CollabCode? self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_opt_box_autoadd_collab_image(

@@ -47,6 +47,7 @@ dependencies:
   provider: ^6.1.5+1
   url_launcher: ^6.3.3
   video_player: ^2.14.1
+  val_highlight: ^0.1.0
 
 dev_dependencies:
   flutter_test:

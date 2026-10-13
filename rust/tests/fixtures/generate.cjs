@@ -39,6 +39,15 @@ function fixture(name, extra) {
 }
 
 fixture('blockcraft-basic');
+fixture('blockcraft-code', (_, m) => {
+  m.get('fixture-doc').get('children').push(['code-1']);
+  m.set('code-1', block('code-1', 'code', 'editable', [{
+    insert: "import 'package:flutter/widgets.dart';\n\nvoid main() {\n  print('代码😀');\n}\n",
+  }], {
+    lang: 'Dart', blockName: '这是一段dart代码', h: 240,
+    customCode: { keep: true },
+  }));
+});
 fixture('blockcraft-unknown', (_, m) => {
   m.get('fixture-doc').get('children').push(['table']);
   m.set('table', block('table', 'table', 'block', ['cell']));

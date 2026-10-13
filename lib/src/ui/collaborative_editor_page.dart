@@ -6,6 +6,7 @@ import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_mobile_collab_demo/src/collab/appflowy_block_editor_adapter.dart';
 import 'package:cses_mobile_collab_demo/src/collab/collab_controller.dart';
 import 'package:cses_mobile_collab_demo/src/ui/collab_block_delete.dart';
+import 'package:cses_mobile_collab_demo/src/ui/collab_code_block.dart';
 import 'package:cses_mobile_collab_demo/src/ui/collab_embed_block.dart';
 import 'package:cses_mobile_collab_demo/src/ui/collab_list_editing.dart';
 import 'package:cses_mobile_collab_demo/src/ui/collab_ordered_marker.dart';
@@ -289,13 +290,7 @@ final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders = {
       padding: _listBlockPadding,
     ),
   ),
-  csesCodeBlockType: ParagraphBlockComponentBuilder(
-    configuration: const BlockComponentConfiguration(
-      padding: _codeBlockPadding,
-      textStyle: _codeBlockTextStyle,
-      placeholderText: _codeBlockPlaceholder,
-    ),
-  ),
+  csesCodeBlockType: CollabCodeBlockComponentBuilder(),
 };
 
 /// Reduces the extra gap between body paragraphs while preserving line height.
@@ -378,14 +373,6 @@ InlineSpan _collabTextSpanDecorator(
     spellOut: decorated.spellOut,
   );
 }
-
-EdgeInsets _codeBlockPadding(Node node) =>
-    const EdgeInsets.symmetric(horizontal: 12, vertical: 10);
-
-TextStyle _codeBlockTextStyle(Node node, {TextSpan? textSpan}) =>
-    const TextStyle(fontFamily: 'monospace', fontSize: 15, height: 1.5);
-
-String _codeBlockPlaceholder(Node node) => '输入代码';
 
 class _EditorConnectionBar extends StatelessWidget {
   const _EditorConnectionBar({

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_mobile_collab_demo/src/collab/collab_code.dart';
 import 'package:cses_mobile_collab_demo/src/collab/appflowy_block_editor_adapter.dart';
 import 'package:cses_mobile_collab_demo/src/rust/api/collab.dart' as native;
 import 'package:cses_mobile_collab_demo/src/rust/frb_generated.dart';
@@ -21,6 +22,120 @@ void main() {
       );
     }
   });
+  test(
+    'code headers cross FRB, survive body edits and SQLite restore',
+    () async {
+      final directory = await Directory.systemTemp.createTemp(
+        'code-header-frb-',
+      );
+      AppFlowyBlockEditorAdapter? adapter;
+      try {
+        native.openCsesDocument(
+          documentId: 'fixture-doc',
+          cacheDocumentId: 'code-cache',
+          databasePath: '${directory.path}/updates.sqlite',
+        );
+        native.applyDocumentUpdate(
+          bytes: await File(
+            'rust/tests/fixtures/blockcraft-code.update',
+          ).readAsBytes(),
+        );
+        final before = native.currentBlocks();
+        final code = before.last;
+        expect(code.code!.language, 'Dart');
+        expect(code.code!.name, '这是一段dart代码');
+        adapter = AppFlowyBlockEditorAdapter(
+          initialBlocks: [
+            CollabEditorBlock(
+              id: code.id,
+              blockType: code.blockType,
+              text: code.text,
+              code: CollabCode(
+                language: code.code!.language,
+                name: code.code!.name,
+                collapsed: code.code!.collapsed,
+                rawProperties: code.code!.properties,
+              ),
+            ),
+          ],
+          onLocalBlocksChanged: (blocks) {
+            final value = blocks.single;
+            native.applyBlockSnapshot(
+              blocks: [
+                ...before.take(before.length - 1),
+                native.CollabBlock(
+                  id: value.id,
+                  blockType: value.blockType,
+                  text: value.text,
+                  segments: const [],
+                  checked: false,
+                  alignment: 'left',
+                  indent: 0,
+                  code: value.code == null
+                      ? null
+                      : native.CollabCode(
+                          language: value.code!.language,
+                          name: value.code!.name,
+                          collapsed: value.code!.collapsed,
+                          properties: value.code!.properties,
+                          propertyEdits: value.code!.propertyEdits,
+                        ),
+                ),
+              ],
+            );
+          },
+        );
+        final node = adapter.editorState.document.first!;
+        await adapter.editorState.apply(
+          adapter.editorState.transaction
+            ..insertText(node, code.text.length, '// mobile'),
+        );
+        expect(native.currentBlocks().last.text, '${code.text}// mobile');
+        expect(native.currentBlocks().last.code!.language, 'Dart');
+        await changeCollabCodeProperty(
+          adapter.editorState,
+          code.id,
+          'blockName',
+          '手机名称',
+        );
+        await changeCollabCodeProperty(
+          adapter.editorState,
+          code.id,
+          'lang',
+          'Python',
+        );
+        await changeCollabCodeProperty(
+          adapter.editorState,
+          code.id,
+          'collapse',
+          true,
+        );
+        expect(native.currentBlocks().last.code!.collapsed, isTrue);
+        adapter.editorState.undoManager.undo();
+        await Future<void>.delayed(Duration.zero);
+        expect(native.currentBlocks().last.code!.collapsed, isFalse);
+        expect(native.currentBlocks().last.code!.language, 'Python');
+        adapter.editorState.undoManager.redo();
+        await Future<void>.delayed(Duration.zero);
+        native.closeDocument();
+        final restored = native.openCsesDocument(
+          documentId: 'fixture-doc',
+          cacheDocumentId: 'code-cache',
+          databasePath: '${directory.path}/updates.sqlite',
+        );
+        expect(restored.blocks.last.code!.name, '手机名称');
+        expect(restored.blocks.last.code!.language, 'Python');
+        expect(restored.blocks.last.code!.collapsed, isTrue);
+        expect(restored.blocks.last.text, '${code.text}// mobile');
+      } finally {
+        adapter?.dispose();
+        native.closeDocument();
+        await directory.delete(recursive: true);
+      }
+    },
+    skip: !available,
+  );
+
   test('block colors cross FRB and persist in formal props', () async {
     final directory = await Directory.systemTemp.createTemp(
       'block-colors-frb-',
