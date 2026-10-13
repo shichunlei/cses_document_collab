@@ -34,10 +34,9 @@ enum ConnectionStatus { starting, connecting, online, offline, error }
 /// }
 /// ```
 class CollabController extends ChangeNotifier with WidgetsBindingObserver {
-  /// 创建离线编辑器；[documentId] 是未登录时的本地草稿键，默认 demo-room。
+  /// 创建离线编辑器；[_documentId] 是未登录时的本地草稿键，默认 demo-room。
   /// 不自动连接旧 y-websocket 或 CSES，不读取持久化凭证。
-  CollabController({String documentId = 'demo-room'})
-    : _documentId = documentId {
+  CollabController({this._documentId = 'demo-room'}) {
     _editorAdapter = AppFlowyBlockEditorAdapter(
       onLocalBlocksChanged: _applyEditorBlocks,
     );
@@ -447,6 +446,8 @@ class CollabController extends ChangeNotifier with WidgetsBindingObserver {
                 )
                 .toList(growable: false),
             checked: block.checked,
+            blockBackgroundColor: block.blockBackgroundColor,
+            blockBorderColor: block.blockBorderColor,
             alignment: block.alignment,
             indent: block.indent,
             image: _toEditorImage(block.image),
@@ -484,6 +485,8 @@ class CollabController extends ChangeNotifier with WidgetsBindingObserver {
                 )
                 .toList(growable: false),
             checked: block.checked,
+            blockBackgroundColor: block.blockBackgroundColor,
+            blockBorderColor: block.blockBorderColor,
             alignment: block.alignment,
             indent: block.indent,
             image: _toRustImage(block.image),
@@ -568,6 +571,8 @@ class CollabController extends ChangeNotifier with WidgetsBindingObserver {
           leftBlock.blockType != rightBlock.blockType ||
           leftBlock.text != rightBlock.text ||
           leftBlock.checked != rightBlock.checked ||
+          leftBlock.blockBackgroundColor != rightBlock.blockBackgroundColor ||
+          leftBlock.blockBorderColor != rightBlock.blockBorderColor ||
           leftBlock.alignment != rightBlock.alignment ||
           leftBlock.indent != rightBlock.indent ||
           leftBlock.replacesId != rightBlock.replacesId ||

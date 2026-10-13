@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:cses_mobile_collab_demo/src/ui/collab_block_colors.dart';
+
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_mobile_collab_demo/src/collab/appflowy_block_editor_adapter.dart';
 import 'package:cses_mobile_collab_demo/src/collab/collab_controller.dart';
@@ -226,6 +228,9 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
 
 final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders = {
   ...standardBlockComponentBuilderMap,
+  QuoteBlockKeys.type: QuoteBlockComponentBuilder(
+    iconBuilder: buildCollabQuoteBorder,
+  ),
   ParagraphBlockKeys.type: ParagraphBlockComponentBuilder(
     configuration: standardBlockComponentBuilderMap[ParagraphBlockKeys.type]!
         .configuration

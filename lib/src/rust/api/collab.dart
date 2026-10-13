@@ -141,6 +141,10 @@ class CollabBlock {
   /// 本地类型转换的新身份所替换的旧 ID；成功后投影清空，不进入共享属性。
   final String? replacesId;
 
+  /// 桌面 props.backColor / borderColor；CSS 原值，独立于行内高亮。
+  final String? blockBackgroundColor;
+  final String? blockBorderColor;
+
   const CollabBlock({
     required this.id,
     required this.blockType,
@@ -152,6 +156,8 @@ class CollabBlock {
     this.image,
     this.ordered,
     this.replacesId,
+    this.blockBackgroundColor,
+    this.blockBorderColor,
   });
 
   @override
@@ -165,7 +171,9 @@ class CollabBlock {
       indent.hashCode ^
       image.hashCode ^
       ordered.hashCode ^
-      replacesId.hashCode;
+      replacesId.hashCode ^
+      blockBackgroundColor.hashCode ^
+      blockBorderColor.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -181,7 +189,9 @@ class CollabBlock {
           indent == other.indent &&
           image == other.image &&
           ordered == other.ordered &&
-          replacesId == other.replacesId;
+          replacesId == other.replacesId &&
+          blockBackgroundColor == other.blockBackgroundColor &&
+          blockBorderColor == other.blockBorderColor;
 }
 
 /// 图片布局与题注投影。尺寸为可选原始属性，None 不等于自动写入默认值。
@@ -248,7 +258,8 @@ class CollabImageCaption {
 }
 
 /// 正式有序列表投影；order 为零基，start 为归一化的一基起始编号。
-/// heading/depth 共同划分计数器；普通快照只读，只有 numbering_edit 能改变编号设置。
+/// heading/depth 共同划分计数器；既有同类型快照只读，只有 numbering_edit 能改变设置。
+/// 新身份类型替换可从 numbering 初始化历史设置，order 仍由结构重算，不扩展 WS 协议。
 class CollabOrdered {
   final int order;
   final int? start;

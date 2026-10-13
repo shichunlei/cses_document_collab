@@ -626,8 +626,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   CollabBlock dco_decode_collab_block(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 10)
-      throw Exception('unexpected arr length: expect 10 but see ${arr.length}');
+    if (arr.length != 12)
+      throw Exception('unexpected arr length: expect 12 but see ${arr.length}');
     return CollabBlock(
       id: dco_decode_String(arr[0]),
       blockType: dco_decode_String(arr[1]),
@@ -639,6 +639,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       image: dco_decode_opt_box_autoadd_collab_image(arr[7]),
       ordered: dco_decode_opt_box_autoadd_collab_ordered(arr[8]),
       replacesId: dco_decode_opt_String(arr[9]),
+      blockBackgroundColor: dco_decode_opt_String(arr[10]),
+      blockBorderColor: dco_decode_opt_String(arr[11]),
     );
   }
 
@@ -887,6 +889,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_image = sse_decode_opt_box_autoadd_collab_image(deserializer);
     var var_ordered = sse_decode_opt_box_autoadd_collab_ordered(deserializer);
     var var_replacesId = sse_decode_opt_String(deserializer);
+    var var_blockBackgroundColor = sse_decode_opt_String(deserializer);
+    var var_blockBorderColor = sse_decode_opt_String(deserializer);
     return CollabBlock(
       id: var_id,
       blockType: var_blockType,
@@ -898,6 +902,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       image: var_image,
       ordered: var_ordered,
       replacesId: var_replacesId,
+      blockBackgroundColor: var_blockBackgroundColor,
+      blockBorderColor: var_blockBorderColor,
     );
   }
 
@@ -1220,6 +1226,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_opt_box_autoadd_collab_image(self.image, serializer);
     sse_encode_opt_box_autoadd_collab_ordered(self.ordered, serializer);
     sse_encode_opt_String(self.replacesId, serializer);
+    sse_encode_opt_String(self.blockBackgroundColor, serializer);
+    sse_encode_opt_String(self.blockBorderColor, serializer);
   }
 
   @protected

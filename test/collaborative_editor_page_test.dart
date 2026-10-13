@@ -22,6 +22,69 @@ void main() {
         );
   });
 
+  testWidgets(
+    'desktop quote background and border render in edit and preview',
+    (tester) async {
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: const [
+          CollabEditorBlock(
+            id: 'quote',
+            blockType: 'quote',
+            text: '引用正文',
+            blockBackgroundColor: '#ffecdf',
+            blockBorderColor: 'rgba(255, 0, 0, 0.5)',
+          ),
+        ],
+        onLocalBlocksChanged: (_) {},
+      );
+      addTearDown(adapter.dispose);
+      final collab = _ReadyCollabController(
+        testEditorState: adapter.editorState,
+      );
+      addTearDown(collab.dispose);
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            AppFlowyEditorLocalizations.delegate,
+          ],
+          home: CollaborativeEditorPage(collab: collab),
+        ),
+      );
+      await tester.pumpAndSettle();
+      void expectColors() {
+        final border = tester.widget<Container>(
+          find.byKey(const ValueKey('collab-quote-border')),
+        );
+        expect(border.color, const Color.fromRGBO(255, 0, 0, 0.5));
+        final containers = tester.widgetList<Container>(
+          find.descendant(
+            of: find.byType(QuoteBlockComponentWidget),
+            matching: find.byType(Container),
+          ),
+        );
+        expect(
+          containers.any(
+            (c) =>
+                c.decoration is BoxDecoration &&
+                (c.decoration! as BoxDecoration).color ==
+                    const Color(0xffffecdf),
+          ),
+          isTrue,
+        );
+        expect(tester.takeException(), isNull);
+      }
+
+      expectColors();
+      await tester.tap(find.byKey(const ValueKey('editor-mode-toggle')));
+      await tester.pumpAndSettle();
+      expectColors();
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+  );
+
   for (final blockType in [
     ParagraphBlockKeys.type,
     NumberedListBlockKeys.type,

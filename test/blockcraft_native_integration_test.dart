@@ -21,6 +21,77 @@ void main() {
       );
     }
   });
+  test('block colors cross FRB and persist in formal props', () async {
+    final directory = await Directory.systemTemp.createTemp(
+      'block-colors-frb-',
+    );
+    try {
+      native.openCsesDocument(
+        documentId: 'fixture-doc',
+        cacheDocumentId: 'color-cache',
+        databasePath: '${directory.path}/updates.sqlite',
+      );
+      native.applyDocumentUpdate(
+        bytes: await File(
+          'rust/tests/fixtures/blockcraft-basic.update',
+        ).readAsBytes(),
+      );
+      final before = native.currentBlocks();
+      final block = before.first;
+      final result = native.applyBlockSnapshot(
+        blocks: [
+          native.CollabBlock(
+            id: block.id,
+            blockType: block.blockType,
+            text: block.text,
+            segments: block.segments,
+            checked: block.checked,
+            alignment: block.alignment,
+            indent: block.indent,
+            blockBackgroundColor: '#ffecdf',
+            blockBorderColor: '#f00',
+          ),
+          ...before.skip(1),
+        ],
+      );
+      expect(result.blocks.first.blockBackgroundColor, '#ffecdf');
+      expect(result.blocks.first.blockBorderColor, '#f00');
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: [
+          CollabEditorBlock(
+            id: block.id,
+            blockType: block.blockType,
+            text: block.text,
+            blockBackgroundColor: result.blocks.first.blockBackgroundColor,
+            blockBorderColor: result.blocks.first.blockBorderColor,
+          ),
+        ],
+        onLocalBlocksChanged: (_) {},
+      );
+      expect(adapter.blocks.single.blockBackgroundColor, '#ffecdf');
+      expect(
+        adapter
+            .editorState
+            .document
+            .first!
+            .attributes[blockComponentBackgroundColor],
+        '0xffffecdf',
+      );
+      adapter.dispose();
+      native.closeDocument();
+      final restored = native.openCsesDocument(
+        documentId: 'fixture-doc',
+        cacheDocumentId: 'color-cache',
+        databasePath: '${directory.path}/updates.sqlite',
+      );
+      expect(restored.blocks.first.blockBorderColor, '#f00');
+      expect(restored.blocks.first.blockBackgroundColor, '#ffecdf');
+    } finally {
+      native.closeDocument();
+      await directory.delete(recursive: true);
+    }
+  }, skip: !available);
+
   test(
     'ordered replacements, deletion and undo cross FRB with native metadata',
     () async {

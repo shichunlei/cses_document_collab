@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_mobile_collab_demo/src/collab/appflowy_block_editor_adapter.dart';
+import 'package:cses_mobile_collab_demo/src/collab/collab_block_colors.dart';
 import 'package:cses_mobile_collab_demo/src/ui/collab_block_delete.dart';
 import 'package:cses_mobile_collab_demo/src/ui/collab_list_editing.dart';
 import 'package:cses_common/observability/api/log.dart';
@@ -457,6 +458,69 @@ class _BlockLayoutMenu extends StatefulWidget {
 
 /// 根据当前选区展示可用操作；点击时重新校验，事务完成后在仍挂载且编辑器未更换时刷新。
 class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
+  String? _colorAttribute;
+
+  Widget _buildBlockColors(List<Node> nodes) {
+    final attribute = _colorAttribute!;
+    final isBorder = attribute == csesBlockBorderColorAttribute;
+    final prefix = isBorder
+        ? 'editor-block-border-color'
+        : 'editor-block-background-color';
+    final colors = isBorder ? _textColors : _backgroundColors;
+    final targets = nodes
+        .where(
+          (node) =>
+              node.delta != null &&
+              (!isBorder || node.type == QuoteBlockKeys.type),
+        )
+        .toList();
+    final current = targets.isEmpty
+        ? null
+        : parseCollabBlockColor(targets.first.attributes[attribute] as String?);
+    final uniform = targets.every(
+      (n) =>
+          parseCollabBlockColor(n.attributes[attribute] as String?) == current,
+    );
+    return ListView(
+      key: ValueKey('$prefix-menu'),
+      scrollDirection: Axis.horizontal,
+      children: [
+        _PopupIconButton(
+          key: ValueKey('$prefix-back'),
+          tooltip: '返回块布局',
+          selected: false,
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => setState(() => _colorAttribute = null),
+        ),
+        _PopupIconButton(
+          key: ValueKey('$prefix-default'),
+          tooltip: isBorder ? '默认线条颜色' : '清除块背景色',
+          selected: uniform && current == null,
+          icon: const Icon(Icons.format_color_reset),
+          onPressed: () => _setBlockColor(null),
+        ),
+        for (final color in colors)
+          Padding(
+            padding: const EdgeInsets.only(right: 6),
+            child: _PopupIconButton(
+              key: ValueKey('$prefix-${color.name}'),
+              tooltip: color.label,
+              selected: uniform && current == color.color,
+              icon: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: color.color,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: const Color(0x22000000)),
+                ),
+                child: const SizedBox.square(dimension: 25),
+              ),
+              onPressed: () => _setBlockColor(color.color),
+            ),
+          ),
+      ],
+    );
+  }
+
   Future<void> _setBlockColor(Color? color) async {
     final state = widget.editorState;
     final selection = state.selection;
@@ -504,6 +568,7 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
       return const SizedBox.shrink();
     }
     final nodes = widget.editorState.getNodesInSelection(selection);
+    if (_colorAttribute != null) return _buildBlockColors(nodes);
     final canOutdent = canChangeCollabListIndent(widget.editorState, -1);
     final canIncreaseIndent = canChangeCollabListIndent(widget.editorState, 1);
 
@@ -545,6 +610,25 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
           ),
           const SizedBox(width: 5),
         ],
+        _PopupIconButton(
+          key: const ValueKey('editor-block-background-color'),
+          tooltip: '块背景色',
+          enabled: nodes.any((n) => n.delta != null),
+          selected: false,
+          icon: const Icon(Icons.format_color_fill, size: 28),
+          onPressed: () => setState(
+            () => _colorAttribute = csesBlockBackgroundColorAttribute,
+          ),
+        ),
+        if (nodes.any((n) => n.type == QuoteBlockKeys.type))
+          _PopupIconButton(
+            key: const ValueKey('editor-block-border-color'),
+            tooltip: '左侧线条颜色',
+            selected: false,
+            icon: const Icon(Icons.border_left, size: 28),
+            onPressed: () =>
+                setState(() => _colorAttribute = csesBlockBorderColorAttribute),
+          ),
       ],
     );
   }

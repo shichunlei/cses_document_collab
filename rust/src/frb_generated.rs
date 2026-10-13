@@ -618,6 +618,8 @@ impl SseDecode for crate::api::collab::CollabBlock {
         let mut var_image = <Option<crate::api::collab::CollabImage>>::sse_decode(deserializer);
         let mut var_ordered = <Option<crate::api::collab::CollabOrdered>>::sse_decode(deserializer);
         let mut var_replacesId = <Option<String>>::sse_decode(deserializer);
+        let mut var_blockBackgroundColor = <Option<String>>::sse_decode(deserializer);
+        let mut var_blockBorderColor = <Option<String>>::sse_decode(deserializer);
         return crate::api::collab::CollabBlock {
             id: var_id,
             block_type: var_blockType,
@@ -629,6 +631,8 @@ impl SseDecode for crate::api::collab::CollabBlock {
             image: var_image,
             ordered: var_ordered,
             replaces_id: var_replacesId,
+            block_background_color: var_blockBackgroundColor,
+            block_border_color: var_blockBorderColor,
         };
     }
 }
@@ -968,6 +972,8 @@ impl flutter_rust_bridge::IntoDart for crate::api::collab::CollabBlock {
             self.image.into_into_dart().into_dart(),
             self.ordered.into_into_dart().into_dart(),
             self.replaces_id.into_into_dart().into_dart(),
+            self.block_background_color.into_into_dart().into_dart(),
+            self.block_border_color.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -1166,6 +1172,8 @@ impl SseEncode for crate::api::collab::CollabBlock {
         <Option<crate::api::collab::CollabImage>>::sse_encode(self.image, serializer);
         <Option<crate::api::collab::CollabOrdered>>::sse_encode(self.ordered, serializer);
         <Option<String>>::sse_encode(self.replaces_id, serializer);
+        <Option<String>>::sse_encode(self.block_background_color, serializer);
+        <Option<String>>::sse_encode(self.block_border_color, serializer);
     }
 }
 

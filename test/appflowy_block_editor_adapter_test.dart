@@ -5,6 +5,49 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test(
+    'remote block colors update in place and survive text editing',
+    () async {
+      final changes = <List<CollabEditorBlock>>[];
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: const [
+          CollabEditorBlock(
+            id: 'q',
+            blockType: 'quote',
+            text: '引用',
+            blockBackgroundColor: '#ffecdf',
+            blockBorderColor: 'rgba(255, 0, 0, 0.5)',
+          ),
+        ],
+        onLocalBlocksChanged: changes.add,
+      );
+      addTearDown(adapter.dispose);
+      final node = adapter.editorState.document.first!;
+      expect(node.attributes[blockComponentBackgroundColor], '0xffffecdf');
+      await adapter.replaceFromRemote(const [
+        CollabEditorBlock(
+          id: 'q',
+          blockType: 'quote',
+          text: '引用',
+          blockBackgroundColor: '#def',
+          blockBorderColor: '#f00',
+        ),
+      ]);
+      expect(identical(adapter.editorState.document.first, node), isTrue);
+      expect(changes, isEmpty);
+      final transaction = adapter.editorState.transaction
+        ..insertText(node, 2, '正文');
+      await adapter.editorState.apply(transaction);
+      expect(changes.last.single.blockBackgroundColor, '#def');
+      expect(changes.last.single.blockBorderColor, '#f00');
+      await adapter.replaceFromRemote(const [
+        CollabEditorBlock(id: 'q', blockType: 'quote', text: '引用正文'),
+      ]);
+      expect(node.attributes[blockComponentBackgroundColor], isNull);
+      expect(adapter.blocks.single.blockBorderColor, isNull);
+    },
+  );
+
+  test(
     'list conversion and undo publish distinct replacement identities',
     () async {
       final changes = <List<CollabEditorBlock>>[];

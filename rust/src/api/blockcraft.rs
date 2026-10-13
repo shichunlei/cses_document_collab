@@ -205,6 +205,7 @@ pub(super) fn validate(doc: &Doc, root_id: &str) -> Result<(), String> {
                 | BLOCK_CHECKED_NAME
                 | BLOCK_ALIGN_NAME
                 | BLOCK_INDENT_NAME
+                | BLOCK_COLORS_NAME
                 | LEGACY_TEXT_NAME
         ) || name.starts_with(BLOCK_TEXT_PREFIX);
         // V1 根类型在首次接收时可能是 UndefinedRef，按 Map/序列两个分量检查实际数据。
@@ -349,6 +350,7 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                     | BLOCK_CHECKED_NAME
                     | BLOCK_ALIGN_NAME
                     | BLOCK_INDENT_NAME
+                    | BLOCK_COLORS_NAME
                     | LEGACY_TEXT_NAME
             )
         {
@@ -461,6 +463,8 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
         result.blocks.push(CollabBlock {
             ordered: ordered.get(&id).map(|v| v.0.clone()),
             replaces_id: None,
+            block_background_color: out_string(props.get(&txn, "backColor")),
+            block_border_color: out_string(props.get(&txn, "borderColor")),
             id,
             text,
             segments,
@@ -738,6 +742,27 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
                 props.try_update(&mut txn, align_key, next.alignment.clone());
             }
         }
+        for (key, previous, color) in [
+            (
+                "backColor",
+                old.and_then(|b| b.block_background_color.as_ref()),
+                next.block_background_color.as_ref(),
+            ),
+            (
+                "borderColor",
+                old.and_then(|b| b.block_border_color.as_ref()),
+                next.block_border_color.as_ref(),
+            ),
+        ] {
+            // 普通正文编辑不重写颜色，保留桌面 null、缺失及未知值。
+            if previous != color {
+                if let Some(color) = color {
+                    props.try_update(&mut txn, key, css_color(Any::String(color.clone().into())));
+                } else {
+                    props.remove(&mut txn, key);
+                }
+            }
+        }
         if old.is_none_or(|b| b.indent != next.indent) {
             props.try_update(&mut txn, "depth", next.indent as i64);
         }
@@ -988,6 +1013,59 @@ mod tests {
         engine.blockcraft_root_id = Some("fixture-doc".into());
         engine.apply_cses_update(bytes.to_vec()).unwrap();
         engine
+    }
+
+    #[test]
+    fn block_colors_roundtrip_without_touching_inline_formats_or_unknown_props() {
+        let mut phone = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-basic.update"
+        ));
+        let mut desktop = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-basic.update"
+        ));
+        let mut desired = phone.blocks();
+        desired[0].block_background_color = Some("#ffecdf".into());
+        desired[0].block_border_color = Some("rgba(255, 0, 0, 0.5)".into());
+        let update = phone.apply_block_snapshot(desired).unwrap();
+        desktop.apply_cses_update(update.v1_update).unwrap();
+        assert_eq!(phone.blocks(), desktop.blocks());
+        let before = phone.blocks()[0].clone();
+        let props_before = {
+            let txn = phone.doc.transact();
+            let blocks = txn.get_map(ROOT_NAME).unwrap();
+            let block = map(&blocks, &txn, &before.id).unwrap();
+            map(&block, &txn, "props").unwrap().to_json(&txn)
+        };
+        let mut edited = phone.blocks();
+        edited[0].text.push_str("正文");
+        edited[0].segments.clear();
+        phone.apply_block_snapshot(edited).unwrap();
+        {
+            let txn = phone.doc.transact();
+            let blocks = txn.get_map(ROOT_NAME).unwrap();
+            let block = map(&blocks, &txn, &before.id).unwrap();
+            assert_eq!(
+                map(&block, &txn, "props").unwrap().to_json(&txn),
+                props_before
+            );
+        }
+        let mut cleared = phone.blocks();
+        cleared[0].block_background_color = None;
+        phone.apply_block_snapshot(cleared).unwrap();
+        let actual = phone.blocks();
+        assert_eq!(actual[0].block_background_color, None);
+        assert_eq!(actual[0].block_border_color, before.block_border_color);
+        let mut restored = actual;
+        restored[0].block_background_color = before.block_background_color;
+        phone.apply_block_snapshot(restored).unwrap();
+        let path = phone.database_path.clone();
+        drop(phone);
+        let mut reopened = CollabEngine::open("fixture-doc".into(), path).unwrap().0;
+        reopened.blockcraft_root_id = Some("fixture-doc".into());
+        assert_eq!(
+            reopened.blocks()[0].block_background_color.as_deref(),
+            Some("#ffecdf")
+        );
     }
 
     /// 通过正式完整快照提交一项显式编号设置；其他块只作为只读设置投影。
@@ -1597,6 +1675,8 @@ mod tests {
                 image: None,
                 ordered: None,
                 replaces_id: None,
+                block_background_color: None,
+                block_border_color: None,
             },
         );
         engine.apply_block_snapshot(desired.clone()).unwrap();
@@ -1692,6 +1772,8 @@ mod tests {
             image: None,
             ordered: None,
             replaces_id: None,
+            block_background_color: None,
+            block_border_color: None,
         };
         for kind in ["image", "video", "paragraph"] {
             if kind != "image" {

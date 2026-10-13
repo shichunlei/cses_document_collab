@@ -20,6 +20,7 @@ const BLOCK_META_NAME: &str = "cses_mobile_block_meta";
 const BLOCK_CHECKED_NAME: &str = "cses_mobile_block_checked";
 const BLOCK_ALIGN_NAME: &str = "cses_mobile_block_align";
 const BLOCK_INDENT_NAME: &str = "cses_mobile_block_indent";
+const BLOCK_COLORS_NAME: &str = "cses_mobile_block_colors";
 const BLOCK_TEXT_PREFIX: &str = "cses_mobile_block_text:";
 const LEGACY_TEXT_NAME: &str = "cses_demo_text";
 const LEGACY_BLOCK_ID: &str = "legacy-shared-text";
@@ -94,6 +95,9 @@ pub struct CollabBlock {
     pub ordered: Option<CollabOrdered>,
     /// 本地类型转换的新身份所替换的旧 ID；成功后投影清空，不进入共享属性。
     pub replaces_id: Option<String>,
+    /// 桌面 props.backColor / borderColor；CSS 原值，独立于行内高亮。
+    pub block_background_color: Option<String>,
+    pub block_border_color: Option<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -129,6 +133,7 @@ struct CollabEngine {
     block_checked: MapRef,
     block_align: MapRef,
     block_indent: MapRef,
+    block_colors: MapRef,
     connection: Connection,
     /// Some 时使用正式 blocks 根；值是业务 docId，不能以本机哈希缓存键替代。
     blockcraft_root_id: Option<String>,
@@ -168,6 +173,7 @@ impl CollabEngine {
         let block_checked = doc.get_or_insert_map(BLOCK_CHECKED_NAME);
         let block_align = doc.get_or_insert_map(BLOCK_ALIGN_NAME);
         let block_indent = doc.get_or_insert_map(BLOCK_INDENT_NAME);
+        let block_colors = doc.get_or_insert_map(BLOCK_COLORS_NAME);
         let updates = load_updates(&connection, &document_id)?;
         for payload in &updates {
             let update = Update::decode_v1(payload)
@@ -187,6 +193,7 @@ impl CollabEngine {
             block_checked,
             block_align,
             block_indent,
+            block_colors,
             connection,
             blockcraft_root_id: None,
         };
@@ -231,7 +238,7 @@ impl CollabEngine {
                     0
                 };
                 Some(CollabBlock {
-                    id,
+                    id: id.clone(),
                     block_type,
                     text: text_ref.get_string(&transaction),
                     segments: text_segments(&text_ref, &transaction),
@@ -241,6 +248,13 @@ impl CollabEngine {
                     image: None,
                     ordered: None,
                     replaces_id: None,
+                    block_background_color: out_string(
+                        self.block_colors
+                            .get(&transaction, &format!("{id}:background")),
+                    ),
+                    block_border_color: out_string(
+                        self.block_colors.get(&transaction, &format!("{id}:border")),
+                    ),
                 })
             })
             .collect()
@@ -321,6 +335,10 @@ impl CollabEngine {
                     self.block_checked.remove(&mut transaction, &id);
                     self.block_align.remove(&mut transaction, &id);
                     self.block_indent.remove(&mut transaction, &id);
+                    self.block_colors
+                        .remove(&mut transaction, &format!("{id}:background"));
+                    self.block_colors
+                        .remove(&mut transaction, &format!("{id}:border"));
                 }
             }
 
@@ -347,6 +365,18 @@ impl CollabEngine {
                     block.id.clone(),
                     block.indent as i64,
                 );
+                for (suffix, color) in [
+                    ("background", &block.block_background_color),
+                    ("border", &block.block_border_color),
+                ] {
+                    let key = format!("{}:{suffix}", block.id);
+                    if let Some(color) = color {
+                        self.block_colors
+                            .try_update(&mut transaction, key, color.clone());
+                    } else {
+                        self.block_colors.remove(&mut transaction, &key);
+                    }
+                }
                 let delta = compute_text_delta(current_text, &block.text);
                 if delta.delete_length > 0 {
                     text_ref.remove_range(&mut transaction, delta.index, delta.delete_length);
@@ -422,6 +452,7 @@ impl CollabEngine {
                     | BLOCK_CHECKED_NAME
                     | BLOCK_ALIGN_NAME
                     | BLOCK_INDENT_NAME
+                    | BLOCK_COLORS_NAME
                     | LEGACY_TEXT_NAME
             ) || name.starts_with(BLOCK_TEXT_PREFIX)
         });
@@ -523,6 +554,8 @@ impl CollabEngine {
             image: None,
             ordered: None,
             replaces_id: None,
+            block_background_color: None,
+            block_border_color: None,
         }])?;
         Ok(true)
     }
@@ -1172,6 +1205,8 @@ mod tests {
             image: None,
             ordered: None,
             replaces_id: None,
+            block_background_color: None,
+            block_border_color: None,
         }
     }
 

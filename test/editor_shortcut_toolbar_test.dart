@@ -950,6 +950,66 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets(
+    'quote colors change independently and can be cleared and undone',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(600, 844));
+      final state = _editorState(text: '引用正文', blockType: QuoteBlockKeys.type);
+      state.selection = Selection.single(path: [0], startOffset: 2);
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        state.dispose();
+        await tester.binding.setSurfaceSize(null);
+      });
+      await tester.pumpWidget(_toolbarApp(state));
+      await tester.pump();
+      await tester.tap(
+        find.byKey(const ValueKey('editor-shortcut-block-layout')),
+      );
+      await tester.pump();
+      await tester.tap(find.byKey(const ValueKey('editor-block-border-color')));
+      await tester.pump();
+      await tester.tap(
+        find.byKey(const ValueKey('editor-block-border-color-red')),
+      );
+      await tester.pumpAndSettle();
+      final node = state.document.first!;
+      final border = node.attributes[csesBlockBorderColorAttribute];
+      expect(border, contains('244, 67, 54'));
+      expect(state.selection?.startIndex, 2);
+      await tester.tap(
+        find.byKey(const ValueKey('editor-block-border-color-back')),
+      );
+      await tester.pump();
+      await tester.tap(
+        find.byKey(const ValueKey('editor-block-background-color')),
+      );
+      await tester.pump();
+      await tester.tap(
+        find.byKey(const ValueKey('editor-block-background-color-yellow')),
+      );
+      await tester.pumpAndSettle();
+      final background = node.attributes[csesBlockBackgroundColorAttribute];
+      expect(background, contains('255, 193, 7'));
+      expect(node.attributes[csesBlockBorderColorAttribute], border);
+      expect(node.delta!.toPlainText(), '引用正文');
+      expect(
+        node.delta!.first.attributes?[AppFlowyRichTextKeys.backgroundColor],
+        isNull,
+      );
+      await tester.tap(
+        find.byKey(const ValueKey('editor-block-background-color-default')),
+      );
+      await tester.pumpAndSettle();
+      expect(node.attributes[csesBlockBackgroundColorAttribute], isNull);
+      state.undoManager.undo();
+      await tester.pumpAndSettle();
+      expect(node.attributes[csesBlockBackgroundColorAttribute], background);
+      expect(node.attributes[csesBlockBorderColorAttribute], border);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   testWidgets('block layout menu aligns and indents list blocks', (
     tester,
   ) async {

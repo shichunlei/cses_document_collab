@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_mobile_collab_demo/src/collab/collab_block_colors.dart';
 import 'package:cses_mobile_collab_demo/src/collab/collab_image.dart';
 import 'package:cses_mobile_collab_demo/src/collab/collab_ordered.dart';
 import 'package:cses_mobile_collab_demo/src/collab/text_delta.dart' as collab;
@@ -46,6 +47,8 @@ const csesDefaultDocumentCoverUrl =
 const csesEmbedUrlAttribute = 'url';
 const csesBlockIndentAttribute = 'cses_collab_indent';
 const csesSuperscriptAttribute = 'cses_superscript';
+const csesBlockBackgroundColorAttribute = 'cses_block_background_color';
+const csesBlockBorderColorAttribute = 'cses_block_border_color';
 const csesSubscriptAttribute = 'cses_subscript';
 
 /// AppFlowy 内存中的正式列表投影，不直接写入原生 props。
@@ -264,6 +267,8 @@ final class CollabEditorBlock {
     this.image,
     this.ordered,
     this.replacesId,
+    this.blockBackgroundColor,
+    this.blockBorderColor,
   });
 
   /// Rust 权威块身份，移动和编辑时保持不变。
@@ -296,6 +301,10 @@ final class CollabEditorBlock {
   /// 本地新块所替换的原块身份，普通编辑和远端投影为 null。
   final String? replacesId;
 
+  /// 桌面块外观 CSS 原值，独立于 Delta 的文字高亮。
+  final String? blockBackgroundColor;
+  final String? blockBorderColor;
+
   /// 计算完整投影哈希，图片布局与题注包含在内。
   @override
   int get hashCode => Object.hash(
@@ -309,6 +318,8 @@ final class CollabEditorBlock {
     image,
     ordered,
     replacesId,
+    blockBackgroundColor,
+    blockBorderColor,
   );
 
   /// 与 [other] 比较完整投影及待消费替换来源，供本地发布去重和远端刷新使用。
@@ -324,7 +335,9 @@ final class CollabEditorBlock {
         other.indent == indent &&
         other.image == image &&
         other.ordered == ordered &&
-        other.replacesId == replacesId;
+        other.replacesId == replacesId &&
+        other.blockBackgroundColor == blockBackgroundColor &&
+        other.blockBorderColor == blockBorderColor;
   }
 
   @override
@@ -467,12 +480,21 @@ final class AppFlowyBlockEditorAdapter {
         final targetIndent = _supportsIndent(target.blockType)
             ? target.indent
             : 0;
-        if (node.attributes[blockComponentAlign] != target.alignment ||
+        if (node.attributes[csesBlockBackgroundColorAttribute] !=
+                target.blockBackgroundColor ||
+            node.attributes[csesBlockBorderColorAttribute] !=
+                target.blockBorderColor ||
+            node.attributes[blockComponentAlign] != target.alignment ||
             node.attributes[csesBlockIndentAttribute] != targetIndent ||
             _readOrdered(node) != target.ordered ||
             node.attributes[csesReplacementSourceAttribute] !=
                 target.replacesId) {
           transaction.updateNode(node, {
+            csesBlockBackgroundColorAttribute: target.blockBackgroundColor,
+            csesBlockBorderColorAttribute: target.blockBorderColor,
+            blockComponentBackgroundColor: parseCollabBlockColor(
+              target.blockBackgroundColor,
+            )?.toHex(),
             blockComponentAlign: target.alignment,
             csesBlockIndentAttribute: targetIndent,
             csesOrderedAttribute: target.ordered?.toJson(),
@@ -643,6 +665,11 @@ final class AppFlowyBlockEditorAdapter {
           if (isImage && block.image != null)
             collabImageAttribute: block.image!.toJson(),
           collabBlockIdAttribute: block.id,
+          csesBlockBackgroundColorAttribute: block.blockBackgroundColor,
+          csesBlockBorderColorAttribute: block.blockBorderColor,
+          blockComponentBackgroundColor: parseCollabBlockColor(
+            block.blockBackgroundColor,
+          )?.toHex(),
           blockComponentAlign: block.alignment,
           csesBlockIndentAttribute: 0,
         },
@@ -707,6 +734,11 @@ final class AppFlowyBlockEditorAdapter {
         if (block.ordered != null) csesOrderedTargetAttribute: block.id,
         if (block.replacesId != null)
           csesReplacementSourceAttribute: block.replacesId,
+        csesBlockBackgroundColorAttribute: block.blockBackgroundColor,
+        csesBlockBorderColorAttribute: block.blockBorderColor,
+        blockComponentBackgroundColor: parseCollabBlockColor(
+          block.blockBackgroundColor,
+        )?.toHex(),
         blockComponentAlign: block.alignment,
         csesBlockIndentAttribute: _supportsIndent(block.blockType)
             ? block.indent
@@ -798,6 +830,10 @@ final class AppFlowyBlockEditorAdapter {
         checked:
             node.type == TodoListBlockKeys.type &&
             (node.attributes[TodoListBlockKeys.checked] as bool? ?? false),
+        blockBackgroundColor:
+            node.attributes[csesBlockBackgroundColorAttribute] as String?,
+        blockBorderColor:
+            node.attributes[csesBlockBorderColorAttribute] as String?,
         alignment: _nodeAlignment(node),
         indent: _supportsIndent(_nodeBlockType(node))
             ? (node.attributes[csesBlockIndentAttribute] as int? ?? 0).clamp(
