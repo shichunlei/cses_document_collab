@@ -103,3 +103,18 @@ fixture('blockcraft-callout', (_, m) => {
   }], { customBody: 42 }));
   m.set('callout-second', block('callout-second', 'paragraph', 'editable', [{ insert: '第二段正文' }], {}));
 });
+
+// Desktop VideoBlockSchema: url + sourceType, not image's src property.
+fixture('blockcraft-video', (_, m) => {
+  m.get('fixture-doc').get('children').push(['video-1', 'empty-video', 'embed-video']);
+  m.set('video-1', block('video-1', 'video', 'void', [], {
+    url: 'https://example.test/video.mp4', sourceType: 'link',
+    poster: 'https://example.test/poster.jpg', wr: 80, customVideo: { keep: true },
+  }));
+  m.set('empty-video', block('empty-video', 'video', 'void', [], {
+    url: '', sourceType: 'local', name: '等待上传.mp4',
+  }));
+  m.set('embed-video', block('embed-video', 'video', 'void', [], {
+    url: '<iframe src="https://example.test/embed"></iframe>', sourceType: 'embed',
+  }));
+});

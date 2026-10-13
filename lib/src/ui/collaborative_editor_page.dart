@@ -236,6 +236,8 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
 final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders =
     {
       ...standardBlockComponentBuilderMap,
+      // Renderer validation failures use the same card as native opaque blocks.
+      errorBlockComponentBuilderKey: CollabUnsupportedBlockComponentBuilder(),
       QuoteBlockKeys.type: QuoteBlockComponentBuilder(
         iconBuilder: buildCollabQuoteBorder,
       ),

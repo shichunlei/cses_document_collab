@@ -5,6 +5,7 @@ import 'package:cses_common/observability/api/log.dart';
 import 'package:cses_mobile_collab_demo/src/collab/appflowy_block_editor_adapter.dart';
 import 'package:cses_mobile_collab_demo/src/collab/collab_image.dart';
 import 'package:cses_mobile_collab_demo/src/ui/collab_image_content.dart';
+import 'package:cses_mobile_collab_demo/src/ui/collab_unsupported_block.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -30,7 +31,7 @@ typedef CollabCoverEditCallback =
 
 /// 构建可选中的链接、视频、封面和正式图片；复用同一选区与资源块生命周期。
 ///
-/// 资源地址通过节点 url 属性和 CollabBlock.text 传递；正式媒体使用 props.src，
+/// 资源地址通过节点 url 属性和 CollabBlock.text 传递；正式图片使用 props.src，视频使用 props.url，
 /// 离线草稿使用私有 Y.Text，桥接调用方不直接解析共享类型。
 /// 正式图片另携带布局和题注，写入原 props/children；不会把题注展平到根。
 /// ```dart
@@ -57,6 +58,15 @@ class CollabEmbedBlockComponentBuilder extends BlockComponentBuilder {
   @override
   BlockComponentWidget build(BlockComponentContext blockComponentContext) {
     final node = blockComponentContext.node;
+    if (kind == CollabEmbedKind.video) {
+      final url = node.attributes[csesEmbedUrlAttribute];
+      final uri = url is String ? Uri.tryParse(url) : null;
+      if (uri == null || !_isSupportedNetworkUri(uri)) {
+        return CollabUnsupportedBlockComponentBuilder().build(
+          blockComponentContext,
+        );
+      }
+    }
     if (kind == CollabEmbedKind.image &&
         node.attributes[collabImageAttribute] == null) {
       return ImageBlockComponentBuilder(
@@ -86,6 +96,7 @@ class CollabEmbedBlockComponentBuilder extends BlockComponentBuilder {
         url is String &&
         (kind == CollabEmbedKind.cover ||
             kind == CollabEmbedKind.image ||
+            kind == CollabEmbedKind.video ||
             url.isNotEmpty);
   };
 }

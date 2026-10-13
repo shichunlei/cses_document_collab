@@ -335,6 +335,30 @@ fn mobile_type<T: ReadTxn>(block: &MapRef, props: &MapRef, txn: &T) -> Option<St
     })
 }
 
+/// 桌面视频用 props.url；兼容早期移动端写入的 src，但显式 url 始终优先。
+/// 仅网络资源支持原生播放器；空值、上传中的 blob 和嵌入代码均原样保留为占位。
+fn video_url<T: ReadTxn>(props: &MapRef, txn: &T) -> Option<String> {
+    match props.get(txn, "sourceType") {
+        None => {}
+        Some(Out::Any(Any::String(value))) if matches!(value.as_ref(), "link" | "local") => {}
+        _ => return None,
+    }
+    let key = if props.contains_key(txn, "url") {
+        "url"
+    } else {
+        "src"
+    };
+    let url = out_string(props.get(txn, key))?;
+    let (scheme, rest) = url.split_once("://")?;
+    if !(scheme.eq_ignore_ascii_case("http") || scheme.eq_ignore_ascii_case("https"))
+        || rest.split(['/', '?', '#']).next().is_none_or(str::is_empty)
+        || url.chars().any(char::is_whitespace)
+    {
+        return None;
+    }
+    Some(url)
+}
+
 /// 有限数字原样投影；缺失、null 和错误类型不触发默认值写回。
 fn number<T: ReadTxn>(props: &MapRef, txn: &T, key: &str) -> Option<f64> {
     match props.get(txn, key) {
@@ -497,12 +521,20 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                 if (kind == "image" && matches!(node_type.as_str(), "block" | "void"))
                     || (kind == "video" && node_type == "void" && array.len(&txn) == 0) =>
             {
-                text = out_string(props.get(&txn, "src")).unwrap_or_default();
-                if !matches!(
-                    props.get(&txn, "src"),
-                    None | Some(Out::Any(Any::Null | Any::String(_)))
-                ) {
-                    result.reason = Some("媒体资源结构暂不支持，当前仅可预览".into());
+                if kind == "video" {
+                    let Some(url) = video_url(&props, &txn) else {
+                        result.blocks.push(placeholder(id, parent_id));
+                        continue;
+                    };
+                    text = url;
+                } else {
+                    text = out_string(props.get(&txn, "src")).unwrap_or_default();
+                    if !matches!(
+                        props.get(&txn, "src"),
+                        None | Some(Out::Any(Any::Null | Any::String(_)))
+                    ) {
+                        result.reason = Some("媒体资源结构暂不支持，当前仅可预览".into());
+                    }
                 }
                 if kind == "image" {
                     // An image with unadapted children is opaque as a whole;
@@ -950,8 +982,15 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
                     ArrayPrelim::from(Vec::<String>::new()),
                 );
             }
-            if old.is_none_or(|b| b.text != next.text) {
-                props.try_update(&mut txn, "src", next.text.clone());
+            if old.is_none_or(|b| b.text != next.text || b.block_type != next.block_type) {
+                props.try_update(
+                    &mut txn,
+                    if flavour == "video" { "url" } else { "src" },
+                    next.text.clone(),
+                );
+                if flavour == "video" && old.is_none_or(|b| b.block_type != "video") {
+                    props.try_update(&mut txn, "sourceType", "link");
+                }
             }
             if flavour == "image" {
                 apply_image(
@@ -1985,6 +2024,111 @@ mod tests {
         assert_eq!(text.get_string(&txn), "正文😀追加");
         drop(txn);
         assert!(!engine.blocks()[2].checked);
+    }
+
+    #[test]
+    fn desktop_video_url_roundtrips_and_unsupported_sources_remain_opaque() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-video.update");
+        let mut phone = engine(fixture);
+        let mut peer = engine(fixture);
+        assert!(project(&phone.doc, "fixture-doc").reason.is_none());
+        let mut desired = phone.blocks();
+        assert_eq!(desired[3].block_type, "video");
+        assert_eq!(desired[3].text, "https://example.test/video.mp4");
+        assert_eq!(desired[4], placeholder("empty-video".into(), None));
+        assert_eq!(desired[5], placeholder("embed-video".into(), None));
+        let original = {
+            let txn = phone.doc.transact();
+            let blocks = txn.get_map(ROOT_NAME).unwrap();
+            ["empty-video", "embed-video"].map(|id| map(&blocks, &txn, id).unwrap().to_json(&txn))
+        };
+        desired[1].text.push_str("手机修改");
+        desired[3].text = "https://example.test/replaced.mp4".into();
+        let update = phone
+            .apply_block_snapshot(desired.clone())
+            .unwrap()
+            .v1_update;
+        peer.apply_cses_update(update).unwrap();
+        assert_eq!(peer.blocks(), desired);
+        {
+            let txn = peer.doc.transact();
+            let blocks = txn.get_map(ROOT_NAME).unwrap();
+            let video = map(&blocks, &txn, "video-1").unwrap();
+            let props = map(&video, &txn, "props").unwrap();
+            assert_eq!(
+                out_string(props.get(&txn, "url")).as_deref(),
+                Some("https://example.test/replaced.mp4")
+            );
+            assert!(!props.contains_key(&txn, "src"));
+            assert!(props.contains_key(&txn, "customVideo"));
+            assert_eq!(
+                out_string(props.get(&txn, "poster")).as_deref(),
+                Some("https://example.test/poster.jpg")
+            );
+            assert_eq!(
+                original,
+                ["empty-video", "embed-video"]
+                    .map(|id| map(&blocks, &txn, id).unwrap().to_json(&txn))
+            );
+        }
+        let mut restored =
+            CollabEngine::open(phone.document_id.clone(), phone.database_path.clone())
+                .unwrap()
+                .0;
+        restored.blockcraft_root_id = Some("fixture-doc".into());
+        assert_eq!(restored.blocks(), desired);
+    }
+
+    #[test]
+    fn video_source_projection_prefers_url_and_preserves_legacy_src() {
+        for (url, source_type, expected) in [
+            (None, "link", "video"),
+            (Some(""), "link", UNSUPPORTED_BLOCK_TYPE),
+            (Some("blob:desktop-only"), "local", UNSUPPORTED_BLOCK_TYPE),
+            (
+                Some("https://example.test/embed"),
+                "embed",
+                UNSUPPORTED_BLOCK_TYPE,
+            ),
+            (
+                Some("https://example.test/video.mp4"),
+                "future-source",
+                UNSUPPORTED_BLOCK_TYPE,
+            ),
+        ] {
+            let mut phone = engine(include_bytes!(
+                "../../tests/fixtures/blockcraft-video.update"
+            ));
+            {
+                let mut txn = phone.doc.transact_mut();
+                let blocks = txn.get_map(ROOT_NAME).unwrap();
+                let video = map(&blocks, &txn, "video-1").unwrap();
+                let props = map(&video, &txn, "props").unwrap();
+                props.try_update(&mut txn, "src", "https://example.test/legacy.mp4");
+                props.try_update(&mut txn, "sourceType", source_type);
+                if let Some(url) = url {
+                    props.try_update(&mut txn, "url", url);
+                } else {
+                    props.remove(&mut txn, "url");
+                }
+            }
+            let mut desired = phone.blocks();
+            assert_eq!(desired[3].block_type, expected);
+            if expected == "video" {
+                assert_eq!(desired[3].text, "https://example.test/legacy.mp4");
+            }
+            assert!(project(&phone.doc, "fixture-doc").reason.is_none());
+            let before = {
+                let txn = phone.doc.transact();
+                let blocks = txn.get_map(ROOT_NAME).unwrap();
+                map(&blocks, &txn, "video-1").unwrap().to_json(&txn)
+            };
+            desired[1].text.push_str("仍可编辑");
+            phone.apply_block_snapshot(desired).unwrap();
+            let txn = phone.doc.transact();
+            let blocks = txn.get_map(ROOT_NAME).unwrap();
+            assert_eq!(before, map(&blocks, &txn, "video-1").unwrap().to_json(&txn));
+        }
     }
 
     /// 占位与原始未知子树分离；编辑其他块、同步和缓存恢复均不改写未知内容。

@@ -22,6 +22,70 @@ void main() {
         );
   });
 
+  for (final source in [
+    '',
+    'blob:desktop-only',
+    'file:///desktop/video.mp4',
+    null,
+  ]) {
+    testWidgets('unrenderable video $source uses the unified placeholder', (
+      tester,
+    ) async {
+      final changes = <List<CollabEditorBlock>>[];
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: [
+          CollabEditorBlock(
+            id: 'video',
+            blockType: csesVideoBlockType,
+            text: source ?? '',
+          ),
+          const CollabEditorBlock(
+            id: 'body',
+            blockType: 'paragraph',
+            text: '正文',
+          ),
+        ],
+        onLocalBlocksChanged: changes.add,
+      );
+      addTearDown(adapter.dispose);
+      if (source == null) {
+        // Reproduce a builder validation failure, separate from an opaque native projection.
+        adapter.editorState.document.first!.updateAttributes({
+          csesEmbedUrlAttribute: null,
+        });
+      }
+      final collab = _ReadyCollabController(
+        testEditorState: adapter.editorState,
+      );
+      addTearDown(collab.dispose);
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            AppFlowyEditorLocalizations.delegate,
+          ],
+          home: CollaborativeEditorPage(collab: collab),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('placeholder'), findsNothing);
+      expect(find.text('未适配的块（不可编辑）'), findsOneWidget);
+      expect(find.text('原始内容已保留'), findsOneWidget);
+      final state = adapter.editorState;
+      expect(state.editable, isTrue);
+      await state.apply(
+        state.transaction..insertText(state.document.last!, 2, '修改'),
+      );
+      await tester.pumpAndSettle();
+      expect(changes.last.first.text, source ?? '');
+      expect(changes.last.last.text, '正文修改');
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+  }
+
   testWidgets(
     'unknown blocks stay opaque while surrounding text remains editable',
     (tester) async {

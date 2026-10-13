@@ -70,7 +70,7 @@ bc:revisions / bc:revision-decisions / bc:revision-meta  原样保留的修订�
 ```
 
 正式段落的 `props.heading` 映射手机 H1～H9，`bullet/ordered/todo/blockquote/code`
-映射列表、待办、引用和代码，图片/视频使用 `props.src`。Todo 的 checked 写入数值 0/1，
+映射列表、待办、引用和代码，图片使用 `props.src`、视频使用 `props.url`。Todo 的 checked 写入数值 0/1，
 正文对齐使用 `textAlign`，图片对齐使用 `align`，缩进使用 `depth`。富文本使用 `a:bold/italic/underline/strike/code/sup/sub`
 与 `s:color/background`，手机 ARGB 颜色写回 CSS。格式只更新发生变化的区间与受支持键，
 已有链接、字体和其他未知行内属性不会被整块清空。新增块沿用正式共享类型，既有块不重建。
@@ -257,7 +257,7 @@ Awareness 展示用户和在线数，尚未对齐桌面光标/选区契约；不
 当前同步顶层块的类型、顺序、文本/URL、Todo 勾选、对齐和视觉缩进，以及 bold、italic、underline、
 strikethrough、inline-code、textColor、backgroundColor、superscript、subscript 行内属性。当前缩进保持扁平块
 Schema，仅表现为列表/Todo 的视觉层级，不会生成 AppFlowy 子节点。链接、图片和视频 URL 使用各块现有
-bridge 的 text 字段传递；正式图片/视频写入 props.src；图片使用 block 类型，children 为题注 ID 数组，
+bridge 的 text 字段传递；正式图片写入 props.src、视频写入 props.url；图片使用 block 类型，children 为题注 ID 数组，
 视频沿用 void 与空 Y.Array；离线 Demo 的
 链接/图片/视频使用私有 Y.Text 载荷。正式独立链接块尚不支持，已有行内链接属性保留。
 语义嵌套列表、table、Awareness 光标与选区暂时不会同步；
@@ -448,3 +448,11 @@ bridge 的 text 字段传递；正式图片/视频写入 props.src；图片使�
 - 外观设置每次只修改一个字段；Undo/Redo 按稳定容器 ID 定位，远端重排后也不会撤销到其他块或恢复过时正文。子段落 Enter 留在容器内，首段行首退格保护容器边界。预览及模型只读时不提供修改入口。
 - Rust 在写入前验证父节点与前序结构，拒绝无效父节点/循环；高亮块内未适配的块显示不可编辑占位，其他子块继续编辑；行内对象或锁继续触发整篇只读保护。含占位的容器不能整体删除，其他容器删除时移除已投影的后代。
 - 验证：`collab_callout_block_test.dart` 覆盖渲染、颜色/表情设置、逐项撤销、远端更新与重排、插入与键盘边界；`callout_native_integration_test.dart` 验证真实 FRB 和 SQLite；Rust 使用 Yjs 13 生成的 `blockcraft-callout.update` 验证共享结构、未知属性及并发收敛。
+
+
+### 视频兼容与统一占位
+
+- 桌面视频使用 `props.url` / `sourceType`，图片仍用 `props.src`。兼容旧移动端视频的 `src`，但显式 `url` 始终优先；修改视频地址和新建视频写入正式 `url`，不清理未知字段。
+- HTTP(S) 视频资源使用原生播放器；空地址、blob 上传中地址、嵌入代码或未知来源保留原始数据，显示“未适配的块（不可编辑）”卡片，不影响其他块编辑。
+- 编辑器组件校验失败也使用同一占位卡片，不再显示英文 `placeholder`。支持的视频加载中或播放失败仍使用视频自身的状态提示。
+- `blockcraft-video.update` 使用 Yjs 生成真实桌面视频结构；回归覆盖地址读写、旧字段兼容、不支持形式的原数据保留及 SQLite 恢复。

@@ -23,6 +23,67 @@ void main() {
     }
   });
   test(
+    'desktop video url crosses FRB while unsupported videos stay opaque',
+    () async {
+      final directory = await Directory.systemTemp.createTemp(
+        'video-schema-frb-',
+      );
+      try {
+        final databasePath = '${directory.path}/updates.sqlite';
+        native.openCsesDocument(
+          documentId: 'fixture-doc',
+          cacheDocumentId: 'video-cache',
+          databasePath: databasePath,
+        );
+        native.applyDocumentUpdate(
+          bytes: await File(
+            'rust/tests/fixtures/blockcraft-video.update',
+          ).readAsBytes(),
+        );
+        expect(native.documentReadOnlyReason(), isNull);
+        final blocks = native.currentBlocks();
+        final video = blocks.firstWhere((b) => b.id == 'video-1');
+        expect(video.blockType, csesVideoBlockType);
+        expect(video.text, 'https://example.test/video.mp4');
+        expect(
+          blocks
+              .where((b) => b.blockType == csesUnsupportedBlockType)
+              .map((b) => b.id),
+          ['empty-video', 'embed-video'],
+        );
+        blocks[blocks.indexOf(video)] = native.CollabBlock(
+          id: video.id,
+          blockType: video.blockType,
+          text: 'https://example.test/replaced.mp4',
+          segments: video.segments,
+          checked: video.checked,
+          alignment: video.alignment,
+          indent: video.indent,
+        );
+        expect(native.applyBlockSnapshot(blocks: blocks).v1Update, isNotEmpty);
+        native.closeDocument();
+        final restored = native.openCsesDocument(
+          documentId: 'fixture-doc',
+          cacheDocumentId: 'video-cache',
+          databasePath: databasePath,
+        );
+        expect(
+          restored.blocks.firstWhere((b) => b.id == 'video-1').text,
+          'https://example.test/replaced.mp4',
+        );
+        expect(
+          restored.blocks.where((b) => b.blockType == csesUnsupportedBlockType),
+          hasLength(2),
+        );
+      } finally {
+        native.closeDocument();
+        await directory.delete(recursive: true);
+      }
+    },
+    skip: available ? false : '先构建宿主 Rust 库',
+  );
+
+  test(
     'code headers cross FRB, survive body edits and SQLite restore',
     () async {
       final directory = await Directory.systemTemp.createTemp(
