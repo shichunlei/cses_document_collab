@@ -6,9 +6,9 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions are ignored because they are not marked as `pub`: `apply_block_snapshot`, `apply_cses_update`, `apply_remote_update`, `apply_text_segments_for_schema`, `apply_text_segments`, `attribute_enabled`, `attribute_string`, `attributes`, `block_text_name`, `blocks`, `compute_text_delta`, `create_compatible_doc`, `handle_wire_message`, `ignored_message`, `is_indentable_block_type`, `is_styled`, `is_supported_alignment`, `is_supported_block_type`, `load_updates`, `migrate_legacy_text`, `open_result`, `open`, `out_bool`, `out_string`, `out_u32`, `persist_update`, `raw_block_ids`, `reconcile_order`, `schema_attribute`, `sync_step1`, `text_segments_for_schema`, `text_segments`, `utf16_len`, `validate_blocks`, `with_engine_mut`, `with_engine`
+// These functions are ignored because they are not marked as `pub`: `apply_block_snapshot`, `apply_cses_update`, `apply_remote_update`, `apply_text_segments_for_schema`, `apply_text_segments`, `attribute_enabled`, `attribute_string`, `attributes`, `block_text_name`, `blocks`, `compute_text_delta`, `create_compatible_doc`, `handle_wire_message`, `ignored_message`, `is_indentable_block_type`, `is_resource_block_type`, `is_styled`, `is_supported_alignment`, `is_supported_block_type`, `load_updates`, `migrate_legacy_text`, `open_result`, `open`, `out_bool`, `out_string`, `out_u32`, `persist_update`, `raw_block_ids`, `reconcile_order`, `schema_attribute`, `sync_step1`, `text_segments_for_schema`, `text_segments`, `utf16_len`, `validate_blocks`, `with_engine_mut`, `with_engine`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `CollabEngine`, `TextDelta`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `assert_fields_are_eq`, `assert_fields_are_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `assert_fields_are_eq`, `assert_fields_are_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`
 
 OpenDocumentResult openDocument({
   required String documentId,
@@ -31,7 +31,7 @@ OpenDocumentResult openCsesDocument({
 );
 
 /// 返回正式模型的只读原因，None 表示当前已知结构可编辑；不代表服务端业务授权。
-/// 每次应用远端更新后重新查询，锁、修订和未知内容可能随协同状态变化。
+/// 每次应用远端更新后重新查询，锁、修订和行内对象可能随协同状态变化。
 String? documentReadOnlyReason() =>
     RustLib.instance.api.crateApiCollabDocumentReadOnlyReason();
 
@@ -140,6 +140,7 @@ class CollabBlock {
 
   /// 代码块头部投影；只有 property_edits 可修改原生属性。
   final CollabCode? code;
+  final CollabResource? resource;
 
   /// 本地类型转换的新身份所替换的旧 ID；成功后投影清空，不进入共享属性。
   final String? replacesId;
@@ -166,6 +167,7 @@ class CollabBlock {
     this.image,
     this.ordered,
     this.code,
+    this.resource,
     this.replacesId,
     this.blockBackgroundColor,
     this.blockBorderColor,
@@ -186,6 +188,7 @@ class CollabBlock {
       image.hashCode ^
       ordered.hashCode ^
       code.hashCode ^
+      resource.hashCode ^
       replacesId.hashCode ^
       blockBackgroundColor.hashCode ^
       blockBorderColor.hashCode ^
@@ -208,6 +211,7 @@ class CollabBlock {
           image == other.image &&
           ordered == other.ordered &&
           code == other.code &&
+          resource == other.resource &&
           replacesId == other.replacesId &&
           blockBackgroundColor == other.blockBackgroundColor &&
           blockBorderColor == other.blockBorderColor &&
@@ -366,6 +370,25 @@ class CollabOrdered {
           needsRepair == other.needsRepair &&
           numbering == other.numbering &&
           numberingEdit == other.numberingEdit;
+}
+
+/// 资源块已建模属性的只读投影；只有显式字段补丁可写入原生 props。
+class CollabResource {
+  final String properties;
+  final String? propertyEdits;
+
+  const CollabResource({required this.properties, this.propertyEdits});
+
+  @override
+  int get hashCode => properties.hashCode ^ propertyEdits.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CollabResource &&
+          runtimeType == other.runtimeType &&
+          properties == other.properties &&
+          propertyEdits == other.propertyEdits;
 }
 
 class CollabTextSegment {

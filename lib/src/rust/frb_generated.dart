@@ -617,6 +617,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  CollabResource dco_decode_box_autoadd_collab_resource(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_collab_resource(raw);
+  }
+
+  @protected
   double dco_decode_box_autoadd_f_64(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as double;
@@ -632,8 +638,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   CollabBlock dco_decode_collab_block(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 16)
-      throw Exception('unexpected arr length: expect 16 but see ${arr.length}');
+    if (arr.length != 17)
+      throw Exception('unexpected arr length: expect 17 but see ${arr.length}');
     return CollabBlock(
       id: dco_decode_String(arr[0]),
       blockType: dco_decode_String(arr[1]),
@@ -645,12 +651,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       image: dco_decode_opt_box_autoadd_collab_image(arr[7]),
       ordered: dco_decode_opt_box_autoadd_collab_ordered(arr[8]),
       code: dco_decode_opt_box_autoadd_collab_code(arr[9]),
-      replacesId: dco_decode_opt_String(arr[10]),
-      blockBackgroundColor: dco_decode_opt_String(arr[11]),
-      blockBorderColor: dco_decode_opt_String(arr[12]),
-      parentId: dco_decode_opt_String(arr[13]),
-      calloutPrefix: dco_decode_opt_String(arr[14]),
-      blockTextColor: dco_decode_opt_String(arr[15]),
+      resource: dco_decode_opt_box_autoadd_collab_resource(arr[10]),
+      replacesId: dco_decode_opt_String(arr[11]),
+      blockBackgroundColor: dco_decode_opt_String(arr[12]),
+      blockBorderColor: dco_decode_opt_String(arr[13]),
+      parentId: dco_decode_opt_String(arr[14]),
+      calloutPrefix: dco_decode_opt_String(arr[15]),
+      blockTextColor: dco_decode_opt_String(arr[16]),
     );
   }
 
@@ -711,6 +718,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       needsRepair: dco_decode_bool(arr[4]),
       numbering: dco_decode_String(arr[5]),
       numberingEdit: dco_decode_opt_String(arr[6]),
+    );
+  }
+
+  @protected
+  CollabResource dco_decode_collab_resource(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return CollabResource(
+      properties: dco_decode_String(arr[0]),
+      propertyEdits: dco_decode_opt_String(arr[1]),
     );
   }
 
@@ -808,6 +827,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  CollabResource? dco_decode_opt_box_autoadd_collab_resource(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_collab_resource(raw);
+  }
+
+  @protected
   double? dco_decode_opt_box_autoadd_f_64(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw == null ? null : dco_decode_box_autoadd_f_64(raw);
@@ -902,6 +927,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  CollabResource sse_decode_box_autoadd_collab_resource(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_collab_resource(deserializer));
+  }
+
+  @protected
   double sse_decode_box_autoadd_f_64(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_f_64(deserializer));
@@ -926,6 +959,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_image = sse_decode_opt_box_autoadd_collab_image(deserializer);
     var var_ordered = sse_decode_opt_box_autoadd_collab_ordered(deserializer);
     var var_code = sse_decode_opt_box_autoadd_collab_code(deserializer);
+    var var_resource = sse_decode_opt_box_autoadd_collab_resource(deserializer);
     var var_replacesId = sse_decode_opt_String(deserializer);
     var var_blockBackgroundColor = sse_decode_opt_String(deserializer);
     var var_blockBorderColor = sse_decode_opt_String(deserializer);
@@ -943,6 +977,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       image: var_image,
       ordered: var_ordered,
       code: var_code,
+      resource: var_resource,
       replacesId: var_replacesId,
       blockBackgroundColor: var_blockBackgroundColor,
       blockBorderColor: var_blockBorderColor,
@@ -1016,6 +1051,17 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       needsRepair: var_needsRepair,
       numbering: var_numbering,
       numberingEdit: var_numberingEdit,
+    );
+  }
+
+  @protected
+  CollabResource sse_decode_collab_resource(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_properties = sse_decode_String(deserializer);
+    var var_propertyEdits = sse_decode_opt_String(deserializer);
+    return CollabResource(
+      properties: var_properties,
+      propertyEdits: var_propertyEdits,
     );
   }
 
@@ -1174,6 +1220,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  CollabResource? sse_decode_opt_box_autoadd_collab_resource(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_collab_resource(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
   double? sse_decode_opt_box_autoadd_f_64(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
@@ -1286,6 +1345,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_box_autoadd_collab_resource(
+    CollabResource self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_collab_resource(self, serializer);
+  }
+
+  @protected
   void sse_encode_box_autoadd_f_64(double self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_f_64(self, serializer);
@@ -1310,6 +1378,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_opt_box_autoadd_collab_image(self.image, serializer);
     sse_encode_opt_box_autoadd_collab_ordered(self.ordered, serializer);
     sse_encode_opt_box_autoadd_collab_code(self.code, serializer);
+    sse_encode_opt_box_autoadd_collab_resource(self.resource, serializer);
     sse_encode_opt_String(self.replacesId, serializer);
     sse_encode_opt_String(self.blockBackgroundColor, serializer);
     sse_encode_opt_String(self.blockBorderColor, serializer);
@@ -1359,6 +1428,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_bool(self.needsRepair, serializer);
     sse_encode_String(self.numbering, serializer);
     sse_encode_opt_String(self.numberingEdit, serializer);
+  }
+
+  @protected
+  void sse_encode_collab_resource(
+    CollabResource self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.properties, serializer);
+    sse_encode_opt_String(self.propertyEdits, serializer);
   }
 
   @protected
@@ -1500,6 +1579,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_bool(self != null, serializer);
     if (self != null) {
       sse_encode_box_autoadd_collab_ordered(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_opt_box_autoadd_collab_resource(
+    CollabResource? self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_collab_resource(self, serializer);
     }
   }
 

@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:cses_mobile_collab_demo/src/collab/collab_resource.dart';
+import 'package:cses_mobile_collab_demo/src/ui/collab_resource_block.dart';
+
 import 'package:cses_mobile_collab_demo/src/ui/collab_unsupported_block.dart';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
@@ -301,6 +304,8 @@ final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders =
       csesCodeBlockType: CollabCodeBlockComponentBuilder(),
       csesCalloutBlockType: CollabCalloutBlockComponentBuilder(),
       csesUnsupportedBlockType: CollabUnsupportedBlockComponentBuilder(),
+      for (final kind in collabResourceTypes)
+        kind: CollabResourceBlockComponentBuilder(),
     }.map((type, builder) {
       const textTypes = {
         ParagraphBlockKeys.type,

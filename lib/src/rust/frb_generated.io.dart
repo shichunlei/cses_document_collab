@@ -37,6 +37,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   CollabOrdered dco_decode_box_autoadd_collab_ordered(dynamic raw);
 
   @protected
+  CollabResource dco_decode_box_autoadd_collab_resource(dynamic raw);
+
+  @protected
   double dco_decode_box_autoadd_f_64(dynamic raw);
 
   @protected
@@ -56,6 +59,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   CollabOrdered dco_decode_collab_ordered(dynamic raw);
+
+  @protected
+  CollabResource dco_decode_collab_resource(dynamic raw);
 
   @protected
   CollabTextSegment dco_decode_collab_text_segment(dynamic raw);
@@ -92,6 +98,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   CollabOrdered? dco_decode_opt_box_autoadd_collab_ordered(dynamic raw);
+
+  @protected
+  CollabResource? dco_decode_opt_box_autoadd_collab_resource(dynamic raw);
 
   @protected
   double? dco_decode_opt_box_autoadd_f_64(dynamic raw);
@@ -134,6 +143,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  CollabResource sse_decode_box_autoadd_collab_resource(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   double sse_decode_box_autoadd_f_64(SseDeserializer deserializer);
 
   @protected
@@ -155,6 +169,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   CollabOrdered sse_decode_collab_ordered(SseDeserializer deserializer);
+
+  @protected
+  CollabResource sse_decode_collab_resource(SseDeserializer deserializer);
 
   @protected
   CollabTextSegment sse_decode_collab_text_segment(
@@ -203,6 +220,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   CollabOrdered? sse_decode_opt_box_autoadd_collab_ordered(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  CollabResource? sse_decode_opt_box_autoadd_collab_resource(
     SseDeserializer deserializer,
   );
 
@@ -260,6 +282,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_box_autoadd_collab_resource(
+    CollabResource self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_box_autoadd_f_64(double self, SseSerializer serializer);
 
   @protected
@@ -282,6 +310,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_collab_ordered(CollabOrdered self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_collab_resource(
+    CollabResource self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_collab_text_segment(
@@ -343,6 +377,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_opt_box_autoadd_collab_ordered(
     CollabOrdered? self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_opt_box_autoadd_collab_resource(
+    CollabResource? self,
     SseSerializer serializer,
   );
 

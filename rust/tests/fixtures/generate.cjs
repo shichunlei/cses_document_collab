@@ -118,3 +118,16 @@ fixture('blockcraft-video', (_, m) => {
     url: '<iframe src="https://example.test/embed"></iframe>', sourceType: 'embed',
   }));
 });
+
+fixture('blockcraft-resources', (_, m) => {
+  const entries = [
+    ['attachment-1', 'attachment', { url: 'https://example.test/spec.pdf', name: '方案.pdf', type: 'application/pdf', size: 2048, icon: 'bc_pdf', customResource: { keep: true } }],
+    ['audio-1', 'audio', { url: 'https://example.test/voice.mp3', name: '语音', sourceType: 'link', size: 4096, customResource: { keep: true } }],
+    ['bookmark-1', 'bookmark', { url: 'https://example.test/article', title: '网页标题', description: '网页摘要', icon: 'https://example.test/icon.png', customResource: { keep: true } }],
+    ['embed-1', 'embed', { url: 'https://example.test/page', wr: 80, ar: 1.5, customResource: { keep: true } }],
+    ['juejin-1', 'juejin-embed', { url: 'https://juejin.cn/post/123456', wr: 90, ar: 1.4, customResource: { keep: true } }],
+    ['figma-1', 'figma-embed', { url: 'https://www.figma.com/design/demo/Design?node-id=1-2', wr: 100, ar: 1.8, customResource: { keep: true } }],
+  ];
+  m.get('fixture-doc').get('children').push(entries.map(([id]) => id));
+  for (const [id, kind, props] of entries) m.set(id, block(id, kind, 'void', [], props));
+});

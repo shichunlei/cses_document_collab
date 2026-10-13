@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:cses_mobile_collab_demo/src/collab/collab_resource.dart';
+
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_mobile_collab_demo/src/collab/collab_code.dart';
 import 'package:cses_common/core/collections/objectid.dart';
@@ -457,6 +459,9 @@ class CollabController extends ChangeNotifier with WidgetsBindingObserver {
             image: _toEditorImage(block.image),
             ordered: _toEditorOrdered(block.ordered),
             code: _toEditorCode(block.code),
+            resource: block.resource == null
+                ? null
+                : CollabResource(properties: block.resource!.properties),
             replacesId: block.replacesId,
           ),
         )
@@ -498,6 +503,12 @@ class CollabController extends ChangeNotifier with WidgetsBindingObserver {
             alignment: block.alignment,
             indent: block.indent,
             image: _toRustImage(block.image),
+            resource: block.resource == null
+                ? null
+                : rust.CollabResource(
+                    properties: block.resource!.properties,
+                    propertyEdits: block.resource!.propertyEdits,
+                  ),
             ordered: _toRustOrdered(block.ordered),
             code: block.code == null
                 ? null
@@ -609,6 +620,7 @@ class CollabController extends ChangeNotifier with WidgetsBindingObserver {
           _toEditorOrdered(leftBlock.ordered) !=
               _toEditorOrdered(rightBlock.ordered) ||
           _toEditorCode(leftBlock.code) != _toEditorCode(rightBlock.code) ||
+          leftBlock.resource?.properties != rightBlock.resource?.properties ||
           _toEditorImage(leftBlock.image) != _toEditorImage(rightBlock.image) ||
           !_rustSegmentsEqual(leftBlock.segments, rightBlock.segments)) {
         return false;

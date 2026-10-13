@@ -1,3 +1,4 @@
+import 'package:cses_mobile_collab_demo/src/collab/collab_resource.dart';
 import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
@@ -205,6 +206,7 @@ Future<bool> deletePreviousUrlBackedBlock(EditorState editorState) async {
 
 /// 判断 [type] 是否属于既有链接/图片/视频块类型，无副作用。
 bool _isUrlBackedBlock(String type) =>
+    isCollabResourceType(type) ||
     type == csesLinkBlockType ||
     type == ImageBlockKeys.type ||
     type == csesVideoBlockType;

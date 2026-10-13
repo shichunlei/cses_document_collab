@@ -91,6 +91,20 @@ pub struct CollabCode {
     pub property_edits: Option<String>,
 }
 
+/// 资源块已建模属性的只读投影；只有显式字段补丁可写入原生 props。
+#[derive(Debug, Clone, PartialEq)]
+pub struct CollabResource {
+    pub properties: String,
+    pub property_edits: Option<String>,
+}
+
+pub(super) fn is_resource_block_type(kind: &str) -> bool {
+    matches!(
+        kind,
+        "attachment" | "audio" | "bookmark" | "embed" | "juejin-embed" | "figma-embed"
+    )
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct CollabBlock {
     pub id: String,
@@ -106,6 +120,7 @@ pub struct CollabBlock {
     pub ordered: Option<CollabOrdered>,
     /// 代码块头部投影；只有 property_edits 可修改原生属性。
     pub code: Option<CollabCode>,
+    pub resource: Option<CollabResource>,
     /// 本地类型转换的新身份所替换的旧 ID；成功后投影清空，不进入共享属性。
     pub replaces_id: Option<String>,
     /// 桌面 props.backColor / borderColor；CSS 原值，独立于行内高亮。
@@ -275,6 +290,14 @@ impl CollabEngine {
                         self.block_colors.get(&transaction, &format!("{id}:text")),
                     ),
                     code: None,
+                    resource: out_string(
+                        self.block_colors
+                            .get(&transaction, &format!("{id}:resource")),
+                    )
+                    .map(|properties| CollabResource {
+                        properties,
+                        property_edits: None,
+                    }),
                     replaces_id: None,
                     block_background_color: out_string(
                         self.block_colors
@@ -367,7 +390,7 @@ impl CollabEngine {
                         .remove(&mut transaction, &format!("{id}:background"));
                     self.block_colors
                         .remove(&mut transaction, &format!("{id}:border"));
-                    for suffix in ["parent", "prefix", "text"] {
+                    for suffix in ["parent", "prefix", "text", "resource"] {
                         self.block_colors
                             .remove(&mut transaction, &format!("{id}:{suffix}"));
                     }
@@ -411,6 +434,16 @@ impl CollabEngine {
                     } else {
                         self.block_colors.remove(&mut transaction, &key);
                     }
+                }
+                let key = format!("{}:resource", block.id);
+                if let Some(resource) = &block.resource {
+                    self.block_colors.try_update(
+                        &mut transaction,
+                        key,
+                        resource.properties.clone(),
+                    );
+                } else {
+                    self.block_colors.remove(&mut transaction, &key);
                 }
                 let delta = compute_text_delta(current_text, &block.text);
                 if delta.delete_length > 0 {
@@ -592,6 +625,7 @@ impl CollabEngine {
             callout_prefix: None,
             block_text_color: None,
             code: None,
+            resource: None,
             replaces_id: None,
             block_background_color: None,
             block_border_color: None,
@@ -982,9 +1016,10 @@ fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(
 }
 
 fn is_supported_block_type(block_type: &str) -> bool {
-    matches!(
-        block_type,
-        "paragraph"
+    is_resource_block_type(block_type)
+        || matches!(
+            block_type,
+            "paragraph"
             | "heading_1"
             | "heading_2"
             | "heading_3"
@@ -1012,7 +1047,7 @@ fn is_supported_block_type(block_type: &str) -> bool {
             // Deterministic IDs/order are enforced by the Dart controller.
             | "document_cover"
             | "document_title"
-    )
+        )
 }
 
 fn is_supported_alignment(alignment: &str) -> bool {
@@ -1274,6 +1309,7 @@ mod tests {
             callout_prefix: None,
             block_text_color: None,
             code: None,
+            resource: None,
             replaces_id: None,
             block_background_color: None,
             block_border_color: None,

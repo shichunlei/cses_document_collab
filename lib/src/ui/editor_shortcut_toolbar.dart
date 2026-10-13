@@ -1,4 +1,6 @@
 import 'dart:async';
+
+import 'package:cses_mobile_collab_demo/src/collab/collab_resource.dart';
 import 'dart:math' as math;
 
 import 'package:appflowy_editor/appflowy_editor.dart';
@@ -1853,12 +1855,29 @@ class _AddBlockSheet extends StatelessWidget {
                               csesVideoBlockType,
                             ),
                           ),
-                          const _ActionShortcutTile(
-                            icon: Icons.attach_file,
-                            label: '文件',
-                            accent: Color(0xFF0EA5E9),
-                            tint: Color(0xFFE0F2FE),
-                          ),
+                          for (final resource in const [
+                            ('attachment', '附件', Icons.attach_file),
+                            ('audio', '音频', Icons.audiotrack_outlined),
+                            ('bookmark', '网页卡片', Icons.bookmark_border),
+                            ('embed', '网页嵌入', Icons.language),
+                            ('juejin-embed', '掘金', Icons.article_outlined),
+                            (
+                              'figma-embed',
+                              'Figma',
+                              Icons.design_services_outlined,
+                            ),
+                          ])
+                            _ActionShortcutTile(
+                              key: ValueKey(
+                                'editor-shortcut-${resource.$1}-block',
+                              ),
+                              icon: resource.$3,
+                              label: resource.$2,
+                              accent: const Color(0xFF2563EB),
+                              tint: const Color(0xFFEFF6FF),
+                              onTap: () =>
+                                  _requestUrlAndClose(context, resource.$1),
+                            ),
                           const _ActionShortcutTile(
                             icon: Icons.table_chart_outlined,
                             label: '表格',
@@ -2015,7 +2034,9 @@ class _UrlBlockDialogState extends State<_UrlBlockDialog> {
 
   void _submit() {
     final value = _controller.text.trim();
-    if (!_isSupportedBlockUrl(value)) {
+    if (!_isSupportedBlockUrl(value) ||
+        (isCollabResourceType(widget.blockType) &&
+            !isCollabResourceUrl(widget.blockType, value))) {
       setState(() => _errorText = '请输入完整的 http:// 或 https:// 链接');
       return;
     }
@@ -2091,7 +2112,9 @@ Future<Selection?> applyUrlBlockShortcut(
 ) async {
   if (selection.start.path.isEmpty ||
       !_isUrlBackedBlockType(blockType) ||
-      !_isSupportedBlockUrl(url)) {
+      !_isSupportedBlockUrl(url) ||
+      (isCollabResourceType(blockType) &&
+          !isCollabResourceUrl(blockType, url))) {
     return null;
   }
   final targetPath = [selection.start.path.first];
@@ -2143,6 +2166,17 @@ Node _urlBackedNode(String blockType, String url) {
   return Node(
     type: blockType,
     attributes: {
+      if (isCollabResourceType(blockType))
+        ...CollabResource.fromValues({
+          if (blockType == 'attachment')
+            'name': Uri.parse(url).pathSegments.lastOrNull ?? '附件',
+          if (blockType == 'audio') 'sourceType': 'link',
+          if (blockType == 'bookmark') 'title': Uri.parse(url).host,
+          if ({'embed', 'figma-embed', 'juejin-embed'}.contains(blockType)) ...{
+            'wr': 100,
+            'ar': 16 / 9,
+          },
+        }).nodeAttributes,
       csesEmbedUrlAttribute: url,
       blockComponentAlign: 'left',
       csesBlockIndentAttribute: 0,
@@ -2151,6 +2185,7 @@ Node _urlBackedNode(String blockType, String url) {
 }
 
 bool _isUrlBackedBlockType(String blockType) =>
+    isCollabResourceType(blockType) ||
     blockType == ImageBlockKeys.type ||
     blockType == csesLinkBlockType ||
     blockType == csesVideoBlockType;

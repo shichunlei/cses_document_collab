@@ -618,6 +618,8 @@ impl SseDecode for crate::api::collab::CollabBlock {
         let mut var_image = <Option<crate::api::collab::CollabImage>>::sse_decode(deserializer);
         let mut var_ordered = <Option<crate::api::collab::CollabOrdered>>::sse_decode(deserializer);
         let mut var_code = <Option<crate::api::collab::CollabCode>>::sse_decode(deserializer);
+        let mut var_resource =
+            <Option<crate::api::collab::CollabResource>>::sse_decode(deserializer);
         let mut var_replacesId = <Option<String>>::sse_decode(deserializer);
         let mut var_blockBackgroundColor = <Option<String>>::sse_decode(deserializer);
         let mut var_blockBorderColor = <Option<String>>::sse_decode(deserializer);
@@ -635,6 +637,7 @@ impl SseDecode for crate::api::collab::CollabBlock {
             image: var_image,
             ordered: var_ordered,
             code: var_code,
+            resource: var_resource,
             replaces_id: var_replacesId,
             block_background_color: var_blockBackgroundColor,
             block_border_color: var_blockBorderColor,
@@ -714,6 +717,18 @@ impl SseDecode for crate::api::collab::CollabOrdered {
             needs_repair: var_needsRepair,
             numbering: var_numbering,
             numbering_edit: var_numberingEdit,
+        };
+    }
+}
+
+impl SseDecode for crate::api::collab::CollabResource {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_properties = <String>::sse_decode(deserializer);
+        let mut var_propertyEdits = <Option<String>>::sse_decode(deserializer);
+        return crate::api::collab::CollabResource {
+            properties: var_properties,
+            property_edits: var_propertyEdits,
         };
     }
 }
@@ -857,6 +872,19 @@ impl SseDecode for Option<crate::api::collab::CollabOrdered> {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         if (<bool>::sse_decode(deserializer)) {
             return Some(<crate::api::collab::CollabOrdered>::sse_decode(
+                deserializer,
+            ));
+        } else {
+            return None;
+        }
+    }
+}
+
+impl SseDecode for Option<crate::api::collab::CollabResource> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(<crate::api::collab::CollabResource>::sse_decode(
                 deserializer,
             ));
         } else {
@@ -1009,6 +1037,7 @@ impl flutter_rust_bridge::IntoDart for crate::api::collab::CollabBlock {
             self.image.into_into_dart().into_dart(),
             self.ordered.into_into_dart().into_dart(),
             self.code.into_into_dart().into_dart(),
+            self.resource.into_into_dart().into_dart(),
             self.replaces_id.into_into_dart().into_dart(),
             self.block_background_color.into_into_dart().into_dart(),
             self.block_border_color.into_into_dart().into_dart(),
@@ -1127,6 +1156,27 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::collab::CollabOrdered>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::collab::CollabResource {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.properties.into_into_dart().into_dart(),
+            self.property_edits.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::collab::CollabResource
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::collab::CollabResource>
+    for crate::api::collab::CollabResource
+{
+    fn into_into_dart(self) -> crate::api::collab::CollabResource {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::api::collab::CollabTextSegment {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
@@ -1237,6 +1287,7 @@ impl SseEncode for crate::api::collab::CollabBlock {
         <Option<crate::api::collab::CollabImage>>::sse_encode(self.image, serializer);
         <Option<crate::api::collab::CollabOrdered>>::sse_encode(self.ordered, serializer);
         <Option<crate::api::collab::CollabCode>>::sse_encode(self.code, serializer);
+        <Option<crate::api::collab::CollabResource>>::sse_encode(self.resource, serializer);
         <Option<String>>::sse_encode(self.replaces_id, serializer);
         <Option<String>>::sse_encode(self.block_background_color, serializer);
         <Option<String>>::sse_encode(self.block_border_color, serializer);
@@ -1287,6 +1338,14 @@ impl SseEncode for crate::api::collab::CollabOrdered {
         <bool>::sse_encode(self.needs_repair, serializer);
         <String>::sse_encode(self.numbering, serializer);
         <Option<String>>::sse_encode(self.numbering_edit, serializer);
+    }
+}
+
+impl SseEncode for crate::api::collab::CollabResource {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.properties, serializer);
+        <Option<String>>::sse_encode(self.property_edits, serializer);
     }
 }
 
@@ -1398,6 +1457,16 @@ impl SseEncode for Option<crate::api::collab::CollabOrdered> {
         <bool>::sse_encode(self.is_some(), serializer);
         if let Some(value) = self {
             <crate::api::collab::CollabOrdered>::sse_encode(value, serializer);
+        }
+    }
+}
+
+impl SseEncode for Option<crate::api::collab::CollabResource> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <crate::api::collab::CollabResource>::sse_encode(value, serializer);
         }
     }
 }

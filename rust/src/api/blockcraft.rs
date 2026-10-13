@@ -24,6 +24,7 @@ fn placeholder(id: String, parent_id: Option<String>) -> CollabBlock {
         image: None,
         ordered: None,
         code: None,
+        resource: None,
         replaces_id: None,
         block_background_color: None,
         block_border_color: None,
@@ -331,6 +332,7 @@ fn mobile_type<T: ReadTxn>(block: &MapRef, props: &MapRef, txn: &T) -> Option<St
         "todo" => "todo_list".to_owned(),
         "blockquote" => "quote".to_owned(),
         "code" | "image" | "video" | "callout" => flavour,
+        s if is_resource_block_type(s) => flavour,
         _ => return None,
     })
 }
@@ -357,6 +359,108 @@ fn video_url<T: ReadTxn>(props: &MapRef, txn: &T) -> Option<String> {
         return None;
     }
     Some(url)
+}
+
+fn resource_keys(kind: &str) -> &'static [&'static str] {
+    match kind {
+        "attachment" => &["name", "type", "size", "icon"],
+        "audio" => &["name", "size", "sourceType", "width"],
+        "bookmark" => &["title", "description", "icon", "image"],
+        "embed" | "juejin-embed" | "figma-embed" => &["wr", "ar", "width", "height"],
+        _ => &[],
+    }
+}
+
+fn valid_resource_url(kind: &str, value: &str) -> bool {
+    let Some((scheme, rest)) = value.split_once("://") else {
+        return false;
+    };
+    if value.len() > 8192
+        || !matches!(scheme, "http" | "https")
+        || value.chars().any(char::is_whitespace)
+    {
+        return false;
+    }
+    let host = rest.split(['/', '?', '#']).next().unwrap_or("");
+    if host.is_empty() || host.contains('@') {
+        return false;
+    }
+    match kind {
+        "figma-embed" => matches!(host, "figma.com" | "www.figma.com" | "embed.figma.com"),
+        "juejin-embed" => matches!(host, "juejin.cn" | "www.juejin.cn"),
+        _ => true,
+    }
+}
+
+fn resource_properties<T: ReadTxn>(kind: &str, props: &MapRef, txn: &T) -> String {
+    let values: std::collections::BTreeMap<_, _> = resource_keys(kind)
+        .iter()
+        .filter_map(|key| {
+            if let Some(Out::Any(value)) = props.get(txn, key) {
+                Some((*key, value))
+            } else {
+                None
+            }
+        })
+        .collect();
+    serde_json::to_string(&values).unwrap()
+}
+
+fn parse_resource_edit(
+    kind: &str,
+    input: &str,
+    initial: bool,
+) -> Result<HashMap<String, Option<Any>>, String> {
+    let fail = || "INVALID_RESOURCE: 资源属性无效".to_owned();
+    if input.len() > 32768 {
+        return Err(fail());
+    }
+    let Any::Map(values) = Any::from_json(input).map_err(|_| fail())? else {
+        return Err(fail());
+    };
+    let mut result = HashMap::new();
+    for (key, wrapper) in values.iter() {
+        if !resource_keys(kind).contains(&key.as_str()) && (initial || key != "url") {
+            return Err(fail());
+        }
+        let value = if initial {
+            Some(wrapper.clone())
+        } else {
+            let Any::Map(v) = wrapper else {
+                return Err(fail());
+            };
+            if v.keys().any(|key| key != "value") {
+                return Err(fail());
+            }
+            v.get("value").cloned()
+        };
+        if let Some(v) = &value {
+            if key == "url"
+                && !out_string(Some(Out::Any(v.clone())))
+                    .is_some_and(|url| valid_resource_url(kind, &url))
+            {
+                return Err(fail());
+            }
+            let numeric = matches!(key.as_str(), "size" | "width" | "height" | "wr" | "ar");
+            let valid = match v {
+                Any::Null => true,
+                Any::String(v) => {
+                    !numeric
+                        && v.len() <= 8192
+                        && (key != "sourceType" || matches!(v.as_ref(), "link" | "local"))
+                }
+                Any::Number(v) => {
+                    numeric && v.is_finite() && *v >= 0.0 && (key == "size" || *v > 0.0)
+                }
+                _ => false,
+            };
+            if !valid {
+                return Err(fail());
+            }
+        }
+        result.insert(key.clone(), value);
+    }
+    Ok(result)
 }
 
 /// 有限数字原样投影；缺失、null 和错误类型不触发默认值写回。
@@ -504,8 +608,28 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                     stack.push((child, depth + 1, Some(id.clone())));
                 }
             }
+            Some(Out::YArray(array))
+                if is_resource_block_type(&kind) && node_type == "void" && array.len(&txn) == 0 =>
+            {
+                text = out_string(props.get(&txn, "url")).unwrap_or_default();
+                let supported_source = kind != "audio"
+                    || match props.get(&txn, "sourceType") {
+                        None => true,
+                        Some(Out::Any(Any::String(value))) => {
+                            matches!(value.as_ref(), "link" | "local")
+                        }
+                        _ => false,
+                    };
+                if !valid_resource_url(&kind, &text) || !supported_source {
+                    result.blocks.push(placeholder(id, parent_id));
+                    continue;
+                }
+            }
             Some(Out::YText(value))
-                if node_type == "editable" && !is_media && kind != "callout" =>
+                if node_type == "editable"
+                    && !is_media
+                    && !is_resource_block_type(&kind)
+                    && kind != "callout" =>
             {
                 text = value.get_string(&txn);
                 segments = text_segments_for_schema(&value, &txn, true);
@@ -584,6 +708,10 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                 properties: code_properties(&props, &txn),
                 property_edits: None,
             }),
+            resource: is_resource_block_type(&kind).then(|| CollabResource {
+                properties: resource_properties(&kind, &props, &txn),
+                property_edits: None,
+            }),
             ordered: ordered.get(&id).map(|v| v.0.clone()),
             replaces_id: None,
             block_background_color: out_string(props.get(&txn, "backColor")),
@@ -629,6 +757,12 @@ fn formal_type(kind: &str) -> Option<(&str, bool)> {
         "callout" => ("callout", false),
         "image" => ("image", true),
         "video" => ("video", true),
+        "attachment" => ("attachment", true),
+        "audio" => ("audio", true),
+        "bookmark" => ("bookmark", true),
+        "embed" => ("embed", true),
+        "juejin-embed" => ("juejin-embed", true),
+        "figma-embed" => ("figma-embed", true),
         _ => return None,
     })
 }
@@ -676,6 +810,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
     let mut replacements = HashMap::new();
     let mut numbering_edits = HashMap::new();
     let mut code_edits = HashMap::new();
+    let mut resource_edits = HashMap::new();
     // 新 UI 身份不能复用未展示的块或孤立块，避免覆盖隐藏内容。
     for block in desired {
         if !previous.contains_key(block.id.as_str()) && blocks.contains_key(&txn, &block.id) {
@@ -703,6 +838,27 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
         } else {
             previous.get(block.id.as_str()).copied()
         };
+        if let Some(resource) = &block.resource {
+            if !is_resource_block_type(&block.block_type) {
+                return Err("INVALID_RESOURCE: 资源属性与块类型不符".into());
+            }
+            let source = if old.is_none() {
+                Some(resource.properties.as_str())
+            } else {
+                resource.property_edits.as_deref()
+            };
+            if let Some(source) = source {
+                resource_edits.insert(
+                    block.id.clone(),
+                    parse_resource_edit(&block.block_type, source, old.is_none())?,
+                );
+            }
+        }
+        if is_resource_block_type(&block.block_type)
+            && !valid_resource_url(&block.block_type, &block.text)
+        {
+            return Err("INVALID_RESOURCE: 请输入有效的资源地址".into());
+        }
         if let Some(edit) = block.code.as_ref().and_then(|v| v.property_edits.as_ref()) {
             if block.block_type != "code"
                 || old.is_some_and(|b| b.block_type != "code")
@@ -975,6 +1131,26 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
                 .collect();
             reconcile_order(&array, &mut txn, &before, &after);
         } else if media {
+            if let Some(edits) = resource_edits.get(&next.id) {
+                for (key, value) in edits {
+                    if let Some(value) = value {
+                        props.try_update(&mut txn, key.as_str(), value.clone());
+                    } else {
+                        props.remove(&mut txn, key);
+                    }
+                }
+            }
+            if old.is_none() && matches!(flavour, "embed" | "figma-embed" | "juejin-embed") {
+                if !props.contains_key(&txn, "wr") {
+                    props.try_update(&mut txn, "wr", 100);
+                }
+                if !props.contains_key(&txn, "ar") {
+                    props.try_update(&mut txn, "ar", 16.0 / 9.0);
+                }
+            }
+            if old.is_none() && flavour == "audio" && !props.contains_key(&txn, "sourceType") {
+                props.try_update(&mut txn, "sourceType", "link");
+            }
             if !matches!(block.get(&txn, "children"), Some(Out::YArray(_))) {
                 block.insert(
                     &mut txn,
@@ -982,10 +1158,18 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
                     ArrayPrelim::from(Vec::<String>::new()),
                 );
             }
-            if old.is_none_or(|b| b.text != next.text || b.block_type != next.block_type) {
+            if (!is_resource_block_type(flavour)
+                && old.is_none_or(|b| b.text != next.text || b.block_type != next.block_type))
+                || (is_resource_block_type(flavour)
+                    && old.is_none_or(|b| b.block_type != next.block_type))
+            {
                 props.try_update(
                     &mut txn,
-                    if flavour == "video" { "url" } else { "src" },
+                    if flavour == "video" || is_resource_block_type(flavour) {
+                        "url"
+                    } else {
+                        "src"
+                    },
                     next.text.clone(),
                 );
                 if flavour == "video" && old.is_none_or(|b| b.block_type != "video") {
@@ -2027,6 +2211,197 @@ mod tests {
     }
 
     #[test]
+    fn six_resource_kinds_roundtrip_without_overwriting_native_extensions() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-resources.update");
+        let mut phone = engine(fixture);
+        let mut peer = engine(fixture);
+        assert!(project(&phone.doc, "fixture-doc").reason.is_none());
+        let mut desired = phone.blocks();
+        assert_eq!(
+            desired[3..]
+                .iter()
+                .map(|b| b.block_type.as_str())
+                .collect::<Vec<_>>(),
+            [
+                "attachment",
+                "audio",
+                "bookmark",
+                "embed",
+                "juejin-embed",
+                "figma-embed"
+            ]
+        );
+        assert!(desired[3..]
+            .iter()
+            .all(|b| b.resource.is_some() && b.segments.is_empty()));
+        desired[1].text.push_str("正文修改");
+        desired[3].text = "https://example.test/new.pdf".into();
+        desired[3].resource.as_mut().unwrap().property_edits = Some(
+            r#"{"name":{"value":"新方案.pdf"},"url":{"value":"https://example.test/new.pdf"}}"#
+                .into(),
+        );
+        desired[6].resource.as_mut().unwrap().property_edits =
+            Some(r#"{"wr":{"value":60},"ar":{"value":2}}"#.into());
+        let update = phone.apply_block_snapshot(desired).unwrap().v1_update;
+        peer.apply_cses_update(update).unwrap();
+        assert_eq!(phone.blocks(), peer.blocks());
+        let actual = phone.blocks();
+        assert_eq!(actual[3].text, "https://example.test/new.pdf");
+        assert!(actual[3]
+            .resource
+            .as_ref()
+            .unwrap()
+            .properties
+            .contains("新方案.pdf"));
+        {
+            let txn = peer.doc.transact();
+            let blocks = txn.get_map(ROOT_NAME).unwrap();
+            for block in actual.iter().skip(3) {
+                let native = map(&blocks, &txn, &block.id).unwrap();
+                let props = map(&native, &txn, "props").unwrap();
+                assert!(props.contains_key(&txn, "customResource"));
+                assert!(map(&native, &txn, "meta")
+                    .unwrap()
+                    .contains_key(&txn, "customAudit"));
+                assert_eq!(
+                    out_string(native.get(&txn, "nodeType")).as_deref(),
+                    Some("void")
+                );
+                assert!(matches!(native.get(&txn, "children"), Some(Out::YArray(_))));
+            }
+        }
+        let vector = phone.doc.transact().state_vector();
+        phone.apply_block_snapshot(actual.clone()).unwrap();
+        assert_eq!(vector, phone.doc.transact().state_vector());
+        let mut reopened =
+            CollabEngine::open(phone.document_id.clone(), phone.database_path.clone())
+                .unwrap()
+                .0;
+        reopened.blockcraft_root_id = Some("fixture-doc".into());
+        assert_eq!(actual, reopened.blocks());
+        let mut invalid = actual.clone();
+        invalid[1].text.push_str("不得部分写入");
+        invalid[3].resource.as_mut().unwrap().property_edits =
+            Some(r#"{"customResource":{"value":"覆盖"}}"#.into());
+        assert!(phone
+            .apply_block_snapshot(invalid)
+            .unwrap_err()
+            .contains("INVALID_RESOURCE"));
+        assert_eq!(actual, phone.blocks());
+        assert_eq!(vector, phone.doc.transact().state_vector());
+        // New resources create the desktop URL and void shared child type.
+        let mut created = actual;
+        let mut new = created[3].clone();
+        new.id = "new-attachment".into();
+        new.text = "https://example.test/created.pdf".into();
+        new.resource = Some(CollabResource {
+            properties: r#"{"name":"新建附件"}"#.into(),
+            property_edits: None,
+        });
+        created.push(new);
+        let mut frame = created[6].clone();
+        frame.id = "new-embed".into();
+        let dimensions = frame.resource.as_ref().unwrap().properties.clone();
+        created.push(frame);
+        let mut audio = created[4].clone();
+        audio.id = "new-audio".into();
+        audio.resource = Some(CollabResource {
+            properties: r#"{"name":"上传音频","sourceType":"local"}"#.into(),
+            property_edits: None,
+        });
+        created.push(audio);
+        phone.apply_block_snapshot(created).unwrap();
+        let actual = phone.blocks();
+        assert_eq!(
+            actual
+                .iter()
+                .find(|b| b.id == "new-attachment")
+                .unwrap()
+                .block_type,
+            "attachment"
+        );
+        assert_eq!(
+            actual
+                .iter()
+                .find(|b| b.id == "new-embed")
+                .unwrap()
+                .resource
+                .as_ref()
+                .unwrap()
+                .properties,
+            dimensions
+        );
+        assert!(actual
+            .last()
+            .unwrap()
+            .resource
+            .as_ref()
+            .unwrap()
+            .properties
+            .contains("local"));
+    }
+
+    #[test]
+    fn resource_field_patches_merge_without_replaying_stale_metadata_or_urls() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-resources.update");
+        let mut a = engine(fixture);
+        let mut b = engine(fixture);
+        let mut left = a.blocks();
+        let mut right = b.blocks();
+        left[5].resource.as_mut().unwrap().property_edits = Some(
+            r#"{"title":{"value":"甲标题"},"url":{"value":"https://example.test/new-article"}}"#
+                .into(),
+        );
+        left[5].text = "https://example.test/new-article".into();
+        right[5].resource.as_mut().unwrap().property_edits =
+            Some(r#"{"description":{"value":"乙摘要"}}"#.into());
+        let au = a.apply_block_snapshot(left).unwrap().v1_update;
+        b.apply_cses_update(au).unwrap();
+        // This older UI snapshot deliberately retains the original URL and title.
+        let bu = b.apply_block_snapshot(right).unwrap().v1_update;
+        a.apply_cses_update(bu).unwrap();
+        assert_eq!(a.blocks(), b.blocks());
+        let bookmark = a.blocks()[5].clone();
+        assert_eq!(bookmark.text, "https://example.test/new-article");
+        let props = bookmark.resource.unwrap().properties;
+        assert!(props.contains("甲标题") && props.contains("乙摘要"));
+    }
+
+    #[test]
+    fn unsupported_resource_sources_stay_opaque_while_other_blocks_edit() {
+        for (id, url) in [
+            ("audio-1", "blob:pending"),
+            ("attachment-1", ""),
+            ("figma-1", "https://example.test/fake"),
+            ("juejin-1", "https://example.test/fake"),
+        ] {
+            let mut phone = engine(include_bytes!(
+                "../../tests/fixtures/blockcraft-resources.update"
+            ));
+            let original = {
+                let mut txn = phone.doc.transact_mut();
+                let blocks = txn.get_map(ROOT_NAME).unwrap();
+                let native = map(&blocks, &txn, id).unwrap();
+                map(&native, &txn, "props")
+                    .unwrap()
+                    .try_update(&mut txn, "url", url);
+                native.to_json(&txn)
+            };
+            let mut desired = phone.blocks();
+            assert!(project(&phone.doc, "fixture-doc").reason.is_none());
+            assert_eq!(
+                desired.iter().find(|b| b.id == id).unwrap().block_type,
+                UNSUPPORTED_BLOCK_TYPE
+            );
+            desired[1].text.push_str("可编辑");
+            phone.apply_block_snapshot(desired).unwrap();
+            let txn = phone.doc.transact();
+            let blocks = txn.get_map(ROOT_NAME).unwrap();
+            assert_eq!(original, map(&blocks, &txn, id).unwrap().to_json(&txn));
+        }
+    }
+
+    #[test]
     fn desktop_video_url_roundtrips_and_unsupported_sources_remain_opaque() {
         let fixture = include_bytes!("../../tests/fixtures/blockcraft-video.update");
         let mut phone = engine(fixture);
@@ -2476,6 +2851,7 @@ mod tests {
                 callout_prefix: None,
                 block_text_color: None,
                 code: None,
+                resource: None,
                 replaces_id: None,
                 block_background_color: None,
                 block_border_color: None,
@@ -2577,6 +2953,7 @@ mod tests {
             callout_prefix: None,
             block_text_color: None,
             code: None,
+            resource: None,
             replaces_id: None,
             block_background_color: None,
             block_border_color: None,

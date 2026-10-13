@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cses_mobile_collab_demo/src/collab/collab_resource.dart';
+
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_mobile_collab_demo/src/collab/collab_code.dart';
 import 'package:cses_mobile_collab_demo/src/collab/collab_block_colors.dart';
@@ -335,6 +337,7 @@ final class CollabEditorBlock {
     this.image,
     this.ordered,
     this.code,
+    this.resource,
     this.replacesId,
     this.blockBackgroundColor,
     this.blockBorderColor,
@@ -372,6 +375,7 @@ final class CollabEditorBlock {
 
   /// Desktop code header metadata, projected without writing shared props.
   final CollabCode? code;
+  final CollabResource? resource;
 
   /// 本地新块所替换的原块身份，普通编辑和远端投影为 null。
   final String? replacesId;
@@ -396,6 +400,7 @@ final class CollabEditorBlock {
     image,
     ordered,
     code,
+    resource,
     replacesId,
     blockBackgroundColor,
     blockBorderColor,
@@ -418,6 +423,7 @@ final class CollabEditorBlock {
         other.image == image &&
         other.ordered == ordered &&
         other.code == code &&
+        other.resource == resource &&
         other.replacesId == replacesId &&
         other.blockBackgroundColor == blockBackgroundColor &&
         other.blockBorderColor == blockBorderColor &&
@@ -657,8 +663,19 @@ final class AppFlowyBlockEditorAdapter {
     }
     final numberingNodes = <Node>{};
     final codeEdits = <Node, Set<String>>{};
+    final resourceEdits = <Node, Set<String>>{};
     for (final operation in value.$2.operations.whereType<UpdateOperation>()) {
       final node = editorState.getNodeAtPath(operation.path);
+      if (node != null && isCollabResourceType(node.type)) {
+        if (operation.attributes.containsKey(csesEmbedUrlAttribute)) {
+          resourceEdits.putIfAbsent(node, () => {}).add('url');
+        }
+        for (final key in collabResourceKeys) {
+          if (operation.attributes.containsKey(resourcePropertyAttribute(key))) {
+            resourceEdits.putIfAbsent(node, () => {}).add(key);
+          }
+        }
+      }
       if (node != null && node.type == csesCodeBlockType) {
         for (final entry in collabCodePropertyAttributes.entries) {
           if (operation.attributes.containsKey(entry.value)) {
@@ -676,6 +693,7 @@ final class AppFlowyBlockEditorAdapter {
       _lastPublishedBlocks,
       numberingNodes: numberingNodes,
       codeEdits: codeEdits,
+      resourceEdits: resourceEdits,
     );
     if (_blocksEqual(nextBlocks, _lastPublishedBlocks)) {
       return;
@@ -746,7 +764,10 @@ final class AppFlowyBlockEditorAdapter {
         transaction.operations.every(
           (operation) =>
               operation is UpdateOperation &&
-              operation.attributes.containsKey(collabCodeTargetAttribute),
+              (operation.attributes.containsKey(collabCodeTargetAttribute) ||
+                  operation.attributes.containsKey(
+                    collabResourceTargetAttribute,
+                  )),
         );
     if (codePropertiesOnly) {
       // Header undo should preserve the current caret, including after reorder/deletion.
@@ -757,6 +778,16 @@ final class AppFlowyBlockEditorAdapter {
     for (final operation in transaction.operations) {
       if (operation is! UpdateOperation) {
         operations.add(operation);
+        continue;
+      }
+      if (operation.attributes.containsKey(collabResourceTargetAttribute)) {
+        if (!editorState.editable) continue;
+        final id = operation.attributes[collabResourceTargetAttribute];
+        final kind = operation.attributes[collabResourceKindAttribute];
+        final node = _flattenNodes(
+          editorState.document.root.children,
+        ).where((n) => _nodeBlockId(n) == id && n.type == kind).firstOrNull;
+        if (node != null) operations.add(operation.copyWith(path: node.path));
         continue;
       }
       final isCallout = operation.attributes.containsKey(
@@ -904,6 +935,8 @@ final class AppFlowyBlockEditorAdapter {
           // AppFlowy's image component and the custom embed components both
           // currently use `url`; spelling out the key choice documents which
           // renderer owns the attribute and avoids coupling future formats.
+          if (isCollabResourceType(block.blockType))
+            ...(block.resource ?? const CollabResource()).nodeAttributes,
           if (isImage) ImageBlockKeys.url: block.text,
           if (!isImage) csesEmbedUrlAttribute: block.text,
           if (isImage) ImageBlockKeys.align: block.alignment,
@@ -1006,6 +1039,7 @@ final class AppFlowyBlockEditorAdapter {
     List<CollabEditorBlock> previous, {
     Set<Node> numberingNodes = const {},
     Map<Node, Set<String>> codeEdits = const {},
+    Map<Node, Set<String>> resourceEdits = const {},
   }) {
     final nodes = _flattenNodes(state.document.root.children).toList();
     final explicitIds = nodes
@@ -1067,6 +1101,12 @@ final class AppFlowyBlockEditorAdapter {
             : null,
         blockTextColor: node.type == csesCalloutBlockType
             ? node.attributes[csesBlockTextColorAttribute] as String?
+            : null,
+        resource: isCollabResourceType(node.type)
+            ? CollabResource.fromAttributes(
+                node.attributes,
+                edited: resourceEdits[node] ?? const {},
+              )
             : null,
         code: _readCode(node, editedProperties: codeEdits[node] ?? const {}),
         blockType: _nodeBlockType(node),
@@ -1144,6 +1184,7 @@ final class AppFlowyBlockEditorAdapter {
   }
 
   static String _nodeBlockType(Node node) {
+    if (isCollabResourceType(node.type)) return node.type;
     if (node.type == csesUnsupportedBlockType) return csesUnsupportedBlockType;
     if (node.type == csesCalloutBlockType) return csesCalloutBlockType;
     return switch (node.type) {
@@ -1233,7 +1274,8 @@ final class AppFlowyBlockEditorAdapter {
     if (node.type == ImageBlockKeys.type) {
       return node.attributes[ImageBlockKeys.url] as String? ?? '';
     }
-    if (node.type == csesLinkBlockType ||
+    if (isCollabResourceType(node.type) ||
+        node.type == csesLinkBlockType ||
         node.type == csesVideoBlockType ||
         node.type == csesDocumentCoverBlockType) {
       return node.attributes[csesEmbedUrlAttribute] as String? ?? '';
@@ -1262,6 +1304,7 @@ final class AppFlowyBlockEditorAdapter {
 }
 
 bool _isUrlBackedBlock(String blockType) =>
+    isCollabResourceType(blockType) ||
     blockType == ImageBlockKeys.type ||
     blockType == csesLinkBlockType ||
     blockType == csesVideoBlockType ||

@@ -23,6 +23,73 @@ void main() {
     }
   });
   test(
+    'six resource schemas cross FRB, update metadata and recover from SQLite',
+    () async {
+      final directory = await Directory.systemTemp.createTemp('resources-frb-');
+      try {
+        final databasePath = '${directory.path}/updates.sqlite';
+        native.openCsesDocument(
+          documentId: 'fixture-doc',
+          cacheDocumentId: 'resource-cache',
+          databasePath: databasePath,
+        );
+        native.applyDocumentUpdate(
+          bytes: await File(
+            'rust/tests/fixtures/blockcraft-resources.update',
+          ).readAsBytes(),
+        );
+        expect(native.documentReadOnlyReason(), isNull);
+        final blocks = native.currentBlocks();
+        expect(blocks.skip(3).map((b) => b.blockType), [
+          'attachment',
+          'audio',
+          'bookmark',
+          'embed',
+          'juejin-embed',
+          'figma-embed',
+        ]);
+        expect(blocks.skip(3).every((b) => b.resource != null), isTrue);
+        final file = blocks[3];
+        blocks[3] = native.CollabBlock(
+          id: file.id,
+          blockType: file.blockType,
+          text: 'https://example.test/new.pdf',
+          segments: file.segments,
+          checked: file.checked,
+          alignment: file.alignment,
+          indent: file.indent,
+          resource: native.CollabResource(
+            properties: file.resource!.properties,
+            propertyEdits:
+                '{"name":{"value":"新方案.pdf"},"url":{"value":"https://example.test/new.pdf"}}',
+          ),
+        );
+        expect(native.applyBlockSnapshot(blocks: blocks).v1Update, isNotEmpty);
+        expect(
+          native.currentBlocks()[3].resource!.properties,
+          contains('新方案.pdf'),
+        );
+        native.closeDocument();
+        final restored = native.openCsesDocument(
+          documentId: 'fixture-doc',
+          cacheDocumentId: 'resource-cache',
+          databasePath: databasePath,
+        );
+        expect(restored.blocks[3].text, 'https://example.test/new.pdf');
+        expect(restored.blocks[3].resource!.properties, contains('新方案.pdf'));
+        expect(
+          restored.blocks.skip(3).every((b) => b.resource != null),
+          isTrue,
+        );
+      } finally {
+        native.closeDocument();
+        await directory.delete(recursive: true);
+      }
+    },
+    skip: available ? false : '先构建宿主 Rust 库',
+  );
+
+  test(
     'desktop video url crosses FRB while unsupported videos stay opaque',
     () async {
       final directory = await Directory.systemTemp.createTemp(
