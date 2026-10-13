@@ -1,38 +1,68 @@
 import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_common/observability/api/log.dart';
 import 'package:cses_mobile_collab_demo/src/collab/appflowy_block_editor_adapter.dart';
+import 'package:cses_mobile_collab_demo/src/collab/collab_image.dart';
+import 'package:cses_mobile_collab_demo/src/ui/collab_image_content.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
-/// URL-backed block presentations that AppFlowy does not provide as standard
-/// components. Body images remain excluded because AppFlowy's native image
-/// block already handles loading, resizing and block selection.
-enum CollabEmbedKind { cover, link, video }
+/// 使用现有可选择资源块外壳展示的媒体类型；正式图片额外包含尺寸和题注投影。
+enum CollabEmbedKind {
+  /// 离线草稿的封面。
+  cover,
+
+  /// 离线草稿的独立链接卡片。
+  link,
+
+  /// 原有视频播放器。
+  video,
+
+  /// 正式 BlockCraft 图片容器，离线无专属投影时复用 AppFlowy 图片组件。
+  image,
+}
 
 typedef CollabCoverEditCallback =
     void Function(BuildContext context, EditorState editorState, Node node);
 
-/// Builds a selectable collaborative link or video block.
+/// 构建可选中的链接、视频、封面和正式图片；复用同一选区与资源块生命周期。
 ///
-/// Both block kinds keep their URL in [csesEmbedUrlAttribute]. The adapter
-/// mirrors that value into `CollabBlock.text`, so the existing Rust/Yrs schema
-/// can synchronize these blocks without adding another bridge field.
+/// 资源地址通过节点 url 属性和 CollabBlock.text 传递；正式媒体使用 props.src，
+/// 离线草稿使用私有 Y.Text，桥接调用方不直接解析共享类型。
+/// 正式图片另携带布局和题注，写入原 props/children；不会把题注展平到根。
+/// ```dart
+/// import 'package:cses_mobile_collab_demo/src/ui/collab_embed_block.dart';
+/// final builder = CollabEmbedBlockComponentBuilder(kind: CollabEmbedKind.image);
+/// // 将 builder 注册到所属 AppFlowyEditor 的 image 类型，无需单独 dispose。
+/// ```
 class CollabEmbedBlockComponentBuilder extends BlockComponentBuilder {
+  /// [kind] 决定资源展示类型，[onEditCover] 只用于封面编辑，null 不显示封面编辑入口。
+  /// [configuration] 提供现有选区外壳的布局；不创建 WS 或持有编辑器所有权。
   CollabEmbedBlockComponentBuilder({
     required this.kind,
     this.onEditCover,
     super.configuration = const BlockComponentConfiguration(),
   });
 
+  /// 当前资源类型，正式图片采用专属布局投影。
   final CollabEmbedKind kind;
+
+  /// 借用封面编辑回调，图片编辑由图片视图处理。
   final CollabCoverEditCallback? onEditCover;
 
+  /// 根据 [blockComponentContext] 创建借用节点的资源视图，离线图片沿用现有组件。
   @override
   BlockComponentWidget build(BlockComponentContext blockComponentContext) {
     final node = blockComponentContext.node;
+    if (kind == CollabEmbedKind.image &&
+        node.attributes[collabImageAttribute] == null) {
+      return ImageBlockComponentBuilder(
+        configuration: configuration,
+      ).build(blockComponentContext);
+    }
     return _CollabEmbedBlockWidget(
       key: node.key,
       node: node,
@@ -47,13 +77,16 @@ class CollabEmbedBlockComponentBuilder extends BlockComponentBuilder {
     );
   }
 
+  /// 验证 UI 节点外壳；正式图片的 caption 由专属属性承载，真实父子关系留在 Rust。
   @override
   BlockComponentValidate get validate => (node) {
     final url = node.attributes[csesEmbedUrlAttribute];
     return node.children.isEmpty &&
         node.delta == null &&
         url is String &&
-        (kind == CollabEmbedKind.cover || url.isNotEmpty);
+        (kind == CollabEmbedKind.cover ||
+            kind == CollabEmbedKind.image ||
+            url.isNotEmpty);
   };
 }
 
@@ -77,11 +110,16 @@ class _CollabEmbedBlockWidget extends BlockComponentStatefulWidget {
       _CollabEmbedBlockWidgetState();
 }
 
+/// 借用编辑器节点展示资源；独占视频控制器，源变化或退出时释放，
+/// 原位节点属性更新通过保存的源字符串检测，迟到初始化不覆盖当前资源。
 class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
     with SelectableMixin, BlockComponentConfigurable {
   final GlobalKey _contentKey = GlobalKey();
   VideoPlayerController? _videoController;
   Object? _videoError;
+
+  /// 已开始加载的源字符串；Node 为可变对象，不能从 oldWidget 恢复旧 URL。
+  String? _videoSource;
 
   @override
   BlockComponentConfiguration get configuration => widget.configuration;
@@ -94,6 +132,8 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
 
   RenderBox? get _renderBox => context.findRenderObject() as RenderBox?;
 
+  /// 挂载时为视频创建独占播放器；其他资源不分配播放器或输入焦点。
+  /// 原位属性变化的组件刷新由 AppFlowy BlockComponentContainer 的节点订阅负责。
   @override
   void initState() {
     super.initState();
@@ -102,48 +142,78 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
     }
   }
 
+  /// [oldWidget] 为同一状态的旧配置；即使其 Node 已被原位更新，也按保存的源
+  /// 检测资源变化。只更新视频控制器，不重建正文或改变当前编辑选区。
   @override
   void didUpdateWidget(covariant _CollabEmbedBlockWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    final oldUrl = oldWidget.node.attributes[csesEmbedUrlAttribute];
-    if (widget.kind == CollabEmbedKind.video && oldUrl != _url) {
-      // A remote Yrs update can replace a block URL while this state remains
-      // mounted. Recreating the controller prevents playback from continuing
-      // against the stale resource.
+    if (widget.kind == CollabEmbedKind.video && _videoSource != _url) {
       unawaited(_initializeVideo());
     }
   }
 
+  /// 为当前源替换播放器，Future 在旧资源释放及新资源初始化后完成。
+  /// 首次 await 前交接控制器所有权，使快速 A→B→A 更新和页面退出都能释放各自
+  /// 资源；异步边界按控制器身份阻止旧结果回写。无效 URL 展示占位，不写协同文档。
+  /// 播放器失败由本地异常边界记录并展示，后台 Future 不向 UI 事件循环泄漏异常。
   Future<void> _initializeVideo() async {
     final previousController = _videoController;
-    _videoController = null;
+    final source = _url;
+    _videoSource = source;
+    final uri = Uri.tryParse(source);
+    final controller = uri != null && _isSupportedNetworkUri(uri)
+        ? VideoPlayerController.networkUrl(uri)
+        : null;
+    _videoController = controller;
     _videoError = null;
-    await previousController?.dispose();
-
-    final uri = Uri.tryParse(_url);
-    if (uri == null || !_isSupportedNetworkUri(uri)) {
-      if (mounted) {
-        setState(() => _videoError = const FormatException('无效的视频链接'));
-      }
+    await _disposeVideo(previousController);
+    if (!mounted ||
+        !identical(_videoController, controller) ||
+        _videoSource != source) {
       return;
     }
 
-    final controller = VideoPlayerController.networkUrl(uri);
-    _videoController = controller;
+    if (controller == null) {
+      setState(() => _videoError = const FormatException('无效的视频链接'));
+      return;
+    }
+
     try {
       await controller.initialize();
+      if (!mounted || !identical(_videoController, controller)) return;
       await controller.setLooping(false);
-    } catch (error) {
-      // Invalid media, unsupported codecs and network failures all stay local
-      // rendering concerns. The URL remains in the document and can still be
-      // opened externally or repaired by another client.
+    } catch (error, stackTrace) {
+      if (!mounted || !identical(_videoController, controller)) return;
       _videoError = error;
+      Log.e(
+        '文档视频加载失败',
+        error: error,
+        stackTrace: stackTrace,
+        tag: 'DocCollabDemo',
+      );
     }
     if (mounted && identical(_videoController, controller)) {
       setState(() {});
     }
   }
 
+  /// 释放本视图拥有的 [controller]，null 表示没有资源；调用方先解除当前引用，
+  /// 每个控制器只交接一次。Future 在释放或记录失败后完成，不使用媒体 URL 作为日志。
+  Future<void> _disposeVideo(VideoPlayerController? controller) async {
+    if (controller == null) return;
+    try {
+      await controller.dispose();
+    } catch (error, stackTrace) {
+      Log.e(
+        '文档视频资源释放失败',
+        error: error,
+        stackTrace: stackTrace,
+        tag: 'DocCollabDemo',
+      );
+    }
+  }
+
+  /// 使用 [context] 渲染资源内容及统一选区外壳，不创建主连接或改变正文。
   @override
   Widget build(BuildContext context) {
     final editorState = context.read<EditorState>();
@@ -151,6 +221,10 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
       CollabEmbedKind.cover => _buildCover(context, editorState),
       CollabEmbedKind.link => _buildLinkCard(context),
       CollabEmbedKind.video => _buildVideoCard(context),
+      CollabEmbedKind.image => CollabImageContent(
+        node: node,
+        editorState: editorState,
+      ),
     };
 
     Widget selectableChild = Padding(
@@ -440,9 +514,13 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
   @override
   TextDirection textDirection() => TextDirection.ltr;
 
+  /// 退出时解除当前控制器引用并启动拥有资源的释放；初始化回调由 mounted/身份
+  /// 检查失效，释放失败由资源边界记录，不修改借用的编辑器、节点或 WS。
   @override
   void dispose() {
-    unawaited(_videoController?.dispose());
+    final controller = _videoController;
+    _videoController = null;
+    unawaited(_disposeVideo(controller));
     super.dispose();
   }
 }

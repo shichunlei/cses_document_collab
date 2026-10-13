@@ -4,13 +4,16 @@ use rusqlite::{params, Connection};
 use std::collections::HashSet;
 use std::fs;
 use std::path::Path;
-use yrs::sync::{Message, SyncMessage};
+use yrs::sync::{Awareness, AwarenessUpdate, Message, SyncMessage};
 use yrs::updates::decoder::Decode;
 use yrs::updates::encoder::Encode;
 use yrs::{
     types::Attrs, Any, Array, ArrayRef, Doc, GetString, Map, MapRef, OffsetKind, Options, Out,
-    ReadTxn, Text, Transact, Update,
+    ReadTxn, StateVector, Text, Transact, Update,
 };
+
+#[path = "blockcraft.rs"]
+mod blockcraft;
 
 const BLOCK_ORDER_NAME: &str = "cses_mobile_block_order";
 const BLOCK_META_NAME: &str = "cses_mobile_block_meta";
@@ -41,7 +44,42 @@ pub struct CollabTextSegment {
     pub subscript: bool,
 }
 
+/// 图片题注的编辑投影；正文仍属于原 caption 块的 Y.Text，格式与未知元数据留在 Doc 中。
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CollabImageCaption {
+    pub id: String,
+    pub text: String,
+}
+
+/// 图片布局与题注投影。尺寸为可选原始属性，None 不等于自动写入默认值。
+/// wr 为相对正文宽度百分比，ar 为宽高比；width/height 为旧版像素尺寸，rotation 为角度。
+#[derive(Debug, Clone, PartialEq, Default)]
+pub struct CollabImage {
+    pub width_ratio: Option<f64>,
+    pub aspect_ratio: Option<f64>,
+    pub width: Option<f64>,
+    pub height: Option<f64>,
+    pub rotation: Option<f64>,
+    pub captions: Vec<CollabImageCaption>,
+}
+
+/// 正式有序列表投影；order 为零基，start 为归一化的一基起始编号。
+/// heading/depth 共同划分计数器；既有同类型快照只读，只有 numbering_edit 能改变设置。
+/// 新身份类型替换可从 numbering 初始化历史设置，order 仍由结构重算，不扩展 WS 协议。
+#[derive(Debug, Clone, PartialEq)]
+pub struct CollabOrdered {
+    pub order: u32,
+    pub start: Option<u32>,
+    pub heading: u32,
+    pub marker_style: Option<String>,
+    pub needs_repair: bool,
+    /// 仅 start/continuePrevious 的原始 JSON，保留缺失、null、0 和历史数值类型供撤销恢复。
+    pub numbering: String,
+    /// 显式设置事务的一次性输入；投影恒为 None，不把自动序号或旧设置当作用户命令。
+    pub numbering_edit: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct CollabBlock {
     pub id: String,
     pub block_type: String,
@@ -50,6 +88,12 @@ pub struct CollabBlock {
     pub checked: bool,
     pub alignment: String,
     pub indent: u32,
+    /// 仅正式图片块携带；离线草稿与其他块为 None，不把题注展平为根子块。
+    pub image: Option<CollabImage>,
+    /// 仅正式 ordered 块携带；普通快照不覆盖设置，显式 numbering_edit 只写 start/continuePrevious。
+    pub ordered: Option<CollabOrdered>,
+    /// 本地类型转换的新身份所替换的旧 ID；成功后投影清空，不进入共享属性。
+    pub replaces_id: Option<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -63,6 +107,8 @@ pub struct OpenDocumentResult {
 pub struct BlockChangeResult {
     pub blocks: Vec<CollabBlock>,
     pub outbound_message: Vec<u8>,
+    /// 未套 y-websocket 消息头的 Yjs V1 update，供 PaaS JSON 协议编码为 Base64。
+    pub v1_update: Vec<u8>,
 }
 
 #[derive(Debug, Clone)]
@@ -77,12 +123,15 @@ struct CollabEngine {
     document_id: String,
     database_path: String,
     doc: Doc,
+    awareness: Awareness,
     block_order: ArrayRef,
     block_meta: MapRef,
     block_checked: MapRef,
     block_align: MapRef,
     block_indent: MapRef,
     connection: Connection,
+    /// Some 时使用正式 blocks 根；值是业务 docId，不能以本机哈希缓存键替代。
+    blockcraft_root_id: Option<String>,
 }
 
 impl CollabEngine {
@@ -131,6 +180,7 @@ impl CollabEngine {
         let mut engine = Self {
             document_id,
             database_path,
+            awareness: Awareness::new(doc.clone()),
             doc,
             block_order,
             block_meta,
@@ -138,6 +188,7 @@ impl CollabEngine {
             block_align,
             block_indent,
             connection,
+            blockcraft_root_id: None,
         };
         let mut persisted_update_count = updates.len() as u32;
         if engine.migrate_legacy_text()? {
@@ -148,6 +199,9 @@ impl CollabEngine {
     }
 
     fn blocks(&self) -> Vec<CollabBlock> {
+        if let Some(root_id) = &self.blockcraft_root_id {
+            return blockcraft::project(&self.doc, root_id).blocks;
+        }
         let ids = self.raw_block_ids();
         let text_refs = ids
             .iter()
@@ -184,6 +238,9 @@ impl CollabEngine {
                     checked,
                     alignment,
                     indent,
+                    image: None,
+                    ordered: None,
+                    replaces_id: None,
                 })
             })
             .collect()
@@ -206,6 +263,17 @@ impl CollabEngine {
         blocks: Vec<CollabBlock>,
     ) -> Result<BlockChangeResult, String> {
         validate_blocks(&blocks)?;
+        if let Some(root_id) = &self.blockcraft_root_id {
+            let before = self.doc.transact().state_vector();
+            blockcraft::apply(&self.doc, root_id, &blocks)?;
+            let update = self.doc.transact().encode_state_as_update_v1(&before);
+            self.persist_update(&update)?;
+            return Ok(BlockChangeResult {
+                blocks: self.blocks(),
+                v1_update: update.clone(),
+                outbound_message: Message::Sync(SyncMessage::Update(update)).encode_v1(),
+            });
+        }
         let current_blocks = self.blocks();
         let current_order = self.raw_block_ids();
         let desired_order = blocks
@@ -216,6 +284,7 @@ impl CollabEngine {
             return Ok(BlockChangeResult {
                 blocks,
                 outbound_message: Vec::new(),
+                v1_update: Vec::new(),
             });
         }
 
@@ -295,8 +364,74 @@ impl CollabEngine {
         self.persist_update(&update)?;
         Ok(BlockChangeResult {
             blocks: self.blocks(),
+            v1_update: update.clone(),
             outbound_message: Message::Sync(SyncMessage::Update(update)).encode_v1(),
         })
+    }
+
+    /// 在隔离 Doc 中验证结构，再应用正文。正式模式保留 blocks 和修订等辅助根，
+    /// 不能完整表达的内容投影为只读；旧 Demo 模式继续使用独立根名称的边界检查。
+    ///
+    /// 未写入内容的旧引擎可在第一次收到合法 BlockCraft 根时识别正式模型。
+    /// 校验失败不改变当前 Doc/SQLite，正式业务 docId 与缓存键由打开 API 分别提供。
+    fn apply_cses_update(&mut self, payload: Vec<u8>) -> Result<WireMessageResult, String> {
+        let probe = create_compatible_doc();
+        let local = self
+            .doc
+            .transact()
+            .encode_state_as_update_v1(&StateVector::default());
+        {
+            let mut txn = probe.transact_mut();
+            txn.apply_update(Update::decode_v1(&local).map_err(|error| error.to_string())?)
+                .map_err(|error| error.to_string())?;
+            txn.apply_update(
+                Update::decode_v1(&payload)
+                    .map_err(|error| format!("invalid Yjs V1 update: {error}"))?,
+            )
+            .map_err(|error| format!("cannot validate remote update: {error}"))?;
+        }
+        let root_id = self.blockcraft_root_id.clone().or_else(|| {
+            if !probe
+                .transact()
+                .root_refs()
+                .any(|(name, _)| name == blockcraft::ROOT_NAME)
+            {
+                return None;
+            }
+            let txn = probe.transact();
+            if txn
+                .get_map(blockcraft::ROOT_NAME)
+                .is_some_and(|blocks| blocks.len(&txn) > 0)
+                && self.raw_block_ids().is_empty()
+            {
+                Some(self.document_id.clone())
+            } else {
+                None
+            }
+        });
+        if let Some(root_id) = root_id {
+            blockcraft::validate(&probe, &root_id)?;
+            self.blockcraft_root_id = Some(root_id);
+            return self.apply_remote_update(payload, "collabUpdate");
+        }
+        let compatible = probe.transact().root_refs().all(|(name, _)| {
+            matches!(
+                name,
+                BLOCK_ORDER_NAME
+                    | BLOCK_META_NAME
+                    | BLOCK_CHECKED_NAME
+                    | BLOCK_ALIGN_NAME
+                    | BLOCK_INDENT_NAME
+                    | LEGACY_TEXT_NAME
+            ) || name.starts_with(BLOCK_TEXT_PREFIX)
+        });
+        if !compatible {
+            return Err(
+                "UNSUPPORTED_DOCUMENT_SCHEMA: 本地草稿不能混入未知正文结构，请使用正式文档模式"
+                    .to_owned(),
+            );
+        }
+        self.apply_remote_update(payload, "collabUpdate")
     }
 
     fn handle_wire_message(&mut self, bytes: Vec<u8>) -> Result<WireMessageResult, String> {
@@ -385,6 +520,9 @@ impl CollabEngine {
             checked: false,
             alignment: "left".to_owned(),
             indent: 0,
+            image: None,
+            ordered: None,
+            replaces_id: None,
         }])?;
         Ok(true)
     }
@@ -510,6 +648,15 @@ fn out_u32(value: Option<Out>) -> Option<u32> {
 }
 
 fn text_segments<T: ReadTxn>(text_ref: &yrs::TextRef, transaction: &T) -> Vec<CollabTextSegment> {
+    text_segments_for_schema(text_ref, transaction, false)
+}
+
+/// 共同的富文本投影；formal 选择 BlockCraft 的 a:/s: 键，未建模属性仍留在原 Y.Text。
+fn text_segments_for_schema<T: ReadTxn>(
+    text_ref: &yrs::TextRef,
+    transaction: &T,
+    formal: bool,
+) -> Vec<CollabTextSegment> {
     let mut segments = text_ref
         .diff(transaction, |_| ())
         .into_iter()
@@ -521,17 +668,29 @@ fn text_segments<T: ReadTxn>(text_ref: &yrs::TextRef, transaction: &T) -> Vec<Co
             let attributes = chunk.attributes.as_deref();
             Some(CollabTextSegment {
                 text,
-                bold: attribute_enabled(attributes, "bold"),
-                italic: attribute_enabled(attributes, "italic"),
-                underline: attribute_enabled(attributes, "underline"),
-                strikethrough: attribute_enabled(attributes, "strikethrough"),
-                code: attribute_enabled(attributes, "code"),
-                text_color: attribute_string(attributes, "textColor"),
+                bold: attribute_enabled(attributes, schema_attribute("bold", formal)),
+                italic: attribute_enabled(attributes, schema_attribute("italic", formal)),
+                underline: attribute_enabled(attributes, schema_attribute("underline", formal)),
+                strikethrough: attribute_enabled(
+                    attributes,
+                    schema_attribute("strikethrough", formal),
+                ),
+                code: attribute_enabled(attributes, schema_attribute("code", formal)),
+                text_color: attribute_string(attributes, schema_attribute("textColor", formal)),
                 // The collaborative schema uses a stable camelCase name while
                 // Flutter maps it to AppFlowy's package-specific `bg_color`.
-                background_color: attribute_string(attributes, "backgroundColor"),
-                superscript: attribute_enabled(attributes, "cses_superscript"),
-                subscript: attribute_enabled(attributes, "cses_subscript"),
+                background_color: attribute_string(
+                    attributes,
+                    schema_attribute("backgroundColor", formal),
+                ),
+                superscript: attribute_enabled(
+                    attributes,
+                    schema_attribute("cses_superscript", formal),
+                ),
+                subscript: attribute_enabled(
+                    attributes,
+                    schema_attribute("cses_subscript", formal),
+                ),
             })
         })
         .collect::<Vec<_>>();
@@ -603,6 +762,16 @@ fn apply_text_segments(
     transaction: &mut yrs::TransactionMut<'_>,
     block: &CollabBlock,
 ) {
+    apply_text_segments_for_schema(text_ref, transaction, block, false);
+}
+
+/// 受支持格式只清除自己的键；正式模式不删除链接、字体、提及或其他未知属性。
+fn apply_text_segments_for_schema(
+    text_ref: &yrs::TextRef,
+    transaction: &mut yrs::TransactionMut<'_>,
+    block: &CollabBlock,
+    formal: bool,
+) {
     let length = block.text.encode_utf16().count() as u32;
     if length == 0 {
         return;
@@ -620,16 +789,43 @@ fn apply_text_segments(
         ("backgroundColor".into(), Any::Null),
         ("cses_superscript".into(), Any::Null),
         ("cses_subscript".into(), Any::Null),
-    ]);
+    ])
+    .into_iter()
+    .map(|(key, value)| (schema_attribute(&key, formal).into(), value))
+    .collect();
     text_ref.format(transaction, 0, length, clear_attributes);
 
     let mut offset = 0;
     for segment in &block.segments {
         let segment_length = segment.text.encode_utf16().count() as u32;
         if segment_length > 0 && segment.is_styled() {
-            text_ref.format(transaction, offset, segment_length, segment.attributes());
+            let attributes = segment
+                .attributes()
+                .into_iter()
+                .map(|(key, value)| (schema_attribute(&key, formal).into(), value))
+                .collect();
+            text_ref.format(transaction, offset, segment_length, attributes);
         }
         offset += segment_length;
+    }
+}
+
+/// 两种编辑器的格式命名映射；其余键保持原样，不创建第二份正文。
+fn schema_attribute(key: &str, formal: bool) -> &str {
+    if !formal {
+        return key;
+    }
+    match key {
+        "bold" => "a:bold",
+        "italic" => "a:italic",
+        "underline" => "a:underline",
+        "strikethrough" => "a:strike",
+        "code" => "a:code",
+        "textColor" => "s:color",
+        "backgroundColor" => "s:background",
+        "cses_superscript" => "a:sup",
+        "cses_subscript" => "a:sub",
+        _ => key,
     }
 }
 
@@ -777,7 +973,12 @@ fn open_result(engine: &CollabEngine, persisted_update_count: u32) -> OpenDocume
     OpenDocumentResult {
         blocks: engine.blocks(),
         persisted_update_count,
-        shared_type_name: BLOCK_ORDER_NAME.to_owned(),
+        shared_type_name: if engine.blockcraft_root_id.is_some() {
+            blockcraft::ROOT_NAME
+        } else {
+            BLOCK_ORDER_NAME
+        }
+        .to_owned(),
     }
 }
 
@@ -792,6 +993,34 @@ pub fn open_document(
     Ok(result)
 }
 
+/// 打开正式文档的独立缓存分区。document_id 是服务端根 ID，cache_document_id 只用于 SQLite 隔离。
+/// 不创建业务根或补写 Demo 头部；恢复的缓存结构必须能通过正式模型校验。
+#[flutter_rust_bridge::frb(sync)]
+pub fn open_cses_document(
+    document_id: String,
+    cache_document_id: String,
+    database_path: String,
+) -> Result<OpenDocumentResult, String> {
+    let (mut engine, count) = CollabEngine::open(cache_document_id, database_path)?;
+    engine.blockcraft_root_id = Some(document_id.clone());
+    blockcraft::validate(&engine.doc, &document_id)?;
+    let result = open_result(&engine, count);
+    *ENGINE.lock() = Some(engine);
+    Ok(result)
+}
+
+/// 返回正式模型的只读原因，None 表示当前已知结构可编辑；不代表服务端业务授权。
+/// 每次应用远端更新后重新查询，锁、修订和未知内容可能随协同状态变化。
+#[flutter_rust_bridge::frb(sync)]
+pub fn document_read_only_reason() -> Result<Option<String>, String> {
+    with_engine(|engine| {
+        Ok(engine
+            .blockcraft_root_id
+            .as_ref()
+            .and_then(|id| blockcraft::project(&engine.doc, id).reason))
+    })
+}
+
 #[flutter_rust_bridge::frb(sync)]
 pub fn current_blocks() -> Result<Vec<CollabBlock>, String> {
     with_engine(|engine| Ok(engine.blocks()))
@@ -800,6 +1029,98 @@ pub fn current_blocks() -> Result<Vec<CollabBlock>, String> {
 #[flutter_rust_bridge::frb(sync)]
 pub fn create_sync_step1() -> Result<Vec<u8>, String> {
     with_engine(|engine| Ok(engine.sync_step1()))
+}
+
+/// 返回原始 Yjs 状态向量；调用方只在 JSON 传输边界进行 Base64 编码。
+#[flutter_rust_bridge::frb(sync)]
+pub fn encode_state_vector() -> Result<Vec<u8>, String> {
+    with_engine(|engine| Ok(engine.doc.transact().state_vector().encode_v1()))
+}
+
+/// 根据服务端原始状态向量计算其缺失的完整 V1 update，不包装 y-websocket 帧。
+///
+/// `state_vector` 必须是已通过大小检查的解码字节；格式错误返回失败，不改变文档。
+#[flutter_rust_bridge::frb(sync)]
+pub fn encode_document_diff(state_vector: Vec<u8>) -> Result<Vec<u8>, String> {
+    let vector = StateVector::decode_v1(&state_vector)
+        .map_err(|error| format!("invalid state vector: {error}"))?;
+    with_engine(|engine| Ok(engine.doc.transact().encode_state_as_update_v1(&vector)))
+}
+
+/// 应用 PaaS 原始 V1 update，先按当前引擎模型检查结构，再更新文档并写入 SQLite。
+///
+/// `bytes` 不包含 y-websocket 帧或 Base64 文本。返回快照供 Flutter 更新 UI，不生成回包，
+/// 因而远端更新不会被自动回发；调用方在 collabSync 后另行计算差量。
+#[flutter_rust_bridge::frb(sync)]
+pub fn apply_document_update(bytes: Vec<u8>) -> Result<WireMessageResult, String> {
+    with_engine_mut(|engine| engine.apply_cses_update(bytes))
+}
+
+/// 提高本机 Awareness 时钟并编码本 clientID 的在线或删除状态。
+///
+/// `user_id` 与 `user_name` 仅作展示，不是授权凭据；`present` 为 false 时发送标准 null。
+/// 只选择自身 clientID 编码，不把已收到的远端状态再次上行。
+#[flutter_rust_bridge::frb(sync)]
+pub fn encode_local_awareness(
+    user_id: String,
+    user_name: String,
+    present: bool,
+) -> Result<Vec<u8>, String> {
+    with_engine_mut(|engine| {
+        engine
+            .awareness
+            .set_local_state(serde_json::json!({"user": {"id": user_id, "name": user_name}}))
+            .map_err(|error| error.to_string())?;
+        if !present {
+            engine.awareness.clean_local_state();
+        }
+        engine
+            .awareness
+            .update_with_clients([engine.doc.client_id()])
+            .map(|update| update.encode_v1())
+            .map_err(|error| error.to_string())
+    })
+}
+
+/// 应用原始 Awareness 字节并返回其他活动编辑器数量，不更改正文或写入 SQLite。
+///
+/// `bytes` 必须来自 collabAwareness；解码失败不更新状态。
+#[flutter_rust_bridge::frb(sync)]
+pub fn apply_awareness_update(bytes: Vec<u8>) -> Result<u32, String> {
+    let update = AwarenessUpdate::decode_v1(&bytes).map_err(|error| error.to_string())?;
+    with_engine_mut(|engine| {
+        engine
+            .awareness
+            .apply_update(update)
+            .map_err(|error| error.to_string())?;
+        Ok(engine
+            .awareness
+            .iter()
+            .filter(|(id, state)| *id != engine.doc.client_id() && state.data.is_some())
+            .count() as u32)
+    })
+}
+
+/// 断线时清除远端在线显示，保留 Awareness 删除时钟与本机状态，避免旧包复活已删除成员。
+#[flutter_rust_bridge::frb(sync)]
+pub fn clear_remote_awareness() -> Result<(), String> {
+    with_engine_mut(|engine| {
+        let remote = engine
+            .awareness
+            .iter()
+            .filter_map(|(id, _)| (id != engine.doc.client_id()).then_some(id))
+            .collect::<Vec<_>>();
+        for id in remote {
+            engine.awareness.remove_state(id);
+        }
+        Ok(())
+    })
+}
+
+/// 释放本 Demo 当前唯一文档引擎；已同步写入的 SQLite 更新仍可在下次打开时恢复。
+#[flutter_rust_bridge::frb(sync)]
+pub fn close_document() {
+    *ENGINE.lock() = None;
 }
 
 #[flutter_rust_bridge::frb(sync)]
@@ -848,6 +1169,9 @@ mod tests {
             checked: false,
             alignment: "left".to_owned(),
             indent: 0,
+            image: None,
+            ordered: None,
+            replaces_id: None,
         }
     }
 
@@ -872,6 +1196,130 @@ mod tests {
         CollabEngine::open(name.to_owned(), path.to_string_lossy().to_string())
             .expect("open engine")
             .0
+    }
+
+    /// 正式 Yjs 13 生成的快照必须进入原有块模型，不能依赖手机 Demo 私有根名称。
+    #[test]
+    fn blockcraft_yjs_fixture_loads_formatted_paragraphs() {
+        let mut engine = test_engine("fixture-doc");
+        let result = engine
+            .apply_cses_update(
+                include_bytes!("../../tests/fixtures/blockcraft-basic.update").to_vec(),
+            )
+            .expect("valid BlockCraft snapshot");
+        assert_eq!(result.blocks.len(), 3);
+        assert_eq!(result.blocks[0].id, "p1");
+        assert_eq!(result.blocks[0].text, "正文😀");
+        assert!(result.blocks[0].segments[0].bold);
+        assert_eq!(result.blocks[1].block_type, "heading_2");
+        assert!(result.blocks[2].checked);
+    }
+
+    // CSES 载荷只有原始 V1 字节；用两份独立 SQLite 引擎验证双向补传和离线恢复。
+    #[test]
+    fn cses_raw_update_round_trip_and_offline_recovery() {
+        let mut phone_a = test_engine("cses-a");
+        let mut phone_b = test_engine("cses-b");
+        let local = phone_a
+            .apply_block_snapshot(vec![block("a", "paragraph", "原始 V1 😀")])
+            .unwrap();
+        assert!(!local.v1_update.is_empty());
+        let remote = phone_b.apply_cses_update(local.v1_update.clone()).unwrap();
+        assert!(remote.reply.is_empty());
+        assert_eq!(phone_a.blocks(), phone_b.blocks());
+        // 重放同一 update 不改变正文，体现 Yjs 幂等边界。
+        phone_b.apply_cses_update(local.v1_update).unwrap();
+        let mut edited = phone_b.blocks();
+        edited.push(block("b", "paragraph", "离线补传"));
+        phone_b.apply_block_snapshot(edited).unwrap();
+        let vector = phone_a.doc.transact().state_vector().encode_v1();
+        let diff = phone_b
+            .doc
+            .transact()
+            .encode_state_as_update_v1(&StateVector::decode_v1(&vector).unwrap());
+        phone_a.apply_cses_update(diff).unwrap();
+        assert_eq!(phone_a.blocks(), phone_b.blocks());
+        let reopened =
+            CollabEngine::open(phone_a.document_id.clone(), phone_a.database_path.clone())
+                .unwrap()
+                .0;
+        assert_eq!(reopened.blocks(), phone_a.blocks());
+    }
+
+    // 不兼容根类型先在独立 Doc 中检查，拒绝后权威状态和 SQLite 都保持不变。
+    #[test]
+    fn cses_schema_rejection_does_not_mutate_doc_or_sqlite() {
+        let mut engine = test_engine("schema-guard");
+        engine
+            .apply_block_snapshot(vec![block("local", "paragraph", "保留")])
+            .unwrap();
+        let before = engine
+            .doc
+            .transact()
+            .encode_state_as_update_v1(&StateVector::default());
+        let count = load_updates(&engine.connection, &engine.document_id)
+            .unwrap()
+            .len();
+        let foreign = create_compatible_doc();
+        foreign.get_or_insert_map("blocks").insert(
+            &mut foreign.transact_mut(),
+            "desktop",
+            "BlockCraft",
+        );
+        let payload = foreign
+            .transact()
+            .encode_state_as_update_v1(&StateVector::default());
+        assert!(engine
+            .apply_cses_update(payload)
+            .unwrap_err()
+            .contains("UNSUPPORTED_DOCUMENT_SCHEMA"));
+        assert_eq!(
+            before,
+            engine
+                .doc
+                .transact()
+                .encode_state_as_update_v1(&StateVector::default())
+        );
+        assert_eq!(
+            count,
+            load_updates(&engine.connection, &engine.document_id)
+                .unwrap()
+                .len()
+        );
+        assert!(engine.apply_cses_update(vec![0, 0]).is_ok());
+    }
+
+    // 公共桥接仅有此测试访问全局引擎；验证本机心跳提升 clock，退出发 null，不回传他人。
+    #[test]
+    fn cses_awareness_bridge_owns_only_local_client_state() {
+        *ENGINE.lock() = Some(test_engine("awareness"));
+        let first = AwarenessUpdate::decode_v1(
+            &encode_local_awareness("u".into(), "User".into(), true).unwrap(),
+        )
+        .unwrap();
+        let local_id = *first.clients.keys().next().unwrap();
+        let first_clock = first.clients[&local_id].clock;
+        let mut remote = Awareness::new(create_compatible_doc());
+        remote
+            .set_local_state(serde_json::json!({"user": {"id": "other"}}))
+            .unwrap();
+        assert_eq!(
+            apply_awareness_update(remote.update().unwrap().encode_v1()).unwrap(),
+            1
+        );
+        let second = AwarenessUpdate::decode_v1(
+            &encode_local_awareness("u".into(), "User".into(), true).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(second.clients.len(), 1);
+        assert!(second.clients[&local_id].clock > first_clock);
+        clear_remote_awareness().unwrap();
+        let removed = AwarenessUpdate::decode_v1(
+            &encode_local_awareness("u".into(), "User".into(), false).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(removed.clients[&local_id].json.as_ref(), "null");
+        close_document();
     }
 
     #[test]

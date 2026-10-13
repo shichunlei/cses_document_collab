@@ -4,10 +4,60 @@ import 'package:cses_mobile_collab_demo/src/ui/editor_shortcut_toolbar.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  test(
+    'list conversion and undo publish distinct replacement identities',
+    () async {
+      final changes = <List<CollabEditorBlock>>[];
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: const [
+          CollabEditorBlock(id: 'p', blockType: 'paragraph', text: 'first'),
+          CollabEditorBlock(id: 'tail', blockType: 'paragraph', text: 'tail'),
+        ],
+        onLocalBlocksChanged: changes.add,
+      );
+      addTearDown(adapter.dispose);
+      final state = adapter.editorState;
+      await state.formatNode(
+        Selection.single(path: [0], startOffset: 0),
+        (node) => node.copyWith(type: NumberedListBlockKeys.type),
+      );
+      final converted = changes.single.first;
+      expect(converted.id, isNot('p'));
+      expect(converted.replacesId, 'p');
+      state.undoManager.undo();
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+      expect(changes.last.length, 2);
+      expect(changes.last.first.blockType, 'paragraph');
+      expect(changes.last.first.id, isNot(converted.id));
+      expect(changes.last.first.replacesId, converted.id);
+    },
+  );
+
   const initial = CollabEditorBlock(
     id: 'paragraph-a',
     blockType: 'paragraph',
     text: 'Hello',
+  );
+
+  test(
+    'list conversion recovers source when the formatter drops custom attributes',
+    () async {
+      final changes = <List<CollabEditorBlock>>[];
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: const [initial],
+        onLocalBlocksChanged: changes.add,
+      );
+      addTearDown(adapter.dispose);
+      await adapter.editorState.formatNode(
+        Selection.single(path: [0], startOffset: 0),
+        (node) => node.copyWith(
+          type: NumberedListBlockKeys.type,
+          attributes: {NumberedListBlockKeys.delta: node.delta!.toJson()},
+        ),
+      );
+      expect(changes.single.single.replacesId, initial.id);
+      expect(changes.single.single.id, isNot(initial.id));
+    },
   );
 
   test('publishes a local block transaction once with a stable id', () async {

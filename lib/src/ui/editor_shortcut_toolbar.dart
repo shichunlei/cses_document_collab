@@ -4,9 +4,12 @@ import 'dart:math' as math;
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_mobile_collab_demo/src/collab/appflowy_block_editor_adapter.dart';
 import 'package:cses_mobile_collab_demo/src/ui/collab_block_delete.dart';
+import 'package:cses_mobile_collab_demo/src/ui/collab_list_editing.dart';
+import 'package:cses_common/observability/api/log.dart';
 import 'package:cses_mobile_collab_demo/src/ui/stable_mobile_toolbar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show ScrollCacheExtent;
 import 'package:flutter/services.dart';
 
 /// Mobile editor shell matching the keyboard toolbar in the supplied reference.
@@ -28,29 +31,36 @@ class EditorShortcutToolbar extends StatefulWidget {
   createState() => _EditorShortcutToolbarState();
 }
 
+/// 移动工具栏状态：拥有样式控制器和退格拦截器，借用编辑器及其键盘服务。
+/// 首帧后注册拦截器，编辑器更换时迁移订阅，退出时注销，不释放外部 EditorState。
 class _EditorShortcutToolbarState extends State<EditorShortcutToolbar> {
   late _InlineStyleController _inlineStyleController;
-  late final CollabUrlBackedBlockDeleteInterceptor _blockDeleteInterceptor;
+
+  /// 本状态拥有的无状态退格拦截器；注册到借用的键盘服务，退出前注销。
+  late final CollabBlockBackspaceInterceptor _backspaceInterceptor;
   AppFlowyKeyboardService? _interceptedKeyboardService;
   int _emptyParagraphKeyboardRequestGeneration = 0;
 
+  /// 创建所属控制器/拦截器并订阅选区，首帧服务挂载后注册；资源在 dispose 中成对释放。
   @override
   void initState() {
     super.initState();
     registerCsesRichTextAttributes();
     _inlineStyleController = _InlineStyleController(widget.editorState);
-    _blockDeleteInterceptor = CollabUrlBackedBlockDeleteInterceptor();
+    _backspaceInterceptor = CollabBlockBackspaceInterceptor();
     widget.editorState.selectionNotifier.addListener(
       _onSelectionMayNeedEmptyParagraphKeyboard,
     );
-    _registerBlockDeleteInterceptorAfterLayout();
+    _registerBackspaceInterceptorAfterLayout();
   }
 
+  /// [oldWidget] 提供旧编辑器；编辑器更换时先注销旧服务/选区监听并释放旧样式控制器，
+  /// 再绑定当前编辑器。键盘服务和 EditorState 均由外部持有，不在此关闭。
   @override
   void didUpdateWidget(covariant EditorShortcutToolbar oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.editorState != widget.editorState) {
-      _unregisterBlockDeleteInterceptor();
+      _unregisterBackspaceInterceptor();
       oldWidget.editorState.selectionNotifier.removeListener(
         _onSelectionMayNeedEmptyParagraphKeyboard,
       );
@@ -59,13 +69,14 @@ class _EditorShortcutToolbarState extends State<EditorShortcutToolbar> {
       widget.editorState.selectionNotifier.addListener(
         _onSelectionMayNeedEmptyParagraphKeyboard,
       );
-      _registerBlockDeleteInterceptorAfterLayout();
+      _registerBackspaceInterceptorAfterLayout();
     }
   }
 
+  /// 注销借用服务上的退格拦截器及选区监听，释放所属样式控制器；外部编辑器保持有效。
   @override
   void dispose() {
-    _unregisterBlockDeleteInterceptor();
+    _unregisterBackspaceInterceptor();
     widget.editorState.selectionNotifier.removeListener(
       _onSelectionMayNeedEmptyParagraphKeyboard,
     );
@@ -73,7 +84,9 @@ class _EditorShortcutToolbarState extends State<EditorShortcutToolbar> {
     super.dispose();
   }
 
-  void _registerBlockDeleteInterceptorAfterLayout() {
+  /// 在子编辑器首帧挂载服务后注册统一退格入口；已销毁或已注册则跳过，重复回调幂等。
+  /// 不创建键盘服务，成功时保存借用引用供迁移/退出注销。
+  void _registerBackspaceInterceptorAfterLayout() {
     // EditorShortcutToolbar is the parent of AppFlowyEditor, so its initState
     // runs before the child installs KeyboardService. At the first post-frame
     // callback the service is available and can safely accept the interceptor.
@@ -85,13 +98,14 @@ class _EditorShortcutToolbarState extends State<EditorShortcutToolbar> {
       if (keyboardService == null) {
         return;
       }
-      keyboardService.registerInterceptor(_blockDeleteInterceptor);
+      keyboardService.registerInterceptor(_backspaceInterceptor);
       _interceptedKeyboardService = keyboardService;
     });
   }
 
-  void _unregisterBlockDeleteInterceptor() {
-    _interceptedKeyboardService?.unregisterInterceptor(_blockDeleteInterceptor);
+  /// 从借用服务移除本状态拥有的拦截器并清空引用；重复调用安全，不关闭服务。
+  void _unregisterBackspaceInterceptor() {
+    _interceptedKeyboardService?.unregisterInterceptor(_backspaceInterceptor);
     _interceptedKeyboardService = null;
   }
 
@@ -428,22 +442,61 @@ final _blockStyleToolbarItem = MobileToolbarItem.withMenu(
       _BlockStyleMenu(editorState: editorState),
 );
 
+/// 块布局菜单，借用 [EditorState] 显示对齐及三种列表共用缩进能力，不拥有编辑器资源。
 class _BlockLayoutMenu extends StatefulWidget {
+  /// [editorState] 为宿主持有的编辑器；菜单读取当前选区，交互期间不保存选区快照。
   const _BlockLayoutMenu({required this.editorState});
 
+  /// 借用的编辑器，提供选区与事务；由宿主释放，菜单不关闭键盘或编辑器。
   final EditorState editorState;
 
+  /// 创建仅管理菜单展示的状态；列表写入由共用事务负责。
   @override
   createState() => _BlockLayoutMenuState();
 }
 
+/// 根据当前选区展示可用操作；点击时重新校验，事务完成后在仍挂载且编辑器未更换时刷新。
 class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
-  static const _indentableTypes = {
-    BulletedListBlockKeys.type,
-    NumberedListBlockKeys.type,
-    TodoListBlockKeys.type,
-  };
+  Future<void> _setBlockColor(Color? color) async {
+    final state = widget.editorState;
+    final selection = state.selection;
+    final attribute = _colorAttribute;
+    if (state.isDisposed ||
+        !state.editable ||
+        selection == null ||
+        attribute == null) {
+      return;
+    }
+    final transaction = state.transaction;
+    // CSS 值直接供桌面使用；透明度与文字高亮各自独立。
+    final css = color == null
+        ? null
+        : 'rgba(${(color.r * 255).round()}, ${(color.g * 255).round()}, ${(color.b * 255).round()}, ${color.a})';
+    for (final node in state.getNodesInSelection(selection)) {
+      if (node.delta == null ||
+          (attribute == csesBlockBorderColorAttribute &&
+              node.type != QuoteBlockKeys.type)) {
+        continue;
+      }
+      transaction.updateNode(node, {
+        attribute: css,
+        if (attribute == csesBlockBackgroundColorAttribute)
+          blockComponentBackgroundColor: color?.toHex(),
+      });
+    }
+    if (transaction.operations.isEmpty) return;
+    if (state.undoManager.undoStack.isNonEmpty) {
+      state.undoManager.undoStack.last.seal();
+    }
+    await state.apply(
+      transaction,
+      withUpdateSelection: false,
+      skipHistoryDebounce: true,
+    );
+    if (mounted && identical(widget.editorState, state)) setState(() {});
+  }
 
+  /// 使用 [context] 渲染布局按钮；能力判定为纯读取，0 级列表仍可减少缩进转段落。
   @override
   Widget build(BuildContext context) {
     final selection = widget.editorState.selection;
@@ -451,12 +504,8 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
       return const SizedBox.shrink();
     }
     final nodes = widget.editorState.getNodesInSelection(selection);
-    final canIndent =
-        nodes.isNotEmpty &&
-        nodes.every((node) => _indentableTypes.contains(node.type));
-    final canOutdent = canIndent && nodes.any((node) => _indentOf(node) > 0);
-    final canIncreaseIndent =
-        canIndent && nodes.every((node) => _indentOf(node) < 6);
+    final canOutdent = canChangeCollabListIndent(widget.editorState, -1);
+    final canIncreaseIndent = canChangeCollabListIndent(widget.editorState, 1);
 
     return ListView(
       key: const ValueKey('editor-block-layout-menu'),
@@ -464,11 +513,11 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
       children: [
         _PopupIconButton(
           key: const ValueKey('editor-block-outdent'),
-          tooltip: '取消缩进',
+          tooltip: '减少缩进',
           enabled: canOutdent,
           selected: false,
           icon: const Icon(Icons.format_indent_decrease, size: 28),
-          onPressed: () => _changeIndent(selection, -1),
+          onPressed: () => _changeIndent(-1),
         ),
         const SizedBox(width: 5),
         _PopupIconButton(
@@ -477,7 +526,7 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
           enabled: canIncreaseIndent,
           selected: false,
           icon: const Icon(Icons.format_indent_increase, size: 28),
-          onPressed: () => _changeIndent(selection, 1),
+          onPressed: () => _changeIndent(1),
         ),
         const SizedBox(width: 10),
         for (final option in const [
@@ -500,28 +549,37 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
     );
   }
 
-  int _indentOf(Node node) {
-    final value = node.attributes[csesBlockIndentAttribute];
-    return value is int ? value.clamp(0, 6) : 0;
-  }
-
+  /// 读取借用 [node] 的展示对齐方式；未知/缺失值回退 left，无副作用。
   String _alignmentOf(Node node) {
     final value = node.attributes[blockComponentAlign];
     return value == 'center' || value == 'right' ? value as String : 'left';
   }
 
-  Future<void> _changeIndent(Selection selection, int delta) async {
-    await widget.editorState.updateNode(
-      selection,
-      (node) => node.copyWith(
-        attributes: {
-          ...node.attributes,
-          csesBlockIndentAttribute: (_indentOf(node) + delta).clamp(0, 6),
-        },
-      ),
-    );
-    if (mounted) {
-      setState(() {});
+  /// 将 [delta]（-1/+1）应用到点击时的当前选区；复用整组选区一个事务及原光标恢复。
+  /// 不缓存 build 时选区，失效/只读或上限条件不执行。等待事务完成后检查 mounted 和编辑器
+  /// 身份再刷新；非预期异常保留错误/堆栈上报 Log.e，并交 FlutterError，不重复用户提示。
+  Future<void> _changeIndent(int delta) async {
+    final state = widget.editorState;
+    try {
+      await changeCollabListIndent(state, delta);
+      if (mounted && identical(widget.editorState, state)) {
+        setState(() {});
+      }
+    } catch (error, stackTrace) {
+      Log.e(
+        '文档列表缩进失败',
+        error: error,
+        stackTrace: stackTrace,
+        tag: 'DocCollabDemo',
+      );
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'DocCollabDemo',
+          context: ErrorDescription('changing collaborative list indentation'),
+        ),
+      );
     }
   }
 
@@ -560,6 +618,8 @@ class _BlockStyleMenu extends StatefulWidget {
 }
 
 class _BlockStyleMenuState extends State<_BlockStyleMenu> {
+  /// 类型命令执行期间拒绝重复提交；所有退出路径均在 finally 恢复，不持有外部资源。
+  bool _applyingStyle = false;
   // H1-H3 are the initial choices. Selecting H3 reveals H4, and each
   // subsequent highest visible heading reveals exactly one more level.
   int _maxHeadingLevel = 3;
@@ -666,6 +726,8 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
     return math.min(level + 1, 9);
   }
 
+  /// 为借用的 [context] 构建类型菜单；高亮当前起点类型，按钮在点击时读取最新选区。
+  /// 构建过程无编辑副作用，列表命令由统一事务执行，Heading 选项按当前披露上限显示。
   @override
   Widget build(BuildContext context) {
     final selection = widget.editorState.selection;
@@ -688,7 +750,7 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
     return ListView.separated(
       key: const ValueKey('editor-block-style-menu'),
       scrollDirection: Axis.horizontal,
-      cacheExtent: 1000,
+      scrollCacheExtent: const ScrollCacheExtent.pixels(1000),
       itemCount: styles.length,
       separatorBuilder: (_, _) => const SizedBox(width: 4),
       itemBuilder: (context, index) {
@@ -706,37 +768,71 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
                   style: const TextStyle(fontSize: 26, height: 1),
                 )
               : Icon(style.icon, size: 27),
-          onPressed: () => _apply(selection, style),
+          onPressed: () => _apply(style),
         );
       },
     );
   }
 
-  Future<void> _apply(Selection selection, _BlockStyleAction style) async {
-    final selectedNode = widget.editorState.getNodeAtPath(selection.start.path);
-    if (selectedNode?.type == csesDocumentTitleBlockType) {
-      // The title uses a text Delta for native IME behavior, but its block type
-      // is a fixed document invariant and must not become a heading/list/body.
+  /// 将 [style] 应用于点击时的当前选区；列表互换复用统一事务，保留层级、格式、勾选规则和焦点。
+  /// 固定标题、只读/销毁、无选区以及执行中的重复命令不执行；列表与非列表混选不部分切换。
+  /// 借用 EditorState，await 后检查菜单仍挂载且编辑器未更换，避免迟到刷新。失败由本边界
+  /// 记录原始异常和堆栈并交给 Flutter 错误报告；Future 在事务与菜单刷新结束后完成。
+  Future<void> _apply(_BlockStyleAction style) async {
+    final state = widget.editorState;
+    final selection = state.selection;
+    if (_applyingStyle ||
+        state.isDisposed ||
+        !state.editable ||
+        selection == null) {
       return;
     }
-    await widget.editorState.formatNode(
-      selection,
-      (node) => _convertedNode(node, style.blockType, style.headingLevel),
-    );
-    if (!mounted) {
+    final nodes = state.getNodesInSelection(selection);
+    if (nodes.isEmpty ||
+        nodes.any((node) => node.type == csesDocumentTitleBlockType)) {
       return;
     }
-    final level = style.headingLevel;
-    setState(() {
-      if (level != null && level >= 3 && level < 9) {
-        _maxHeadingLevel = math.max(_maxHeadingLevel, level + 1);
-      } else if (level == null || level < 3) {
-        // Paragraph, list, Todo, code and quote actions have no heading level.
-        // They start a fresh heading-selection flow, just like H1 and H2, so
-        // the menu returns to H1-H3 and hides every progressively revealed row.
-        _maxHeadingLevel = 3;
+    _applyingStyle = true;
+    try {
+      const listTypes = {'numbered_list', 'bulleted_list', 'todo_list'};
+      if (listTypes.contains(style.blockType) &&
+          nodes.any((node) => listTypes.contains(node.type))) {
+        await changeCollabListType(state, style.blockType);
+      } else {
+        await state.formatNode(
+          selection,
+          (node) => _convertedNode(node, style.blockType, style.headingLevel),
+        );
       }
-    });
+      if (!mounted || widget.editorState != state || state.isDisposed) {
+        return;
+      }
+      final level = style.headingLevel;
+      setState(() {
+        if (level != null && level >= 3 && level < 9) {
+          _maxHeadingLevel = math.max(_maxHeadingLevel, level + 1);
+        } else if (level == null || level < 3) {
+          _maxHeadingLevel = 3;
+        }
+      });
+    } catch (error, stackTrace) {
+      Log.e(
+        '文档列表类型切换失败',
+        error: error,
+        stackTrace: stackTrace,
+        tag: 'DocCollabDemo',
+      );
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'DocCollabDemo',
+          context: ErrorDescription('切换文档块类型'),
+        ),
+      );
+    } finally {
+      _applyingStyle = false;
+    }
   }
 }
 
@@ -890,7 +986,7 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
     return ListView.separated(
       key: const ValueKey('editor-inline-style-menu'),
       scrollDirection: Axis.horizontal,
-      cacheExtent: 1000,
+      scrollCacheExtent: const ScrollCacheExtent.pixels(1000),
       itemCount: _styles.length + 2,
       separatorBuilder: (_, _) => const SizedBox(width: 6),
       itemBuilder: (context, index) {
@@ -1512,7 +1608,7 @@ class _AddBlockSheet extends StatelessWidget {
                     child: ListView.separated(
                       key: const ValueKey('editor-add-heading-list'),
                       scrollDirection: Axis.horizontal,
-                      cacheExtent: 1000,
+                      scrollCacheExtent: const ScrollCacheExtent.pixels(1000),
                       itemCount: _maxHeadingLevel,
                       separatorBuilder: (_, _) => const SizedBox(width: 8),
                       itemBuilder: (context, index) {

@@ -1,34 +1,41 @@
+import 'dart:async';
+
 import 'package:cses_mobile_collab_demo/src/collab/collab_controller.dart';
 import 'package:cses_mobile_collab_demo/src/ui/collaborative_editor_page.dart';
+import 'package:cses_mobile_collab_demo/src/ui/cses_connection_panel.dart';
 import 'package:flutter/material.dart';
 
+/// 独立 Demo 入口，拥有编辑器控制器并装配 CSES 会话配置面板。
 class CollabDemoPage extends StatefulWidget {
+  /// 创建连接配置页；控制器随此页生命周期创建与释放。
   const CollabDemoPage({super.key});
 
   @override
+  /// 创建本页资源所有者。
   State<CollabDemoPage> createState() => _CollabDemoPageState();
 }
 
+/// 持有唯一协同控制器，进入正文页时借用同一实例。
 class _CollabDemoPageState extends State<CollabDemoPage> {
   late final CollabController _collab;
-  late final TextEditingController _serverUrl;
 
   @override
+  /// 初始化本地文档，网络连接由用户填写会话后触发。
   void initState() {
     super.initState();
     _collab = CollabController();
-    _serverUrl = TextEditingController(text: _collab.serverUrl);
-    _collab.initialize();
+    unawaited(_collab.initialize());
   }
 
   @override
+  /// 释放本页创建的编辑器控制器及协同会话。
   void dispose() {
-    _serverUrl.dispose();
     _collab.dispose();
     super.dispose();
   }
 
   @override
+  /// 使用 [context] 渲染当前状态，无网络或缓存副作用。
   Widget build(BuildContext context) {
     return ListenableBuilder(
       listenable: _collab,
@@ -50,17 +57,7 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  _ConnectionPanel(
-                    urlController: _serverUrl,
-                    documentId: _collab.documentId,
-                    event: _collab.lastProtocolEvent,
-                    persistedUpdateCount: _collab.persistedUpdateCount,
-                    blockCount: _collab.blockCount,
-                    sharedTypeName: _collab.sharedTypeName,
-                    onConnect: () =>
-                        _collab.updateServerUrlAndReconnect(_serverUrl.text),
-                    onReset: _confirmReset,
-                  ),
+                  CsesConnectionPanel(collab: _collab, onReset: _confirmReset),
                   if (_collab.error != null) ...[
                     const SizedBox(height: 12),
                     _ErrorBanner(message: _collab.error!),
@@ -90,7 +87,7 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
                           const Divider(height: 28),
                           FilledButton.icon(
                             key: const ValueKey('open-collaborative-editor'),
-                            onPressed: _collab.initialized
+                            onPressed: _collab.initialized && !_collab.busy
                                 ? _openCollaborativeEditor
                                 : null,
                             icon: const Icon(Icons.edit_document),
@@ -116,6 +113,7 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
     );
   }
 
+  /// 打开独立正文页，Future 在返回连接页时完成；控制器继续持有文档。
   Future<void> _openCollaborativeEditor() {
     FocusManager.instance.primaryFocus?.unfocus();
     return Navigator.of(context).push(
@@ -125,6 +123,7 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
     );
   }
 
+  /// 确认后清理当前文档的本地更新，不删除服务端文档。
   Future<void> _confirmReset() async {
     final confirmed = await showDialog<bool>(
       context: context,
@@ -143,97 +142,22 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
         ],
       ),
     );
-    if (confirmed == true) {
+    if (mounted && confirmed == true) {
       await _collab.resetLocalCache();
     }
   }
 }
 
-class _ConnectionPanel extends StatelessWidget {
-  const _ConnectionPanel({
-    required this.urlController,
-    required this.documentId,
-    required this.event,
-    required this.persistedUpdateCount,
-    required this.blockCount,
-    required this.sharedTypeName,
-    required this.onConnect,
-    required this.onReset,
-  });
-
-  final TextEditingController urlController;
-  final String documentId;
-  final String event;
-  final int persistedUpdateCount;
-  final int blockCount;
-  final String sharedTypeName;
-  final VoidCallback onConnect;
-  final VoidCallback onReset;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      color: Theme.of(context).colorScheme.surfaceContainerLowest,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Wrap(
-              spacing: 16,
-              runSpacing: 12,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                SizedBox(
-                  width: 380,
-                  child: TextField(
-                    controller: urlController,
-                    decoration: const InputDecoration(
-                      labelText: 'y-websocket base URL',
-                      isDense: true,
-                    ),
-                    onSubmitted: (_) => onConnect(),
-                  ),
-                ),
-                FilledButton.icon(
-                  onPressed: onConnect,
-                  icon: const Icon(Icons.sync),
-                  label: const Text('连接 / 重连'),
-                ),
-                TextButton.icon(
-                  onPressed: onReset,
-                  icon: const Icon(Icons.delete_outline),
-                  label: const Text('清本机缓存'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 18,
-              runSpacing: 6,
-              children: [
-                Text('room: $documentId'),
-                Text('protocol: $event'),
-                Text('loaded updates: $persistedUpdateCount'),
-                Text('blocks: $blockCount'),
-                const Text('editor: AppFlowy block editor'),
-                Text('shared type: $sharedTypeName'),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
+/// 主连接及协同阶段的紧凑显示。
 class _StatusChip extends StatelessWidget {
+  /// 显示 [status] 对应的标签和颜色。
   const _StatusChip({required this.status});
 
+  /// 控制器持有的当前阶段。
   final ConnectionStatus status;
 
   @override
+  /// 使用 [context] 渲染当前状态，无网络或缓存副作用。
   Widget build(BuildContext context) {
     final (label, color) = switch (status) {
       ConnectionStatus.starting => ('初始化', Colors.blueGrey),
@@ -250,12 +174,16 @@ class _StatusChip extends StatelessWidget {
   }
 }
 
+/// 可操作失败信息的单一展示位置。
 class _ErrorBanner extends StatelessWidget {
+  /// 显示控制器提供的 [message]，不包含登录凭证。
   const _ErrorBanner({required this.message});
 
+  /// 当前失败文案。
   final String message;
 
   @override
+  /// 使用 [context] 渲染当前状态，无网络或缓存副作用。
   Widget build(BuildContext context) {
     return Material(
       color: Theme.of(context).colorScheme.errorContainer,

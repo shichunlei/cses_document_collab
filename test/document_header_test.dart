@@ -24,7 +24,7 @@ void main() {
     expect(migrated[0].id, csesDocumentCoverBlockId);
     expect(migrated[0].text, csesDefaultDocumentCoverUrl);
     expect(migrated[1].id, csesDocumentTitleBlockId);
-    expect(migrated[1].text, '无标题');
+    expect(migrated[1].text, '未命名文档');
     expect(migrated[2], same(body));
     // Reapplying the migration must be idempotent so reconnects never create a
     // second header or publish a structurally unchanged Rust snapshot.

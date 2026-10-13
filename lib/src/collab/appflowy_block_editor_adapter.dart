@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_mobile_collab_demo/src/collab/collab_image.dart';
+import 'package:cses_mobile_collab_demo/src/collab/collab_ordered.dart';
 import 'package:cses_mobile_collab_demo/src/collab/text_delta.dart' as collab;
 
 typedef LocalEditorBlocksChanged =
@@ -44,6 +47,94 @@ const csesEmbedUrlAttribute = 'url';
 const csesBlockIndentAttribute = 'cses_collab_indent';
 const csesSuperscriptAttribute = 'cses_superscript';
 const csesSubscriptAttribute = 'cses_subscript';
+
+/// AppFlowy 内存中的正式列表投影，不直接写入原生 props。
+const csesOrderedAttribute = 'cses_blockcraft_ordered';
+
+/// 可撤销的原始编号设置 JSON；与派生编号投影分离，避免撤销时恢复过期 order/ms。
+const csesOrderedNumberingAttribute = 'cses_ordered_numbering';
+
+/// 编号历史操作的稳定目标身份；本地元数据，不进入原生 props 或 WS。
+const csesOrderedTargetAttribute = 'cses_ordered_target';
+
+/// 在借用的 [state] 中按稳定 [blockId] 设置正式列表编号；[restart] 为 true 时
+/// 当前项从 1 开始，否则接续同层级计数器。仅正式编号投影可操作，草稿不发送正式命令。
+/// 选择菜单后重新查找节点，删除、类型变化、只读、销毁或已具备请求的设置时返回 false。
+/// 成功通过独立 AppFlowy 事务进入撤销历史并返回 true；事务异常交由调用边界处理。
+/// 不改变选区、不创建资源；原生持久化和广播由适配器的本地事务订阅负责。
+///
+/// ```dart
+/// import 'package:cses_mobile_collab_demo/src/collab/appflowy_block_editor_adapter.dart';
+/// import 'package:cses_mobile_collab_demo/src/collab/collab_ordered.dart';
+/// final adapter = AppFlowyBlockEditorAdapter(
+///   initialBlocks: const [CollabEditorBlock(id: 'item', blockType: 'numbered_list',
+///     text: '正文', ordered: CollabOrdered(order: 0))],
+///   onLocalBlocksChanged: (blocks) { /* 宿主持久化并广播原生增量 */ },
+/// );
+/// await changeCollabOrderedNumbering(adapter.editorState, 'item', restart: true);
+/// adapter.dispose();
+/// ```
+Future<bool> changeCollabOrderedNumbering(
+  EditorState state,
+  String blockId, {
+  required bool restart,
+}) async {
+  if (state.isDisposed || !state.editable) return false;
+  Node? target;
+  for (final node in state.document.root.children) {
+    if (node.attributes[AppFlowyBlockEditorAdapter.collabBlockIdAttribute] ==
+        blockId) {
+      target = node;
+      break;
+    }
+  }
+  if (target == null || target.type != NumberedListBlockKeys.type) return false;
+  final raw = target.attributes[csesOrderedAttribute];
+  if (raw is! Map) return false;
+  final value = CollabOrdered.fromJson(Map<String, dynamic>.from(raw))
+      .withNumbering(
+        target.attributes[csesOrderedNumberingAttribute] as String? ??
+            raw['numbering'] as String? ??
+            '{}',
+      );
+  final settings = jsonDecode(value.numbering) as Map<String, dynamic>;
+  if (restart
+      ? settings['start'] == 1 && settings['continuePrevious'] == false
+      : value.continuesPrevious) {
+    return false;
+  }
+  // 单独封存前一编辑动作，避免编号命令与紧邻的文字输入被一次撤销合并。
+  if (state.undoManager.undoStack.isNonEmpty) {
+    state.undoManager.undoStack.last.seal();
+  }
+  // AppFlowy updateNode 的自动逆操作会保存未传入的其他节点属性。编号历史必须只保存
+  // 两个本地元数据键，防止撤销编号时恢复旧正文、ms 或远端新算出的 order。
+  final transaction = state.transaction
+    ..add(
+      UpdateOperation(
+        target.path,
+        {
+          csesOrderedTargetAttribute: blockId,
+          csesOrderedNumberingAttribute: restart
+              ? '{"start":1,"continuePrevious":false}'
+              : '{"start":0,"continuePrevious":true}',
+        },
+        {
+          csesOrderedTargetAttribute: blockId,
+          csesOrderedNumberingAttribute: value.numbering,
+        },
+      ),
+    );
+  await state.apply(
+    transaction,
+    withUpdateSelection: false,
+    skipHistoryDebounce: true,
+  );
+  return true;
+}
+
+/// 类型转换待消费的来源身份；Rust 完成替换后清除，不保存为共享属性。
+const csesReplacementSourceAttribute = 'cses_replacement_source';
 
 /// Registers the collaborative script attributes with AppFlowy's IME.
 ///
@@ -149,7 +240,19 @@ final class CollabEditorTextSegment {
   }
 }
 
+/// Rust 权威块的不可变展示投影，普通正文与图片专属数据分开保存。
+///
+/// ```dart
+/// import 'package:cses_mobile_collab_demo/src/collab/appflowy_block_editor_adapter.dart';
+/// const block = CollabEditorBlock(id: 'p1', blockType: 'paragraph', text: '正文');
+/// ```
 final class CollabEditorBlock {
+  /// 创建块投影。[id] 是稳定块 ID，[blockType] 是手机块类型，[text] 是正文或媒体 URL。
+  /// [segments] 是正文格式分段，[checked] 仅适用于 Todo，[alignment] 默认 left，
+  /// [indent] 是列表视觉层级 0～6，[image] 仅正式图片使用，null 保持旧草稿行为。
+  /// [ordered] 是正式编号只读投影，null 使用草稿编号；[replacesId] 为类型转换来源，
+  /// 成功写入后置 null，不能复用为普通新块 ID。
+  /// 调用方保持集合不可变；实例不持有编辑器或网络资源。
   const CollabEditorBlock({
     required this.id,
     required this.blockType,
@@ -158,16 +261,42 @@ final class CollabEditorBlock {
     this.checked = false,
     this.alignment = 'left',
     this.indent = 0,
+    this.image,
+    this.ordered,
+    this.replacesId,
   });
 
+  /// Rust 权威块身份，移动和编辑时保持不变。
   final String id;
+
+  /// AppFlowy 映射所需类型，不等于正式 BlockCraft flavour。
   final String blockType;
+
+  /// 文本块正文，或媒体块资源 URL。
   final String text;
+
+  /// 文本格式投影；图片为空，原题注格式由 Rust 保留。
   final List<CollabEditorTextSegment> segments;
+
+  /// Todo 是否勾选，其他类型为 false。
   final bool checked;
+
+  /// left/center/right 对齐；正式图片写入 props.align。
   final String alignment;
+
+  /// 列表的视觉缩进 0～6，图片为零。
   final int indent;
 
+  /// 正式图片的原始布局和题注；其他块及离线草稿为 null。
+  final CollabImage? image;
+
+  /// 正式 ordered 的结构编号，普通块和独立草稿为 null。
+  final CollabOrdered? ordered;
+
+  /// 本地新块所替换的原块身份，普通编辑和远端投影为 null。
+  final String? replacesId;
+
+  /// 计算完整投影哈希，图片布局与题注包含在内。
   @override
   int get hashCode => Object.hash(
     id,
@@ -177,8 +306,12 @@ final class CollabEditorBlock {
     checked,
     alignment,
     indent,
+    image,
+    ordered,
+    replacesId,
   );
 
+  /// 与 [other] 比较完整投影及待消费替换来源，供本地发布去重和远端刷新使用。
   @override
   bool operator ==(Object other) {
     return other is CollabEditorBlock &&
@@ -188,7 +321,10 @@ final class CollabEditorBlock {
         _segmentsEqual(other.segments, segments) &&
         other.checked == checked &&
         other.alignment == alignment &&
-        other.indent == indent;
+        other.indent == indent &&
+        other.image == image &&
+        other.ordered == ordered &&
+        other.replacesId == replacesId;
   }
 
   @override
@@ -200,9 +336,18 @@ final class CollabEditorBlock {
 /// Maps AppFlowy top-level nodes to the mobile block-level Yrs schema.
 ///
 /// AppFlowy owns rendering, selection, IME and local undo. Rust/Yrs owns block
-/// order, block type metadata and a separate collaborative Y.Text per block.
-/// Supported inline Delta attributes are stored as native Y.Text formatting.
+/// order, block type metadata and native text/props/children. 正式图片的题注保留在
+/// image 专属投影中，UI 仍是一个根级资源节点，不把题注混入根顺序。
+/// ```dart
+/// import 'package:cses_mobile_collab_demo/src/collab/appflowy_block_editor_adapter.dart';
+/// final adapter = AppFlowyBlockEditorAdapter(onLocalBlocksChanged: (blocks) {});
+/// // 宿主将 Rust 投影交给 adapter.replaceFromRemote(blocks)。
+/// adapter.dispose();
+/// ```
 final class AppFlowyBlockEditorAdapter {
+  /// [onLocalBlocksChanged] 在本地事务完成后接收完整投影；远端回放不调用它。
+  /// [initialBlocks] 默认空，由适配器创建可落光标的正文。适配器拥有 EditorState 和事务订阅，
+  /// 调用方必须在不再使用编辑器时 dispose，不另行关闭借用的 editorState。
   AppFlowyBlockEditorAdapter({
     required this.onLocalBlocksChanged,
     List<CollabEditorBlock> initialBlocks = const [],
@@ -224,11 +369,28 @@ final class AppFlowyBlockEditorAdapter {
   bool _applyingRemote = false;
   bool _disposed = false;
 
+  /// 当前文档内历史身份到替换身份的链；用于将 AppFlowy Undo/Redo 的旧快照转换为新结构操作。
+  /// 普通文本和排序不生成身份。切换文档时清空，避免不同文档的旧撤销快照互相映射。
+  final Map<String, String> _replacementIds = {};
+
+  /// 丢弃上一文档的身份链及 Undo/Redo 历史；必须在切换引擎后、回放新文档前调用。
+  /// 不关闭编辑器、监听或网络资源，不修改权威文档。
+  void resetDocumentHistory() {
+    _replacementIds.clear();
+    editorState.undoManager.undoStack.clear();
+    editorState.undoManager.redoStack.clear();
+  }
+
   List<CollabEditorBlock> get blocks =>
       _readBlocks(editorState, _lastPublishedBlocks);
   String get text => blocks.map((block) => block.text).join('\n');
 
   /// Applies canonical Rust/Yrs blocks without publishing them as local edits.
+  /// [nextBlocks] 是当前权威投影，空列表显示一个 UI 空段落；Future 在事务完成后结束。
+  /// 块身份、类型、顺序一致时原位更新文字和媒体属性，保留组件、选区与输入连接；
+  /// URL、尺寸和题注复用节点映射，移除的可选投影显式清空。结构不同才重建节点。
+  /// 不记录本地撤销或发送 WS；销毁后不执行，事务异常向调用边界传播。
+  /// 正式编号及原始设置更新内存投影，不进入历史；成功转换后清除 replacesId。
   Future<void> replaceFromRemote(List<CollabEditorBlock> nextBlocks) async {
     if (_disposed) {
       return;
@@ -244,9 +406,8 @@ final class AppFlowyBlockEditorAdapter {
     }
 
     final currentNodes = editorState.document.root.children;
-    // URL-backed blocks do not own a Delta, so replacing them must use the
-    // structural branch below. This also ensures a changed remote URL reaches
-    // native image/video controllers instead of being treated as text input.
+    // 媒体没有 Delta，但仍可通过属性事务更新。同一结构的原生编号确认必须保留
+    // Enter 已创建的节点；整篇删除再插入会让远端路径变换把光标移出文档。
     final canPatchInPlace =
         currentNodes.length == targetBlocks.length &&
         List<bool>.generate(
@@ -255,7 +416,8 @@ final class AppFlowyBlockEditorAdapter {
               _nodeBlockId(currentNodes[index]) == targetBlocks[index].id &&
               _nodeBlockType(currentNodes[index]) ==
                   targetBlocks[index].blockType &&
-              currentNodes[index].delta != null,
+              (currentNodes[index].delta != null ||
+                  _isUrlBackedBlock(targetBlocks[index].blockType)),
         ).every((matches) => matches);
     final transaction = editorState.transaction;
 
@@ -263,6 +425,19 @@ final class AppFlowyBlockEditorAdapter {
       for (var index = 0; index < currentNodes.length; index += 1) {
         final node = currentNodes[index];
         final target = targetBlocks[index];
+        if (_isUrlBackedBlock(target.blockType)) {
+          if (currentBlocks[index] != target) {
+            // 统一复用创建节点时的协议映射，避免 URL/布局/题注形成两套编码。
+            // updateNode 合并属性，故可选图片投影缺失时需要显式 null 删除旧值。
+            transaction.updateNode(node, {
+              ..._nodeFromBlock(target).attributes,
+              if (target.blockType == ImageBlockKeys.type &&
+                  target.image == null)
+                collabImageAttribute: null,
+            });
+          }
+          continue;
+        }
         final currentSegments = _readNodeSegments(node);
         if (!_segmentsEqual(currentSegments, target.segments)) {
           final currentLength = node.delta?.length ?? 0;
@@ -293,10 +468,19 @@ final class AppFlowyBlockEditorAdapter {
             ? target.indent
             : 0;
         if (node.attributes[blockComponentAlign] != target.alignment ||
-            node.attributes[csesBlockIndentAttribute] != targetIndent) {
+            node.attributes[csesBlockIndentAttribute] != targetIndent ||
+            _readOrdered(node) != target.ordered ||
+            node.attributes[csesReplacementSourceAttribute] !=
+                target.replacesId) {
           transaction.updateNode(node, {
             blockComponentAlign: target.alignment,
             csesBlockIndentAttribute: targetIndent,
+            csesOrderedAttribute: target.ordered?.toJson(),
+            csesOrderedNumberingAttribute: target.ordered?.numbering,
+            csesOrderedTargetAttribute: target.ordered == null
+                ? null
+                : target.id,
+            csesReplacementSourceAttribute: target.replacesId,
           });
         }
       }
@@ -329,16 +513,65 @@ final class AppFlowyBlockEditorAdapter {
     }
   }
 
+  /// 在本地 [value] 的 before 阶段按稳定 ID 重定位编号历史，after 阶段发布快照；
+  /// 类型转换生成新身份并记录来源供 Rust 保留扩展数据。
+  /// 远端回放及销毁后不发布；Undo/Redo 的历史身份经文档内映射恢复为当前可替换来源。
+  /// 仅明确修改编号设置属性的 UpdateOperation 生成编号写入意图；普通文字/结构快照
+  /// 即使携带旧设置也不会覆盖原生 start/continuePrevious。撤销和重做复用相同路径。
   void _handleTransaction(EditorTransactionValue value) {
-    if (_disposed || _applyingRemote || value.$1 != TransactionTime.after) {
+    if (_disposed || _applyingRemote) {
       return;
     }
-    final nextBlocks = blocks;
+    if (value.$1 == TransactionTime.before) {
+      _resolveNumberingTargets(value.$2);
+      return;
+    }
+    final numberingNodes = <Node>{};
+    for (final operation in value.$2.operations.whereType<UpdateOperation>()) {
+      if (operation.attributes.containsKey(csesOrderedNumberingAttribute)) {
+        final node = editorState.getNodeAtPath(operation.path);
+        if (node != null) numberingNodes.add(node);
+      }
+    }
+    final nextBlocks = _readBlocks(
+      editorState,
+      _lastPublishedBlocks,
+      numberingNodes: numberingNodes,
+    );
     if (_blocksEqual(nextBlocks, _lastPublishedBlocks)) {
       return;
     }
     _lastPublishedBlocks = List<CollabEditorBlock>.unmodifiable(nextBlocks);
     onLocalBlocksChanged(_lastPublishedBlocks);
+  }
+
+  /// 在借用的 [transaction] 应用前重定位明确编号操作；AppFlowy 的历史路径可能因远端
+  /// 重排失效，因此只使用操作内保存的稳定目标 ID。删除或已转为其他类型时丢弃该操作。
+  /// 其他操作保持原状；同步事务 before 通知保证修改发生在节点写入及历史记录之前。
+  /// 不创建新事务或资源，也不直接改动原生文档，撤销/重做记录最终实际应用的路径。
+  void _resolveNumberingTargets(Transaction transaction) {
+    final operations = <Operation>[];
+    for (final operation in transaction.operations) {
+      if (operation is! UpdateOperation ||
+          !operation.attributes.containsKey(csesOrderedNumberingAttribute)) {
+        operations.add(operation);
+        continue;
+      }
+      var id = operation.attributes[csesOrderedTargetAttribute] as String?;
+      if (id == null) continue;
+      while (_replacementIds.containsKey(id)) {
+        id = _replacementIds[id];
+      }
+      final node = editorState.document.root.children
+          .where(
+            (n) =>
+                _nodeBlockId(n) == id && n.type == NumberedListBlockKeys.type,
+          )
+          .firstOrNull;
+      if (node == null) continue;
+      operations.add(operation.copyWith(path: node.path));
+    }
+    transaction.operations = operations;
   }
 
   void dispose() {
@@ -392,6 +625,8 @@ final class AppFlowyBlockEditorAdapter {
     return node;
   }
 
+  /// 将权威 [block] 转为 AppFlowy 节点，图片保存强类型专属数据的 Map 投影。
+  /// 题注留在资源属性而非 AppFlowy children；实际父子关系由 Rust 的共享类型持有。
   static Node _nodeFromBlock(CollabEditorBlock block) {
     if (_isUrlBackedBlock(block.blockType)) {
       final isImage = block.blockType == ImageBlockKeys.type;
@@ -405,6 +640,8 @@ final class AppFlowyBlockEditorAdapter {
           if (isImage) ImageBlockKeys.url: block.text,
           if (!isImage) csesEmbedUrlAttribute: block.text,
           if (isImage) ImageBlockKeys.align: block.alignment,
+          if (isImage && block.image != null)
+            collabImageAttribute: block.image!.toJson(),
           collabBlockIdAttribute: block.id,
           blockComponentAlign: block.alignment,
           csesBlockIndentAttribute: 0,
@@ -463,6 +700,13 @@ final class AppFlowyBlockEditorAdapter {
       attributes: {
         deltaKey: _deltaFromBlock(block).toJson(),
         collabBlockIdAttribute: block.id,
+        if (block.ordered != null)
+          csesOrderedAttribute: block.ordered!.toJson(),
+        if (block.ordered != null)
+          csesOrderedNumberingAttribute: block.ordered!.numbering,
+        if (block.ordered != null) csesOrderedTargetAttribute: block.id,
+        if (block.replacesId != null)
+          csesReplacementSourceAttribute: block.replacesId,
         blockComponentAlign: block.alignment,
         csesBlockIndentAttribute: _supportsIndent(block.blockType)
             ? block.indent
@@ -472,10 +716,17 @@ final class AppFlowyBlockEditorAdapter {
     );
   }
 
-  static List<CollabEditorBlock> _readBlocks(
+  /// 从借用 [state] 读取完整根投影，[previous] 用于恢复身份及识别 flavour 转换。
+  /// 图片属性显式恢复为强类型；远端回放期间的发布抑制由调用方负责。
+  /// 转换生成新的协同身份，历史身份链保证 Undo/Redo 仍替换当前块，保留 Rust 原生扩展属性。
+  /// [numberingNodes] 默认空集合，只有当前本地事务明确修改编号设置的节点才生成写入意图。
+  /// 恢复为有序列表的历史节点保留其编号投影，Rust 仅在新身份替换时用它初始化原始设置；
+  /// 正常新转入有序列表的节点由类型命令移除旧投影，走默认续号。非有序目标清理内存编号数据。
+  List<CollabEditorBlock> _readBlocks(
     EditorState state,
-    List<CollabEditorBlock> previous,
-  ) {
+    List<CollabEditorBlock> previous, {
+    Set<Node> numberingNodes = const {},
+  }) {
     final nodes = state.document.root.children;
     final explicitIds = nodes
         .map((node) => node.attributes[collabBlockIdAttribute])
@@ -483,9 +734,14 @@ final class AppFlowyBlockEditorAdapter {
         .where((id) => id.isNotEmpty)
         .toSet();
     final seenIds = <String>{};
+    final previousById = {for (final block in previous) block.id: block};
     return List<CollabEditorBlock>.generate(nodes.length, (index) {
       final node = nodes[index];
       var blockId = _nodeBlockId(node);
+      while (!previousById.containsKey(blockId) &&
+          _replacementIds.containsKey(blockId)) {
+        blockId = _replacementIds[blockId]!;
+      }
       final attributeValue = node.attributes[collabBlockIdAttribute];
       final hasExplicitId =
           attributeValue is String && attributeValue.isNotEmpty;
@@ -498,6 +754,25 @@ final class AppFlowyBlockEditorAdapter {
             ? previousId
             : node.id;
       }
+      final before = previousById[blockId];
+      if (!_applyingRemote &&
+          before != null &&
+          _formalFlavour(before.blockType) !=
+              _formalFlavour(_nodeBlockType(node))) {
+        final source = blockId;
+        blockId = Node(type: ParagraphBlockKeys.type).id;
+        _replacementIds[source] = blockId;
+        node.updateAttributes({
+          csesReplacementSourceAttribute: source,
+          if (node.type != NumberedListBlockKeys.type) ...{
+            csesOrderedAttribute: null,
+            csesOrderedNumberingAttribute: null,
+            csesOrderedTargetAttribute: null,
+          },
+          if (node.type == NumberedListBlockKeys.type)
+            csesOrderedTargetAttribute: blockId,
+        });
+      }
       seenIds.add(blockId);
       if (attributeValue != blockId) {
         node.updateAttributes({collabBlockIdAttribute: blockId});
@@ -506,6 +781,19 @@ final class AppFlowyBlockEditorAdapter {
         id: blockId,
         blockType: _nodeBlockType(node),
         text: _readNodePlainText(node),
+        ordered: node.type == NumberedListBlockKeys.type
+            ? _readOrdered(node, edited: numberingNodes.contains(node))
+            : null,
+        replacesId: node.attributes[csesReplacementSourceAttribute] as String?,
+        image:
+            node.type == ImageBlockKeys.type &&
+                node.attributes[collabImageAttribute] is Map
+            ? CollabImage.fromJson(
+                Map<String, dynamic>.from(
+                  node.attributes[collabImageAttribute] as Map,
+                ),
+              )
+            : null,
         segments: _readNodeSegments(node),
         checked:
             node.type == TodoListBlockKeys.type &&
@@ -520,6 +808,24 @@ final class AppFlowyBlockEditorAdapter {
       );
     }, growable: false);
   }
+
+  /// 从借用 [node] 恢复正式编号及设置；草稿或未投影的新项返回 null。
+  /// [edited] 默认 false，仅本地设置事务指定节点时为 true，生成一次性写入意图。
+  /// 不修改节点或写原生文档；缺失设置属性回退原投影，支持历史节点恢复。
+  static CollabOrdered? _readOrdered(Node node, {bool edited = false}) {
+    final value = node.attributes[csesOrderedAttribute];
+    if (value is! Map) return null;
+    final ordered = CollabOrdered.fromJson(Map<String, dynamic>.from(value));
+    return ordered.withNumbering(
+      node.attributes[csesOrderedNumberingAttribute] as String? ??
+          ordered.numbering,
+      edited: edited,
+    );
+  }
+
+  /// 将手机 [type] 归到正式 flavour；标题级别变化仍是同一 paragraph，不替换身份。
+  static String _formalFlavour(String type) =>
+      type.startsWith('heading_') ? 'paragraph' : type;
 
   static String _nodeBlockId(Node node) {
     final value = node.attributes[collabBlockIdAttribute];

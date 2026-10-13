@@ -6,9 +6,9 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions are ignored because they are not marked as `pub`: `apply_block_snapshot`, `apply_remote_update`, `apply_text_segments`, `attribute_enabled`, `attribute_string`, `attributes`, `block_text_name`, `blocks`, `compute_text_delta`, `create_compatible_doc`, `handle_wire_message`, `ignored_message`, `is_indentable_block_type`, `is_styled`, `is_supported_alignment`, `is_supported_block_type`, `load_updates`, `migrate_legacy_text`, `open_result`, `open`, `out_bool`, `out_string`, `out_u32`, `persist_update`, `raw_block_ids`, `reconcile_order`, `sync_step1`, `text_segments`, `utf16_len`, `validate_blocks`, `with_engine_mut`, `with_engine`
+// These functions are ignored because they are not marked as `pub`: `apply_block_snapshot`, `apply_cses_update`, `apply_remote_update`, `apply_text_segments_for_schema`, `apply_text_segments`, `attribute_enabled`, `attribute_string`, `attributes`, `block_text_name`, `blocks`, `compute_text_delta`, `create_compatible_doc`, `handle_wire_message`, `ignored_message`, `is_indentable_block_type`, `is_styled`, `is_supported_alignment`, `is_supported_block_type`, `load_updates`, `migrate_legacy_text`, `open_result`, `open`, `out_bool`, `out_string`, `out_u32`, `persist_update`, `raw_block_ids`, `reconcile_order`, `schema_attribute`, `sync_step1`, `text_segments_for_schema`, `text_segments`, `utf16_len`, `validate_blocks`, `with_engine_mut`, `with_engine`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `CollabEngine`, `TextDelta`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `assert_fields_are_eq`, `assert_fields_are_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `assert_fields_are_eq`, `assert_fields_are_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`
 
 OpenDocumentResult openDocument({
   required String documentId,
@@ -18,11 +18,74 @@ OpenDocumentResult openDocument({
   databasePath: databasePath,
 );
 
+/// 打开正式文档的独立缓存分区。document_id 是服务端根 ID，cache_document_id 只用于 SQLite 隔离。
+/// 不创建业务根或补写 Demo 头部；恢复的缓存结构必须能通过正式模型校验。
+OpenDocumentResult openCsesDocument({
+  required String documentId,
+  required String cacheDocumentId,
+  required String databasePath,
+}) => RustLib.instance.api.crateApiCollabOpenCsesDocument(
+  documentId: documentId,
+  cacheDocumentId: cacheDocumentId,
+  databasePath: databasePath,
+);
+
+/// 返回正式模型的只读原因，None 表示当前已知结构可编辑；不代表服务端业务授权。
+/// 每次应用远端更新后重新查询，锁、修订和未知内容可能随协同状态变化。
+String? documentReadOnlyReason() =>
+    RustLib.instance.api.crateApiCollabDocumentReadOnlyReason();
+
 List<CollabBlock> currentBlocks() =>
     RustLib.instance.api.crateApiCollabCurrentBlocks();
 
 Uint8List createSyncStep1() =>
     RustLib.instance.api.crateApiCollabCreateSyncStep1();
+
+/// 返回原始 Yjs 状态向量；调用方只在 JSON 传输边界进行 Base64 编码。
+Uint8List encodeStateVector() =>
+    RustLib.instance.api.crateApiCollabEncodeStateVector();
+
+/// 根据服务端原始状态向量计算其缺失的完整 V1 update，不包装 y-websocket 帧。
+///
+/// `state_vector` 必须是已通过大小检查的解码字节；格式错误返回失败，不改变文档。
+Uint8List encodeDocumentDiff({required List<int> stateVector}) => RustLib
+    .instance
+    .api
+    .crateApiCollabEncodeDocumentDiff(stateVector: stateVector);
+
+/// 应用 PaaS 原始 V1 update，先按当前引擎模型检查结构，再更新文档并写入 SQLite。
+///
+/// `bytes` 不包含 y-websocket 帧或 Base64 文本。返回快照供 Flutter 更新 UI，不生成回包，
+/// 因而远端更新不会被自动回发；调用方在 collabSync 后另行计算差量。
+WireMessageResult applyDocumentUpdate({required List<int> bytes}) =>
+    RustLib.instance.api.crateApiCollabApplyDocumentUpdate(bytes: bytes);
+
+/// 提高本机 Awareness 时钟并编码本 clientID 的在线或删除状态。
+///
+/// `user_id` 与 `user_name` 仅作展示，不是授权凭据；`present` 为 false 时发送标准 null。
+/// 只选择自身 clientID 编码，不把已收到的远端状态再次上行。
+Uint8List encodeLocalAwareness({
+  required String userId,
+  required String userName,
+  required bool present,
+}) => RustLib.instance.api.crateApiCollabEncodeLocalAwareness(
+  userId: userId,
+  userName: userName,
+  present: present,
+);
+
+/// 应用原始 Awareness 字节并返回其他活动编辑器数量，不更改正文或写入 SQLite。
+///
+/// `bytes` 必须来自 collabAwareness；解码失败不更新状态。
+int applyAwarenessUpdate({required List<int> bytes}) =>
+    RustLib.instance.api.crateApiCollabApplyAwarenessUpdate(bytes: bytes);
+
+/// 断线时清除远端在线显示，保留 Awareness 删除时钟与本机状态，避免旧包复活已删除成员。
+void clearRemoteAwareness() =>
+    RustLib.instance.api.crateApiCollabClearRemoteAwareness();
+
+/// 释放本 Demo 当前唯一文档引擎；已同步写入的 SQLite 更新仍可在下次打开时恢复。
+void closeDocument() => RustLib.instance.api.crateApiCollabCloseDocument();
 
 BlockChangeResult applyBlockSnapshot({required List<CollabBlock> blocks}) =>
     RustLib.instance.api.crateApiCollabApplyBlockSnapshot(blocks: blocks);
@@ -37,13 +100,18 @@ class BlockChangeResult {
   final List<CollabBlock> blocks;
   final Uint8List outboundMessage;
 
+  /// 未套 y-websocket 消息头的 Yjs V1 update，供 PaaS JSON 协议编码为 Base64。
+  final Uint8List v1Update;
+
   const BlockChangeResult({
     required this.blocks,
     required this.outboundMessage,
+    required this.v1Update,
   });
 
   @override
-  int get hashCode => blocks.hashCode ^ outboundMessage.hashCode;
+  int get hashCode =>
+      blocks.hashCode ^ outboundMessage.hashCode ^ v1Update.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -51,7 +119,8 @@ class BlockChangeResult {
       other is BlockChangeResult &&
           runtimeType == other.runtimeType &&
           blocks == other.blocks &&
-          outboundMessage == other.outboundMessage;
+          outboundMessage == other.outboundMessage &&
+          v1Update == other.v1Update;
 }
 
 class CollabBlock {
@@ -63,6 +132,15 @@ class CollabBlock {
   final String alignment;
   final int indent;
 
+  /// 仅正式图片块携带；离线草稿与其他块为 None，不把题注展平为根子块。
+  final CollabImage? image;
+
+  /// 仅正式 ordered 块携带；普通快照不覆盖设置，显式 numbering_edit 只写 start/continuePrevious。
+  final CollabOrdered? ordered;
+
+  /// 本地类型转换的新身份所替换的旧 ID；成功后投影清空，不进入共享属性。
+  final String? replacesId;
+
   const CollabBlock({
     required this.id,
     required this.blockType,
@@ -71,6 +149,9 @@ class CollabBlock {
     required this.checked,
     required this.alignment,
     required this.indent,
+    this.image,
+    this.ordered,
+    this.replacesId,
   });
 
   @override
@@ -81,7 +162,10 @@ class CollabBlock {
       segments.hashCode ^
       checked.hashCode ^
       alignment.hashCode ^
-      indent.hashCode;
+      indent.hashCode ^
+      image.hashCode ^
+      ordered.hashCode ^
+      replacesId.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -94,7 +178,122 @@ class CollabBlock {
           segments == other.segments &&
           checked == other.checked &&
           alignment == other.alignment &&
-          indent == other.indent;
+          indent == other.indent &&
+          image == other.image &&
+          ordered == other.ordered &&
+          replacesId == other.replacesId;
+}
+
+/// 图片布局与题注投影。尺寸为可选原始属性，None 不等于自动写入默认值。
+/// wr 为相对正文宽度百分比，ar 为宽高比；width/height 为旧版像素尺寸，rotation 为角度。
+class CollabImage {
+  final double? widthRatio;
+  final double? aspectRatio;
+  final double? width;
+  final double? height;
+  final double? rotation;
+  final List<CollabImageCaption> captions;
+
+  const CollabImage({
+    this.widthRatio,
+    this.aspectRatio,
+    this.width,
+    this.height,
+    this.rotation,
+    required this.captions,
+  });
+
+  static Future<CollabImage> default_() =>
+      RustLib.instance.api.crateApiCollabCollabImageDefault();
+
+  @override
+  int get hashCode =>
+      widthRatio.hashCode ^
+      aspectRatio.hashCode ^
+      width.hashCode ^
+      height.hashCode ^
+      rotation.hashCode ^
+      captions.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CollabImage &&
+          runtimeType == other.runtimeType &&
+          widthRatio == other.widthRatio &&
+          aspectRatio == other.aspectRatio &&
+          width == other.width &&
+          height == other.height &&
+          rotation == other.rotation &&
+          captions == other.captions;
+}
+
+/// 图片题注的编辑投影；正文仍属于原 caption 块的 Y.Text，格式与未知元数据留在 Doc 中。
+class CollabImageCaption {
+  final String id;
+  final String text;
+
+  const CollabImageCaption({required this.id, required this.text});
+
+  @override
+  int get hashCode => id.hashCode ^ text.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CollabImageCaption &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          text == other.text;
+}
+
+/// 正式有序列表投影；order 为零基，start 为归一化的一基起始编号。
+/// heading/depth 共同划分计数器；普通快照只读，只有 numbering_edit 能改变编号设置。
+class CollabOrdered {
+  final int order;
+  final int? start;
+  final int heading;
+  final String? markerStyle;
+  final bool needsRepair;
+
+  /// 仅 start/continuePrevious 的原始 JSON，保留缺失、null、0 和历史数值类型供撤销恢复。
+  final String numbering;
+
+  /// 显式设置事务的一次性输入；投影恒为 None，不把自动序号或旧设置当作用户命令。
+  final String? numberingEdit;
+
+  const CollabOrdered({
+    required this.order,
+    this.start,
+    required this.heading,
+    this.markerStyle,
+    required this.needsRepair,
+    required this.numbering,
+    this.numberingEdit,
+  });
+
+  @override
+  int get hashCode =>
+      order.hashCode ^
+      start.hashCode ^
+      heading.hashCode ^
+      markerStyle.hashCode ^
+      needsRepair.hashCode ^
+      numbering.hashCode ^
+      numberingEdit.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CollabOrdered &&
+          runtimeType == other.runtimeType &&
+          order == other.order &&
+          start == other.start &&
+          heading == other.heading &&
+          markerStyle == other.markerStyle &&
+          needsRepair == other.needsRepair &&
+          numbering == other.numbering &&
+          numberingEdit == other.numberingEdit;
 }
 
 class CollabTextSegment {

@@ -36,9 +36,12 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  cupertino_icons: ^1.0.8
   cses_collab_core:
     path: rust_builder
+  # CSES 主连接、登录上下文、心跳和重连由工作区 Common 提供。
+  cses_common:
+    path: ../cses/cses.common
+  crypto: ^3.0.7
   flutter_rust_bridge: 2.13.0
   path_provider: ^2.1.6
   provider: ^6.1.5+1

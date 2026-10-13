@@ -66,7 +66,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.13.0';
 
   @override
-  int get rustContentHash => -350178527;
+  int get rustContentHash => -1647568854;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -78,17 +78,47 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 }
 
 abstract class RustLibApi extends BaseApi {
+  int crateApiCollabApplyAwarenessUpdate({required List<int> bytes});
+
   BlockChangeResult crateApiCollabApplyBlockSnapshot({
     required List<CollabBlock> blocks,
   });
+
+  WireMessageResult crateApiCollabApplyDocumentUpdate({
+    required List<int> bytes,
+  });
+
+  void crateApiCollabClearRemoteAwareness();
+
+  void crateApiCollabCloseDocument();
+
+  Future<CollabImage> crateApiCollabCollabImageDefault();
 
   Uint8List crateApiCollabCreateSyncStep1();
 
   List<CollabBlock> crateApiCollabCurrentBlocks();
 
+  String? crateApiCollabDocumentReadOnlyReason();
+
+  Uint8List crateApiCollabEncodeDocumentDiff({required List<int> stateVector});
+
+  Uint8List crateApiCollabEncodeLocalAwareness({
+    required String userId,
+    required String userName,
+    required bool present,
+  });
+
+  Uint8List crateApiCollabEncodeStateVector();
+
   WireMessageResult crateApiCollabHandleWireMessage({required List<int> bytes});
 
   Future<void> crateApiInitInitApp();
+
+  OpenDocumentResult crateApiCollabOpenCsesDocument({
+    required String documentId,
+    required String cacheDocumentId,
+    required String databasePath,
+  });
 
   OpenDocumentResult crateApiCollabOpenDocument({
     required String documentId,
@@ -107,6 +137,32 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   });
 
   @override
+  int crateApiCollabApplyAwarenessUpdate({required List<int> bytes}) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_list_prim_u_8_loose(bytes, serializer);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 1)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_u_32,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta: kCrateApiCollabApplyAwarenessUpdateConstMeta,
+        argValues: [bytes],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiCollabApplyAwarenessUpdateConstMeta =>
+      const TaskConstMeta(
+        debugName: "apply_awareness_update",
+        argNames: ["bytes"],
+      );
+
+  @override
   BlockChangeResult crateApiCollabApplyBlockSnapshot({
     required List<CollabBlock> blocks,
   }) {
@@ -115,7 +171,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_list_collab_block(blocks, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 1)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 2)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_block_change_result,
@@ -135,12 +191,111 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  WireMessageResult crateApiCollabApplyDocumentUpdate({
+    required List<int> bytes,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_list_prim_u_8_loose(bytes, serializer);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 3)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_wire_message_result,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta: kCrateApiCollabApplyDocumentUpdateConstMeta,
+        argValues: [bytes],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiCollabApplyDocumentUpdateConstMeta =>
+      const TaskConstMeta(
+        debugName: "apply_document_update",
+        argNames: ["bytes"],
+      );
+
+  @override
+  void crateApiCollabClearRemoteAwareness() {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 4)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_unit,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta: kCrateApiCollabClearRemoteAwarenessConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiCollabClearRemoteAwarenessConstMeta =>
+      const TaskConstMeta(debugName: "clear_remote_awareness", argNames: []);
+
+  @override
+  void crateApiCollabCloseDocument() {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 5)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_unit,
+          decodeErrorData: null,
+        ),
+        constMeta: kCrateApiCollabCloseDocumentConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiCollabCloseDocumentConstMeta =>
+      const TaskConstMeta(debugName: "close_document", argNames: []);
+
+  @override
+  Future<CollabImage> crateApiCollabCollabImageDefault() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 6,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_collab_image,
+          decodeErrorData: null,
+        ),
+        constMeta: kCrateApiCollabCollabImageDefaultConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiCollabCollabImageDefaultConstMeta =>
+      const TaskConstMeta(debugName: "collab_image_default", argNames: []);
+
+  @override
   Uint8List crateApiCollabCreateSyncStep1() {
     return handler.executeSync(
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 2)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 7)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_prim_u_8_strict,
@@ -162,7 +317,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 3)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 8)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_collab_block,
@@ -179,6 +334,108 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "current_blocks", argNames: []);
 
   @override
+  String? crateApiCollabDocumentReadOnlyReason() {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 9)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_opt_String,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta: kCrateApiCollabDocumentReadOnlyReasonConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiCollabDocumentReadOnlyReasonConstMeta =>
+      const TaskConstMeta(debugName: "document_read_only_reason", argNames: []);
+
+  @override
+  Uint8List crateApiCollabEncodeDocumentDiff({required List<int> stateVector}) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_list_prim_u_8_loose(stateVector, serializer);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 10)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_list_prim_u_8_strict,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta: kCrateApiCollabEncodeDocumentDiffConstMeta,
+        argValues: [stateVector],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiCollabEncodeDocumentDiffConstMeta =>
+      const TaskConstMeta(
+        debugName: "encode_document_diff",
+        argNames: ["stateVector"],
+      );
+
+  @override
+  Uint8List crateApiCollabEncodeLocalAwareness({
+    required String userId,
+    required String userName,
+    required bool present,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(userId, serializer);
+          sse_encode_String(userName, serializer);
+          sse_encode_bool(present, serializer);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 11)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_list_prim_u_8_strict,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta: kCrateApiCollabEncodeLocalAwarenessConstMeta,
+        argValues: [userId, userName, present],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiCollabEncodeLocalAwarenessConstMeta =>
+      const TaskConstMeta(
+        debugName: "encode_local_awareness",
+        argNames: ["userId", "userName", "present"],
+      );
+
+  @override
+  Uint8List crateApiCollabEncodeStateVector() {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 12)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_list_prim_u_8_strict,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta: kCrateApiCollabEncodeStateVectorConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiCollabEncodeStateVectorConstMeta =>
+      const TaskConstMeta(debugName: "encode_state_vector", argNames: []);
+
+  @override
   WireMessageResult crateApiCollabHandleWireMessage({
     required List<int> bytes,
   }) {
@@ -187,7 +444,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_list_prim_u_8_loose(bytes, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 4)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 13)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_wire_message_result,
@@ -215,7 +472,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 5,
+            funcId: 14,
             port: port_,
           );
         },
@@ -234,6 +491,38 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "init_app", argNames: []);
 
   @override
+  OpenDocumentResult crateApiCollabOpenCsesDocument({
+    required String documentId,
+    required String cacheDocumentId,
+    required String databasePath,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(documentId, serializer);
+          sse_encode_String(cacheDocumentId, serializer);
+          sse_encode_String(databasePath, serializer);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 15)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_open_document_result,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta: kCrateApiCollabOpenCsesDocumentConstMeta,
+        argValues: [documentId, cacheDocumentId, databasePath],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiCollabOpenCsesDocumentConstMeta =>
+      const TaskConstMeta(
+        debugName: "open_cses_document",
+        argNames: ["documentId", "cacheDocumentId", "databasePath"],
+      );
+
+  @override
   OpenDocumentResult crateApiCollabOpenDocument({
     required String documentId,
     required String databasePath,
@@ -244,7 +533,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_String(documentId, serializer);
           sse_encode_String(databasePath, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 6)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 16)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_open_document_result,
@@ -268,7 +557,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 7)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 17)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_open_document_result,
@@ -294,11 +583,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   BlockChangeResult dco_decode_block_change_result(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 2)
-      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    if (arr.length != 3)
+      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
     return BlockChangeResult(
       blocks: dco_decode_list_collab_block(arr[0]),
       outboundMessage: dco_decode_list_prim_u_8_strict(arr[1]),
+      v1Update: dco_decode_list_prim_u_8_strict(arr[2]),
     );
   }
 
@@ -309,11 +599,35 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  CollabImage dco_decode_box_autoadd_collab_image(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_collab_image(raw);
+  }
+
+  @protected
+  CollabOrdered dco_decode_box_autoadd_collab_ordered(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_collab_ordered(raw);
+  }
+
+  @protected
+  double dco_decode_box_autoadd_f_64(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as double;
+  }
+
+  @protected
+  int dco_decode_box_autoadd_u_32(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as int;
+  }
+
+  @protected
   CollabBlock dco_decode_collab_block(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 7)
-      throw Exception('unexpected arr length: expect 7 but see ${arr.length}');
+    if (arr.length != 10)
+      throw Exception('unexpected arr length: expect 10 but see ${arr.length}');
     return CollabBlock(
       id: dco_decode_String(arr[0]),
       blockType: dco_decode_String(arr[1]),
@@ -322,6 +636,54 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       checked: dco_decode_bool(arr[4]),
       alignment: dco_decode_String(arr[5]),
       indent: dco_decode_u_32(arr[6]),
+      image: dco_decode_opt_box_autoadd_collab_image(arr[7]),
+      ordered: dco_decode_opt_box_autoadd_collab_ordered(arr[8]),
+      replacesId: dco_decode_opt_String(arr[9]),
+    );
+  }
+
+  @protected
+  CollabImage dco_decode_collab_image(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 6)
+      throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
+    return CollabImage(
+      widthRatio: dco_decode_opt_box_autoadd_f_64(arr[0]),
+      aspectRatio: dco_decode_opt_box_autoadd_f_64(arr[1]),
+      width: dco_decode_opt_box_autoadd_f_64(arr[2]),
+      height: dco_decode_opt_box_autoadd_f_64(arr[3]),
+      rotation: dco_decode_opt_box_autoadd_f_64(arr[4]),
+      captions: dco_decode_list_collab_image_caption(arr[5]),
+    );
+  }
+
+  @protected
+  CollabImageCaption dco_decode_collab_image_caption(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return CollabImageCaption(
+      id: dco_decode_String(arr[0]),
+      text: dco_decode_String(arr[1]),
+    );
+  }
+
+  @protected
+  CollabOrdered dco_decode_collab_ordered(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 7)
+      throw Exception('unexpected arr length: expect 7 but see ${arr.length}');
+    return CollabOrdered(
+      order: dco_decode_u_32(arr[0]),
+      start: dco_decode_opt_box_autoadd_u_32(arr[1]),
+      heading: dco_decode_u_32(arr[2]),
+      markerStyle: dco_decode_opt_String(arr[3]),
+      needsRepair: dco_decode_bool(arr[4]),
+      numbering: dco_decode_String(arr[5]),
+      numberingEdit: dco_decode_opt_String(arr[6]),
     );
   }
 
@@ -346,9 +708,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  double dco_decode_f_64(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as double;
+  }
+
+  @protected
   List<CollabBlock> dco_decode_list_collab_block(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_collab_block).toList();
+  }
+
+  @protected
+  List<CollabImageCaption> dco_decode_list_collab_image_caption(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_collab_image_caption).toList();
   }
 
   @protected
@@ -386,6 +760,30 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   String? dco_decode_opt_String(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw == null ? null : dco_decode_String(raw);
+  }
+
+  @protected
+  CollabImage? dco_decode_opt_box_autoadd_collab_image(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_collab_image(raw);
+  }
+
+  @protected
+  CollabOrdered? dco_decode_opt_box_autoadd_collab_ordered(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_collab_ordered(raw);
+  }
+
+  @protected
+  double? dco_decode_opt_box_autoadd_f_64(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_f_64(raw);
+  }
+
+  @protected
+  int? dco_decode_opt_box_autoadd_u_32(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_u_32(raw);
   }
 
   @protected
@@ -434,9 +832,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_blocks = sse_decode_list_collab_block(deserializer);
     var var_outboundMessage = sse_decode_list_prim_u_8_strict(deserializer);
+    var var_v1Update = sse_decode_list_prim_u_8_strict(deserializer);
     return BlockChangeResult(
       blocks: var_blocks,
       outboundMessage: var_outboundMessage,
+      v1Update: var_v1Update,
     );
   }
 
@@ -444,6 +844,34 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   bool sse_decode_bool(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return deserializer.buffer.getUint8() != 0;
+  }
+
+  @protected
+  CollabImage sse_decode_box_autoadd_collab_image(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_collab_image(deserializer));
+  }
+
+  @protected
+  CollabOrdered sse_decode_box_autoadd_collab_ordered(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_collab_ordered(deserializer));
+  }
+
+  @protected
+  double sse_decode_box_autoadd_f_64(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_f_64(deserializer));
+  }
+
+  @protected
+  int sse_decode_box_autoadd_u_32(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_u_32(deserializer));
   }
 
   @protected
@@ -456,6 +884,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_checked = sse_decode_bool(deserializer);
     var var_alignment = sse_decode_String(deserializer);
     var var_indent = sse_decode_u_32(deserializer);
+    var var_image = sse_decode_opt_box_autoadd_collab_image(deserializer);
+    var var_ordered = sse_decode_opt_box_autoadd_collab_ordered(deserializer);
+    var var_replacesId = sse_decode_opt_String(deserializer);
     return CollabBlock(
       id: var_id,
       blockType: var_blockType,
@@ -464,6 +895,59 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       checked: var_checked,
       alignment: var_alignment,
       indent: var_indent,
+      image: var_image,
+      ordered: var_ordered,
+      replacesId: var_replacesId,
+    );
+  }
+
+  @protected
+  CollabImage sse_decode_collab_image(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_widthRatio = sse_decode_opt_box_autoadd_f_64(deserializer);
+    var var_aspectRatio = sse_decode_opt_box_autoadd_f_64(deserializer);
+    var var_width = sse_decode_opt_box_autoadd_f_64(deserializer);
+    var var_height = sse_decode_opt_box_autoadd_f_64(deserializer);
+    var var_rotation = sse_decode_opt_box_autoadd_f_64(deserializer);
+    var var_captions = sse_decode_list_collab_image_caption(deserializer);
+    return CollabImage(
+      widthRatio: var_widthRatio,
+      aspectRatio: var_aspectRatio,
+      width: var_width,
+      height: var_height,
+      rotation: var_rotation,
+      captions: var_captions,
+    );
+  }
+
+  @protected
+  CollabImageCaption sse_decode_collab_image_caption(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_id = sse_decode_String(deserializer);
+    var var_text = sse_decode_String(deserializer);
+    return CollabImageCaption(id: var_id, text: var_text);
+  }
+
+  @protected
+  CollabOrdered sse_decode_collab_ordered(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_order = sse_decode_u_32(deserializer);
+    var var_start = sse_decode_opt_box_autoadd_u_32(deserializer);
+    var var_heading = sse_decode_u_32(deserializer);
+    var var_markerStyle = sse_decode_opt_String(deserializer);
+    var var_needsRepair = sse_decode_bool(deserializer);
+    var var_numbering = sse_decode_String(deserializer);
+    var var_numberingEdit = sse_decode_opt_String(deserializer);
+    return CollabOrdered(
+      order: var_order,
+      start: var_start,
+      heading: var_heading,
+      markerStyle: var_markerStyle,
+      needsRepair: var_needsRepair,
+      numbering: var_numbering,
+      numberingEdit: var_numberingEdit,
     );
   }
 
@@ -497,6 +981,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  double sse_decode_f_64(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return deserializer.buffer.getFloat64();
+  }
+
+  @protected
   List<CollabBlock> sse_decode_list_collab_block(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
@@ -504,6 +994,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var ans_ = <CollabBlock>[];
     for (var idx_ = 0; idx_ < len_; ++idx_) {
       ans_.add(sse_decode_collab_block(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<CollabImageCaption> sse_decode_list_collab_image_caption(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <CollabImageCaption>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_collab_image_caption(deserializer));
     }
     return ans_;
   }
@@ -563,6 +1067,54 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  CollabImage? sse_decode_opt_box_autoadd_collab_image(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_collab_image(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  CollabOrdered? sse_decode_opt_box_autoadd_collab_ordered(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_collab_ordered(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  double? sse_decode_opt_box_autoadd_f_64(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_f_64(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  int? sse_decode_opt_box_autoadd_u_32(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_u_32(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
   int sse_decode_u_32(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return deserializer.buffer.getUint32();
@@ -616,12 +1168,43 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_list_collab_block(self.blocks, serializer);
     sse_encode_list_prim_u_8_strict(self.outboundMessage, serializer);
+    sse_encode_list_prim_u_8_strict(self.v1Update, serializer);
   }
 
   @protected
   void sse_encode_bool(bool self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     serializer.buffer.putUint8(self ? 1 : 0);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_collab_image(
+    CollabImage self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_collab_image(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_collab_ordered(
+    CollabOrdered self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_collab_ordered(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_f_64(double self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_f_64(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_u_32(int self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_u_32(self, serializer);
   }
 
   @protected
@@ -634,6 +1217,42 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_bool(self.checked, serializer);
     sse_encode_String(self.alignment, serializer);
     sse_encode_u_32(self.indent, serializer);
+    sse_encode_opt_box_autoadd_collab_image(self.image, serializer);
+    sse_encode_opt_box_autoadd_collab_ordered(self.ordered, serializer);
+    sse_encode_opt_String(self.replacesId, serializer);
+  }
+
+  @protected
+  void sse_encode_collab_image(CollabImage self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_opt_box_autoadd_f_64(self.widthRatio, serializer);
+    sse_encode_opt_box_autoadd_f_64(self.aspectRatio, serializer);
+    sse_encode_opt_box_autoadd_f_64(self.width, serializer);
+    sse_encode_opt_box_autoadd_f_64(self.height, serializer);
+    sse_encode_opt_box_autoadd_f_64(self.rotation, serializer);
+    sse_encode_list_collab_image_caption(self.captions, serializer);
+  }
+
+  @protected
+  void sse_encode_collab_image_caption(
+    CollabImageCaption self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.id, serializer);
+    sse_encode_String(self.text, serializer);
+  }
+
+  @protected
+  void sse_encode_collab_ordered(CollabOrdered self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_u_32(self.order, serializer);
+    sse_encode_opt_box_autoadd_u_32(self.start, serializer);
+    sse_encode_u_32(self.heading, serializer);
+    sse_encode_opt_String(self.markerStyle, serializer);
+    sse_encode_bool(self.needsRepair, serializer);
+    sse_encode_String(self.numbering, serializer);
+    sse_encode_opt_String(self.numberingEdit, serializer);
   }
 
   @protected
@@ -655,6 +1274,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_f_64(double self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putFloat64(self);
+  }
+
+  @protected
   void sse_encode_list_collab_block(
     List<CollabBlock> self,
     SseSerializer serializer,
@@ -663,6 +1288,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_i_32(self.length, serializer);
     for (final item in self) {
       sse_encode_collab_block(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_collab_image_caption(
+    List<CollabImageCaption> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_collab_image_caption(item, serializer);
     }
   }
 
@@ -718,6 +1355,52 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_bool(self != null, serializer);
     if (self != null) {
       sse_encode_String(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_opt_box_autoadd_collab_image(
+    CollabImage? self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_collab_image(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_opt_box_autoadd_collab_ordered(
+    CollabOrdered? self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_collab_ordered(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_opt_box_autoadd_f_64(double? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_f_64(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_opt_box_autoadd_u_32(int? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_u_32(self, serializer);
     }
   }
 

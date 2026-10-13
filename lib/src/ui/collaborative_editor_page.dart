@@ -5,6 +5,8 @@ import 'package:cses_mobile_collab_demo/src/collab/appflowy_block_editor_adapter
 import 'package:cses_mobile_collab_demo/src/collab/collab_controller.dart';
 import 'package:cses_mobile_collab_demo/src/ui/collab_block_delete.dart';
 import 'package:cses_mobile_collab_demo/src/ui/collab_embed_block.dart';
+import 'package:cses_mobile_collab_demo/src/ui/collab_list_editing.dart';
+import 'package:cses_mobile_collab_demo/src/ui/collab_ordered_marker.dart';
 import 'package:cses_mobile_collab_demo/src/ui/editor_shortcut_toolbar.dart';
 import 'package:flutter/material.dart';
 
@@ -13,37 +15,75 @@ import 'package:flutter/material.dart';
 /// Connection setup and controller ownership deliberately stay outside this
 /// widget. A host application only needs to inject a [CollabController] whose
 /// lifecycle is longer than this route.
+///
+/// ```dart
+/// import 'package:cses_mobile_collab_demo/src/collab/collab_controller.dart';
+/// import 'package:cses_mobile_collab_demo/src/ui/collaborative_editor_page.dart';
+/// final controller = CollabController(); // 宿主负责 initialize/configureCses 和 dispose。
+/// final page = CollaborativeEditorPage(collab: controller);
+/// ```
 class CollaborativeEditorPage extends StatefulWidget {
+  /// 借用 [collab] 展示文档与能力，不创建或关闭其协同会话。
   const CollaborativeEditorPage({super.key, required this.collab});
 
+  /// 宿主持有的协同控制器；未知内容和锁等只读约束由该控制器提供。
   final CollabController collab;
 
+  /// 创建页面展示状态及能力监听；释放时只归还编辑模式控制权。
   @override
   createState() => _CollaborativeEditorPageState();
 }
 
+/// 页面持有用户预览选择，并与 Rust 模型能力共同决定编辑器是否允许修改。
 class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
   bool _isPreview = false;
 
+  /// 当前借用的文档控制器，不拥有其资源。
   CollabController get collab => widget.collab;
 
+  /// 用户预览和模型只读约束任意一个生效时都使用只读展示。
+  bool get _previewOnly => _isPreview || !collab.canEdit;
+
+  /// 注册能力监听，使远端锁定或未知块到达后立即关闭本地输入。
+  @override
+  void initState() {
+    super.initState();
+    collab.addListener(_syncEditorMode);
+    _syncEditorMode();
+  }
+
+  /// 根据控制器的当前能力同步输入状态；不连接网络或更改正文。
+  void _syncEditorMode() {
+    collab.editorState.editable = !_previewOnly;
+    if (_previewOnly) {
+      collab.editorState.service.keyboardService?.closeKeyboard();
+    }
+  }
+
+  /// [oldWidget] 的控制器被替换时解绑旧监听，再绑定新实例，避免借用对象泄漏。
   @override
   void didUpdateWidget(covariant CollaborativeEditorPage oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.collab != widget.collab) {
-      oldWidget.collab.editorState.editable = true;
+      oldWidget.collab.removeListener(_syncEditorMode);
+      oldWidget.collab.editorState.editable = oldWidget.collab.canEdit;
       _isPreview = false;
-      widget.collab.editorState.editable = true;
+      collab.addListener(_syncEditorMode);
+      _syncEditorMode();
     }
   }
 
+  /// 注销页面监听，并恢复宿主能力约束下的模式；不释放借用控制器。
   @override
   void dispose() {
-    collab.editorState.editable = true;
+    collab.removeListener(_syncEditorMode);
+    collab.editorState.editable = collab.canEdit;
     super.dispose();
   }
 
+  /// 切换用户预览选择；Rust 模型只读时拒绝进入编辑，预览会关闭键盘并清除选区。
   void _toggleMode() {
+    if (!collab.canEdit) return;
     final nextPreview = !_isPreview;
     final editorState = collab.editorState;
     if (nextPreview) {
@@ -51,10 +91,11 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
       editorState.service.keyboardService?.closeKeyboard();
       editorState.selection = null;
     }
-    editorState.editable = !nextPreview;
     setState(() => _isPreview = nextPreview);
+    _syncEditorMode();
   }
 
+  /// 使用 [context] 渲染当前模式和能力；网络和监听由控制器及页面生命周期管理。
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
@@ -68,7 +109,7 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
             surfaceTintColor: Colors.transparent,
             title: const Text('协同文档'),
             actions: [
-              if (!_isPreview) ...[
+              if (!_previewOnly) ...[
                 IconButton(
                   key: const ValueKey('editor-undo'),
                   tooltip: '撤销',
@@ -83,17 +124,17 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
                 ),
               ],
               Tooltip(
-                message: _isPreview ? '进入编辑' : '进入预览',
+                message: _previewOnly ? '进入编辑' : '进入预览',
                 child: TextButton.icon(
                   key: const ValueKey('editor-mode-toggle'),
-                  onPressed: _toggleMode,
+                  onPressed: collab.canEdit ? _toggleMode : null,
                   icon: Icon(
-                    _isPreview
+                    _previewOnly
                         ? Icons.edit_outlined
                         : Icons.visibility_outlined,
                     size: 20,
                   ),
-                  label: Text(_isPreview ? '编辑' : '预览'),
+                  label: Text(_previewOnly ? '编辑' : '预览'),
                 ),
               ),
               const SizedBox(width: 4),
@@ -109,13 +150,15 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
                 ),
                 if (collab.error != null)
                   _EditorErrorBanner(message: collab.error!),
+                if (collab.readOnlyReason != null)
+                  _EditorErrorBanner(message: '只读：${collab.readOnlyReason}'),
                 Expanded(
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
                       Padding(
                         padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
-                        child: _isPreview
+                        child: _previewOnly
                             ? _buildEditor()
                             : EditorShortcutToolbar(
                                 editorState: collab.editorState,
@@ -141,6 +184,9 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
     );
   }
 
+  /// 构建原生编辑器，输入遵守用户模式与模型能力；有序/无序/Todo 列表 Enter 在标准快捷键
+  /// 之前处理扁平 depth；行首退格先退级再交给标题/媒体边界处理。软键盘通过工具栏注册
+  /// 同规则拦截器，硬件命令在下方优先派发，共用事务及现有协同发布链路。
   Widget _buildEditor() {
     return IgnorePointer(
       ignoring: !collab.initialized,
@@ -149,14 +195,17 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
         child: AppFlowyEditor(
           key: const ValueKey('collaborative-appflowy-editor'),
           editorState: collab.editorState,
-          editable: !_isPreview,
-          disableKeyboardService: _isPreview,
+          editable: !_previewOnly,
+          disableKeyboardService: _previewOnly,
           blockComponentBuilders: _collabBlockComponentBuilders,
-          // The custom Backspace command must precede AppFlowy's standard
-          // handler; otherwise the standard implementation skips non-Delta
-          // resource blocks and merges with an earlier text paragraph.
+          characterShortcutEvents: [
+            collabListEnter,
+            ...standardCharacterShortcutEvents,
+          ],
+          // 列表行首先逐级退级；非列表再保护标题/删除前置媒体，最后交标准退格。
+          // 不能先让标准命令合并正文，或在退级前删除列表旁的图片/视频。
           commandShortcutEvents: [
-            collabUrlBackedBlockBackspaceCommand,
+            collabBlockBackspaceCommand,
             ...standardCommandShortcutEvents,
           ],
           shrinkWrap: false,
@@ -175,7 +224,10 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
 
 final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders = {
   ...standardBlockComponentBuilderMap,
-  // AppFlowy already supplies the image renderer through the standard map.
+  // 正式图片复用资源块选区外壳并展示尺寸/题注；离线图片仍使用 AppFlowy 原组件。
+  ImageBlockKeys.type: CollabEmbedBlockComponentBuilder(
+    kind: CollabEmbedKind.image,
+  ),
   // Links and videos remain first-class selectable editor blocks by providing
   // custom renderers whose URL attributes are synchronized through Rust/Yrs.
   csesLinkBlockType: CollabEmbedBlockComponentBuilder(
@@ -213,6 +265,7 @@ final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders = {
     ),
   ),
   NumberedListBlockKeys.type: NumberedListBlockComponentBuilder(
+    iconBuilder: buildCollabOrderedMarker,
     configuration: standardBlockComponentConfiguration.copyWith(
       padding: _listBlockPadding,
     ),
