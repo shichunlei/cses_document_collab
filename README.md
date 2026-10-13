@@ -78,11 +78,14 @@ rustup target add \
 cargo run --manifest-path server/Cargo.toml
 ```
 
-再启动 Flutter，并选择 Android 或 iOS 设备：
+再安装依赖并启动 Flutter：
 
 ```bash
+flutter pub get
 flutter devices
-flutter run -d <android-or-ios-device-id>
+flutter run -d <android-device-id>
+# iOS 先生成 SPM 所需的 Rust XCFramework
+scripts/ios.sh run -d <ios-device-id>
 ```
 
 启动后先在连接管理页确认 WS 地址和 room，再点击“进入协同编辑”打开独立
@@ -93,11 +96,42 @@ flutter run -d <android-or-ios-device-id>
 ```bash
 flutter devices
 flutter run -d <android-device-id>
-flutter run -d <ios-device-id>
+scripts/ios.sh run -d <ios-device-id>
 ```
 
 iPhone 首次运行需要在 Xcode 中配置开发者签名。两台手机默认使用
 `ws://196.168.1.109:1234/demo-room`，无需修改 room。
+
+宿主 Flutter 最低版本为 **3.44.0**，Dart 最低版本为 **3.12.0**；`rust_builder` 支持 Flutter 3.44.0 起。
+依赖按 Flutter 3.44.9 验证，锁定版本见 `pubspec.lock`。Flutter SDK 固定的依赖与工作区插件的
+主版本约束继续由依赖解析器管理。`rust_builder` 使用 ffi 2.2.0、ffigen 21.0.0；
+ffigen 22/23 的传递依赖要求 meta >=1.19，与该 Flutter SDK 固定的 meta 1.18 不兼容。
+FRB 的 Dart 库、Rust 库和代码生成器统一为 2.13.0。修改 Rust API 后使用
+`flutter_rust_bridge_codegen` 2.13.0 执行 `flutter_rust_bridge_codegen generate`，再重建原生库。
+iOS 最低版本为 14.0。宿主只使用 SPM，不需要 CocoaPods；`rust_builder/ios` 提供 SPM 接入。
+使用 Flutter 3.44.9 默认启用的 SPM 支持，无需额外配置开关。
+Flutter 生成的 `FlutterGeneratedPluginSwiftPackage` 管理插件，Rust 插件通过
+`rust_builder/ios/cses_collab_core/Package.swift` 引用本地动态 XCFramework。
+
+使用统一入口构建或启动 iOS，确保先更新 Rust 库，再解析 SPM 依赖：
+从旧 Pods 工程首次切换时先执行一次 `flutter clean`，避免链接到旧的同名 framework 缓存。
+
+```bash
+scripts/ios.sh build ios --debug --no-codesign
+scripts/ios.sh run -d <ios-device-id>
+# Release / Archive
+scripts/ios.sh build ipa --release
+```
+
+脚本用 Cargo 增量构建真机 arm64、模拟器 arm64/x86_64，并生成 XCFramework。
+Rust 二进制和 `ios/Flutter/ephemeral/` 都不提交；干净检出后必须先通过上述入口生成二进制。
+使用 Xcode 前先执行 `scripts/build_rust_ios.sh debug`（归档使用 `release`），再执行
+`flutter build ios --debug --config-only` 并打开 `ios/Runner.xcworkspace`。
+Rust 源码改变后，直接使用 Xcode 或 `flutter run` 前也需要重新执行 Rust 构建脚本。
+iPhone 首次运行需要在 Xcode 中配置开发者签名。
+
+`rust_builder` 保留 `.podspec` 和 Cargokit 构建脚本，供其他使用 CocoaPods 的宿主接入；
+本宿主不提供 CocoaPods 回退配置。
 
 已验证的 Android Debug APK 位于：
 

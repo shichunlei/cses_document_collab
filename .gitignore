@@ -31,6 +31,7 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+/rust_builder/ios/cses_collab_core/*.xcframework/
 /coverage/
 /rust/target/
 /server/target/
@@ -49,3 +50,5 @@ app.*.map.json
 /dist
 
 */pubspec.lock
+# Keep the app's verified dependency resolution, including when globally ignored.
+!/pubspec.lock
