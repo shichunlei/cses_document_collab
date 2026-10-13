@@ -143,6 +143,8 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
             ],
           ),
           body: SafeArea(
+            // Use the system bottom inset once. It becomes zero above the
+            // keyboard so the toolbar stays flush with the keyboard edge.
             child: Column(
               children: [
                 _EditorConnectionBar(
@@ -159,9 +161,9 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
                     fit: StackFit.expand,
                     children: [
                       Padding(
-                        // AppFlowy's editorStyle.padding is applied per block,
-                        // so page-level vertical space belongs outside it.
-                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
+                        // AppFlowy's editorStyle.padding is per block. Keep
+                        // page spacing here and bottom spacing in SafeArea.
+                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                         child: _previewOnly
                             ? _buildEditor()
                             : EditorShortcutToolbar(
