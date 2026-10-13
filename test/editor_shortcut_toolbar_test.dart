@@ -210,7 +210,7 @@ void main() {
     await tester.tap(linkTile);
     await tester.pumpAndSettle();
     expect(
-      find.byKey(const ValueKey('editor-link-url-dialog')),
+      find.byKey(const ValueKey('editor-link-source-sheet')),
       findsOneWidget,
     );
 
@@ -218,6 +218,7 @@ void main() {
       find.byKey(const ValueKey('editor-url-block-input')),
       'https://example.com/article',
     );
+    await tester.pump();
     await tester.tap(find.byKey(const ValueKey('editor-url-block-submit')));
     await tester.pumpAndSettle();
     // The production flow retries a cancelled Android IME animation once.

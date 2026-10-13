@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:cses_mobile_collab_demo/src/collab/editor_media_upload.dart';
+import 'package:cses_mobile_collab_demo/src/ui/editor_media_source_sheet.dart';
+
 import 'package:cses_mobile_collab_demo/src/collab/collab_resource.dart';
 import 'dart:math' as math;
 
@@ -1502,47 +1505,79 @@ Future<void> showEditorAddBlockSheet(
   }
 }
 
-/// Prompts for a URL and inserts a link, image or video from the compact
-/// keyboard toolbar.
-///
-/// The dialog temporarily hides the IME. After insertion the returned caret is
-/// restored to the trailing paragraph and explicitly handed back to AppFlowy's
-/// keyboard service, matching the behavior of selections made in the add
-/// sheet.
+/// Opens the mobile source sheet, then inserts a link or uploaded resource.
+/// Resolve the original block by identity after file selection/upload so remote
+/// reorder/deletion never inserts into an unrelated paragraph.
 Future<void> showEditorUrlBlockDialog(
   BuildContext context,
   EditorState editorState,
   String blockType,
 ) async {
+  if (editorState.isDisposed || !editorState.editable) return;
   final selection = editorState.selection;
   if (selection == null) {
     _showToolbarMessage(context, '请先把光标放入正文');
     return;
   }
-
+  final target = editorState.getNodeAtPath(selection.start.path);
+  if (target == null) return;
+  final targetId = _mediaTargetId(target);
   FocusManager.instance.primaryFocus?.unfocus();
-  final url = await showDialog<String>(
-    context: context,
-    builder: (context) => _UrlBlockDialog(blockType: blockType),
+  final source = await showEditorMediaSourceSheet(
+    context,
+    blockType: blockType,
+    canEdit: () => !editorState.isDisposed && editorState.editable,
   );
-  if (url == null || !context.mounted) {
-    return;
-  }
-
-  final nextSelection = await applyUrlBlockShortcut(
-    editorState,
-    selection,
-    blockType,
-    url,
-  );
-  if (!context.mounted) {
-    return;
-  }
+  if (source == null || !context.mounted) return;
+  final current = _mediaInsertionSelection(editorState, targetId, selection);
+  final nextSelection = current == null
+      ? null
+      : await applyUrlBlockShortcut(
+          editorState,
+          current,
+          blockType,
+          source.url,
+          mediaSource: source,
+        );
+  if (!context.mounted) return;
   if (nextSelection == null) {
-    _showToolbarMessage(context, '插入失败，请重新选择正文位置');
+    _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
     return;
   }
   await _restoreEditorCaretAndKeyboard(context, editorState, nextSelection);
+}
+
+String _mediaTargetId(Node node) =>
+    node.attributes[AppFlowyBlockEditorAdapter.collabBlockIdAttribute]
+        as String? ??
+    node.id;
+
+Node? _findMediaTarget(EditorState state, String id) {
+  if (state.isDisposed) return null;
+  Node? visit(Node node) {
+    if (_mediaTargetId(node) == id) return node;
+    for (final child in node.children) {
+      final found = visit(child);
+      if (found != null) return found;
+    }
+    return null;
+  }
+
+  return visit(state.document.root);
+}
+
+Selection? _mediaInsertionSelection(
+  EditorState state,
+  String id,
+  Selection old,
+) {
+  if (state.isDisposed || !state.editable) return null;
+  final node = _findMediaTarget(state, id);
+  if (node == null) return null;
+  return Selection.single(
+    path: node.path,
+    startOffset: old.start.offset.clamp(0, node.delta?.length ?? 0),
+  );
 }
 
 /// Adds, replaces or removes the fixed document cover URL.
@@ -1558,24 +1593,28 @@ Future<void> showEditorDocumentCoverDialog(
   final currentUrl =
       coverNode.attributes[csesEmbedUrlAttribute] as String? ?? '';
   FocusManager.instance.primaryFocus?.unfocus();
-  final nextUrl = await showDialog<String>(
-    context: context,
-    builder: (context) => _UrlBlockDialog(
-      blockType: csesDocumentCoverBlockType,
-      initialValue: currentUrl,
-      allowRemove: currentUrl.isNotEmpty,
-    ),
+  if (editorState.isDisposed || !editorState.editable) return;
+  final id = _mediaTargetId(coverNode);
+  final source = await showEditorMediaSourceSheet(
+    context,
+    blockType: csesDocumentCoverBlockType,
+    initialValue: currentUrl,
+    allowRemove: currentUrl.isNotEmpty,
+    canEdit: () => !editorState.isDisposed && editorState.editable,
   );
-  if (nextUrl == null || !context.mounted) {
+  if (source == null ||
+      !context.mounted ||
+      editorState.isDisposed ||
+      !editorState.editable) {
     return;
   }
-  final latestNode = editorState.document.nodeAtPath(coverNode.path);
+  final latestNode = _findMediaTarget(editorState, id);
   if (latestNode == null || latestNode.type != csesDocumentCoverBlockType) {
     _showToolbarMessage(context, '封面已被远端修改，请重试');
     return;
   }
   final transaction = editorState.transaction
-    ..updateNode(latestNode, {csesEmbedUrlAttribute: nextUrl});
+    ..updateNode(latestNode, {csesEmbedUrlAttribute: source.url});
   await editorState.apply(transaction);
 }
 
@@ -1967,24 +2006,34 @@ class _AddBlockSheet extends StatelessWidget {
     BuildContext context,
     String blockType,
   ) async {
-    final url = await showDialog<String>(
-      context: context,
-      builder: (context) => _UrlBlockDialog(blockType: blockType),
+    if (editorState.isDisposed || !editorState.editable) return;
+    final target = editorState.getNodeAtPath(capturedSelection.start.path);
+    if (target == null) return;
+    final id = _mediaTargetId(target);
+    final source = await showEditorMediaSourceSheet(
+      context,
+      blockType: blockType,
+      canEdit: () => !editorState.isDisposed && editorState.editable,
     );
-    if (url == null) {
-      // Cancelling only the nested URL dialog keeps the add sheet open so the
-      // user can choose a different block without losing the captured caret.
-      return;
-    }
-
-    final nextSelection = await applyUrlBlockShortcut(
+    if (source == null || !context.mounted) return;
+    final current = _mediaInsertionSelection(
       editorState,
+      id,
       capturedSelection,
-      blockType,
-      url,
     );
+    final nextSelection = current == null
+        ? null
+        : await applyUrlBlockShortcut(
+            editorState,
+            current,
+            blockType,
+            source.url,
+            mediaSource: source,
+          );
     if (context.mounted && nextSelection != null) {
       Navigator.pop<Selection>(context, nextSelection);
+    } else if (context.mounted) {
+      _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
     }
   }
 }
@@ -2000,104 +2049,6 @@ class _BlockShortcut {
   final int? headingLevel;
 }
 
-class _UrlBlockDialog extends StatefulWidget {
-  const _UrlBlockDialog({
-    required this.blockType,
-    this.initialValue = '',
-    this.allowRemove = false,
-  });
-
-  final String blockType;
-  final String initialValue;
-  final bool allowRemove;
-
-  @override
-  State<_UrlBlockDialog> createState() => _UrlBlockDialogState();
-}
-
-class _UrlBlockDialogState extends State<_UrlBlockDialog> {
-  late final TextEditingController _controller;
-  String? _errorText;
-
-  String get _label => switch (widget.blockType) {
-    ImageBlockKeys.type => '图片链接',
-    csesVideoBlockType => '视频链接',
-    csesDocumentCoverBlockType => '封面图片链接',
-    _ => '网页链接',
-  };
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController(text: widget.initialValue);
-  }
-
-  void _submit() {
-    final value = _controller.text.trim();
-    if (!_isSupportedBlockUrl(value) ||
-        (isCollabResourceType(widget.blockType) &&
-            !isCollabResourceUrl(widget.blockType, value))) {
-      setState(() => _errorText = '请输入完整的 http:// 或 https:// 链接');
-      return;
-    }
-    Navigator.pop<String>(context, value);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      key: ValueKey('editor-${widget.blockType}-url-dialog'),
-      title: Text('插入$_label'),
-      content: TextField(
-        key: const ValueKey('editor-url-block-input'),
-        controller: _controller,
-        autofocus: true,
-        keyboardType: TextInputType.url,
-        textInputAction: TextInputAction.done,
-        autocorrect: false,
-        enableSuggestions: false,
-        decoration: InputDecoration(
-          labelText: _label,
-          hintText: 'https://example.com/resource',
-          errorText: _errorText,
-          border: const OutlineInputBorder(),
-        ),
-        onChanged: (_) {
-          // Clear a stale validation message as soon as the user edits the
-          // value; validation runs again on submission against trimmed input.
-          if (_errorText != null) {
-            setState(() => _errorText = null);
-          }
-        },
-        onSubmitted: (_) => _submit(),
-      ),
-      actions: [
-        if (widget.allowRemove)
-          TextButton(
-            key: const ValueKey('editor-cover-url-remove'),
-            onPressed: () => Navigator.pop<String>(context, ''),
-            child: const Text('移除封面'),
-          ),
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('取消'),
-        ),
-        FilledButton(
-          key: const ValueKey('editor-url-block-submit'),
-          onPressed: _submit,
-          child: const Text('插入'),
-        ),
-      ],
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-}
-
 /// Inserts a URL-backed block and returns the editable caret after it.
 ///
 /// Link, image and video components are non-text blocks, so they cannot host
@@ -2108,25 +2059,32 @@ Future<Selection?> applyUrlBlockShortcut(
   EditorState editorState,
   Selection selection,
   String blockType,
-  String url,
-) async {
-  if (selection.start.path.isEmpty ||
+  String url, {
+  EditorMediaSource? mediaSource,
+}) async {
+  if (editorState.isDisposed ||
+      !editorState.editable ||
+      selection.start.path.isEmpty ||
       !_isUrlBackedBlockType(blockType) ||
       !_isSupportedBlockUrl(url) ||
       (isCollabResourceType(blockType) &&
           !isCollabResourceUrl(blockType, url))) {
     return null;
   }
-  final targetPath = [selection.start.path.first];
+  final targetPath = selection.start.path;
   final targetNode = editorState.getNodeAtPath(targetPath);
   if (targetNode == null) {
     return null;
   }
 
-  final mediaNode = _urlBackedNode(blockType, url.trim());
+  final mediaNode = _urlBackedNode(
+    blockType,
+    url.trim(),
+    mediaSource: mediaSource,
+  );
   final sourceIsEmpty = targetNode.delta?.toPlainText().isEmpty == true;
-  final insertPath = sourceIsEmpty ? targetPath : [targetPath.first + 1];
-  final paragraphPath = [insertPath.first + 1];
+  final insertPath = sourceIsEmpty ? targetPath : targetPath.next;
+  final paragraphPath = insertPath.next;
   final paragraphNode = _emptyNode(ParagraphBlockKeys.type, null);
   final nextSelection = Selection.single(path: paragraphPath, startOffset: 0);
 
@@ -2152,7 +2110,11 @@ Future<Selection?> applyUrlBlockShortcut(
   return nextSelection;
 }
 
-Node _urlBackedNode(String blockType, String url) {
+Node _urlBackedNode(
+  String blockType,
+  String url, {
+  EditorMediaSource? mediaSource,
+}) {
   if (blockType == ImageBlockKeys.type) {
     return Node(
       type: ImageBlockKeys.type,
@@ -2169,8 +2131,18 @@ Node _urlBackedNode(String blockType, String url) {
       if (isCollabResourceType(blockType))
         ...CollabResource.fromValues({
           if (blockType == 'attachment')
-            'name': Uri.parse(url).pathSegments.lastOrNull ?? '附件',
-          if (blockType == 'audio') 'sourceType': 'link',
+            'name':
+                mediaSource?.file?.name ??
+                Uri.parse(url).pathSegments.lastOrNull ??
+                '附件',
+          if (blockType == 'audio')
+            'sourceType': mediaSource?.file == null ? 'link' : 'local',
+          if (mediaSource?.file != null &&
+              {'audio', 'attachment'}.contains(blockType)) ...{
+            'name': mediaSource!.file!.name,
+            'size': mediaSource.file!.size,
+            if (blockType == 'attachment') 'type': mediaSource.file!.mimeType,
+          },
           if (blockType == 'bookmark') 'title': Uri.parse(url).host,
           if ({'embed', 'figma-embed', 'juejin-embed'}.contains(blockType)) ...{
             'wr': 100,
