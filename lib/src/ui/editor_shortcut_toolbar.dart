@@ -599,15 +599,20 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
           ('left', '左对齐', Icons.format_align_left),
           ('center', '居中', Icons.format_align_center),
           ('right', '右对齐', Icons.format_align_right),
+          ('justify', '两端对齐', Icons.format_align_justify),
+          ('distributed', '分散对齐', Icons.space_bar),
         ]) ...[
           _PopupIconButton(
             key: ValueKey('editor-block-align-${option.$1}'),
             tooltip: option.$2,
+            enabled:
+                !const {'justify', 'distributed'}.contains(option.$1) ||
+                nodes.every((n) => n.delta != null),
             selected:
                 nodes.isNotEmpty &&
                 nodes.every((node) => _alignmentOf(node) == option.$1),
             icon: Icon(option.$3, size: 28),
-            onPressed: () => _setAlignment(selection, option.$1),
+            onPressed: () => _setAlignment(option.$1),
           ),
           const SizedBox(width: 5),
         ],
@@ -637,7 +642,15 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
   /// 读取借用 [node] 的展示对齐方式；未知/缺失值回退 left，无副作用。
   String _alignmentOf(Node node) {
     final value = node.attributes[blockComponentAlign];
-    return value == 'center' || value == 'right' ? value as String : 'left';
+    return const {
+          'left',
+          'center',
+          'right',
+          'justify',
+          'distributed',
+        }.contains(value)
+        ? value as String
+        : 'left';
   }
 
   /// 将 [delta]（-1/+1）应用到点击时的当前选区；复用整组选区一个事务及原光标恢复。
@@ -668,16 +681,36 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
     }
   }
 
-  Future<void> _setAlignment(Selection selection, String alignment) async {
-    await widget.editorState.updateNode(
-      selection,
-      (node) => node.copyWith(
-        attributes: {...node.attributes, blockComponentAlign: alignment},
-      ),
-    );
-    if (mounted) {
-      setState(() {});
+  Future<void> _setAlignment(String alignment) async {
+    final state = widget.editorState;
+    final selection = state.selection;
+    if (state.isDisposed || !state.editable || selection == null) return;
+    final nodes = state.getNodesInSelection(selection);
+    if (const {'justify', 'distributed'}.contains(alignment) &&
+        nodes.any((n) => n.delta == null)) {
+      return;
     }
+    final transaction = state.transaction;
+    for (final node in nodes) {
+      if (node.attributes[blockComponentAlign] == alignment) continue;
+      transaction.add(
+        UpdateOperation(
+          node.path,
+          {blockComponentAlign: alignment},
+          {blockComponentAlign: node.attributes[blockComponentAlign]},
+        ),
+      );
+    }
+    if (transaction.operations.isEmpty) return;
+    if (state.undoManager.undoStack.isNonEmpty) {
+      state.undoManager.undoStack.last.seal();
+    }
+    await state.apply(
+      transaction,
+      withUpdateSelection: false,
+      skipHistoryDebounce: true,
+    );
+    if (mounted && identical(widget.editorState, state)) setState(() {});
   }
 }
 

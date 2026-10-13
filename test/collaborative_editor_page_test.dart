@@ -182,6 +182,124 @@ void main() {
     },
   );
 
+  testWidgets('alignment switches keep the live paragraph caret and text', (
+    tester,
+  ) async {
+    final adapter = AppFlowyBlockEditorAdapter(
+      initialBlocks: const [
+        CollabEditorBlock(id: 'p', blockType: 'paragraph', text: '切换对齐方式'),
+      ],
+      onLocalBlocksChanged: (_) {},
+    );
+    addTearDown(adapter.dispose);
+    final collab = _ReadyCollabController(testEditorState: adapter.editorState);
+    addTearDown(collab.dispose);
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          AppFlowyEditorLocalizations.delegate,
+        ],
+        home: CollaborativeEditorPage(collab: collab),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final state = adapter.editorState;
+    final node = state.document.first!;
+    state.selection = Selection.single(path: [0], startOffset: 3);
+    for (final mode in ['distributed', 'justify', 'left', 'distributed']) {
+      await state.apply(
+        state.transaction..updateNode(node, {blockComponentAlign: mode}),
+        withUpdateSelection: false,
+      );
+      await tester.pumpAndSettle();
+      expect(state.selection?.startIndex, 3);
+      expect(
+        node.selectable!.getCursorRectInPosition(
+          Position(path: [0], offset: 3),
+        ),
+        isNotNull,
+      );
+      expect(adapter.blocks.single.text, '切换对齐方式');
+      expect(tester.takeException(), isNull);
+    }
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
+
+  for (final alignment in ['justify', 'distributed']) {
+    for (final type in [
+      'paragraph',
+      'heading_2',
+      'quote',
+      'bulleted_list',
+      'numbered_list',
+      'todo_list',
+    ]) {
+      testWidgets(
+        '$type renders $alignment and preserves selection in preview',
+        (tester) async {
+          final adapter = AppFlowyBlockEditorAdapter(
+            initialBlocks: [
+              CollabEditorBlock(
+                id: 'text',
+                blockType: type,
+                text: '测试段落的对齐方式',
+                alignment: alignment,
+              ),
+            ],
+            onLocalBlocksChanged: (_) {},
+          );
+          addTearDown(adapter.dispose);
+          final collab = _ReadyCollabController(
+            testEditorState: adapter.editorState,
+          );
+          addTearDown(collab.dispose);
+          await tester.pumpWidget(
+            MaterialApp(
+              localizationsDelegates: const [
+                GlobalMaterialLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                AppFlowyEditorLocalizations.delegate,
+              ],
+              home: CollaborativeEditorPage(collab: collab),
+            ),
+          );
+          await tester.pumpAndSettle();
+          void expectLayout() {
+            final richText = tester.widget<AppFlowyRichText>(
+              find.byType(AppFlowyRichText),
+            );
+            expect(richText.textAlign, TextAlign.justify);
+            final texts = tester.widgetList<RichText>(
+              find.descendant(
+                of: find.byType(AppFlowyRichText),
+                matching: find.byType(RichText),
+              ),
+            );
+            final rendered = texts.firstWhere(
+              (t) => t.text.toPlainText() == '测试段落的对齐方式',
+            );
+            expect(rendered.text.toPlainText(), adapter.blocks.single.text);
+            final caret = adapter.editorState.document.first!.selectable!
+                .getCursorRectInPosition(Position(path: [0], offset: 3));
+            expect(caret, isNotNull);
+            expect(caret!.left.isFinite, isTrue);
+            expect(tester.takeException(), isNull);
+          }
+
+          expectLayout();
+          await tester.tap(find.byKey(const ValueKey('editor-mode-toggle')));
+          await tester.pumpAndSettle();
+          expectLayout();
+          await tester.pumpWidget(const SizedBox.shrink());
+        },
+      );
+    }
+  }
+
   for (final blockType in [
     ParagraphBlockKeys.type,
     NumberedListBlockKeys.type,
@@ -272,8 +390,7 @@ void main() {
     expect(editor.blockComponentBuilders, contains(csesDocumentCoverBlockType));
     expect(editor.blockComponentBuilders, contains(csesDocumentTitleBlockType));
     final titleBuilder =
-        editor.blockComponentBuilders[csesDocumentTitleBlockType]!
-            as ParagraphBlockComponentBuilder;
+        editor.blockComponentBuilders[csesDocumentTitleBlockType]!;
     expect(
       titleBuilder.configuration
           .textStyle(Node(type: csesDocumentTitleBlockType))

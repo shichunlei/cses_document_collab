@@ -107,6 +107,41 @@ void main() {
   );
 
   test(
+    'both justified alignments survive remote replay and local text edits',
+    () async {
+      final changes = <List<CollabEditorBlock>>[];
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: const [
+          CollabEditorBlock(
+            id: 'p',
+            blockType: 'paragraph',
+            text: '正文',
+            alignment: 'justify',
+          ),
+        ],
+        onLocalBlocksChanged: changes.add,
+      );
+      addTearDown(adapter.dispose);
+      final state = adapter.editorState;
+      expect(adapter.blocks.single.alignment, 'justify');
+      await adapter.replaceFromRemote(const [
+        CollabEditorBlock(
+          id: 'p',
+          blockType: 'paragraph',
+          text: '正文',
+          alignment: 'distributed',
+        ),
+      ]);
+      expect(changes, isEmpty);
+      expect(adapter.blocks.single.alignment, 'distributed');
+      await state.apply(
+        state.transaction..insertText(state.document.first!, 2, '修改'),
+      );
+      expect(changes.last.single.alignment, 'distributed');
+    },
+  );
+
+  test(
     'remote block colors update in place and survive text editing',
     () async {
       final changes = <List<CollabEditorBlock>>[];

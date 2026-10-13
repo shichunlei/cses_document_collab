@@ -1010,6 +1010,41 @@ void main() {
     },
   );
 
+  testWidgets('block layout supports justify and distributed with undo', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(600, 844));
+    final state = _editorState(text: '两端对齐和分散对齐');
+    state.selection = Selection.single(path: [0], startOffset: 3);
+    addTearDown(() async {
+      await tester.pumpWidget(const SizedBox.shrink());
+      state.dispose();
+      await tester.binding.setSurfaceSize(null);
+    });
+    await tester.pumpWidget(_toolbarApp(state));
+    await tester.pump();
+    await tester.tap(
+      find.byKey(const ValueKey('editor-shortcut-block-layout')),
+    );
+    await tester.pump();
+    for (final mode in ['justify', 'distributed']) {
+      await tester.tap(find.byKey(ValueKey('editor-block-align-$mode')));
+      await tester.pumpAndSettle();
+      expect(state.document.first!.attributes[blockComponentAlign], mode);
+      expect(state.selection?.startIndex, 3);
+    }
+    state.undoManager.undo();
+    await tester.pumpAndSettle();
+    expect(state.document.first!.attributes[blockComponentAlign], 'justify');
+    state.undoManager.redo();
+    await tester.pumpAndSettle();
+    expect(
+      state.document.first!.attributes[blockComponentAlign],
+      'distributed',
+    );
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('block layout menu aligns and indents list blocks', (
     tester,
   ) async {

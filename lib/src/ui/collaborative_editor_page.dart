@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cses_mobile_collab_demo/src/ui/collab_unsupported_block.dart';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_mobile_collab_demo/src/ui/collab_text_alignment.dart';
 import 'package:cses_mobile_collab_demo/src/ui/collab_block_colors.dart';
 import 'package:cses_mobile_collab_demo/src/collab/appflowy_block_editor_adapter.dart';
 import 'package:cses_mobile_collab_demo/src/collab/collab_controller.dart';
@@ -232,71 +233,89 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
   }
 }
 
-final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders = {
-  ...standardBlockComponentBuilderMap,
-  QuoteBlockKeys.type: QuoteBlockComponentBuilder(
-    iconBuilder: buildCollabQuoteBorder,
-  ),
-  ParagraphBlockKeys.type: ParagraphBlockComponentBuilder(
-    configuration: standardBlockComponentBuilderMap[ParagraphBlockKeys.type]!
-        .configuration
-        .copyWith(padding: _paragraphBlockPadding),
-  ),
-  // 正式图片复用资源块选区外壳并展示尺寸/题注；离线图片仍使用 AppFlowy 原组件。
-  ImageBlockKeys.type: CollabEmbedBlockComponentBuilder(
-    kind: CollabEmbedKind.image,
-  ),
-  // Links and videos remain first-class selectable editor blocks by providing
-  // custom renderers whose URL attributes are synchronized through Rust/Yrs.
-  csesLinkBlockType: CollabEmbedBlockComponentBuilder(
-    kind: CollabEmbedKind.link,
-  ),
-  csesVideoBlockType: CollabEmbedBlockComponentBuilder(
-    kind: CollabEmbedKind.video,
-  ),
-  // The cover is a non-text URL block. It remains selectable with AppFlowy's
-  // block selection system, while the explicit callback opens a URL editor
-  // only in edit mode; preview mode renders the image without edit controls.
-  csesDocumentCoverBlockType: CollabEmbedBlockComponentBuilder(
-    kind: CollabEmbedKind.cover,
-    configuration: const BlockComponentConfiguration(
-      padding: _documentCoverPadding,
-    ),
-    onEditCover: (context, editorState, node) {
-      unawaited(showEditorDocumentCoverDialog(context, editorState, node));
-    },
-  ),
-  // The document title intentionally reuses AppFlowy's paragraph component so
-  // mobile IME, selection and collaborative Delta edits behave exactly like
-  // body text. Only presentation and structural conversion rules differ.
-  csesDocumentTitleBlockType: ParagraphBlockComponentBuilder(
-    configuration: const BlockComponentConfiguration(
-      padding: _documentTitlePadding,
-      textStyle: _documentTitleTextStyle,
-      placeholderText: _documentTitlePlaceholder,
-      placeholderTextStyle: _documentTitlePlaceholderStyle,
-    ),
-  ),
-  BulletedListBlockKeys.type: BulletedListBlockComponentBuilder(
-    configuration: standardBlockComponentConfiguration.copyWith(
-      padding: _listBlockPadding,
-    ),
-  ),
-  NumberedListBlockKeys.type: NumberedListBlockComponentBuilder(
-    iconBuilder: buildCollabOrderedMarker,
-    configuration: standardBlockComponentConfiguration.copyWith(
-      padding: _listBlockPadding,
-    ),
-  ),
-  TodoListBlockKeys.type: TodoListBlockComponentBuilder(
-    configuration: standardBlockComponentConfiguration.copyWith(
-      padding: _listBlockPadding,
-    ),
-  ),
-  csesCodeBlockType: CollabCodeBlockComponentBuilder(),
-  csesCalloutBlockType: CollabCalloutBlockComponentBuilder(),
-  csesUnsupportedBlockType: CollabUnsupportedBlockComponentBuilder(),
-};
+final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders =
+    {
+      ...standardBlockComponentBuilderMap,
+      QuoteBlockKeys.type: QuoteBlockComponentBuilder(
+        iconBuilder: buildCollabQuoteBorder,
+      ),
+      ParagraphBlockKeys.type: ParagraphBlockComponentBuilder(
+        configuration:
+            standardBlockComponentBuilderMap[ParagraphBlockKeys.type]!
+                .configuration
+                .copyWith(padding: _paragraphBlockPadding),
+      ),
+      // 正式图片复用资源块选区外壳并展示尺寸/题注；离线图片仍使用 AppFlowy 原组件。
+      ImageBlockKeys.type: CollabEmbedBlockComponentBuilder(
+        kind: CollabEmbedKind.image,
+      ),
+      // Links and videos remain first-class selectable editor blocks by providing
+      // custom renderers whose URL attributes are synchronized through Rust/Yrs.
+      csesLinkBlockType: CollabEmbedBlockComponentBuilder(
+        kind: CollabEmbedKind.link,
+      ),
+      csesVideoBlockType: CollabEmbedBlockComponentBuilder(
+        kind: CollabEmbedKind.video,
+      ),
+      // The cover is a non-text URL block. It remains selectable with AppFlowy's
+      // block selection system, while the explicit callback opens a URL editor
+      // only in edit mode; preview mode renders the image without edit controls.
+      csesDocumentCoverBlockType: CollabEmbedBlockComponentBuilder(
+        kind: CollabEmbedKind.cover,
+        configuration: const BlockComponentConfiguration(
+          padding: _documentCoverPadding,
+        ),
+        onEditCover: (context, editorState, node) {
+          unawaited(showEditorDocumentCoverDialog(context, editorState, node));
+        },
+      ),
+      // The document title intentionally reuses AppFlowy's paragraph component so
+      // mobile IME, selection and collaborative Delta edits behave exactly like
+      // body text. Only presentation and structural conversion rules differ.
+      csesDocumentTitleBlockType: ParagraphBlockComponentBuilder(
+        configuration: const BlockComponentConfiguration(
+          padding: _documentTitlePadding,
+          textStyle: _documentTitleTextStyle,
+          placeholderText: _documentTitlePlaceholder,
+          placeholderTextStyle: _documentTitlePlaceholderStyle,
+        ),
+      ),
+      BulletedListBlockKeys.type: BulletedListBlockComponentBuilder(
+        configuration: standardBlockComponentConfiguration.copyWith(
+          padding: _listBlockPadding,
+        ),
+      ),
+      NumberedListBlockKeys.type: NumberedListBlockComponentBuilder(
+        iconBuilder: buildCollabOrderedMarker,
+        configuration: standardBlockComponentConfiguration.copyWith(
+          padding: _listBlockPadding,
+        ),
+      ),
+      TodoListBlockKeys.type: TodoListBlockComponentBuilder(
+        configuration: standardBlockComponentConfiguration.copyWith(
+          padding: _listBlockPadding,
+        ),
+      ),
+      csesCodeBlockType: CollabCodeBlockComponentBuilder(),
+      csesCalloutBlockType: CollabCalloutBlockComponentBuilder(),
+      csesUnsupportedBlockType: CollabUnsupportedBlockComponentBuilder(),
+    }.map((type, builder) {
+      const textTypes = {
+        ParagraphBlockKeys.type,
+        HeadingBlockKeys.type,
+        QuoteBlockKeys.type,
+        BulletedListBlockKeys.type,
+        NumberedListBlockKeys.type,
+        TodoListBlockKeys.type,
+        csesDocumentTitleBlockType,
+      };
+      return MapEntry(
+        type,
+        textTypes.contains(type)
+            ? CollabTextAlignmentBuilder(builder)
+            : builder,
+      );
+    });
 
 /// Reduces the extra gap between body paragraphs while preserving line height.
 EdgeInsets _paragraphBlockPadding(Node node) =>

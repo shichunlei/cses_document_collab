@@ -1016,7 +1016,10 @@ fn is_supported_block_type(block_type: &str) -> bool {
 }
 
 fn is_supported_alignment(alignment: &str) -> bool {
-    matches!(alignment, "left" | "center" | "right")
+    matches!(
+        alignment,
+        "left" | "center" | "right" | "justify" | "distributed"
+    )
 }
 
 fn is_indentable_block_type(block_type: &str) -> bool {

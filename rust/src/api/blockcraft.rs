@@ -1406,6 +1406,42 @@ mod tests {
         );
     }
 
+    #[test]
+    fn both_justified_alignments_sync_and_survive_text_edit_and_reopen() {
+        let mut phone = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-basic.update"
+        ));
+        let mut peer = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-basic.update"
+        ));
+        for alignment in ["justify", "distributed"] {
+            let mut desired = phone.blocks();
+            desired[0].alignment = alignment.into();
+            let result = phone.apply_block_snapshot(desired).unwrap();
+            peer.apply_cses_update(result.v1_update).unwrap();
+            assert_eq!(peer.blocks()[0].alignment, alignment);
+            let mut edited = peer.blocks();
+            edited[0].text.push_str("修改正文");
+            edited[0].segments.clear();
+            let result = peer.apply_block_snapshot(edited).unwrap();
+            phone.apply_cses_update(result.v1_update).unwrap();
+            assert_eq!(phone.blocks(), peer.blocks());
+            assert_eq!(phone.blocks()[0].alignment, alignment);
+            let txn = phone.doc.transact();
+            let blocks = txn.get_map(ROOT_NAME).unwrap();
+            let block = map(&blocks, &txn, &phone.blocks()[0].id).unwrap();
+            assert_eq!(
+                out_string(map(&block, &txn, "props").unwrap().get(&txn, "textAlign")).as_deref(),
+                Some(alignment)
+            );
+        }
+        let path = phone.database_path.clone();
+        drop(phone);
+        let mut reopened = CollabEngine::open("fixture-doc".into(), path).unwrap().0;
+        reopened.blockcraft_root_id = Some("fixture-doc".into());
+        assert_eq!(reopened.blocks()[0].alignment, "distributed");
+    }
+
     /// 通过正式完整快照提交一项显式编号设置；其他块只作为只读设置投影。
     fn numbering_command(engine: &mut CollabEngine, id: &str, edit: &str) -> BlockChangeResult {
         let mut blocks = engine.blocks();

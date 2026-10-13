@@ -171,16 +171,15 @@ Future<bool> changeCollabCodeProperty(
     return false;
   }
   if (property == 'collapse' && value != null && value is! bool) return false;
-  final node =
-      _codePropertyNodes(state.document.root.children)
-          .where(
-            (node) =>
-                node.type == csesCodeBlockType &&
-                node.attributes[AppFlowyBlockEditorAdapter
-                        .collabBlockIdAttribute] ==
-                    blockId,
-          )
-          .firstOrNull;
+  final node = _codePropertyNodes(state.document.root.children)
+      .where(
+        (node) =>
+            node.type == csesCodeBlockType &&
+            node.attributes[AppFlowyBlockEditorAdapter
+                    .collabBlockIdAttribute] ==
+                blockId,
+      )
+      .firstOrNull;
   if (node == null) return false;
   final code = CollabCode.fromAttributes(node.attributes);
   final before = code.propertyAttribute(property);
@@ -359,7 +358,7 @@ final class CollabEditorBlock {
   /// Todo 是否勾选，其他类型为 false。
   final bool checked;
 
-  /// left/center/right 对齐；正式图片写入 props.align。
+  /// left/center/right/justify/distributed 文字对齐；正式图片写入 props.align。
   final String alignment;
 
   /// 列表的视觉缩进 0～6，图片为零。
@@ -371,7 +370,7 @@ final class CollabEditorBlock {
   /// 正式 ordered 的结构编号，普通块和独立草稿为 null。
   final CollabOrdered? ordered;
 
-  /// Header properties with explicit per-field edits.
+  /// Desktop code header metadata, projected without writing shared props.
   final CollabCode? code;
 
   /// 本地新块所替换的原块身份，普通编辑和远端投影为 null。
@@ -750,7 +749,7 @@ final class AppFlowyBlockEditorAdapter {
               operation.attributes.containsKey(collabCodeTargetAttribute),
         );
     if (codePropertiesOnly) {
-      // Header undo preserves the current caret after reorder or deletion.
+      // Header undo should preserve the current caret, including after reorder/deletion.
       transaction.beforeSelection = editorState.selection;
       transaction.afterSelection = editorState.selection;
     }
@@ -1210,7 +1209,15 @@ final class AppFlowyBlockEditorAdapter {
 
   static String _nodeAlignment(Node node) {
     final value = node.attributes[blockComponentAlign];
-    return value == 'center' || value == 'right' ? value as String : 'left';
+    return const {
+          'left',
+          'center',
+          'right',
+          'justify',
+          'distributed',
+        }.contains(value)
+        ? value as String
+        : 'left';
   }
 
   static bool _supportsIndent(String blockType) =>
