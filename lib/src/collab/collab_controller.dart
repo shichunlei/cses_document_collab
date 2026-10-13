@@ -35,7 +35,7 @@ enum ConnectionStatus { starting, connecting, online, offline, error }
 /// ```
 class CollabController extends ChangeNotifier with WidgetsBindingObserver {
   /// 创建离线编辑器；[_documentId] 是未登录时的本地草稿键，默认 demo-room。
-  /// 不自动连接旧 y-websocket 或 CSES，不读取持久化凭证。
+  /// 不自动连接 CSES，不读取持久化凭证；登录后的宿主负责触发主连接。
   CollabController({this._documentId = 'demo-room'}) {
     _editorAdapter = AppFlowyBlockEditorAdapter(
       onLocalBlocksChanged: _applyEditorBlocks,

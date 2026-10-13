@@ -34,7 +34,6 @@ migrate_working_dir/
 /rust_builder/ios/cses_collab_core/*.xcframework/
 /coverage/
 /rust/target/
-/server/target/
 
 # Symbolication related
 app.*.symbols

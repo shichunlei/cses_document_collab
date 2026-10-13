@@ -32,11 +32,10 @@
 - 直接引用 `../cses/cses.common`，复用鉴权上下文、hello、主连接心跳、重连及精确三级路由
 - `subscribe → collabJoin → collabSync → collabUpdate` 双向差量交换，20 秒主动补偿
 - 本机 Awareness 10 秒提升时钟上报，显示其他编辑器数量；尚未绑定光标和选区
-- `IoCollabSocketTransport` 和标准 y-websocket Rust API 保留为旧协议回归工具，当前页面不再使用
+- 在线协同只使用 CSES 主连接，通过 Common 收发 JSON 协议，不提供独立 WS 传输或本地测试服务
 - `OffsetKind::Utf16`，与 Dart/Yjs 的文本下标一致
 - `gc: false` 对应的 `skip_gc: true`
 - SQLite 增量 Update 日志，应用重启后离线恢复
-- 本地内存版标准 y-websocket 测试服务
 - 同一正式测试 docId、不同 instance 的手机间实时同步
 - 旧版 `cses_demo_text` SQLite 数据以零文本复制方式挂载为 paragraph 块
 
@@ -221,17 +220,11 @@ Rust 或 FRB 桥接声明变化后必须停止运行并完整重新构建安装�
 17. 拒绝的块操作应恢复 UI；支持的编辑应保留原 blockId、props/meta 未知键、链接与字体属性；
 18. 正式文档重连与新打开应使用 blocks 根，不能补传旧 Demo 缓存；同块并发文本和不同格式应收敛。
 
-### 旧标准 y-websocket 工具
-
-`server/` 仍可通过 `cargo run --manifest-path server/Cargo.toml` 启动，供旧传输和 Rust API 回归。
-它不是 CSES PaaS JSON 服务，不能用于当前连接表单；`IoCollabSocketTransport` 的测试保留。
-
 ## 验证
 
 ```bash
 cargo test --manifest-path rust/Cargo.toml
 cargo build --manifest-path rust/Cargo.toml
-cargo check --manifest-path server/Cargo.toml
 flutter test test/blockcraft_native_integration_test.dart
 flutter test test/cses_connection_settings_test.dart test/cses_doc_collaboration_session_test.dart test/cses_ws_gateway_integration_test.dart
 flutter test test/collab_list_enter_focus_test.dart test/collab_video_update_test.dart
@@ -421,11 +414,11 @@ bridge 的 text 字段传递；正式图片/视频写入 props.src；图片使�
 
 ## 非生产能力
 
-旧标准 y-websocket 测试服务只保存内存数据。当前 Demo 接入目标 CSES 环境，但本机回环测试
-不证明真实环境已发布协议或已完成登录鉴权与持久化联调；需要使用有效测试会话和文档单独验收。
+当前 Demo 只接入 CSES WS。本机回环测试验证 Common 的连接、路由与协同协议，
+不证明真实环境已发布协议或已完成登录鉴权与持久化联调；需要使用有效测试账号和文档单独验收。
 当前服务端协同 WS 的文档权限校验边界以对接文档为准，不能从 ACCESS_DENIED 错误码推断已具备隔离。
 
-为了访问本地 `ws://` 服务，Demo 临时放宽了 Android cleartext 和 iOS ATS。
+部分 CSES 环境下发 `ws://` 地址，Demo 为兼容这些环境保留 Android cleartext 和 iOS ATS 配置。
 接入业务环境时必须使用 `wss://`，并移除
 `android:usesCleartextTraffic="true"` 与 `NSAllowsArbitraryLoads`。
 
