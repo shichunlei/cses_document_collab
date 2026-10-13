@@ -111,6 +111,11 @@ pub struct CollabBlock {
     /// 桌面 props.backColor / borderColor；CSS 原值，独立于行内高亮。
     pub block_background_color: Option<String>,
     pub block_border_color: Option<String>,
+    /// 高亮容器的父 ID；根级为 None，正文始终保留自己的 Y.Text。
+    pub parent_id: Option<String>,
+    /// 对应桌面 callout.props.prefix / color，不与行内格式混用。
+    pub callout_prefix: Option<String>,
+    pub block_text_color: Option<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -260,6 +265,15 @@ impl CollabEngine {
                     indent,
                     image: None,
                     ordered: None,
+                    parent_id: out_string(
+                        self.block_colors.get(&transaction, &format!("{id}:parent")),
+                    ),
+                    callout_prefix: out_string(
+                        self.block_colors.get(&transaction, &format!("{id}:prefix")),
+                    ),
+                    block_text_color: out_string(
+                        self.block_colors.get(&transaction, &format!("{id}:text")),
+                    ),
                     code: None,
                     replaces_id: None,
                     block_background_color: out_string(
@@ -353,6 +367,10 @@ impl CollabEngine {
                         .remove(&mut transaction, &format!("{id}:background"));
                     self.block_colors
                         .remove(&mut transaction, &format!("{id}:border"));
+                    for suffix in ["parent", "prefix", "text"] {
+                        self.block_colors
+                            .remove(&mut transaction, &format!("{id}:{suffix}"));
+                    }
                 }
             }
 
@@ -382,6 +400,9 @@ impl CollabEngine {
                 for (suffix, color) in [
                     ("background", &block.block_background_color),
                     ("border", &block.block_border_color),
+                    ("parent", &block.parent_id),
+                    ("prefix", &block.callout_prefix),
+                    ("text", &block.block_text_color),
                 ] {
                     let key = format!("{}:{suffix}", block.id);
                     if let Some(color) = color {
@@ -567,6 +588,9 @@ impl CollabEngine {
             indent: 0,
             image: None,
             ordered: None,
+            parent_id: None,
+            callout_prefix: None,
+            block_text_color: None,
             code: None,
             replaces_id: None,
             block_background_color: None,
@@ -879,12 +903,33 @@ fn schema_attribute(key: &str, formal: bool) -> &str {
 
 fn validate_blocks(blocks: &[CollabBlock]) -> Result<(), String> {
     let mut ids = HashSet::new();
+    let mut ancestors = Vec::<&str>::new();
     for block in blocks {
         if block.id.trim().is_empty() {
             return Err("block id must not be empty".to_owned());
         }
         if !ids.insert(block.id.as_str()) {
             return Err(format!("duplicate block id: {}", block.id));
+        }
+        if let Some(parent) = block.parent_id.as_deref() {
+            let position = ancestors
+                .iter()
+                .position(|id| *id == parent)
+                .ok_or("INVALID_BLOCK_PARENT: 父块必须是前序高亮容器")?;
+            ancestors.truncate(position + 1);
+        } else {
+            ancestors.clear();
+        }
+        if block.block_type == "callout" {
+            if !block.text.is_empty() || !block.segments.is_empty() || ancestors.len() >= 256 {
+                return Err("INVALID_CALLOUT: 高亮容器不能直接存储正文或超出嵌套限制".into());
+            }
+            ancestors.push(&block.id);
+        } else if block.callout_prefix.is_some() || block.block_text_color.is_some() {
+            return Err("INVALID_CALLOUT: 表情和容器文字颜色仅适用于高亮块".into());
+        }
+        if block.callout_prefix.as_ref().is_some_and(|v| v.len() > 256) {
+            return Err("INVALID_CALLOUT: 表情过长".into());
         }
         if !is_supported_block_type(&block.block_type) {
             return Err(format!("unsupported block type: {}", block.block_type));
@@ -952,6 +997,7 @@ fn is_supported_block_type(block_type: &str) -> bool {
             | "todo_list"
             | "quote"
             | "code"
+            | "callout"
             // URL-backed blocks reuse the existing per-block Y.Text payload:
             // their `text` contains the resource URL rather than editable
             // paragraph content. This preserves convergence without a schema
@@ -1219,6 +1265,9 @@ mod tests {
             indent: 0,
             image: None,
             ordered: None,
+            parent_id: None,
+            callout_prefix: None,
+            block_text_color: None,
             code: None,
             replaces_id: None,
             block_background_color: None,

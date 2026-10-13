@@ -22,7 +22,7 @@ final collabListEnter = CharacterShortcutEvent(
 );
 
 /// 在借用的 [state] 处理当前折叠光标的有序/无序/Todo 列表 Enter，成功完成事务返回 true。
-/// 只接管根级、无子节点的扁平列表；只读、销毁、Shift、无选区或其他类型返回 false，
+/// 只接管根级或高亮容器内、无子节点的扁平列表；只读、销毁、Shift、无选区或其他类型返回 false，
 /// 交由标准输入处理。文字拆分复用 insertNewLine，保留 Delta 格式和方向并继承层级/对齐。
 /// 空项退级原位修改 depth；有序项若显式重开编号，同时用既有编号命令恢复接续父层。
 /// 无序/待办项仅修改层级，不携带任何有序列表编号命令。待办拆分不改原项勾选，
@@ -66,13 +66,13 @@ Future<bool> handleCollabListEnter(EditorState state) async {
   return true;
 }
 
-/// 返回借用的 [state] 是否可在列表项开头退级；只接管折叠光标偏移 0 的根级扁平列表。
+/// 返回借用的 [state] 是否可在列表项开头退级；只接管折叠光标偏移 0 的根级或高亮块内扁平列表。
 /// 有正文和空项均支持；只读、销毁、范围选区、真正嵌套节点及非列表返回 false，无副作用。
 bool canOutdentCollabListAtStart(EditorState state) =>
     _editableFlatList(state) != null && state.selection?.start.offset == 0;
 
 /// 将借用的 [state] 中行首列表退一级，最外层转为普通段落；完成事务后返回 true。
-/// 非可编辑根级列表、非折叠选区或偏移不为 0 时返回 false。复用 Enter 与 Backspace，
+/// 非可编辑根级或高亮块内列表、非折叠选区或偏移不为 0 时返回 false。复用 Enter 与 Backspace，
 /// 不删除正文、行内格式或相邻块，退级保留 Todo 勾选及块身份；转换使用既有类型身份链。
 /// 有序正起点通过既有编号命令接续目标层，逆操作恢复原始设置；每次操作独立可撤销。
 /// 选区保持原路径偏移 0，清空临时选区信息以继续附着输入连接。宿主拥有编辑器生命周期；
@@ -83,7 +83,7 @@ Future<bool> outdentCollabListAtStart(EditorState state) =>
     : Future.value(false);
 
 /// 返回借用 [state] 当前选区是否可整体升降列表层级；[delta] 仅接受 -1 或 1。
-/// 选区中每项必须是可编辑根级有序/无序/Todo 列表且无真实子节点。增加时任一项已到 6 级
+/// 选区中每项必须是可编辑根级或高亮块内有序/无序/Todo 列表且无真实子节点。增加时任一项已到 6 级
 /// 则整体返回 false；减少允许 0 级转段落。支持项内光标、正反向范围和块选区；不修改状态。
 bool canChangeCollabListIndent(EditorState state, int delta) {
   if (delta != -1 && delta != 1) {
@@ -256,8 +256,8 @@ List<Node> _selectedFlatLists(EditorState state) {
   }
   final selection = state.selection;
   if (selection == null ||
-      selection.start.path.length != 1 ||
-      selection.end.path.length != 1) {
+      selection.start.path.isEmpty ||
+      selection.end.path.isEmpty) {
     return const [];
   }
   final nodes = state.getNodesInSelection(selection);
@@ -266,7 +266,7 @@ List<Node> _selectedFlatLists(EditorState state) {
         (node) =>
             node.delta == null ||
             node.children.isNotEmpty ||
-            node.path.length != 1 ||
+            !_isFlatListParent(node) ||
             (node.type != NumberedListBlockKeys.type &&
                 node.type != BulletedListBlockKeys.type &&
                 node.type != TodoListBlockKeys.type),
@@ -289,7 +289,7 @@ int _listDepth(Node node) {
 }
 
 /// 从借用的 [state] 读取可编辑的扁平列表；返回原节点供事务使用，不转移所有权。
-/// 无选区、只读、销毁、非折叠/非根路径、无 Delta、有子节点或非三种列表返回 null。
+/// 无选区、只读、销毁、非折叠/非支持父节点路径、无 Delta、有子节点或非三种列表返回 null。
 Node? _editableFlatList(EditorState state) {
   if (state.isDisposed || !state.editable) {
     return null;
@@ -297,11 +297,12 @@ Node? _editableFlatList(EditorState state) {
   final selection = state.selection;
   if (selection == null ||
       !selection.isCollapsed ||
-      selection.start.path.length != 1) {
+      selection.start.path.isEmpty) {
     return null;
   }
   final node = state.getNodeAtPath(selection.start.path);
   if (node == null ||
+      !_isFlatListParent(node) ||
       node.delta == null ||
       node.children.isNotEmpty ||
       (node.type != NumberedListBlockKeys.type &&
@@ -311,3 +312,7 @@ Node? _editableFlatList(EditorState state) {
   }
   return node;
 }
+
+// Depth is a prop within each sibling list, including lists inside a callout.
+bool _isFlatListParent(Node node) =>
+    node.path.length == 1 || node.parent?.type == csesCalloutBlockType;

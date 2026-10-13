@@ -1,12 +1,13 @@
 import 'dart:async';
 
-import 'package:cses_mobile_collab_demo/src/ui/collab_block_colors.dart';
-
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_mobile_collab_demo/src/ui/collab_block_colors.dart';
 import 'package:cses_mobile_collab_demo/src/collab/appflowy_block_editor_adapter.dart';
 import 'package:cses_mobile_collab_demo/src/collab/collab_controller.dart';
 import 'package:cses_mobile_collab_demo/src/ui/collab_block_delete.dart';
 import 'package:cses_mobile_collab_demo/src/ui/collab_code_block.dart';
+import 'package:cses_mobile_collab_demo/src/ui/collab_callout_block.dart';
+import 'package:cses_mobile_collab_demo/src/collab/collab_block_colors.dart';
 import 'package:cses_mobile_collab_demo/src/ui/collab_embed_block.dart';
 import 'package:cses_mobile_collab_demo/src/ui/collab_list_editing.dart';
 import 'package:cses_mobile_collab_demo/src/ui/collab_ordered_marker.dart';
@@ -291,6 +292,7 @@ final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders = {
     ),
   ),
   csesCodeBlockType: CollabCodeBlockComponentBuilder(),
+  csesCalloutBlockType: CollabCalloutBlockComponentBuilder(),
 };
 
 /// Reduces the extra gap between body paragraphs while preserving line height.
@@ -340,7 +342,7 @@ InlineSpan _collabTextSpanDecorator(
   TextSpan before,
   TextSpan after,
 ) {
-  final decorated = mobileTextSpanDecoratorForAttribute(
+  var decorated = mobileTextSpanDecoratorForAttribute(
     context,
     node,
     index,
@@ -348,6 +350,30 @@ InlineSpan _collabTextSpanDecorator(
     before,
     after,
   );
+  // Container color is inherited only when the text has no explicit foreground.
+  if (text.attributes?[AppFlowyRichTextKeys.textColor] == null) {
+    Node? ancestor = node.parent;
+    while (ancestor != null) {
+      if (ancestor.type == csesCalloutBlockType) {
+        final color = parseCollabBlockColor(
+          ancestor.attributes[csesBlockTextColorAttribute] as String?,
+        );
+        if (color != null) {
+          decorated = TextSpan(
+            text: decorated.text,
+            children: decorated.children,
+            style: (decorated.style ?? const TextStyle()).copyWith(
+              color: color,
+            ),
+            recognizer: decorated.recognizer,
+            mouseCursor: decorated.mouseCursor,
+          );
+          break;
+        }
+      }
+      ancestor = ancestor.parent;
+    }
+  }
   final attributes = text.attributes;
   final superscript = attributes?[csesSuperscriptAttribute] == true;
   final subscript = attributes?[csesSubscriptAttribute] == true;

@@ -11,6 +11,10 @@ import 'package:cses_mobile_collab_demo/src/collab/text_delta.dart' as collab;
 typedef LocalEditorBlocksChanged =
     void Function(List<CollabEditorBlock> blocks);
 
+const csesCalloutBlockType = 'callout';
+const csesCalloutTargetAttribute = 'cses_callout_target';
+const csesCalloutPrefixAttribute = 'cses_callout_prefix';
+const csesBlockTextColorAttribute = 'cses_block_text_color';
 const csesCodeBlockType = 'code';
 const csesLinkBlockType = 'link';
 const csesVideoBlockType = 'video';
@@ -85,7 +89,9 @@ Future<bool> changeCollabOrderedNumbering(
 }) async {
   if (state.isDisposed || !state.editable) return false;
   Node? target;
-  for (final node in state.document.root.children) {
+  for (final node in AppFlowyBlockEditorAdapter._flattenNodes(
+    state.document.root.children,
+  )) {
     if (node.attributes[AppFlowyBlockEditorAdapter.collabBlockIdAttribute] ==
         blockId) {
       target = node;
@@ -164,15 +170,16 @@ Future<bool> changeCollabCodeProperty(
     return false;
   }
   if (property == 'collapse' && value != null && value is! bool) return false;
-  final node = _codePropertyNodes(state.document.root.children)
-      .where(
-        (node) =>
-            node.type == csesCodeBlockType &&
-            node.attributes[AppFlowyBlockEditorAdapter
-                    .collabBlockIdAttribute] ==
-                blockId,
-      )
-      .firstOrNull;
+  final node =
+      _codePropertyNodes(state.document.root.children)
+          .where(
+            (node) =>
+                node.type == csesCodeBlockType &&
+                node.attributes[AppFlowyBlockEditorAdapter
+                        .collabBlockIdAttribute] ==
+                    blockId,
+          )
+          .firstOrNull;
   if (node == null) return false;
   final code = CollabCode.fromAttributes(node.attributes);
   final before = code.propertyAttribute(property);
@@ -331,6 +338,9 @@ final class CollabEditorBlock {
     this.replacesId,
     this.blockBackgroundColor,
     this.blockBorderColor,
+    this.parentId,
+    this.calloutPrefix,
+    this.blockTextColor,
   });
 
   /// Rust 权威块身份，移动和编辑时保持不变。
@@ -369,6 +379,9 @@ final class CollabEditorBlock {
   /// 桌面块外观 CSS 原值，独立于 Delta 的文字高亮。
   final String? blockBackgroundColor;
   final String? blockBorderColor;
+  final String? parentId;
+  final String? calloutPrefix;
+  final String? blockTextColor;
 
   /// 计算完整投影哈希，图片布局与题注包含在内。
   @override
@@ -386,6 +399,9 @@ final class CollabEditorBlock {
     replacesId,
     blockBackgroundColor,
     blockBorderColor,
+    parentId,
+    calloutPrefix,
+    blockTextColor,
   );
 
   /// 与 [other] 比较完整投影及待消费替换来源，供本地发布去重和远端刷新使用。
@@ -404,7 +420,10 @@ final class CollabEditorBlock {
         other.code == code &&
         other.replacesId == replacesId &&
         other.blockBackgroundColor == blockBackgroundColor &&
-        other.blockBorderColor == blockBorderColor;
+        other.blockBorderColor == blockBorderColor &&
+        other.parentId == parentId &&
+        other.calloutPrefix == calloutPrefix &&
+        other.blockTextColor == blockTextColor;
   }
 
   @override
@@ -485,7 +504,8 @@ final class AppFlowyBlockEditorAdapter {
       return;
     }
 
-    final currentNodes = editorState.document.root.children;
+    final currentRootNodes = editorState.document.root.children;
+    final currentNodes = _flattenNodes(currentRootNodes).toList();
     // 媒体没有 Delta，但仍可通过属性事务更新。同一结构的原生编号确认必须保留
     // Enter 已创建的节点；整篇删除再插入会让远端路径变换把光标移出文档。
     final canPatchInPlace =
@@ -496,7 +516,9 @@ final class AppFlowyBlockEditorAdapter {
               _nodeBlockId(currentNodes[index]) == targetBlocks[index].id &&
               _nodeBlockType(currentNodes[index]) ==
                   targetBlocks[index].blockType &&
-              (currentNodes[index].delta != null ||
+              currentBlocks[index].parentId == targetBlocks[index].parentId &&
+              (currentNodes[index].type == csesCalloutBlockType ||
+                  currentNodes[index].delta != null ||
                   _isUrlBackedBlock(targetBlocks[index].blockType)),
         ).every((matches) => matches);
     final transaction = editorState.transaction;
@@ -519,7 +541,9 @@ final class AppFlowyBlockEditorAdapter {
           continue;
         }
         final currentSegments = _readNodeSegments(node);
-        if (!_segmentsEqual(currentSegments, target.segments)) {
+        if (node.type == csesCalloutBlockType) {
+          // Container content is represented by its child nodes.
+        } else if (!_segmentsEqual(currentSegments, target.segments)) {
           final currentLength = node.delta?.length ?? 0;
           if (currentLength > 0) {
             transaction.deleteText(node, 0, currentLength);
@@ -547,7 +571,11 @@ final class AppFlowyBlockEditorAdapter {
         final targetIndent = _supportsIndent(target.blockType)
             ? target.indent
             : 0;
-        if (node.attributes[csesBlockBackgroundColorAttribute] !=
+        if (node.attributes[csesCalloutPrefixAttribute] !=
+                target.calloutPrefix ||
+            node.attributes[csesBlockTextColorAttribute] !=
+                target.blockTextColor ||
+            node.attributes[csesBlockBackgroundColorAttribute] !=
                 target.blockBackgroundColor ||
             node.attributes[csesBlockBorderColorAttribute] !=
                 target.blockBorderColor ||
@@ -558,6 +586,8 @@ final class AppFlowyBlockEditorAdapter {
             node.attributes[csesReplacementSourceAttribute] !=
                 target.replacesId) {
           transaction.updateNode(node, {
+            csesCalloutPrefixAttribute: target.calloutPrefix,
+            csesBlockTextColorAttribute: target.blockTextColor,
             csesBlockBackgroundColorAttribute: target.blockBackgroundColor,
             csesBlockBorderColorAttribute: target.blockBorderColor,
             blockComponentBackgroundColor: parseCollabBlockColor(
@@ -578,13 +608,11 @@ final class AppFlowyBlockEditorAdapter {
         }
       }
     } else {
-      if (currentNodes.isNotEmpty) {
-        transaction.deleteNodesAtPath([0], currentNodes.length);
+      if (currentRootNodes.isNotEmpty) {
+        transaction.deleteNodesAtPath([0], currentRootNodes.length);
       }
       transaction.add(
-        InsertOperation([
-          0,
-        ], targetBlocks.map(_nodeFromBlock).toList(growable: false)),
+        InsertOperation([0], _nodesFromBlocks(targetBlocks)),
         transform: false,
       );
     }
@@ -630,7 +658,6 @@ final class AppFlowyBlockEditorAdapter {
           }
         }
       }
-
       if (operation.attributes.containsKey(csesOrderedNumberingAttribute)) {
         final node = editorState.getNodeAtPath(operation.path);
         if (node != null) numberingNodes.add(node);
@@ -672,32 +699,38 @@ final class AppFlowyBlockEditorAdapter {
         operations.add(operation);
         continue;
       }
+      final isCallout = operation.attributes.containsKey(
+        csesCalloutTargetAttribute,
+      );
       final isCode = operation.attributes.containsKey(
         collabCodeTargetAttribute,
       );
-      if (!isCode &&
-          !operation.attributes.containsKey(csesOrderedNumberingAttribute)) {
+      final isOrdered = operation.attributes.containsKey(
+        csesOrderedNumberingAttribute,
+      );
+      if (!isCallout && !isCode && !isOrdered) {
         operations.add(operation);
         continue;
       }
-      if (isCode && !editorState.editable) continue;
-      var id =
-          operation.attributes[isCode
-                  ? collabCodeTargetAttribute
-                  : csesOrderedTargetAttribute]
-              as String?;
+      if ((isCallout || isCode) && !editorState.editable) continue;
+      final targetKey = isCallout
+          ? csesCalloutTargetAttribute
+          : isCode
+          ? collabCodeTargetAttribute
+          : csesOrderedTargetAttribute;
+      final type = isCallout
+          ? csesCalloutBlockType
+          : isCode
+          ? csesCodeBlockType
+          : NumberedListBlockKeys.type;
+      var id = operation.attributes[targetKey] as String?;
       if (id == null) continue;
       while (_replacementIds.containsKey(id)) {
         id = _replacementIds[id];
       }
-      final node = _codePropertyNodes(editorState.document.root.children)
-          .where(
-            (n) =>
-                _nodeBlockId(n) == id &&
-                n.type ==
-                    (isCode ? csesCodeBlockType : NumberedListBlockKeys.type),
-          )
-          .firstOrNull;
+      final node = _flattenNodes(
+        editorState.document.root.children,
+      ).where((n) => _nodeBlockId(n) == id && n.type == type).firstOrNull;
       if (node != null) operations.add(operation.copyWith(path: node.path));
     }
     transaction.operations = operations;
@@ -715,7 +748,7 @@ final class AppFlowyBlockEditorAdapter {
   static EditorState _createEditorState(List<CollabEditorBlock> blocks) {
     final nodes = blocks.isEmpty
         ? [_newEmptyParagraphNode()]
-        : blocks.map(_nodeFromBlock).toList(growable: false);
+        : _nodesFromBlocks(blocks);
     return EditorState(
       document: Document(
         root: Node(type: 'page', id: 'cses-demo-page', children: nodes),
@@ -754,9 +787,47 @@ final class AppFlowyBlockEditorAdapter {
     return node;
   }
 
+  static Iterable<Node> _flattenNodes(Iterable<Node> nodes) sync* {
+    for (final node in nodes) {
+      yield node;
+      if (node.type == csesCalloutBlockType) {
+        yield* _flattenNodes(node.children);
+      }
+    }
+  }
+
+  static List<Node> _nodesFromBlocks(List<CollabEditorBlock> blocks) {
+    final nodes = {for (final block in blocks) block.id: _nodeFromBlock(block)};
+    final roots = <Node>[];
+    for (final block in blocks) {
+      final node = nodes[block.id]!;
+      final parent = nodes[block.parentId];
+      if (parent != null && parent.type == csesCalloutBlockType) {
+        parent.insert(node);
+      } else {
+        roots.add(node);
+      }
+    }
+    return roots;
+  }
+
   /// 将权威 [block] 转为 AppFlowy 节点，图片保存强类型专属数据的 Map 投影。
   /// 题注留在资源属性而非 AppFlowy children；实际父子关系由 Rust 的共享类型持有。
   static Node _nodeFromBlock(CollabEditorBlock block) {
+    if (block.blockType == csesCalloutBlockType) {
+      return Node(
+        type: csesCalloutBlockType,
+        id: block.id,
+        attributes: {
+          collabBlockIdAttribute: block.id,
+          csesCalloutTargetAttribute: block.id,
+          csesCalloutPrefixAttribute: block.calloutPrefix,
+          csesBlockTextColorAttribute: block.blockTextColor,
+          csesBlockBackgroundColorAttribute: block.blockBackgroundColor,
+          csesBlockBorderColorAttribute: block.blockBorderColor,
+        },
+      );
+    }
     if (_isUrlBackedBlock(block.blockType)) {
       final isImage = block.blockType == ImageBlockKeys.type;
       return Node(
@@ -869,7 +940,7 @@ final class AppFlowyBlockEditorAdapter {
     Set<Node> numberingNodes = const {},
     Map<Node, Set<String>> codeEdits = const {},
   }) {
-    final nodes = state.document.root.children;
+    final nodes = _flattenNodes(state.document.root.children).toList();
     final explicitIds = nodes
         .map((node) => node.attributes[collabBlockIdAttribute])
         .whereType<String>()
@@ -921,6 +992,15 @@ final class AppFlowyBlockEditorAdapter {
       }
       return CollabEditorBlock(
         id: blockId,
+        parentId: node.parent?.type == csesCalloutBlockType
+            ? _nodeBlockId(node.parent!)
+            : null,
+        calloutPrefix: node.type == csesCalloutBlockType
+            ? node.attributes[csesCalloutPrefixAttribute] as String?
+            : null,
+        blockTextColor: node.type == csesCalloutBlockType
+            ? node.attributes[csesBlockTextColorAttribute] as String?
+            : null,
         code: _readCode(node, editedProperties: codeEdits[node] ?? const {}),
         blockType: _nodeBlockType(node),
         text: _readNodePlainText(node),
@@ -997,6 +1077,7 @@ final class AppFlowyBlockEditorAdapter {
   }
 
   static String _nodeBlockType(Node node) {
+    if (node.type == csesCalloutBlockType) return csesCalloutBlockType;
     return switch (node.type) {
       HeadingBlockKeys.type =>
         'heading_${(node.attributes[HeadingBlockKeys.level] as int? ?? 1).clamp(1, 9)}',
@@ -1069,6 +1150,7 @@ final class AppFlowyBlockEditorAdapter {
       blockType == TodoListBlockKeys.type;
 
   static String _readNodePlainText(Node node) {
+    if (node.type == csesCalloutBlockType) return "";
     // Media/embed nodes intentionally have no Delta. Their URL is serialized
     // through `CollabBlock.text` so Rust/Yrs can preserve and synchronize it
     // with the same mature per-block Y.Text mechanism as ordinary content.

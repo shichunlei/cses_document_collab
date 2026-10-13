@@ -449,6 +449,9 @@ class CollabController extends ChangeNotifier with WidgetsBindingObserver {
             checked: block.checked,
             blockBackgroundColor: block.blockBackgroundColor,
             blockBorderColor: block.blockBorderColor,
+            parentId: block.parentId,
+            calloutPrefix: block.calloutPrefix,
+            blockTextColor: block.blockTextColor,
             alignment: block.alignment,
             indent: block.indent,
             image: _toEditorImage(block.image),
@@ -489,6 +492,9 @@ class CollabController extends ChangeNotifier with WidgetsBindingObserver {
             checked: block.checked,
             blockBackgroundColor: block.blockBackgroundColor,
             blockBorderColor: block.blockBorderColor,
+            parentId: block.parentId,
+            calloutPrefix: block.calloutPrefix,
+            blockTextColor: block.blockTextColor,
             alignment: block.alignment,
             indent: block.indent,
             image: _toRustImage(block.image),
@@ -594,12 +600,15 @@ class CollabController extends ChangeNotifier with WidgetsBindingObserver {
           leftBlock.checked != rightBlock.checked ||
           leftBlock.blockBackgroundColor != rightBlock.blockBackgroundColor ||
           leftBlock.blockBorderColor != rightBlock.blockBorderColor ||
+          leftBlock.parentId != rightBlock.parentId ||
+          leftBlock.calloutPrefix != rightBlock.calloutPrefix ||
+          leftBlock.blockTextColor != rightBlock.blockTextColor ||
           leftBlock.alignment != rightBlock.alignment ||
           leftBlock.indent != rightBlock.indent ||
           leftBlock.replacesId != rightBlock.replacesId ||
-          _toEditorCode(leftBlock.code) != _toEditorCode(rightBlock.code) ||
           _toEditorOrdered(leftBlock.ordered) !=
               _toEditorOrdered(rightBlock.ordered) ||
+          _toEditorCode(leftBlock.code) != _toEditorCode(rightBlock.code) ||
           _toEditorImage(leftBlock.image) != _toEditorImage(rightBlock.image) ||
           !_rustSegmentsEqual(leftBlock.segments, rightBlock.segments)) {
         return false;

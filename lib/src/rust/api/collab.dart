@@ -148,6 +148,13 @@ class CollabBlock {
   final String? blockBackgroundColor;
   final String? blockBorderColor;
 
+  /// 高亮容器的父 ID；根级为 None，正文始终保留自己的 Y.Text。
+  final String? parentId;
+
+  /// 对应桌面 callout.props.prefix / color，不与行内格式混用。
+  final String? calloutPrefix;
+  final String? blockTextColor;
+
   const CollabBlock({
     required this.id,
     required this.blockType,
@@ -162,6 +169,9 @@ class CollabBlock {
     this.replacesId,
     this.blockBackgroundColor,
     this.blockBorderColor,
+    this.parentId,
+    this.calloutPrefix,
+    this.blockTextColor,
   });
 
   @override
@@ -178,7 +188,10 @@ class CollabBlock {
       code.hashCode ^
       replacesId.hashCode ^
       blockBackgroundColor.hashCode ^
-      blockBorderColor.hashCode;
+      blockBorderColor.hashCode ^
+      parentId.hashCode ^
+      calloutPrefix.hashCode ^
+      blockTextColor.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -197,7 +210,10 @@ class CollabBlock {
           code == other.code &&
           replacesId == other.replacesId &&
           blockBackgroundColor == other.blockBackgroundColor &&
-          blockBorderColor == other.blockBorderColor;
+          blockBorderColor == other.blockBorderColor &&
+          parentId == other.parentId &&
+          calloutPrefix == other.calloutPrefix &&
+          blockTextColor == other.blockTextColor;
 }
 
 class CollabCode {

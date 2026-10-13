@@ -5,6 +5,7 @@ import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_mobile_collab_demo/src/collab/appflowy_block_editor_adapter.dart';
 import 'package:cses_mobile_collab_demo/src/collab/collab_block_colors.dart';
 import 'package:cses_mobile_collab_demo/src/ui/collab_block_delete.dart';
+import 'package:cses_mobile_collab_demo/src/ui/collab_callout_block.dart';
 import 'package:cses_mobile_collab_demo/src/ui/collab_list_editing.dart';
 import 'package:cses_common/observability/api/log.dart';
 import 'package:cses_mobile_collab_demo/src/ui/stable_mobile_toolbar.dart';
@@ -873,7 +874,11 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
     }
     final nodes = state.getNodesInSelection(selection);
     if (nodes.isEmpty ||
-        nodes.any((node) => node.type == csesDocumentTitleBlockType)) {
+        nodes.any(
+          (node) =>
+              node.type == csesDocumentTitleBlockType ||
+              node.type == csesCalloutBlockType,
+        )) {
       return;
     }
     _applyingStyle = true;
@@ -1827,11 +1832,21 @@ class _AddBlockSheet extends StatelessWidget {
                             accent: Color(0xFF14B8A6),
                             tint: Color(0xFFCCFBF1),
                           ),
-                          const _ActionShortcutTile(
+                          _ActionShortcutTile(
+                            key: const ValueKey('editor-shortcut-callout'),
                             icon: Icons.view_stream_outlined,
                             label: '高亮块',
-                            accent: Color(0xFFF97316),
-                            tint: Color(0xFFFFEDD5),
+                            accent: const Color(0xFFF97316),
+                            tint: const Color(0xFFFFEDD5),
+                            onTap: () async {
+                              final selection = await insertCollabCallout(
+                                editorState,
+                                capturedSelection,
+                              );
+                              if (context.mounted && selection != null) {
+                                Navigator.pop<Selection>(context, selection);
+                              }
+                            },
                           ),
                           const _ActionShortcutTile(
                             icon: Icons.functions,
@@ -2123,12 +2138,14 @@ Future<bool> applyBlockShortcut(
   String blockType, {
   int? headingLevel,
 }) async {
-  if (selection.start.path.isEmpty) {
+  if (editorState.isDisposed ||
+      !editorState.editable ||
+      selection.start.path.isEmpty) {
     return false;
   }
-  final targetPath = [selection.start.path.first];
+  final targetPath = selection.start.path;
   final node = editorState.getNodeAtPath(targetPath);
-  if (node == null) {
+  if (node == null || node.delta == null) {
     return false;
   }
 
@@ -2142,7 +2159,7 @@ Future<bool> applyBlockShortcut(
     return true;
   }
 
-  final insertPath = [targetPath.first + 1];
+  final insertPath = targetPath.next;
   final transaction = editorState.transaction
     ..insertNode(
       insertPath,

@@ -621,6 +621,9 @@ impl SseDecode for crate::api::collab::CollabBlock {
         let mut var_replacesId = <Option<String>>::sse_decode(deserializer);
         let mut var_blockBackgroundColor = <Option<String>>::sse_decode(deserializer);
         let mut var_blockBorderColor = <Option<String>>::sse_decode(deserializer);
+        let mut var_parentId = <Option<String>>::sse_decode(deserializer);
+        let mut var_calloutPrefix = <Option<String>>::sse_decode(deserializer);
+        let mut var_blockTextColor = <Option<String>>::sse_decode(deserializer);
         return crate::api::collab::CollabBlock {
             id: var_id,
             block_type: var_blockType,
@@ -635,6 +638,9 @@ impl SseDecode for crate::api::collab::CollabBlock {
             replaces_id: var_replacesId,
             block_background_color: var_blockBackgroundColor,
             block_border_color: var_blockBorderColor,
+            parent_id: var_parentId,
+            callout_prefix: var_calloutPrefix,
+            block_text_color: var_blockTextColor,
         };
     }
 }
@@ -1006,6 +1012,9 @@ impl flutter_rust_bridge::IntoDart for crate::api::collab::CollabBlock {
             self.replaces_id.into_into_dart().into_dart(),
             self.block_background_color.into_into_dart().into_dart(),
             self.block_border_color.into_into_dart().into_dart(),
+            self.parent_id.into_into_dart().into_dart(),
+            self.callout_prefix.into_into_dart().into_dart(),
+            self.block_text_color.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -1231,6 +1240,9 @@ impl SseEncode for crate::api::collab::CollabBlock {
         <Option<String>>::sse_encode(self.replaces_id, serializer);
         <Option<String>>::sse_encode(self.block_background_color, serializer);
         <Option<String>>::sse_encode(self.block_border_color, serializer);
+        <Option<String>>::sse_encode(self.parent_id, serializer);
+        <Option<String>>::sse_encode(self.callout_prefix, serializer);
+        <Option<String>>::sse_encode(self.block_text_color, serializer);
     }
 }
 

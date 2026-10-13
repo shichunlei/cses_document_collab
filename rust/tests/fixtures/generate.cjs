@@ -90,3 +90,16 @@ fixture('blockcraft-ordered', (_, m) => {
     m.set(id, block(id, flavour, 'editable', [{ insert: `fixture-${id}` }], props));
   }
 });
+
+// Desktop CalloutBlockSchema: container Y.Array + independent editable Y.Text children.
+fixture('blockcraft-callout', (_, m) => {
+  m.get('fixture-doc').get('children').push(['callout-1']);
+  m.set('callout-1', block('callout-1', 'callout', 'block', ['callout-body', 'callout-second'], {
+    prefix: '🤪', backColor: '#F6E5F0', borderColor: '#FFE6CD', color: '#F97316',
+    customCallout: { keep: true },
+  }));
+  m.set('callout-body', block('callout-body', 'paragraph', 'editable', [{
+    insert: '这是高亮块儿😀', attributes: { 'a:bold': true, 'a:link': 'https://example.test/callout', 't:ff': 'serif' },
+  }], { customBody: 42 }));
+  m.set('callout-second', block('callout-second', 'paragraph', 'editable', [{ insert: '第二段正文' }], {}));
+});

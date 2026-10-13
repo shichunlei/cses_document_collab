@@ -1,6 +1,6 @@
 //! 正式 BlockCraft 的 Yrs 适配。`blocks` 中的嵌套共享类型始终是权威数据，
 //! Flutter 快照只是投影；写入只修改明确支持的字段，保留 props/meta/行内未知属性。
-//! 暂不能完整投影的容器、内嵌对象、修订和锁定内容令整篇文档只读，防止扁平 UI 丢数据。
+//! 高亮容器按父子关系投影；暂不能完整投影的其他容器、内嵌对象、修订和锁定内容令整篇文档只读，防止扁平 UI 丢数据。
 
 use super::*;
 use std::collections::HashMap;
@@ -307,7 +307,7 @@ fn mobile_type<T: ReadTxn>(block: &MapRef, props: &MapRef, txn: &T) -> Option<St
         "ordered" => "numbered_list".to_owned(),
         "todo" => "todo_list".to_owned(),
         "blockquote" => "quote".to_owned(),
-        "code" | "image" | "video" => flavour,
+        "code" | "image" | "video" | "callout" => flavour,
         _ => return None,
     })
 }
@@ -414,14 +414,14 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
     let blocks = txn
         .get_map(ROOT_NAME)
         .expect("root lookup established blocks");
-    let ordered = ordered_projection(&blocks, &txn, &children(&root, &txn));
-    let mut stack: Vec<(String, usize)> = children(&root, &txn)
+    let mut ordered = ordered_projection(&blocks, &txn, &children(&root, &txn));
+    let mut stack: Vec<(String, usize, Option<String>)> = children(&root, &txn)
         .into_iter()
         .rev()
-        .map(|id| (id, 0))
+        .map(|id| (id, 0, None))
         .collect();
     let mut seen = HashSet::new();
-    while let Some((id, depth)) = stack.pop() {
+    while let Some((id, depth, parent_id)) = stack.pop() {
         if depth > 256 || seen.len() >= 100_000 || !seen.insert(id.clone()) {
             result.reason = Some("文档结构重复、循环或超限，当前仅可预览".into());
             continue;
@@ -449,7 +449,16 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
         let mut image = None;
         let is_media = matches!(kind.as_deref(), Some("image" | "video"));
         match block.get(&txn, "children") {
-            Some(Out::YText(value)) if node_type == "editable" && !is_media => {
+            Some(Out::YArray(_)) if kind.as_deref() == Some("callout") && node_type == "block" => {
+                let ids = children(&block, &txn);
+                ordered.extend(ordered_projection(&blocks, &txn, &ids));
+                for child in ids.into_iter().rev() {
+                    stack.push((child, depth + 1, Some(id.clone())));
+                }
+            }
+            Some(Out::YText(value))
+                if node_type == "editable" && !is_media && kind.as_deref() != Some("callout") =>
+            {
                 text = value.get_string(&txn);
                 segments = text_segments_for_schema(&value, &txn, true);
                 if value
@@ -485,7 +494,7 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                     ));
                     for child in children(&block, &txn).into_iter().rev() {
                         if !seen.contains(&child) {
-                            stack.push((child, depth + 1));
+                            stack.push((child, depth + 1, parent_id.clone()));
                         }
                     }
                 }
@@ -493,7 +502,7 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
             _ => {
                 result.reason = Some(format!("块 {flavour} 的结构暂不支持，当前仅可预览"));
                 for child in children(&block, &txn).into_iter().rev() {
-                    stack.push((child, depth + 1));
+                    stack.push((child, depth + 1, parent_id.clone()));
                 }
             }
         }
@@ -504,6 +513,13 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
         }
         let kind = kind.unwrap_or_else(|| "paragraph".into());
         result.blocks.push(CollabBlock {
+            parent_id,
+            callout_prefix: (kind == "callout")
+                .then(|| out_string(props.get(&txn, "prefix")))
+                .flatten(),
+            block_text_color: (kind == "callout")
+                .then(|| out_string(props.get(&txn, "color")))
+                .flatten(),
             code: (kind == "code").then(|| CollabCode {
                 language: out_string(props.get(&txn, "lang")).unwrap_or_else(|| "PlainText".into()),
                 name: out_string(props.get(&txn, "blockName")).unwrap_or_default(),
@@ -553,6 +569,7 @@ fn formal_type(kind: &str) -> Option<(&str, bool)> {
         "todo_list" => ("todo", false),
         "quote" => ("blockquote", false),
         "code" => ("code", false),
+        "callout" => ("callout", false),
         "image" => ("image", true),
         "video" => ("video", true),
         _ => return None,
@@ -560,7 +577,7 @@ fn formal_type(kind: &str) -> Option<(&str, bool)> {
 }
 
 /// 在全部前置校验通过后才更新既有共享类型。外部负责取得向量、持久化增量和广播。
-/// 未改动的块/属性/格式不重放；删除仅处理本次根子列表中的块，隐藏与孤立数据原样保留。
+/// 未改动的块/属性/格式不重放；删除仅处理本次已投影的块，隐藏与孤立数据原样保留。
 /// 新身份类型替换只清理源类型专有的编号/勾选键，其他扩展属性继续克隆；恢复有序历史时
 /// 仅初始化经过白名单校验的原始编号设置和投影样式，派生 order 始终重新计算。
 pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result<(), String> {
@@ -581,7 +598,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
         Some(Out::YArray(v)) => v,
         _ => return Err("根 children 必须是 Y.Array".into()),
     };
-    let ids = children(&root, &txn);
+    let ids: Vec<_> = current.blocks.iter().map(|b| b.id.clone()).collect();
     let previous: HashMap<_, _> = current.blocks.iter().map(|b| (b.id.as_str(), b)).collect();
     let mut desired_ids: HashSet<String> = desired.iter().map(|b| b.id.clone()).collect();
     let mut replaced_ids = HashSet::new();
@@ -646,6 +663,9 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
         }) {
             return Err("INVALID_BLOCK_CONVERSION: flavour 转换需要新块身份和 replacesId".into());
         }
+        if old.is_some_and(|b| b.block_type == "callout") && block.block_type != "callout" {
+            return Err("UNSUPPORTED_BLOCK_TYPE: 高亮容器不能直接转换为正文块".into());
+        }
         if old.is_some_and(|b| {
             b.block_type == "image" && b.image.as_ref().is_some_and(|i| !i.captions.is_empty())
         }) && block.block_type != "image"
@@ -684,7 +704,13 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
     drop(txn);
     let mut txn = doc.transact_mut();
     let next_ids: Vec<_> = desired.iter().map(|b| b.id.clone()).collect();
-    reconcile_order(&order, &mut txn, &ids, &next_ids);
+    let root_ids: Vec<_> = desired
+        .iter()
+        .filter(|b| b.parent_id.is_none())
+        .map(|b| b.id.clone())
+        .collect();
+    let old_root_ids = children(&root, &txn);
+    reconcile_order(&order, &mut txn, &old_root_ids, &root_ids);
     let keep: HashSet<_> = next_ids.iter().collect();
     for id in &ids {
         if !keep.contains(id) {
@@ -700,7 +726,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
         let old = previous
             .get(next.replaces_id.as_deref().unwrap_or(&next.id))
             .copied();
-        if old == Some(next) {
+        if old == Some(next) && next.block_type != "callout" {
             continue;
         }
         let (flavour, media) = formal_type(&next.block_type).unwrap();
@@ -781,7 +807,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
             block.try_update(
                 &mut txn,
                 "nodeType",
-                if flavour == "image" {
+                if matches!(flavour, "image" | "callout") {
                     "block"
                 } else if media {
                     "void"
@@ -813,6 +839,16 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
         }
         for (key, previous, color) in [
             (
+                "prefix",
+                old.and_then(|b| b.callout_prefix.as_ref()),
+                next.callout_prefix.as_ref(),
+            ),
+            (
+                "color",
+                old.and_then(|b| b.block_text_color.as_ref()),
+                next.block_text_color.as_ref(),
+            ),
+            (
                 "backColor",
                 old.and_then(|b| b.block_background_color.as_ref()),
                 next.block_background_color.as_ref(),
@@ -826,7 +862,15 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
             // 普通正文编辑不重写颜色，保留桌面 null、缺失及未知值。
             if previous != color {
                 if let Some(color) = color {
-                    props.try_update(&mut txn, key, css_color(Any::String(color.clone().into())));
+                    props.try_update(
+                        &mut txn,
+                        key,
+                        if key == "prefix" {
+                            Any::String(color.clone().into())
+                        } else {
+                            css_color(Any::String(color.clone().into()))
+                        },
+                    );
                 } else {
                     props.remove(&mut txn, key);
                 }
@@ -840,7 +884,23 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
         {
             props.try_update(&mut txn, "checked", i64::from(next.checked));
         }
-        if media {
+        if flavour == "callout" {
+            let array = match block.get(&txn, "children") {
+                Some(Out::YArray(v)) => v,
+                _ => block.insert(
+                    &mut txn,
+                    "children",
+                    ArrayPrelim::from(Vec::<String>::new()),
+                ),
+            };
+            let before = children(&block, &txn);
+            let after: Vec<_> = desired
+                .iter()
+                .filter(|b| b.parent_id.as_deref() == Some(&next.id))
+                .map(|b| b.id.clone())
+                .collect();
+            reconcile_order(&array, &mut txn, &before, &after);
+        } else if media {
             if !matches!(block.get(&txn, "children"), Some(Out::YArray(_))) {
                 block.insert(
                     &mut txn,
@@ -882,7 +942,15 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
         .filter(|b| !previous.contains_key(b.id.as_str()))
         .map(|b| b.id.clone())
         .collect();
-    update_ordered_counters(&blocks, &mut txn, &next_ids, &inserted);
+    update_ordered_counters(&blocks, &mut txn, &root_ids, &inserted);
+    for container in desired.iter().filter(|b| b.block_type == "callout") {
+        let ids: Vec<_> = desired
+            .iter()
+            .filter(|b| b.parent_id.as_deref() == Some(&container.id))
+            .map(|b| b.id.clone())
+            .collect();
+        update_ordered_counters(&blocks, &mut txn, &ids, &inserted);
+    }
     Ok(())
 }
 
@@ -1082,6 +1150,165 @@ mod tests {
         engine.blockcraft_root_id = Some("fixture-doc".into());
         engine.apply_cses_update(bytes.to_vec()).unwrap();
         engine
+    }
+
+    #[test]
+    fn callout_tree_and_appearance_roundtrip_without_flattening_or_losing_extensions() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-callout.update");
+        let mut phone = engine(fixture);
+        assert!(project(&phone.doc, "fixture-doc").reason.is_none());
+        let mut desired = phone.blocks();
+        let container = desired.iter_mut().find(|b| b.id == "callout-1").unwrap();
+        assert_eq!(container.block_type, "callout");
+        assert_eq!(container.callout_prefix.as_deref(), Some("🤪"));
+        assert_eq!(container.text, "");
+        container.callout_prefix = Some("👨‍👩‍👧‍👦".into());
+        container.block_background_color = Some("#DFEAFC".into());
+        container.block_border_color = Some("#2563EB".into());
+        container.block_text_color = Some("#15803D".into());
+        let body = desired.iter_mut().find(|b| b.id == "callout-body").unwrap();
+        assert_eq!(body.parent_id.as_deref(), Some("callout-1"));
+        body.text.push_str("手机修改");
+        body.segments[0].text.push_str("手机修改");
+        phone.apply_block_snapshot(desired).unwrap();
+        {
+            let txn = phone.doc.transact();
+            let blocks = txn.get_map(ROOT_NAME).unwrap();
+            let root = map(&blocks, &txn, "fixture-doc").unwrap();
+            assert_eq!(children(&root, &txn), vec!["p1", "p2", "todo", "callout-1"]);
+            let callout = map(&blocks, &txn, "callout-1").unwrap();
+            assert_eq!(
+                children(&callout, &txn),
+                vec!["callout-body", "callout-second"]
+            );
+            assert_eq!(
+                out_string(callout.get(&txn, "nodeType")).as_deref(),
+                Some("block")
+            );
+            let props = map(&callout, &txn, "props").unwrap();
+            assert!(props.contains_key(&txn, "customCallout"));
+            assert_eq!(out_string(props.get(&txn, "prefix")).as_deref(), Some("👨‍👩‍👧‍👦"));
+            assert_eq!(
+                out_string(props.get(&txn, "backColor")).as_deref(),
+                Some("#DFEAFC")
+            );
+            assert_eq!(
+                out_string(props.get(&txn, "borderColor")).as_deref(),
+                Some("#2563EB")
+            );
+            assert_eq!(
+                out_string(props.get(&txn, "color")).as_deref(),
+                Some("#15803D")
+            );
+            let body = map(&blocks, &txn, "callout-body").unwrap();
+            let Some(Out::YText(text)) = body.get(&txn, "children") else {
+                panic!("body must stay Y.Text")
+            };
+            assert_eq!(
+                text.diff(&txn, |_| ())[0]
+                    .attributes
+                    .as_ref()
+                    .unwrap()
+                    .get("a:link"),
+                Some(&Any::String("https://example.test/callout".into()))
+            );
+            assert!(map(&body, &txn, "props")
+                .unwrap()
+                .contains_key(&txn, "customBody"));
+        }
+        let expected = phone.blocks();
+        let vector = phone.doc.transact().state_vector();
+        phone.apply_block_snapshot(expected.clone()).unwrap();
+        assert_eq!(phone.doc.transact().state_vector(), vector);
+        let path = phone.database_path.clone();
+        drop(phone);
+        let mut reopened = CollabEngine::open("fixture-doc".into(), path).unwrap().0;
+        reopened.blockcraft_root_id = Some("fixture-doc".into());
+        assert_eq!(reopened.blocks(), expected);
+    }
+
+    #[test]
+    fn callout_changes_merge_with_remote_body_and_other_appearance_fields() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-callout.update");
+        let mut a = engine(fixture);
+        let mut b = engine(fixture);
+        let mut left = a.blocks();
+        let mut right = b.blocks();
+        left.iter_mut()
+            .find(|v| v.id == "callout-1")
+            .unwrap()
+            .callout_prefix = Some("💡".into());
+        right
+            .iter_mut()
+            .find(|v| v.id == "callout-1")
+            .unwrap()
+            .block_background_color = Some("#DFEAFC".into());
+        right
+            .iter_mut()
+            .find(|v| v.id == "callout-second")
+            .unwrap()
+            .text
+            .push_str("远端");
+        let ua = a.apply_block_snapshot(left).unwrap().v1_update;
+        let ub = b.apply_block_snapshot(right).unwrap().v1_update;
+        a.apply_cses_update(ub).unwrap();
+        b.apply_cses_update(ua).unwrap();
+        assert_eq!(a.blocks(), b.blocks());
+        assert_eq!(
+            a.blocks()
+                .iter()
+                .find(|v| v.id == "callout-1")
+                .unwrap()
+                .callout_prefix
+                .as_deref(),
+            Some("💡")
+        );
+        assert_eq!(
+            a.blocks()
+                .iter()
+                .find(|v| v.id == "callout-second")
+                .unwrap()
+                .text,
+            "第二段正文远端"
+        );
+    }
+
+    #[test]
+    fn callout_child_order_insertion_removal_and_invalid_parent_are_atomic() {
+        let mut engine = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-callout.update"
+        ));
+        let mut desired = engine.blocks();
+        let mut new = desired.last().unwrap().clone();
+        new.id = "new-child".into();
+        new.text = "新增子段落".into();
+        desired.push(new);
+        desired.swap(4, 5);
+        engine.apply_block_snapshot(desired.clone()).unwrap();
+        {
+            let txn = engine.doc.transact();
+            let blocks = txn.get_map(ROOT_NAME).unwrap();
+            let callout = map(&blocks, &txn, "callout-1").unwrap();
+            assert_eq!(
+                children(&callout, &txn),
+                vec!["callout-second", "callout-body", "new-child"]
+            );
+        }
+        let before = engine.doc.transact().state_vector();
+        desired.last_mut().unwrap().parent_id = Some("p1".into());
+        assert!(engine.apply_block_snapshot(desired).is_err());
+        assert_eq!(engine.doc.transact().state_vector(), before);
+        let desired: Vec<_> = engine
+            .blocks()
+            .into_iter()
+            .filter(|b| b.id != "callout-1" && b.parent_id.is_none())
+            .collect();
+        engine.apply_block_snapshot(desired).unwrap();
+        let txn = engine.doc.transact();
+        let blocks = txn.get_map(ROOT_NAME).unwrap();
+        for id in ["callout-1", "callout-body", "callout-second", "new-child"] {
+            assert!(!blocks.contains_key(&txn, id));
+        }
     }
 
     #[test]
@@ -1874,6 +2101,9 @@ mod tests {
                 indent: 0,
                 image: None,
                 ordered: None,
+                parent_id: None,
+                callout_prefix: None,
+                block_text_color: None,
                 code: None,
                 replaces_id: None,
                 block_background_color: None,
@@ -1972,6 +2202,9 @@ mod tests {
             indent: 0,
             image: None,
             ordered: None,
+            parent_id: None,
+            callout_prefix: None,
+            block_text_color: None,
             code: None,
             replaces_id: None,
             block_background_color: None,

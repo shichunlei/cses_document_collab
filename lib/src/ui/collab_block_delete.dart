@@ -32,7 +32,8 @@ final collabBlockBackspaceCommand = CommandShortcutEvent(
       unawaited(_runBackspaceTransaction(state, outdent: true));
       return KeyEventResult.handled;
     }
-    if (isProtectedDocumentTitleBoundary(state)) {
+    if (isProtectedDocumentTitleBoundary(state) ||
+        isProtectedCalloutBoundary(state)) {
       return KeyEventResult.handled;
     }
     if (!canDeletePreviousUrlBackedBlock(state)) {
@@ -83,6 +84,11 @@ class CollabBlockBackspaceInterceptor
         return false;
       }
       return outdentCollabListAtStart(editorState);
+    }
+    if (isProtectedCalloutBoundary(editorState) &&
+        deletion.deletedRange.isCollapsed &&
+        deletion.deletedRange.start == 0) {
+      return true;
     }
     if (isProtectedDocumentTitleBoundary(editorState)) {
       return true;
@@ -200,3 +206,18 @@ bool _isUrlBackedBlock(String type) =>
     type == csesLinkBlockType ||
     type == ImageBlockKeys.type ||
     type == csesVideoBlockType;
+
+/// Keep Backspace from merging the first callout paragraph across its container edge.
+bool isProtectedCalloutBoundary(EditorState editorState) {
+  if (editorState.isDisposed || !editorState.editable) return false;
+  final selection = editorState.selection;
+  if (selection == null ||
+      !selection.isCollapsed ||
+      selection.start.offset != 0) {
+    return false;
+  }
+  final node = editorState.getNodeAtPath(selection.start.path);
+  return node?.delta != null &&
+      ((node?.parent?.type == csesCalloutBlockType && node?.previous == null) ||
+          node?.previous?.type == csesCalloutBlockType);
+}
