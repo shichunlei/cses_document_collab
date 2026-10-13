@@ -2,6 +2,8 @@
 
 一个独立运行的 Flutter + Rust/Yrs 离线协同实验，复用工作区 `cses.common` 的 CSES 主连接，不依赖 SaaS 详情页。
 
+桌面块的完整移动端适配进度见 [块适配表](docs/block-adaptation.md)。每完成一个块的适配，都须同步更新该表的状态、支持范围及验证记录。
+
 ## 已实现
 
 - AppFlowy Editor 6.2 块编辑界面和连接状态
