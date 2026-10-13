@@ -122,6 +122,10 @@ class _EditorShortcutToolbarState extends State<EditorShortcutToolbar> {
     if (defaultTargetPlatform != TargetPlatform.android ||
         selection == null ||
         !selection.isCollapsed ||
+        widget
+                .editorState
+                .selectionExtraInfo?[selectionExtraInfoDoNotAttachTextService] ==
+            true ||
         widget.editorState.selectionUpdateReason !=
             SelectionUpdateReason.uiEvent) {
       return;
@@ -150,6 +154,11 @@ class _EditorShortcutToolbarState extends State<EditorShortcutToolbar> {
     if (!mounted ||
         requestGeneration != _emptyParagraphKeyboardRequestGeneration ||
         widget.editorState.selection != selection ||
+        widget
+                .editorState
+                .selectionExtraInfo?[selectionExtraInfoDoNotAttachTextService] ==
+            true ||
+        ModalRoute.of(context)?.isCurrent == false ||
         _editorKeyboardIsVisible(context)) {
       return;
     }
@@ -1445,106 +1454,170 @@ void _showToolbarMessage(BuildContext context, String message) {
     );
 }
 
-Future<void> showEditorAddBlockSheet(
-  BuildContext context,
-  EditorState editorState,
-) async {
-  final selection = editorState.selection;
-  if (selection == null) {
-    _showToolbarMessage(context, '请先把光标放入正文');
-    return;
+/// The saved selection is independent of focus and survives block reordering.
+/// Both endpoints are retained so cancellation also restores expanded ranges.
+class _EditorSelectionBookmark {
+  _EditorSelectionBookmark(EditorState state, Selection selection)
+    : startId = _idAt(state, selection.start),
+      endId = _idAt(state, selection.end),
+      startOffset = selection.start.offset,
+      endOffset = selection.end.offset;
+
+  final String? startId;
+  final String? endId;
+  final int startOffset;
+  final int endOffset;
+
+  static String? _idAt(EditorState state, Position point) {
+    final node = state.getNodeAtPath(point.path);
+    return node == null ? null : _mediaTargetId(node);
   }
 
-  final previousExtraInfo = editorState.selectionExtraInfo == null
-      ? null
-      : Map<Object?, Object?>.from(editorState.selectionExtraInfo!);
-  editorState.selectionExtraInfo = {
-    ...?previousExtraInfo,
-    selectionExtraInfoDisableMobileToolbarKey: true,
-  };
-  // PropertyValueNotifier intentionally notifies even for the same selection,
-  // forcing MobileToolbarV2 to rebuild with the disabled flag immediately.
-  editorState.selection = selection;
-
-  Selection? appliedSelection;
-  try {
-    FocusManager.instance.primaryFocus?.unfocus();
-    appliedSelection = await showModalBottomSheet<Selection>(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => _AddBlockSheet(
-        editorState: editorState,
-        capturedSelection: selection,
-      ),
+  Position? _resolvePoint(EditorState state, String? id, int offset) {
+    final node = id == null ? null : _findMediaTarget(state, id);
+    if (node == null) return null;
+    return Position(
+      path: node.path,
+      offset: offset.clamp(0, node.delta?.length ?? 0),
     );
-  } finally {
-    if (appliedSelection == null) {
-      // Closing the sheet without choosing a block is a cancellation. Restore
-      // the previous toolbar metadata and leave the editor unfocused so a
-      // cancel action never opens the keyboard unexpectedly.
-      editorState.selectionExtraInfo = previousExtraInfo;
-      editorState.selection = null;
-    } else {
-      if (!context.mounted) {
-        // The owning editor route disappeared while its child modal was
-        // closing. Preserve the logical selection metadata, but never request
-        // focus through a disposed BuildContext.
-        editorState.selectionExtraInfo = previousExtraInfo;
-        editorState.selection = appliedSelection;
-      } else {
-        await _restoreEditorCaretAndKeyboard(
-          context,
-          editorState,
-          appliedSelection,
-          extraInfo: previousExtraInfo,
-        );
+  }
+
+  Selection? resolve(EditorState state) {
+    if (state.isDisposed || !state.editable) return null;
+    final start = _resolvePoint(state, startId, startOffset);
+    final end = _resolvePoint(state, endId, endOffset);
+    if (start == null || end == null) return null;
+    return Selection(start: start, end: end);
+  }
+}
+
+/// Owns one entire modal flow, including a nested source/file chooser.
+/// Never use the live editor selection as the modal's insertion bookmark.
+class _EditorModalSession {
+  _EditorModalSession(this.state)
+    : bookmark = state.selection == null
+          ? null
+          : _EditorSelectionBookmark(state, state.selection!),
+      previousExtraInfo = state.selectionExtraInfo == null
+          ? null
+          : Map<Object?, Object?>.from(state.selectionExtraInfo!),
+      previousStyle = Map<String, dynamic>.from(state.toggledStyle) {
+    state.selectionExtraInfo = {
+      ...?previousExtraInfo,
+      selectionExtraInfoDisableMobileToolbarKey: true,
+      selectionExtraInfoDoNotAttachTextService: true,
+    };
+    state.selection = null;
+    state.service.keyboardService
+      ?..closeKeyboard()
+      ..disableShortcuts()
+      ..disable(disposition: UnfocusDisposition.scope);
+    FocusManager.instance.primaryFocus?.unfocus();
+  }
+
+  final EditorState state;
+  final _EditorSelectionBookmark? bookmark;
+  final Map<Object?, Object?>? previousExtraInfo;
+  final Map<String, dynamic> previousStyle;
+
+  Future<void> finish(
+    BuildContext? context,
+    Selection? appliedSelection,
+  ) async {
+    if (state.isDisposed) return;
+    state.selectionExtraInfo = previousExtraInfo;
+    state.service.keyboardService?.enableShortcuts();
+    if (context == null || !_canRestoreEditorFocus(context, state)) return;
+    final selection = appliedSelection ?? bookmark?.resolve(state);
+    // A deleted anchor must not silently resolve to a different block.
+    if (selection == null) return;
+    await _restoreEditorCaretAndKeyboard(
+      context,
+      state,
+      selection,
+      extraInfo: previousExtraInfo,
+    );
+    if (!state.isDisposed &&
+        appliedSelection == null &&
+        state.selection == selection) {
+      for (final entry in previousStyle.entries) {
+        state.updateToggledStyle(entry.key, entry.value);
       }
     }
   }
 }
 
-/// Opens the mobile source sheet, then inserts a link or uploaded resource.
-/// Resolve the original block by identity after file selection/upload so remote
-/// reorder/deletion never inserts into an unrelated paragraph.
-Future<void> showEditorUrlBlockDialog(
+Future<void> showEditorAddBlockSheet(
   BuildContext context,
   EditorState editorState,
-  String blockType,
 ) async {
   if (editorState.isDisposed || !editorState.editable) return;
-  final selection = editorState.selection;
-  if (selection == null) {
+  if (editorState.selection == null) {
     _showToolbarMessage(context, '请先把光标放入正文');
     return;
   }
-  final target = editorState.getNodeAtPath(selection.start.path);
-  if (target == null) return;
-  final targetId = _mediaTargetId(target);
-  FocusManager.instance.primaryFocus?.unfocus();
-  final source = await showEditorMediaSourceSheet(
-    context,
-    blockType: blockType,
-    canEdit: () => !editorState.isDisposed && editorState.editable,
-  );
-  if (source == null || !context.mounted) return;
-  final current = _mediaInsertionSelection(editorState, targetId, selection);
-  final nextSelection = current == null
-      ? null
-      : await applyUrlBlockShortcut(
-          editorState,
-          current,
-          blockType,
-          source.url,
-          mediaSource: source,
+  final session = _EditorModalSession(editorState);
+  Selection? appliedSelection;
+  ModalRoute<Selection>? route;
+  try {
+    appliedSelection = await showModalBottomSheet<Selection>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      requestFocus: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        route = ModalRoute.of<Selection>(context);
+        return _AddBlockSheet(
+          editorState: editorState,
+          bookmark: session.bookmark!,
         );
-  if (!context.mounted) return;
-  if (nextSelection == null) {
-    _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
+      },
+    );
+    await route?.completed;
+  } finally {
+    await session.finish(context.mounted ? context : null, appliedSelection);
+  }
+}
+
+/// Opens the mobile source sheet with a separate insertion bookmark.
+Future<void> showEditorUrlBlockDialog(
+  BuildContext context,
+  EditorState editorState,
+  String blockType, {
+  EditorMediaUploadService service = const CsesEditorMediaUploadService(),
+}) async {
+  if (editorState.isDisposed || !editorState.editable) return;
+  if (editorState.selection == null) {
+    _showToolbarMessage(context, '请先把光标放入正文');
     return;
   }
-  await _restoreEditorCaretAndKeyboard(context, editorState, nextSelection);
+  final session = _EditorModalSession(editorState);
+  Selection? nextSelection;
+  try {
+    final source = await showEditorMediaSourceSheet(
+      context,
+      blockType: blockType,
+      service: service,
+      canEdit: () => !editorState.isDisposed && editorState.editable,
+    );
+    if (source == null || !context.mounted) return;
+    final current = session.bookmark?.resolve(editorState);
+    nextSelection = current == null
+        ? null
+        : await applyUrlBlockShortcut(
+            editorState,
+            current,
+            blockType,
+            source.url,
+            mediaSource: source,
+          );
+    if (context.mounted && nextSelection == null) {
+      _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
+    }
+  } finally {
+    await session.finish(context.mounted ? context : null, nextSelection);
+  }
 }
 
 String _mediaTargetId(Node node) =>
@@ -1566,57 +1639,49 @@ Node? _findMediaTarget(EditorState state, String id) {
   return visit(state.document.root);
 }
 
-Selection? _mediaInsertionSelection(
-  EditorState state,
-  String id,
-  Selection old,
-) {
-  if (state.isDisposed || !state.editable) return null;
-  final node = _findMediaTarget(state, id);
-  if (node == null) return null;
-  return Selection.single(
-    path: node.path,
-    startOffset: old.start.offset.clamp(0, node.delta?.length ?? 0),
-  );
-}
-
-/// Adds, replaces or removes the fixed document cover URL.
-///
-/// The cover is a structural collaborative block, so changing its URL uses a
-/// normal AppFlowy transaction and is published through the same adapter path
-/// as body edits. No caret is restored because the cover itself is non-text.
+/// Adds, replaces or removes the cover, restoring any prior body selection.
 Future<void> showEditorDocumentCoverDialog(
   BuildContext context,
   EditorState editorState,
   Node coverNode,
 ) async {
+  if (editorState.isDisposed || !editorState.editable) return;
   final currentUrl =
       coverNode.attributes[csesEmbedUrlAttribute] as String? ?? '';
-  FocusManager.instance.primaryFocus?.unfocus();
-  if (editorState.isDisposed || !editorState.editable) return;
   final id = _mediaTargetId(coverNode);
-  final source = await showEditorMediaSourceSheet(
-    context,
-    blockType: csesDocumentCoverBlockType,
-    initialValue: currentUrl,
-    allowRemove: currentUrl.isNotEmpty,
-    canEdit: () => !editorState.isDisposed && editorState.editable,
-  );
-  if (source == null ||
-      !context.mounted ||
-      editorState.isDisposed ||
-      !editorState.editable) {
-    return;
+  final session = _EditorModalSession(editorState);
+  try {
+    final source = await showEditorMediaSourceSheet(
+      context,
+      blockType: csesDocumentCoverBlockType,
+      initialValue: currentUrl,
+      allowRemove: currentUrl.isNotEmpty,
+      canEdit: () => !editorState.isDisposed && editorState.editable,
+    );
+    if (source == null ||
+        !context.mounted ||
+        editorState.isDisposed ||
+        !editorState.editable) {
+      return;
+    }
+    final latestNode = _findMediaTarget(editorState, id);
+    if (latestNode == null || latestNode.type != csesDocumentCoverBlockType) {
+      _showToolbarMessage(context, '封面已被远端修改，请重试');
+      return;
+    }
+    final transaction = editorState.transaction
+      ..updateNode(latestNode, {csesEmbedUrlAttribute: source.url});
+    await editorState.apply(transaction);
+  } finally {
+    await session.finish(context.mounted ? context : null, null);
   }
-  final latestNode = _findMediaTarget(editorState, id);
-  if (latestNode == null || latestNode.type != csesDocumentCoverBlockType) {
-    _showToolbarMessage(context, '封面已被远端修改，请重试');
-    return;
-  }
-  final transaction = editorState.transaction
-    ..updateNode(latestNode, {csesEmbedUrlAttribute: source.url});
-  await editorState.apply(transaction);
 }
+
+bool _canRestoreEditorFocus(BuildContext context, EditorState state) =>
+    context.mounted &&
+    !state.isDisposed &&
+    state.editable &&
+    ModalRoute.of(context)?.isCurrent != false;
 
 /// Restores an AppFlowy text-input client after a dialog or bottom sheet.
 ///
@@ -1635,9 +1700,7 @@ Future<void> _restoreEditorCaretAndKeyboard(
   // Waiting for the target node's widget registration prevents the input
   // service from attaching before the paragraph has a render/selectable state.
   await _waitForEditableSelectionTarget(editorState, selection);
-  if (!context.mounted) {
-    return;
-  }
+  if (!context.mounted || !_canRestoreEditorFocus(context, editorState)) return;
 
   // Re-emitting a UI selection is sufficient: KeyboardService's selection
   // listener attaches the text input service and requests editor focus. Do not
@@ -1662,6 +1725,7 @@ Future<void> _restoreEditorCaretAndKeyboard(
   // stacking another show request on an existing connection.
   await Future<void>.delayed(const Duration(milliseconds: 360));
   if (!context.mounted ||
+      !_canRestoreEditorFocus(context, editorState) ||
       _editorKeyboardIsVisible(context) ||
       editorState.selection != selection) {
     return;
@@ -1670,7 +1734,9 @@ Future<void> _restoreEditorCaretAndKeyboard(
   final keyboardService = editorState.service.keyboardService;
   keyboardService?.closeKeyboard();
   await WidgetsBinding.instance.endOfFrame;
-  if (!context.mounted || editorState.selection != selection) {
+  if (!context.mounted ||
+      !_canRestoreEditorFocus(context, editorState) ||
+      editorState.selection != selection) {
     return;
   }
   await editorState.updateSelectionWithReason(
@@ -1688,6 +1754,7 @@ Future<void> _waitForEditableSelectionTarget(
   // final layout without creating an unbounded wait if the editor route has
   // already been removed. The caller separately checks BuildContext liveness.
   for (var attempt = 0; attempt < 3; attempt += 1) {
+    if (editorState.isDisposed || !editorState.editable) return;
     final node = editorState.getNodeAtPath(selection.start.path);
     if (node?.delta != null && node?.context != null) {
       return;
@@ -1704,13 +1771,10 @@ bool _editorKeyboardIsVisible(BuildContext context) {
 }
 
 class _AddBlockSheet extends StatelessWidget {
-  const _AddBlockSheet({
-    required this.editorState,
-    required this.capturedSelection,
-  });
+  const _AddBlockSheet({required this.editorState, required this.bookmark});
 
   final EditorState editorState;
-  final Selection capturedSelection;
+  final _EditorSelectionBookmark bookmark;
 
   // The add/more sheet is the exhaustive block picker, unlike the compact T
   // menu that progressively discloses deep headings. Expose every heading
@@ -1930,6 +1994,10 @@ class _AddBlockSheet extends StatelessWidget {
                             accent: const Color(0xFFF97316),
                             tint: const Color(0xFFFFEDD5),
                             onTap: () async {
+                              final capturedSelection = bookmark.resolve(
+                                editorState,
+                              );
+                              if (capturedSelection == null) return;
                               final selection = await insertCollabCallout(
                                 editorState,
                                 capturedSelection,
@@ -1984,6 +2052,11 @@ class _AddBlockSheet extends StatelessWidget {
     BuildContext context,
     _BlockShortcut shortcut,
   ) async {
+    final capturedSelection = bookmark.resolve(editorState);
+    if (capturedSelection == null) {
+      _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
+      return;
+    }
     final applied = await applyBlockShortcut(
       editorState,
       capturedSelection,
@@ -2007,20 +2080,13 @@ class _AddBlockSheet extends StatelessWidget {
     String blockType,
   ) async {
     if (editorState.isDisposed || !editorState.editable) return;
-    final target = editorState.getNodeAtPath(capturedSelection.start.path);
-    if (target == null) return;
-    final id = _mediaTargetId(target);
     final source = await showEditorMediaSourceSheet(
       context,
       blockType: blockType,
       canEdit: () => !editorState.isDisposed && editorState.editable,
     );
     if (source == null || !context.mounted) return;
-    final current = _mediaInsertionSelection(
-      editorState,
-      id,
-      capturedSelection,
-    );
+    final current = bookmark.resolve(editorState);
     final nextSelection = current == null
         ? null
         : await applyUrlBlockShortcut(

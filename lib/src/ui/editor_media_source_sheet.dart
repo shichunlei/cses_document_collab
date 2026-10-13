@@ -13,23 +13,34 @@ Future<EditorMediaSource?> showEditorMediaSourceSheet(
   bool allowRemove = false,
   bool Function()? canEdit,
   EditorMediaUploadService service = const CsesEditorMediaUploadService(),
-}) => showModalBottomSheet<EditorMediaSource>(
-  context: context,
-  isScrollControlled: true,
-  useSafeArea: true,
-  backgroundColor: Colors.white,
-  shape: const RoundedRectangleBorder(
-    borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-  ),
-  clipBehavior: Clip.antiAlias,
-  builder: (_) => _MediaSourceSheet(
-    kind: blockType,
-    initialValue: initialValue,
-    allowRemove: allowRemove,
-    canEdit: canEdit,
-    service: service,
-  ),
-);
+}) async {
+  ModalRoute<EditorMediaSource>? route;
+  final result = await showModalBottomSheet<EditorMediaSource>(
+    context: context,
+    isScrollControlled: true,
+    useSafeArea: true,
+    backgroundColor: Colors.white,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    ),
+    clipBehavior: Clip.antiAlias,
+    requestFocus: true,
+    builder: (context) {
+      route = ModalRoute.of<EditorMediaSource>(context);
+      return _MediaSourceSheet(
+        kind: blockType,
+        initialValue: initialValue,
+        allowRemove: allowRemove,
+        canEdit: canEdit,
+        service: service,
+      );
+    },
+  );
+  // Navigator.pop completes before the reverse transition. Keep the editor
+  // suspended until the sheet and its text input have actually been removed.
+  await route?.completed;
+  return result;
+}
 
 class _MediaSourceSheet extends StatefulWidget {
   const _MediaSourceSheet({
