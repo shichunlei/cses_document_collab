@@ -62,6 +62,9 @@ class CollabController extends ChangeNotifier with WidgetsBindingObserver {
   bool _initializing = false;
   bool _busy = false;
   bool _disposed = false;
+
+  /// 当前控制器的异步释放任务；切换账号前等待它，避免旧宿主关闭新连接。
+  Future<void>? _shutdownTask;
   bool _observingLifecycle = false;
 
   /// 当前线上 docId，未连接时为本地草稿标识。
@@ -197,7 +200,11 @@ class CollabController extends ChangeNotifier with WidgetsBindingObserver {
       );
       if (_disposed) return;
       _initialized = true;
-      _host.configure(settings);
+      await _host.configure(settings);
+      if (_disposed) {
+        _host.close();
+        return;
+      }
       _status = ConnectionStatus.connecting;
       _error = null;
       final session = CsesDocCollaborationSession(
@@ -615,6 +622,12 @@ class CollabController extends ChangeNotifier with WidgetsBindingObserver {
     return true;
   }
 
+  /// 释放控制器并等待 Socket、投影与 Rust 文档关闭；退出账号前必须等待。
+  Future<void> close() {
+    dispose();
+    return _shutdownTask ?? Future<void>.value();
+  }
+
   /// 同步标记失效，停止 Widget 监听；后台顺序注销 WS、关闭引擎并记录释放异常。
   /// Flutter dispose 不能等待 Future，资源释放任务自行拥有统一异常边界。
   @override
@@ -626,7 +639,8 @@ class CollabController extends ChangeNotifier with WidgetsBindingObserver {
       _observingLifecycle = false;
     }
     _editorAdapter.dispose();
-    unawaited(_shutdown());
+    _shutdownTask = _shutdown();
+    unawaited(_shutdownTask!);
     super.dispose();
   }
 

@@ -4,6 +4,8 @@ import 'package:cses_common/runtime/config/config.dart';
 import 'package:cses_common/runtime/config/env_type.dart';
 import 'package:cses_common/runtime/context/context.dart';
 import 'package:cses_common/runtime/session/user.dart';
+import 'package:cses_common/runtime/device/device_util.dart';
+import 'package:cses_common/runtime/preferences/sp_util.dart';
 import 'package:cses_mobile_collab_demo/src/collab/cses_connection_settings.dart';
 
 /// 独立 Demo 的应用级 CSES 主连接宿主；只导入已有登录会话，不执行登录 HTTP 流程。
@@ -16,7 +18,7 @@ import 'package:cses_mobile_collab_demo/src/collab/cses_connection_settings.dart
 /// Future<void> useHost(CsesConnectionSettings settings,
 ///     CsesDocCollaborationSession session) async {
 ///   const host = CsesDemoHost();
-///   host.configure(settings);
+///   await host.configure(settings);
 ///   await session.start();
 ///   await host.connect();
 ///   // 编辑器生命周期结束后释放；会话不关闭共享主连接。
@@ -31,14 +33,19 @@ final class CsesDemoHost {
   /// 将已校验的 [settings] 写入 Common 内存上下文，不保存 cookie 或打印会话快照。
   ///
   /// 调用前必须释放旧会话并关闭旧主连接；Demo 固定使用 pre 环境标记和 bct appType，
-  /// 实际地址完全取自表单。deviceId 沿用登录设备，不调用设备工具生成新 ID。
-  void configure(CsesConnectionSettings settings) {
+  /// 实际地址取自表单，deviceId 通过 Common 设备工具读取并复用其缓存。
+  Future<void> configure(CsesConnectionSettings settings) async {
     settings.validate();
+    await SpUtil.getInstance();
+    final deviceId = await DeviceUtils.getDeviceId();
+    if (deviceId == null || deviceId.trim().isEmpty) {
+      throw const FormatException('无法获取本机 deviceId，请检查设备后重试');
+    }
     Config().appType = 'bct';
     Config().envType = EnvType.pre;
     ctx.websocketHost = settings.websocketUrl;
     ctx.cookieId = settings.cookieId;
-    ctx.deviceId = settings.deviceId;
+    ctx.deviceId = deviceId;
     ctx.versionName = '1.0.0-collab-demo';
     ctx.versionCode = 1;
     ctx.osVersion = 'demo';

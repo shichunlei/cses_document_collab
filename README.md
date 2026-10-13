@@ -83,7 +83,7 @@ bc:revisions / bc:revision-decisions / bc:revision-meta  原样保留的修订�
 ## CSES 接入与资源所有权
 
 ```text
-连接配置页 → CollabController（Demo 装配边界）
+账号密码登录页 → /User/login → 文档状态页 → CollabController（Demo 装配边界）
                  ├─ AppFlowyBlockEditorAdapter → Flutter 原生编辑器
                  ├─ Rust/Yrs Doc → SQLite 增量日志
                  ├─ CsesDocCollaborationSession → 协同状态机/差量/Awareness
@@ -91,12 +91,20 @@ bc:revisions / bc:revision-decisions / bc:revision-meta  原样保留的修订�
                  └─ CsesDemoHost → CSES 唯一主连接和登录上下文
 ```
 
-- `cses_connection_settings.dart` 校验已有登录的 WS 地址、cookieId/deviceId、企业、用户和正式 docId；
+- `cses_account_login.dart` 使用 `cses.saas` 的 `POST /User/login` 密码登录契约，提交
+  `userName/password`，请求头使用 Common 本机 `deviceId`，与后续 WS 保持一致。
+  PRE API 为 `https://api-pre.jinqidongli.com/User/login`。专用 HTTP 客户端不安装正文日志拦截器；
+  密码不落盘，成功后清空输入框。响应中的 cookieId/userId/companyId 和 webConfig.websocketHost
+  构成内存会话，缺少企业时按 organizes 选择普通企业；缺少有效身份则留在登录页。
+- `cses_login_page.dart` 校验输入并防止重复提交；失败展示错误，销毁后忽略迟到响应。
+  登录成功后创建文档宿主，等待本地初始化，再自动注册协同并连接 WS。退出登录等待旧控制器的
+  Socket、投影与全局 Rust 文档完全释放，再回到登录页。
+- `cses_connection_settings.dart` 校验登录响应的 WS 地址、cookieId、企业、用户和正式 docId；
   不执行 HTTP 登录，不自动创建文档。缓存键由地址/企业/用户/docId 哈希生成，cookie 轮换不丢离线修改。
   正式模型采用 `cses-blockcraft-v1:` 前缀，旧 `cses:` Demo 分区保留但不混入正式正文。
   Rust 的业务根 ID 和本机缓存键分别传入，不能用哈希缓存键查找正式 root。
 - `cses_demo_host.dart` 初始化 Common 内存上下文，固定 `pre` 环境标记和 `bct` appType；
-  实际部署地址由表单指定。CPU 等握手 Header 必须非 null，避免 dart:io 在握手前失败。
+  实际部署地址取自登录响应，未返回时使用 PRE 默认地址。CPU 等握手 Header 必须非 null，避免 dart:io 在握手前失败。
 - `cses_collab_gateway.dart` 使用现有 `registerListeners(onlyListen: true)` 安装回调，
   并借用公开注册锁等待其 async void 操作完成。主连接 ready 后手动发送平台 subscribe，随后会话 join。
   纯监听注销避免 Common 自动排队 unsubscribe；适配器不创建/关闭物理 WS。
@@ -122,7 +130,7 @@ bc:revisions / bc:revision-decisions / bc:revision-meta  原样保留的修订�
 正文以 Yjs 幂等 update 和重连向量修复，join/leave/Awareness 的失败重放仍需真实环境专项验证。
 要获得生产级严格无队列发送，需要 Common 提供对应能力后再评估，首轮实验不扩展其公共 API。
 
-Common 当前 URI 构造不支持已有 Query，Demo 表单因此要求完整、无 Query 的部署地址。
+Common 当前 URI 构造不支持已有 Query，因此登录响应中的部署地址必须完整且无 Query。
 其连接诊断可能输出包含 cookieId 的 URI，原始日志应按凭证处理，不能直接共享。
 引用完整 Common 会带入其原生插件；Common 与工作区 AppFlowy 使用相同的 file_picker/device_info_plus 版本。
 Demo 使用 image 4.12.0 与 archive 4.5.1，已移除旧的 image 版本覆盖，未修改 Common 或已有编辑器 fork 的源码。
@@ -148,14 +156,13 @@ flutter run -d <android-device-id>
 scripts/ios.sh run -d <ios-device-id>
 ```
 
-启动后可先离线进入本地草稿。当前宿主使用 PRE 环境标记；连接表单预填指定的 PRE WS 地址、测试会话和文档 ID，
-包含 cookieId 的默认值随 Demo 源码提供。所有字段均可手动修改，普通页面刷新保留输入，重新挂载恢复默认值；
-不另行持久化输入、不自动连接。连接正式 BlockCraft 文档，并使用同一次有效测试登录的 cookieId、deviceId、companyId、userId，
-再点击“连接 / 重连”。
-该操作打开独立缓存分区，未连接时的草稿不会自动上传到测试文档。
+启动后进入用户名、密码登录页，使用 PRE 环境的真实账号登录；不预填账号密码，
+不再手动填写 userId、cookieId、companyId 或 WS 地址。登录成功后自动连接固定正式测试文档
+`6ac76e5375083c8c9f19cbd3`。文档页可重新连接、清理本机缓存或退出登录。
+会话只驻留内存，重启后重新登录；SQLite 正文缓存仍按地址/企业/用户/文档隔离并保留。
 
-两台设备填写相同 docId，分别使用各自有效登录的 cookieId/deviceId。instance 自动生成，
-同一次挂载期间重连保持稳定，重新连接配置后产生新实例。
+两台设备分别登录各自账号，deviceId 自动读取本机标识，测试文档 ID 相同。
+instance 自动生成，同一次文档宿主挂载期间保持稳定，重新配置连接时产生新实例。
 界面出现 `bidirectional-sync-ready` 后再确认双端编辑；握手超时要核对会话和服务端协议部署，
 底层 Socket 打开或收到 hello 不代表文档会话成功。
 

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:cses_common/network/websocket/cses_websocket_client.dart';
 import 'package:cses_mobile_collab_demo/src/collab/cses_collab_gateway.dart';
@@ -9,9 +8,60 @@ import 'package:cses_mobile_collab_demo/src/collab/cses_connection_settings.dart
 import 'package:cses_mobile_collab_demo/src/collab/cses_demo_host.dart';
 import 'package:cses_mobile_collab_demo/src/collab/cses_doc_collaboration_session.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/services.dart';
+import 'package:cses_common/runtime/runtime_fields.dart';
+import 'package:cses_common/runtime/preferences/sp_util.dart';
 
 /// 在本机真实 Socket 上验证原 Common 接口和 PaaS JSON 路由，无真实会话凭证。
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  setUp(() async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+          const MethodChannel('plugins.flutter.io/shared_preferences'),
+          (call) async => call.method == 'getAll' ? <String, Object>{} : true,
+        );
+    await SpUtil.getInstance();
+    await SpUtil.remove('DEVICE_ID');
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+          const MethodChannel(RuntimeFields.channelName),
+          (call) async => call.method == RuntimeFields.getDeviceId
+              ? 'loopback-device'
+              : null,
+        );
+  });
+  tearDown(() async {
+    await SpUtil.remove('DEVICE_ID');
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+          const MethodChannel(RuntimeFields.channelName),
+          null,
+        );
+  });
+  test(
+    'missing Common device ID rejects configuration before context changes',
+    () async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            const MethodChannel(RuntimeFields.channelName),
+            (call) async => ' ',
+          );
+      const host = CsesDemoHost();
+      await expectLater(
+        host.configure(
+          const CsesConnectionSettings(
+            websocketUrl: 'wss://example.test/ws',
+            cookieId: 'cookie',
+            companyId: 'company',
+            userId: 'user',
+            documentId: 'doc',
+          ),
+        ),
+        throwsFormatException,
+      );
+    },
+  );
   test(
     'unmodified Common connects, subscribes, joins and exchanges routed JSON',
     () async {
@@ -73,11 +123,10 @@ void main() {
         }
         await server.close(force: true);
       });
-      host.configure(
+      await host.configure(
         CsesConnectionSettings(
           websocketUrl: 'ws://127.0.0.1:${server.port}/deployment/ws',
           cookieId: 'loopback-cookie',
-          deviceId: 'loopback-device',
           companyId: 'company',
           userId: 'user',
           documentId: 'doc',

@@ -11,7 +11,6 @@ CsesConnectionSettings _settings({
 }) => CsesConnectionSettings(
   websocketUrl: url,
   cookieId: cookie,
-  deviceId: 'device',
   companyId: company,
   userId: user,
   documentId: doc,

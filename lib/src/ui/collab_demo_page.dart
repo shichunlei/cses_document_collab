@@ -1,14 +1,21 @@
 import 'dart:async';
 
 import 'package:cses_mobile_collab_demo/src/collab/collab_controller.dart';
+import 'package:cses_mobile_collab_demo/src/collab/cses_account_login.dart';
 import 'package:cses_mobile_collab_demo/src/ui/collaborative_editor_page.dart';
 import 'package:cses_mobile_collab_demo/src/ui/cses_connection_panel.dart';
 import 'package:flutter/material.dart';
 
-/// 独立 Demo 入口，拥有编辑器控制器并装配 CSES 会话配置面板。
+/// 登录后的文档入口，拥有编辑器控制器并装配 CSES 状态面板。
 class CollabDemoPage extends StatefulWidget {
-  /// 创建连接配置页；控制器随此页生命周期创建与释放。
-  const CollabDemoPage({super.key});
+  /// 创建文档状态页；控制器随此页生命周期创建与释放。
+  const CollabDemoPage({super.key, this.session, this.onLogout});
+
+  /// 已认证的会话；为空时仅用于离线预览和测试，不建立网络连接。
+  final CsesAccountSession? session;
+
+  /// 返回登录页；移除本页会释放协同控制器及共享连接。
+  final VoidCallback? onLogout;
 
   @override
   /// 创建本页资源所有者。
@@ -20,11 +27,18 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
   late final CollabController _collab;
 
   @override
-  /// 初始化本地文档，网络连接由用户填写会话后触发。
+  /// 初始化本地文档，随后使用登录会话自动连接。
   void initState() {
     super.initState();
     _collab = CollabController();
-    unawaited(_collab.initialize());
+    unawaited(_initializeSession());
+  }
+
+  /// 先初始化本地存储，再注册文档路由并自动连接；页面销毁后不交付迟到结果。
+  Future<void> _initializeSession() async {
+    await _collab.initialize();
+    if (!mounted || widget.session == null) return;
+    await _collab.configureCses(widget.session!.settings);
   }
 
   @override
@@ -44,6 +58,12 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
           appBar: AppBar(
             title: const Text('CSES 协同 Demo'),
             actions: [
+              if (widget.onLogout != null)
+                IconButton(
+                  onPressed: _collab.busy ? null : _logout,
+                  tooltip: '退出登录',
+                  icon: const Icon(Icons.logout),
+                ),
               Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child: _StatusChip(status: _collab.status),
@@ -57,7 +77,11 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  CsesConnectionPanel(collab: _collab, onReset: _confirmReset),
+                  CsesConnectionPanel(
+                    collab: _collab,
+                    session: widget.session,
+                    onReset: _confirmReset,
+                  ),
                   if (_collab.error != null) ...[
                     const SizedBox(height: 12),
                     _ErrorBanner(message: _collab.error!),
@@ -113,7 +137,13 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
     );
   }
 
-  /// 打开独立正文页，Future 在返回连接页时完成；控制器继续持有文档。
+  /// 先完成资源释放再返回登录页，避免下一账号登录后被旧宿主清理。
+  Future<void> _logout() async {
+    await _collab.close();
+    if (mounted) widget.onLogout?.call();
+  }
+
+  /// 打开独立正文页，Future 在返回文档状态页时完成；控制器继续持有文档。
   Future<void> _openCollaborativeEditor() {
     FocusManager.instance.primaryFocus?.unfocus();
     return Navigator.of(context).push(
