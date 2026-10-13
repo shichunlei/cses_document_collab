@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_common/observability/api/log.dart';
 import 'package:cses_mobile_collab_demo/src/collab/appflowy_block_editor_adapter.dart';
@@ -99,28 +101,35 @@ Future<void> _showNumberingMenu(
         );
     final box = context.findRenderObject() as RenderBox?;
     final overlay =
-        Overlay.of(context).context.findRenderObject() as RenderBox?;
+        Navigator.of(context).overlay?.context.findRenderObject() as RenderBox?;
     if (box == null || overlay == null) return;
     final origin = box.localToGlobal(Offset.zero, ancestor: overlay);
-    final restart = await showMenu<bool>(
+    final anchor = origin & box.size;
+    final direction = Directionality.of(context);
+    final restart = await showGeneralDialog<bool>(
       context: context,
       requestFocus: false,
-      position: RelativeRect.fromRect(
-        origin & box.size,
-        Offset.zero & overlay.size,
-      ),
-      items: [
-        CheckedPopupMenuItem(
-          value: false,
-          checked: value.continuesPrevious,
-          child: const Text('继续编号'),
-        ),
-        CheckedPopupMenuItem(
-          value: true,
-          checked: value.restarts,
-          child: const Text('重新编号'),
-        ),
-      ],
+      useRootNavigator: false,
+      barrierDismissible: true,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: Colors.transparent,
+      transitionDuration: const Duration(milliseconds: 100),
+      pageBuilder: (menuContext, _, _) {
+        final media = MediaQuery.of(menuContext);
+        return CustomSingleChildLayout(
+          delegate: _NumberingMenuLayout(
+            anchor: anchor,
+            direction: direction,
+            insets: EdgeInsets.fromLTRB(
+              media.padding.left + 8,
+              media.padding.top + 8,
+              media.padding.right + 8,
+              math.max(media.padding.bottom, media.viewInsets.bottom) + 8,
+            ),
+          ),
+          child: _NumberingMenu(value: value),
+        );
+      },
     );
     if (restart == null || !context.mounted) return;
     await changeCollabOrderedNumbering(state, blockId, restart: restart);
@@ -137,6 +146,124 @@ Future<void> _showNumberingMenu(
       )?.showSnackBar(const SnackBar(content: Text('编号操作失败，请重试')));
     }
   }
+}
+
+/// Compact custom surface; no stock popup sizing or checkmark column.
+class _NumberingMenu extends StatelessWidget {
+  const _NumberingMenu({required this.value});
+
+  final CollabOrdered value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      key: const ValueKey('collab-numbering-menu'),
+      color: Colors.white,
+      surfaceTintColor: Colors.transparent,
+      elevation: 4,
+      shadowColor: const Color(0x26000000),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4),
+        side: const BorderSide(color: Color(0xFFE5E7EB)),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: IntrinsicWidth(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _item(
+                context,
+                label: '继续编号',
+                restart: false,
+                selected: value.continuesPrevious,
+              ),
+              _item(
+                context,
+                label: '重新编号',
+                restart: true,
+                selected: value.restarts,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _item(
+    BuildContext context, {
+    required String label,
+    required bool restart,
+    required bool selected,
+  }) => Semantics(
+    button: true,
+    selected: selected,
+    child: InkWell(
+      key: ValueKey('collab-numbering-${restart ? 'restart' : 'continue'}'),
+      onTap: () => Navigator.of(context).pop(restart),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 14,
+            height: 1.2,
+            fontWeight: FontWeight.w400,
+            color: selected ? const Color(0xFF9CA3AF) : const Color(0xFF374151),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+/// Anchors below the number, flips above when needed, and avoids the keyboard.
+class _NumberingMenuLayout extends SingleChildLayoutDelegate {
+  const _NumberingMenuLayout({
+    required this.anchor,
+    required this.direction,
+    required this.insets,
+  });
+
+  final Rect anchor;
+  final TextDirection direction;
+  final EdgeInsets insets;
+
+  @override
+  BoxConstraints getConstraintsForChild(BoxConstraints constraints) =>
+      BoxConstraints.loose(
+        Size(
+          math.max(0, constraints.maxWidth - insets.horizontal),
+          math.max(0, constraints.maxHeight - insets.vertical),
+        ),
+      );
+
+  @override
+  Offset getPositionForChild(Size size, Size childSize) {
+    final right = math.max(
+      insets.left,
+      size.width - insets.right - childSize.width,
+    );
+    final bottom = math.max(
+      insets.top,
+      size.height - insets.bottom - childSize.height,
+    );
+    final x = direction == TextDirection.rtl
+        ? anchor.right - childSize.width
+        : anchor.left;
+    final below = anchor.bottom + 4;
+    final y = below <= bottom ? below : anchor.top - childSize.height - 4;
+    return Offset(x.clamp(insets.left, right), y.clamp(insets.top, bottom));
+  }
+
+  @override
+  bool shouldRelayout(_NumberingMenuLayout oldDelegate) =>
+      anchor != oldDelegate.anchor ||
+      direction != oldDelegate.direction ||
+      insets != oldDelegate.insets;
 }
 
 /// 对借用的草稿 [node] 计算相邻一基起始编号的零基序号；正式列表使用 Rust 投影。

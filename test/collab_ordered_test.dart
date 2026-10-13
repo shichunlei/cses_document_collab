@@ -20,7 +20,7 @@ void main() {
           id: 'item',
           blockType: 'numbered_list',
           text: 'item',
-          ordered: CollabOrdered(order: 2),
+          ordered: CollabOrdered(order: 2, numbering: '{"start":3}'),
         ),
       ],
       onLocalBlocksChanged: changes.add,
@@ -55,24 +55,124 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('继续编号'), findsOneWidget);
     expect(find.text('重新编号'), findsOneWidget);
-    final menuOrigin = tester.getTopLeft(
-      find.widgetWithText(CheckedPopupMenuItem<bool>, '继续编号'),
-    );
+    final menu = find.byKey(const ValueKey('collab-numbering-menu'));
+    expect(find.byType(CheckedPopupMenuItem<bool>), findsNothing);
+    final menuOrigin = tester.getTopLeft(menu);
     expect(menuOrigin.dx, inInclusiveRange(190, 240));
     expect(menuOrigin.dy, inInclusiveRange(110, 160));
-    await tester.tap(find.widgetWithText(CheckedPopupMenuItem<bool>, '重新编号'));
+    expect(tester.getSize(menu).width, lessThanOrEqualTo(110));
+    expect(tester.getSize(menu).height, lessThanOrEqualTo(80));
+    expect(
+      tester.widget<Text>(find.text('重新编号')).style!.color,
+      const Color(0xFF9CA3AF),
+    );
+    await tester.tap(find.byKey(const ValueKey('collab-numbering-restart')));
     await tester.pumpAndSettle();
     expect(changes, hasLength(1));
     expect(jsonDecode(changes.single.single.ordered!.numberingEdit!), {
       'start': 1,
       'continuePrevious': false,
     });
+    await tester.tap(find.text('3.'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('collab-numbering-continue')));
+    await tester.pumpAndSettle();
+    expect(changes, hasLength(2));
+    expect(jsonDecode(changes.last.single.ordered!.numberingEdit!), {
+      'start': 0,
+      'continuePrevious': true,
+    });
     adapter.editorState.editable = false;
     await tester.tap(find.text('3.'));
     await tester.pumpAndSettle();
     expect(find.text('继续编号'), findsNothing);
-    expect(changes, hasLength(1));
+    expect(changes, hasLength(2));
   });
+
+  testWidgets(
+    'custom menu avoids screen edges and keyboard, cancel keeps selection',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final changes = <List<CollabEditorBlock>>[];
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: const [
+          CollabEditorBlock(
+            id: 'item',
+            blockType: 'numbered_list',
+            text: 'item',
+            ordered: CollabOrdered(order: 0),
+          ),
+        ],
+        onLocalBlocksChanged: changes.add,
+      );
+      addTearDown(adapter.dispose);
+      final state = adapter.editorState;
+      state.editorStyle = const EditorStyle.mobile();
+      final selection = Selection.single(path: [0], startOffset: 2);
+      state.selection = selection;
+      final focus = FocusNode();
+      addTearDown(focus.dispose);
+      await tester.pumpWidget(
+        MaterialApp(
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(
+              context,
+            ).copyWith(viewInsets: const EdgeInsets.only(bottom: 300)),
+            child: child!,
+          ),
+          home: Provider<EditorState>.value(
+            value: state,
+            child: Focus(
+              focusNode: focus,
+              autofocus: true,
+              child: Builder(
+                builder: (context) => Align(
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 310),
+                    child: SizedBox(
+                      width: 36,
+                      height: 24,
+                      child: buildCollabOrderedMarker(
+                        context,
+                        state.document.first!,
+                        TextDirection.ltr,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final markerTop = tester.getTopLeft(find.text('1.')).dy;
+      await tester.tap(find.text('1.'));
+      await tester.pumpAndSettle();
+      final menu = find.byKey(const ValueKey('collab-numbering-menu'));
+      final rect = tester.getRect(menu);
+      expect(rect.right, lessThanOrEqualTo(382));
+      expect(rect.bottom, lessThan(markerTop));
+      expect(rect.top, greaterThanOrEqualTo(8));
+      expect(focus.hasFocus, isTrue);
+      expect(state.selection, selection);
+      await tester.tapAt(const Offset(20, 100));
+      await tester.pumpAndSettle();
+      expect(menu, findsNothing);
+      expect(changes, isEmpty);
+      expect(state.selection, selection);
+
+      await tester.tap(find.text('1.'));
+      await tester.pumpAndSettle();
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      expect(menu, findsNothing);
+      expect(changes, isEmpty);
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   test(
     'numbering undo follows stable target after remote reorder and ignores deletion',
