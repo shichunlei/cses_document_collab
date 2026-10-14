@@ -2148,6 +2148,12 @@ Future<Selection?> applyUrlBlockShortcut(
     url.trim(),
     mediaSource: mediaSource,
   );
+  // This is a new resource, including when replacing an empty paragraph.
+  // Without an explicit identity the adapter's positional fallback treats it
+  // as a conversion of that paragraph; Rust then skips initial resource props.
+  mediaNode.updateAttributes({
+    AppFlowyBlockEditorAdapter.collabBlockIdAttribute: mediaNode.id,
+  });
   final sourceIsEmpty = targetNode.delta?.toPlainText().isEmpty == true;
   final insertPath = sourceIsEmpty ? targetPath : targetPath.next;
   final paragraphPath = insertPath.next;

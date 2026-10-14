@@ -327,6 +327,14 @@ void main() {
         ),
       );
       final resource = changes.single.first.resource!;
+      expect(changes.single.first.id, isNot('body'));
+      expect(
+        changes.single.first.replacesId,
+        isNull,
+        reason:
+            'an upload replaces the empty paragraph with a new resource; '
+            'a conversion would discard its initial metadata in Rust',
+      );
       expect(resource.string('name'), '方案.pdf');
       expect(resource.number('size'), 2048);
       expect(resource.string('type'), 'application/pdf');
