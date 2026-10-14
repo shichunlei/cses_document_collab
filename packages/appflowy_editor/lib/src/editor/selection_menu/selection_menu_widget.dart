@@ -20,14 +20,14 @@ typedef SelectionMenuItemNameBuilder = Widget Function(
 /// Selection Menu Item
 class SelectionMenuItem {
   SelectionMenuItem({
-    required String Function() getName,
+    required this._getName,
     required this.icon,
     required this.keywords,
     required SelectionMenuItemHandler handler,
     this.nameBuilder,
     this.deleteKeywords = false,
     this.deleteSlash = true,
-  }) : _getName = getName {
+  }) {
     this.handler = (editorState, menuService, context) {
       if (deleteSlash || deleteKeywords) {
         _deleteSlash(editorState);

@@ -26,23 +26,18 @@ final _wordRegex = RegExp(r"\S+");
 /// the current [Selection].
 ///
 class Counters {
-  const Counters({
-    int wordCount = 0,
-    int charCount = 0,
-  })  : _wordCount = wordCount,
-        _charCount = charCount;
+  const Counters({this._wordCount = 0, this._charCount = 0});
 
   final int _wordCount;
+
   int get wordCount => _wordCount;
 
   final int _charCount;
+
   int get charCount => _charCount;
 
   @override
-  bool operator ==(other) =>
-      other is Counters &&
-      other.wordCount == wordCount &&
-      other.charCount == charCount;
+  bool operator ==(other) => other is Counters && other.wordCount == wordCount && other.charCount == charCount;
 
   @override
   int get hashCode => Object.hash(wordCount, charCount);
@@ -62,10 +57,7 @@ class Counters {
 /// the counter stats.
 ///
 class WordCountService with ChangeNotifier {
-  WordCountService({
-    required this.editorState,
-    this.debounceDuration = const Duration(milliseconds: 300),
-  });
+  WordCountService({required this.editorState, this.debounceDuration = const Duration(milliseconds: 300)});
 
   final EditorState editorState;
 
@@ -108,8 +100,7 @@ class WordCountService with ChangeNotifier {
   /// it will return the [documentCounters]. Otherwise it
   /// will compute it on demand.
   ///
-  Counters getDocumentCounters() =>
-      isRunning ? documentCounters : _countersFromNode();
+  Counters getDocumentCounters() => isRunning ? documentCounters : _countersFromNode();
 
   /// This method can be used to get the word and character
   /// count of the current [Selection] of the [EditorState].
@@ -119,8 +110,7 @@ class WordCountService with ChangeNotifier {
   /// it will return the [selectionCounters]. Otherwise it
   /// will compute it on demand.
   ///
-  Counters getSelectionCounters() =>
-      isRunning ? selectionCounters : _countersFromSelection();
+  Counters getSelectionCounters() => isRunning ? selectionCounters : _countersFromSelection();
 
   /// Registers the Word Counter and starts notifying
   /// about updates to word and character count.
@@ -136,8 +126,7 @@ class WordCountService with ChangeNotifier {
       _recountOnSelectionUpdate();
     }
 
-    if (documentCounters != _emptyCounters ||
-        selectionCounters != _emptyCounters) {
+    if (documentCounters != _emptyCounters || selectionCounters != _emptyCounters) {
       notifyListeners();
     }
 
@@ -229,10 +218,7 @@ class WordCountService with ChangeNotifier {
       _documentTimer!.cancel();
     }
 
-    _documentTimer = Timer(
-      debounceDuration,
-      () => _recountOnTransactionUpdate(value.$1),
-    );
+    _documentTimer = Timer(debounceDuration, () => _recountOnTransactionUpdate(value.$1));
   }
 
   void _recountOnTransactionUpdate(TransactionTime time) {
@@ -243,8 +229,7 @@ class WordCountService with ChangeNotifier {
     final counters = _countersFromNode();
 
     // If there is no update, no need to notify listeners
-    if (counters.wordCount != documentCounters.wordCount ||
-        counters.charCount != documentCounters.charCount) {
+    if (counters.wordCount != documentCounters.wordCount || counters.charCount != documentCounters.charCount) {
       if (counters != documentCounters) {
         _documentCounters = counters;
         notifyListeners();

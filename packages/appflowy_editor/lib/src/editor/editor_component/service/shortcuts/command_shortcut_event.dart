@@ -2,9 +2,7 @@ import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:appflowy_editor/src/editor/util/platform_extension.dart';
 import 'package:flutter/material.dart';
 
-typedef CommandShortcutEventHandler = KeyEventResult Function(
-  EditorState editorState,
-);
+typedef CommandShortcutEventHandler = KeyEventResult Function(EditorState editorState);
 
 /// Defines the implementation of shortcut event based on command.
 class CommandShortcutEvent {
@@ -12,11 +10,11 @@ class CommandShortcutEvent {
     required this.key,
     required this.command,
     required this.handler,
-    required String Function()? getDescription,
+    required this._getDescription,
     String? windowsCommand,
     String? macOSCommand,
     String? linuxCommand,
-  }) : _getDescription = getDescription {
+  }) {
     updateCommand(
       command: command,
       windowsCommand: windowsCommand,
@@ -68,16 +66,8 @@ class CommandShortcutEvent {
     command = '';
   }
 
-  void updateCommand({
-    String? command,
-    String? windowsCommand,
-    String? macOSCommand,
-    String? linuxCommand,
-  }) {
-    if (command == null &&
-        windowsCommand == null &&
-        macOSCommand == null &&
-        linuxCommand == null) {
+  void updateCommand({String? command, String? windowsCommand, String? macOSCommand, String? linuxCommand}) {
+    if (command == null && windowsCommand == null && macOSCommand == null && linuxCommand == null) {
       return;
     }
     var matched = false;
@@ -102,8 +92,7 @@ class CommandShortcutEvent {
     }
 
     if (matched) {
-      _keybindings =
-          this.command.split(',').map((e) => Keybinding.parse(e)).toList();
+      _keybindings = this.command.split(',').map((e) => Keybinding.parse(e)).toList();
     }
   }
 
@@ -130,17 +119,13 @@ class CommandShortcutEvent {
   }
 
   @override
-  String toString() =>
-      'CommandShortcutEvent(key: $key, command: $command, handler: $handler)';
+  String toString() => 'CommandShortcutEvent(key: $key, command: $command, handler: $handler)';
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is CommandShortcutEvent &&
-        other.key == key &&
-        other.command == command &&
-        other.handler == handler;
+    return other is CommandShortcutEvent && other.key == key && other.command == command && other.handler == handler;
   }
 
   @override

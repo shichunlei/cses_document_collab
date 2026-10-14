@@ -1,19 +1,11 @@
 import 'package:appflowy_editor/src/editor_state.dart';
 import 'package:flutter/material.dart';
 
-typedef ContextMenuWidgetBuilder = Widget Function(
-  BuildContext context,
-  Offset position,
-  EditorState editorState,
-  VoidCallback onPressed,
-);
+typedef ContextMenuWidgetBuilder =
+    Widget Function(BuildContext context, Offset position, EditorState editorState, VoidCallback onPressed);
 
 class ContextMenuItem {
-  ContextMenuItem({
-    required String Function() getName,
-    required this.onPressed,
-    this.isApplicable,
-  }) : _getName = getName;
+  ContextMenuItem({required this._getName, required this.onPressed, this.isApplicable});
 
   final String Function() _getName;
   final void Function(EditorState editorState) onPressed;
@@ -41,8 +33,7 @@ class ContextMenu extends StatelessWidget {
     final children = <Widget>[];
     for (var i = 0; i < items.length; i++) {
       for (var j = 0; j < items[i].length; j++) {
-        if (items[i][j].isApplicable != null &&
-            !items[i][j].isApplicable!(editorState)) {
+        if (items[i][j].isApplicable != null && !items[i][j].isApplicable!(editorState)) {
           continue;
         }
 
@@ -55,9 +46,7 @@ class ContextMenu extends StatelessWidget {
             builder: (BuildContext context, setState) {
               return Material(
                 child: InkWell(
-                  customBorder: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6),
-                  ),
+                  customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                   onTap: () {
                     items[i][j].onPressed(editorState);
                     onPressed();
@@ -65,13 +54,7 @@ class ContextMenu extends StatelessWidget {
                   onHover: (value) => setState(() {}),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      items[i][j].name,
-                      textAlign: TextAlign.start,
-                      style: const TextStyle(
-                        fontSize: 14,
-                      ),
-                    ),
+                    child: Text(items[i][j].name, textAlign: TextAlign.start, style: const TextStyle(fontSize: 14)),
                   ),
                 ),
               );
@@ -86,17 +69,9 @@ class ContextMenu extends StatelessWidget {
       left: position.dx,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-        constraints: const BoxConstraints(
-          minWidth: 140,
-        ),
+        constraints: const BoxConstraints(minWidth: 140),
         decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 5,
-              spreadRadius: 1,
-              color: Colors.black.withValues(alpha: 0.1),
-            ),
-          ],
+          boxShadow: [BoxShadow(blurRadius: 5, spreadRadius: 1, color: Colors.black.withValues(alpha: 0.1))],
           borderRadius: BorderRadius.circular(6.0),
         ),
         child: IntrinsicWidth(

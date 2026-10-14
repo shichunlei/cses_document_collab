@@ -7,8 +7,8 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
-import 'wrapping.dart';
 import 'viewport.dart';
+import 'wrapping.dart';
 
 /// A version of [CustomScrollView] that allows does not constrict the extents
 /// to be within 0 and 1. See [CustomScrollView] for more information.
@@ -22,18 +22,14 @@ class UnboundedCustomScrollView extends CustomScrollView {
     super.controller,
     super.primary,
     super.physics,
-    bool shrinkWrap = false,
+    this._shrinkWrap = false,
     super.center,
-    double anchor = 0.0,
+    this._anchor = 0.0,
     super.cacheExtent,
     super.slivers,
     super.semanticChildCount,
     super.dragStartBehavior,
-  })  : _shrinkWrap = shrinkWrap,
-        _anchor = anchor,
-        super(
-          shrinkWrap: false,
-        );
+  }) : super(shrinkWrap: false);
 
   // [CustomScrollView] enforces constraints on [CustomScrollView.anchor], so
   // we need our own version.
@@ -45,12 +41,7 @@ class UnboundedCustomScrollView extends CustomScrollView {
   /// Build the viewport.
   @override
   @protected
-  Widget buildViewport(
-    BuildContext context,
-    ViewportOffset offset,
-    AxisDirection axisDirection,
-    List<Widget> slivers,
-  ) {
+  Widget buildViewport(BuildContext context, ViewportOffset offset, AxisDirection axisDirection, List<Widget> slivers) {
     if (_shrinkWrap) {
       return CustomShrinkWrappingViewport(
         axisDirection: axisDirection,

@@ -2,12 +2,11 @@ import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:flutter/material.dart';
 
 extension NodeExtensions on Node {
-  RenderBox? get renderBox =>
-      key.currentContext?.findRenderObject()?.unwrapOrNull<RenderBox>();
+  RenderBox? get renderBox => key.currentContext?.findRenderObject()?.unwrapOrNull<RenderBox>();
 
   BuildContext? get context => key.currentContext;
-  SelectableMixin? get selectable =>
-      key.currentState?.unwrapOrNull<SelectableMixin>();
+
+  SelectableMixin? get selectable => key.currentState?.unwrapOrNull<SelectableMixin>();
 
   /// Level of the node in the document tree.
   ///
@@ -136,10 +135,7 @@ extension NodeExtensions on Node {
     return null;
   }
 
-  bool allSatisfyInSelection(
-    Selection selection,
-    bool Function(Delta delta) test,
-  ) {
+  bool allSatisfyInSelection(Selection selection, bool Function(Delta delta) test) {
     if (selection.isCollapsed) {
       return false;
     }
@@ -189,16 +185,13 @@ extension NodesExtensions<T extends Node> on List<T> {
     return this;
   }
 
-  bool allSatisfyInSelection(
-    Selection selection,
-    bool Function(Delta delta) test,
-  ) {
+  bool allSatisfyInSelection(Selection selection, bool Function(Delta delta) test) {
     if (selection.isCollapsed) {
       return false;
     }
 
     selection = selection.normalized;
-    final nodes = this.normalized;
+    final nodes = normalized;
 
     if (nodes.length == 1) {
       return nodes.first.allSatisfyInSelection(selection, test);
