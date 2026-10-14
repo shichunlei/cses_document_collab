@@ -108,35 +108,4 @@ void main() {
       expect(adapter.editorState.document.root.children, hasLength(2));
     },
   );
-
-  test('Backspace cannot merge the first body paragraph into the title', () {
-    final adapter = AppFlowyBlockEditorAdapter(
-      initialBlocks: const [
-        CollabEditorBlock(
-          id: csesDocumentCoverBlockId,
-          blockType: csesDocumentCoverBlockType,
-          text: 'https://example.test/default-cover.png',
-        ),
-        CollabEditorBlock(
-          id: csesDocumentTitleBlockId,
-          blockType: csesDocumentTitleBlockType,
-          text: '文档标题',
-        ),
-        CollabEditorBlock(
-          id: csesDocumentBodyBlockId,
-          blockType: ParagraphBlockKeys.type,
-          text: '',
-        ),
-      ],
-      onLocalBlocksChanged: (_) {},
-    );
-    addTearDown(adapter.dispose);
-    adapter.editorState.selection = Selection.single(path: [2], startOffset: 0);
-
-    // The title is an editable Delta node, so without this explicit boundary
-    // AppFlowy's standard Backspace command would merge the empty body node
-    // into the title and destroy the fixed document-header structure.
-    expect(isProtectedDocumentTitleBoundary(adapter.editorState), isTrue);
-    expect(canDeletePreviousUrlBackedBlock(adapter.editorState), isFalse);
-  });
 }

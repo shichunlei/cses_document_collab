@@ -10,22 +10,58 @@ import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:mime/mime.dart';
 
-import 'package:cses_document_collab/cses_document_collab.dart';
+import 'package:cses_document_collab/cses_document_collab.dart'
+    show
+        EditorLocalFile,
+        EditorMediaSource,
+        EditorMediaUploadService,
+        validateEditorMediaFile;
 
+/// 借用Common登录、OSS和文件登记封装的宿主上传端口，不拥有编辑器或HTTP客户端。
+/// 文件选择与上传分开，等待期间检查取消和账号/企业/会话变化；仅稳定URL进入协同或头部业务。
+///
+/// ```dart
+/// import 'package:cses_mobile_collab_demo/src/demo/cses_editor_media_upload_service.dart';
+/// import 'package:dio/dio.dart';
+/// Future<void> uploadIcon() async {
+///   const service = CsesEditorMediaUploadService();
+///   final file = await service.pickFile('document_icon');
+///   if (file == null) return;
+///   final cancel = CancelToken();
+///   try {
+///     await service.upload(file, 'document_icon', cancelToken: cancel, onProgress: (_) {});
+///   } finally {
+///     cancel.cancel();
+///   }
+/// }
+/// ```
 class CsesEditorMediaUploadService implements EditorMediaUploadService {
+  /// 创建无状态上传端口；使用前由宿主完成Common登录，服务不持有连接或账号副本。
   const CsesEditorMediaUploadService();
 
+  /// 为资源 [kind] 打开单文件选择器并返回路径/MIME/大小，取消返回null；SVG仅图标允许。
+  /// 文件和选择器由系统/宿主管理，选择失败按Future异常传给来源面板。
   @override
   Future<EditorLocalFile?> pickFile(String kind) async {
     final picked = await FilePicker.pickFile(
       type: switch (kind) {
-        'image' || 'document_cover' => FileType.custom,
+        'image' || 'document_banner' || 'document_icon' => FileType.custom,
         'video' => FileType.video,
         'audio' => FileType.audio,
         _ => FileType.any,
       },
-      allowedExtensions: kind == 'image' || kind == 'document_cover'
-          ? ['png', 'jpg', 'jpeg', 'gif', 'webp']
+      allowedExtensions:
+          kind == 'image' ||
+              kind == 'document_banner' ||
+              kind == 'document_icon'
+          ? [
+              'png',
+              'jpg',
+              'jpeg',
+              'gif',
+              'webp',
+              if (kind == 'document_icon') 'svg',
+            ]
           : null,
     );
     if (picked == null) return null;
@@ -41,6 +77,9 @@ class CsesEditorMediaUploadService implements EditorMediaUploadService {
     return file;
   }
 
+  /// 上传借用的 [file] 至资源 [kind] 对应OSS桶并登记；[cancelToken] 由调用方创建和取消。
+  /// [onProgress] 报告0～1进度；Future仅在会话未变化且文件登记完成后返回稳定URL。
+  /// 文件变化、账号变化、取消或网络失败向调用方抛出；服务不关闭Common客户端。
   @override
   Future<EditorMediaSource> upload(
     EditorLocalFile file,
@@ -69,7 +108,7 @@ class CsesEditorMediaUploadService implements EditorMediaUploadService {
     final actualSize = await File(file.path).length();
     if (actualSize != file.size) throw const FormatException('文件已发生变化，请重新选择');
     final bucket = switch (kind) {
-      'image' || 'document_cover' => 'picture',
+      'image' || 'document_banner' || 'document_icon' => 'picture',
       'video' => 'video',
       'audio' => 'audio',
       _ => 'attachment',

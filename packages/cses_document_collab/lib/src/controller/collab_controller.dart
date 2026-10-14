@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'document_metadata_controller.dart';
 
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 
@@ -32,18 +33,16 @@ class CollabController extends ChangeNotifier {
     CollabHostServices services = const CollabHostServices(),
   }) : this._(config, gateway, services);
 
-  /// Create a draft in [databasePath] with stable [documentId], [defaultCoverUrl]
-  /// for a missing header, and borrowed [services]. No online session is started.
+  /// Create a body-only draft in [databasePath] with stable [documentId] and
+  /// borrowed [services]. No online session or business header is started.
   CollabController.localDraft({
     required String databasePath,
     String documentId = 'demo-room',
-    String defaultCoverUrl = '',
     CollabHostServices services = const CollabHostServices(),
   }) : this._(
          CollabDocumentConfig.localDraft(
            databasePath: databasePath,
            documentId: documentId,
-           defaultCoverUrl: defaultCoverUrl,
          ),
          null,
          services,
@@ -52,6 +51,15 @@ class CollabController extends ChangeNotifier {
   /// Store [config], [gateway] and [services]; native ownership begins on initialize.
   CollabController._(this.config, this._gateway, this._services)
     : _editable = config.editable {
+    header = config.isFormal && _services.documentMetadata != null
+        ? DocumentMetadataController(
+            documentId: config.documentId,
+            service: _services.documentMetadata!,
+            canEdit: () => !_disposed && _editable,
+            services: _services,
+          )
+        : null;
+    header?.addListener(_notify);
     _editorAdapter = AppFlowyBlockEditorAdapter(
       onLocalBlocksChanged: _applyEditorBlocks,
     );
@@ -59,6 +67,9 @@ class CollabController extends ChangeNotifier {
 
   /// Immutable host identity and storage contract; contains no login credentials.
   final CollabDocumentConfig config;
+
+  /// 正式业务头部，独立于原生正文；草稿或宿主未注入服务时为 null。
+  late final DocumentMetadataController? header;
   final CsesCollabGateway? _gateway;
   final CollabHostServices _services;
   bool _editable;
@@ -150,14 +161,18 @@ class CollabController extends ChangeNotifier {
       if (_disposed) return;
       await _openLocal(
         config.cacheDocumentId,
-        initializeHeaders: !config.isFormal,
         formalDocumentId: config.isFormal ? config.documentId : null,
       );
       if (_disposed) return;
       _initialized = true;
       _status = ConnectionStatus.offline;
       _lastProtocolEvent = 'local-updates-loaded';
-      if (config.isFormal) await _startSession();
+      if (config.isFormal) {
+        await _startSession();
+        // 头部是独立业务读取；网络失败或超时不能阻塞已恢复的离线正文。
+        // 读取自身处理异常，关闭流程仍等待进行中的请求。
+        if (!_disposed) unawaited(header?.refresh() ?? Future<void>.value());
+      }
     } catch (error, stackTrace) {
       _setError(error, stackTrace);
       if (CollabRuntime.owns(this)) {
@@ -189,6 +204,7 @@ class CollabController extends ChangeNotifier {
   Future<void> setEditable(bool editable) {
     if (_disposed || editable == _editable) return _accessTransition;
     _editable = editable;
+    header?.permissionsChanged();
     editorState.editable = canEdit;
     _notify();
     _accessTransition = _accessTransition.then((_) async {
@@ -213,16 +229,12 @@ class CollabController extends ChangeNotifier {
     }
   }
 
-  /// 打开 [cacheId] 的持久化引擎；[initializeHeaders] 默认 true，补齐本地草稿头部。
+  /// 打开 [cacheId] 的持久化引擎；草稿只保留正文。
   /// [formalDocumentId] 非 null 时指定正式根 ID，使用 BlockCraft 引擎且禁止插入 Demo 头部。
   /// null 仅用于独立本地草稿；正式根 ID 与缓存哈希键必须分开传递。
   /// Future 在 AppFlowy 投影完成后结束，调用者负责确保旧会话已释放。
   /// 同时清除旧文档的身份映射与本地撤销历史，禁止历史操作跨缓存或账号恢复。
-  Future<void> _openLocal(
-    String cacheId, {
-    bool initializeHeaders = true,
-    String? formalDocumentId,
-  }) async {
+  Future<void> _openLocal(String cacheId, {String? formalDocumentId}) async {
     final result = formalDocumentId == null
         ? rust.openDocument(
             documentId: cacheId,
@@ -235,27 +247,10 @@ class CollabController extends ChangeNotifier {
           );
     _lastBlocks = List.unmodifiable(result.blocks);
     _editorAdapter.resetDocumentHistory();
-    if (initializeHeaders && formalDocumentId == null) _ensureHeaders();
     _readOnlyReason = rust.documentReadOnlyReason();
     _sharedTypeName = result.sharedTypeName;
     _persistedUpdateCount = result.persistedUpdateCount;
     await _queueProjection();
-  }
-
-  /// 在权威快照缺少头部时才补齐并持久化；已有服务端标题/封面不会重复插入默认文本。
-  /// 串行投影使用最新快照，不发独立 update；握手调用方通过状态向量补传此迁移。
-  void _ensureHeaders() {
-    final blocks = _toRustBlocks(
-      ensureCsesDocumentHeaderBlocks(
-        _toEditorBlocks(_lastBlocks),
-        defaultCoverUrl: config.defaultCoverUrl,
-      ),
-    );
-    if (_rustBlocksEqual(blocks, _lastBlocks)) return;
-    _lastBlocks = List.unmodifiable(
-      rust.applyBlockSnapshot(blocks: blocks).blocks,
-    );
-    unawaited(_queueProjection());
   }
 
   /// Assemble a document-only session. Read-only hosts receive updates but send
@@ -316,14 +311,7 @@ class CollabController extends ChangeNotifier {
       return;
     }
     try {
-      final blocks = _toRustBlocks(
-        !config.isFormal
-            ? ensureCsesDocumentHeaderBlocks(
-                nextBlocks,
-                defaultCoverUrl: config.defaultCoverUrl,
-              )
-            : nextBlocks,
-      );
+      final blocks = _toRustBlocks(nextBlocks);
       if (_rustBlocksEqual(blocks, _lastBlocks)) return;
       final result = rust.applyBlockSnapshot(blocks: blocks);
       _error = null;
@@ -407,7 +395,6 @@ class CollabController extends ChangeNotifier {
       rust.resetLocalDocument();
       await _openLocal(
         config.cacheDocumentId,
-        initializeHeaders: !config.isFormal,
         formalDocumentId: config.isFormal ? config.documentId : null,
       );
       if (_disposed) return;
@@ -694,7 +681,8 @@ class CollabController extends ChangeNotifier {
     return true;
   }
 
-  /// Wait for document subscriptions, projection and native shutdown; no socket is closed.
+  /// Wait for header business requests, document subscriptions, projection and native shutdown.
+  /// Borrowed host services and the physical socket are not closed.
   Future<void> close() {
     dispose();
     return _shutdownTask ?? Future<void>.value();
@@ -706,18 +694,21 @@ class CollabController extends ChangeNotifier {
   void dispose() {
     if (_disposed) return;
     _disposed = true;
+    header?.removeListener(_notify);
+    header?.dispose();
     _shutdownTask = _shutdown();
     unawaited(_shutdownTask!);
     super.dispose();
   }
 
-  /// 等待会话释放及已排队投影结束，再关闭本控制器拥有的全局 Rust 引擎。
+  /// 等待业务头部读写、会话释放及已排队投影，再关闭所属全局Rust引擎；宿主端口不释放。
   Future<void> _shutdown() async {
     try {
       await _initializationTask?.then<void>(
         (_) {},
         onError: (Object _, StackTrace _) {},
       );
+      await header?.close();
       await _accessTransition;
       await _releaseSession();
       await _projection;
@@ -736,54 +727,4 @@ class CollabController extends ChangeNotifier {
       CollabRuntime.release(this);
     }
   }
-}
-
-/// Adds the fixed Feishu-style cover/title region to old or empty documents.
-///
-/// Header IDs are deterministic across clients, preventing two offline phones
-/// from inventing competing title blocks while migrating the same room. Any
-/// existing header content is preserved and moved ahead of ordinary body
-/// blocks; a document with no body also receives one editable paragraph.
-/// [blocks] is a borrowed snapshot; [defaultCoverUrl] comes from the host.
-List<CollabEditorBlock> ensureCsesDocumentHeaderBlocks(
-  List<CollabEditorBlock> blocks, {
-  String defaultCoverUrl = '',
-}) {
-  CollabEditorBlock? cover;
-  CollabEditorBlock? title;
-  final body = <CollabEditorBlock>[];
-  for (final block in blocks) {
-    if (block.blockType == csesDocumentCoverBlockType && cover == null) {
-      cover = block;
-    } else if (block.blockType == csesDocumentTitleBlockType && title == null) {
-      title = block;
-    } else if (block.blockType != csesDocumentCoverBlockType &&
-        block.blockType != csesDocumentTitleBlockType) {
-      body.add(block);
-    }
-  }
-
-  cover ??= CollabEditorBlock(
-    id: csesDocumentCoverBlockId,
-    blockType: csesDocumentCoverBlockType,
-    // Only a genuinely missing cover receives the product default. An existing
-    // cover block with empty text represents an intentional user removal and
-    // is preserved by the normalization loop above.
-    text: defaultCoverUrl,
-  );
-  title ??= const CollabEditorBlock(
-    id: csesDocumentTitleBlockId,
-    blockType: csesDocumentTitleBlockType,
-    text: '未命名文档',
-  );
-  if (body.isEmpty) {
-    body.add(
-      const CollabEditorBlock(
-        id: csesDocumentBodyBlockId,
-        blockType: ParagraphBlockKeys.type,
-        text: '',
-      ),
-    );
-  }
-  return List<CollabEditorBlock>.unmodifiable([cover, title, ...body]);
 }

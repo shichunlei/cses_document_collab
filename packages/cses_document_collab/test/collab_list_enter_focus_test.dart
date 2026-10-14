@@ -296,7 +296,7 @@ void main() {
   );
 }
 
-/// 创建带封面、列表、视频、链接、正式图片的离线适配器；[text] 是列表正文，
+/// 创建带图片、列表、视频、链接、正式图片的离线适配器；[text] 是列表正文，
 /// [changes] 接收本地事务快照。调用方持有并负责 dispose，不创建网络资源。
 AppFlowyBlockEditorAdapter _mixedAdapter(
   String text,
@@ -304,8 +304,8 @@ AppFlowyBlockEditorAdapter _mixedAdapter(
 ) => AppFlowyBlockEditorAdapter(
   initialBlocks: [
     const CollabEditorBlock(
-      id: 'cover',
-      blockType: csesDocumentCoverBlockType,
+      id: 'leading-image',
+      blockType: ImageBlockKeys.type,
       text: '',
     ),
     CollabEditorBlock(

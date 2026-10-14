@@ -1,4 +1,4 @@
-import 'dart:async';
+import 'document_header.dart';
 
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/editor/collab_resource_block.dart';
@@ -106,6 +106,8 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
   }
 
   /// 使用 [context] 渲染当前模式和能力；网络和监听由控制器及页面生命周期管理。
+  /// 在借用的 [context] 中按连接状态构建编辑页面；业务头部占用header槽，正文仍使用协同块树。
+  /// 页面仅管理视图/输入监听，预览隐藏编辑入口，不拥有宿主业务服务。
   @override
   Widget build(BuildContext context) {
     return Localizations.override(
@@ -120,7 +122,7 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
             appBar: AppBar(
               backgroundColor: Colors.white,
               surfaceTintColor: Colors.transparent,
-              title: const Text('协同文档'),
+              title: Text(collab.header?.value?.name ?? '协同文档'),
               actions: [
                 if (!_previewOnly) ...[
                   IconButton(
@@ -172,9 +174,11 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
                       fit: StackFit.expand,
                       children: [
                         Padding(
-                          // AppFlowy's editorStyle.padding is per block. Keep
-                          // page spacing here and bottom spacing in SafeArea.
-                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                          // 正式头部使用完整宽度；正文左右留白由每个根块的样式提供。
+                          // 本地草稿仍保留顶部留白，SafeArea 负责底部系统边距。
+                          padding: EdgeInsets.only(
+                            top: collab.header == null ? 20 : 0,
+                          ),
                           child: _previewOnly
                               ? _buildEditor()
                               : EditorShortcutToolbar(
@@ -203,7 +207,7 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
   }
 
   /// 构建原生编辑器，输入遵守用户模式与模型能力；有序/无序/Todo 列表 Enter 在标准快捷键
-  /// 之前处理扁平 depth；行首退格先退级再交给标题/媒体边界处理。软键盘通过工具栏注册
+  /// 之前处理扁平 depth；行首退格先退级再交给容器/媒体边界处理。软键盘通过工具栏注册
   /// 同规则拦截器，硬件命令在下方优先派发，共用事务及现有协同发布链路。
   Widget _buildEditor() {
     return IgnorePointer(
@@ -213,6 +217,13 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
         child: AppFlowyEditor(
           key: const ValueKey('collaborative-appflowy-editor'),
           editorState: collab.editorState,
+          header: collab.header == null
+              ? null
+              : DocumentHeader(
+                  controller: collab.header!,
+                  editorState: collab.editorState,
+                  preview: _isPreview,
+                ),
           editable: !_previewOnly,
           disableKeyboardService: _previewOnly,
           blockComponentBuilders: _collabBlockComponentBuilders,
@@ -220,7 +231,7 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
             collabListEnter,
             ...standardCharacterShortcutEvents,
           ],
-          // 列表行首先逐级退级；非列表再保护标题/删除前置媒体，最后交标准退格。
+          // 列表行首先逐级退级；非列表再保护容器边界/删除前置媒体，最后交标准退格。
           // 不能先让标准命令合并正文，或在退级前删除列表旁的图片/视频。
           commandShortcutEvents: [
             collabBlockBackspaceCommand,
@@ -228,7 +239,9 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
           ],
           shrinkWrap: false,
           editorStyle: const EditorStyle.mobile(
-            padding: EdgeInsets.zero,
+            padding: EdgeInsets.symmetric(
+              horizontal: DocumentHeader.contentInset,
+            ),
             cursorColor: Color(0xFF5B5BD6),
             dragHandleColor: Color(0xFF5B5BD6),
             selectionColor: Color(0x335B5BD6),
@@ -266,29 +279,6 @@ final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders =
       csesVideoBlockType: CollabEmbedBlockComponentBuilder(
         kind: CollabEmbedKind.video,
       ),
-      // The cover is a non-text URL block. It remains selectable with AppFlowy's
-      // block selection system, while the explicit callback opens a URL editor
-      // only in edit mode; preview mode renders the image without edit controls.
-      csesDocumentCoverBlockType: CollabEmbedBlockComponentBuilder(
-        kind: CollabEmbedKind.cover,
-        configuration: const BlockComponentConfiguration(
-          padding: _documentCoverPadding,
-        ),
-        onEditCover: (context, editorState, node) {
-          unawaited(showEditorDocumentCoverDialog(context, editorState, node));
-        },
-      ),
-      // The document title intentionally reuses AppFlowy's paragraph component so
-      // mobile IME, selection and collaborative Delta edits behave exactly like
-      // body text. Only presentation and structural conversion rules differ.
-      csesDocumentTitleBlockType: ParagraphBlockComponentBuilder(
-        configuration: const BlockComponentConfiguration(
-          padding: _documentTitlePadding,
-          textStyle: _documentTitleTextStyle,
-          placeholderText: _documentTitlePlaceholder,
-          placeholderTextStyle: _documentTitlePlaceholderStyle,
-        ),
-      ),
       BulletedListBlockKeys.type: BulletedListBlockComponentBuilder(
         configuration: standardBlockComponentConfiguration.copyWith(
           padding: _listBlockPadding,
@@ -318,7 +308,6 @@ final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders =
         BulletedListBlockKeys.type,
         NumberedListBlockKeys.type,
         TodoListBlockKeys.type,
-        csesDocumentTitleBlockType,
       };
       return MapEntry(
         type,
@@ -331,35 +320,6 @@ final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders =
 /// Reduces the extra gap between body paragraphs while preserving line height.
 EdgeInsets _paragraphBlockPadding(Node node) =>
     const EdgeInsets.symmetric(vertical: 2);
-
-/// Keeps the wide cover visually separated from the editor title and body.
-EdgeInsets _documentCoverPadding(Node node) =>
-    const EdgeInsets.only(top: 4, bottom: 14);
-
-/// Gives the large editable title the compact spacing used by mobile docs.
-EdgeInsets _documentTitlePadding(Node node) =>
-    const EdgeInsets.only(top: 8, bottom: 20);
-
-/// Placeholder used if a user removes every title character.
-String _documentTitlePlaceholder(Node node) => '未命名文档';
-
-/// Dedicated title typography; it is not a heading level and cannot be
-/// converted by the block-style menu, preserving the fixed header invariant.
-TextStyle _documentTitleTextStyle(Node node, {TextSpan? textSpan}) =>
-    const TextStyle(
-      color: Color(0xFF111827),
-      fontSize: 38,
-      fontWeight: FontWeight.w700,
-      height: 1.18,
-      letterSpacing: -0.8,
-    );
-
-/// Mirrors the title geometry while visually distinguishing empty content.
-TextStyle _documentTitlePlaceholderStyle(Node node, {TextSpan? textSpan}) =>
-    _documentTitleTextStyle(
-      node,
-      textSpan: textSpan,
-    ).copyWith(color: const Color(0xFF9CA3AF));
 
 EdgeInsets _listBlockPadding(Node node) {
   final value = node.attributes[csesBlockIndentAttribute];

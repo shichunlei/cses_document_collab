@@ -13,3 +13,6 @@ export 'src/model/collab_host_services.dart';
 export 'src/model/editor_media_upload.dart';
 export 'src/sync/cses_collab_gateway.dart';
 export 'src/sync/cses_doc_collaboration_session.dart' show CsesCollabState;
+
+export 'src/model/document_metadata.dart';
+export 'src/controller/document_metadata_controller.dart';

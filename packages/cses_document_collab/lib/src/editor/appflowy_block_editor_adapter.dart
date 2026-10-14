@@ -22,22 +22,6 @@ const csesCodeBlockType = 'code';
 const csesLinkBlockType = 'link';
 const csesVideoBlockType = 'video';
 
-/// Structural node types reserved for the document header.
-///
-/// They remain ordinary collaborative blocks instead of page-only Flutter
-/// state, which lets title text and cover replacement participate in Yrs
-/// updates, offline recovery and cross-device undo-safe transactions.
-const csesDocumentCoverBlockType = 'document_cover';
-const csesDocumentTitleBlockType = 'document_title';
-
-/// Stable IDs used when an old room is migrated to the fixed header schema.
-///
-/// Every client derives the same IDs while offline, so two phones opening the
-/// same legacy room cannot independently create duplicate cover/title blocks.
-const csesDocumentCoverBlockId = 'cses-document-cover';
-const csesDocumentTitleBlockId = 'cses-document-title';
-const csesDocumentBodyBlockId = 'cses-document-body';
-
 /// Shared node attribute used by the custom link and video renderers.
 ///
 /// The collaborative wire model deliberately reuses `CollabBlock.text` for
@@ -982,11 +966,6 @@ final class AppFlowyBlockEditorAdapter {
         blockComponentDelta,
         <String, Object>{},
       ),
-      csesDocumentTitleBlockType => (
-        csesDocumentTitleBlockType,
-        blockComponentDelta,
-        <String, Object>{},
-      ),
       _ => (
         ParagraphBlockKeys.type,
         ParagraphBlockKeys.delta,
@@ -1192,8 +1171,6 @@ final class AppFlowyBlockEditorAdapter {
       ImageBlockKeys.type => ImageBlockKeys.type,
       csesLinkBlockType => csesLinkBlockType,
       csesVideoBlockType => csesVideoBlockType,
-      csesDocumentCoverBlockType => csesDocumentCoverBlockType,
-      csesDocumentTitleBlockType => csesDocumentTitleBlockType,
       _ => ParagraphBlockKeys.type,
     };
   }
@@ -1270,8 +1247,7 @@ final class AppFlowyBlockEditorAdapter {
     }
     if (isCollabResourceType(node.type) ||
         node.type == csesLinkBlockType ||
-        node.type == csesVideoBlockType ||
-        node.type == csesDocumentCoverBlockType) {
+        node.type == csesVideoBlockType) {
       return node.attributes[csesEmbedUrlAttribute] as String? ?? '';
     }
     final delta = node.delta;
@@ -1301,8 +1277,7 @@ bool _isUrlBackedBlock(String blockType) =>
     isCollabResourceType(blockType) ||
     blockType == ImageBlockKeys.type ||
     blockType == csesLinkBlockType ||
-    blockType == csesVideoBlockType ||
-    blockType == csesDocumentCoverBlockType;
+    blockType == csesVideoBlockType;
 
 bool _segmentsEqual(
   List<CollabEditorTextSegment> left,

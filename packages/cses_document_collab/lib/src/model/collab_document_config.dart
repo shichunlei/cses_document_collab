@@ -20,16 +20,13 @@ class CollabDocumentConfig {
     required this.databasePath,
     this.userName = '',
     this.editable = false,
-  }) : isFormal = true,
-       defaultCoverUrl = '';
+  }) : isFormal = true;
 
   /// Open a local draft using [documentId] as its cache key. [databasePath]
-  /// identifies the SQLite file; [defaultCoverUrl] only fills a missing cover.
-  /// Existing empty covers and existing content are preserved.
+  /// identifies the SQLite file. Drafts contain only body blocks.
   const CollabDocumentConfig.localDraft({
     required this.databasePath,
     this.documentId = 'demo-room',
-    this.defaultCoverUrl = '',
     this.editable = true,
   }) : isFormal = false,
        serverIdentity = '',
@@ -60,9 +57,6 @@ class CollabDocumentConfig {
 
   /// Initial host authorization; runtime changes use controller.setEditable.
   final bool editable;
-
-  /// Host-provided cover for missing local draft headers only.
-  final String defaultCoverUrl;
 
   /// Validate identity and storage before acquiring the process-wide engine.
   /// Throws [FormatException] without opening storage or registering listeners.

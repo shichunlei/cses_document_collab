@@ -9,7 +9,7 @@
 - AppFlowy Editor 6.2 块编辑界面和连接状态
 - 独立全屏 `CollaborativeEditorPage`，与 Demo 的连接配置页面解耦
 - `CollaborativeEditorPage` 支持编辑/预览切换；预览时收起键盘和工具栏并禁止文档修改
-- 飞书文档风格的固定头部：默认头图、可添加/替换/移除封面，以及大号可编辑文档标题
+- 正式文档业务头部：显示桌面封面、图标（emoji/图片，含 SVG）、标题，封面铺满屏宽，居中叠加更换/移除/调整按钮，图标跨在封面下沿；支持封面“公共图库 / 上传 / 链接”三 Tab（复用桌面20张图库）、移除及位置调整、图标“表情符号 / 上传 / 链接”三 Tab 选择/替换/移除、标题修改；保存复用 Common HTTP 业务接口
 - 基于键盘 Insets 的稳定移动快捷栏，T/Aa/块布局二级菜单展开时不收起键盘
 - 参考移动文档产品的“添加”底部面板，支持 H1～H9、两种列表、Todo、引用、高亮块、链接、图片和视频
 - T 菜单从 H1～H3 开始按需逐级展开到 H9，并包含列表、Todo、代码块和引用；三种列表互换保留层级、正文格式及光标/选区
@@ -23,8 +23,7 @@
 - AppBar 撤销/重做；远端 transaction 不进入本机 UndoManager
 - AppFlowy transaction 与 Rust/Yrs 块级 Schema 适配层：离线草稿沿用 Demo 模型，CSES 文档使用正式 BlockCraft 模型
 - `paragraph`、`heading_1`～`heading_9`、`bulleted_list`、
-  `numbered_list`、`todo_list`、`quote`、`code`、`callout`、`link`、`image`、`video`、
-  `document_cover`、`document_title`
+  `numbered_list`、`todo_list`、`quote`、`code`、`callout`、`link`、`image`、`video`
   的类型、文本/URL 和受支持属性同步
 - 链接块可打开系统浏览器，正式图片展示比例尺寸和题注，离线图片复用 AppFlowy 原生渲染；视频支持内嵌播放
 - 光标位于资源块后方文本块的起始位置时，软键盘或硬件键盘退格可删除链接、图片、视频块并保留当前段落
@@ -54,10 +53,18 @@ cses_mobile_block_indent         Y.Map<blockId, 0..6>
 cses_mobile_block_text:<blockId> Y.Text（文本块含行内 attributes；链接/图片/视频块存 URL）
 ```
 
-封面与标题也复用上述块结构：`document_cover` 的 Y.Text 保存可选图片 URL，
-`document_title` 的 Y.Text 保存标题文字。旧文档首次加载时会使用确定性 blockId
-自动补齐头部；默认封面为 README 当前版本配置的百度图片链接。用户主动移除后保留空 URL，
-后续加载不会再次覆盖为默认图。
+正式文档头部独立于上述正文块。宿主通过 `CollabHostServices.documentMetadata`
+注入 `DocumentMetadataService`，Demo 的 `CsesDocumentMetadataService` 使用
+`cses_common/network/http/client/http_manager.dart` 读取 `/doc/document/view` 和
+`/doc/permission/read`，通过 `/doc/document/modify` 修改名称、icon 或 banner，
+移除图标/封面使用 `/doc/document/icon/remove`、`/doc/document/banner/remove`。
+仅业务接口确认后更新头部；失败保留原值，可重试。正文撤销不撤销头部业务修改。
+图标/封面操作按桌面 owner 角色控制，改名检查实际 owner 身份，仅 `abilities.rename == false` 时禁止（兼容权限字段缺失）；
+预览和宿主只读状态禁止修改。前台恢复、重连及重新打开时获取桌面最新头部。
+
+离线草稿只包含正文；不再创建或支持 `document_cover`、`document_title`。
+旧私有草稿加载时按原始类型删除这两个头部块并持久化，保留其余正文、格式和顺序；
+该迁移不会把旧 Demo 标题/封面写入正式文档的业务字段，也不会修改正式 blocks。
 
 CSES 文档通过 `packages/cses_document_collab/rust/src/api/blockcraft.rs` 直接读写正式共享类型：
 
@@ -82,8 +89,7 @@ bc:revisions / bc:revision-decisions / bc:revision-meta  原样保留的修订�
 行内对象、锁定块、修订记录和未知顶层根继续使用整篇只读保护。
 结构重复/循环、缺失子块等情况同样限制编辑。正式正文缺少根时等待初始化，
 不自动创建根、封面或标题；业务界面空白不代表 Yjs 文档无结构。
-只读约束同时在页面输入和 Rust 写事务前检查。手机专属标题、封面和独立链接块
-没有隐式正式对应，相关操作会被拒绝并恢复 UI。
+只读约束同时在页面输入和 Rust 写事务前检查。手机专属独立链接块没有隐式正式对应，相关操作会被拒绝并恢复 UI。
 
 ## CSES 接入与资源所有权
 
@@ -178,7 +184,7 @@ Rust 或 FRB 桥接声明变化后必须停止运行并完整重新构建安装�
 建议按以下顺序验收当前块级阶段：
 
 1. 手机 A 输入中文、Emoji 和多段 paragraph，手机 B 应实时出现；
-2. 独立离线草稿检查默认封面与大号标题；正式文档检查原正文完整加载、没有新增 Demo 头部；
+2. 独立离线草稿检查只含正文；正式文档核对桌面封面、表情、名称，修改/移除后重开桌面确认，并验证只读、失败重试与前台刷新；
 3. 光标进入正文后，确认键盘上方出现 `＋ / T / Aa / 块布局 / 图片 / @`
    快捷栏；
 4. 选中文字后点击 `Aa`，验证粗体、斜体、下划线、删除线、行内代码和文字颜色会同步；
@@ -225,7 +231,7 @@ flutter test --no-pub
 未知容器、行内对象和锁。生成器 `generate.cjs` 接受已安装的 yjs 包路径，避免依赖 Rust 自己生成的样本自证兼容。
 原生桥接测试验证业务根 ID 与缓存键分离、编辑以及 SQLite 恢复；旧样本测试缺库时显式跳过；新增控制器抽包门禁缺库直接失败，运行前需先 cargo build。
 
-当前未接入文档业务名称/封面接口、`/doc/document/edit` 的 dirty-block 快照、评论及业务权限。
+正式头部已接入文档业务名称、图标和封面接口及对应权限；正文 `/doc/document/edit` 的 dirty-block 快照、评论和完整正文业务权限仍未接入。
 Awareness 展示用户和在线数，尚未对齐桌面光标/选区契约；不能用 ready 或 SyncStatus 声称业务落库成功。
 表格和复杂嵌套布局暂时显示不可编辑占位，其他已识别块仍可编辑；行内对象、锁与修订继续整篇只读，后续按对应语义适配。
 
@@ -279,7 +285,7 @@ bridge 的 text 字段传递；正式图片写入 props.src、视频写入 props
   对齐或只读编号投影；结构转换仅替换改变类型的项目，使用既有身份链。每组删除/插入净块数为 0，
   其他项目路径保持，原生确认继续原位回写，以维持焦点、输入连接和批量选择。
 - `collab_block_delete.dart` 的 `collabBlockBackspaceCommand` 与 `CollabBlockBackspaceInterceptor`
-  共用优先级：列表退级 → 标题保护 → 前置资源删除 → 标准退格。列表之前的段落、标题、
+  共用优先级：列表退级 → 容器边界保护 → 前置资源删除 → 标准退格。列表之前的段落、标题、
   图片/视频不会在退级时被合并或删除。IME 只将移除 AppFlowy 行首占位符后位置 0 的折叠删除
   作为退级，前向删字与候选词删除不接管。硬件同步命令由独立异步异常边界等待事务并上报。
   移动工具栏拥有拦截器，在首帧服务挂载后注册；编辑器更换时注销旧服务再注册，退出时注销，
@@ -322,7 +328,7 @@ bridge 的 text 字段传递；正式图片写入 props.src、视频写入 props
 - AppFlowy 撤销/重做通过当前文档内的身份链替换最新原生块，保留扩展数据；远端投影不进入
   本地历史。切换文档或清缓存时清除身份链及 Undo/Redo，防止上一文档的操作写入新文档。
 - 原生编号确认及远端属性投影在根块 ID、类型、顺序一致时原位更新，包括无 Delta 的图片、
-  视频、链接和封面。不能因文档包含媒体就删除再插入全文，否则远端路径变换会让 Enter
+  视频和链接。不能因文档包含媒体就删除再插入全文，否则远端路径变换会让 Enter
   后的光标越出文档并断开输入。实际结构变化仍走结构事务；属性回写不进入撤销或广播。
   图片按当前节点读取 URL/布局/题注；视频独立保存已加载源，以控制器身份守卫迟到初始化，
   换源和页面退出释放所属播放器。回归覆盖列表行首/行中/行尾 Enter、空项退出、连续输入、

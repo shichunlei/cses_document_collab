@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'cses_document_metadata_service.dart';
 
 import 'package:cses_common/core/collections/objectid.dart';
 import 'package:cses_common/observability/api/log.dart';
@@ -56,12 +57,11 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
         onError: (message, error, stack, tag) =>
             Log.e(message, error: error, stackTrace: stack, tag: tag),
         mediaUpload: const CsesEditorMediaUploadService(),
+        documentMetadata: localDraft ? null : CsesDocumentMetadataService(),
       );
       if (localDraft) {
         _controller = CollabController.localDraft(
           databasePath: path,
-          defaultCoverUrl:
-              'https://gips0.baidu.com/it/u=4248708052,2809939788&fm=3028&app=3028&f=JPEG&fmt=auto?w=1280&h=720',
           services: services,
         );
       } else {
@@ -115,7 +115,10 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
   Future<void> reconnect() async {
     if (_disposed || !_ownsConnection) return;
     try {
-      if (await _recover() && !_disposed) await _controller?.retry();
+      if (await _recover() && !_disposed) {
+        await _controller?.retry();
+        await _controller?.header?.refresh();
+      }
     } catch (error, stackTrace) {
       Log.e(
         'Demo 重新连接失败',
@@ -147,6 +150,7 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
     try {
       if (!_disposed && _ownsConnection && await _recover() && !_disposed) {
         _controller?.resync();
+        await _controller?.header?.refresh();
       }
     } catch (error, stackTrace) {
       Log.e(

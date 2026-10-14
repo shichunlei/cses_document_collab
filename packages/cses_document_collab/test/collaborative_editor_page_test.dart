@@ -1,4 +1,6 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/src/controller/document_metadata_controller.dart';
+import 'package:cses_document_collab/src/model/document_metadata.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/controller/collab_controller.dart';
 import 'package:cses_document_collab/src/editor/collab_block_delete.dart';
@@ -419,6 +421,99 @@ void main() {
     });
   }
 
+  testWidgets(
+    'formal cover fills page width; centered controls overlay image and icon crosses its bottom',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: const [
+          CollabEditorBlock(id: 'body', blockType: 'paragraph', text: '正文'),
+        ],
+        onLocalBlocksChanged: (_) {},
+      );
+      final header = DocumentMetadataController(
+        documentId: 'doc',
+        service: _HeaderService(),
+        canEdit: () => true,
+      );
+      await header.refresh();
+      final collab = _ReadyCollabController(
+        testEditorState: adapter.editorState,
+        testHeader: header,
+      );
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        collab.dispose();
+        adapter.dispose();
+        await tester.binding.setSurfaceSize(null);
+      });
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            AppFlowyEditorLocalizations.delegate,
+          ],
+          home: CollaborativeEditorPage(collab: collab),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final cover = tester.getRect(
+        find.byKey(const ValueKey('document-banner-image')),
+      );
+      expect(cover.left, 0);
+      expect(cover.right, 390);
+      final controls = tester.getRect(
+        find.byKey(const ValueKey('document-banner-actions')),
+      );
+      expect(controls.center.dx, closeTo(cover.center.dx, 0.5));
+      expect(controls.center.dy, closeTo(cover.center.dy, 0.5));
+      for (final key in [
+        'document-banner-edit',
+        'document-banner-remove',
+        'document-banner-position',
+      ]) {
+        final bounds = tester.getRect(find.byKey(ValueKey(key)));
+        expect(cover.contains(bounds.topLeft), isTrue);
+        expect(cover.contains(bounds.bottomRight), isTrue);
+      }
+      final icon = tester.getRect(
+        find.byKey(const ValueKey('document-icon-edit')),
+      );
+      expect(icon.left, 20);
+      expect(icon.top, closeTo(cover.bottom - 32, 0.5));
+      expect(icon.bottom, closeTo(cover.bottom + 16, 0.5));
+      final title = tester.getRect(
+        find.descendant(
+          of: find.byKey(const ValueKey('formal-document-header')),
+          matching: find.text(header.value!.name),
+        ),
+      );
+      expect(title.left, 20);
+      expect(title.top, greaterThan(icon.bottom));
+      final body = tester.getRect(
+        find.byKey(adapter.editorState.document.first!.key),
+      );
+      expect(body.left, 20);
+      await tester.tap(find.byKey(const ValueKey('editor-mode-toggle')));
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('document-banner-actions')),
+        findsNothing,
+      );
+      expect(
+        tester.getRect(find.byKey(const ValueKey('document-banner-image'))),
+        cover,
+      );
+      expect(
+        tester.getRect(find.byKey(const ValueKey('document-icon-edit'))),
+        icon,
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   testWidgets('standalone page owns the full-screen editor UI', (tester) async {
     await tester.binding.setSurfaceSize(const Size(390, 844));
     addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -451,16 +546,9 @@ void main() {
     expect(editor.blockComponentBuilders, contains(csesLinkBlockType));
     expect(editor.blockComponentBuilders, contains(csesVideoBlockType));
     expect(editor.blockComponentBuilders, contains(ImageBlockKeys.type));
-    expect(editor.blockComponentBuilders, contains(csesDocumentCoverBlockType));
-    expect(editor.blockComponentBuilders, contains(csesDocumentTitleBlockType));
-    final titleBuilder =
-        editor.blockComponentBuilders[csesDocumentTitleBlockType]!;
-    expect(
-      titleBuilder.configuration
-          .textStyle(Node(type: csesDocumentTitleBlockType))
-          .fontSize,
-      38,
-    );
+    expect(editor.blockComponentBuilders, isNot(contains('document_cover')));
+    expect(editor.blockComponentBuilders, isNot(contains('document_title')));
+    expect(editor.header, isNull); // 本地草稿只显示正文。
     expect(
       editor.commandShortcutEvents.first,
       same(collabBlockBackspaceCommand),
@@ -565,10 +653,13 @@ void main() {
 
 /// 不加载原生库的页面宿主 Fake；只模拟已初始化文档的能力变化。
 class _ReadyCollabController extends CollabController {
-  _ReadyCollabController({this.testEditorState})
+  _ReadyCollabController({this.testEditorState, this.testHeader})
     : super.localDraft(databasePath: '/unused');
 
   final EditorState? testEditorState;
+  final DocumentMetadataController? testHeader;
+  @override
+  DocumentMetadataController? get header => testHeader;
 
   @override
   EditorState get editorState => testEditorState ?? super.editorState;
@@ -595,4 +686,22 @@ class _ReadyCollabController extends CollabController {
     _reason = reason;
     notifyListeners();
   }
+}
+
+/// 头部几何测试借用的业务数据；不进行 HTTP 或原生读写。
+class _HeaderService implements DocumentMetadataService {
+  /// 用固定测试数据读取 [documentId] 的业务头部；不发请求或拥有编辑器资源。
+  @override
+  Future<DocumentMetadata> load(String documentId) async => DocumentMetadata(
+    id: documentId,
+    name: '正式标题',
+    icon: {'type': 'emoji', 'value': '📚'},
+    banner: {'url': 'https://example.test/cover.png', 'y': 30},
+    canRename: true,
+    canChangeAppearance: true,
+  );
+
+  /// 接受测试文档 [documentId] 的 [patch] 作为成功ACK，不写任何共享数据。
+  @override
+  Future<void> update(String documentId, DocumentMetadataPatch patch) async {}
 }

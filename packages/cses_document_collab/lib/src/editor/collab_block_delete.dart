@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 /// 硬件 Backspace/Shift+Backspace 的协同入口，置于标准命令前。
-/// 行首列表先退级，随后保护标题边界，再处理前置资源删除；不接管行内文字和范围删除。
+/// 行首列表先退级，随后保护容器边界，再处理前置资源删除；不接管行内文字和范围删除。
 /// 编辑器命令回调必须同步返回 KeyEventResult，事务由私有异步异常边界等待并上报失败。
 /// 借用 EditorState，无额外监听或资源；软键盘通过同规则的拦截器处理。
 ///
@@ -33,8 +33,7 @@ final collabBlockBackspaceCommand = CommandShortcutEvent(
       unawaited(_runBackspaceTransaction(state, outdent: true));
       return KeyEventResult.handled;
     }
-    if (isProtectedDocumentTitleBoundary(state) ||
-        isProtectedCalloutBoundary(state) ||
+    if (isProtectedCalloutBoundary(state) ||
         isProtectedUnsupportedBlockBoundary(state)) {
       return KeyEventResult.handled;
     }
@@ -46,7 +45,7 @@ final collabBlockBackspaceCommand = CommandShortcutEvent(
   },
 );
 
-/// 移动 IME 删除拦截器，统一列表退级、标题保护和相邻媒体删除的优先级。
+/// 移动 IME 删除拦截器，统一列表退级、容器边界保护和相邻媒体删除的优先级。
 /// AppFlowy 在调用前移除行首占位符；退格占位符表现为逻辑位置 0 的折叠删除范围。
 /// 非折叠删除和正在组合的候选文字交给原输入链，避免把实际删字误判成退级。
 /// 不拥有编辑器或键盘服务；创建方在服务挂载后注册，换 EditorState/退出时注销。
@@ -70,7 +69,7 @@ class CollabBlockBackspaceInterceptor
 
   /// 处理已去除占位符的 [deletion]，借用 [editorState] 完成结构事务后返回 true。
   /// 列表行首折叠删除优先退级；前向删字、候选词删除、范围选区及普通行内删除返回 false。
-  /// 非列表沿用标题保护与媒体删除。只读/销毁时不执行；异常通过 Future 交给 IME 边界。
+  /// 非列表沿用容器边界保护与媒体删除。只读/销毁时不执行；异常通过 Future 交给 IME 边界。
   @override
   Future<bool> interceptDelete(
     TextEditingDeltaDeletion deletion,
@@ -91,9 +90,6 @@ class CollabBlockBackspaceInterceptor
             isProtectedUnsupportedBlockBoundary(editorState)) &&
         deletion.deletedRange.isCollapsed &&
         deletion.deletedRange.start == 0) {
-      return true;
-    }
-    if (isProtectedDocumentTitleBoundary(editorState)) {
       return true;
     }
     if (!canDeletePreviousUrlBackedBlock(editorState)) {
@@ -132,27 +128,6 @@ Future<void> _runBackspaceTransaction(
       ),
     );
   }
-}
-
-/// Prevents the first body paragraph from merging into the document title.
-///
-/// [editorState] 为借用的编辑器；只读或销毁时返回 false，不修改节点或历史。
-/// AppFlowy's default Backspace handler merges adjacent Delta nodes at offset
-/// zero. The title is deliberately a Delta node so it can use the native IME,
-/// but it is also a structural header and must never absorb body content.
-bool isProtectedDocumentTitleBoundary(EditorState editorState) {
-  if (editorState.isDisposed || !editorState.editable) {
-    return false;
-  }
-  final selection = editorState.selection;
-  if (selection == null ||
-      !selection.isCollapsed ||
-      selection.start.offset != 0) {
-    return false;
-  }
-  final currentNode = editorState.getNodeAtPath(selection.start.path);
-  return currentNode?.delta != null &&
-      currentNode?.previous?.type == csesDocumentTitleBlockType;
 }
 
 /// 返回借用的 [editorState] 当前折叠光标是否应删除前置资源；要求偏移 0，且存在前置媒体。

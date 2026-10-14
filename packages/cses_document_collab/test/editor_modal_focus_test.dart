@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cses_document_collab/src/editor/editor_media_source_sheet.dart';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
@@ -81,10 +82,6 @@ class _Harness {
                       'image': CollabEmbedBlockComponentBuilder(
                         kind: CollabEmbedKind.image,
                       ),
-                      csesDocumentCoverBlockType:
-                          CollabEmbedBlockComponentBuilder(
-                            kind: CollabEmbedKind.cover,
-                          ),
                       csesLinkBlockType: CollabEmbedBlockComponentBuilder(
                         kind: CollabEmbedKind.link,
                       ),
@@ -390,42 +387,28 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('cover update preserves and restores the body caret', (
-    tester,
-  ) async {
-    final h = _Harness();
-    await h.adapter.replaceFromRemote([
-      const CollabEditorBlock(
-        id: 'cover',
-        blockType: csesDocumentCoverBlockType,
-        text: '',
-      ),
-      _a,
-      _b,
-    ]);
-    await h.mount(
-      tester,
-      selection: Selection.single(path: [1], startOffset: 2),
-    );
-    final original = h.state.selection;
-    final modal = showEditorDocumentCoverDialog(
-      h.context,
-      h.state,
-      h.state.document.first!,
-    );
-    await _settle(tester);
-    expect(h.focus.hasFocus, isFalse);
-    expect(h.state.selection, isNull);
-    await tester.enterText(
-      find.byKey(const ValueKey('editor-url-block-input')),
-      'https://example.test/cover.png',
-    );
-    await tester.pump();
-    await tester.tap(find.byKey(const ValueKey('editor-url-block-submit')));
-    await _finishModal(tester, modal);
-    expect(h.adapter.blocks.first.text, 'https://example.test/cover.png');
-    expect(h.state.selection, original);
-    expect(h.focus.hasFocus, isTrue);
-    expect(tester.takeException(), isNull);
-  });
+  testWidgets(
+    'business header action leaves body untouched and restores caret',
+    (tester) async {
+      final h = _Harness();
+      await h.mount(tester);
+      final original = h.state.selection;
+      final modal = runEditorHeaderAction<void>(h.context, h.state, () async {
+        await showEditorMediaSourceSheet(
+          h.context,
+          blockType: 'document_banner',
+          canEdit: () => h.state.editable,
+        );
+      });
+      await _settle(tester);
+      expect(h.focus.hasFocus, isFalse);
+      expect(h.state.selection, isNull);
+      Navigator.pop(h.context);
+      await _finishModal(tester, modal);
+      expect(h.adapter.blocks, [_a, _b]);
+      expect(h.state.selection, original);
+      expect(h.focus.hasFocus, isTrue);
+      expect(tester.takeException(), isNull);
+    },
+  );
 }

@@ -231,6 +231,10 @@ impl CollabEngine {
             blockcraft_root_id: None,
         };
         let mut persisted_update_count = updates.len() as u32;
+        // 仅清理旧私有草稿头部，正式 BlockCraft 的 blocks 共享类型完全不动。
+        if engine.remove_legacy_headers()? {
+            persisted_update_count += 1;
+        }
         if engine.migrate_legacy_text()? {
             persisted_update_count += 1;
         }
@@ -602,6 +606,33 @@ impl CollabEngine {
         }
     }
 
+    // 从旧草稿的原始类型识别头部，不能按 ID 删除，避免误删同名正文。
+    // 通过已有快照事务清理顺序及属性并持久化；正文富文本和父子关系原样保留。
+    fn remove_legacy_headers(&mut self) -> Result<bool, String> {
+        let removed = {
+            let txn = self.doc.transact();
+            self.raw_block_ids()
+                .into_iter()
+                .filter(|id| {
+                    matches!(
+                        out_string(self.block_meta.get(&txn, id)).as_deref(),
+                        Some("document_cover" | "document_title")
+                    )
+                })
+                .collect::<HashSet<_>>()
+        };
+        if removed.is_empty() {
+            return Ok(false);
+        }
+        let body = self
+            .blocks()
+            .into_iter()
+            .filter(|block| !removed.contains(&block.id))
+            .collect();
+        self.apply_block_snapshot(body)?;
+        Ok(true)
+    }
+
     fn migrate_legacy_text(&mut self) -> Result<bool, String> {
         if !self.blocks().is_empty() {
             return Ok(false);
@@ -968,7 +999,7 @@ fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(
         if !is_supported_block_type(&block.block_type)
             && !(allow_placeholders && block.block_type == blockcraft::UNSUPPORTED_BLOCK_TYPE)
         {
-            return Err(format!("unsupported block type: {}", block.block_type));
+            return Err(format!("UNSUPPORTED_BLOCK_TYPE: {}", block.block_type));
         }
         if !block.segments.is_empty()
             && block
@@ -1042,11 +1073,6 @@ fn is_supported_block_type(block_type: &str) -> bool {
             | "link"
             | "image"
             | "video"
-            // Fixed document header blocks use the same Y.Text payload: the
-            // cover stores an optional URL and the title stores editable text.
-            // Deterministic IDs/order are enforced by the Dart controller.
-            | "document_cover"
-            | "document_title"
         )
 }
 
@@ -1643,29 +1669,45 @@ mod tests {
     }
 
     #[test]
-    fn document_cover_and_title_converge_between_replicas() {
-        let mut phone_a = test_engine("document-header-a");
-        let mut phone_b = test_engine("document-header-b");
-        let expected = vec![
-            block(
-                "cses-document-cover",
-                "document_cover",
-                "https://example.com/cover.jpg",
-            ),
-            block("cses-document-title", "document_title", "协同文档标题"),
-            block("body", "paragraph", "正文"),
-        ];
-
-        let update = phone_a
-            .apply_block_snapshot(expected.clone())
-            .expect("document header edit")
-            .outbound_message;
-        phone_b
-            .handle_wire_message(update)
-            .expect("apply document header update");
-
-        assert_eq!(phone_a.blocks(), expected);
-        assert_eq!(phone_b.blocks(), expected);
+    fn old_draft_headers_are_removed_once_without_changing_body() {
+        let directory = tempfile::tempdir().unwrap();
+        let path = directory
+            .path()
+            .join("header.sqlite3")
+            .to_string_lossy()
+            .to_string();
+        let (mut engine, _) = CollabEngine::open("draft".into(), path.clone()).unwrap();
+        let mut body = block("body", "paragraph", "正文🙂");
+        body.segments = vec![styled_segment("正文🙂", true, false)];
+        engine.apply_block_snapshot(vec![body.clone()]).unwrap();
+        // 模拟旧版本持久化数据；新版本写入口不再接受这两种类型。
+        let before = engine.doc.transact().state_vector();
+        {
+            let mut txn = engine.doc.transact_mut();
+            engine
+                .block_order
+                .insert_range(&mut txn, 0, ["cover", "title"]);
+            engine
+                .block_meta
+                .insert(&mut txn, "cover", "document_cover");
+            engine
+                .block_meta
+                .insert(&mut txn, "title", "document_title");
+        }
+        let update = engine.doc.transact().encode_state_as_update_v1(&before);
+        engine.persist_update(&update).unwrap();
+        drop(engine);
+        let (mut restored, count) = CollabEngine::open("draft".into(), path.clone()).unwrap();
+        assert_eq!(restored.blocks(), vec![body.clone()]);
+        for kind in ["document_cover", "document_title"] {
+            assert!(restored
+                .apply_block_snapshot(vec![block("invalid", kind, "旧头部")])
+                .is_err());
+        }
+        drop(restored);
+        let (reopened, next_count) = CollabEngine::open("draft".into(), path).unwrap();
+        assert_eq!(reopened.blocks(), vec![body]);
+        assert_eq!(next_count, count);
     }
 
     #[test]

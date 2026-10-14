@@ -907,7 +907,7 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
   }
 
   /// 将 [style] 应用于点击时的当前选区；列表互换复用统一事务，保留层级、格式、勾选规则和焦点。
-  /// 固定标题、只读/销毁、无选区以及执行中的重复命令不执行；列表与非列表混选不部分切换。
+  /// 高亮容器、只读/销毁、无选区以及执行中的重复命令不执行；列表与非列表混选不部分切换。
   /// 借用 EditorState，await 后检查菜单仍挂载且编辑器未更换，避免迟到刷新。失败由本边界
   /// 记录原始异常和堆栈并交给 Flutter 错误报告；Future 在事务与菜单刷新结束后完成。
   Future<void> _apply(_BlockStyleAction style) async {
@@ -921,11 +921,7 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
     }
     final nodes = state.getNodesInSelection(selection);
     if (nodes.isEmpty ||
-        nodes.any(
-          (node) =>
-              node.type == csesDocumentTitleBlockType ||
-              node.type == csesCalloutBlockType,
-        )) {
+        nodes.any((node) => node.type == csesCalloutBlockType)) {
       return;
     }
     _applyingStyle = true;
@@ -1639,39 +1635,18 @@ Node? _findMediaTarget(EditorState state, String id) {
   return visit(state.document.root);
 }
 
-/// Adds, replaces or removes the cover, restoring any prior body selection.
-Future<void> showEditorDocumentCoverDialog(
+/// 在 [action] 的完整头部操作期间隔离正文输入，结束后恢复原稳定块选区。
+/// [context] 与 [editorState] 均为借用对象；弹窗必须等待退场动画后完成。
+/// [action] 的结果在正文选区恢复后返回，取消为null；异常仍恢复焦点后透传，销毁的编辑器不执行action。
+Future<T?> runEditorHeaderAction<T>(
   BuildContext context,
   EditorState editorState,
-  Node coverNode,
+  Future<T?> Function() action,
 ) async {
-  if (editorState.isDisposed || !editorState.editable) return;
-  final currentUrl =
-      coverNode.attributes[csesEmbedUrlAttribute] as String? ?? '';
-  final id = _mediaTargetId(coverNode);
+  if (editorState.isDisposed) return null;
   final session = _EditorModalSession(editorState);
   try {
-    final source = await showEditorMediaSourceSheet(
-      context,
-      blockType: csesDocumentCoverBlockType,
-      initialValue: currentUrl,
-      allowRemove: currentUrl.isNotEmpty,
-      canEdit: () => !editorState.isDisposed && editorState.editable,
-    );
-    if (source == null ||
-        !context.mounted ||
-        editorState.isDisposed ||
-        !editorState.editable) {
-      return;
-    }
-    final latestNode = _findMediaTarget(editorState, id);
-    if (latestNode == null || latestNode.type != csesDocumentCoverBlockType) {
-      _showToolbarMessage(context, '封面已被远端修改，请重试');
-      return;
-    }
-    final transaction = editorState.transaction
-      ..updateNode(latestNode, {csesEmbedUrlAttribute: source.url});
-    await editorState.apply(transaction);
+    return await action();
   } finally {
     await session.finish(context.mounted ? context : null, null);
   }

@@ -160,7 +160,7 @@ void main() {
       }
       for (final preceding in [
         ParagraphBlockKeys.type,
-        csesDocumentTitleBlockType,
+        QuoteBlockKeys.type,
         ImageBlockKeys.type,
       ]) {
         test('list outdent takes priority after $preceding', () async {

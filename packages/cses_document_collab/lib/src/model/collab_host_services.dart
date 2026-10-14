@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'document_metadata.dart';
 
 import 'package:cses_document_collab/src/model/editor_media_upload.dart';
 import 'package:flutter/foundation.dart';
@@ -21,7 +22,16 @@ class CollabHostServices {
   /// [createId] generates unique block/session IDs; null uses secure 24-digit
   /// hexadecimal IDs. [onError] reports failures; null prints error and stack.
   /// [mediaUpload] is borrowed and must use the host's current authentication.
-  const CollabHostServices({this.createId, this.onError, this.mediaUpload});
+  /// [documentMetadata] 提供正式头部的业务读写；草稿不使用该端口。
+  const CollabHostServices({
+    this.createId,
+    this.onError,
+    this.mediaUpload,
+    this.documentMetadata,
+  });
+
+  /// 正式文档头部业务接口；null 时宿主不提供头部能力。
+  final DocumentMetadataService? documentMetadata;
 
   /// Host ID generator, borrowed for the lifetime of the document.
   final String Function()? createId;

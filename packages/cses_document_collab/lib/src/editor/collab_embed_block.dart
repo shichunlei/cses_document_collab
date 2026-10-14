@@ -13,9 +13,6 @@ import 'package:video_player/video_player.dart';
 
 /// 使用现有可选择资源块外壳展示的媒体类型；正式图片额外包含尺寸和题注投影。
 enum CollabEmbedKind {
-  /// 离线草稿的封面。
-  cover,
-
   /// 离线草稿的独立链接卡片。
   link,
 
@@ -26,10 +23,7 @@ enum CollabEmbedKind {
   image,
 }
 
-typedef CollabCoverEditCallback =
-    void Function(BuildContext context, EditorState editorState, Node node);
-
-/// 构建可选中的链接、视频、封面和正式图片；复用同一选区与资源块生命周期。
+/// 构建可选中的链接、视频和正式图片；复用同一选区与资源块生命周期。
 ///
 /// 资源地址通过节点 url 属性和 CollabBlock.text 传递；正式图片使用 props.src，视频使用 props.url，
 /// 离线草稿使用私有 Y.Text，桥接调用方不直接解析共享类型。
@@ -40,19 +34,15 @@ typedef CollabCoverEditCallback =
 /// // 将 builder 注册到所属 AppFlowyEditor 的 image 类型，无需单独 dispose。
 /// ```
 class CollabEmbedBlockComponentBuilder extends BlockComponentBuilder {
-  /// [kind] 决定资源展示类型，[onEditCover] 只用于封面编辑，null 不显示封面编辑入口。
+  /// [kind] 决定资源展示类型。
   /// [configuration] 提供现有选区外壳的布局；不创建 WS 或持有编辑器所有权。
   CollabEmbedBlockComponentBuilder({
     required this.kind,
-    this.onEditCover,
     super.configuration = const BlockComponentConfiguration(),
   });
 
   /// 当前资源类型，正式图片采用专属布局投影。
   final CollabEmbedKind kind;
-
-  /// 借用封面编辑回调，图片编辑由图片视图处理。
-  final CollabCoverEditCallback? onEditCover;
 
   /// 根据 [blockComponentContext] 创建借用节点的资源视图，离线图片沿用现有组件。
   @override
@@ -77,7 +67,6 @@ class CollabEmbedBlockComponentBuilder extends BlockComponentBuilder {
       key: node.key,
       node: node,
       kind: kind,
-      onEditCover: onEditCover,
       configuration: configuration,
       showActions: showActions(node),
       actionBuilder: (context, state) =>
@@ -94,8 +83,7 @@ class CollabEmbedBlockComponentBuilder extends BlockComponentBuilder {
     return node.children.isEmpty &&
         node.delta == null &&
         url is String &&
-        (kind == CollabEmbedKind.cover ||
-            kind == CollabEmbedKind.image ||
+        (kind == CollabEmbedKind.image ||
             kind == CollabEmbedKind.video ||
             url.isNotEmpty);
   };
@@ -106,7 +94,6 @@ class _CollabEmbedBlockWidget extends BlockComponentStatefulWidget {
     super.key,
     required super.node,
     required this.kind,
-    this.onEditCover,
     required super.configuration,
     super.showActions,
     super.actionBuilder,
@@ -114,7 +101,6 @@ class _CollabEmbedBlockWidget extends BlockComponentStatefulWidget {
   });
 
   final CollabEmbedKind kind;
-  final CollabCoverEditCallback? onEditCover;
 
   @override
   State<_CollabEmbedBlockWidget> createState() =>
@@ -229,7 +215,6 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
   Widget build(BuildContext context) {
     final editorState = context.read<EditorState>();
     final child = switch (widget.kind) {
-      CollabEmbedKind.cover => _buildCover(context, editorState),
       CollabEmbedKind.link => _buildLinkCard(context),
       CollabEmbedKind.video => _buildVideoCard(context),
       CollabEmbedKind.image => CollabImageContent(
@@ -268,69 +253,6 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
       );
     }
     return selectableChild;
-  }
-
-  Widget _buildCover(BuildContext context, EditorState editorState) {
-    final canEdit = editorState.editable && widget.onEditCover != null;
-    if (_url.isEmpty) {
-      return Align(
-        alignment: Alignment.centerLeft,
-        child: TextButton.icon(
-          key: const ValueKey('collab-document-cover-add'),
-          onPressed: canEdit
-              ? () => widget.onEditCover!(context, editorState, node)
-              : null,
-          icon: const Icon(Icons.add_photo_alternate_outlined, size: 20),
-          label: const Text('添加封面'),
-          style: TextButton.styleFrom(
-            foregroundColor: const Color(0xFF64748B),
-            padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 10),
-          ),
-        ),
-      );
-    }
-
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(2),
-      child: AspectRatio(
-        aspectRatio: 2.15,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            Image.network(
-              _url,
-              fit: BoxFit.cover,
-              errorBuilder: (_, _, _) => const ColoredBox(
-                color: Color(0xFFF1F5F9),
-                child: Center(
-                  child: Icon(
-                    Icons.broken_image_outlined,
-                    color: Color(0xFF94A3B8),
-                    size: 42,
-                  ),
-                ),
-              ),
-            ),
-            if (canEdit)
-              Positioned(
-                right: 12,
-                bottom: 12,
-                child: FilledButton.tonalIcon(
-                  key: const ValueKey('collab-document-cover-edit'),
-                  onPressed: () =>
-                      widget.onEditCover!(context, editorState, node),
-                  icon: const Icon(Icons.edit_outlined, size: 17),
-                  label: const Text('编辑封面'),
-                  style: FilledButton.styleFrom(
-                    backgroundColor: const Color(0xCC1F2937),
-                    foregroundColor: Colors.white,
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
   }
 
   Widget _buildLinkCard(BuildContext context) {
