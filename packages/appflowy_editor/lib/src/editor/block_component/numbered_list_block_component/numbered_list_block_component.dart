@@ -17,6 +17,22 @@ class NumberedListBlockKeys {
   static const String textDirection = blockComponentTextDirection;
 }
 
+/// Creates a numbered list node from optional attributes and child nodes.
+///
+/// When [attributes] is `null`, [delta] and [number] initialize the generated
+/// attributes. Otherwise, the supplied map is used as-is. [textDirection] is
+/// stored when set, and [children] defaults to an empty list.
+///
+/// ```dart
+/// import 'package:appflowy_editor/appflowy_editor.dart';
+///
+/// final node = numberedListNode(number: 1);
+/// ```
+///
+/// [delta] is the structured item text used when attributes are generated.
+/// [attributes] is an optional complete attribute map. [number] is the initial
+/// list number when attributes are generated. [textDirection] is an optional
+/// direction value. [children] contains nested nodes.
 Node numberedListNode({
   Delta? delta,
   Attributes? attributes,
@@ -32,8 +48,7 @@ Node numberedListNode({
     type: NumberedListBlockKeys.type,
     attributes: {
       ...attributes,
-      if (textDirection != null)
-        NumberedListBlockKeys.textDirection: textDirection,
+      NumberedListBlockKeys.textDirection: textDirection,
     },
     children: children ?? [],
   );

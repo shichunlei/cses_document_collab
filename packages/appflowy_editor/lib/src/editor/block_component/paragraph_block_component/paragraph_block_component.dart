@@ -13,6 +13,21 @@ class ParagraphBlockKeys {
   static const String textDirection = blockComponentTextDirection;
 }
 
+/// Creates a paragraph node with optional structured text and nested nodes.
+///
+/// [text] supplies initial content when [delta] is absent. [attributes] are
+/// merged after the generated delta. [textDirection] is stored when set, and
+/// [children] defaults to an empty list.
+///
+/// ```dart
+/// import 'package:appflowy_editor/appflowy_editor.dart';
+///
+/// final node = paragraphNode(text: 'Hello');
+/// ```
+///
+/// [text] is the initial paragraph text. [delta] is its structured content.
+/// [textDirection] is an optional direction value. [attributes] contains
+/// additional node attributes. [children] contains nested nodes.
 Node paragraphNode({
   String? text,
   Delta? delta,
@@ -25,9 +40,8 @@ Node paragraphNode({
     attributes: {
       ParagraphBlockKeys.delta:
           (delta ?? (Delta()..insert(text ?? ''))).toJson(),
-      if (attributes != null) ...attributes,
-      if (textDirection != null)
-        ParagraphBlockKeys.textDirection: textDirection,
+      ...?attributes,
+      ParagraphBlockKeys.textDirection: textDirection,
     },
     children: children,
   );

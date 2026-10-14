@@ -15,6 +15,21 @@ class QuoteBlockKeys {
   static const String textDirection = blockComponentTextDirection;
 }
 
+/// Creates a quote node with optional structured text and nested nodes.
+///
+/// When [attributes] is `null`, the node receives a generated delta attribute
+/// from [delta]. Otherwise, the supplied attributes are retained. Set
+/// [textDirection] to store a direction value; [children] defaults to empty.
+///
+/// ```dart
+/// import 'package:appflowy_editor/appflowy_editor.dart';
+///
+/// final node = quoteNode(delta: Delta()..insert('Quoted text'));
+/// ```
+///
+/// [delta] is the structured quote text used when attributes are generated.
+/// [textDirection] is an optional direction value. [attributes] is the
+/// optional complete node attribute map. [children] contains nested nodes.
 Node quoteNode({
   Delta? delta,
   String? textDirection,
@@ -26,7 +41,7 @@ Node quoteNode({
     type: QuoteBlockKeys.type,
     attributes: {
       ...attributes,
-      if (textDirection != null) QuoteBlockKeys.textDirection: textDirection,
+      QuoteBlockKeys.textDirection: textDirection,
     },
     children: children ?? [],
   );

@@ -20,6 +20,23 @@ class TodoListBlockKeys {
   static const String textDirection = blockComponentTextDirection;
 }
 
+/// Creates a todo list node with its initial checked state.
+///
+/// [text] supplies initial content when [delta] is absent. [attributes] are
+/// merged after the generated checked state and delta, so matching keys
+/// override them. [textDirection] is stored when set, and [children] defaults
+/// to an empty list.
+///
+/// ```dart
+/// import 'package:appflowy_editor/appflowy_editor.dart';
+///
+/// final node = todoListNode(checked: false, text: 'Review changes');
+/// ```
+///
+/// [checked] determines whether the item starts checked. [text] is the initial
+/// item text. [delta] is its structured content. [textDirection] is an
+/// optional direction value. [attributes] contains additional or overriding
+/// node attributes. [children] contains nested nodes.
 Node todoListNode({
   required bool checked,
   String? text,
@@ -34,8 +51,8 @@ Node todoListNode({
       TodoListBlockKeys.checked: checked,
       TodoListBlockKeys.delta:
           (delta ?? (Delta()..insert(text ?? ''))).toJson(),
-      if (attributes != null) ...attributes,
-      if (textDirection != null) TodoListBlockKeys.textDirection: textDirection,
+      ...?attributes,
+      TodoListBlockKeys.textDirection: textDirection,
     },
     children: children ?? [],
   );

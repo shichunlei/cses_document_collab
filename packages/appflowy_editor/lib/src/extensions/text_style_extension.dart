@@ -34,7 +34,21 @@ extension TextSpanExtensions on TextSpan {
   }
 }
 
+/// Combines text styles while preserving the receiving style's defaults.
+///
+/// ```dart
+/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:flutter/material.dart';
+///
+/// final style = const TextStyle(fontSize: 14).combine(
+///   const TextStyle(fontWeight: FontWeight.bold),
+/// );
+/// ```
 extension TextStyleExtensions on TextStyle {
+  /// Combines this style with [other], returning this style when it is `null`.
+  ///
+  /// A non-inheriting [other] replaces this style entirely. Otherwise its
+  /// configured properties override or augment this style.
   TextStyle combine(TextStyle? other) {
     if (other == null) {
       return this;
@@ -62,8 +76,8 @@ extension TextStyleExtensions on TextStyle {
       fontFeatures: other.fontFeatures,
       fontVariations: other.fontVariations,
       decoration: TextDecoration.combine([
-        if (decoration != null) decoration!,
-        if (other.decoration != null) other.decoration!,
+        ?decoration,
+        ?other.decoration,
       ]),
       decorationColor: other.decorationColor,
       decorationStyle: other.decorationStyle,

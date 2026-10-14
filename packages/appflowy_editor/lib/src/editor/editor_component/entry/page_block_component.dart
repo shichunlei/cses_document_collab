@@ -49,6 +49,10 @@ class PageBlockComponent extends BlockComponentStatelessWidget {
   final Widget? footer;
   final BlockComponentWrapper? wrapper;
 
+  /// Builds the page's header, document blocks, and footer from [context].
+  ///
+  /// Reads the editor and optional scroll controller from the widget tree.
+  /// Large pages use a lazy list when the controller allows scrolling.
   @override
   Widget build(BuildContext context) {
     final editorState = context.read<EditorState>();
@@ -65,7 +69,7 @@ class PageBlockComponent extends BlockComponentStatelessWidget {
             }
             return Column(
               children: [
-                if (header != null) header!,
+                ?header,
                 ...items.map(
                   (e) {
                     Widget child = editorState.renderer.build(context, e);
@@ -82,7 +86,7 @@ class PageBlockComponent extends BlockComponentStatelessWidget {
                     );
                   },
                 ),
-                if (footer != null) footer!,
+                ?footer,
               ],
             );
           },

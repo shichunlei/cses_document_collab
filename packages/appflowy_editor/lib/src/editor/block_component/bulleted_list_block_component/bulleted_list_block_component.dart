@@ -15,6 +15,22 @@ class BulletedListBlockKeys {
   static const String textDirection = blockComponentTextDirection;
 }
 
+/// Creates a bulleted list node and merges optional block data.
+///
+/// [text] supplies initial text when [delta] is absent. [delta] takes
+/// precedence when both are provided. [textDirection] is stored when set,
+/// [attributes] are merged after the generated delta, and [children] defaults
+/// to an empty list.
+///
+/// ```dart
+/// import 'package:appflowy_editor/appflowy_editor.dart';
+///
+/// final node = bulletedListNode(text: 'A list item');
+/// ```
+///
+/// [text] is the initial item text. [delta] is its structured text content.
+/// [textDirection] is an optional direction value. [attributes] contains
+/// additional node attributes. [children] contains nested nodes.
 Node bulletedListNode({
   String? text,
   Delta? delta,
@@ -27,9 +43,8 @@ Node bulletedListNode({
     attributes: {
       BulletedListBlockKeys.delta:
           (delta ?? (Delta()..insert(text ?? ''))).toJson(),
-      if (attributes != null) ...attributes,
-      if (textDirection != null)
-        BulletedListBlockKeys.textDirection: textDirection,
+      ...?attributes,
+      BulletedListBlockKeys.textDirection: textDirection,
     },
     children: children ?? [],
   );

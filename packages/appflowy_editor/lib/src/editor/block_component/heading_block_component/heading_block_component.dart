@@ -20,6 +20,22 @@ class HeadingBlockKeys {
   static const String textDirection = blockComponentTextDirection;
 }
 
+/// Creates a heading node with a level from one through six.
+///
+/// [level] is clamped to the supported range after its debug assertion.
+/// [text] supplies initial content when [delta] is absent. [attributes] are
+/// merged after the generated level and delta, so matching keys override them.
+/// [textDirection] is stored when set.
+///
+/// ```dart
+/// import 'package:appflowy_editor/appflowy_editor.dart';
+///
+/// final node = headingNode(level: 2, text: 'Section title');
+/// ```
+///
+/// [level] is the heading depth. [text] is the initial text. [delta] is the
+/// structured text content. [textDirection] is an optional direction value.
+/// [attributes] contains additional or overriding node attributes.
 Node headingNode({
   required int level,
   String? text,
@@ -33,8 +49,8 @@ Node headingNode({
     attributes: {
       HeadingBlockKeys.delta: (delta ?? (Delta()..insert(text ?? ''))).toJson(),
       HeadingBlockKeys.level: level.clamp(1, 6),
-      if (attributes != null) ...attributes,
-      if (textDirection != null) HeadingBlockKeys.textDirection: textDirection,
+      ...?attributes,
+      HeadingBlockKeys.textDirection: textDirection,
     },
   );
 }
