@@ -1,3 +1,7 @@
+import 'package:cses_document_collab/src/editor/collab_inline_formula.dart';
+import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
+import 'package:cses_document_collab/src/editor/collab_formula_block.dart';
+import 'package:cses_document_collab/src/model/collab_formula.dart';
 import 'package:cses_document_collab/src/editor/collab_divider_block.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
 import 'document_header.dart';
@@ -255,6 +259,7 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
   }
 }
 
+/// 正式协同块的渲染器工厂；分割线与公式保持无正文结构，未知块使用保护占位。
 final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders =
     {
       ...standardBlockComponentBuilderMap,
@@ -298,6 +303,7 @@ final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders =
         ),
       ),
       collabDividerType: CollabDividerBlockComponentBuilder(),
+      collabFormulaType: CollabFormulaBlockComponentBuilder(),
       csesCodeBlockType: CollabCodeBlockComponentBuilder(),
       csesCalloutBlockType: CollabCalloutBlockComponentBuilder(),
       csesUnsupportedBlockType: CollabUnsupportedBlockComponentBuilder(),
@@ -330,6 +336,8 @@ EdgeInsets _listBlockPadding(Node node) {
   return EdgeInsets.fromLTRB(indent * 28.0, 2, 0, 2);
 }
 
+/// 在借用 [context]/[node] 中装饰 UTF-16 [index] 开始的 [text]。
+/// [before] 是内置格式，[after] 为调用方装饰；行内公式使用单字符 WidgetSpan，保留文字颜色。
 InlineSpan _collabTextSpanDecorator(
   BuildContext context,
   Node node,
@@ -371,6 +379,35 @@ InlineSpan _collabTextSpanDecorator(
     }
   }
   final attributes = text.attributes;
+  final latex = attributes?[collabInlineLatexAttribute];
+  if (latex is String) {
+    var offset = index;
+    final spans = <InlineSpan>[];
+    for (final rune in text.text.runes) {
+      if (rune == 0xfffc) {
+        spans.add(
+          WidgetSpan(
+            alignment: PlaceholderAlignment.middle,
+            child: CollabInlineFormula(
+              node: node,
+              offset: offset,
+              latex: latex,
+              style:
+                  decorated.style ??
+                  before.style ??
+                  const TextStyle(fontSize: 16),
+            ),
+          ),
+        );
+      } else {
+        spans.add(
+          TextSpan(text: String.fromCharCode(rune), style: decorated.style),
+        );
+      }
+      offset += rune > 0xffff ? 2 : 1;
+    }
+    return TextSpan(children: spans);
+  }
   final superscript = attributes?[csesSuperscriptAttribute] == true;
   final subscript = attributes?[csesSubscriptAttribute] == true;
   if (!superscript && !subscript) {

@@ -445,6 +445,7 @@ class CollabController extends ChangeNotifier {
                 .map(
                   (segment) => CollabEditorTextSegment(
                     text: segment.text,
+                    inlineLatex: segment.inlineLatex,
                     bold: segment.bold,
                     italic: segment.italic,
                     underline: segment.underline,
@@ -491,6 +492,7 @@ class CollabController extends ChangeNotifier {
                 .map(
                   (segment) => rust.CollabTextSegment(
                     text: segment.text,
+                    inlineLatex: segment.inlineLatex,
                     bold: segment.bold,
                     italic: segment.italic,
                     underline: segment.underline,

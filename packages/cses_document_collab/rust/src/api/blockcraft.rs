@@ -331,7 +331,7 @@ fn mobile_type<T: ReadTxn>(block: &MapRef, props: &MapRef, txn: &T) -> Option<St
         "ordered" => "numbered_list".to_owned(),
         "todo" => "todo_list".to_owned(),
         "blockquote" => "quote".to_owned(),
-        "code" | "image" | "video" | "callout" | "divider" => flavour,
+        "code" | "image" | "video" | "callout" | "divider" | "formula" => flavour,
         s if is_resource_block_type(s) => flavour,
         _ => return None,
     })
@@ -389,9 +389,10 @@ fn is_divider_style(style: &str) -> bool {
     )
 }
 
-/// 已适配 void 块的可编辑属性白名单；divider 复用桥接属性载体，不使用资源 URL。
+/// 已适配 void 块的可编辑属性白名单；divider/formula 复用桥接属性载体，不使用资源 URL。
 fn resource_keys(kind: &str) -> &'static [&'static str] {
     match kind {
+        "formula" => &["latex"],
         "divider" => &[
             "style",
             "length",
@@ -449,7 +450,7 @@ fn parse_resource_edit(
     initial: bool,
 ) -> Result<HashMap<String, Option<Any>>, String> {
     let fail = || "INVALID_RESOURCE: 资源属性无效".to_owned();
-    if input.len() > 32768 {
+    if input.len() > (if kind == "formula" { 160_128 } else { 32768 }) {
         return Err(fail());
     }
     let Any::Map(values) = Any::from_json(input).map_err(|_| fail())? else {
@@ -458,7 +459,7 @@ fn parse_resource_edit(
     let mut result = HashMap::new();
     for (key, wrapper) in values.iter() {
         if !resource_keys(kind).contains(&key.as_str())
-            && (initial || key != "url" || kind == "divider")
+            && (initial || key != "url" || matches!(kind, "divider" | "formula"))
         {
             return Err(fail());
         }
@@ -479,6 +480,15 @@ fn parse_resource_edit(
                     .is_some_and(|url| valid_resource_url(kind, &url))
             {
                 return Err(fail());
+            }
+            if kind == "formula" {
+                if !matches!(v, Any::Null)
+                    && !matches!(v, Any::String(latex) if latex.encode_utf16().count() <= 20_000)
+                {
+                    return Err(fail());
+                }
+                result.insert(key.clone(), value);
+                continue;
             }
             if kind == "divider" {
                 let valid = match (key.as_str(), v) {
@@ -671,7 +681,9 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                 }
             }
             Some(Out::YArray(array))
-                if kind == "divider" && node_type == "void" && array.len(&txn) == 0 => {}
+                if matches!(kind.as_str(), "divider" | "formula")
+                    && node_type == "void"
+                    && array.len(&txn) == 0 => {}
             Some(Out::YArray(array))
                 if is_resource_block_type(&kind) && node_type == "void" && array.len(&txn) == 0 =>
             {
@@ -694,16 +706,18 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                     && !is_media
                     && !is_resource_block_type(&kind)
                     && kind != "callout"
-                    && kind != "divider" =>
+                    && kind != "divider"
+                    && kind != "formula" =>
             {
-                text = value.get_string(&txn);
+                text = projected_inline_text(&value, &txn);
                 segments = text_segments_for_schema(&value, &txn, true);
-                if value
-                    .diff(&txn, |_| ())
-                    .iter()
-                    .any(|c| !matches!(&c.insert, Out::Any(Any::String(_))))
-                {
-                    result.reason = Some("文档含行内对象，当前仅可预览".into());
+                if value.diff(&txn, |_| ()).iter().any(|c| {
+                    !matches!(&c.insert, Out::Any(Any::String(_)))
+                        && (kind == "code" || inline_latex_value(&c.insert).is_none())
+                }) {
+                    result.reason = Some("文档含未适配的行内对象，当前仅可预览".into());
+                    text = value.get_string(&txn);
+                    segments.clear();
                 }
             }
             Some(Out::YArray(array))
@@ -773,11 +787,11 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                 properties: code_properties(&props, &txn),
                 property_edits: None,
             }),
-            resource: (is_resource_block_type(&kind) || kind == "divider").then(|| {
-                CollabResource {
-                    properties: resource_properties(&kind, &props, &txn),
-                    property_edits: None,
-                }
+            resource: (is_resource_block_type(&kind)
+                || matches!(kind.as_str(), "divider" | "formula"))
+            .then(|| CollabResource {
+                properties: resource_properties(&kind, &props, &txn),
+                property_edits: None,
             }),
             ordered: ordered.get(&id).map(|v| v.0.clone()),
             replaces_id: None,
@@ -825,6 +839,7 @@ fn formal_type(kind: &str) -> Option<(&str, bool)> {
         "image" => ("image", true),
         "video" => ("video", true),
         "divider" => ("divider", true),
+        "formula" => ("formula", true),
         "attachment" => ("attachment", true),
         "audio" => ("audio", true),
         "bookmark" => ("bookmark", true),
@@ -907,7 +922,9 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
             previous.get(block.id.as_str()).copied()
         };
         if let Some(resource) = &block.resource {
-            if !is_resource_block_type(&block.block_type) && block.block_type != "divider" {
+            if !is_resource_block_type(&block.block_type)
+                && !matches!(block.block_type.as_str(), "divider" | "formula")
+            {
                 return Err("INVALID_RESOURCE: 资源属性与块类型不符".into());
             }
             let source = if old.is_none() {
@@ -1226,7 +1243,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
                     ArrayPrelim::from(Vec::<String>::new()),
                 );
             }
-            if flavour != "divider"
+            if !matches!(flavour, "divider" | "formula")
                 && ((!is_resource_block_type(flavour)
                     && old.is_none_or(|b| b.text != next.text || b.block_type != next.block_type))
                     || (is_resource_block_type(flavour)
@@ -1260,14 +1277,30 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
                 Some(Out::YText(v)) => v,
                 _ => block.insert(&mut txn, "children", TextPrelim::new("")),
             };
-            let before = text.get_string(&txn);
-            let delta = compute_text_delta(&before, &next.text);
+            let before = projected_inline_text(&text, &txn);
+            let contains_formula = next.segments.iter().any(|s| s.inline_latex.is_some())
+                || text
+                    .diff(&txn, |_| ())
+                    .iter()
+                    .any(|c| inline_latex_value(&c.insert).is_some());
+            let delta = if before == next.text || !contains_formula {
+                compute_text_delta(&before, &next.text)
+            } else {
+                compute_inline_text_delta(&text, &txn, next)
+            };
             if delta.delete_length > 0 {
                 text.remove_range(&mut txn, delta.index, delta.delete_length);
             }
             if !delta.insert_text.is_empty() {
-                text.insert(&mut txn, delta.index, &delta.insert_text);
+                insert_inline_range(
+                    &text,
+                    &mut txn,
+                    next,
+                    delta.index,
+                    delta.insert_text.encode_utf16().count() as u32,
+                );
             }
+            reconcile_inline_formulas(&text, &mut txn, next);
             apply_formats(&text, &mut txn, next);
         }
     }
@@ -1286,6 +1319,190 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
         update_ordered_counters(&blocks, &mut txn, &ids, &inserted);
     }
     Ok(())
+}
+
+/// 混合文字/公式差量按对象内容比较前后缀，避免新增公式误匹配已有 U+FFFC。
+/// 普通文字按 Unicode 标量比较，返回的 index/delete_length 始终是 UTF-16 单位。
+fn compute_inline_text_delta<T: ReadTxn>(
+    text: &TextRef,
+    txn: &T,
+    desired: &CollabBlock,
+) -> TextDelta {
+    let mut actual = Vec::new();
+    for chunk in text.diff(txn, |_| ()) {
+        if let Some(latex) = inline_latex_value(&chunk.insert) {
+            actual.push((format!("formula:{latex}"), 1u32));
+        } else if let Out::Any(Any::String(value)) = chunk.insert {
+            actual.extend(
+                value
+                    .chars()
+                    .map(|c| (format!("text:{c}"), c.len_utf16() as u32)),
+            );
+        }
+    }
+    let mut target = Vec::new();
+    if desired.segments.is_empty() {
+        target.extend(
+            desired
+                .text
+                .chars()
+                .map(|c| (format!("text:{c}"), c.len_utf16() as u32)),
+        );
+    } else {
+        for segment in &desired.segments {
+            if let Some(latex) = &segment.inline_latex {
+                target.push((format!("formula:{latex}"), 1u32));
+            } else {
+                target.extend(
+                    segment
+                        .text
+                        .chars()
+                        .map(|c| (format!("text:{c}"), c.len_utf16() as u32)),
+                );
+            }
+        }
+    }
+    let prefix = actual
+        .iter()
+        .zip(&target)
+        .take_while(|(a, b)| a == b)
+        .count();
+    let suffix = actual[prefix..]
+        .iter()
+        .rev()
+        .zip(target[prefix..].iter().rev())
+        .take_while(|(a, b)| a == b)
+        .count();
+    let index = actual[..prefix].iter().map(|a| a.1).sum();
+    let delete_length = actual[prefix..actual.len() - suffix]
+        .iter()
+        .map(|a| a.1)
+        .sum();
+    let insert_length: u32 = target[prefix..target.len() - suffix]
+        .iter()
+        .map(|a| a.1)
+        .sum();
+    let units: Vec<_> = desired.text.encode_utf16().collect();
+    TextDelta {
+        index,
+        delete_length,
+        insert_text: String::from_utf16(&units[index as usize..(index + insert_length) as usize])
+            .unwrap(),
+    }
+}
+
+/// 插入 desired 投影的 UTF-16 子区间；公式使用原生 insert_embed，不写占位文本。
+fn insert_inline_range(
+    text: &TextRef,
+    txn: &mut yrs::TransactionMut<'_>,
+    desired: &CollabBlock,
+    start: u32,
+    length: u32,
+) {
+    if desired.segments.is_empty() {
+        let units: Vec<_> = desired.text.encode_utf16().collect();
+        text.insert(
+            txn,
+            start,
+            &String::from_utf16(&units[start as usize..(start + length) as usize]).unwrap(),
+        );
+        return;
+    }
+    let mut offset = 0;
+    let mut cursor = start;
+    for segment in &desired.segments {
+        let units: Vec<_> = segment.text.encode_utf16().collect();
+        let end = offset + units.len() as u32;
+        let from = start.max(offset);
+        let to = (start + length).min(end);
+        if from < to {
+            if let Some(latex) = &segment.inline_latex {
+                text.insert_embed(
+                    txn,
+                    cursor,
+                    Any::Map(std::sync::Arc::new(HashMap::from([(
+                        "latex".into(),
+                        Any::String(latex.clone().into()),
+                    )]))),
+                );
+            } else {
+                text.insert(
+                    txn,
+                    cursor,
+                    &String::from_utf16(&units[(from - offset) as usize..(to - offset) as usize])
+                        .unwrap(),
+                );
+            }
+            cursor += to - from;
+        }
+        offset = end;
+    }
+}
+
+/// 比较原生对象与目标单字符投影；公式修改只替换该原子，保留未建模格式。
+/// 普通 U+FFFC 字符无 inline_latex 时仍是普通文字，不被误判为公式。
+fn reconcile_inline_formulas(
+    text: &TextRef,
+    txn: &mut yrs::TransactionMut<'_>,
+    desired: &CollabBlock,
+) {
+    let mut actual = HashMap::new();
+    let mut offset = 0;
+    for chunk in text.diff(txn, |_| ()) {
+        if let Some(latex) = inline_latex_value(&chunk.insert) {
+            actual.insert(
+                offset,
+                (latex, chunk.attributes.map(|a| *a).unwrap_or_default()),
+            );
+            offset += 1;
+        } else if let Out::Any(Any::String(value)) = chunk.insert {
+            offset += value.encode_utf16().count() as u32;
+        }
+    }
+    let mut wanted = HashMap::new();
+    offset = 0;
+    for segment in &desired.segments {
+        if let Some(latex) = &segment.inline_latex {
+            wanted.insert(offset, latex);
+        }
+        offset += segment.text.encode_utf16().count() as u32;
+    }
+    let positions: HashSet<_> = actual.keys().chain(wanted.keys()).copied().collect();
+    for position in positions {
+        let before = actual.get(&position);
+        let after = wanted.get(&position);
+        if before.map(|v| &v.0) == after.copied() {
+            continue;
+        }
+        let attributes = before.map(|v| v.1.clone()).unwrap_or_else(|| {
+            let mut offset = 0;
+            for chunk in text.diff(txn, |_| ()) {
+                let length = match &chunk.insert {
+                    Out::Any(Any::String(value)) => value.encode_utf16().count() as u32,
+                    _ => 1,
+                };
+                if position >= offset && position < offset + length {
+                    return chunk.attributes.map(|a| *a).unwrap_or_default();
+                }
+                offset += length;
+            }
+            Attrs::new()
+        });
+        text.remove_range(txn, position, 1);
+        if let Some(latex) = after {
+            text.insert_embed_with_attributes(
+                txn,
+                position,
+                Any::Map(std::sync::Arc::new(HashMap::from([(
+                    "latex".into(),
+                    Any::String((*latex).clone().into()),
+                )]))),
+                attributes,
+            );
+        } else {
+            text.insert_with_attributes(txn, position, "\u{fffc}", attributes);
+        }
+    }
 }
 
 /// 更新图片支持的布局键与题注。只写变化字段，保留旧尺寸/未知属性和题注原 Y.Text 格式。
@@ -1393,6 +1610,9 @@ fn apply_formats(text: &TextRef, txn: &mut yrs::TransactionMut<'_>, desired: &Co
                 s.encode_utf16().count() as u32,
                 c.attributes.map(|a| *a).unwrap_or_default(),
             )),
+            other if inline_latex_value(&other).is_some() => {
+                Some((1, c.attributes.map(|a| *a).unwrap_or_default()))
+            }
             _ => None,
         })
         .collect();
@@ -3317,6 +3537,282 @@ mod tests {
         assert_eq!(number(&props, &txn, "width"), Some(600.0));
         assert_eq!(number(&props, &txn, "height"), Some(200.0));
     }
+    /// 混合正文与公式占一个 UTF-16 位置；修改对象保留原生格式，删除不损坏周围 emoji。
+    #[test]
+    fn inline_formulas_project_edit_insert_delete_and_preserve_extensions() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-inline-formula.update");
+        let mut engine = engine(fixture);
+        assert!(project(&engine.doc, "fixture-doc").reason.is_none());
+        let before = engine.blocks();
+        let body = before.iter().find(|b| b.id == "p1").unwrap();
+        assert_eq!(body.text, "前😀\u{fffc}后\u{fffc}\u{fffc}\u{fffc}");
+        assert_eq!(
+            body.segments
+                .iter()
+                .filter(|s| s.inline_latex.is_some())
+                .count(),
+            3
+        );
+        assert_eq!(body.segments.last().unwrap().inline_latex, None);
+        let mut desired = before.clone();
+        desired
+            .iter_mut()
+            .find(|b| b.id == "p1")
+            .unwrap()
+            .segments
+            .iter_mut()
+            .find(|s| s.inline_latex.is_some())
+            .unwrap()
+            .inline_latex = Some("a^2".into());
+        engine.apply_block_snapshot(desired).unwrap();
+        let txn = engine.doc.transact();
+        let root = txn.get_map(ROOT_NAME).unwrap();
+        let block = map(&root, &txn, "p1").unwrap();
+        let Some(Out::YText(text)) = block.get(&txn, "children") else {
+            panic!()
+        };
+        let chunks = text.diff(&txn, |_| ());
+        let formula = chunks
+            .iter()
+            .find(|c| inline_latex_value(&c.insert).as_deref() == Some("a^2"))
+            .unwrap();
+        assert_eq!(
+            formula.attributes.as_ref().unwrap().get("customInline"),
+            Some(&Any::String("preserve-formula".into()))
+        );
+        assert_eq!(text.len(&txn), 8);
+        assert!(chunks.iter().any(|c| c
+            .attributes
+            .as_ref()
+            .is_some_and(|a| a.contains_key("a:link"))));
+        drop(txn);
+        // 插到既有公式前，新对象不得把已有对象当成普通 U+FFFC 替换。
+        let mut desired = engine.blocks();
+        let body = desired.iter_mut().find(|b| b.id == "p1").unwrap();
+        let mut inserted = body
+            .segments
+            .iter()
+            .find(|s| s.inline_latex.is_some())
+            .unwrap()
+            .clone();
+        inserted.inline_latex = Some("inserted".into());
+        inserted.bold = false;
+        body.segments.insert(1, inserted);
+        body.text = body.segments.iter().map(|s| s.text.as_str()).collect();
+        engine.apply_block_snapshot(desired).unwrap();
+        let after = engine.blocks();
+        let body = after.iter().find(|b| b.id == "p1").unwrap();
+        assert_eq!(
+            body.segments
+                .iter()
+                .filter_map(|s| s.inline_latex.as_deref())
+                .collect::<Vec<_>>(),
+            ["inserted", "a^2", "x^2", "x^2"]
+        );
+        let mut deleted = after;
+        let body = deleted.iter_mut().find(|b| b.id == "p1").unwrap();
+        body.segments
+            .retain(|s| s.inline_latex.as_deref() != Some("inserted"));
+        body.text = body.segments.iter().map(|s| s.text.as_str()).collect();
+        engine.apply_block_snapshot(deleted).unwrap();
+        assert_eq!(
+            engine.blocks().iter().find(|b| b.id == "p1").unwrap().text,
+            before[0].text
+        );
+        let unchanged = engine.blocks();
+        let mut invalid = unchanged.clone();
+        invalid
+            .iter_mut()
+            .find(|b| b.id == "p1")
+            .unwrap()
+            .segments
+            .iter_mut()
+            .find(|s| s.inline_latex.is_some())
+            .unwrap()
+            .inline_latex = Some("😀".repeat(10001));
+        assert!(engine
+            .apply_block_snapshot(invalid)
+            .unwrap_err()
+            .contains("INVALID_INLINE_FORMULA"));
+        assert_eq!(engine.blocks(), unchanged);
+    }
+
+    /// 行内公式修改与另一端正文追加交换增量后收敛，两个操作不互相覆盖。
+    #[test]
+    fn inline_formula_and_adjacent_text_converge() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-inline-formula.update");
+        let mut left = engine(fixture);
+        let mut right = engine(fixture);
+        let mut a = left.blocks();
+        a[0].segments
+            .iter_mut()
+            .find(|s| s.inline_latex.is_some())
+            .unwrap()
+            .inline_latex = Some("remote^2".into());
+        let ua = left.apply_block_snapshot(a).unwrap();
+        let mut b = right.blocks();
+        b[0].segments.last_mut().unwrap().text.push_str("追加");
+        b[0].text.push_str("追加");
+        let ub = right.apply_block_snapshot(b).unwrap();
+        left.apply_cses_update(ub.v1_update).unwrap();
+        right.apply_cses_update(ua.v1_update).unwrap();
+        assert_eq!(left.blocks(), right.blocks());
+        assert!(left.blocks()[0].text.ends_with("追加"));
+        assert_eq!(
+            left.blocks()[0]
+                .segments
+                .iter()
+                .find_map(|s| s.inline_latex.as_deref()),
+            Some("remote^2")
+        );
+    }
+
+    /// 公式保留 void 结构、扩展属性和 TeX 原文；非法补丁在任何写入前拒绝。
+    #[test]
+    fn formula_projection_patches_and_validation_are_atomic() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-formula.update");
+        let mut engine = engine(fixture);
+        let before = engine.blocks();
+        assert!(project(&engine.doc, "fixture-doc").reason.is_none());
+        assert_eq!(
+            before.iter().filter(|b| b.block_type == "formula").count(),
+            5
+        );
+        assert!(before
+            .iter()
+            .filter(|b| b.block_type == "formula")
+            .all(|b| b.text.is_empty() && b.segments.is_empty() && b.resource.is_some()));
+        assert_eq!(
+            before.last().unwrap().parent_id.as_deref(),
+            Some("formula-callout")
+        );
+        let mut desired = before.clone();
+        desired
+            .iter_mut()
+            .find(|b| b.id == "formula-1")
+            .unwrap()
+            .resource
+            .as_mut()
+            .unwrap()
+            .property_edits = Some(r#"{"latex":{"value":"E=mc^2"}}"#.into());
+        engine.apply_block_snapshot(desired).unwrap();
+        // 陈旧完整属性只是投影，无显式补丁不重放。
+        engine.apply_block_snapshot(before).unwrap();
+        let txn = engine.doc.transact();
+        let blocks = txn.get_map(ROOT_NAME).unwrap();
+        let formula = map(&blocks, &txn, "formula-1").unwrap();
+        let props = map(&formula, &txn, "props").unwrap();
+        assert_eq!(
+            out_string(props.get(&txn, "latex")).as_deref(),
+            Some("E=mc^2")
+        );
+        assert!(props.contains_key(&txn, "customFormula"));
+        assert!(!props.contains_key(&txn, "url"));
+        assert!(!props.contains_key(&txn, "src"));
+        assert!(matches!(
+            formula.get(&txn, "children"),
+            Some(Out::YArray(_))
+        ));
+        drop(txn);
+        for patch in [
+            r#"{"latex":{"value":123}}"#.to_owned(),
+            r#"{"url":{"value":"https://example.test"}}"#.to_owned(),
+            serde_json::json!({"latex": {"value": "😀".repeat(10001)}}).to_string(),
+        ] {
+            let unchanged = engine.blocks();
+            let mut desired = unchanged.clone();
+            desired
+                .iter_mut()
+                .find(|b| b.id == "formula-1")
+                .unwrap()
+                .resource
+                .as_mut()
+                .unwrap()
+                .property_edits = Some(patch);
+            assert!(engine.apply_block_snapshot(desired).is_err());
+            assert_eq!(engine.blocks(), unchanged);
+        }
+        for (patch, expected) in [
+            (r#"{"latex":{}}"#, "{}"),
+            (r#"{"latex":{"value":null}}"#, r#"{"latex":null}"#),
+            (r#"{"latex":{"value":""}}"#, r#"{"latex":""}"#),
+        ] {
+            let mut desired = engine.blocks();
+            desired
+                .iter_mut()
+                .find(|b| b.id == "formula-empty")
+                .unwrap()
+                .resource
+                .as_mut()
+                .unwrap()
+                .property_edits = Some(patch.into());
+            engine.apply_block_snapshot(desired).unwrap();
+            assert_eq!(
+                engine
+                    .blocks()
+                    .iter()
+                    .find(|b| b.id == "formula-empty")
+                    .unwrap()
+                    .resource
+                    .as_ref()
+                    .unwrap()
+                    .properties,
+                expected
+            );
+        }
+        let mut desired = engine.blocks();
+        let original = desired
+            .iter()
+            .find(|b| b.id == "formula-empty")
+            .unwrap()
+            .clone();
+        let mut new = original;
+        new.id = "new-formula".into();
+        new.resource.as_mut().unwrap().properties = r#"{"latex":"x^2"}"#.into();
+        new.resource.as_mut().unwrap().property_edits = None;
+        desired.push(new);
+        engine.apply_block_snapshot(desired).unwrap();
+        let txn = engine.doc.transact();
+        let blocks = txn.get_map(ROOT_NAME).unwrap();
+        let new = map(&blocks, &txn, "new-formula").unwrap();
+        assert_eq!(
+            out_string(new.get(&txn, "nodeType")).as_deref(),
+            Some("void")
+        );
+        let props = map(&new, &txn, "props").unwrap();
+        assert_eq!(out_string(props.get(&txn, "latex")).as_deref(), Some("x^2"));
+        assert!(!props.contains_key(&txn, "src"));
+    }
+
+    /// 两端同时修改同一公式后交换 Yjs update，按 CRDT 冲突规则收敛。
+    #[test]
+    fn concurrent_formula_edits_converge() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-formula.update");
+        let mut left = engine(fixture);
+        let mut right = engine(fixture);
+        let mut a = left.blocks();
+        a.iter_mut()
+            .find(|b| b.id == "formula-1")
+            .unwrap()
+            .resource
+            .as_mut()
+            .unwrap()
+            .property_edits = Some(r#"{"latex":{"value":"a^2"}}"#.into());
+        let ua = left.apply_block_snapshot(a).unwrap();
+        let mut b = right.blocks();
+        b.iter_mut()
+            .find(|b| b.id == "formula-1")
+            .unwrap()
+            .resource
+            .as_mut()
+            .unwrap()
+            .property_edits = Some(r#"{"latex":{"value":"b^2"}}"#.into());
+        let ub = right.apply_block_snapshot(b).unwrap();
+        left.apply_cses_update(ub.v1_update).unwrap();
+        right.apply_cses_update(ua.v1_update).unwrap();
+        assert_eq!(left.blocks(), right.blocks());
+    }
+
     /// 桌面全部分割线与嵌套结构投影为 void；单字段补丁保留扩展属性及 null/缺失语义。
     #[test]
     fn divider_projection_patches_and_invalid_edits_are_atomic() {

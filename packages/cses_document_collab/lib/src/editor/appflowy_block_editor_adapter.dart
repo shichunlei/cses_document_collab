@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cses_document_collab/src/model/collab_divider.dart';
+import 'package:cses_document_collab/src/model/collab_formula.dart';
+import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
 
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 
@@ -206,7 +208,17 @@ void registerCsesRichTextAttributes() {
   }
 }
 
+/// 不可变富文本片段，行内公式仅占一个 U+FFFC，使用属性投影恢复原生对象。
+/// 调用方持有原文；该类型不创建编辑器、连接或可释放资源。
+/// ```dart
+/// import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
+/// const formula = CollabEditorTextSegment(text: '\uFFFC', inlineLatex: 'x^2');
+/// ```
 final class CollabEditorTextSegment {
+  /// [text] 为正文或公式单字符位置，[inlineLatex] 非 null 时只允许 U+FFFC。
+  /// [bold]、[italic]、[underline]、[strikethrough]、[code] 默认 false，分别控制对应格式。
+  /// [textColor] 和 [backgroundColor] 为原始颜色字符串，null 表示未显式指定。
+  /// [superscript]、[subscript] 默认 false，分别控制上下标；原文及属性不自动规范化。
   const CollabEditorTextSegment({
     required this.text,
     this.bold = false,
@@ -218,14 +230,28 @@ final class CollabEditorTextSegment {
     this.backgroundColor,
     this.superscript = false,
     this.subscript = false,
+    this.inlineLatex,
   });
 
+  /// 正文文本；行内公式必须为单个 U+FFFC。
   final String text;
+
+  /// 是否加粗，默认 false。
   final bool bold;
+
+  /// 是否斜体，默认 false。
   final bool italic;
+
+  /// 是否有下划线，默认 false。
   final bool underline;
+
+  /// 是否有删除线，默认 false。
   final bool strikethrough;
+
+  /// 是否为行内代码样式，默认 false。
   final bool code;
+
+  /// 显式前景颜色原值，null 时继承正文。
   final String? textColor;
 
   /// Inline highlight serialized from AppFlowy's `bg_color` delta attribute.
@@ -234,9 +260,17 @@ final class CollabEditorTextSegment {
   /// the payload makes the same highlight render consistently after a remote
   /// Yrs update is converted back into an AppFlowy document.
   final String? backgroundColor;
+
+  /// 是否为上标，默认 false。
   final bool superscript;
+
+  /// 是否为下标，默认 false。
   final bool subscript;
 
+  /// 行内公式源码；非 null 时 text 为单个 U+FFFC，原生层恢复 {latex: …} 对象。
+  final String? inlineLatex;
+
+  /// 是否需要保留显式分段；公式即使没有文字格式也必须保留对象信息。
   bool get isStyled =>
       bold ||
       italic ||
@@ -246,8 +280,10 @@ final class CollabEditorTextSegment {
       textColor != null ||
       backgroundColor != null ||
       superscript ||
-      subscript;
+      subscript ||
+      inlineLatex != null;
 
+  /// AppFlowy 内存属性；inlineLatex 使用私有键，不作为桌面文字格式保存。
   Attributes get attributes => {
     if (bold) AppFlowyRichTextKeys.bold: true,
     if (italic) AppFlowyRichTextKeys.italic: true,
@@ -259,8 +295,10 @@ final class CollabEditorTextSegment {
       AppFlowyRichTextKeys.backgroundColor: backgroundColor,
     if (superscript) csesSuperscriptAttribute: true,
     if (subscript) csesSubscriptAttribute: true,
+    if (inlineLatex != null) collabInlineLatexAttribute: inlineLatex,
   };
 
+  /// 基于全部原文、格式与公式字段计算哈希。
   @override
   int get hashCode => Object.hash(
     text,
@@ -273,8 +311,10 @@ final class CollabEditorTextSegment {
     backgroundColor,
     superscript,
     subscript,
+    inlineLatex,
   );
 
+  /// 将 [other] 与当前不可变片段的全部字段比较。
   @override
   bool operator ==(Object other) {
     return other is CollabEditorTextSegment &&
@@ -287,7 +327,8 @@ final class CollabEditorTextSegment {
         other.textColor == textColor &&
         other.backgroundColor == backgroundColor &&
         other.superscript == superscript &&
-        other.subscript == subscript;
+        other.subscript == subscript &&
+        other.inlineLatex == inlineLatex;
   }
 }
 
@@ -471,8 +512,9 @@ final class AppFlowyBlockEditorAdapter {
   String get text => blocks.map((block) => block.text).join('\n');
 
   /// Applies canonical Rust/Yrs blocks without publishing them as local edits.
+  /// 行内公式或格式更新采用 Delta 局部差量，保留对象外的正文与光标位置。
   /// [nextBlocks] 是当前权威投影，空列表显示一个 UI 空段落；Future 在事务完成后结束。
-  /// 块身份、类型、顺序一致时原位更新文字、媒体及分割线属性，保留组件、选区与输入连接；
+  /// 块身份、类型、顺序一致时原位更新文字、媒体、分割线及公式属性，保留组件、选区与输入连接；
   /// URL、尺寸和题注复用节点映射，移除的可选投影显式清空。结构不同才重建节点。
   /// 不记录本地撤销或发送 WS；销毁后不执行，事务异常向调用边界传播。
   /// 正式编号及原始设置更新内存投影，不进入历史；成功转换后清除 replacesId。
@@ -506,6 +548,7 @@ final class AppFlowyBlockEditorAdapter {
               (currentNodes[index].type == csesUnsupportedBlockType ||
                   currentNodes[index].type == csesCalloutBlockType ||
                   currentNodes[index].type == collabDividerType ||
+                  currentNodes[index].type == collabFormulaType ||
                   currentNodes[index].delta != null ||
                   _isUrlBackedBlock(targetBlocks[index].blockType)),
         ).every((matches) => matches);
@@ -517,7 +560,8 @@ final class AppFlowyBlockEditorAdapter {
         final target = targetBlocks[index];
         if (node.type == csesUnsupportedBlockType) continue;
         if (_isUrlBackedBlock(target.blockType) ||
-            target.blockType == collabDividerType) {
+            target.blockType == collabDividerType ||
+            target.blockType == collabFormulaType) {
           if (currentBlocks[index] != target) {
             // 统一复用创建节点时的协议映射，避免 URL/布局/题注形成两套编码。
             // updateNode 合并属性，故可选图片投影缺失时需要显式 null 删除旧值。
@@ -534,13 +578,12 @@ final class AppFlowyBlockEditorAdapter {
         if (node.type == csesCalloutBlockType) {
           // Container content is represented by its child nodes.
         } else if (!_segmentsEqual(currentSegments, target.segments)) {
-          final currentLength = node.delta?.length ?? 0;
-          if (currentLength > 0) {
-            transaction.deleteText(node, 0, currentLength);
-          }
-          final targetDelta = _deltaFromBlock(target);
-          if (targetDelta.isNotEmpty) {
-            transaction.insertTextDelta(node, 0, targetDelta);
+          final currentDelta = node.delta ?? Delta();
+          final patch = currentDelta.diff(_deltaFromBlock(target));
+          if (patch.isNotEmpty) {
+            transaction.add(
+              UpdateTextOperation(node.path, patch, patch.invert(currentDelta)),
+            );
           }
         } else {
           final currentText = node.delta?.toPlainText() ?? '';
@@ -633,13 +676,14 @@ final class AppFlowyBlockEditorAdapter {
   /// 类型转换生成新身份并记录来源供 Rust 保留扩展数据。
   /// 远端回放及销毁后不发布；Undo/Redo 的历史身份经文档内映射恢复为当前可替换来源。
   /// 仅明确修改编号设置属性的 UpdateOperation 生成编号写入意图；普通文字/结构快照
-  /// 即使携带旧设置也不会覆盖原生 start/continuePrevious。分割线同样只发布明确的单字段补丁。
+  /// 即使携带旧设置也不会覆盖原生 start/continuePrevious。分割线和公式同样只发布明确的单字段补丁。
   /// 撤销和重做复用相同路径。
   void _handleTransaction(EditorTransactionValue value) {
     if (_disposed || _applyingRemote) {
       return;
     }
     if (value.$1 == TransactionTime.before) {
+      resolveCollabInlineFormulaCommands(editorState, value.$2);
       _resolveNumberingTargets(value.$2);
       _protectUnsupportedBlocks(value.$2);
       return;
@@ -649,6 +693,11 @@ final class AppFlowyBlockEditorAdapter {
     final resourceEdits = <Node, Set<String>>{};
     for (final operation in value.$2.operations.whereType<UpdateOperation>()) {
       final node = editorState.getNodeAtPath(operation.path);
+      if (node != null &&
+          node.type == collabFormulaType &&
+          operation.attributes.containsKey(collabFormulaAttribute)) {
+        resourceEdits.putIfAbsent(node, () => {}).add('latex');
+      }
       if (node != null && node.type == collabDividerType) {
         for (final key in collabDividerKeys) {
           if (operation.attributes.containsKey(dividerPropertyAttribute(key))) {
@@ -896,13 +945,25 @@ final class AppFlowyBlockEditorAdapter {
 
   /// 将权威 [block] 转为 AppFlowy 节点，图片保存强类型专属数据的 Map 投影。
   /// 题注留在资源属性而非 AppFlowy children；实际父子关系由 Rust 的共享类型持有。
-  /// 分割线保存白名单原始属性和独立历史字段，不生成 Delta 或 URL。
+  /// 分割线与公式保存白名单原始属性和独立历史字段，不生成 Delta 或 URL。
   static Node _nodeFromBlock(CollabEditorBlock block) {
     if (block.blockType == csesUnsupportedBlockType) {
       return Node(
         type: csesUnsupportedBlockType,
         id: block.id,
         attributes: {collabBlockIdAttribute: block.id},
+      );
+    }
+    if (block.blockType == collabFormulaType) {
+      return Node(
+        type: collabFormulaType,
+        id: block.id,
+        attributes: {
+          collabBlockIdAttribute: block.id,
+          ...collabFormulaNodeAttributes(
+            block.resource ?? const CollabResource(),
+          ),
+        },
       );
     }
     if (block.blockType == collabDividerType) {
@@ -1032,7 +1093,7 @@ final class AppFlowyBlockEditorAdapter {
   /// 图片属性显式恢复为强类型；远端回放期间的发布抑制由调用方负责。
   /// 转换生成新的协同身份，历史身份链保证 Undo/Redo 仍替换当前块，保留 Rust 原生扩展属性。
   /// [numberingNodes] 默认空集合，只有当前本地事务明确修改编号设置的节点才生成写入意图。
-  /// [codeEdits] 和 [resourceEdits] 默认空，分别指定代码头部及资源/分割线的显式字段修改；
+  /// [codeEdits] 和 [resourceEdits] 默认空，分别指定代码头部及资源/分割线/公式的显式字段修改；
   /// 仅指定字段产生补丁，其他原始属性保持只读投影，不重放到权威文档。
   /// 恢复为有序列表的历史节点保留其编号投影，Rust 仅在新身份替换时用它初始化原始设置；
   /// 正常新转入有序列表的节点由类型命令移除旧投影，走默认续号。非有序目标清理内存编号数据。
@@ -1104,7 +1165,12 @@ final class AppFlowyBlockEditorAdapter {
         blockTextColor: node.type == csesCalloutBlockType
             ? node.attributes[csesBlockTextColorAttribute] as String?
             : null,
-        resource: node.type == collabDividerType
+        resource: node.type == collabFormulaType
+            ? readCollabFormula(
+                node.attributes,
+                edited: resourceEdits[node]?.contains('latex') == true,
+              )
+            : node.type == collabDividerType
             ? CollabDivider.readAttributes(
                 node.attributes,
                 edited: resourceEdits[node] ?? const {},
@@ -1190,9 +1256,11 @@ final class AppFlowyBlockEditorAdapter {
     return value is String && value.isNotEmpty ? value : node.id;
   }
 
-  /// 将借用 [node] 映射为投影类型，分割线保持无正文的独立类型。
+  /// 将借用 [node] 映射为投影类型，分割线与公式保持无正文的独立类型。
   static String _nodeBlockType(Node node) {
-    if (isCollabResourceType(node.type) || node.type == collabDividerType) {
+    if (isCollabResourceType(node.type) ||
+        node.type == collabDividerType ||
+        node.type == collabFormulaType) {
       return node.type;
     }
     if (node.type == csesUnsupportedBlockType) return csesUnsupportedBlockType;
@@ -1224,6 +1292,8 @@ final class AppFlowyBlockEditorAdapter {
     return delta;
   }
 
+  /// 从借用 [node] 读取文字与单字符公式投影，拆开相同属性合并的多个原子。
+  /// 普通字符不继承公式身份；未知 AppFlowy 属性由其他适配边界处理。
   static List<CollabEditorTextSegment> _readNodeSegments(Node node) {
     final delta = node.delta;
     if (delta == null) {
@@ -1231,10 +1301,26 @@ final class AppFlowyBlockEditorAdapter {
     }
     final segments = delta
         .whereType<TextInsert>()
+        .expand((operation) {
+          if (operation.attributes?[collabInlineLatexAttribute] is! String) {
+            return [operation];
+          }
+          return operation.text.runes.map(
+            (rune) => TextInsert(
+              String.fromCharCode(rune),
+              attributes: {
+                ...?operation.attributes,
+                if (rune != 0xfffc) collabInlineLatexAttribute: null,
+              },
+            ),
+          );
+        })
         .map((operation) {
           final attributes = operation.attributes ?? const <String, Object>{};
           return CollabEditorTextSegment(
             text: operation.text,
+            inlineLatex:
+                operation.attributes?[collabInlineLatexAttribute] as String?,
             bold: attributes[AppFlowyRichTextKeys.bold] == true,
             italic: attributes[AppFlowyRichTextKeys.italic] == true,
             underline: attributes[AppFlowyRichTextKeys.underline] == true,
@@ -1274,9 +1360,11 @@ final class AppFlowyBlockEditorAdapter {
       blockType == NumberedListBlockKeys.type ||
       blockType == TodoListBlockKeys.type;
 
-  /// 读取借用 [node] 的正文或资源地址，容器和分割线不提供文字。
+  /// 读取借用 [node] 的正文或资源地址，容器、分割线和公式不提供文字。
   static String _readNodePlainText(Node node) {
-    if (node.type == csesCalloutBlockType || node.type == collabDividerType) {
+    if (node.type == csesCalloutBlockType ||
+        node.type == collabDividerType ||
+        node.type == collabFormulaType) {
       return "";
     }
     // Media/embed nodes intentionally have no Delta. Their URL is serialized

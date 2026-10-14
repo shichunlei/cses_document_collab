@@ -27,22 +27,36 @@ const LEGACY_BLOCK_ID: &str = "legacy-shared-text";
 
 static ENGINE: Lazy<Mutex<Option<CollabEngine>>> = Lazy::new(|| Mutex::new(None));
 
+/// 富文本片段投影；行内公式以单个对象替换字符占据一个 UTF-16 光标位置。
+/// `inline_latex` 只携带桌面 embed 原文，不作为 Y.Text 格式属性保存。
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CollabTextSegment {
+    /// 正文或单个对象替换字符；长度采用 UTF-16，与 Yjs/Flutter 光标一致。
     pub text: String,
+    /// 是否加粗。
     pub bold: bool,
+    /// 是否斜体。
     pub italic: bool,
+    /// 是否有下划线。
     pub underline: bool,
+    /// 是否有删除线。
     pub strikethrough: bool,
+    /// 是否使用行内代码格式。
     pub code: bool,
+    /// 显式文字颜色原值；None 表示继承。
     pub text_color: Option<String>,
     /// Inline background/highlight color encoded as an ARGB string.
     ///
     /// This stays distinct from `text_color` so peers can independently merge
     /// foreground and background formatting on the same Yrs text range.
     pub background_color: Option<String>,
+    /// 是否为上标。
     pub superscript: bool,
+    /// 是否为下标。
     pub subscript: bool,
+    /// 行内公式的 LaTeX 原文；Some 时 text 必须是单个 U+FFFC，None 为普通文本。
+    /// 空字符串的桌面 embed 可读取；本地编辑为空按桌面语义删除对象。
+    pub inline_latex: Option<String>,
 }
 
 /// 图片题注的编辑投影；正文仍属于原 caption 块的 Y.Text，格式与未知元数据留在 Doc 中。
@@ -798,12 +812,15 @@ fn text_segments_for_schema<T: ReadTxn>(
         .diff(transaction, |_| ())
         .into_iter()
         .filter_map(|chunk| {
+            let inline_latex = formal.then(|| inline_latex_value(&chunk.insert)).flatten();
             let text = match chunk.insert {
                 Out::Any(Any::String(value)) => value.to_string(),
+                _ if inline_latex.is_some() => "\u{fffc}".into(),
                 _ => return None,
             };
             let attributes = chunk.attributes.as_deref();
             Some(CollabTextSegment {
+                inline_latex,
                 text,
                 bold: attribute_enabled(attributes, schema_attribute("bold", formal)),
                 italic: attribute_enabled(attributes, schema_attribute("italic", formal)),
@@ -837,6 +854,29 @@ fn text_segments_for_schema<T: ReadTxn>(
     segments
 }
 
+/// 识别桌面唯一键为 latex 的字符串 embed，其他对象不进入可编辑投影。
+fn inline_latex_value(value: &Out) -> Option<String> {
+    match value {
+        Out::Any(Any::Map(values)) if values.len() == 1 => match values.get("latex") {
+            Some(Any::String(latex)) => Some(latex.to_string()),
+            _ => None,
+        },
+        _ => None,
+    }
+}
+
+/// 将混合 Y.Text 投影为 UTF-16 定位文本；每个非文字对象占一个 U+FFFC。
+/// 未适配对象仍由调用方施加只读保护，此函数不解包或覆盖它们。
+fn projected_inline_text<T: ReadTxn>(text: &yrs::TextRef, txn: &T) -> String {
+    text.diff(txn, |_| ())
+        .into_iter()
+        .map(|chunk| match chunk.insert {
+            Out::Any(Any::String(value)) => value.to_string(),
+            _ => "\u{fffc}".into(),
+        })
+        .collect()
+}
+
 fn attribute_enabled(attributes: Option<&Attrs>, key: &str) -> bool {
     matches!(
         attributes.and_then(|attributes| attributes.get(key)),
@@ -862,6 +902,7 @@ impl CollabTextSegment {
             || self.background_color.is_some()
             || self.superscript
             || self.subscript
+            || self.inline_latex.is_some()
     }
 
     fn attributes(&self) -> Attrs {
@@ -986,8 +1027,14 @@ fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(
         } else {
             ancestors.clear();
         }
-        if block.block_type == "divider" && (!block.text.is_empty() || !block.segments.is_empty()) {
-            return Err("INVALID_DIVIDER: 分割线不能存储正文".into());
+        if matches!(block.block_type.as_str(), "divider" | "formula")
+            && (!block.text.is_empty() || !block.segments.is_empty())
+        {
+            return Err(if block.block_type == "formula" {
+                "INVALID_FORMULA: 公式不能存储正文".into()
+            } else {
+                "INVALID_DIVIDER: 分割线不能存储正文".into()
+            });
         }
         if block.block_type == "callout" {
             if !block.text.is_empty() || !block.segments.is_empty() || ancestors.len() >= 256 {
@@ -1004,6 +1051,18 @@ fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(
             && !(allow_placeholders && block.block_type == blockcraft::UNSUPPORTED_BLOCK_TYPE)
         {
             return Err(format!("UNSUPPORTED_BLOCK_TYPE: {}", block.block_type));
+        }
+        if block.segments.iter().any(|segment| {
+            segment.inline_latex.as_ref().is_some_and(|latex| {
+                segment.text != "\u{fffc}"
+                    || latex.encode_utf16().count() > 20_000
+                    || block.block_type == "code"
+            })
+        }) {
+            return Err("INVALID_INLINE_FORMULA: 行内公式位置或长度无效".into());
+        }
+        if !allow_placeholders && block.segments.iter().any(|s| s.inline_latex.is_some()) {
+            return Err("INVALID_INLINE_FORMULA: 行内公式仅用于正式文档".into());
         }
         if !block.segments.is_empty()
             && block
@@ -1072,6 +1131,7 @@ fn is_supported_block_type(block_type: &str) -> bool {
             | "code"
             | "callout"
             | "divider"
+            | "formula"
             // URL-backed blocks reuse the existing per-block Y.Text payload:
             // their `text` contains the resource URL rather than editable
             // paragraph content. This preserves convergence without a schema
@@ -1350,6 +1410,7 @@ mod tests {
 
     fn styled_segment(text: &str, bold: bool, strikethrough: bool) -> CollabTextSegment {
         CollabTextSegment {
+            inline_latex: None,
             text: text.to_owned(),
             bold,
             italic: false,

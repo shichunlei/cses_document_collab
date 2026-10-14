@@ -148,3 +148,36 @@ fixture('blockcraft-divider', (_, m) => {
   m.set('nested-divider', block('nested-divider', 'divider', 'void', [], {}));
   m.set('nested-text', block('nested-text', 'paragraph', 'editable', [{insert: '嵌套后置段落'}]));
 });
+
+// FormulaBlockSchema 的 void + props.latex；包含空值、未知 TeX 与高亮容器。
+fixture('blockcraft-formula', (_, m) => {
+  m.get('fixture-doc').get('children').push(['formula-1', 'formula-empty', 'formula-invalid', 'formula-null', 'formula-callout']);
+  m.set('formula-1', block('formula-1', 'formula', 'void', [], {
+    latex: String.raw`\frac{a}{b}+\sqrt{x}`, customFormula: { keep: true },
+  }));
+  m.set('formula-empty', block('formula-empty', 'formula', 'void', [], {}));
+  m.set('formula-invalid', block('formula-invalid', 'formula', 'void', [], { latex: String.raw`\unknowncommand{` }));
+  m.set('formula-null', block('formula-null', 'formula', 'void', [], { latex: null }));
+  m.set('formula-callout', block('formula-callout', 'callout', 'block', ['nested-formula'], { prefix: '💡' }));
+  m.set('nested-formula', block('nested-formula', 'formula', 'void', [], { latex: 'E=mc^2' }));
+});
+
+// 行内公式占 Y.Text 一个位置，覆盖多个对象、emoji、普通 U+FFFC 与未知格式。
+fixture('blockcraft-inline-formula', (_, m) => {
+  const text = m.get('p1').get('children');
+  text.delete(0, text.length);
+  text.insert(0, '前😀', { 'a:link': 'https://example.test', customInline: 'preserve-text' });
+  text.insertEmbed(text.length, { latex: String.raw`\frac{a}{b}` }, { 'a:bold': true, customInline: 'preserve-formula' });
+  text.insert(text.length, '后');
+  text.insertEmbed(text.length, { latex: 'x^2' });
+  text.insertEmbed(text.length, { latex: 'x^2' });
+  text.insert(text.length, '\ufffc');
+  const title = m.get('p2').get('children');
+  title.insertEmbed(title.length, { latex: String.raw`\sqrt{x}` });
+  m.get('todo').get('children').insertEmbed(0, { latex: '' });
+  m.get('fixture-doc').get('children').push(['inline-callout']);
+  m.set('inline-callout', block('inline-callout', 'callout', 'block', ['inline-child'], { prefix: '💡' }));
+  m.set('inline-child', block('inline-child', 'paragraph', 'editable', [
+    { insert: '嵌套' }, { insert: { latex: 'E=mc^2' } }, { insert: '文字' },
+  ]));
+});

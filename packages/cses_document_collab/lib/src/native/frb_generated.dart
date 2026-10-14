@@ -737,8 +737,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   CollabTextSegment dco_decode_collab_text_segment(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 10)
-      throw Exception('unexpected arr length: expect 10 but see ${arr.length}');
+    if (arr.length != 11)
+      throw Exception('unexpected arr length: expect 11 but see ${arr.length}');
     return CollabTextSegment(
       text: dco_decode_String(arr[0]),
       bold: dco_decode_bool(arr[1]),
@@ -750,6 +750,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       backgroundColor: dco_decode_opt_String(arr[7]),
       superscript: dco_decode_bool(arr[8]),
       subscript: dco_decode_bool(arr[9]),
+      inlineLatex: dco_decode_opt_String(arr[10]),
     );
   }
 
@@ -1080,6 +1081,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_backgroundColor = sse_decode_opt_String(deserializer);
     var var_superscript = sse_decode_bool(deserializer);
     var var_subscript = sse_decode_bool(deserializer);
+    var var_inlineLatex = sse_decode_opt_String(deserializer);
     return CollabTextSegment(
       text: var_text,
       bold: var_bold,
@@ -1091,6 +1093,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       backgroundColor: var_backgroundColor,
       superscript: var_superscript,
       subscript: var_subscript,
+      inlineLatex: var_inlineLatex,
     );
   }
 
@@ -1456,6 +1459,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_opt_String(self.backgroundColor, serializer);
     sse_encode_bool(self.superscript, serializer);
     sse_encode_bool(self.subscript, serializer);
+    sse_encode_opt_String(self.inlineLatex, serializer);
   }
 
   @protected

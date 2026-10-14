@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
 import 'dart:async';
 
@@ -8,6 +9,8 @@ import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'dart:math' as math;
 
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/src/editor/collab_formula_sheet.dart';
+import 'package:cses_document_collab/src/model/collab_formula.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
 import 'package:cses_document_collab/src/editor/collab_block_delete.dart';
@@ -1993,9 +1996,92 @@ class _AddBlockSheet extends StatelessWidget {
                               }
                             },
                           ),
-                          const _ActionShortcutTile(
+                          _ActionShortcutTile(
+                            key: const ValueKey('editor-shortcut-formula'),
                             icon: Icons.functions,
                             label: '公式',
+                            onTap: () async {
+                              try {
+                                final latex = await showCollabFormulaInput(
+                                  context,
+                                  editorState,
+                                );
+                                if (!context.mounted || latex == null) return;
+                                final selection = bookmark.resolve(editorState);
+                                if (selection == null) {
+                                  _showToolbarMessage(
+                                    context,
+                                    '插入位置已变化，请重新选择正文位置',
+                                  );
+                                  return;
+                                }
+                                final landing = await insertCollabFormula(
+                                  editorState,
+                                  selection,
+                                  latex,
+                                );
+                                if (context.mounted && landing != null) {
+                                  Navigator.pop<Selection>(context, landing);
+                                }
+                              } catch (error, stack) {
+                                CollabDiagnostics.report(
+                                  '插入公式失败',
+                                  error: error,
+                                  stackTrace: stack,
+                                  tag: 'DocCollab',
+                                );
+                                if (context.mounted) {
+                                  _showToolbarMessage(context, '插入失败，请重试');
+                                }
+                              }
+                            },
+                          ),
+                          _ActionShortcutTile(
+                            key: const ValueKey(
+                              'editor-shortcut-inline-formula',
+                            ),
+                            icon: Icons.functions,
+                            label: '行内公式',
+                            onTap: () async {
+                              try {
+                                final latex = await showCollabFormulaInput(
+                                  context,
+                                  editorState,
+                                );
+                                if (!context.mounted || latex == null) return;
+                                final selection = bookmark.resolve(editorState);
+                                if (selection == null) {
+                                  _showToolbarMessage(
+                                    context,
+                                    '插入位置已变化，请重新选择正文位置',
+                                  );
+                                  return;
+                                }
+                                final landing = await insertCollabInlineFormula(
+                                  editorState,
+                                  selection,
+                                  latex,
+                                );
+                                if (context.mounted && landing != null) {
+                                  Navigator.pop<Selection>(context, landing);
+                                } else if (context.mounted) {
+                                  _showToolbarMessage(
+                                    context,
+                                    '请选择同一段正文中的位置，公式内容不能为空',
+                                  );
+                                }
+                              } catch (error, stack) {
+                                CollabDiagnostics.report(
+                                  '插入行内公式失败',
+                                  error: error,
+                                  stackTrace: stack,
+                                  tag: 'DocCollab',
+                                );
+                                if (context.mounted) {
+                                  _showToolbarMessage(context, '插入失败，请重试');
+                                }
+                              }
+                            },
                           ),
                           _ActionShortcutTile(
                             key: const ValueKey('editor-shortcut-divider'),

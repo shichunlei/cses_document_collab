@@ -746,6 +746,7 @@ impl SseDecode for crate::api::collab::CollabTextSegment {
         let mut var_backgroundColor = <Option<String>>::sse_decode(deserializer);
         let mut var_superscript = <bool>::sse_decode(deserializer);
         let mut var_subscript = <bool>::sse_decode(deserializer);
+        let mut var_inlineLatex = <Option<String>>::sse_decode(deserializer);
         return crate::api::collab::CollabTextSegment {
             text: var_text,
             bold: var_bold,
@@ -757,6 +758,7 @@ impl SseDecode for crate::api::collab::CollabTextSegment {
             background_color: var_backgroundColor,
             superscript: var_superscript,
             subscript: var_subscript,
+            inline_latex: var_inlineLatex,
         };
     }
 }
@@ -1190,6 +1192,7 @@ impl flutter_rust_bridge::IntoDart for crate::api::collab::CollabTextSegment {
             self.background_color.into_into_dart().into_dart(),
             self.superscript.into_into_dart().into_dart(),
             self.subscript.into_into_dart().into_dart(),
+            self.inline_latex.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -1362,6 +1365,7 @@ impl SseEncode for crate::api::collab::CollabTextSegment {
         <Option<String>>::sse_encode(self.background_color, serializer);
         <bool>::sse_encode(self.superscript, serializer);
         <bool>::sse_encode(self.subscript, serializer);
+        <Option<String>>::sse_encode(self.inline_latex, serializer);
     }
 }
 

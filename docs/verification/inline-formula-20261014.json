@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-14",
+  "feature": "BlockCraft inline latex embed in ordinary editable text",
+  "device": {
+    "model": "HONOR X70 / MTN AN00",
+    "os": "Android 16"
+  },
+  "documentId": "6ac76e5375083c8c9f19cbd3",
+  "results": {
+    "add": "更多/添加→行内公式，输入\\frac{2026}{14}，原段落内保存，光标和键盘恢复",
+    "adjacentText": "公式后输入qa，公式与普通文字同行，点击对象打开行内公式面板",
+    "edit": "改为\\sqrt{625}，输入面板预览正确；根式intrinsic零宽度问题修复后，正文和只读预览正确",
+    "deleteHistory": "删除按钮移除对象；撤销恢复sqrt625，重做移除，未影响相邻标题和待办最终状态",
+    "cleanup": "qa及本次测试公式已删除，原空段落恢复；测试期间坐标误触造成标题合并/待办勾选，已撤回并清除重复文字，标题和待办最终恢复",
+    "finalApkReopen": "最终APK重新安装登录后首次同步出现SYNC_TIMEOUT，随后重新连接收到sync-status并恢复在线可编辑；170块保持。已有行内e=mc2正常显示并点击打开源码，取消未改写；原独立E=mc2仍保留。未据此认定断线恢复或服务端持久化ACK全流程通过。"
+  },
+  "automated": {
+    "flutterPackageFull": 668,
+    "flutterHost": 24,
+    "rust": 66,
+    "finalUiRegression": 53,
+    "staticAnalysis": "affected package and host passed",
+    "frb": "2.13.0 regenerated",
+    "nativeBuilds": [
+      "host debug",
+      "Android debug APK",
+      "iOS debug xcframework"
+    ]
+  },
+  "screenshots": [
+    "inline-formula-preview-20261014.png",
+    "inline-formula-edit-20261014.png",
+    "inline-formula-undo-20261014.png",
+    "inline-formula-deleted-20261014.png",
+    "inline-formula-reopened-20261014.png",
+    "inline-formula-existing-edit-20261014.png"
+  ],
+  "notVerified": [
+    "actual desktop UI bidirectional inline formula observation",
+    "iOS UI",
+    "reconnect",
+    "server persistence ACK"
+  ],
+  "limits": [
+    "code blocks and image captions keep unsupported inline-object protection",
+    "unknown inline objects remain protected",
+    "legacy localDraft rejects inline latex",
+    "editing source max 20000 UTF16 units",
+    "paragraph text changes require closing and reopening formula panel",
+    "stale formula history is refused instead of overwriting remote changes"
+  ]
+}

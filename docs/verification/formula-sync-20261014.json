@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-14",
+  "environment": "CSES PRE",
+  "device": {
+    "model": "HONOR X70 / MTN AN00",
+    "android": "16"
+  },
+  "documentId": "6ac76e5375083c8c9f19cbd3",
+  "testFormula": {
+    "inserted": "\\frac{1014}{7}+\\sqrt{529}",
+    "desktopEdit": "\\frac{1014}{7}+\\sqrt{625}"
+  },
+  "results": {
+    "androidInsert": {
+      "passed": true,
+      "evidence": "真实更多入口输入并保存，正文出现新独立公式，原文字保留，后置段落光标与键盘恢复"
+    },
+    "mobileToDesktopInsert": {
+      "passed": true,
+      "evidence": "用户在真实桌面编辑器观察确认收到新增公式"
+    },
+    "desktopToMobileEdit": {
+      "passed": true,
+      "evidence": "用户在桌面把529改为625；手机正文接收并显示625"
+    },
+    "remoteConflict": {
+      "passed": true,
+      "evidence": "更新到达时面板保留529草稿，提示其他设备修改，禁用保存；重新加载后原文和预览变为625",
+      "screenshot": "formula-sync-conflict-20261014.png"
+    },
+    "reload": {
+      "passed": true,
+      "screenshot": "formula-sync-reloaded-20261014.png"
+    },
+    "androidDeleteUndoRedo": {
+      "passed": true,
+      "evidence": "删除后公式消失；撤销恢复桌面最新625值；重做后公式再次消失，其他正文保留"
+    },
+    "mobileToDesktopDelete": {
+      "passed": true,
+      "evidence": "用户确认桌面测试公式消失，原E=mc2公式仍在"
+    }
+  },
+  "finalState": {
+    "testFormulaDeleted": true,
+    "existingFormulaPreserved": true,
+    "screenshot": "formula-sync-deleted-20261014.png"
+  },
+  "limitations": [
+    "桌面观察及编辑由用户执行并确认，未连接桌面UI自动化",
+    "不验证服务器持久化ACK、断线恢复、iOS或全量TeX方言",
+    "桌面行内对象会触发当前移动端整篇只读保护；用户移除行内对象后本轮独立公式验证恢复"
+  ]
+}

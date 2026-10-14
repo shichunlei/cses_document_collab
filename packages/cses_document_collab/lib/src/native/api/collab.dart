@@ -6,7 +6,7 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions are ignored because they are not marked as `pub`: `apply_block_snapshot`, `apply_cses_update`, `apply_remote_update`, `apply_text_segments_for_schema`, `apply_text_segments`, `attribute_enabled`, `attribute_string`, `attributes`, `block_text_name`, `blocks`, `compute_text_delta`, `create_compatible_doc`, `handle_wire_message`, `ignored_message`, `is_indentable_block_type`, `is_resource_block_type`, `is_styled`, `is_supported_alignment`, `is_supported_block_type`, `load_updates`, `migrate_legacy_text`, `open_result`, `open`, `out_bool`, `out_string`, `out_u32`, `persist_update`, `raw_block_ids`, `reconcile_order`, `schema_attribute`, `sync_step1`, `text_segments_for_schema`, `text_segments`, `utf16_len`, `validate_blocks`, `with_engine_mut`, `with_engine`
+// These functions are ignored because they are not marked as `pub`: `apply_block_snapshot`, `apply_cses_update`, `apply_remote_update`, `apply_text_segments_for_schema`, `apply_text_segments`, `attribute_enabled`, `attribute_string`, `attributes`, `block_text_name`, `blocks`, `compute_text_delta`, `create_compatible_doc`, `handle_wire_message`, `ignored_message`, `inline_latex_value`, `is_indentable_block_type`, `is_resource_block_type`, `is_styled`, `is_supported_alignment`, `is_supported_block_type`, `load_updates`, `migrate_legacy_text`, `open_result`, `open`, `out_bool`, `out_string`, `out_u32`, `persist_update`, `projected_inline_text`, `raw_block_ids`, `reconcile_order`, `remove_legacy_headers`, `schema_attribute`, `sync_step1`, `text_segments_for_schema`, `text_segments`, `utf16_len`, `validate_blocks`, `with_engine_mut`, `with_engine`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `CollabEngine`, `TextDelta`
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `assert_fields_are_eq`, `assert_fields_are_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`
 
@@ -391,13 +391,28 @@ class CollabResource {
           propertyEdits == other.propertyEdits;
 }
 
+/// 富文本片段投影；行内公式以单个对象替换字符占据一个 UTF-16 光标位置。
+/// `inline_latex` 只携带桌面 embed 原文，不作为 Y.Text 格式属性保存。
 class CollabTextSegment {
+  /// 正文或单个对象替换字符；长度采用 UTF-16，与 Yjs/Flutter 光标一致。
   final String text;
+
+  /// 是否加粗。
   final bool bold;
+
+  /// 是否斜体。
   final bool italic;
+
+  /// 是否有下划线。
   final bool underline;
+
+  /// 是否有删除线。
   final bool strikethrough;
+
+  /// 是否使用行内代码格式。
   final bool code;
+
+  /// 显式文字颜色原值；None 表示继承。
   final String? textColor;
 
   /// Inline background/highlight color encoded as an ARGB string.
@@ -405,8 +420,16 @@ class CollabTextSegment {
   /// This stays distinct from `text_color` so peers can independently merge
   /// foreground and background formatting on the same Yrs text range.
   final String? backgroundColor;
+
+  /// 是否为上标。
   final bool superscript;
+
+  /// 是否为下标。
   final bool subscript;
+
+  /// 行内公式的 LaTeX 原文；Some 时 text 必须是单个 U+FFFC，None 为普通文本。
+  /// 空字符串的桌面 embed 可读取；本地编辑为空按桌面语义删除对象。
+  final String? inlineLatex;
 
   const CollabTextSegment({
     required this.text,
@@ -419,6 +442,7 @@ class CollabTextSegment {
     this.backgroundColor,
     required this.superscript,
     required this.subscript,
+    this.inlineLatex,
   });
 
   @override
@@ -432,7 +456,8 @@ class CollabTextSegment {
       textColor.hashCode ^
       backgroundColor.hashCode ^
       superscript.hashCode ^
-      subscript.hashCode;
+      subscript.hashCode ^
+      inlineLatex.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -448,7 +473,8 @@ class CollabTextSegment {
           textColor == other.textColor &&
           backgroundColor == other.backgroundColor &&
           superscript == other.superscript &&
-          subscript == other.subscript;
+          subscript == other.subscript &&
+          inlineLatex == other.inlineLatex;
 }
 
 class OpenDocumentResult {
