@@ -38,6 +38,11 @@ class CustomShrinkWrappingViewport extends CustomViewport {
   /// rebuild this widget when the [offset] changes.
   ///
   /// The [offset] argument must not be null.
+  /// [key] identifies the widget. [axisDirection] and [crossAxisDirection]
+  /// control layout. [anchor] sets the zero-offset position. [offset] owns the
+  /// scroll position. [children] are slivers, and [center] selects the center
+  /// child. [cacheExtent] sets the cache amount in [cacheExtentStyle] units.
+  /// [cacheExtentStyle] selects pixels or viewport multiples.
   CustomShrinkWrappingViewport({
     super.key,
     super.axisDirection,
@@ -47,6 +52,7 @@ class CustomShrinkWrappingViewport extends CustomViewport {
     List<RenderSliver>? children,
     super.center,
     super.cacheExtent,
+    super.cacheExtentStyle,
     super.slivers,
   });
 
@@ -57,6 +63,7 @@ class CustomShrinkWrappingViewport extends CustomViewport {
   @override
   double get anchor => _anchor;
 
+  /// Creates the render viewport with the configured cache extent.
   @override
   CustomRenderShrinkWrappingViewport createRenderObject(BuildContext context) {
     return CustomRenderShrinkWrappingViewport(
@@ -64,10 +71,11 @@ class CustomShrinkWrappingViewport extends CustomViewport {
       crossAxisDirection: crossAxisDirection ?? Viewport.getDefaultCrossAxisDirection(context, axisDirection),
       offset: offset,
       anchor: anchor,
-      cacheExtent: cacheExtent,
+      scrollCacheExtent: _scrollCacheExtent,
     );
   }
 
+  /// Updates the render viewport's layout and cache settings from this widget.
   @override
   void updateRenderObject(BuildContext context, CustomRenderShrinkWrappingViewport renderObject) {
     renderObject
@@ -75,8 +83,7 @@ class CustomShrinkWrappingViewport extends CustomViewport {
       ..crossAxisDirection = crossAxisDirection ?? Viewport.getDefaultCrossAxisDirection(context, axisDirection)
       ..anchor = anchor
       ..offset = offset
-      ..cacheExtent = cacheExtent
-      ..cacheExtentStyle = cacheExtentStyle
+      ..scrollCacheExtent = _scrollCacheExtent
       ..clipBehavior = clipBehavior;
   }
 }
@@ -112,6 +119,11 @@ class CustomRenderShrinkWrappingViewport extends CustomRenderViewport {
   ///
   /// The [offset] must be specified. For testing purposes, consider passing a
   /// [ViewportOffset.zero] or [ViewportOffset.fixed].
+  ///
+  /// [axisDirection] and [crossAxisDirection] control layout. [offset] owns
+  /// the scroll position. [anchor] may extend beyond the unit interval.
+  /// [children] are slivers, [center] selects the center sliver, and
+  /// [scrollCacheExtent] controls cached content.
   CustomRenderShrinkWrappingViewport({
     super.axisDirection,
     required super.crossAxisDirection,
@@ -119,7 +131,7 @@ class CustomRenderShrinkWrappingViewport extends CustomRenderViewport {
     this._anchor = 0.0,
     super.children,
     super.center,
-    super.cacheExtent,
+    super.scrollCacheExtent,
   });
 
   double _anchor;
@@ -263,12 +275,12 @@ class CustomRenderShrinkWrappingViewport extends CustomRenderViewport {
     final reverseDirectionRemainingPaintExtent = centerOffset.clamp(0.0, mainAxisExtent);
     final forwardDirectionRemainingPaintExtent = (mainAxisExtent - centerOffset).clamp(0.0, mainAxisExtent);
 
-    switch (cacheExtentStyle) {
+    switch (scrollCacheExtent.style) {
       case CacheExtentStyle.pixel:
-        _calculatedCacheExtent = cacheExtent;
+        _calculatedCacheExtent = scrollCacheExtent.value;
         break;
       case CacheExtentStyle.viewport:
-        _calculatedCacheExtent = mainAxisExtent * cacheExtent!;
+        _calculatedCacheExtent = mainAxisExtent * scrollCacheExtent.value;
         break;
     }
 
@@ -447,6 +459,16 @@ abstract class CustomViewport extends MultiChildRenderObjectWidget {
   /// {@macro flutter.rendering.RenderViewportBase.cacheExtentStyle}
   final CacheExtentStyle cacheExtentStyle;
 
+  /// Converts the legacy numeric settings to the Flutter cache extent value.
+  ScrollCacheExtent? get _scrollCacheExtent {
+    final extent = cacheExtent;
+    if (extent == null) return null;
+    return switch (cacheExtentStyle) {
+      CacheExtentStyle.pixel => ScrollCacheExtent.pixels(extent),
+      CacheExtentStyle.viewport => ScrollCacheExtent.viewport(extent),
+    };
+  }
+
   /// {@macro flutter.material.Material.clipBehavior}
   ///
   /// Defaults to [Clip.hardEdge].
@@ -606,6 +628,12 @@ abstract class CustomRenderViewport extends RenderViewportBase<CustomSliverPhysi
   ///
   /// The [offset] must be specified. For testing purposes, consider passing a
   /// [ViewportOffset.zero] or [ViewportOffset.fixed].
+  ///
+  /// [axisDirection] and [crossAxisDirection] control layout directions.
+  /// [offset] owns the scroll position. [anchor] sets the zero-offset anchor.
+  /// [children] are viewport slivers, [center] selects the center sliver,
+  /// [scrollCacheExtent] controls the cached region, and [clipBehavior] clips
+  /// overflow.
   CustomRenderViewport({
     super.axisDirection,
     required super.crossAxisDirection,
@@ -613,12 +641,9 @@ abstract class CustomRenderViewport extends RenderViewportBase<CustomSliverPhysi
     double anchor = 0.0,
     List<RenderSliver>? children,
     RenderSliver? center,
-    super.cacheExtent,
-    super.cacheExtentStyle,
+    super.scrollCacheExtent,
     super.clipBehavior,
-  }) : assert(anchor >= 0.0 && anchor <= 1.0),
-       assert(cacheExtentStyle != CacheExtentStyle.viewport || cacheExtent != null),
-       _center = center {
+  }) : assert(anchor >= 0.0 && anchor <= 1.0), _center = center {
     addAll(children);
     if (center == null && firstChild != null) _center = firstChild;
   }

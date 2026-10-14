@@ -15,6 +15,22 @@ import 'package:flutter/widgets.dart';
 /// computed to allow scroll extents outside 0 to 1.  See [Viewport]
 /// for more information.
 class UnboundedViewport extends Viewport {
+  /// Creates an anchored viewport with the requested [scrollCacheExtent].
+  ///
+  /// [key] identifies the widget. [axisDirection] and [crossAxisDirection]
+  /// control layout direction. [offset] owns the scroll position. [center]
+  /// identifies the center sliver. [scrollCacheExtent] sets cached content,
+  /// [slivers] provides the contents, and [anchor] may extend outside 0–1.
+  ///
+  /// ```dart
+  /// import 'package:flutter/rendering.dart';
+  /// import 'package:flutter/widgets.dart';
+  ///
+  /// final viewport = UnboundedViewport(
+  ///   offset: ViewportOffset.zero(),
+  ///   scrollCacheExtent: const ScrollCacheExtent.pixels(500),
+  /// );
+  /// ```
   UnboundedViewport({
     super.key,
     super.axisDirection,
@@ -22,7 +38,7 @@ class UnboundedViewport extends Viewport {
     this._anchor = 0.0,
     required super.offset,
     super.center,
-    super.cacheExtent,
+    super.scrollCacheExtent,
     super.slivers,
   });
 
@@ -33,6 +49,7 @@ class UnboundedViewport extends Viewport {
   @override
   double get anchor => _anchor;
 
+  /// Creates the render viewport while preserving [scrollCacheExtent].
   @override
   RenderViewport createRenderObject(BuildContext context) {
     return UnboundedRenderViewport(
@@ -40,7 +57,7 @@ class UnboundedViewport extends Viewport {
       crossAxisDirection: crossAxisDirection ?? Viewport.getDefaultCrossAxisDirection(context, axisDirection),
       anchor: anchor,
       offset: offset,
-      cacheExtent: cacheExtent,
+      scrollCacheExtent: scrollCacheExtent,
     );
   }
 }
@@ -55,6 +72,21 @@ class UnboundedViewport extends Viewport {
 // comment.
 class UnboundedRenderViewport extends RenderViewport {
   /// Creates a viewport for [RenderSliver] objects.
+  ///
+  /// [axisDirection] and [crossAxisDirection] control layout. [offset] owns
+  /// the scroll position. [anchor] may extend outside 0–1. [children] are
+  /// slivers, [center] selects the center child, and [scrollCacheExtent]
+  /// controls cached content.
+  ///
+  /// ```dart
+  /// import 'package:flutter/rendering.dart';
+  ///
+  /// final viewport = UnboundedRenderViewport(
+  ///   crossAxisDirection: AxisDirection.right,
+  ///   offset: ViewportOffset.zero(),
+  ///   scrollCacheExtent: const ScrollCacheExtent.pixels(500),
+  /// );
+  /// ```
   UnboundedRenderViewport({
     super.axisDirection,
     required super.crossAxisDirection,
@@ -62,7 +94,7 @@ class UnboundedRenderViewport extends RenderViewport {
     this._anchor = 0.0,
     super.children,
     super.center,
-    super.cacheExtent,
+    super.scrollCacheExtent,
   });
 
   static const int _maxLayoutCycles = 10;
@@ -220,12 +252,12 @@ class UnboundedRenderViewport extends RenderViewport {
     final double reverseDirectionRemainingPaintExtent = centerOffset.clamp(0.0, mainAxisExtent);
     final double forwardDirectionRemainingPaintExtent = (mainAxisExtent - centerOffset).clamp(0.0, mainAxisExtent);
 
-    switch (cacheExtentStyle) {
+    switch (scrollCacheExtent.style) {
       case CacheExtentStyle.pixel:
-        _calculatedCacheExtent = cacheExtent;
+        _calculatedCacheExtent = scrollCacheExtent.value;
         break;
       case CacheExtentStyle.viewport:
-        _calculatedCacheExtent = mainAxisExtent * cacheExtent!;
+        _calculatedCacheExtent = mainAxisExtent * scrollCacheExtent.value;
         break;
     }
 

@@ -15,6 +15,25 @@ import 'wrapping.dart';
 class UnboundedCustomScrollView extends CustomScrollView {
   final bool _shrinkWrap;
 
+  /// Creates a scroll view that permits an anchor outside the unit interval.
+  ///
+  /// ```dart
+  /// import 'package:appflowy_editor/appflowy_editor.dart';
+  /// import 'package:flutter/widgets.dart';
+  ///
+  /// final view = UnboundedCustomScrollView(
+  ///   scrollCacheExtent: const ScrollCacheExtent.pixels(500),
+  ///   slivers: const [SliverToBoxAdapter(child: Text('Content'))],
+  /// );
+  /// ```
+  ///
+  /// [key] identifies the widget. [scrollDirection] selects the scrolling
+  /// axis. [reverse] reverses its direction. [controller] supplies the scroll
+  /// position. [primary] opts into the inherited primary controller.
+  /// [physics] configures user scrolling. [scrollCacheExtent] controls cached
+  /// content. [center] is the key of the center sliver. [slivers] are the
+  /// viewport contents. [semanticChildCount] declares semantic children.
+  /// [dragStartBehavior] controls drag gesture start behavior.
   const UnboundedCustomScrollView({
     super.key,
     super.scrollDirection,
@@ -25,7 +44,7 @@ class UnboundedCustomScrollView extends CustomScrollView {
     this._shrinkWrap = false,
     super.center,
     this._anchor = 0.0,
-    super.cacheExtent,
+    super.scrollCacheExtent,
     super.slivers,
     super.semanticChildCount,
     super.dragStartBehavior,
@@ -38,7 +57,10 @@ class UnboundedCustomScrollView extends CustomScrollView {
   @override
   double get anchor => _anchor;
 
-  /// Build the viewport.
+  /// Builds a viewport for [slivers] using [offset] and [axisDirection].
+  ///
+  /// Uses [context] to resolve the cross-axis direction and [scrollCacheExtent]
+  /// to retain the configured cache size.
   @override
   @protected
   Widget buildViewport(BuildContext context, ViewportOffset offset, AxisDirection axisDirection, List<Widget> slivers) {
@@ -47,7 +69,8 @@ class UnboundedCustomScrollView extends CustomScrollView {
         axisDirection: axisDirection,
         offset: offset,
         slivers: slivers,
-        cacheExtent: cacheExtent,
+        cacheExtent: scrollCacheExtent?.value,
+        cacheExtentStyle: scrollCacheExtent?.style ?? CacheExtentStyle.pixel,
         center: center,
         anchor: anchor,
       );
@@ -56,7 +79,7 @@ class UnboundedCustomScrollView extends CustomScrollView {
       axisDirection: axisDirection,
       offset: offset,
       slivers: slivers,
-      cacheExtent: cacheExtent,
+      scrollCacheExtent: scrollCacheExtent,
       center: center,
       anchor: anchor,
     );
