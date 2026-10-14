@@ -4,64 +4,31 @@ import 'dart:io';
 
 import 'package:cses_common/network/websocket/cses_websocket_client.dart';
 import 'package:cses_mobile_collab_demo/src/demo/common_cses_collab_gateway.dart';
-import 'package:cses_mobile_collab_demo/src/demo/cses_connection_settings.dart';
+import 'package:cses_mobile_collab_demo/src/demo/cses_account_login.dart';
 import 'package:cses_mobile_collab_demo/src/demo/cses_demo_host.dart';
 import 'package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart';
-import 'package:cses_common/runtime/runtime_fields.dart';
-import 'package:cses_common/runtime/preferences/sp_util.dart';
+import 'package:cses_common/runtime/config/config.dart';
+import 'package:cses_common/runtime/context/context.dart';
+import 'package:cses_common/runtime/session/user.dart';
+
+import 'support/common_login_harness.dart';
 
 /// 在本机真实 Socket 上验证原 Common 接口和 PaaS JSON 路由，无真实会话凭证。
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  late CommonLoginHarness harness;
   setUp(() async {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(
-          const MethodChannel('plugins.flutter.io/shared_preferences'),
-          (call) async => call.method == 'getAll' ? <String, Object>{} : true,
-        );
-    await SpUtil.getInstance();
-    await SpUtil.remove('DEVICE_ID');
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(
-          const MethodChannel(RuntimeFields.channelName),
-          (call) async => call.method == RuntimeFields.getDeviceId
-              ? 'loopback-device'
-              : null,
-        );
+    harness = CommonLoginHarness();
+    await harness.install();
   });
-  tearDown(() async {
-    await SpUtil.remove('DEVICE_ID');
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(
-          const MethodChannel(RuntimeFields.channelName),
-          null,
-        );
+  tearDown(() => harness.uninstall());
+  test('missing Common login rejects connection without creating a socket', () {
+    const host = CsesDemoHost();
+    expect(host.connect, throwsFormatException);
+    expect(csesWebSocketClient.isConnected, isFalse);
   });
-  test(
-    'missing Common device ID rejects configuration before context changes',
-    () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(
-            const MethodChannel(RuntimeFields.channelName),
-            (call) async => ' ',
-          );
-      const host = CsesDemoHost();
-      await expectLater(
-        host.configure(
-          const CsesConnectionSettings(
-            websocketUrl: 'wss://example.test/ws',
-            cookieId: 'cookie',
-            companyId: 'company',
-            userId: 'user',
-            documentId: 'doc',
-          ),
-        ),
-        throwsFormatException,
-      );
-    },
-  );
   test(
     'unmodified Common connects, subscribes, joins and exchanges routed JSON',
     () async {
@@ -123,15 +90,20 @@ void main() {
         }
         await server.close(force: true);
       });
-      await host.configure(
-        CsesConnectionSettings(
-          websocketUrl: 'ws://127.0.0.1:${server.port}/deployment/ws',
-          cookieId: 'loopback-cookie',
-          companyId: 'company',
-          userId: 'user',
-          documentId: 'doc',
-        ),
+      harness.respond = (_) => jsonResponse(
+        success()
+          ..['webConfig'] = {
+            'websocketHost': 'ws://127.0.0.1:${server.port}/deployment/ws',
+          },
       );
+      await const CsesAccountLogin().login('account', 'password');
+      expect(ctx.websocketHost, 'ws://127.0.0.1:${server.port}/deployment/ws');
+      expect(Config().baseUrl, 'https://api-pre.jinqidongli.com');
+      expect(ctx.site, 'jqdl');
+      expect(ctx.pictureDomain, 'https://picture.example.test/KEY');
+      expect(ctx.videoDomain, 'https://video.example.test/KEY');
+      expect(ctx.attachmentDomain, 'https://attachment.example.test/KEY');
+      expect(User().currentCompany?.companyName, '测试企业');
       session = CsesDocCollaborationSession(
         gateway: CommonCsesCollabGateway(),
         documentId: 'doc',
@@ -176,11 +148,13 @@ void main() {
         'instance': 'editor-one',
       });
       expect(docMessages[2]['body'], {'data': 'AAA='});
-      expect(csesWebSocketClient.buildHeaders()['deviceId'], 'loopback-device');
+      expect(csesWebSocketClient.buildHeaders()['deviceId'], 'native-device');
+      expect(csesWebSocketClient.buildHeaders()['companyId'], User().companyId);
+      expect(harness.requests.single.headers['deviceId'], ctx.deviceId);
       expect(csesWebSocketClient.buildUri().path, '/deployment/ws');
       expect(
         csesWebSocketClient.buildUri().queryParameters['cookieId'],
-        'loopback-cookie',
+        'server-cookie',
       );
       sockets.single.add(
         jsonEncode({

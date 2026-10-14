@@ -1,0 +1,47 @@
+{
+  "image": {
+    "filename": "direct-context-check-20261014.png",
+    "bytes": 33105,
+    "url": "https://picture.jinqidongli.com/5ffd465e263864787b87aa01/6acf17474353263be653c45c.png",
+    "status": 200,
+    "contentType": "image/png",
+    "hashMatches": true,
+    "sha256": "36e0403c857cdf2c25a89a8e1a8b5bf1785ba89bf109202e55c25da373469d72",
+    "serverBlock": {
+      "id": "fO5lBm",
+      "flavour": "image",
+      "rootPosition": 131
+    }
+  },
+  "video": {
+    "filename": "direct-context-check-20261014.mp4",
+    "bytes": 11866,
+    "url": "https://video.jinqidongli.com/5ffd465e263864787b87aa01/6acf17864353263be653c486.mp4",
+    "status": 200,
+    "contentType": "video/mp4",
+    "hashMatches": true,
+    "sha256": "8d57131e9c6be97f55004d1adb8e5c0777e23300c8a4b6d67cdbc03c3bb1cf8a",
+    "serverBlock": {
+      "id": "p6Ew3w",
+      "flavour": "video",
+      "rootPosition": 132
+    },
+    "playback": {
+      "initialized": true,
+      "durationMs": 1000,
+      "positionMs": 1000,
+      "completed": true,
+      "error": null
+    },
+    "pickerName": "1000015434.mp4"
+  },
+  "context": {
+    "removedConfigLibraryAbsent": true,
+    "documentContext": "{configUserMatches: true, configCompanyMatches: true, configServerMatches: true, configDocument: 6ac76e5375083c8c9f19cbd3, status: ConnectionStatus.online, canEdit: true, error: null, blockCount: 146, cacheKey: cses-blockcraft-v1:860e4ca085f1a03973bcce698c996bf3dc394c2199f632aed35ccfd450ebfc20}",
+    "finalStatus": "online",
+    "finalBlockCount": 150,
+    "socketDeviceCompanyCookieMatch": true,
+    "finalReLogin": "{userMatches: true, companyMatches: true, serverMatches: true, status: ConnectionStatus.online, blocks: 150, error: null}",
+    "uploadedResourcesRestored": true
+  }
+}

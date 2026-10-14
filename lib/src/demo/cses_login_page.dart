@@ -1,15 +1,15 @@
 import 'package:cses_mobile_collab_demo/src/demo/cses_account_login.dart';
 import 'package:flutter/material.dart';
 
-/// 用户名密码登录入口；只在有效响应后将内存会话交给宿主，不存储登录凭证。
+/// 用户名密码登录入口；Common 上下文就绪后通知页面切换，不存储登录凭证。
 class CsesLoginPage extends StatefulWidget {
-  /// [onLoggedIn] 接收成功会话，[login] 可注入测试登录服务。
+  /// [onLoggedIn] 通知登录成功，[login] 可注入测试登录服务。
   const CsesLoginPage({
     super.key,
     required this.onLoggedIn,
     this.login = const CsesAccountLogin(),
   });
-  final ValueChanged<CsesAccountSession> onLoggedIn;
+  final VoidCallback onLoggedIn;
   final CsesAccountLogin login;
 
   @override
@@ -25,7 +25,7 @@ class _CsesLoginPageState extends State<CsesLoginPage> {
   bool _obscure = true;
   String? _error;
 
-  /// 校验表单并登录；错误留在当前页，成功清空密码后再交付会话。
+  /// 校验表单并初始化 Common 登录；销毁后的响应不再注入上下文，成功后清空密码。
   Future<void> _submit() async {
     if (_busy || !_form.currentState!.validate()) return;
     FocusScope.of(context).unfocus();
@@ -34,10 +34,14 @@ class _CsesLoginPageState extends State<CsesLoginPage> {
       _error = null;
     });
     try {
-      final session = await widget.login.login(_userName.text, _password.text);
+      await widget.login.login(
+        _userName.text,
+        _password.text,
+        isActive: () => mounted,
+      );
       if (!mounted) return;
       _password.clear();
-      widget.onLoggedIn(session);
+      widget.onLoggedIn();
     } on CsesLoginFailure catch (error) {
       if (mounted) setState(() => _error = error.message);
     } catch (error, stackTrace) {

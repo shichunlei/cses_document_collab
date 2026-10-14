@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:cses_document_collab/cses_document_collab.dart';
-import 'package:cses_mobile_collab_demo/src/demo/cses_account_login.dart';
 import 'package:cses_mobile_collab_demo/src/demo/document_host.dart';
 import 'package:cses_mobile_collab_demo/src/demo/cses_connection_panel.dart';
 import 'package:flutter/material.dart';
@@ -9,10 +8,10 @@ import 'package:flutter/material.dart';
 /// 登录后的文档入口，拥有编辑器控制器并装配 CSES 状态面板。
 class CollabDemoPage extends StatefulWidget {
   /// 创建文档状态页；控制器随此页生命周期创建与释放。
-  const CollabDemoPage({super.key, this.session, this.onLogout});
+  const CollabDemoPage({super.key, this.localDraft = false, this.onLogout});
 
-  /// 已认证的会话；为空时仅用于离线预览和测试，不建立网络连接。
-  final CsesAccountSession? session;
+  /// 离线预览和测试可显式打开本地草稿；正式文档直接使用 Common 上下文。
+  final bool localDraft;
 
   /// 返回登录页；移除本页会释放协同控制器及共享连接。
   final VoidCallback? onLogout;
@@ -33,13 +32,8 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
   /// 初始化本地文档，随后使用登录会话自动连接。
   void initState() {
     super.initState();
-    _host = DemoDocumentHost(session: widget.session);
-    unawaited(_initializeSession());
-  }
-
-  /// 先初始化本地存储，再注册文档路由并自动连接；页面销毁后不交付迟到结果。
-  Future<void> _initializeSession() async {
-    await _host.initialize();
+    _host = DemoDocumentHost(localDraft: widget.localDraft);
+    unawaited(_host.initialize());
   }
 
   @override
@@ -98,7 +92,6 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
                 children: [
                   CsesConnectionPanel(
                     collab: _collab,
-                    session: widget.session,
                     onReset: _confirmReset,
                     onReconnect: _host.reconnect,
                   ),

@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:cses_common/core/collections/objectid.dart';
 import 'package:cses_common/observability/api/log.dart';
+import 'package:cses_common/runtime/context/context.dart';
+import 'package:cses_common/runtime/session/user.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';
 import 'package:cses_mobile_collab_demo/src/demo/common_cses_collab_gateway.dart';
 import 'package:cses_mobile_collab_demo/src/demo/cses_account_login.dart';
@@ -12,16 +14,17 @@ import 'package:path_provider/path_provider.dart';
 
 /// Demo composition root for package controllers and its owned Common socket.
 ///
-/// Create with `DemoDocumentHost(session: session)`, await initialize, borrow
+/// Create after Common login, await initialize, borrow
 /// controller for the editor page, then await close before account switching.
-/// Unlike the package, this host owns authentication, storage location and
-/// foreground connection recovery. Late initialization is joined during close.
+/// This host reads Common identity once into the package's document config,
+/// owns the storage location and foreground recovery, and clears Common login
+/// after document teardown. Late initialization is joined during close.
 class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
-  /// [session] is the authenticated snapshot; null opens the local draft.
-  DemoDocumentHost({this.session});
+  /// Uses Common login; [localDraft] opens an offline draft for preview or tests.
+  DemoDocumentHost({this.localDraft = false});
 
-  /// Borrowed session; credentials never enter the package controller.
-  final CsesAccountSession? session;
+  /// Explicit document mode; credentials never enter the package controller.
+  final bool localDraft;
   final CsesDemoHost _socket = const CsesDemoHost();
   CollabController? _controller;
   Future<void>? _initialization;
@@ -42,6 +45,8 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
 
   /// Choose the legacy SQLite location and assemble only public package APIs.
   Future<void> _initialize() async {
+    // 登录已在 Common 注入；即使本地存储初始化失败，退出也须清理该登录。
+    _ownsConnection = !localDraft;
     try {
       final directory = await getApplicationSupportDirectory();
       if (_disposed) return;
@@ -52,8 +57,7 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
             Log.e(message, error: error, stackTrace: stack, tag: tag),
         mediaUpload: const CsesEditorMediaUploadService(),
       );
-      final account = session;
-      if (account == null) {
+      if (localDraft) {
         _controller = CollabController.localDraft(
           databasePath: path,
           defaultCoverUrl:
@@ -61,17 +65,17 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
           services: services,
         );
       } else {
-        _ownsConnection = true;
-        await _socket.configure(account.settings);
-        if (_disposed) return;
-        final settings = account.settings;
+        // 身份和服务端地址只在这里从 Common 读取并注入不可变文档配置。
+        // 包自行计算缓存分区；cookie 与物理连接仍由 Common 持有，不进入文档配置。
+        // 切换用户/企业须先释放旧控制器，再用新的 Common 上下文创建控制器。
+        final user = User();
         _controller = CollabController.cses(
           config: CollabDocumentConfig(
-            documentId: settings.documentId,
-            serverIdentity: settings.websocketUrl,
-            companyId: settings.companyId,
-            userId: settings.userId,
-            userName: account.displayName,
+            documentId: csesDemoDocumentId,
+            serverIdentity: ctx.websocketHost ?? '',
+            companyId: user.companyId,
+            userId: user.userId ?? '',
+            userName: user.name.isNotEmpty ? user.name : user.userName,
             databasePath: path,
             editable: true,
           ),

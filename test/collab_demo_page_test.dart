@@ -1,4 +1,3 @@
-import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_mobile_collab_demo/src/demo/collab_demo_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,9 +26,8 @@ void main() {
           GlobalMaterialLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
-          AppFlowyEditorLocalizations.delegate,
         ],
-        home: CollabDemoPage(),
+        home: CollabDemoPage(localDraft: true),
       ),
     );
 

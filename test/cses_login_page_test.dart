@@ -1,36 +1,35 @@
 import 'dart:async';
-import 'package:cses_mobile_collab_demo/src/demo/cses_account_login.dart';
+import 'package:cses_common/runtime/context/context.dart';
+import 'package:cses_common/runtime/session/user.dart';
 import 'package:cses_mobile_collab_demo/src/demo/cses_login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'support/common_login_harness.dart';
+
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  late CommonLoginHarness harness;
+  setUp(() async {
+    harness = CommonLoginHarness();
+    await harness.install();
+  });
+  tearDown(() => harness.uninstall());
   testWidgets(
     'username/password only; validation, single submission and successful handoff',
     (tester) async {
       final reply = Completer<Map<String, dynamic>>();
-      var calls = 0;
-      CsesAccountSession? session;
+      harness.respond = (_) async => jsonResponse(await reply.future);
+      var handedOff = false;
       await tester.pumpWidget(
-        MaterialApp(
-          home: CsesLoginPage(
-            onLoggedIn: (value) => session = value,
-            login: CsesAccountLogin(
-              deviceIdProvider: () async => 'device',
-              request: (_, _) {
-                calls++;
-                return reply.future;
-              },
-            ),
-          ),
-        ),
+        MaterialApp(home: CsesLoginPage(onLoggedIn: () => handedOff = true)),
       );
       expect(find.byType(TextFormField), findsNWidgets(2));
       expect(find.text('userId'), findsNothing);
       await tester.tap(find.byKey(const ValueKey('login-submit')));
       await tester.pump();
       expect(find.text('请输入用户名'), findsOneWidget);
-      expect(calls, 0);
+      expect(harness.requests, isEmpty);
       await tester.enterText(
         find.byKey(const ValueKey('login-username')),
         'account',
@@ -40,18 +39,16 @@ void main() {
         'password',
       );
       await tester.tap(find.byKey(const ValueKey('login-submit')));
-      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(milliseconds: 100));
       await tester.tap(find.byKey(const ValueKey('login-submit')));
-      expect(calls, 1);
-      expect(session, isNull);
-      reply.complete({
-        'isSuccess': true,
-        'cookieId': 'cookie',
-        'userId': 'user',
-        'companyId': 'company',
-      });
+      expect(harness.requests, hasLength(1));
+      expect(handedOff, false);
+      reply.complete(success());
       await tester.pumpAndSettle();
-      expect(session!.settings.documentId, csesDemoDocumentId);
+      expect(handedOff, true);
+      expect(ctx.cookieId, 'server-cookie');
+      expect(User().companyId, 'server-company');
       expect(
         tester
             .widget<TextFormField>(find.byKey(const ValueKey('login-password')))
@@ -67,16 +64,9 @@ void main() {
     (tester) async {
       var handedOff = false;
       final reply = Completer<Map<String, dynamic>>();
+      harness.respond = (_) async => jsonResponse(await reply.future);
       await tester.pumpWidget(
-        MaterialApp(
-          home: CsesLoginPage(
-            onLoggedIn: (_) => handedOff = true,
-            login: CsesAccountLogin(
-              deviceIdProvider: () async => 'device',
-              request: (_, _) => reply.future,
-            ),
-          ),
-        ),
+        MaterialApp(home: CsesLoginPage(onLoggedIn: () => handedOff = true)),
       );
       await tester.enterText(
         find.byKey(const ValueKey('login-username')),
@@ -93,15 +83,12 @@ void main() {
       expect(find.text('密码错误'), findsOneWidget);
       expect(handedOff, false);
       final late = Completer<Map<String, dynamic>>();
+      harness.respond = (_) async => jsonResponse(await late.future);
       await tester.pumpWidget(
         MaterialApp(
           home: CsesLoginPage(
             key: const ValueKey('new-login'),
-            onLoggedIn: (_) => handedOff = true,
-            login: CsesAccountLogin(
-              deviceIdProvider: () async => 'device',
-              request: (_, _) => late.future,
-            ),
+            onLoggedIn: () => handedOff = true,
           ),
         ),
       );
@@ -114,16 +101,13 @@ void main() {
         'password',
       );
       await tester.tap(find.byKey(const ValueKey('login-submit')));
-      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
       await tester.pumpWidget(const SizedBox());
-      late.complete({
-        'isSuccess': true,
-        'cookieId': 'cookie',
-        'userId': 'user',
-        'companyId': 'company',
-      });
+      late.complete(success());
       await tester.pumpAndSettle();
       expect(handedOff, false);
+      expect(ctx.cookieId, isNull);
+      expect(User().companyId, isEmpty);
       expect(tester.takeException(), isNull);
     },
   );

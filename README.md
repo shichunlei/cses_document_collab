@@ -33,7 +33,7 @@
 - 本地 AppFlowy transaction、远端 transaction 防回环
 - `flutter_rust_bridge` 调用手机端 Rust
 - Rust/Yrs 提供原始 V1 update、状态向量和 Awareness，CSES 适配层使用 Base64 JSON 文本信封
-- Demo 宿主引用 `../cses.common`，复用鉴权上下文、hello、主连接心跳、重连及精确三级路由
+- Demo 宿主引用 `../cses/cses.common`，复用 Dio HTTP、登录上下文、hello、主连接心跳、重连及精确三级路由
 - `subscribe → collabJoin → collabSync → collabUpdate` 双向差量交换，20 秒主动补偿
 - 本机 Awareness 10 秒提升时钟上报，显示其他编辑器数量；尚未绑定光标和选区
 - 在线协同只使用 CSES 主连接，通过 Common 收发 JSON 协议，不提供独立 WS 传输或本地测试服务
@@ -88,8 +88,8 @@ bc:revisions / bc:revision-decisions / bc:revision-meta  原样保留的修订�
 ## CSES 接入与资源所有权
 
 ```text
-Demo 登录 → DemoDocumentHost → cses_document_collab 公共入口
-             ├─ CsesDemoHost → Common 唯一主连接/认证
+Demo 登录（Common HTTP → User/ctx）→ DemoDocumentHost → cses_document_collab 公共入口
+             ├─ CsesDemoHost → 使用 Common 当前认证的唯一主连接
              ├─ CommonCsesCollabGateway → 包的 Gateway 契约
              ├─ CsesEditorMediaUploadService → 宿主 OSS/文件登记
              └─ CollabController → AppFlowy 投影 ↔ Rust/Yrs ↔ SQLite
@@ -97,10 +97,14 @@ Demo 登录 → DemoDocumentHost → cses_document_collab 公共入口
 
 完整接入契约、资源释放顺序和迁入 SaaS 的步骤见 [协同包接入文档](docs/collab-package-integration.md)；独立包的公共 API 与构建说明见 [包 README](packages/cses_document_collab/README.md)。包不引用 demo、SaaS、Common 或全局登录上下文。
 
-- Demo 仍使用 `/User/login` 的 PRE 账号密码契约，固定正式测试文档 ID；cookie 只在宿主内存中持有。
-- `DemoDocumentHost` 选择旧 SQLite 路径及相同缓存分区，配置 Common 登录上下文，注入 Gateway、ID、日志和媒体上传。包直接打开正式模型，不先打开草稿。
+- Android 宿主通过 `com.yundiz/common` 提供设备 ID、CPU 型号及 CPU 信息，复用 CSES Android 的设备处理器契约，使 Common 的 `ctx.updateDeviceInfo()` 可完整初始化；CPU 信息读取失败时使用系统兜底。
+- Demo 按 SaaS 账号密码流程先初始化 Common 的 PRE 配置、偏好和设备信息，再通过 `HttpManager` 的共享 Dio 请求 `/User/login`；公共 header 和异常映射均由 Common 提供。固定正式测试文档 ID，不保存密码或登录账户快照。
+- 登录成功后由 `CsesAccountLogin` 将完整响应交给 `User().resolveContext(value)`，统一解析身份、企业、权限、媒体站点、域名和 WebSocket 地址，校验通过后才进入文档页。企业选择复用 Common 的组织排序和上次企业偏好；Demo 不再保留响应副本、手动推导企业或覆盖连接地址。页面已销毁的迟到响应不注入上下文；解析/校验失败清理本次用户态，留在登录页重试。
+- 登录成功直接通知页面切换，账号与展示名读取 Common 的 `User`，不传递独立会话对象。`DemoDocumentHost` 选择旧 SQLite 路径，在创建控制器时直接使用 `ctx.websocketHost`、`User().companyId`、`User().userId` 和展示名构造 `CollabDocumentConfig`，再注入 Gateway、ID、日志和媒体上传；不再次解析登录或请求 `/User/auth`。包直接打开正式模型，不先打开草稿；离线预览和测试显式设置 `localDraft: true`。
+- 文档 ID、服务端、企业、用户和数据库路径只在 `CollabDocumentConfig` 中形成不可变快照；缓存键由协同包统一计算，宿主不保存 Cookie 副本或重复维护缓存算法。切换身份须关闭旧控制器后重新创建。
+- WebSocket 地址和默认协议以 Common 解析结果为准。若与历史 Demo 的默认地址不同，按现有地址/企业/用户/文档缓存键进入对应分区，旧缓存仍保留。
 - `initialize()` 完成表示本地恢复和回调注册完成；协同 ready/online 只表示客户端差量交换，不是服务端落库回执。
-- 页面借用控制器；退出账号先等待包的 close，再由 Demo 宿主关闭主连接并清理认证。返回连接面板仍复用同一控制器。
+- 页面借用控制器；退出账号先等待包的 close，再由 Demo 宿主关闭主连接，并通过 Common 清理用户态，保留应用级设备信息。即使本地文档初始化失败，退出也会清理已登录身份。返回连接面板仍复用同一控制器。
 - Rust 是单文档引擎，包对第二控制器明确拒绝；新文档必须等待旧控制器关闭。
 - 包使用宿主编辑授权和模型只读条件。只读握手不补传缓存中的本地变更，恢复授权后再同步。正式部署仍需服务端文档/租户鉴权。
 - 权限、文档不存在、非法 schema 停止自动重试；重连和主动补偿维持原协议。上行单次 1 MiB，下行正文 32 MiB，向量/Awareness 64 KiB。
@@ -433,5 +437,7 @@ bridge 的 text 字段传递；正式图片写入 props.src、视频写入 props
 - 本地上传通过系统文件选择器单选；图片上限 60MB、音频 50MB、视频/附件 100MB。展示选中文件和上传进度，失败可重试，关闭面板取消请求；链接与文件 Tab 切换保留输入。
 - 使用已有 CSES 登录态获取 OSS 凭证，上传后登记文件；用户原文件不重命名、不删除。仅上传和登记成功后才创建协同块，使用稳定 HTTP(S) URL，附件和音频保留名称/大小，附件另保留 MIME 类型。
 - 打开面板前独立保存光标/选区与稳定块 ID，面板期间正文失焦并暂停输入连接和快捷键；资源插入仍按原块位置定位，高亮容器内保持父子关系。确认后将光标移至资源后的正文，取消后恢复原选区、方向及待输入样式，均等关闭动画结束再恢复键盘；两层面板全部关闭前不恢复正文焦点。原块被远端删除、文档只读或账号切换时不插入。
-- `editor_media_source_sheet_test.dart` 覆盖来源切换、取消/失败重试/只读竞态、大小限制、元数据及窄屏键盘布局；真实账号下的 OSS/文件登记联调仍需设备验证。
+- `editor_media_source_sheet_test.dart` 覆盖来源切换、取消/失败重试/只读竞态、大小限制、元数据及窄屏键盘布局；图片、视频、附件已完成 Android 真机 OSS 上传、文件登记及服务端文档回读验证；音频和封面的真实上传仍需单独验证，详见 [OSS 联调记录](docs/oss-upload-integration.md)。
 - `editor_modal_focus_test.dart` 使用真实 AppFlowy 键盘服务验证面板与正文焦点隔离、取消恢复、协同重排/删除及上传期间的插入锚点。
+
+- 2026-10-14 联调修复：资源插入明确分配新协同块 ID，避免替换空段落被识别为旧块转换，导致附件名称/类型/大小未初始化；回归覆盖新建身份及元数据。

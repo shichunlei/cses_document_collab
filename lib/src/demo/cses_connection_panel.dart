@@ -1,19 +1,18 @@
+import 'package:cses_common/runtime/session/user.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';
 import 'package:cses_mobile_collab_demo/src/demo/cses_account_login.dart';
 import 'package:flutter/material.dart';
 
-/// 已登录文档的状态面板；身份来自登录响应，不接受手填 userId、cookie 或设备 ID。
+/// 已登录文档的状态面板；展示名读取 Common 当前用户，不接受手填身份或连接配置。
 class CsesConnectionPanel extends StatelessWidget {
-  /// [collab] 由宿主持有，[session] 是当前认证会话，[onReset] 确认后清理本机正文缓存。
+  /// [collab] 由宿主持有，[onReset] 确认后清理本机正文缓存。
   const CsesConnectionPanel({
     super.key,
     required this.collab,
-    this.session,
     required this.onReset,
     required this.onReconnect,
   });
   final CollabController collab;
-  final CsesAccountSession? session;
   final Future<void> Function() onReset;
 
   /// Host-owned connection recovery followed by document sync.
@@ -30,11 +29,9 @@ class CsesConnectionPanel extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text('测试文档', style: Theme.of(context).textTheme.titleMedium),
-            if (session != null) ...[
+            if (collab.config.isFormal) ...[
               const SizedBox(height: 8),
-              Text(
-                '当前账号：${session!.displayName.isEmpty ? '已登录' : session!.displayName}',
-              ),
+              Text('当前账号：${User().userName}'),
             ],
             const SizedBox(height: 8),
             const SelectableText(csesDemoDocumentId),
@@ -45,7 +42,9 @@ class CsesConnectionPanel extends StatelessWidget {
               children: [
                 FilledButton.icon(
                   onPressed:
-                      session != null && collab.initialized && !collab.busy
+                      collab.config.isFormal &&
+                          collab.initialized &&
+                          !collab.busy
                       ? onReconnect
                       : null,
                   icon: const Icon(Icons.sync),

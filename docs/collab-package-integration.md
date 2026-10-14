@@ -24,7 +24,7 @@ flowchart TD
 
 | 能力 | 当前 Demo 实现 | 后续 SaaS 接入 |
 |---|---|---|
-| 登录与连接上下文 | CsesAccountLogin/CsesDemoHost | 已有登录与企业上下文 |
+| 登录与连接上下文 | CsesAccountLogin 通过 Common HttpManager 登录并初始化 User/ctx；CsesDemoHost 直接使用当前上下文 | 已有登录与企业上下文 |
 | 数据库路径 | DemoDocumentHost 选择旧路径 | Binding 注入应用支持目录内路径 |
 | Gateway | CommonCsesCollabGateway | 文档模块 Infrastructure 实现同一接口 |
 | 日志/ID | Common Log.e/ObjectId 的回调 | Binding 注入已有日志/ID 能力 |
@@ -32,7 +32,9 @@ flowchart TD
 | 正文编辑权限 | Demo 显式 editable=true | 读取服务端权限后注入并监听撤销 |
 | 主连接恢复 | DemoDocumentHost 前台监听 | 已有 WebSocketLifecycleOwner |
 
-正式与草稿是显式构造方式。正式文档初始化直接恢复 BlockCraft 分区并开始文档握手；草稿沿用旧私有结构，并由宿主传入默认封面。正式文档不会先加载 demo-room、创建业务根或补写草稿头部。
+Demo 的登录配置和设备信息先于 Common HTTP 初始化；登录成功响应只交给 `User().resolveContext`，不由文档宿主重新解析或覆盖。登录完成只通知页面切换，不创建独立会话对象，账号和展示名直接读取 `User`。文档宿主在创建控制器时直接从 `User/ctx` 构造 `CollabDocumentConfig`；服务端、企业和用户身份在该配置中形成不可变快照，Cookie 始终留在 Common，缓存键只由协同包计算。失败重试和页面销毁不得留下半完成的身份；登录响应迟到时须在注入前检查页面有效性。Common HTTP、主连接及 OSS/资源登记共享同一登录上下文。
+
+正式与草稿是显式构造方式。Demo 默认使用 Common 当前上下文打开正式文档，离线预览和测试显式设置 `localDraft: true`。正式文档初始化直接恢复 BlockCraft 分区并开始文档握手；草稿沿用旧私有结构，并由宿主传入默认封面。正式文档不会先加载 demo-room、创建业务根或补写草稿头部。
 
 ## 资源与异步生命周期
 
@@ -48,7 +50,7 @@ Common 适配器沿用已有 onlyListen+手动 subscribe 策略；注册/注销 
 
 ## 数据兼容
 
-Demo SQLite 路径仍为应用支持目录下 `cses_mobile_collab_demo/updates.sqlite3`。正式缓存键保持 `cses-blockcraft-v1:SHA256(JSON([websocketUrl, companyId, userId, documentId]))`，cookie 不参与。宿主传入旧完整 WS 地址作为 serverIdentity，避免换包后错误生成新分区。Rust 接收正式 docId 和独立缓存键，保留未知原生属性、修订结构与不支持块的数据。
+Demo SQLite 路径仍为应用支持目录下 `cses_mobile_collab_demo/updates.sqlite3`。正式缓存键保持 `cses-blockcraft-v1:SHA256(JSON([websocketUrl, companyId, userId, documentId]))`，cookie 不参与。宿主传入 Common 解析的完整 WS 地址作为 serverIdentity；默认协议也遵循 Common，不在 Demo 强制改写。若地址与历史 Demo 不同则使用对应分区，保留旧分区，不将不同服务身份的离线增量自动合并。Rust 接收正式 docId 和独立缓存键，保留未知原生属性、修订结构与不支持块的数据。
 
 块清单仍以 [block-adaptation.md](block-adaptation.md) 为准：8 已适配、8 部分支持、1 结构支持、24 未适配。上传功能由宿主注入；当前 Demo 保留上传进度、取消、重试和插入位置保护，包未配置上传服务时只提供 URL。
 
@@ -68,7 +70,11 @@ Demo SQLite 路径仍为应用支持目录下 `cses_mobile_collab_demo/updates.s
 
 验证入口：根目录 `flutter test test` 覆盖认证与 Common 回环；包目录 `cargo build/cargo test/flutter test` 覆盖编辑、Schema 和真实 FRB；`tool/verify_portable_package.sh /path/to/appflowy_editor` 复制包至无关目录，再从另一个宿主仅通过公开入口加载、渲染与重开 SQLite。iOS/Android 从实际 Demo App 构建，验证传递依赖打包。
 
-2026-10-14 已完成验证：
+2026-10-14 当前宿主直接注入文档配置的验证：根宿主 16 项测试、相关静态检查和 Android debug 构建通过。缓存兼容测试固定迁移前的真实键，不再比较两套缓存计算实现；主连接地址校验由登录边界验证 Common 当前上下文。Android 16 真机登录后实际文档配置与 Common 身份/地址一致；图片和视频通过系统选择器上传、文件登记、OSS 哈希回读、服务端独立空向量回读及一秒视频播放验收。详见 [OSS 联调记录](oss-upload-integration.md)。
+
+2026-10-14 此前登录接入阶段的自动验证（真机复验之前）：根宿主 18 项测试通过，覆盖 Common 请求 header、上下文解析、企业偏好、失败重试、页面销毁迟到响应、文档初始化失败后的退出清理与真实 Socket 回环；本次涉及的 App 和测试静态检查无问题。全仓分析另有旧 build_tool 构建路径错误和 AppFlowy/示例的既有提示，未纳入本次修改。真实账号和真机上传未在本次重新验收。
+
+2026-10-14 包迁移阶段已完成验证：
 
 | 项目 | 结果 |
 |---|---|

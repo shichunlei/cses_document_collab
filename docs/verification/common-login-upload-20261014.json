@@ -1,0 +1,38 @@
+{
+  "image": {
+    "filename": "common-login-check-20261014.png",
+    "bytes": 33105,
+    "url": "https://picture.jinqidongli.com/5ffd465e263864787b87aa01/6acf1338c8dbea98159378b5.png",
+    "status": 200,
+    "contentType": "image/png",
+    "hashMatches": true,
+    "serverBlock": {
+      "id": "c-OOzX",
+      "flavour": "image",
+      "rootPosition": 131
+    },
+    "sha256": "36e0403c857cdf2c25a89a8e1a8b5bf1785ba89bf109202e55c25da373469d72"
+  },
+  "video": {
+    "filename": "common-login-check-20261014.mp4",
+    "pickerName": "1000015430.mp4",
+    "bytes": 11866,
+    "url": "https://video.jinqidongli.com/5ffd465e263864787b87aa01/6acf13a0c8dbea98159378f4.mp4",
+    "status": 200,
+    "contentType": "video/mp4",
+    "hashMatches": true,
+    "serverBlock": {
+      "id": "huQayt",
+      "flavour": "video",
+      "rootPosition": 132
+    },
+    "playback": {
+      "initialized": true,
+      "completed": true,
+      "durationMs": 1000,
+      "positionMs": 1000,
+      "error": null
+    },
+    "sha256": "8d57131e9c6be97f55004d1adb8e5c0777e23300c8a4b6d67cdbc03c3bb1cf8a"
+  }
+}

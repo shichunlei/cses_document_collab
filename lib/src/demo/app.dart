@@ -1,6 +1,5 @@
 import 'package:cses_mobile_collab_demo/src/demo/collab_demo_page.dart';
 import 'package:cses_mobile_collab_demo/src/demo/cses_login_page.dart';
-import 'package:cses_mobile_collab_demo/src/demo/cses_account_login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -11,9 +10,9 @@ class CsesCollabDemoApp extends StatefulWidget {
   createState() => _CsesCollabDemoAppState();
 }
 
-/// 持有当前内存会话；登录成功后切入文档宿主，退出时销毁宿主及其 WS。
+/// 管理登录页和文档页切换；账号上下文由 Common 持有。
 class _CsesCollabDemoAppState extends State<CsesCollabDemoApp> {
-  CsesAccountSession? _session;
+  bool _loggedIn = false;
 
   @override
   Widget build(BuildContext context) {
@@ -34,14 +33,9 @@ class _CsesCollabDemoAppState extends State<CsesCollabDemoApp> {
         scaffoldBackgroundColor: const Color(0xFFF7F7FA),
         useMaterial3: true,
       ),
-      home: _session == null
-          ? CsesLoginPage(
-              onLoggedIn: (session) => setState(() => _session = session),
-            )
-          : CollabDemoPage(
-              session: _session,
-              onLogout: () => setState(() => _session = null),
-            ),
+      home: !_loggedIn
+          ? CsesLoginPage(onLoggedIn: () => setState(() => _loggedIn = true))
+          : CollabDemoPage(onLogout: () => setState(() => _loggedIn = false)),
     );
   }
 }
