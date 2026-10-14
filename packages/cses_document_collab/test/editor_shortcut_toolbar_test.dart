@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+/// 注册工具栏与添加面板的事务、光标恢复和权限回归；测试各自释放借用的编辑器。
 void main() {
   setUpAll(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
@@ -275,6 +276,134 @@ void main() {
     expect(find.byKey(const ValueKey('editor-mobile-toolbar')), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+
+  for (final sourceText in ['', 'Existing paragraph']) {
+    testWidgets(
+      'plus sheet inserts code from ${sourceText.isEmpty ? 'empty' : 'non-empty'} text and restores its caret',
+      (tester) async {
+        await tester.binding.setSurfaceSize(const Size(390, 844));
+        final state = _editorState(text: sourceText);
+        state.selection = Selection.single(path: [0], startOffset: 0);
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox.shrink());
+          state.dispose();
+          await tester.binding.setSurfaceSize(null);
+        });
+
+        await tester.pumpWidget(_toolbarApp(state));
+        await tester.pump();
+        await tester.tap(find.byKey(const ValueKey('editor-shortcut-add')));
+        await tester.pumpAndSettle();
+        final code = find.byKey(const ValueKey('editor-shortcut-code-block'));
+        await tester.ensureVisible(code);
+        await tester.tap(code);
+        await tester.pumpAndSettle();
+        await tester.pump(const Duration(milliseconds: 400));
+        await tester.pumpAndSettle();
+
+        final codeIndex = sourceText.isEmpty ? 0 : 1;
+        expect(state.document.root.children, hasLength(codeIndex + 1));
+        final codeNode = state.document.root.children[codeIndex];
+        expect(codeNode.type, csesCodeBlockType);
+        expect(codeNode.delta!.toPlainText(), isEmpty);
+        if (sourceText.isEmpty) {
+          expect(codeNode.attributes['cses_collab_block_id'], 'block-a');
+        } else {
+          expect(state.document.first!.delta!.toPlainText(), sourceText);
+          expect(state.document.first!.type, ParagraphBlockKeys.type);
+        }
+        expect(state.selection?.start.path, [codeIndex]);
+        expect(state.selection?.start.offset, 0);
+        expect(
+          find.byKey(const ValueKey('editor-add-block-sheet')),
+          findsNothing,
+        );
+        expect(
+          find.byKey(const ValueKey('editor-mobile-toolbar')),
+          findsOneWidget,
+        );
+        expect(find.textContaining('尚未进入当前'), findsNothing);
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+
+  testWidgets('plus code entry follows its source after a remote insertion', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 844));
+    final state = _editorState(text: 'Original paragraph');
+    state.selection = Selection.single(path: [0], startOffset: 4);
+    addTearDown(() async {
+      await tester.pumpWidget(const SizedBox.shrink());
+      state.dispose();
+      await tester.binding.setSurfaceSize(null);
+    });
+
+    await tester.pumpWidget(_toolbarApp(state));
+    await tester.pump();
+    await tester.tap(find.byKey(const ValueKey('editor-shortcut-add')));
+    await tester.pumpAndSettle();
+    await state.apply(
+      state.transaction
+        ..insertNode([0], paragraphNode(text: 'Remote paragraph')),
+      options: const ApplyOptions(recordUndo: false, inMemoryUpdate: true),
+    );
+    await tester.pump();
+    final code = find.byKey(const ValueKey('editor-shortcut-code-block'));
+    await tester.ensureVisible(code);
+    await tester.tap(code);
+    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pumpAndSettle();
+
+    expect(state.document.root.children, hasLength(3));
+    expect(
+      state.document.root.children[0].delta!.toPlainText(),
+      'Remote paragraph',
+    );
+    expect(
+      state.document.root.children[1].delta!.toPlainText(),
+      'Original paragraph',
+    );
+    expect(state.document.root.children[2].type, csesCodeBlockType);
+    expect(state.selection?.start.path, [2]);
+    expect(find.byKey(const ValueKey('editor-add-block-sheet')), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets(
+    'plus code entry rejects permission revoked while the sheet is open',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      final state = _editorState(text: 'Original paragraph');
+      state.selection = Selection.single(path: [0], startOffset: 0);
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        state.dispose();
+        await tester.binding.setSurfaceSize(null);
+      });
+
+      await tester.pumpWidget(_toolbarApp(state));
+      await tester.pump();
+      await tester.tap(find.byKey(const ValueKey('editor-shortcut-add')));
+      await tester.pumpAndSettle();
+      state.editable = false;
+      final code = find.byKey(const ValueKey('editor-shortcut-code-block'));
+      await tester.ensureVisible(code);
+      await tester.tap(code);
+      await tester.pumpAndSettle();
+
+      expect(state.document.root.children, hasLength(1));
+      expect(state.document.first!.type, ParagraphBlockKeys.type);
+      expect(state.document.first!.delta!.toPlainText(), 'Original paragraph');
+      expect(
+        find.byKey(const ValueKey('editor-add-block-sheet')),
+        findsOneWidget,
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   testWidgets('H menu converts the selected block to todo', (tester) async {
     await tester.binding.setSurfaceSize(const Size(390, 844));

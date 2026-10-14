@@ -1745,6 +1745,8 @@ bool _editorKeyboardIsVisible(BuildContext context) {
   return mediaQueryInset > 0 || physicalInset > 0;
 }
 
+/// 完整块选择面板，借用编辑器和打开面板时捕获的稳定选区。
+/// 支持的操作复用现有块命令；成功后返回目标选区，由外层在退场后恢复正文输入。
 class _AddBlockSheet extends StatelessWidget {
   const _AddBlockSheet({required this.editorState, required this.bookmark});
 
@@ -1757,6 +1759,8 @@ class _AddBlockSheet extends StatelessWidget {
   // directly without first walking through H3-H8.
   static const _maxHeadingLevel = 9;
 
+  /// 使用借用的 [context] 构建块入口；代码块与标题、列表复用同一插入及关闭流程。
+  /// 返回面板 Widget，不持有或释放编辑器；未支持的入口继续显示占位提示。
   @override
   Widget build(BuildContext context) {
     final height = math.min(MediaQuery.sizeOf(context).height * 0.72, 640.0);
@@ -1871,9 +1875,14 @@ class _AddBlockSheet extends StatelessWidget {
                               const _BlockShortcut(TodoListBlockKeys.type),
                             ),
                           ),
-                          const _ActionShortcutTile(
+                          _ActionShortcutTile(
+                            key: const ValueKey('editor-shortcut-code-block'),
                             icon: Icons.data_object,
                             label: '代码块',
+                            onTap: () => _applyAndClose(
+                              context,
+                              const _BlockShortcut(csesCodeBlockType),
+                            ),
                           ),
                           _ActionShortcutTile(
                             key: const ValueKey('editor-shortcut-quote'),
@@ -2023,6 +2032,9 @@ class _AddBlockSheet extends StatelessWidget {
     );
   }
 
+  /// 按稳定块标记解析插入位置，将 [shortcut] 应用于借用的编辑器。
+  /// [context] 属于当前面板；位置失效时提示且保持面板，成功后关闭并返回目标选区。
+  /// Future 在块事务和关闭请求完成后结束，退场与焦点恢复由外层负责；事务异常透传。
   Future<void> _applyAndClose(
     BuildContext context,
     _BlockShortcut shortcut,
