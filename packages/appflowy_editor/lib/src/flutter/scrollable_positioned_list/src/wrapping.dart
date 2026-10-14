@@ -881,10 +881,11 @@ abstract class CustomRenderViewport extends RenderViewportBase<CustomSliverPhysi
     }
   }
 
+  /// Applies the child's paint offset to [transform] for [child].
   @override
   void applyPaintTransform(RenderObject child, Matrix4 transform) {
     final Offset offset = paintOffsetOf(child as RenderSliver);
-    transform.translate(offset.dx, offset.dy);
+    transform.translateByDouble(offset.dx, offset.dy, 0.0, 1.0);
   }
 
   @override
