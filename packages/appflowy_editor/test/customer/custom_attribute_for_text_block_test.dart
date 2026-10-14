@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../new/util/util.dart';
 
+/// Registers the widget test for rendering custom mention attributes.
 void main() async {
   // column
   // - text field
@@ -28,11 +29,12 @@ void main() async {
 class CustomAttributeKeyForTextBlock extends StatelessWidget {
   const CustomAttributeKeyForTextBlock({super.key});
 
+  /// Builds an editor that renders mention attributes using [context].
   @override
   Widget build(BuildContext context) {
     final editorStyle = EditorStyle.desktop(
       // Example for customizing a new attribute key.
-      textSpanDecorator: (_, __, ___, textInsert, textSpan, ____) {
+      textSpanDecorator: (_, _, _, textInsert, textSpan, _) {
         final attributes = textInsert.attributes;
         if (attributes == null) {
           return textSpan;

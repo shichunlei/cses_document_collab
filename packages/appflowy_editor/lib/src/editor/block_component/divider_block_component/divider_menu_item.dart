@@ -1,6 +1,7 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:flutter/material.dart';
 
+/// The menu item that inserts a divider and paragraph at a collapsed selection.
 SelectionMenuItem dividerMenuItem = SelectionMenuItem(
   getName: () => AppFlowyEditorL10n.current.divider,
   icon: (editorState, isSelected, style) => SelectionMenuIconWidget(
@@ -9,7 +10,7 @@ SelectionMenuItem dividerMenuItem = SelectionMenuItem(
     style: style,
   ),
   keywords: ['horizontal rule', 'divider'],
-  handler: (editorState, _, __) {
+  handler: (editorState, _, _) {
     final selection = editorState.selection;
     if (selection == null || !selection.isCollapsed) {
       return;

@@ -45,6 +45,7 @@ class _MeetingBlockWidget extends BlockComponentStatelessWidget {
   /// Removes this block from the editor document.
   final ValueChanged<Node> onDelete;
 
+  /// Builds the meeting block and its edit controls using [context].
   @override
   Widget build(BuildContext context) {
     final source = node.attributes['_csesMeetingSource'];
@@ -107,7 +108,7 @@ class _MeetingBlockWidget extends BlockComponentStatelessWidget {
                 url ?? '',
                 height: 220,
                 fit: BoxFit.contain,
-                errorBuilder: (_, __, ___) => _mediaCard(
+                errorBuilder: (_, _, _) => _mediaCard(
                   context,
                   Icons.image_outlined,
                   '图片',

@@ -44,10 +44,11 @@ CharacterShortcutEvent insertNewLineAfterBulletedList = CharacterShortcutEvent(
   ),
 );
 
-// This function formats a symbol in the selection to a bulleted list.
-// If the selection is not collapsed, it returns false.
-// If the selection is collapsed and the text is not the symbol, it returns false.
-// If the selection is collapsed and the text is the symbol, it will format the current node to a bulleted list.
+/// Converts a matching single-character [symbol] into a bulleted list.
+///
+/// Uses the selection in the borrowed [editorState] and removes [symbol] from
+/// the text. Completes after applying the transaction, returning `false` when
+/// the selection is absent, expanded, or does not match an eligible text node.
 Future<bool> _formatSymbolToBulletedList(
   EditorState editorState,
   String symbol,
@@ -57,7 +58,7 @@ Future<bool> _formatSymbolToBulletedList(
   return formatMarkdownSymbol(
     editorState,
     (node) => node.type != BulletedListBlockKeys.type,
-    (_, text, __) => text == symbol,
+    (_, text, _) => text == symbol,
     (_, node, delta) => [
       node.copyWith(
         type: BulletedListBlockKeys.type,

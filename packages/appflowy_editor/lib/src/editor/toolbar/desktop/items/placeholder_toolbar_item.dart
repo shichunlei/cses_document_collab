@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 
 const placeholderItemId = 'editor.placeholder';
 
+/// The always-visible vertical separator for desktop toolbar groups.
 final ToolbarItem placeholderItem = ToolbarItem(
   id: placeholderItemId,
   group: -1,
   isActive: (editorState) => true,
-  builder: (_, __, ___, ____, _____) {
+  builder: (_, _, _, _, _) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
       child: Container(

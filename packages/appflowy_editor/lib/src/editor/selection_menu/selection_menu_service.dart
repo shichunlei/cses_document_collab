@@ -258,6 +258,7 @@ class SelectionMenu extends SelectionMenuService {
   }
 }
 
+/// The default block insertion items, with names resolved from the current locale.
 final List<SelectionMenuItem> standardSelectionMenuItems = [
   SelectionMenuItem(
     getName: () => AppFlowyEditorL10n.current.text,
@@ -267,7 +268,7 @@ final List<SelectionMenuItem> standardSelectionMenuItems = [
       style: style,
     ),
     keywords: ['text'],
-    handler: (editorState, _, __) {
+    handler: (editorState, _, _) {
       insertNodeAfterSelection(editorState, paragraphNode());
     },
   ),
@@ -279,7 +280,7 @@ final List<SelectionMenuItem> standardSelectionMenuItems = [
       style: style,
     ),
     keywords: ['heading 1, h1'],
-    handler: (editorState, _, __) {
+    handler: (editorState, _, _) {
       insertHeadingAfterSelection(editorState, 1);
     },
   ),
@@ -291,7 +292,7 @@ final List<SelectionMenuItem> standardSelectionMenuItems = [
       style: style,
     ),
     keywords: ['heading 2, h2'],
-    handler: (editorState, _, __) {
+    handler: (editorState, _, _) {
       insertHeadingAfterSelection(editorState, 2);
     },
   ),
@@ -303,7 +304,7 @@ final List<SelectionMenuItem> standardSelectionMenuItems = [
       style: style,
     ),
     keywords: ['heading 3, h3'],
-    handler: (editorState, _, __) {
+    handler: (editorState, _, _) {
       insertHeadingAfterSelection(editorState, 3);
     },
   ),
@@ -328,7 +329,7 @@ final List<SelectionMenuItem> standardSelectionMenuItems = [
       style: style,
     ),
     keywords: ['bulleted list', 'list', 'unordered list'],
-    handler: (editorState, _, __) {
+    handler: (editorState, _, _) {
       insertBulletedListAfterSelection(editorState);
     },
   ),
@@ -340,7 +341,7 @@ final List<SelectionMenuItem> standardSelectionMenuItems = [
       style: style,
     ),
     keywords: ['numbered list', 'list', 'ordered list'],
-    handler: (editorState, _, __) {
+    handler: (editorState, _, _) {
       insertNumberedListAfterSelection(editorState);
     },
   ),
@@ -352,7 +353,7 @@ final List<SelectionMenuItem> standardSelectionMenuItems = [
       style: style,
     ),
     keywords: ['todo list', 'list', 'checkbox list'],
-    handler: (editorState, _, __) {
+    handler: (editorState, _, _) {
       insertCheckboxAfterSelection(editorState);
     },
   ),
@@ -364,7 +365,7 @@ final List<SelectionMenuItem> standardSelectionMenuItems = [
       style: style,
     ),
     keywords: ['quote', 'refer'],
-    handler: (editorState, _, __) {
+    handler: (editorState, _, _) {
       insertQuoteAfterSelection(editorState);
     },
   ),
@@ -372,6 +373,7 @@ final List<SelectionMenuItem> standardSelectionMenuItems = [
   tableMenuItem,
 ];
 
+/// The paragraph and heading insertion items available in a single column.
 final List<SelectionMenuItem> singleColumnVisibleMenuItems = [
   SelectionMenuItem(
     getName: () => AppFlowyEditorL10n.current.text,
@@ -381,7 +383,7 @@ final List<SelectionMenuItem> singleColumnVisibleMenuItems = [
       style: style,
     ),
     keywords: ['text'],
-    handler: (editorState, _, __) {
+    handler: (editorState, _, _) {
       insertNodeAfterSelection(editorState, paragraphNode());
     },
   ),
@@ -393,7 +395,7 @@ final List<SelectionMenuItem> singleColumnVisibleMenuItems = [
       style: style,
     ),
     keywords: ['heading 1, h1'],
-    handler: (editorState, _, __) {
+    handler: (editorState, _, _) {
       insertHeadingAfterSelection(editorState, 1);
     },
   ),
@@ -405,7 +407,7 @@ final List<SelectionMenuItem> singleColumnVisibleMenuItems = [
       style: style,
     ),
     keywords: ['heading 2, h2'],
-    handler: (editorState, _, __) {
+    handler: (editorState, _, _) {
       insertHeadingAfterSelection(editorState, 2);
     },
   ),

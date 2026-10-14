@@ -40,10 +40,12 @@ abstract class BlockComponentBuilder with BlockComponentSelectable {
 
   bool Function(Node node) showActions = (_) => false;
 
-  BlockActionBuilder actionBuilder = (_, __) => const SizedBox.shrink();
+  /// The leading action builder, which renders an empty widget by default.
+  BlockActionBuilder actionBuilder = (_, _) => const SizedBox.shrink();
 
+  /// The trailing action builder, which renders an empty widget by default.
   BlockActionTrailingBuilder actionTrailingBuilder =
-      (_, __) => const SizedBox.shrink();
+      (_, _) => const SizedBox.shrink();
 
   BlockComponentConfiguration configuration =
       const BlockComponentConfiguration();

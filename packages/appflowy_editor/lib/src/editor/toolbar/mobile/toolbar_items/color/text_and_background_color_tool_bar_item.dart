@@ -1,16 +1,26 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:flutter/material.dart';
 
+/// Builds a toolbar menu for text and background colors.
+///
+/// [textColorOptions] and [backgroundColorOptions] provide the respective
+/// palettes; `null` uses the generated default palette for that tab.
+///
+/// ```dart
+/// import 'package:appflowy_editor/appflowy_editor.dart';
+///
+/// final colorItem = buildTextAndBackgroundColorMobileToolbarItem();
+/// ```
 MobileToolbarItem buildTextAndBackgroundColorMobileToolbarItem({
   List<ColorOption>? textColorOptions,
   List<ColorOption>? backgroundColorOptions,
 }) {
   return MobileToolbarItem.withMenu(
-    itemIconBuilder: (context, __, ___) => AFMobileIcon(
+    itemIconBuilder: (context, _, _) => AFMobileIcon(
       afMobileIcons: AFMobileIcons.color,
       color: MobileToolbarTheme.of(context).iconColor,
     ),
-    itemMenuBuilder: (_, editorState, ___) {
+    itemMenuBuilder: (_, editorState, _) {
       final selection = editorState.selection;
       if (selection == null) {
         return const SizedBox.shrink();

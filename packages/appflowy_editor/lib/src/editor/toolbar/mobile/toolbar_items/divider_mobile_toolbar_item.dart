@@ -1,7 +1,8 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 
+/// The mobile action that inserts a divider at a collapsed selection.
 final dividerMobileToolbarItem = MobileToolbarItem.action(
-  itemIconBuilder: (context, __, ___) => AFMobileIcon(
+  itemIconBuilder: (context, _, _) => AFMobileIcon(
     afMobileIcons: AFMobileIcons.divider,
     color: MobileToolbarTheme.of(context).iconColor,
   ),

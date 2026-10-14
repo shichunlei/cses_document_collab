@@ -82,6 +82,7 @@ class _FixedToolbar extends StatelessWidget {
 
   final EditorState editorState;
 
+  /// Builds selection-aware formatting controls using [context].
   @override
   Widget build(BuildContext context) {
     final items = [
@@ -208,7 +209,7 @@ class _FixedToolbar extends StatelessWidget {
               },
             );
           },
-          separatorBuilder: (_, __) => const VerticalDivider(),
+          separatorBuilder: (_, _) => const VerticalDivider(),
           itemCount: items.length,
         );
       },

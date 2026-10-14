@@ -80,6 +80,7 @@ class _MobileToolbarV2State extends State<MobileToolbarV2> {
     super.dispose();
   }
 
+  /// Builds the editor and keyboard-dependent toolbar spacing with [context].
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -90,7 +91,7 @@ class _MobileToolbarV2State extends State<MobileToolbarV2> {
         // add a bottom offset to make sure the toolbar is above the keyboard
         ValueListenableBuilder(
           valueListenable: isKeyboardShow,
-          builder: (context, isKeyboardShow, __) {
+          builder: (context, isKeyboardShow, _) {
             return SizedBox(
               height: isKeyboardShow ? widget.toolbarHeight : 0,
             );
@@ -110,12 +111,15 @@ class _MobileToolbarV2State extends State<MobileToolbarV2> {
     toolbarOverlay = null;
   }
 
+  /// Replaces the owned toolbar overlay and schedules insertion after layout.
+  ///
+  /// The overlay follows the editor selection and is removed during disposal.
   void _insertKeyboardToolbar() {
     _removeKeyboardToolbar();
 
     Widget child = ValueListenableBuilder<Selection?>(
       valueListenable: widget.editorState.selectionNotifier,
-      builder: (_, Selection? selection, __) {
+      builder: (_, Selection? selection, _) {
         // if the selection is null, hide the toolbar
         if (selection == null ||
             widget.editorState.selectionExtraInfo?[
@@ -289,7 +293,7 @@ class _MobileToolbarState extends State<_MobileToolbar>
     }
   }
 
-  // toolbar list view and close keyboard/menu button
+  /// Builds toolbar items and the keyboard/menu close control using [context].
   Widget _buildToolbar(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final style = MobileToolbarTheme.of(context);
@@ -359,7 +363,7 @@ class _MobileToolbarState extends State<_MobileToolbar>
           // close menu or close keyboard button
           ValueListenableBuilder(
             valueListenable: showMenuNotifier,
-            builder: (_, showingMenu, __) {
+            builder: (_, showingMenu, _) {
               return _CloseKeyboardOrMenuButton(
                 showingMenu: showingMenu,
                 onPressed: () {
@@ -385,14 +389,14 @@ class _MobileToolbarState extends State<_MobileToolbar>
     );
   }
 
-  // if there's no menu, we need to add a spacer to push the toolbar up when the keyboard is shown
+  /// Builds the active menu or keyboard-height spacing using [context] insets.
   Widget _buildMenuOrSpacer(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: cachedKeyboardHeight,
-      builder: (_, height, ___) {
+      builder: (_, height, _) {
         return ValueListenableBuilder(
           valueListenable: showMenuNotifier,
-          builder: (_, showingMenu, __) {
+          builder: (_, showingMenu, _) {
             var keyboardHeight = height;
             if (defaultTargetPlatform == TargetPlatform.android) {
               if (!showingMenu) {

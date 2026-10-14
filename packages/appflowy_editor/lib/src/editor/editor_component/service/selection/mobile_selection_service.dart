@@ -165,10 +165,11 @@ class _MobileSelectionServiceWidgetState
           );
   }
 
+  /// Builds a magnifier following the last pan offset, hidden when disabled.
   Widget _buildMagnifier() {
     return ValueListenableBuilder(
       valueListenable: _lastPanOffset,
-      builder: (_, offset, __) {
+      builder: (_, offset, _) {
         if (offset == null || disableMagnifier) {
           return const SizedBox.shrink();
         }

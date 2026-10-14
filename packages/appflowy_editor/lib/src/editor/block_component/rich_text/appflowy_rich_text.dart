@@ -452,6 +452,9 @@ class _AppFlowyRichTextState extends State<AppFlowyRichText>
     });
   }
 
+  /// Builds completion text that refreshes when the editor selection changes.
+  ///
+  /// Returns an empty widget when the provider has no completion to display.
   Widget _buildAutoCompleteRichText() {
     final textInserts = widget.node.delta!.whereType<TextInsert>();
     TextSpan textSpan = getTextSpan(textInserts: textInserts);
@@ -461,7 +464,7 @@ class _AppFlowyRichTextState extends State<AppFlowyRichText>
     textSpan = adjustTextSpan(textSpan);
     return ValueListenableBuilder(
       valueListenable: widget.editorState.selectionNotifier,
-      builder: (_, __, ___) {
+      builder: (_, _, _) {
         final autoCompleteText = autoCompleteTextProvider?.call(
           context,
           widget.node,

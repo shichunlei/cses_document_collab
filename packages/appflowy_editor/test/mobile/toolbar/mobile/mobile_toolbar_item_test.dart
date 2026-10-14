@@ -2,11 +2,12 @@ import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+/// Registers tests for action and menu toolbar item configuration.
 void main() {
   group('MobileToolbarItem', () {
     test('action item should not have a menu', () {
       final item = MobileToolbarItem.action(
-        itemIconBuilder: (_, __, ___) => const Icon(Icons.format_bold),
+        itemIconBuilder: (_, _, _) => const Icon(Icons.format_bold),
         actionHandler: (editorState, selection) {},
       );
 
@@ -15,8 +16,8 @@ void main() {
 
     test('menu item should have a menu', () {
       final item = MobileToolbarItem.withMenu(
-        itemIconBuilder: (_, __, ___) => const Icon(Icons.format_color_text),
-        itemMenuBuilder: (_, editorState, __) {
+        itemIconBuilder: (_, _, _) => const Icon(Icons.format_color_text),
+        itemMenuBuilder: (_, editorState, _) {
           return Container();
         },
       );

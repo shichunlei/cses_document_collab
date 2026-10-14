@@ -327,6 +327,7 @@ class _TableBlockComponentWidgetState extends State<TableBlockComponentWidget>
   }
 }
 
+/// The menu item that inserts a two-by-two table at a collapsed selection.
 SelectionMenuItem tableMenuItem = SelectionMenuItem(
   getName: () => AppFlowyEditorL10n.current.table,
   icon: (editorState, isSelected, style) => SelectionMenuIconWidget(
@@ -335,7 +336,7 @@ SelectionMenuItem tableMenuItem = SelectionMenuItem(
     style: style,
   ),
   keywords: ['table'],
-  handler: (editorState, _, __) {
+  handler: (editorState, _, _) {
     final selection = editorState.selection;
     if (selection == null || !selection.isCollapsed) {
       return;

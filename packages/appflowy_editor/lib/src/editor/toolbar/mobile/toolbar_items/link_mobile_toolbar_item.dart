@@ -1,8 +1,9 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:flutter/material.dart';
 
+/// The mobile menu for editing a link at the current selection.
 final linkMobileToolbarItem = MobileToolbarItem.withMenu(
-  itemIconBuilder: (context, __, ___) => AFMobileIcon(
+  itemIconBuilder: (context, _, _) => AFMobileIcon(
     afMobileIcons: AFMobileIcons.link,
     color: MobileToolbarTheme.of(context).iconColor,
   ),

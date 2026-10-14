@@ -1,7 +1,8 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 
+/// The mobile action that toggles todo-list formatting on selected blocks.
 final todoListMobileToolbarItem = MobileToolbarItem.action(
-  itemIconBuilder: (context, __, ___) => AFMobileIcon(
+  itemIconBuilder: (context, _, _) => AFMobileIcon(
     afMobileIcons: AFMobileIcons.checkbox,
     color: MobileToolbarTheme.of(context).iconColor,
   ),

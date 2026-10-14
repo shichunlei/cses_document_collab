@@ -44,11 +44,12 @@ class MobileToolbar extends StatelessWidget {
   final double buttonBorderWidth;
   final double buttonSelectedBorderWidth;
 
+  /// Builds themed formatting controls for the current selection with [context].
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<Selection?>(
       valueListenable: editorState.selectionNotifier,
-      builder: (_, Selection? selection, __) {
+      builder: (_, Selection? selection, _) {
         if (selection == null) {
           return const SizedBox.shrink();
         }

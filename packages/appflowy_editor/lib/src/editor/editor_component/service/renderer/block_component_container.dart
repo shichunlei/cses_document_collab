@@ -19,12 +19,13 @@ class BlockComponentContainer extends StatelessWidget {
   final BlockComponentConfiguration configuration;
   final WidgetBuilder builder;
 
+  /// Builds and observes the borrowed node, rendering its child with [context].
   @override
   Widget build(BuildContext context) {
     final child = ChangeNotifierProvider<Node>.value(
       value: node,
       child: Consumer<Node>(
-        builder: (_, __, ___) {
+        builder: (_, _, _) {
           AppFlowyEditorLog.editor
               .debug('node is rebuilding...: type: ${node.type} ');
           return CompositedTransformTarget(

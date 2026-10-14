@@ -157,7 +157,7 @@ class _MeetingBlockFormState extends State<_MeetingBlockForm> {
     super.dispose();
   }
 
-  /// Builds editable fields for every supported property in the chosen block.
+  /// Builds editable fields for the chosen block using [context] for sizing.
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -169,7 +169,7 @@ class _MeetingBlockFormState extends State<_MeetingBlockForm> {
           key: _formKey,
           child: ListView.separated(
             itemCount: _fields.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 12),
+            separatorBuilder: (_, _) => const SizedBox(height: 12),
             itemBuilder: (context, index) {
               final field = _fields[index];
               final options = field.options;

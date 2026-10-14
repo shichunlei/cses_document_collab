@@ -1,12 +1,13 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:flutter/material.dart';
 
+/// The mobile text-formatting menu including inline code alongside decorations.
 final textDecorationMobileToolbarItemV2 = MobileToolbarItem.withMenu(
-  itemIconBuilder: (context, __, ___) => AFMobileIcon(
+  itemIconBuilder: (context, _, _) => AFMobileIcon(
     afMobileIcons: AFMobileIcons.textDecoration,
     color: MobileToolbarTheme.of(context).iconColor,
   ),
-  itemMenuBuilder: (_, editorState, __) {
+  itemMenuBuilder: (_, editorState, _) {
     final selection = editorState.selection;
     if (selection == null) {
       return const SizedBox.shrink();

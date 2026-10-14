@@ -74,7 +74,9 @@ class _CustomizeThemeForEditorState extends State<CustomizeThemeForEditor> {
     );
   }
 
-  /// custom the block style
+  /// Builds themed block renderers that apply todo changes to [editorState].
+  ///
+  /// The caller retains ownership of [editorState].
   Map<String, BlockComponentBuilder> customBuilder(
     EditorState editorState,
   ) {
@@ -103,7 +105,7 @@ class _CustomizeThemeForEditorState extends State<CustomizeThemeForEditor> {
       // todo-list block
       TodoListBlockKeys.type: TodoListBlockComponentBuilder(
         configuration: configuration,
-        iconBuilder: (context, node, ___) {
+        iconBuilder: (context, node, _) {
           final checked = node.attributes[TodoListBlockKeys.checked] as bool;
           return GestureDetector(
             onTap: () => editorState.apply(
