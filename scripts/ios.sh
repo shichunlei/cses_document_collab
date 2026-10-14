@@ -16,6 +16,6 @@ if [[ "${1:-}" == build ]]; then
     [[ "$ARG" != --debug ]] || PROFILE=debug
   done
 fi
-"$ROOT/scripts/build_rust_ios.sh" "$PROFILE"
+"$ROOT/packages/cses_document_collab/tool/build_rust_ios.sh" "$PROFILE"
 cd "$ROOT"
 exec flutter "$@"

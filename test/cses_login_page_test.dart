@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:cses_mobile_collab_demo/src/collab/cses_account_login.dart';
-import 'package:cses_mobile_collab_demo/src/ui/cses_login_page.dart';
+import 'package:cses_mobile_collab_demo/src/demo/cses_account_login.dart';
+import 'package:cses_mobile_collab_demo/src/demo/cses_login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

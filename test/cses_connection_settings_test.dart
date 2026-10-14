@@ -1,4 +1,4 @@
-import 'package:cses_mobile_collab_demo/src/collab/cses_connection_settings.dart';
+import 'package:cses_mobile_collab_demo/src/demo/cses_connection_settings.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// 生成可选 [cookie]、[company]、[user]、[doc]、[url] 的本地测试会话。

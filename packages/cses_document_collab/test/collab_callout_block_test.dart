@@ -1,0 +1,403 @@
+import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
+import 'package:cses_document_collab/src/controller/collab_controller.dart';
+import 'package:cses_document_collab/src/editor/collab_callout_block.dart';
+import 'package:cses_document_collab/src/editor/collab_block_delete.dart';
+import 'package:cses_document_collab/src/editor/collaborative_editor_page.dart';
+import 'package:cses_document_collab/src/editor/collab_list_editing.dart';
+import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+const _fixture = [
+  CollabEditorBlock(
+    id: 'callout',
+    blockType: csesCalloutBlockType,
+    text: '',
+    calloutPrefix: '🤪',
+    blockBackgroundColor: '#F6E5F0',
+    blockBorderColor: '#FFE6CD',
+    blockTextColor: '#F97316',
+  ),
+  CollabEditorBlock(
+    id: 'body',
+    parentId: 'callout',
+    blockType: 'paragraph',
+    text: '这是高亮块儿',
+  ),
+  CollabEditorBlock(
+    id: 'second',
+    parentId: 'callout',
+    blockType: 'paragraph',
+    text: '第二段',
+  ),
+  CollabEditorBlock(id: 'tail', blockType: 'paragraph', text: '块外正文'),
+];
+
+void main() {
+  setUpAll(() {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockStreamHandler(
+          const EventChannel('keyboardHeightEventChannel'),
+          MockStreamHandler.inline(
+            onListen: (_, events) => events.success(0.0),
+          ),
+        );
+  });
+
+  testWidgets(
+    'desktop callout renders nested paragraphs and appearance in edit and preview',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final changes = <List<CollabEditorBlock>>[];
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: _fixture,
+        onLocalBlocksChanged: changes.add,
+      );
+      addTearDown(adapter.dispose);
+      await _pump(tester, adapter);
+      expect(adapter.editorState.document.root.children.length, 2);
+      expect(
+        adapter.editorState.getNodeAtPath([0, 0])!.delta!.toPlainText(),
+        '这是高亮块儿',
+      );
+      expect(adapter.blocks, _fixture);
+      expect(find.text('🤪'), findsOneWidget);
+      final containers = tester.widgetList<Container>(find.byType(Container));
+      expect(
+        containers.any(
+          (widget) =>
+              widget.decoration is BoxDecoration &&
+              (widget.decoration as BoxDecoration).color ==
+                  const Color(0xFFF6E5F0) &&
+              (widget.decoration as BoxDecoration).border ==
+                  Border.all(color: const Color(0xFFFFE6CD)),
+        ),
+        isTrue,
+      );
+      final rich = tester
+          .widgetList<RichText>(find.byType(RichText))
+          .where((w) => w.text.toPlainText().contains('这是高亮块儿'))
+          .first;
+      bool hasColor(InlineSpan span) =>
+          span.style?.color == const Color(0xFFF97316) ||
+          (span is TextSpan && (span.children ?? []).any(hasColor));
+      expect(hasColor(rich.text), isTrue);
+      expect(changes, isEmpty);
+      await tester.tap(find.byKey(const ValueKey('editor-mode-toggle')));
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('collab-callout-settings')),
+        findsNothing,
+      );
+      expect(find.text('🤪'), findsOneWidget);
+      expect(adapter.blocks, _fixture);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+  );
+
+  testWidgets(
+    'emoji and color controls publish field edits and independent undo',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final changes = <List<CollabEditorBlock>>[];
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: _fixture,
+        onLocalBlocksChanged: changes.add,
+      );
+      addTearDown(adapter.dispose);
+      await _pump(tester, adapter);
+      final state = adapter.editorState;
+      state.selection = Selection.single(path: [0, 0], startOffset: 2);
+      await tester.pump();
+      await tester.tap(find.byKey(const ValueKey('collab-callout-prefix')));
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('callout-emoji-settings-panel')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey('callout-background-blue')),
+        findsNothing,
+      );
+      expect(find.text('文字颜色'), findsNothing);
+      await tester.tap(find.byKey(const ValueKey('callout-emoji-💡')));
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('callout-emoji-settings-panel')),
+        findsNothing,
+      );
+      await tester.tap(find.byKey(const ValueKey('collab-callout-settings')));
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('callout-color-settings-panel')),
+        findsOneWidget,
+      );
+      expect(find.byKey(const ValueKey('callout-custom-prefix')), findsNothing);
+      expect(find.byKey(const ValueKey('callout-emoji-💡')), findsNothing);
+      expect(find.text('文字颜色'), findsNothing);
+      await tester.tap(find.byKey(const ValueKey('callout-background-blue')));
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('callout-color-settings-panel')),
+        findsOneWidget,
+      );
+      final border = find.byKey(const ValueKey('callout-border-green'));
+      await tester.ensureVisible(border);
+      await tester.tap(border);
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('callout-color-settings-panel')),
+        findsOneWidget,
+      );
+      expect(adapter.blocks.first.calloutPrefix, '💡');
+      expect(adapter.blocks.first.blockBackgroundColor, '#DFEAFC');
+      expect(adapter.blocks.first.blockBorderColor, '#DDF3E4');
+      expect(adapter.blocks[1].parentId, 'callout');
+      expect(adapter.blocks[1].text, '这是高亮块儿');
+      expect(changes.length, 3);
+      state.undoManager.undo();
+      await tester.pumpAndSettle();
+      expect(adapter.blocks.first.blockBorderColor, '#FFE6CD');
+      expect(adapter.blocks.first.blockBackgroundColor, '#DFEAFC');
+      state.undoManager.redo();
+      await tester.pumpAndSettle();
+      expect(adapter.blocks.first.blockBorderColor, '#DDF3E4');
+      expect(tester.takeException(), isNull);
+      Navigator.of(
+        tester.element(
+          find.byKey(const ValueKey('callout-color-settings-panel')),
+        ),
+      ).pop();
+      await tester.pumpAndSettle();
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+  );
+
+  testWidgets(
+    'remote appearance keeps child identity and caret; undo follows reordered callout',
+    (tester) async {
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: _fixture,
+        onLocalBlocksChanged: (_) {},
+      );
+      addTearDown(adapter.dispose);
+      await _pump(tester, adapter);
+      final state = adapter.editorState;
+      final child = state.getNodeAtPath([0, 0]);
+      final caret = Selection.single(path: [0, 0], startOffset: 2);
+      state.selection = caret;
+      await updateCollabCalloutAppearance(
+        state,
+        'callout',
+        csesCalloutPrefixAttribute,
+        '💡',
+      );
+      const remoteCallout = CollabEditorBlock(
+        id: 'callout',
+        blockType: csesCalloutBlockType,
+        text: '',
+        calloutPrefix: '💡',
+        blockBackgroundColor: '#DFEAFC',
+        blockBorderColor: '#FFE6CD',
+        blockTextColor: '#F97316',
+      );
+      await adapter.replaceFromRemote([remoteCallout, ..._fixture.skip(1)]);
+      await tester.pumpAndSettle();
+      expect(identical(state.getNodeAtPath([0, 0]), child), isTrue);
+      expect(state.selection, caret);
+      await adapter.replaceFromRemote(const [
+        _fixtureTail,
+        remoteCallout,
+        CollabEditorBlock(
+          id: 'body',
+          parentId: 'callout',
+          blockType: 'paragraph',
+          text: '远端更新正文',
+        ),
+        CollabEditorBlock(
+          id: 'second',
+          parentId: 'callout',
+          blockType: 'paragraph',
+          text: '第二段',
+        ),
+      ]);
+      state.undoManager.undo();
+      await tester.pumpAndSettle();
+      expect(adapter.blocks[1].calloutPrefix, '🤪');
+      expect(adapter.blocks[1].blockBackgroundColor, '#DFEAFC');
+      expect(adapter.blocks[2].text, '远端更新正文');
+      expect(adapter.blocks.first.text, '块外正文');
+      state.editable = false;
+      await updateCollabCalloutAppearance(
+        state,
+        'callout',
+        csesCalloutPrefixAttribute,
+        '🚀',
+      );
+      expect(adapter.blocks[1].calloutPrefix, '🤪');
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+  );
+
+  testWidgets(
+    'add sheet inserts a callout and body shortcuts never replace the container',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: _fixture,
+        onLocalBlocksChanged: (_) {},
+      );
+      addTearDown(adapter.dispose);
+      await _pump(tester, adapter);
+      final state = adapter.editorState;
+      state.selection = Selection.single(path: [0, 0], startOffset: 1);
+      final sheet = showEditorAddBlockSheet(
+        tester.element(find.byType(AppFlowyEditor)),
+        state,
+      );
+      await tester.pumpAndSettle();
+      final tile = find.byKey(const ValueKey('editor-shortcut-callout'));
+      await tester.ensureVisible(tile);
+      await tester.tap(tile);
+      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 400));
+      await tester.pumpAndSettle();
+      await sheet;
+      expect(state.document.root.children.map((n) => n.type), [
+        csesCalloutBlockType,
+        csesCalloutBlockType,
+        'paragraph',
+      ]);
+      expect(state.selection!.start.path, [1, 0]);
+      // Convert the empty body rather than its parent callout.
+      expect(
+        await applyBlockShortcut(
+          state,
+          state.selection!,
+          NumberedListBlockKeys.type,
+        ),
+        isTrue,
+      );
+      expect(state.getNodeAtPath([1])!.type, csesCalloutBlockType);
+      expect(state.getNodeAtPath([1, 0])!.type, NumberedListBlockKeys.type);
+      state.selection = Selection.single(path: [1, 0], startOffset: 0);
+      expect(await changeCollabListIndent(state, 1), isTrue);
+      expect(
+        state.getNodeAtPath([1, 0])!.attributes[csesBlockIndentAttribute],
+        1,
+      );
+      final body = state.getNodeAtPath([1, 0])!;
+      await state.apply(state.transaction..insertText(body, 0, '列表正文'));
+      state.selection = Selection.single(path: [1, 0], startOffset: 4);
+      expect(await handleCollabListEnter(state), isTrue);
+      expect(state.getNodeAtPath([1])!.children.length, 2);
+      expect(
+        state.getNodeAtPath([1, 1])!.attributes[csesBlockIndentAttribute],
+        1,
+      );
+      expect(
+        adapter.blocks.where(
+          (b) =>
+              b.parentId ==
+              adapter.blocks
+                  .firstWhere(
+                    (b) =>
+                        b.id != 'callout' &&
+                        b.blockType == csesCalloutBlockType,
+                  )
+                  .id,
+        ),
+        hasLength(2),
+      );
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+  );
+
+  testWidgets(
+    'insertion, nested Enter and boundary Backspace preserve container',
+    (tester) async {
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: const [
+          CollabEditorBlock(id: 'p', blockType: 'paragraph', text: '正文'),
+        ],
+        onLocalBlocksChanged: (_) {},
+      );
+      addTearDown(adapter.dispose);
+      await _pump(tester, adapter);
+      final state = adapter.editorState;
+      await insertCollabCallout(
+        state,
+        Selection.single(path: [0], startOffset: 1),
+      );
+      await tester.pumpAndSettle();
+      expect(adapter.blocks[1].blockType, csesCalloutBlockType);
+      expect(adapter.blocks[2].parentId, adapter.blocks[1].id);
+      expect(state.selection!.start.path, [1, 0]);
+      final child = state.getNodeAtPath([1, 0])!;
+      await state.apply(state.transaction..insertText(child, 0, '新增正文'));
+      state.selection = Selection.single(path: [1, 0], startOffset: 2);
+      await state.insertNewLine();
+      await tester.pumpAndSettle();
+      expect(state.getNodeAtPath([1])!.children.length, 2);
+      expect(
+        adapter.blocks.skip(2).every((b) => b.parentId == adapter.blocks[1].id),
+        isTrue,
+      );
+      state.selection = Selection.single(path: [1, 0], startOffset: 0);
+      expect(
+        collabBlockBackspaceCommand.execute(state),
+        KeyEventResult.handled,
+      );
+      await tester.pumpAndSettle();
+      expect(state.getNodeAtPath([1])!.type, csesCalloutBlockType);
+      expect(state.getNodeAtPath([0])!.delta!.toPlainText(), '正文');
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+  );
+}
+
+const _fixtureTail = CollabEditorBlock(
+  id: 'tail',
+  blockType: 'paragraph',
+  text: '块外正文',
+);
+
+Future<void> _pump(
+  WidgetTester tester,
+  AppFlowyBlockEditorAdapter adapter,
+) async {
+  final collab = _ReadyController(adapter.editorState);
+  addTearDown(collab.dispose);
+  await tester.pumpWidget(
+    MaterialApp(
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        AppFlowyEditorLocalizations.delegate,
+      ],
+      home: CollaborativeEditorPage(collab: collab),
+    ),
+  );
+  await tester.pumpAndSettle();
+}
+
+class _ReadyController extends CollabController {
+  _ReadyController(this.state) : super.localDraft(databasePath: '/unused');
+  final EditorState state;
+  @override
+  EditorState get editorState => state;
+  @override
+  bool get initialized => true;
+  @override
+  bool get canEdit => true;
+}

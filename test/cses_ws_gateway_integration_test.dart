@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cses_common/network/websocket/cses_websocket_client.dart';
-import 'package:cses_mobile_collab_demo/src/collab/cses_collab_gateway.dart';
-import 'package:cses_mobile_collab_demo/src/collab/cses_connection_settings.dart';
-import 'package:cses_mobile_collab_demo/src/collab/cses_demo_host.dart';
-import 'package:cses_mobile_collab_demo/src/collab/cses_doc_collaboration_session.dart';
+import 'package:cses_mobile_collab_demo/src/demo/common_cses_collab_gateway.dart';
+import 'package:cses_mobile_collab_demo/src/demo/cses_connection_settings.dart';
+import 'package:cses_mobile_collab_demo/src/demo/cses_demo_host.dart';
+import 'package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart';
 import 'package:cses_common/runtime/runtime_fields.dart';

@@ -1,6 +1,6 @@
 # CSES Mobile Collab Demo
 
-一个独立运行的 Flutter + Rust/Yrs 离线协同实验，复用工作区 `cses.common` 的 CSES 主连接，不依赖 SaaS 详情页。
+一个独立运行的 Flutter + Rust/Yrs 离线协同实验。协同核心位于 `packages/cses_document_collab`；根 App 装配登录、Common 主连接、上传与缓存路径。
 
 桌面块的完整移动端适配进度见 [块适配表](docs/block-adaptation.md)。每完成一个块的适配，都须同步更新该表的状态、支持范围及验证记录。
 
@@ -33,7 +33,7 @@
 - 本地 AppFlowy transaction、远端 transaction 防回环
 - `flutter_rust_bridge` 调用手机端 Rust
 - Rust/Yrs 提供原始 V1 update、状态向量和 Awareness，CSES 适配层使用 Base64 JSON 文本信封
-- 直接引用 `../cses/cses.common`，复用鉴权上下文、hello、主连接心跳、重连及精确三级路由
+- Demo 宿主引用 `../cses.common`，复用鉴权上下文、hello、主连接心跳、重连及精确三级路由
 - `subscribe → collabJoin → collabSync → collabUpdate` 双向差量交换，20 秒主动补偿
 - 本机 Awareness 10 秒提升时钟上报，显示其他编辑器数量；尚未绑定光标和选区
 - 在线协同只使用 CSES 主连接，通过 Common 收发 JSON 协议，不提供独立 WS 传输或本地测试服务
@@ -59,7 +59,7 @@ cses_mobile_block_text:<blockId> Y.Text（文本块含行内 attributes；链接
 自动补齐头部；默认封面为 README 当前版本配置的百度图片链接。用户主动移除后保留空 URL，
 后续加载不会再次覆盖为默认图。
 
-CSES 文档通过 `rust/src/api/blockcraft.rs` 直接读写正式共享类型：
+CSES 文档通过 `packages/cses_document_collab/rust/src/api/blockcraft.rs` 直接读写正式共享类型：
 
 ```text
 blocks                         Y.Map<blockId, Y.Map>
@@ -88,61 +88,28 @@ bc:revisions / bc:revision-decisions / bc:revision-meta  原样保留的修订�
 ## CSES 接入与资源所有权
 
 ```text
-账号密码登录页 → /User/login → 文档状态页 → CollabController（Demo 装配边界）
-                 ├─ AppFlowyBlockEditorAdapter → Flutter 原生编辑器
-                 ├─ Rust/Yrs Doc → SQLite 增量日志
-                 ├─ CsesDocCollaborationSession → 协同状态机/差量/Awareness
-                 │      └─ CommonCsesCollabGateway → 原 Common 公共 API
-                 └─ CsesDemoHost → CSES 唯一主连接和登录上下文
+Demo 登录 → DemoDocumentHost → cses_document_collab 公共入口
+             ├─ CsesDemoHost → Common 唯一主连接/认证
+             ├─ CommonCsesCollabGateway → 包的 Gateway 契约
+             ├─ CsesEditorMediaUploadService → 宿主 OSS/文件登记
+             └─ CollabController → AppFlowy 投影 ↔ Rust/Yrs ↔ SQLite
 ```
 
-- `cses_account_login.dart` 使用 `cses.saas` 的 `POST /User/login` 密码登录契约，提交
-  `userName/password`，请求头使用 Common 本机 `deviceId`，与后续 WS 保持一致。
-  PRE API 为 `https://api-pre.jinqidongli.com/User/login`。专用 HTTP 客户端不安装正文日志拦截器；
-  密码不落盘，成功后清空输入框。响应中的 cookieId/userId/companyId 和 webConfig.websocketHost
-  构成内存会话，缺少企业时按 organizes 选择普通企业；缺少有效身份则留在登录页。
-- `cses_login_page.dart` 校验输入并防止重复提交；失败展示错误，销毁后忽略迟到响应。
-  登录成功后创建文档宿主，等待本地初始化，再自动注册协同并连接 WS。退出登录等待旧控制器的
-  Socket、投影与全局 Rust 文档完全释放，再回到登录页。
-- `cses_connection_settings.dart` 校验登录响应的 WS 地址、cookieId、企业、用户和正式 docId；
-  不执行 HTTP 登录，不自动创建文档。缓存键由地址/企业/用户/docId 哈希生成，cookie 轮换不丢离线修改。
-  正式模型采用 `cses-blockcraft-v1:` 前缀，旧 `cses:` Demo 分区保留但不混入正式正文。
-  Rust 的业务根 ID 和本机缓存键分别传入，不能用哈希缓存键查找正式 root。
-- `cses_demo_host.dart` 初始化 Common 内存上下文，固定 `pre` 环境标记和 `bct` appType；
-  实际部署地址取自登录响应，未返回时使用 PRE 默认地址。CPU 等握手 Header 必须非 null，避免 dart:io 在握手前失败。
-- `cses_collab_gateway.dart` 使用现有 `registerListeners(onlyListen: true)` 安装回调，
-  并借用公开注册锁等待其 async void 操作完成。主连接 ready 后手动发送平台 subscribe，随后会话 join。
-  纯监听注销避免 Common 自动排队 unsubscribe；适配器不创建/关闭物理 WS。
-- `cses_doc_collaboration_session.dart` 只拥有自己的监听和定时器。收到 collabSync 后先应用服务端
-  update，再按服务端向量发送本地差量；ready 表示客户端交换完成，不是服务端落库回执。
-  CSES 新缓存直接加载服务端正式正文，不补齐离线草稿的 Demo 头部；
-  离线编辑只写 Yrs/SQLite，重连恢复 subscribe/join；15 秒同步超时，最多 3 次指数退避重试。
-- 权限拒绝、文档不存在、参数/Schema 错误停止自动重试，前台恢复不会清除此类错误。
-  房间关闭及服务端内部错误允许有界重新 join。单次上行 update 限制 1 MiB，不按字节拆包；
-  下行正文实验上限 32 MiB，状态向量和 Awareness 各 64 KiB。
-- 在线退出依次发送本机 Awareness null、collabLeave、unsubscribe，再注销监听；离线退出只清理本地。
-  账号/文档切换和应用退出由宿主关闭本 Demo 独占的主连接；返回连接页继续保留同一会话。
-- Rust 引擎是进程全局单实例，Demo 同时只允许一个 CollabController。投影串行完成，
-  销毁标记阻止迟到 UI 回写；多个视图应借用同一控制器，不能另开独立 Doc 争用全局引擎。
-- 页面监听 `canEdit/readOnlyReason`，用户预览选择与模型能力共同决定输入状态；
-  远端新增锁定、修订等整篇只读内容时关闭编辑和快捷栏，返回配置页不会解除模型只读约束。
-  Rust 拒绝的本地操作重新投影权威快照，避免 UI 留下未被接受的内容。
+完整接入契约、资源释放顺序和迁入 SaaS 的步骤见 [协同包接入文档](docs/collab-package-integration.md)；独立包的公共 API 与构建说明见 [包 README](packages/cses_document_collab/README.md)。包不引用 demo、SaaS、Common 或全局登录上下文。
 
-### 直接复用 Common 的实验边界
-
-`cses.common` 源码保持不变。Demo 在线时调用已有 `sendMessageWithResult`，离线不调用发送器。
-该 API 在同步发送异常时仍可能把消息加入 Common 队列，因此这里不能保证严格无队列发送；
-正文以 Yjs 幂等 update 和重连向量修复，join/leave/Awareness 的失败重放仍需真实环境专项验证。
-要获得生产级严格无队列发送，需要 Common 提供对应能力后再评估，首轮实验不扩展其公共 API。
-
-Common 当前 URI 构造不支持已有 Query，因此登录响应中的部署地址必须完整且无 Query。
-其连接诊断可能输出包含 cookieId 的 URI，原始日志应按凭证处理，不能直接共享。
-引用完整 Common 会带入其原生插件；Common 与工作区 AppFlowy 使用相同的 file_picker/device_info_plus 版本。
-Demo 使用 image 4.12.0 与 archive 4.5.1，已移除旧的 image 版本覆盖，未修改 Common 或已有编辑器 fork 的源码。
+- Demo 仍使用 `/User/login` 的 PRE 账号密码契约，固定正式测试文档 ID；cookie 只在宿主内存中持有。
+- `DemoDocumentHost` 选择旧 SQLite 路径及相同缓存分区，配置 Common 登录上下文，注入 Gateway、ID、日志和媒体上传。包直接打开正式模型，不先打开草稿。
+- `initialize()` 完成表示本地恢复和回调注册完成；协同 ready/online 只表示客户端差量交换，不是服务端落库回执。
+- 页面借用控制器；退出账号先等待包的 close，再由 Demo 宿主关闭主连接并清理认证。返回连接面板仍复用同一控制器。
+- Rust 是单文档引擎，包对第二控制器明确拒绝；新文档必须等待旧控制器关闭。
+- 包使用宿主编辑授权和模型只读条件。只读握手不补传缓存中的本地变更，恢复授权后再同步。正式部署仍需服务端文档/租户鉴权。
+- 权限、文档不存在、非法 schema 停止自动重试；重连和主动补偿维持原协议。上行单次 1 MiB，下行正文 32 MiB，向量/Awareness 64 KiB。
+- Common 适配器保留既有 onlyListen 与手动 subscribe 实验边界；同步发送异常可能进入 Common 队列。join/leave/Awareness 的失败重放仍需真实环境验证。
+- Common WS 地址不能带既有 query；其 URI 日志可能包含凭证，不能共享原始连接日志。
 
 ## 运行
 
-首次构建移动端 Rust 库时安装目标工具链：
+首次构建移动端 Rust 库时安装目标工具链（源码已在包目录中）：
 
 ```bash
 rustup target add \
@@ -171,16 +138,16 @@ instance 自动生成，同一次文档宿主挂载期间保持稳定，重新�
 界面出现 `bidirectional-sync-ready` 后再确认双端编辑；握手超时要核对会话和服务端协议部署，
 底层 Socket 打开或收到 hello 不代表文档会话成功。
 
-宿主 Flutter 最低版本为 **3.44.9**，Dart 最低版本为 **3.12.0**；`rust_builder` 支持 Flutter 3.44.0 起。
+宿主 Flutter 最低版本为 **3.44.9**，Dart 最低版本为 **3.12.0**；`cses_document_collab` 支持 Flutter 3.44.0 起。
 依赖按 Flutter 3.44.9 验证，锁定版本见 `pubspec.lock`。Flutter SDK 固定的依赖与工作区插件的
-主版本约束继续由依赖解析器管理。`rust_builder` 使用 ffi 2.2.0、ffigen 21.0.0；
+主版本约束继续由依赖解析器管理。`cses_document_collab` 使用 ffi 2.2.0、ffigen 21.0.0；
 ffigen 22/23 的传递依赖要求 meta >=1.19，与该 Flutter SDK 固定的 meta 1.18 不兼容。
 FRB 的 Dart 库、Rust 库和代码生成器统一为 2.13.0。修改 Rust API 后使用
 `flutter_rust_bridge_codegen` 2.13.0 执行 `flutter_rust_bridge_codegen generate`，再重建原生库。
-iOS 最低版本为 14.0。宿主只使用 SPM，不需要 CocoaPods；`rust_builder/ios` 提供 SPM 接入。
+iOS 最低版本为 14.0。宿主只使用 SPM，不需要 CocoaPods；`packages/cses_document_collab/ios` 提供 SPM 接入。
 使用 Flutter 3.44.9 默认启用的 SPM 支持，无需额外配置开关。
 Flutter 生成的 `FlutterGeneratedPluginSwiftPackage` 管理插件，Rust 插件通过
-`rust_builder/ios/cses_collab_core/Package.swift` 引用本地动态 XCFramework。
+`packages/cses_document_collab/ios/cses_document_collab/Package.swift` 引用本地动态 XCFramework。
 
 使用统一入口构建或启动 iOS，确保先更新 Rust 库，再解析 SPM 依赖：
 从旧 Pods 工程首次切换时先执行一次 `flutter clean`，避免链接到旧的同名 framework 缓存。
@@ -199,7 +166,7 @@ Rust 二进制和 `ios/Flutter/ephemeral/` 都不提交；干净检出后必须�
 Rust 源码改变后，直接使用 Xcode 或 `flutter run` 前也需要重新执行 Rust 构建脚本。
 iPhone 首次运行需要在 Xcode 中配置开发者签名。
 
-`rust_builder` 保留 `.podspec` 和 Cargokit 构建脚本，供其他使用 CocoaPods 的宿主接入；
+`cses_document_collab` 保留 `.podspec` 和 Cargokit 构建脚本，供其他使用 CocoaPods 的宿主接入；
 本宿主不提供 CocoaPods 回退配置。
 当前 Android 构建输出位于 `build/app/outputs/flutter-apk/app-debug.apk`。
 Rust 或 FRB 桥接声明变化后必须停止运行并完整重新构建安装；热重载/热重启不能替换已加载的原生库。
@@ -228,27 +195,31 @@ Rust 或 FRB 桥接声明变化后必须停止运行并完整重新构建安装�
 
 ## 验证
 
+根 App 测试覆盖登录、旧缓存身份、Demo 页面与 Common 本机 WebSocket 联调：
+
 ```bash
-cargo test --manifest-path rust/Cargo.toml
-cargo build --manifest-path rust/Cargo.toml
-flutter test test/blockcraft_native_integration_test.dart
-flutter test test/cses_connection_settings_test.dart test/cses_doc_collaboration_session_test.dart test/cses_ws_gateway_integration_test.dart
-flutter test test/collab_list_enter_focus_test.dart test/collab_video_update_test.dart
-flutter test test/collab_list_enter_test.dart test/ordered_numbering_native_test.dart
-flutter test test/collab_list_backspace_test.dart test/collab_list_backspace_focus_test.dart test/collab_block_delete_test.dart
-flutter test test/collab_list_indent_test.dart test/collab_list_type_test.dart test/collab_list_toolbar_focus_test.dart test/ordered_numbering_native_test.dart
-flutter test
-flutter analyze
-flutter build apk --debug
-scripts/ios.sh build ios --debug --no-codesign
+flutter test test
+flutter analyze --no-pub
 ```
+
+包内测试从包目录执行；先按包 README 配置同一 AppFlowy fork，再构建原生库：
+
+```bash
+cd packages/cses_document_collab
+flutter pub get
+cargo build --manifest-path rust/Cargo.toml
+cargo test --manifest-path rust/Cargo.toml
+flutter test --no-pub
+```
+
+异地引用验证：`packages/cses_document_collab/tool/verify_portable_package.sh ../cses.plugins/appflowy_editor`。
 
 ## 与 CSES 桌面端的边界
 
 当前 Demo 使用正式 BlockCraft 的 blocks 根、嵌套块 Map 和原生 Y.Text，支持普通顶层正文及高亮容器内正文双向编辑。
 `rust/tests/fixtures/` 保存由 Yjs 13.6.19 编码的脱敏 V1 样本，覆盖富文本、未知 props/meta、
 未知容器、行内对象和锁。生成器 `generate.cjs` 接受已安装的 yjs 包路径，避免依赖 Rust 自己生成的样本自证兼容。
-原生桥接测试验证业务根 ID 与缓存键分离、编辑以及 SQLite 恢复；没有宿主库时显式跳过，需先 cargo build。
+原生桥接测试验证业务根 ID 与缓存键分离、编辑以及 SQLite 恢复；旧样本测试缺库时显式跳过；新增控制器抽包门禁缺库直接失败，运行前需先 cargo build。
 
 当前未接入文档业务名称/封面接口、`/doc/document/edit` 的 dirty-block 快照、评论及业务权限。
 Awareness 展示用户和在线数，尚未对齐桌面光标/选区契约；不能用 ready 或 SyncStatus 声称业务落库成功。
@@ -405,18 +376,9 @@ bridge 的 text 字段传递；正式图片写入 props.src、视频写入 props
 
 ## 编辑页面移植
 
-编辑器页面已经从连接管理页拆出：
+宿主只依赖 `cses_document_collab` 的公开入口，传入正式 docId、企业/用户/服务端缓存身份、数据库路径、Gateway 与授权。编辑页为 `CollaborativeEditorPage(collab: controller)`。Binding/页面宿主负责等待 initialize/close，包负责 native 初始化和本地化。
 
-- `lib/src/ui/collaborative_editor_page.dart`：全屏编辑页、连接状态、撤销/重做；
-- `lib/src/ui/editor_shortcut_toolbar.dart`：键盘快捷栏和“添加”面板；
-- `lib/src/collab/collab_controller.dart`：编辑状态及协同生命周期；
-- `lib/src/collab/appflowy_block_editor_adapter.dart`：AppFlowy transaction 与
-  Rust/Yrs 块 Schema 的双向适配。
-
-当前 `CollabController` 还包含独立 Demo 的主连接宿主，移植到已有业务 App 时应注入现有主连接，
-不能照搬其账号切换/关闭全局连接逻辑。Demo 创建并持有控制器，完成 `initialize()` 后，通过
-`CollaborativeEditorPage(collab: controller)` 打开编辑页即可。页面退出时
-不要销毁仍需复用的 controller；由创建它的上层页面或依赖注入容器统一释放。
+后续迁入 SaaS 的具体配置与示例见 [接入文档](docs/collab-package-integration.md)。包目录可以整目录移动，当前 AppFlowy fork 仍需由最终 App 解析。
 
 ## 非生产能力
 

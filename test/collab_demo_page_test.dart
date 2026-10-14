@@ -1,5 +1,5 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
-import 'package:cses_mobile_collab_demo/src/ui/collab_demo_page.dart';
+import 'package:cses_mobile_collab_demo/src/demo/collab_demo_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';

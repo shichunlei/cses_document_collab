@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:cses_mobile_collab_demo/src/collab/cses_account_login.dart';
+import 'package:cses_mobile_collab_demo/src/demo/cses_account_login.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Map<String, dynamic> success() => {

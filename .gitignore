@@ -31,9 +31,7 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
-/rust_builder/ios/cses_collab_core/*.xcframework/
 /coverage/
-/rust/target/
 
 # Symbolication related
 app.*.symbols
@@ -49,3 +47,12 @@ app.*.map.json
 /dist
 
 *.lock
+
+# Portable package and temporary host resolution/build outputs.
+**/.dart_tool/
+**/build/
+****/*.xcframework/
+**/pubspec_overrides.yaml
+
+# Lock native dependencies for reproducible plugin builds.
+!packages/cses_document_collab/rust/Cargo.lock

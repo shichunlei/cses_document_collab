@@ -1,6 +1,6 @@
 # 桌面块移动端适配表
 
-最后核对：2026-10-13。桌面依赖：`@ccc/blockcraft` 0.11.14。
+最后核对：2026-10-14。桌面依赖：`@ccc/blockcraft` 0.11.14。
 
 本表记录 CSES 桌面主文档编辑器实际注册的块及其在本项目移动端的适配情况，作为后续适配工作的统一清单。每完成一个块的适配，须在同一次改动中更新本表。
 
@@ -19,6 +19,8 @@
 H1～H9 是 `paragraph.props.heading`，不另计为块类型。行内链接、@提及、行内公式等不计入本表。移动端自有的独立链接、封面和文档标题也不计入桌面块数量。
 
 资源添加面板统一独立保存原光标/选区和块 ID，打开后正文失焦并暂停输入；确认按原块位置插入，关闭动画结束后恢复正文输入，取消则恢复原选区及方向。协同重排按块 ID 重新定位，原块删除时停止插入并提示重选；嵌套面板全部关闭前不恢复正文焦点。此交互修正不改变下表状态统计。
+
+上传服务现由宿主注入：demo 已装配 CSES OSS/文件登记；其他宿主未注入时仅显示链接输入。拆包不改变各块的正式 Schema 支持范围。
 
 ## 适配清单
 
@@ -86,9 +88,9 @@ H1～H9 是 `paragraph.props.heading`，不另计为块类型。行内链接、@
 
 ## 核对依据
 
-- 移动端正式类型映射、共享结构与写入边界：[blockcraft.rs](../rust/src/api/blockcraft.rs)。
-- 移动端编辑投影：[appflowy_block_editor_adapter.dart](../lib/src/collab/appflowy_block_editor_adapter.dart)。
-- 移动端渲染器注册：[collaborative_editor_page.dart](../lib/src/ui/collaborative_editor_page.dart)。
+- 移动端正式类型映射、共享结构与写入边界：[blockcraft.rs](../packages/cses_document_collab/rust/src/api/blockcraft.rs)。
+- 移动端编辑投影：[appflowy_block_editor_adapter.dart](../packages/cses_document_collab/lib/src/editor/appflowy_block_editor_adapter.dart)。
+- 移动端渲染器注册：[collaborative_editor_page.dart](../packages/cses_document_collab/lib/src/editor/collaborative_editor_page.dart)。
 - 桌面基础块注册：[const.ts](../../cses-client/src/pages/docs/editor/const.ts)。
 - 桌面任务列表追加注册：[editor.component.ts](../../cses-client/src/pages/docs/pages/document/components/blockcraft-editor/editor.component.ts)。
 - 桌面天气、日期及人员卡片注册：[registry.ts](../../cses-client/packages/docs/src/template-library/materials/registry.ts)。
@@ -99,6 +101,7 @@ H1～H9 是 `paragraph.props.heading`，不另计为块类型。行内链接、@
 
 | 日期 | 更新 | 验证依据 |
 |---|---|---|
+| 2026-10-14 | 协同核心、块渲染及 Rust/SQLite 提取为独立 Flutter FFI 包；更新源码引用，上传由宿主注入；各块实际支持范围与统计不变 | 包与宿主分开回归、原生控制器占用/缓存/只读门禁和异地引用验证；详细结果见协同包接入文档 |
 | 2026-10-13 | 图片、视频、音频、附件等添加面板与正文焦点隔离；独立保存原选区及稳定块 ID，确认仍按原位置插入，取消恢复原选区，封面操作同样恢复原正文位置；统计不变 | 真实 AppFlowy 键盘服务测试覆盖输入焦点、关闭动画、嵌套面板、取消恢复、协同重排/删除、上传等待和只读竞态 |
 | 2026-10-13 | 图片、视频、音频、附件及封面添加统一使用底部面板；提供链接/本地上传 Tab，接入系统单文件选择、CSES OSS 上传/文件登记、进度/取消/重试及元数据；仅成功后的稳定 URL 进入协同，适配状态统计不变 | 链接插入与键盘恢复、Tab 保留输入、上传失败/取消/只读竞态、文件大小限制、附件元数据与容器内插入测试；真实账号网络上传仍待设备验证 |
 | 2026-10-13 | 接入附件、音频、网页卡片、网页嵌入、掘金和 Figma 六类资源块的展示/交互/属性事务/插入删除及正式协同；按剩余缺口标为部分支持，统计 8 已适配 / 8 部分支持 / 24 未适配 | 核对桌面六种 Schema；Yjs 资源样本、Rust 属性白名单/并发/SQLite、Dart 属性撤销、播放器/WebView 生命周期与 FRB 集成回归 |
