@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/model/collab_divider.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'dart:async';
 
@@ -130,7 +131,7 @@ Future<void> _runBackspaceTransaction(
   }
 }
 
-/// 返回借用的 [editorState] 当前折叠光标是否应删除前置资源；要求偏移 0，且存在前置媒体。
+/// 返回借用的 [editorState] 当前折叠光标是否应删除前置资源；要求偏移 0，且存在前置媒体或分割线。
 /// 只读、销毁、无选区/Delta 或其他前项返回 false；不执行删除或拥有资源。
 bool canDeletePreviousUrlBackedBlock(EditorState editorState) {
   if (editorState.isDisposed || !editorState.editable) {
@@ -152,8 +153,9 @@ bool canDeletePreviousUrlBackedBlock(EditorState editorState) {
 
 /// Deletes the resource immediately before a caret at text offset zero.
 ///
-/// [editorState] 为借用的编辑器；仅在前置资源可删除时执行。完成事务返回 true，
+/// [editorState] 为借用的编辑器；仅在前置资源或分割线可删除时执行。完成事务返回 true，
 /// 不满足条件返回 false；异常通过 Future 传播，资源的组件生命周期由编辑器负责。
+/// 分割线删除单独封闭撤销记录，避免与插入/相邻正文输入合并。
 /// The current text block is deliberately retained. Removing its previous
 /// sibling shifts it onto the deleted block's path, so [previousNode.path] is
 /// also the correct post-transaction caret path. This keeps the software
@@ -175,12 +177,20 @@ Future<bool> deletePreviousUrlBackedBlock(EditorState editorState) async {
     ..afterSelection = landingSelection
     ..selectionExtraInfo = {}
     ..customSelectionType = SelectionType.inline;
-  await editorState.apply(transaction);
+  if (previousNode.type == collabDividerType &&
+      editorState.undoManager.undoStack.isNonEmpty) {
+    editorState.undoManager.undoStack.last.seal();
+  }
+  await editorState.apply(
+    transaction,
+    skipHistoryDebounce: previousNode.type == collabDividerType,
+  );
   return true;
 }
 
-/// 判断 [type] 是否属于既有链接/图片/视频块类型，无副作用。
+/// 判断 [type] 是否属于可通过后置段落行首退格删除的资源或分割线，无副作用。
 bool _isUrlBackedBlock(String type) =>
+    type == collabDividerType ||
     isCollabResourceType(type) ||
     type == csesLinkBlockType ||
     type == ImageBlockKeys.type ||

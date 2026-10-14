@@ -966,6 +966,7 @@ fn schema_attribute(key: &str, formal: bool) -> &str {
     }
 }
 
+/// 在事务之前验证投影身份、父子顺序和块专属约束，失败不会修改共享状态。
 fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(), String> {
     let mut ids = HashSet::new();
     let mut ancestors = Vec::<&str>::new();
@@ -984,6 +985,9 @@ fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(
             ancestors.truncate(position + 1);
         } else {
             ancestors.clear();
+        }
+        if block.block_type == "divider" && (!block.text.is_empty() || !block.segments.is_empty()) {
+            return Err("INVALID_DIVIDER: 分割线不能存储正文".into());
         }
         if block.block_type == "callout" {
             if !block.text.is_empty() || !block.segments.is_empty() || ancestors.len() >= 256 {
@@ -1046,6 +1050,7 @@ fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(
     Ok(())
 }
 
+/// 返回手机可写的块类型；[block_type] 是投影类型而非桌面 flavour。
 fn is_supported_block_type(block_type: &str) -> bool {
     is_resource_block_type(block_type)
         || matches!(
@@ -1066,6 +1071,7 @@ fn is_supported_block_type(block_type: &str) -> bool {
             | "quote"
             | "code"
             | "callout"
+            | "divider"
             // URL-backed blocks reuse the existing per-block Y.Text payload:
             // their `text` contains the resource URL rather than editable
             // paragraph content. This preserves convergence without a schema

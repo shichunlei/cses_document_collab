@@ -331,7 +331,7 @@ fn mobile_type<T: ReadTxn>(block: &MapRef, props: &MapRef, txn: &T) -> Option<St
         "ordered" => "numbered_list".to_owned(),
         "todo" => "todo_list".to_owned(),
         "blockquote" => "quote".to_owned(),
-        "code" | "image" | "video" | "callout" => flavour,
+        "code" | "image" | "video" | "callout" | "divider" => flavour,
         s if is_resource_block_type(s) => flavour,
         _ => return None,
     })
@@ -361,8 +361,45 @@ fn video_url<T: ReadTxn>(props: &MapRef, txn: &T) -> Option<String> {
     Some(url)
 }
 
+/// 桌面 0.11.14 的三类分割线预设；未知远端样式只投影，不能作为新设置写入。
+fn is_divider_style(style: &str) -> bool {
+    matches!(
+        style,
+        "solid"
+            | "dashed"
+            | "dotted"
+            | "double"
+            | "fade"
+            | "wave"
+            | "zigzag"
+            | "sketch"
+            | "triple-dot"
+            | "diamond"
+            | "tape-dot-black"
+            | "tape-grid-pattern"
+            | "tape-regular-lines"
+            | "tape-gradient-blocks"
+            | "tape-gray-lines"
+            | "edge-grass"
+            | "edge-flower"
+            | "edge-vine"
+            | "edge-daisy"
+            | "edge-stars"
+            | "edge-berries"
+    )
+}
+
+/// 已适配 void 块的可编辑属性白名单；divider 复用桥接属性载体，不使用资源 URL。
 fn resource_keys(kind: &str) -> &'static [&'static str] {
     match kind {
+        "divider" => &[
+            "style",
+            "length",
+            "thickness",
+            "opacity",
+            "lineColor",
+            "size",
+        ],
         "attachment" => &["name", "type", "size", "icon"],
         "audio" => &["name", "size", "sourceType", "width"],
         "bookmark" => &["title", "description", "icon", "image"],
@@ -420,7 +457,9 @@ fn parse_resource_edit(
     };
     let mut result = HashMap::new();
     for (key, wrapper) in values.iter() {
-        if !resource_keys(kind).contains(&key.as_str()) && (initial || key != "url") {
+        if !resource_keys(kind).contains(&key.as_str())
+            && (initial || key != "url" || kind == "divider")
+        {
             return Err(fail());
         }
         let value = if initial {
@@ -440,6 +479,29 @@ fn parse_resource_edit(
                     .is_some_and(|url| valid_resource_url(kind, &url))
             {
                 return Err(fail());
+            }
+            if kind == "divider" {
+                let valid = match (key.as_str(), v) {
+                    (_, Any::Null) => true,
+                    ("style", Any::String(v)) => is_divider_style(v),
+                    ("length", Any::String(v)) => {
+                        matches!(v.as_ref(), "short" | "medium" | "long" | "full")
+                    }
+                    ("thickness", Any::String(v)) => {
+                        matches!(v.as_ref(), "thin" | "regular" | "thick")
+                    }
+                    ("size", Any::String(v)) => {
+                        matches!(v.as_ref(), "thin" | "small" | "medium" | "large")
+                    }
+                    ("lineColor", Any::String(v)) => v.len() <= 256,
+                    ("opacity", Any::Number(v)) => v.is_finite() && (0.1..=1.0).contains(v),
+                    _ => false,
+                };
+                if !valid {
+                    return Err(fail());
+                }
+                result.insert(key.clone(), value);
+                continue;
             }
             let numeric = matches!(key.as_str(), "size" | "width" | "height" | "wr" | "ar");
             let valid = match v {
@@ -609,6 +671,8 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                 }
             }
             Some(Out::YArray(array))
+                if kind == "divider" && node_type == "void" && array.len(&txn) == 0 => {}
+            Some(Out::YArray(array))
                 if is_resource_block_type(&kind) && node_type == "void" && array.len(&txn) == 0 =>
             {
                 text = out_string(props.get(&txn, "url")).unwrap_or_default();
@@ -629,7 +693,8 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                 if node_type == "editable"
                     && !is_media
                     && !is_resource_block_type(&kind)
-                    && kind != "callout" =>
+                    && kind != "callout"
+                    && kind != "divider" =>
             {
                 text = value.get_string(&txn);
                 segments = text_segments_for_schema(&value, &txn, true);
@@ -708,9 +773,11 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                 properties: code_properties(&props, &txn),
                 property_edits: None,
             }),
-            resource: is_resource_block_type(&kind).then(|| CollabResource {
-                properties: resource_properties(&kind, &props, &txn),
-                property_edits: None,
+            resource: (is_resource_block_type(&kind) || kind == "divider").then(|| {
+                CollabResource {
+                    properties: resource_properties(&kind, &props, &txn),
+                    property_edits: None,
+                }
             }),
             ordered: ordered.get(&id).map(|v| v.0.clone()),
             replaces_id: None,
@@ -757,6 +824,7 @@ fn formal_type(kind: &str) -> Option<(&str, bool)> {
         "callout" => ("callout", false),
         "image" => ("image", true),
         "video" => ("video", true),
+        "divider" => ("divider", true),
         "attachment" => ("attachment", true),
         "audio" => ("audio", true),
         "bookmark" => ("bookmark", true),
@@ -839,7 +907,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
             previous.get(block.id.as_str()).copied()
         };
         if let Some(resource) = &block.resource {
-            if !is_resource_block_type(&block.block_type) {
+            if !is_resource_block_type(&block.block_type) && block.block_type != "divider" {
                 return Err("INVALID_RESOURCE: 资源属性与块类型不符".into());
             }
             let source = if old.is_none() {
@@ -1158,10 +1226,11 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
                     ArrayPrelim::from(Vec::<String>::new()),
                 );
             }
-            if (!is_resource_block_type(flavour)
-                && old.is_none_or(|b| b.text != next.text || b.block_type != next.block_type))
-                || (is_resource_block_type(flavour)
-                    && old.is_none_or(|b| b.block_type != next.block_type))
+            if flavour != "divider"
+                && ((!is_resource_block_type(flavour)
+                    && old.is_none_or(|b| b.text != next.text || b.block_type != next.block_type))
+                    || (is_resource_block_type(flavour)
+                        && old.is_none_or(|b| b.block_type != next.block_type)))
             {
                 props.try_update(
                     &mut txn,
@@ -3247,5 +3316,189 @@ mod tests {
         assert!(!props.contains_key(&txn, "ar"));
         assert_eq!(number(&props, &txn, "width"), Some(600.0));
         assert_eq!(number(&props, &txn, "height"), Some(200.0));
+    }
+    /// 桌面全部分割线与嵌套结构投影为 void；单字段补丁保留扩展属性及 null/缺失语义。
+    #[test]
+    fn divider_projection_patches_and_invalid_edits_are_atomic() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-divider.update");
+        let mut engine = engine(fixture);
+        let before = engine.blocks();
+        assert!(project(&engine.doc, "fixture-doc").reason.is_none());
+        assert_eq!(
+            before.iter().filter(|b| b.block_type == "divider").count(),
+            23
+        );
+        assert_eq!(
+            before.last().unwrap().parent_id.as_deref(),
+            Some("divider-callout")
+        );
+        assert!(before
+            .iter()
+            .filter(|b| b.block_type == "divider")
+            .all(|b| b.text.is_empty() && b.segments.is_empty() && b.resource.is_some()));
+        let mut desired = before.clone();
+        let item = desired.iter_mut().find(|b| b.id == "divider-0").unwrap();
+        item.resource.as_mut().unwrap().property_edits =
+            Some(r##"{"style":{"value":"edge-vine"},"lineColor":{"value":"#EF4444"}}"##.into());
+        engine.apply_block_snapshot(desired).unwrap();
+        let txn = engine.doc.transact();
+        let blocks = txn.get_map(ROOT_NAME).unwrap();
+        let block = map(&blocks, &txn, "divider-0").unwrap();
+        let props = map(&block, &txn, "props").unwrap();
+        assert_eq!(
+            out_string(props.get(&txn, "style")).as_deref(),
+            Some("edge-vine")
+        );
+        assert_eq!(
+            out_string(props.get(&txn, "text")).as_deref(),
+            Some("legacy label preserved")
+        );
+        assert!(props.contains_key(&txn, "customDivider"));
+        assert!(map(&block, &txn, "meta")
+            .unwrap()
+            .contains_key(&txn, "customAudit"));
+        assert!(!props.contains_key(&txn, "url") && !props.contains_key(&txn, "src"));
+        assert!(matches!(block.get(&txn, "children"), Some(Out::YArray(_))));
+        drop(txn);
+        let state = engine
+            .doc
+            .transact()
+            .encode_state_as_update_v1(&StateVector::default());
+        for patch in [
+            r#"{"url":{"value":"https://example.test"}}"#,
+            r#"{"opacity":{"value":0}}"#,
+            r#"{"length":{"value":"huge"}}"#,
+            r#"{"style":{"value":"future"}}"#,
+            r#"{"customDivider":{"value":null}}"#,
+        ] {
+            let mut invalid = engine.blocks();
+            invalid
+                .iter_mut()
+                .find(|b| b.id == "divider-0")
+                .unwrap()
+                .resource
+                .as_mut()
+                .unwrap()
+                .property_edits = Some(patch.into());
+            assert!(engine.apply_block_snapshot(invalid).is_err());
+            assert_eq!(
+                engine
+                    .doc
+                    .transact()
+                    .encode_state_as_update_v1(&StateVector::default()),
+                state
+            );
+        }
+        let mut invalid = engine.blocks();
+        invalid
+            .iter_mut()
+            .find(|b| b.id == "divider-0")
+            .unwrap()
+            .text = "cannot store text".into();
+        assert!(engine.apply_block_snapshot(invalid).is_err());
+        assert_eq!(
+            engine
+                .doc
+                .transact()
+                .encode_state_as_update_v1(&StateVector::default()),
+            state
+        );
+        let mut desired = engine.blocks();
+        desired
+            .iter_mut()
+            .find(|b| b.id == "legacy-divider")
+            .unwrap()
+            .resource
+            .as_mut()
+            .unwrap()
+            .property_edits = Some(r#"{"opacity":{}}"#.into());
+        engine.apply_block_snapshot(desired).unwrap();
+        assert!(!engine
+            .blocks()
+            .iter()
+            .find(|b| b.id == "legacy-divider")
+            .unwrap()
+            .resource
+            .as_ref()
+            .unwrap()
+            .properties
+            .contains("opacity"));
+        let mut desired = engine.blocks();
+        desired
+            .iter_mut()
+            .find(|b| b.id == "legacy-divider")
+            .unwrap()
+            .resource
+            .as_mut()
+            .unwrap()
+            .property_edits = Some(r#"{"opacity":{"value":null}}"#.into());
+        engine.apply_block_snapshot(desired).unwrap();
+        assert!(engine
+            .blocks()
+            .iter()
+            .find(|b| b.id == "legacy-divider")
+            .unwrap()
+            .resource
+            .as_ref()
+            .unwrap()
+            .properties
+            .contains("null"));
+    }
+
+    /// 两端独立修改分割线的不同字段后收敛，陈旧完整投影不能覆盖另一端显式设置。
+    #[test]
+    fn divider_field_edits_converge_and_creation_has_no_url_or_text() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-divider.update");
+        let mut left = engine(fixture);
+        let mut right = engine(fixture);
+        let mut a = left.blocks();
+        a.iter_mut()
+            .find(|b| b.id == "divider-0")
+            .unwrap()
+            .resource
+            .as_mut()
+            .unwrap()
+            .property_edits = Some(r#"{"style":{"value":"wave"}}"#.into());
+        let ua = left.apply_block_snapshot(a).unwrap();
+        let mut b = right.blocks();
+        b.iter_mut()
+            .find(|b| b.id == "divider-0")
+            .unwrap()
+            .resource
+            .as_mut()
+            .unwrap()
+            .property_edits = Some(r#"{"length":{"value":"short"}}"#.into());
+        let ub = right.apply_block_snapshot(b).unwrap();
+        left.apply_cses_update(ub.v1_update).unwrap();
+        right.apply_cses_update(ua.v1_update).unwrap();
+        assert_eq!(left.blocks(), right.blocks());
+        let mut desired = left.blocks();
+        let mut new = desired
+            .iter()
+            .find(|b| b.id == "divider-0")
+            .unwrap()
+            .clone();
+        new.id = "new-divider".into();
+        new.resource = Some(CollabResource {
+            properties: r#"{"style":"double"}"#.into(),
+            property_edits: None,
+        });
+        new.parent_id = None;
+        desired.push(new);
+        left.apply_block_snapshot(desired).unwrap();
+        let txn = left.doc.transact();
+        let root = txn.get_map(ROOT_NAME).unwrap();
+        let block = map(&root, &txn, "new-divider").unwrap();
+        let props = map(&block, &txn, "props").unwrap();
+        assert_eq!(
+            out_string(block.get(&txn, "nodeType")).as_deref(),
+            Some("void")
+        );
+        assert!(matches!(block.get(&txn, "children"), Some(Out::YArray(_))));
+        assert!(!props.contains_key(&txn, "url") && !props.contains_key(&txn, "src"));
+        assert_eq!(
+            out_string(props.get(&txn, "style")).as_deref(),
+            Some("double")
+        );
     }
 }

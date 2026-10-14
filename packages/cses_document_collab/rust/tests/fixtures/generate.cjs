@@ -131,3 +131,20 @@ fixture('blockcraft-resources', (_, m) => {
   m.get('fixture-doc').get('children').push(entries.map(([id]) => id));
   for (const [id, kind, props] of entries) m.set(id, block(id, kind, 'void', [], props));
 });
+
+// Desktop DividerBlockSchema 0.11.14: void leaf, props only, no Y.Text or URL.
+fixture('blockcraft-divider', (_, m) => {
+  const styles = ['solid','dashed','dotted','double','fade','wave','zigzag','sketch','triple-dot','diamond',
+    'tape-dot-black','tape-grid-pattern','tape-regular-lines','tape-gradient-blocks','tape-gray-lines',
+    'edge-grass','edge-flower','edge-vine','edge-daisy','edge-stars','edge-berries'];
+  const ids = styles.map((_, i) => `divider-${i}`);
+  m.get('fixture-doc').get('children').push([...ids, 'legacy-divider', 'divider-callout']);
+  styles.forEach((style, i) => m.set(ids[i], block(ids[i], 'divider', 'void', [], {
+    style, length: 'long', thickness: 'regular', opacity: .7, lineColor: '#123456',
+    customDivider: { keep: true }, text: 'legacy label preserved', align: 'right',
+  })));
+  m.set('legacy-divider', block('legacy-divider', 'divider', 'void', [], { size: 'small', opacity: null }));
+  m.set('divider-callout', block('divider-callout', 'callout', 'block', ['nested-divider', 'nested-text']));
+  m.set('nested-divider', block('nested-divider', 'divider', 'void', [], {}));
+  m.set('nested-text', block('nested-text', 'paragraph', 'editable', [{insert: '嵌套后置段落'}]));
+});

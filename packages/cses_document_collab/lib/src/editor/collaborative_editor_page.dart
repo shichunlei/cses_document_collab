@@ -1,3 +1,5 @@
+import 'package:cses_document_collab/src/editor/collab_divider_block.dart';
+import 'package:cses_document_collab/src/model/collab_divider.dart';
 import 'document_header.dart';
 
 import 'package:cses_document_collab/src/model/collab_resource.dart';
@@ -295,6 +297,7 @@ final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders =
           padding: _listBlockPadding,
         ),
       ),
+      collabDividerType: CollabDividerBlockComponentBuilder(),
       csesCodeBlockType: CollabCodeBlockComponentBuilder(),
       csesCalloutBlockType: CollabCalloutBlockComponentBuilder(),
       csesUnsupportedBlockType: CollabUnsupportedBlockComponentBuilder(),

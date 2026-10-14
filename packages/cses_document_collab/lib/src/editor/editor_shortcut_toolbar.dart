@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/model/collab_divider.dart';
 import 'dart:async';
 
 import 'package:cses_document_collab/src/model/editor_media_upload.dart';
@@ -1761,6 +1762,7 @@ class _AddBlockSheet extends StatelessWidget {
 
   /// 使用借用的 [context] 构建块入口；代码块与标题、列表复用同一插入及关闭流程。
   /// 返回面板 Widget，不持有或释放编辑器；未支持的入口继续显示占位提示。
+  /// 在借用 [context] 中渲染可用块入口；插入按保存的稳定选区定位并等待事务完成。
   @override
   Widget build(BuildContext context) {
     final height = math.min(MediaQuery.sizeOf(context).height * 0.72, 640.0);
@@ -1995,11 +1997,41 @@ class _AddBlockSheet extends StatelessWidget {
                             icon: Icons.functions,
                             label: '公式',
                           ),
-                          const _ActionShortcutTile(
+                          _ActionShortcutTile(
+                            key: const ValueKey('editor-shortcut-divider'),
                             icon: Icons.horizontal_rule,
-                            label: '分隔线',
-                            accent: Color(0xFF6366F1),
-                            tint: Color(0xFFE0E7FF),
+                            label: '分割线',
+                            accent: const Color(0xFF6366F1),
+                            tint: const Color(0xFFE0E7FF),
+                            onTap: () async {
+                              final selection = bookmark.resolve(editorState);
+                              if (selection == null) {
+                                _showToolbarMessage(
+                                  context,
+                                  '插入位置已变化，请重新选择正文位置',
+                                );
+                                return;
+                              }
+                              try {
+                                final landing = await insertCollabDivider(
+                                  editorState,
+                                  selection,
+                                );
+                                if (context.mounted && landing != null) {
+                                  Navigator.pop<Selection>(context, landing);
+                                }
+                              } catch (error, stack) {
+                                CollabDiagnostics.report(
+                                  '插入分割线失败',
+                                  error: error,
+                                  stackTrace: stack,
+                                  tag: 'DocCollab',
+                                );
+                                if (context.mounted) {
+                                  _showToolbarMessage(context, '插入失败，请重试');
+                                }
+                              }
+                            },
                           ),
                           const _ActionShortcutTile(
                             icon: Icons.grid_on_outlined,

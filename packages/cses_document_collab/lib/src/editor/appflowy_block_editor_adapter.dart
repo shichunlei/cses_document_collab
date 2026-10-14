@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cses_document_collab/src/model/collab_divider.dart';
+
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
@@ -351,6 +353,8 @@ final class CollabEditorBlock {
 
   /// Desktop code header metadata, projected without writing shared props.
   final CollabCode? code;
+
+  /// 已适配 void 块的属性载体；分割线仅保存样式字段，资源块保存元数据。
   final CollabResource? resource;
 
   /// 本地新块所替换的原块身份，普通编辑和远端投影为 null。
@@ -468,7 +472,7 @@ final class AppFlowyBlockEditorAdapter {
 
   /// Applies canonical Rust/Yrs blocks without publishing them as local edits.
   /// [nextBlocks] 是当前权威投影，空列表显示一个 UI 空段落；Future 在事务完成后结束。
-  /// 块身份、类型、顺序一致时原位更新文字和媒体属性，保留组件、选区与输入连接；
+  /// 块身份、类型、顺序一致时原位更新文字、媒体及分割线属性，保留组件、选区与输入连接；
   /// URL、尺寸和题注复用节点映射，移除的可选投影显式清空。结构不同才重建节点。
   /// 不记录本地撤销或发送 WS；销毁后不执行，事务异常向调用边界传播。
   /// 正式编号及原始设置更新内存投影，不进入历史；成功转换后清除 replacesId。
@@ -501,6 +505,7 @@ final class AppFlowyBlockEditorAdapter {
               currentBlocks[index].parentId == targetBlocks[index].parentId &&
               (currentNodes[index].type == csesUnsupportedBlockType ||
                   currentNodes[index].type == csesCalloutBlockType ||
+                  currentNodes[index].type == collabDividerType ||
                   currentNodes[index].delta != null ||
                   _isUrlBackedBlock(targetBlocks[index].blockType)),
         ).every((matches) => matches);
@@ -511,7 +516,8 @@ final class AppFlowyBlockEditorAdapter {
         final node = currentNodes[index];
         final target = targetBlocks[index];
         if (node.type == csesUnsupportedBlockType) continue;
-        if (_isUrlBackedBlock(target.blockType)) {
+        if (_isUrlBackedBlock(target.blockType) ||
+            target.blockType == collabDividerType) {
           if (currentBlocks[index] != target) {
             // 统一复用创建节点时的协议映射，避免 URL/布局/题注形成两套编码。
             // updateNode 合并属性，故可选图片投影缺失时需要显式 null 删除旧值。
@@ -627,7 +633,8 @@ final class AppFlowyBlockEditorAdapter {
   /// 类型转换生成新身份并记录来源供 Rust 保留扩展数据。
   /// 远端回放及销毁后不发布；Undo/Redo 的历史身份经文档内映射恢复为当前可替换来源。
   /// 仅明确修改编号设置属性的 UpdateOperation 生成编号写入意图；普通文字/结构快照
-  /// 即使携带旧设置也不会覆盖原生 start/continuePrevious。撤销和重做复用相同路径。
+  /// 即使携带旧设置也不会覆盖原生 start/continuePrevious。分割线同样只发布明确的单字段补丁。
+  /// 撤销和重做复用相同路径。
   void _handleTransaction(EditorTransactionValue value) {
     if (_disposed || _applyingRemote) {
       return;
@@ -642,6 +649,13 @@ final class AppFlowyBlockEditorAdapter {
     final resourceEdits = <Node, Set<String>>{};
     for (final operation in value.$2.operations.whereType<UpdateOperation>()) {
       final node = editorState.getNodeAtPath(operation.path);
+      if (node != null && node.type == collabDividerType) {
+        for (final key in collabDividerKeys) {
+          if (operation.attributes.containsKey(dividerPropertyAttribute(key))) {
+            resourceEdits.putIfAbsent(node, () => {}).add(key);
+          }
+        }
+      }
       if (node != null && isCollabResourceType(node.type)) {
         if (operation.attributes.containsKey(csesEmbedUrlAttribute)) {
           resourceEdits.putIfAbsent(node, () => {}).add('url');
@@ -882,12 +896,25 @@ final class AppFlowyBlockEditorAdapter {
 
   /// 将权威 [block] 转为 AppFlowy 节点，图片保存强类型专属数据的 Map 投影。
   /// 题注留在资源属性而非 AppFlowy children；实际父子关系由 Rust 的共享类型持有。
+  /// 分割线保存白名单原始属性和独立历史字段，不生成 Delta 或 URL。
   static Node _nodeFromBlock(CollabEditorBlock block) {
     if (block.blockType == csesUnsupportedBlockType) {
       return Node(
         type: csesUnsupportedBlockType,
         id: block.id,
         attributes: {collabBlockIdAttribute: block.id},
+      );
+    }
+    if (block.blockType == collabDividerType) {
+      return Node(
+        type: collabDividerType,
+        id: block.id,
+        attributes: {
+          collabBlockIdAttribute: block.id,
+          ...CollabDivider.nodeAttributes(
+            block.resource ?? const CollabResource(),
+          ),
+        },
       );
     }
     if (block.blockType == csesCalloutBlockType) {
@@ -1005,6 +1032,8 @@ final class AppFlowyBlockEditorAdapter {
   /// 图片属性显式恢复为强类型；远端回放期间的发布抑制由调用方负责。
   /// 转换生成新的协同身份，历史身份链保证 Undo/Redo 仍替换当前块，保留 Rust 原生扩展属性。
   /// [numberingNodes] 默认空集合，只有当前本地事务明确修改编号设置的节点才生成写入意图。
+  /// [codeEdits] 和 [resourceEdits] 默认空，分别指定代码头部及资源/分割线的显式字段修改；
+  /// 仅指定字段产生补丁，其他原始属性保持只读投影，不重放到权威文档。
   /// 恢复为有序列表的历史节点保留其编号投影，Rust 仅在新身份替换时用它初始化原始设置；
   /// 正常新转入有序列表的节点由类型命令移除旧投影，走默认续号。非有序目标清理内存编号数据。
   List<CollabEditorBlock> _readBlocks(
@@ -1075,7 +1104,12 @@ final class AppFlowyBlockEditorAdapter {
         blockTextColor: node.type == csesCalloutBlockType
             ? node.attributes[csesBlockTextColorAttribute] as String?
             : null,
-        resource: isCollabResourceType(node.type)
+        resource: node.type == collabDividerType
+            ? CollabDivider.readAttributes(
+                node.attributes,
+                edited: resourceEdits[node] ?? const {},
+              )
+            : isCollabResourceType(node.type)
             ? CollabResource.fromAttributes(
                 node.attributes,
                 edited: resourceEdits[node] ?? const {},
@@ -1156,8 +1190,11 @@ final class AppFlowyBlockEditorAdapter {
     return value is String && value.isNotEmpty ? value : node.id;
   }
 
+  /// 将借用 [node] 映射为投影类型，分割线保持无正文的独立类型。
   static String _nodeBlockType(Node node) {
-    if (isCollabResourceType(node.type)) return node.type;
+    if (isCollabResourceType(node.type) || node.type == collabDividerType) {
+      return node.type;
+    }
     if (node.type == csesUnsupportedBlockType) return csesUnsupportedBlockType;
     if (node.type == csesCalloutBlockType) return csesCalloutBlockType;
     return switch (node.type) {
@@ -1237,8 +1274,11 @@ final class AppFlowyBlockEditorAdapter {
       blockType == NumberedListBlockKeys.type ||
       blockType == TodoListBlockKeys.type;
 
+  /// 读取借用 [node] 的正文或资源地址，容器和分割线不提供文字。
   static String _readNodePlainText(Node node) {
-    if (node.type == csesCalloutBlockType) return "";
+    if (node.type == csesCalloutBlockType || node.type == collabDividerType) {
+      return "";
+    }
     // Media/embed nodes intentionally have no Delta. Their URL is serialized
     // through `CollabBlock.text` so Rust/Yrs can preserve and synchronize it
     // with the same mature per-block Y.Text mechanism as ordinary content.
