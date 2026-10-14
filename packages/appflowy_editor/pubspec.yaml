@@ -1,0 +1,80 @@
+name: "appflowy_editor"
+
+version: 6.2.0
+publish_to: none
+
+homepage: "https://github.com/AppFlowy-IO/appflowy-editor"
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+  flutter: ">=3.44.0"
+
+description: A highly customizable rich-text editor for Flutter. The AppFlowy
+  Editor project for AppFlowy and beyond.
+
+dependencies:
+  collection: ^1.19.1
+  device_info_plus: ^13.3.0
+  diff_match_patch: ^0.4.1
+  file_picker: ^13.1.0
+  flutter:
+    sdk: flutter
+  flutter_svg: ^2.3.0
+  html: ^0.15.7
+  http: ^1.6.0
+  intl: ^0.20.2
+  keyboard_height_plugin: ^0.3.0
+  logging: ^1.3.0
+  markdown: ^7.3.1
+  nanoid2: ^2.1.0
+  numerus: ^2.3.2
+  pdf: ^3.13.1
+  provider: ^6.1.5+1
+  scroll_to_index: ^3.0.1
+  string_validator: ^1.2.0
+  universal_html: ^2.3.0
+  universal_platform: ^1.1.0
+  url_launcher: ^6.3.3
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_localizations:
+    sdk: flutter
+  flutter_test:
+    sdk: flutter
+  intl_utils: "^2.8.17"
+  mockito: "^5.7.0"
+  network_image_mock: "^2.1.1"
+  path_provider: "^2.1.6"
+  pubspec_dependency_sorter: "^1.0.5"
+
+platforms:
+  android:
+  ios:
+  linux:
+  macos:
+  windows:
+  web:
+
+topics:
+  - widgets
+  - editor
+  - appflowy
+
+flutter:
+  assets:
+    - "assets/images/toolbar/"
+    - "assets/images/selection_menu/"
+    - "assets/images/image_toolbar/"
+    - "assets/images/"
+    - "assets/mobile/toolbar_icons/"
+
+flutter_intl:
+  enabled: true
+  class_name: AppFlowyEditorLocalizations
+  main_locale: en
+  arb_dir: lib/l10n
+  output_dir: lib/src/l10n
+  use_deferred_loading: false
+  localizely:
+    project_id: b7199c7d-eca0-4025-894d-230cdcafa9aa

@@ -1,0 +1,981 @@
+{
+  "id": "6a2bc804902071673fbb9c56",
+  "flavour": "root",
+  "nodeType": "root",
+  "props": {
+  },
+  "meta": {
+    "createdTime": 1781254108432,
+    "lastModified": {
+      "time": 1781254108432,
+      "user": null
+    }
+  },
+  "children": [
+    {
+      "id": "LZM6lXU9UoGAn3WWyT",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "会议描述"
+        }
+      ]
+    },
+    {
+      "id": "Hlt6b00nc7gdeqbl1O",
+      "flavour": "divider",
+      "nodeType": "void",
+      "props": {
+      },
+      "meta": {
+      },
+      "children": [
+      ]
+    },
+    {
+      "id": "QmzHGTWBi9yV0xgbo3",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "普通文本"
+        }
+      ]
+    },
+    {
+      "id": "k3ukvhhXYvjjRiQOdD",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0,
+        "heading": 1
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "H1格式"
+        }
+      ]
+    },
+    {
+      "id": "QpJxMfnNtHu8cibqQV",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0,
+        "heading": 2
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "h2格式"
+        }
+      ]
+    },
+    {
+      "id": "D6Fj9WO4XS6OqvFsC0",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0,
+        "heading": 3
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "H3格式"
+        }
+      ]
+    },
+    {
+      "id": "TCds7En05PIm-1Vozs",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0,
+        "heading": 4
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "H4格式"
+        }
+      ]
+    },
+    {
+      "id": "sPv0S1g9JEqlQKuNJV",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "加粗 ",
+          "attributes": {
+            "a:bold": true
+          }
+        },
+        {
+          "insert": "删除线",
+          "attributes": {
+            "a:strike": true
+          }
+        },
+        {
+          "insert": " "
+        },
+        {
+          "insert": "下划线",
+          "attributes": {
+            "a:underline": true
+          }
+        },
+        {
+          "insert": " "
+        },
+        {
+          "insert": "倾斜",
+          "attributes": {
+            "a:italic": true
+          }
+        },
+        {
+          "insert": " "
+        },
+        {
+          "insert": "final",
+          "attributes": {
+            "a:code": true
+          }
+        },
+        {
+          "insert": " 2"
+        },
+        {
+          "insert": "3",
+          "attributes": {
+            "a:sup": true
+          }
+        },
+        {
+          "insert": " 3"
+        },
+        {
+          "insert": "5",
+          "attributes": {
+            "a:sub": true
+          }
+        },
+        {
+          "insert": " "
+        },
+        {
+          "insert": "连接",
+          "attributes": {
+            "a:link": "https://www.baidu.com"
+          }
+        },
+        {
+          "insert": " "
+        }
+      ]
+    },
+    {
+      "id": "MU6kOPNXatzs5J-N0R",
+      "flavour": "ordered",
+      "nodeType": "editable",
+      "props": {
+        "order": 0,
+        "depth": 0
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "有序列表1"
+        }
+      ]
+    },
+    {
+      "id": "RfYJXrt7TuxHqtdHUL",
+      "flavour": "ordered",
+      "nodeType": "editable",
+      "props": {
+        "order": 1,
+        "depth": 0
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "有序列表2"
+        }
+      ]
+    },
+    {
+      "id": "Dz0OTYUmeEriRa0kKX",
+      "flavour": "bullet",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "无序列表1"
+        }
+      ]
+    },
+    {
+      "id": "s9NVCH6h3WHaNIFo9G",
+      "flavour": "bullet",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "无序列表2"
+        }
+      ]
+    },
+    {
+      "id": "jZXcWJThgL4aGbvjSV",
+      "flavour": "todo",
+      "nodeType": "editable",
+      "props": {
+        "created": 1781254020480,
+        "checked": 0,
+        "depth": 0
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "todolist1"
+        }
+      ]
+    },
+    {
+      "id": "GlcbwlHdhujP0jO21g",
+      "flavour": "todo",
+      "nodeType": "editable",
+      "props": {
+        "created": 1781254020480,
+        "checked": 0,
+        "depth": 0
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "todolist2"
+        }
+      ]
+    },
+    {
+      "id": "M3kJ9Rk9RjY8zOSg_p",
+      "flavour": "blockquote",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0,
+        "textAlign": "right"
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "这是"
+        }
+      ]
+    },
+    {
+      "id": "0onvh-kO4jbXfdy0EP",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0,
+        "textAlign": "left"
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "代码块"
+        }
+      ]
+    },
+    {
+      "id": "-pJjWubB21IFWFJaMw",
+      "flavour": "code",
+      "nodeType": "editable",
+      "props": {
+        "lang": "Dart",
+        "depth": 0
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "String extractText(Map<String, dynamic> doc) {\n  final children = doc['docDescription']['children'] as List;\n\n  return children.map((e) {\n    if (e['flavour'] == 'divider') {\n      return '----------------';\n    }\n\n    final childList = e['children'] as List? ?? [];\n    return childList\n        .map((c) => c['insert']?.toString() ?? '')\n        .join();\n  }).join('\\n');\n}"
+        }
+      ]
+    },
+    {
+      "id": "NsTSDeKVwNsGnLr5WV",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "图片"
+        }
+      ]
+    },
+    {
+      "id": "_c6ag-MIlnam6d3wu6",
+      "flavour": "image",
+      "nodeType": "block",
+      "props": {
+        "src": "http://picture.jinqidongli.com/6008f761453b4e60700f01e2/6a2bd47795de97f5167a9762.jpg",
+        "width": 2240,
+        "height": 1280
+      },
+      "meta": {
+      },
+      "children": [
+      ]
+    },
+    {
+      "id": "P2w7O2k-zQuNFSS-36",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "高亮块"
+        }
+      ]
+    },
+    {
+      "id": "Tr6ZWVNjYKYshe5hPT",
+      "flavour": "callout",
+      "nodeType": "block",
+      "props": {
+        "backColor": "#FFE6CD",
+        "color": "#333",
+        "borderColor": "transparent",
+        "prefix": "\uD83D\uDCE2"
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "id": "ovUdSCZ9RuUe8PhsLa",
+          "flavour": "paragraph",
+          "nodeType": "editable",
+          "props": {
+            "depth": 0,
+            "heading": 2
+          },
+          "meta": {
+          },
+          "children": [
+            {
+              "insert": "这里是高亮块"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "7WQSp1RRW5PXsfA1gX",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "figma块"
+        }
+      ]
+    },
+    {
+      "id": "SF6J5cSshU7r20iGOG",
+      "flavour": "figma-embed",
+      "nodeType": "void",
+      "props": {
+        "url": "https://www.figma.com/design/bZerotp4ghGEbPOJgDBKOj/%E6%96%B0%E5%9B%BE%E6%A0%87?node-id=0-1&p=f",
+        "width": null,
+        "height": 424
+      },
+      "meta": {
+      },
+      "children": [
+      ]
+    },
+    {
+      "id": "4evRxA1-huyry_sXYg",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "掘金块"
+        }
+      ]
+    },
+    {
+      "id": "B6xmcpffsO9-QKiCr-",
+      "flavour": "juejin-embed",
+      "nodeType": "void",
+      "props": {
+        "url": "https://juejin.cn/post/7638897090145075246",
+        "height": 424
+      },
+      "meta": {
+      },
+      "children": [
+      ]
+    },
+    {
+      "id": "S71Y7br18h7rDrCTRL",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "音频"
+        }
+      ]
+    },
+    {
+      "id": "UWjE1_-RFOxgVWeqy_",
+      "flavour": "audio",
+      "nodeType": "void",
+      "props": {
+        "url": "http://audio.jinqidongli.com/6008f761453b4e60700f01e2/6a2bd50ac77ebc9afaa64ef6.mp3",
+        "name": "小故事-极限.mp3",
+        "sourceType": "local",
+        "size": 7905818
+      },
+      "meta": {
+      },
+      "children": [
+      ]
+    },
+    {
+      "id": "Ia4JmKRPcwdiwPx3ev",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "视频"
+        }
+      ]
+    },
+    {
+      "id": "TwAwIbPTy1ihv9HPhz",
+      "flavour": "video",
+      "nodeType": "void",
+      "props": {
+        "url": "http://video.jinqidongli.com/6008f761453b4e60700f01e2/6a2bd52495de97f5167a9770.mp4",
+        "sourceType": "local",
+        "type": "video/mp4",
+        "width": 0,
+        "name": "68b3bb46615f2d2c78327b09.mp4",
+        "size": 4059152
+      },
+      "meta": {
+      },
+      "children": [
+      ]
+    },
+    {
+      "id": "mq90v20jykXAHWAfx0",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "网页块"
+        }
+      ]
+    },
+    {
+      "id": "_dBPnfUL7R5Kbi41wk",
+      "flavour": "bookmark",
+      "nodeType": "void",
+      "props": {
+        "url": "https://www.bjwmb.gov.cn/zyhd/10129052.html",
+        "title": "友谊塔见证中朝友谊薪火相传",
+        "description": "友谊塔见证中朝友谊薪火相传",
+        "icon": "https://www.bjwmb.gov.cn/skin/bjwmb/images/icons/favicon.ico",
+        "image": "https://www.bjwmb.gov.cn/skin/bjwmb/images/logo@2x.png"
+      },
+      "meta": {
+      },
+      "children": [
+      ]
+    },
+    {
+      "id": "yhoTgfF5LzYbzVDkVA",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "附件pdf"
+        }
+      ]
+    },
+    {
+      "id": "B6b8QE5sHMeoVmHFcE",
+      "flavour": "attachment",
+      "nodeType": "void",
+      "props": {
+        "name": "C20220000006547stp.pdf",
+        "url": "http://pdf.jinqidongli.com/6008f761453b4e60700f01e2/6a2bd590c77ebc9afaa64ef8.pdf",
+        "type": "application/pdf",
+        "size": 505337,
+        "icon": "bc_file-pdf"
+      },
+      "meta": {
+      },
+      "children": [
+      ]
+    },
+    {
+      "id": "rw1hmbngpssVRG0KTx",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "附件excel"
+        }
+      ]
+    },
+    {
+      "id": "8hJe2K4Mj87kzJjyKJ",
+      "flavour": "attachment",
+      "nodeType": "void",
+      "props": {
+        "name": "202311091032224596217.xlsx",
+        "url": "http://attachment.jinqidongli.com/6008f761453b4e60700f01e2/6a2f5a67c77ebc9afaa655b5.xlsx",
+        "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "size": 14580,
+        "icon": "bc_file-xlsx"
+      },
+      "meta": {
+      },
+      "children": [
+      ]
+    },
+    {
+      "id": "KgWCnegMn5DXC36f7Y",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "附件word"
+        }
+      ]
+    },
+    {
+      "id": "6IqWwK5Tk6rlydCscG",
+      "flavour": "attachment",
+      "nodeType": "void",
+      "props": {
+        "name": "承诺函通用版本.docx",
+        "url": "http://attachment.jinqidongli.com/6008f761453b4e60700f01e2/6a2f5a8395de97f5167a9e75.docx",
+        "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "size": 14720,
+        "icon": "bc_file-doc"
+      },
+      "meta": {
+      },
+      "children": [
+      ]
+    },
+    {
+      "id": "srtiwuB7K_rnQNKlih",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "附件图片"
+        }
+      ]
+    },
+    {
+      "id": "t8fdl8IL8QIuKqQ7Y6",
+      "flavour": "attachment",
+      "nodeType": "void",
+      "props": {
+        "name": "1211707209931_.pic.jpg",
+        "url": "http://picture.jinqidongli.com/6008f761453b4e60700f01e2/6a2f5cf395de97f5167a9eb1.jpg",
+        "type": "",
+        "size": 34991,
+        "icon": "bc_file-unknown"
+      },
+      "meta": {
+      },
+      "children": [
+      ]
+    },
+    {
+      "id": "pvwywjtCusoUZhnxD1",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "附件音频"
+        }
+      ]
+    },
+    {
+      "id": "a9W7Yf2w5HOS7Qb24F",
+      "flavour": "attachment",
+      "nodeType": "void",
+      "props": {
+        "name": "小故事-这很好啊.mp3",
+        "url": "http://audio.jinqidongli.com/6008f761453b4e60700f01e2/6a2f5d14902071673fbba58f.mp3",
+        "type": "audio/mpeg",
+        "size": 9446240,
+        "icon": "bc_file-mp3"
+      },
+      "meta": {
+      },
+      "children": [
+      ]
+    },
+    {
+      "id": "j4lCInpFyAa6C3Ls_K",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "meta": {
+      },
+      "children": [
+        {
+          "insert": "附件视频"
+        }
+      ]
+    },
+    {
+      "id": "35nM8UEvQwZivVpiIz",
+      "flavour": "attachment",
+      "nodeType": "void",
+      "props": {
+        "name": "68b3be5a615f2d2c78327b0b.mp4",
+        "url": "http://video.jinqidongli.com/6008f761453b4e60700f01e2/6a2f5d3095de97f5167a9eb7.mp4",
+        "type": "video/mp4",
+        "size": 9926882,
+        "icon": "bc_file-video"
+      },
+      "meta": {
+      },
+      "children": [
+      ]
+    },
+    {
+      "id": "UVqzbY6oi18a8Zk8m0",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "meta": {},
+      "children": [
+        {
+          "insert": "分割线各种样式"
+        }
+      ]
+    },
+    {
+      "id": "rj72v1Tn0BDiO22L4K",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "meta": {},
+      "children": [
+        {
+          "insert": "普通分割线"
+        }
+      ]
+    },
+    {
+      "id": "m1kxuzrlgWlzzMWhN6",
+      "flavour": "divider",
+      "nodeType": "void",
+      "props": {},
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "Zl0w6BVjALPmR_hsj8",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "children": [
+        {
+          "insert": "点线"
+        }
+      ]
+    },
+    {
+      "id": "Kc_UxM5jicquhT-c0t",
+      "flavour": "divider",
+      "nodeType": "void",
+      "props": {
+        "style": "dotted",
+        "size": "small"
+      },
+      "children": []
+    },
+    {
+      "id": "LuaMuQtn4qdJEX-Xlq",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "children": [
+        {
+          "insert": "虚线"
+        }
+      ]
+    },
+    {
+      "id": "k1RZVCAbOB_vzUCy18",
+      "flavour": "divider",
+      "nodeType": "void",
+      "props": {
+        "style": "dashed",
+        "size": "thin"
+      },
+      "children": []
+    },
+    {
+      "id": "J6kTQX1ONKuCZu81pY",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "children": [
+        {
+          "insert": "双实线"
+        }
+      ]
+    },
+    {
+      "id": "rJEHV9cwftWTaXEoNx",
+      "flavour": "divider",
+      "nodeType": "void",
+      "props": {
+        "style": "double",
+        "size": "large"
+      },
+      "children": []
+    },
+    {
+      "id": "5HKSL6IMphPpd76k8C",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "children": [
+        {
+          "insert": "文字分割线-居中-文字颜色-双实线"
+        }
+      ]
+    },
+    {
+      "id": "OdcFbeJ7b1wCHUp5uJ",
+      "flavour": "divider",
+      "nodeType": "void",
+      "props": {
+        "text": "这里是分割线",
+        "size": "medium",
+        "color": "#26A69A",
+        "style": "double"
+      },
+      "children": []
+    },
+    {
+      "id": "L9FMhE3DKtPwv-4Dd8",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "children": [
+        {
+          "insert": "文字分割线-居左"
+        }
+      ]
+    },
+    {
+      "id": "A8oQfjvBBLN4yi5rG1",
+      "flavour": "divider",
+      "nodeType": "void",
+      "props": {
+        "align": "left",
+        "text": "密封线"
+      },
+      "children": []
+    },
+    {
+      "id": "dXxwy-ymYRXnnVKlFu",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "children": [
+        {
+          "insert": "文字分割线-居右"
+        }
+      ]
+    },
+    {
+      "id": "rKUYzweA-P4EFOIgnT",
+      "flavour": "divider",
+      "nodeType": "void",
+      "props": {
+        "text": "装订线",
+        "align": "right",
+        "size": "large",
+        "color": "#8D6E63"
+      },
+      "children": []
+    },
+    {
+      "id": "VEpgyh5zuSSa0hnBcL",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "children": [
+        {
+          "insert": "贴纸胶带分割线"
+        }
+      ]
+    },
+    {
+      "id": "zvaXjWXkLwqaYQGpkk",
+      "flavour": "divider",
+      "nodeType": "void",
+      "props": {
+        "style": "tape-gradient-blocks",
+        "size": "large"
+      },
+      "children": []
+    },
+    {
+      "id": "VZ9GFFzulyhFWvdMd8",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "children": [
+        {
+          "insert": "贴纸胶带分割线2"
+        }
+      ]
+    },
+    {
+      "id": "yusy_KkxLk8WGSxxwZ",
+      "flavour": "divider",
+      "nodeType": "void",
+      "props": {
+        "style": "tape-grid-pattern",
+        "size": "large"
+      },
+      "children": []
+    }
+  ]
+}

@@ -22,18 +22,12 @@ dependencies:
   mime: ^2.1.0
   path_provider: ^2.1.6
 
-# Resolve the same patched editor for the host and its transitive package.
-dependency_overrides:
-  appflowy_editor:
-    path: ../cses.plugins/appflowy_editor
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
   integration_test:
     sdk: flutter
-  appflowy_editor: 6.2.0
 
 flutter:
   uses-material-design: true

@@ -6,15 +6,12 @@ Flutter FFI 插件包，提供正式 BlockCraft 文档的原生编辑、Yrs 差�
 
 ## 接入
 
-最终 App 的 pubspec 添加本包的 path 依赖。当前需使用工作区 AppFlowy 6.2.0 fork，它包含 Flutter 3.44 输入适配和撤销修复；宿主通过 dependency_overrides 指向它。该 fork 还依赖同工作区的 diff_match_patch、scroll_to_index，移动本包不意味着可以省掉这些依赖。包的 pubspec 本身没有指向工作区之外的 path。
+最终 App 的 pubspec 添加本包的 path 依赖。当前使用本项目 `packages/appflowy_editor` 下的 AppFlowy 6.2.0 fork，它包含 Flutter 3.44 输入适配和撤销修复；本包通过 `../appflowy_editor` 引用它。AppFlowy 的 `diff_match_patch`、`scroll_to_index` 直接使用 pub.dev 发布版本。迁移时应保留本包与 appflowy_editor 的同级目录结构；单独移动本包时，宿主需通过 dependency_overrides 指向可用的同一 fork。
 
 ```yaml
 dependencies:
   cses_document_collab:
     path: packages/cses_document_collab
-dependency_overrides:
-  appflowy_editor:
-    path: /your/workspace/cses.plugins/appflowy_editor
 ```
 
 宿主代码只 import `package:cses_document_collab/cses_document_collab.dart`。以下函数返回的控制器由调用方持有，路由退出/账号切换前必须 `await controller.close()`：
@@ -102,7 +99,7 @@ flutter analyze --no-pub
 原生回归需要真实宿主动态库。`collab_controller_native_test.dart` 对缺库直接失败，避免将跳过测试当作验证。异地引用门禁会复制本包到临时目录，由另一个 Flutter 宿主只通过公开入口加载 native Doc、呈现只读编辑页并验证 SQLite 重开：
 
 ```bash
-tool/verify_portable_package.sh /path/to/cses.plugins/appflowy_editor
+tool/verify_portable_package.sh ../appflowy_editor
 ```
 
 包保留已有块支持范围、未知数据保护和模型只读规则。上传、私有资源鉴权、业务元数据、服务端保存及租户权限由宿主/服务端提供，真实环境联调须单独验收。

@@ -18,7 +18,7 @@ flowchart TD
   Common --> Server[Document/docId/instance]
 ```
 
-包不读取 `ctx`、`User`、`Config`，不发起 HTTP 登录，不创建/关闭物理 WebSocket，不选择宿主缓存目录。移动后包内无需修改业务 import 或原生库源码路径。包内无引用 demo/Common/SaaS 的 import、无外部 path 依赖；内部 `cses_mobile_*` 常量是旧草稿的持久化格式，必须保留兼容。
+包不读取 `ctx`、`User`、`Config`，不发起 HTTP 登录，不创建/关闭物理 WebSocket，不选择宿主缓存目录。移动后包内无需修改业务 import 或原生库源码路径。包内无引用 demo/Common/SaaS 的 import；AppFlowy fork 通过同级 `../appflowy_editor` 引用，其 `diff_match_patch`、`scroll_to_index` 直接使用 pub.dev 发布版本。内部 `cses_mobile_*` 常量是旧草稿的持久化格式，必须保留兼容。
 
 宿主提供：
 
@@ -55,7 +55,7 @@ Demo SQLite 路径仍为应用支持目录下 `cses_mobile_collab_demo/updates.s
 ## 平移到 SaaS
 
 1. 整目录移动/引用本包，在 `cses.saas/pubspec.yaml` 添加 path 或固定版本依赖。
-2. 在最终 App（例如 cses.jqdl）的 dependency_overrides 解析同一 AppFlowy 6.2.0 fork；其 diff_match_patch/scroll_to_index 依赖也必须可解析。库层的 override 不代替最终 App 的 override。
+2. 将本项目 `packages/` 中的 appflowy_editor 一并迁移并保留同级目录结构，解析同一 AppFlowy 6.2.0 fork；diff_match_patch、scroll_to_index 由 pub.dev 解析，无需迁移本地包。若单独移动协同包，在最终 App（例如 cses.jqdl）的 dependency_overrides 指向可用的 fork。库层的 override 不代替最终 App 的 override。
 3. 在文档模块注册编辑路由与 Binding，从一次路由快照取得正式 docId、企业/用户/服务端身份和数据库路径。
 4. 复用当前 Common 连接实现 Gateway；适配器参考本 Demo 的 `lib/src/demo/common_cses_collab_gateway.dart`，只拥有文档注册。配置 host services 使异常继续进入统一日志，并可注入现有上传实现。
 5. 确认正文编辑权限契约后创建 CollabDocumentConfig。当前移动端 modify 字段表示元数据修改；服务端编辑策略仍需明确 allowEdit 与 allowRename 的关系，不能仅按角色或 companyId 推断正文授权。

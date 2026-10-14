@@ -10,7 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  appflowy_editor: 6.2.0
+  appflowy_editor:
+    path: ../appflowy_editor
   crypto: ^3.0.7
   dio: ^5.11.1
   flutter_rust_bridge: 2.13.0

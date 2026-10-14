@@ -212,7 +212,7 @@ cargo test --manifest-path rust/Cargo.toml
 flutter test --no-pub
 ```
 
-异地引用验证：`packages/cses_document_collab/tool/verify_portable_package.sh ../cses.plugins/appflowy_editor`。
+异地引用验证：`packages/cses_document_collab/tool/verify_portable_package.sh packages/appflowy_editor`。
 
 ## 与 CSES 桌面端的边界
 
@@ -287,7 +287,7 @@ bridge 的 text 字段传递；正式图片写入 props.src、视频写入 props
 - Todo 有正文时回车新增未勾选的同级待办项，不复制原项完成状态；原项勾选保持不变。
   空项逐级退级只改 depth，保留当前勾选。最外层转段落后不再展示待办状态，Undo/Redo
   通过现有类型转换及属性历史恢复待办类型、层级与勾选；原生 checked 沿用既有同步协议。
-- Demo 引用本地 `cses.plugins/appflowy_editor`：UndoManager 重做通过 `ApplyOptions.isRedo`
+- Demo 引用本地 `packages/appflowy_editor`：UndoManager 重做通过 `ApplyOptions.isRedo`
   标记历史回放，每个重做命令独立进入撤销栈且保留其余重做记录；普通新编辑清空重做栈，
   即使此前已撤销所有命令也同样处理。远端投影不记录历史；定时封存不能合并重做边界。
   列表回归覆盖已有其他历史时的连续重做、跨封存时间后的逐步撤销，以及撤销后新输入。
