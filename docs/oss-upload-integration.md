@@ -14,7 +14,7 @@
 
 图片和视频通过真机底部面板及系统文件选择上传。Android 系统视频选择器将视频显示名改为 `1000015411.mp4`，回读内容与原始 MP4 一致。
 
-附件通过应用私有缓存中的测试文件调用同一 `CsesEditorMediaUploadService` 和正式资源插入事务验证；本次没有单独完成附件系统文件选择器的交互验收。联调时直接使用 Downloads 路径出现请求体 0 字节错误，改用应用私有缓存文件后上传成功；本次附件验证未单独覆盖系统文件选择器的授权和文件交付交互。
+首轮附件通过应用私有缓存中的测试文件调用同一 `CsesEditorMediaUploadService` 和正式资源插入事务验证，当时未完成系统文件选择器的交互验收。直接使用 Downloads 路径曾出现请求体 0 字节错误，改用应用私有缓存文件后上传成功；后续已通过真实系统选择器完成完整流程，见下方“附件系统文件选择器完整流程复验”。
 
 三项均使用 Common 的 OSS 客户端和 fileDrive 登记接口，上传服务仅在两步成功后返回 URL。随后使用独立订阅和空状态向量重新拉取服务端完整 Yjs 文档，以新建 Y.Doc 解码核对，排除仅观察本机 SQLite 缓存的情况。三块按图片、视频、附件顺序出现在文档根列表中。附件元数据为：
 
@@ -85,6 +85,30 @@ Android debug APK 构建通过，根宿主 18 项回归测试通过。普通页�
 验证摘要与哈希见 [验证数据](verification/direct-context-upload-20261014.json)，截图见下图。本轮仍仅覆盖 Android、小型测试图片和一秒视频；iOS、大文件、断网重试、音频和封面不在本轮范围。图片已适配、视频部分支持及剩余桌面工具栏/嵌入限制保持不变。
 
 ![直接使用 Common 文档上下文的 Android 真机验证](verification/direct-context-upload-20261014.png)
+
+## 附件系统文件选择器完整流程复验（2026-10-14）
+
+环境：Android 真机 MTN AN00 / HONOR X70，Android 16，已登录 PRE；使用测试文档 `6ac76e5375083c8c9f19cbd3`，区域标记 `attachment-picker-check-20261014`。
+
+通过正文添加菜单进入“附件 → 本地上传 → 点击选择附件文件”，在 Android 系统 DocumentsUI 的“下载内容 → mobile-collab-oss-check-20261014”中点击文件名称，选择专门生成的 `attachment-picker-check-20261014.txt`。系统选择器正常返回，底部面板展示文件名；点击“上传并插入”后面板关闭，正文出现附件卡片并恢复输入。期间也验证了重新选择文件，最终仅上传新选中的测试 TXT。
+
+系统选择器将文件交付到应用私有 `cache/file_picker`，该缓存文件为 101 字节，SHA-256 与 Downloads 原文件一致。实际走宿主 Common OSS 上传与 fileDrive 文件登记，未以调试调用代替选择或插入。首轮直接使用 Downloads 路径的 0 字节问题在本次系统选择器正式流程中未复现；本次无需修改上传代码。
+
+| 项目 | 结果 |
+|---|---|
+| 文件 | `attachment-picker-check-20261014.txt`，101 字节 |
+| OSS 回读 | HTTP 200，`text/plain` |
+| 原文件、选择器缓存与 OSS 内容 | SHA-256 均为 `3536d21350b7d1f41ecc45d77db6f3809b305d14c8ed8e298e0476a8ed30169c` |
+| 服务端恢复的附件 | 块 ID `JwfvEv`，flavour `attachment`，根列表位置 141（从 0 开始） |
+| 附件属性 | name 为完整原文件名，size 为 101，type 为 `text/plain`，URL 与 OSS 回读地址一致 |
+
+为验证服务端同步，上传后通过 Demo 正常界面清理当前文档的本机缓存（保留其他文档缓存和服务端正文），再点击重新连接。协议记录确认首次 `collabJoin` 的状态向量为 `AA==`，随后收到 `collabSync` 和同步状态；没有在恢复期间再次插入附件。新的本机更新日志共 3 条、61944 字节，以新的 Y.Doc 解码确认上述附件及属性，编辑页恢复在线并显示新附件。该依据是清缓存后的服务端恢复，不是仅检查上传前的本机缓存，也不代表额外数据库落库 ACK。
+
+验证摘要、链接与哈希见 [验证数据](verification/attachment-picker-upload-20261014.json)。选择后的面板见 [选择器返回结果](verification/attachment-picker-selected-20261014.png)，清缓存后恢复的正文如下。记录不包含 Cookie、OSS 临时凭证、完整登录响应或完整正文数据。
+
+![系统选择器上传附件后，从服务端恢复的在线正文](verification/attachment-picker-upload-20261014.png)
+
+附件仍为部分支持，应用内下载管理尚未接入；本轮只验收 Android 本地小型 TXT 的完整选择、上传与插入流程，未覆盖 iOS、其他文件提供方、大文件及断网重试。
 
 ## 回归与范围
 
