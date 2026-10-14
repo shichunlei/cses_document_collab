@@ -2182,6 +2182,11 @@ Future<Selection?> applyUrlBlockShortcut(
   return nextSelection;
 }
 
+/// Creates a detached resource node for validated [blockType] and HTTP(S) [url].
+/// Optional borrowed [mediaSource] contributes uploaded file metadata; null means
+/// a link-only source. Link cards use default full width and natural height, with
+/// no saved host-name title masking fetched metadata. Returns a node without
+/// inserting it or performing network requests; the caller owns insertion.
 Node _urlBackedNode(
   String blockType,
   String url, {
@@ -2215,10 +2220,8 @@ Node _urlBackedNode(
             'size': mediaSource.file!.size,
             if (blockType == 'attachment') 'type': mediaSource.file!.mimeType,
           },
-          if (blockType == 'bookmark') 'title': Uri.parse(url).host,
           if ({'embed', 'figma-embed', 'juejin-embed'}.contains(blockType)) ...{
             'wr': 100,
-            'ar': 16 / 9,
           },
         }).nodeAttributes,
       csesEmbedUrlAttribute: url,

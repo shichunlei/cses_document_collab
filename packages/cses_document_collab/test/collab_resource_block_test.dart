@@ -8,28 +8,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:video_player_platform_interface/video_player_platform_interface.dart';
-import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
+import 'package:metalink/metalink.dart';
+import 'package:cses_document_collab/src/editor/collab_link_preview.dart';
 
-Widget _app(EditorState state) => MaterialApp(
-  localizationsDelegates: const [
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-    AppFlowyEditorLocalizations.delegate,
-  ],
-  home: Scaffold(
-    body: AppFlowyEditor(
-      editorState: state,
-      editable: state.editable,
-      disableKeyboardService: true,
-      blockComponentBuilders: {
-        ...standardBlockComponentBuilderMap,
-        for (final kind in collabResourceTypes)
-          kind: CollabResourceBlockComponentBuilder(),
-      },
-    ),
-  ),
-);
+/// Returns a localized editor harness borrowing [state] and [loadPreview].
+/// Null [loadPreview] uses fixture HTML; no real network request is required.
+Widget _app(EditorState state, {CollabLinkPreviewLoader? loadPreview}) =>
+    MaterialApp(
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        AppFlowyEditorLocalizations.delegate,
+      ],
+      home: Scaffold(
+        body: AppFlowyEditor(
+          editorState: state,
+          editable: state.editable,
+          disableKeyboardService: true,
+          blockComponentBuilders: {
+            ...standardBlockComponentBuilderMap,
+            for (final kind in collabResourceTypes)
+              kind: CollabResourceBlockComponentBuilder(
+                loadPreview: loadPreview ?? _metadata,
+              ),
+          },
+        ),
+      ),
+    );
 CollabEditorBlock _block(
   String kind,
   String url, {
@@ -41,6 +47,7 @@ CollabEditorBlock _block(
   resource: CollabResource.fromValues(props),
 );
 
+/// Registers resource UI, collaboration, readonly and controller lifecycle checks.
 void main() {
   testWidgets(
     'attachment fields edit and undo; readonly hides editing but retains opening',
@@ -119,12 +126,12 @@ void main() {
     },
   );
 
-  for (final kind in ['embed', 'figma-embed', 'juejin-embed']) {
+  for (final kind in ['bookmark', 'embed', 'figma-embed', 'juejin-embed']) {
     testWidgets(
-      '$kind embeds the correct URL and replaces its page on remote changes',
+      '$kind renders metadata from the original URL and follows remote changes',
       (tester) async {
-        final platform = _WebPlatform();
-        WebViewPlatform.instance = platform;
+        final loads = <String>[];
+        final pending = Completer<ExtractionResult<LinkMetadata>>();
         final first = kind == 'figma-embed'
             ? 'https://www.figma.com/design/demo/Design?node-id=1-2'
             : kind == 'juejin-embed'
@@ -135,37 +142,70 @@ void main() {
             : kind == 'juejin-embed'
             ? 'https://juejin.cn/post/456'
             : 'https://example.test/next';
+        final changes = <List<CollabEditorBlock>>[];
         final adapter = AppFlowyBlockEditorAdapter(
           initialBlocks: [
             _block(kind, first, props: {'wr': 75, 'ar': 1.5}),
           ],
-          onLocalBlocksChanged: (_) {},
+          onLocalBlocksChanged: changes.add,
         );
         addTearDown(adapter.dispose);
-        await tester.pumpWidget(_app(adapter.editorState));
-        await tester.pumpAndSettle();
-        expect(find.text('内嵌网页'), findsOneWidget);
-        expect(platform.loads.single, collabResourceFrameUrl(kind, first));
-        if (kind == 'figma-embed') {
-          expect(platform.loads.single.queryParameters['url'], first);
+        Future<ExtractionResult<LinkMetadata>> loadPreview(String url) {
+          loads.add(url);
+          return url == first ? pending.future : _metadata(url);
         }
-        final old = platform.controllers.single.delegate!;
-        expect(
-          await old.navigation!(
-            const NavigationRequest(url: 'javascript:bad', isMainFrame: true),
-          ),
-          NavigationDecision.prevent,
+
+        await tester.pumpWidget(
+          _app(adapter.editorState, loadPreview: loadPreview),
         );
+        await tester.pump();
+        expect(find.byType(LinearProgressIndicator), findsOneWidget);
+        expect(loads, [first]);
         await adapter.replaceFromRemote([
           _block(kind, second, props: {'wr': 50, 'ar': 2}),
         ]);
         await tester.pumpAndSettle();
-        expect(platform.loads.last, collabResourceFrameUrl(kind, second));
-        old.progress?.call(1);
-        await tester.pump();
-        expect(find.byType(LinearProgressIndicator), findsNothing);
+        expect(loads, [first, second]);
+        expect(find.text('预览标题 $second'), findsOneWidget);
+        expect(find.text('提取的网页摘要'), findsOneWidget);
+        expect(
+          find.byKey(const ValueKey('resource-open-resource')),
+          findsNothing,
+        );
+        await tester.tap(find.byKey(const ValueKey('resource-edit-resource')));
+        await tester.pumpAndSettle();
+        expect(
+          find.byKey(const ValueKey('resource-field-url')),
+          findsOneWidget,
+        );
+        await tester.tap(find.text('取消'));
+        await tester.pumpAndSettle();
+        final preview = find.byType(CollabLinkPreview);
+        final width = tester.getSize(preview).width;
+        expect(
+          width,
+          closeTo(tester.getSize(find.byType(LayoutBuilder).last).width / 2, 1),
+        );
+        pending.complete(await _metadata(first));
+        await tester.pumpAndSettle();
+        expect(find.text('预览标题 $first'), findsNothing);
+        expect(find.text('预览标题 $second'), findsOneWidget);
+        expect(changes, isEmpty);
+        expect(adapter.blocks.single.resource!.number('ar'), 2);
+        adapter.editorState.editable = false;
+        await tester.pumpWidget(
+          _app(adapter.editorState, loadPreview: loadPreview),
+        );
+        await tester.pumpAndSettle();
+        expect(
+          find.byKey(const ValueKey('resource-edit-resource')),
+          findsNothing,
+        );
+        expect(
+          find.byKey(const ValueKey('resource-open-resource')),
+          findsNothing,
+        );
         await tester.pumpWidget(const SizedBox.shrink());
-        old.progress?.call(50);
         expect(tester.takeException(), isNull);
       },
     );
@@ -227,76 +267,15 @@ void main() {
   }
 }
 
-class _WebPlatform extends WebViewPlatform {
-  final loads = <Uri>[];
-  final controllers = <_WebController>[];
-  @override
-  PlatformWebViewController createPlatformWebViewController(
-    PlatformWebViewControllerCreationParams params,
-  ) {
-    final c = _WebController(params, loads);
-    controllers.add(c);
-    return c;
-  }
-
-  @override
-  PlatformNavigationDelegate createPlatformNavigationDelegate(
-    PlatformNavigationDelegateCreationParams params,
-  ) => _Navigation(params);
-  @override
-  PlatformWebViewWidget createPlatformWebViewWidget(
-    PlatformWebViewWidgetCreationParams params,
-  ) => _WebWidget(params);
-}
-
-class _WebController extends PlatformWebViewController {
-  _WebController(super.params, this.loads) : super.implementation();
-  final List<Uri> loads;
-  _Navigation? delegate;
-  @override
-  Future<void> setJavaScriptMode(JavaScriptMode mode) async {}
-  @override
-  Future<void> setPlatformNavigationDelegate(
-    PlatformNavigationDelegate delegate,
-  ) async {
-    this.delegate = delegate as _Navigation;
-  }
-
-  @override
-  Future<void> loadRequest(LoadRequestParams params) async {
-    loads.add(params.uri);
-    delegate?.progress?.call(100);
-  }
-}
-
-class _Navigation extends PlatformNavigationDelegate {
-  _Navigation(super.params) : super.implementation();
-  ProgressCallback? progress;
-  NavigationRequestCallback? navigation;
-  @override
-  Future<void> setOnProgress(ProgressCallback callback) async {
-    progress = callback;
-  }
-
-  @override
-  Future<void> setOnNavigationRequest(
-    NavigationRequestCallback callback,
-  ) async {
-    navigation = callback;
-  }
-
-  @override
-  Future<void> setOnWebResourceError(WebResourceErrorCallback callback) async {}
-}
-
-class _WebWidget extends PlatformWebViewWidget {
-  _WebWidget(super.params) : super.implementation();
-  @override
-  Widget build(BuildContext context) => const ColoredBox(
-    color: Colors.white,
-    child: Center(child: Text('内嵌网页')),
-  );
-}
+/// Returns metadata parsed from fixture HTML using [url] as its base address.
+/// Completes without network requests or mutation of editor/shared state.
+Future<ExtractionResult<LinkMetadata>> _metadata(String url) =>
+    MetaLinkParser().parseHtml(
+      '<html><head><meta property="og:title" content="预览标题 $url">'
+      '<meta property="og:description" content="提取的网页摘要">'
+      '</head></html>',
+      documentUrl: Uri.parse(url),
+    );
 
 class _AudioPlatform extends VideoPlayerPlatform {
   _AudioPlatform(this.pending);

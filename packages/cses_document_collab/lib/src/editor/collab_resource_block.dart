@@ -5,12 +5,10 @@ import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.da
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/editor/collab_unsupported_block.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:cses_document_collab/src/editor/collab_link_preview.dart';
 
 String collabResourceLabel(String kind) => switch (kind) {
   'attachment' => '附件',
@@ -28,10 +26,6 @@ IconData _icon(String kind) => switch (kind) {
   'juejin-embed' => Icons.article_outlined,
   _ => Icons.language,
 };
-
-Uri collabResourceFrameUrl(String kind, String url) => kind == 'figma-embed'
-    ? Uri.https('www.figma.com', '/embed', {'embed_host': 'share', 'url': url})
-    : Uri.parse(url);
 
 Future<void> _open(BuildContext context, String url) async {
   try {
@@ -51,11 +45,31 @@ Future<void> _open(BuildContext context, String url) async {
   }
 }
 
-/// Selectable, non-text resource surface. Owns no collaboration or network session.
+/// Builds selectable resources using the editor supplied by AppFlowy's host.
+/// Does not own the editor or an injected metadata loader. Unsupported URLs keep
+/// their original data in the standard unsupported-block surface.
+///
+/// ```dart
+/// import 'package:cses_document_collab/src/editor/collab_resource_block.dart';
+///
+/// final builder = CollabResourceBlockComponentBuilder();
+/// // Register builder in AppFlowyEditor's blockComponentBuilders by resource type.
+/// ```
 class CollabResourceBlockComponentBuilder extends BlockComponentBuilder {
+  /// Creates a renderer with optional caller-owned [loadPreview].
+  /// Null uses MetaLink for link cards; attachments and audio do not invoke it.
+  CollabResourceBlockComponentBuilder({this.loadPreview});
+
+  /// Optional caller-owned metadata loader; null selects the native default.
+  final CollabLinkPreviewLoader? loadPreview;
+
+  /// Returns the leaf-resource validator; text deltas or children are rejected.
   @override
   BlockComponentValidate get validate =>
       (node) => node.delta == null && node.children.isEmpty;
+
+  /// Returns the selectable renderer for borrowed AppFlowy [context].
+  /// Invalid URLs use the unsupported-block renderer without modifying data.
   @override
   BlockComponentWidget build(BlockComponentContext context) {
     final url = context.node.attributes[csesEmbedUrlAttribute] as String? ?? '';
@@ -66,20 +80,32 @@ class CollabResourceBlockComponentBuilder extends BlockComponentBuilder {
       key: context.node.key,
       node: context.node,
       configuration: configuration,
+      loadPreview: loadPreview,
     );
   }
 }
 
+/// Borrows a resource node and editor configuration for a selectable card.
 class _ResourceBlock extends BlockComponentStatefulWidget {
+  /// Binds optional stable [key], borrowed [node] and [configuration].
+  /// Optional caller-owned [loadPreview] overrides MetaLink extraction; null uses
+  /// the default. Network work starts only when a link preview is mounted.
   const _ResourceBlock({
     super.key,
     required super.node,
     required super.configuration,
+    this.loadPreview,
   });
+
+  /// Optional caller-owned metadata loader; null selects the native default.
+  final CollabLinkPreviewLoader? loadPreview;
+
+  /// Returns selection state; the parent editor retains ownership of the node.
   @override
   State<_ResourceBlock> createState() => _ResourceBlockState();
 }
 
+/// Borrows editor state for selection and routes explicit resource edits.
 class _ResourceBlockState extends State<_ResourceBlock> with SelectableMixin {
   final _bodyKey = GlobalKey();
   late final _editor = context.read<EditorState>();
@@ -106,19 +132,28 @@ class _ResourceBlockState extends State<_ResourceBlock> with SelectableMixin {
     await _editor.apply(transaction);
   }
 
+  /// Returns a selectable resource surface using inherited [context].
+  /// Link cards open through their preview and expose editing/deletion only in
+  /// editable mode; audio and attachments retain separate opening controls.
+  /// Metadata stays local, while explicit edits use the borrowed editor.
   @override
   Widget build(BuildContext context) {
     final node = widget.node;
     final kind = node.type;
     final props = CollabResource.fromAttributes(node.attributes);
     final label = collabResourceLabel(kind);
-    final title = props.string(kind == 'bookmark' ? 'title' : 'name');
+    final title = props.string('name');
     final name = title.isNotEmpty
         ? title
         : (kind == 'attachment'
               ? Uri.parse(_url).pathSegments.lastOrNull ?? label
               : label);
-    final isFrame = {'embed', 'figma-embed', 'juejin-embed'}.contains(kind);
+    final isCard = {
+      'bookmark',
+      'embed',
+      'figma-embed',
+      'juejin-embed',
+    }.contains(kind);
     final child = Container(
       key: _bodyKey,
       margin: const EdgeInsets.symmetric(vertical: 6),
@@ -163,14 +198,15 @@ class _ResourceBlockState extends State<_ResourceBlock> with SelectableMixin {
                     ],
                   ),
                 ),
-                ExcludeFocus(
-                  child: IconButton(
-                    key: ValueKey('resource-open-$_id'),
-                    tooltip: kind == 'attachment' ? '下载或打开附件' : '在浏览器打开',
-                    icon: const Icon(Icons.open_in_new, size: 18),
-                    onPressed: () => _open(context, _url),
+                if (!isCard)
+                  ExcludeFocus(
+                    child: IconButton(
+                      key: ValueKey('resource-open-$_id'),
+                      tooltip: kind == 'attachment' ? '下载或打开附件' : '在浏览器打开',
+                      icon: const Icon(Icons.open_in_new, size: 18),
+                      onPressed: () => _open(context, _url),
+                    ),
                   ),
-                ),
                 if (_editor.editable) ...[
                   ExcludeFocus(
                     child: IconButton(
@@ -201,38 +237,28 @@ class _ResourceBlockState extends State<_ResourceBlock> with SelectableMixin {
               ],
             ),
           ),
-          if (kind == 'bookmark') _BookmarkPreview(props: props, url: _url),
           if (kind == 'audio')
             _AudioPlayer(key: ValueKey('audio:$_url'), url: _url),
-          if (isFrame)
+          if (isCard)
             LayoutBuilder(
               builder: (context, constraints) {
-                final ratio = props.number('ar');
-                final wr = props.number('wr');
-                final ratioMode =
-                    (wr != null && wr > 0) || (ratio != null && ratio > 0);
-                final width = ratioMode
-                    ? constraints.maxWidth * ((wr ?? 100).clamp(1, 100) / 100)
+                final width = props.number('wr');
+                final cardWidth = width != null && width > 0
+                    ? constraints.maxWidth * (width.clamp(1, 100) / 100)
                     : (props.number('width') ?? constraints.maxWidth).clamp(
                         1.0,
                         constraints.maxWidth,
                       );
-                final height =
-                    (ratioMode
-                            ? width /
-                                  ((ratio != null && ratio > 0)
-                                      ? ratio
-                                      : 16 / 9)
-                            : props.number('height') ?? width / (16 / 9))
-                        .clamp(180.0, 720.0);
                 return Align(
                   alignment: Alignment.centerLeft,
                   child: SizedBox(
-                    width: width,
-                    height: height,
-                    child: _EmbeddedPage(
+                    width: cardWidth,
+                    child: CollabLinkPreview(
                       key: ValueKey('$kind:$_url'),
-                      url: collabResourceFrameUrl(kind, _url),
+                      url: _url,
+                      props: props,
+                      loadPreview: widget.loadPreview,
+                      onOpen: () => _open(context, _url),
                     ),
                   ),
                 );
@@ -302,55 +328,6 @@ String _subtitle(String kind, CollabResource props, String url) {
           : '${(size / 1024).toStringAsFixed(1)} KB',
     host,
   ].join(' · ');
-}
-
-class _BookmarkPreview extends StatelessWidget {
-  const _BookmarkPreview({required this.props, required this.url});
-  final CollabResource props;
-  final String url;
-  @override
-  Widget build(BuildContext context) {
-    final image = props.string('image');
-    final description = props.string('description');
-    if (image.isEmpty && description.isEmpty) return const SizedBox.shrink();
-    return InkWell(
-      onTap: () => _open(context, url),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (description.isNotEmpty)
-              Expanded(
-                child: Text(
-                  description,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: Color(0xFF64748B),
-                  ),
-                ),
-              ),
-            if (isCollabResourceUrl('bookmark', image))
-              Padding(
-                padding: const EdgeInsets.only(left: 8),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
-                  child: Image.network(
-                    image,
-                    width: 80,
-                    height: 64,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, _, _) => const SizedBox.shrink(),
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 /// Owns one audio controller. Keyed by URL so replacement disposes the old stream.
@@ -462,114 +439,6 @@ class _AudioPlayerState extends State<_AudioPlayer> {
 String _time(Duration value) =>
     '${value.inMinutes}:${(value.inSeconds % 60).toString().padLeft(2, '0')}';
 
-/// Platform-owned webview; navigation is limited to web URLs, with no native JS bridge.
-class _EmbeddedPage extends StatefulWidget {
-  const _EmbeddedPage({super.key, required this.url});
-  final Uri url;
-  @override
-  State<_EmbeddedPage> createState() => _EmbeddedPageState();
-}
-
-class _EmbeddedPageState extends State<_EmbeddedPage> {
-  WebViewController? _controller;
-  String? _error;
-  int _progress = 0;
-  int _generation = 0;
-  @override
-  void initState() {
-    super.initState();
-    if (WebViewPlatform.instance != null) unawaited(_load());
-  }
-
-  Future<void> _load() async {
-    final generation = ++_generation;
-    bool current() => mounted && generation == _generation;
-    try {
-      final controller = WebViewController();
-      _controller = controller;
-      await controller.setJavaScriptMode(JavaScriptMode.unrestricted);
-      await controller.setNavigationDelegate(
-        NavigationDelegate(
-          onProgress: (v) {
-            if (current()) setState(() => _progress = v);
-          },
-          onWebResourceError: (e) {
-            if (current() && e.isForMainFrame != false) {
-              setState(() => _error = '网页暂时无法加载');
-            }
-          },
-          onNavigationRequest: (r) => isCollabResourceUrl('embed', r.url)
-              ? NavigationDecision.navigate
-              : NavigationDecision.prevent,
-        ),
-      );
-      if (!current()) return;
-      await controller.loadRequest(widget.url);
-      if (current()) setState(() {});
-    } catch (_) {
-      if (current()) setState(() => _error = '网页暂时无法加载');
-    }
-  }
-
-  @override
-  void dispose() {
-    _generation++;
-    _controller = null;
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final controller = _controller;
-    if (_error != null || controller == null) {
-      return ColoredBox(
-        color: const Color(0xFFF8FAFC),
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.language, color: Color(0xFF94A3B8), size: 32),
-              const SizedBox(height: 8),
-              Text(
-                _error ?? '当前设备不支持内嵌浏览',
-                style: const TextStyle(fontSize: 12, color: Color(0xFF64748B)),
-              ),
-              TextButton(
-                onPressed: () => _open(context, widget.url.toString()),
-                child: const Text('在浏览器打开'),
-              ),
-              if (_error != null)
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _error = null;
-                      _progress = 0;
-                    });
-                    unawaited(_load());
-                  },
-                  child: const Text('重试'),
-                ),
-            ],
-          ),
-        ),
-      );
-    }
-    return Stack(
-      children: [
-        WebViewWidget(
-          key: ValueKey(controller),
-          controller: controller,
-          gestureRecognizers: {
-            Factory<EagerGestureRecognizer>(() => EagerGestureRecognizer()),
-          },
-        ),
-        if (_progress < 100)
-          LinearProgressIndicator(value: _progress / 100, minHeight: 2),
-      ],
-    );
-  }
-}
-
 class _ResourceSettings extends StatefulWidget {
   const _ResourceSettings({
     required this.editor,
@@ -587,10 +456,15 @@ class _ResourceSettings extends StatefulWidget {
   State<_ResourceSettings> createState() => _ResourceSettingsState();
 }
 
+/// Owns settings fields and serializes explicit, conflict-checked property edits.
 class _ResourceSettingsState extends State<_ResourceSettings> {
   late final Map<String, TextEditingController> _fields;
   String? _error;
   bool _saving = false;
+
+  /// Creates owned text controllers from the borrowed settings snapshot.
+  /// Card width is editable as a percentage; stored height/aspect fields remain
+  /// untouched because native link previews determine their own content height.
   @override
   void initState() {
     super.initState();
@@ -608,9 +482,6 @@ class _ResourceSettingsState extends State<_ResourceSettings> {
         'wr': TextEditingController(
           text: (widget.props.number('wr') ?? 100).toString(),
         ),
-        'ar': TextEditingController(
-          text: (widget.props.number('ar') ?? 16 / 9).toStringAsFixed(3),
-        ),
       },
     };
   }
@@ -623,6 +494,10 @@ class _ResourceSettingsState extends State<_ResourceSettings> {
     super.dispose();
   }
 
+  /// Validates the current URL and width, then applies changed fields by block ID.
+  /// Completes after property transactions and closes the dialog on success;
+  /// conflicting remote edits or failures keep the dialog open with feedback.
+  /// Does not mutate a disposed/read-only editor or overwrite unrelated fields.
   Future<void> _save() async {
     final url = _fields['url']!.text.trim();
     if (!isCollabResourceUrl(widget.kind, url)) {
@@ -642,17 +517,12 @@ class _ResourceSettingsState extends State<_ResourceSettings> {
         if (text != widget.url) changes['url'] = text;
         continue;
       }
-      if ({'wr', 'ar'}.contains(entry.key)) {
-        final initial = entry.key == 'wr'
-            ? (widget.props.number('wr') ?? 100).toString()
-            : (widget.props.number('ar') ?? 16 / 9).toStringAsFixed(3);
+      if (entry.key == 'wr') {
+        final initial = (widget.props.number('wr') ?? 100).toString();
         if (text == initial) continue;
         final number = double.tryParse(text);
-        if (number == null ||
-            !number.isFinite ||
-            number <= 0 ||
-            (entry.key == 'wr' && number > 100)) {
-          setState(() => _error = '宽度应为 1–100，宽高比应为正数');
+        if (number == null || !number.isFinite || number < 1 || number > 100) {
+          setState(() => _error = '宽度应为 1–100');
           return;
         }
         changes[entry.key] = number;
