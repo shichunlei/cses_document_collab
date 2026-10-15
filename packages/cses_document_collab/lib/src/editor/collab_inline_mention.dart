@@ -1,6 +1,6 @@
 import 'collab_mention_avatar.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
-import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
+import 'collab_mention_tap_handler.dart';
 import 'package:cses_document_collab/src/model/collab_user_mention.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 /// 正文单字符用户提及，显示头像与原始姓名，不附加@字符。
-/// 点击打开人员资料/复制/删除，预览允许查看但不能改正文。
+/// 点击优先交给宿主统一回调，未配置时打开人员资料/复制/删除，预览允许查看但不能改正文。
 /// 借用节点与编辑器，不拥有连接；头像按稳定用户ID加载公共图片，失败回退姓名首字，不写正文。
 /// ```dart
 /// import 'package:flutter/material.dart';
@@ -59,25 +59,13 @@ class CollabInlineMention extends StatelessWidget {
           onTap: () async {
             final target = CollabUserMentionTarget.capture(node, offset);
             if (target == null) return;
-            try {
-              await runEditorHeaderAction<void>(
-                context,
-                state,
-                () => _showProfile(context, state, target),
-              );
-            } catch (error, stack) {
-              CollabDiagnostics.report(
-                '用户提及操作失败',
-                error: error,
-                stackTrace: stack,
-                tag: 'DocCollab',
-              );
-              if (context.mounted) {
-                ScaffoldMessenger.maybeOf(
-                  context,
-                )?.showSnackBar(const SnackBar(content: Text('操作失败，请重试')));
-              }
-            }
+            await handleCollabMentionTap(
+              context,
+              state,
+              node,
+              offset,
+              defaultAction: () => _showProfile(context, state, target),
+            );
           },
           child: ConstrainedBox(
             constraints: BoxConstraints(

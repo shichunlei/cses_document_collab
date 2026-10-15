@@ -1733,17 +1733,22 @@ Node? _findMediaTarget(EditorState state, String id) {
 /// 在 [action] 的完整头部操作期间隔离正文输入，结束后恢复原稳定块选区。
 /// [context] 与 [editorState] 均为借用对象；弹窗必须等待退场动画后完成。
 /// [action] 的结果在正文选区恢复后返回，取消为null；异常仍恢复焦点后透传，销毁的编辑器不执行action。
+/// [canRestore] 可在异步结束时拒绝恢复已失效会话的焦点；null沿用页面与编辑器存活检查。
 Future<T?> runEditorHeaderAction<T>(
   BuildContext context,
   EditorState editorState,
-  Future<T?> Function() action,
-) async {
+  Future<T?> Function() action, {
+  bool Function()? canRestore,
+}) async {
   if (editorState.isDisposed) return null;
   final session = _EditorModalSession(editorState);
   try {
     return await action();
   } finally {
-    await session.finish(context.mounted ? context : null, null);
+    await session.finish(
+      context.mounted && (canRestore?.call() ?? true) ? context : null,
+      null,
+    );
   }
 }
 

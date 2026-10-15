@@ -218,7 +218,7 @@ void registerCsesRichTextAttributes() {
 final class CollabEditorTextSegment {
   /// [text] 为正文或公式单字符位置，[inlineLatex] 非 null 时只允许 U+FFFC。
   /// [inlineMention] 为用户/实体显示名，[mentionId] 为稳定ID，两者成对且与公式互斥。
-  /// [mentionType] 为meeting/task/doc时展示对应实体，null兼容已有用户；[mentionAttributes] 为实体原生属性JSON，
+  /// [mentionType] 为meeting/task/doc时展示对应实体，null兼容已有用户；[mentionAttributes] 为四类提及原生属性JSON，
   /// 保留删除后撤销所需的业务信息，不能作为编辑实体业务数据的补丁。
   /// [bold]、[italic]、[underline]、[strikethrough]、[code] 默认 false，分别控制对应格式。
   /// [textColor] 和 [backgroundColor] 为原始颜色字符串，null 表示未显式指定。
@@ -287,7 +287,7 @@ final class CollabEditorTextSegment {
   /// meeting/task/doc区分三类实体；null兼容历史用户投影，不使用实体ID加载人员头像。
   final String? mentionType;
 
-  /// 非用户实体原始属性JSON快照，用户为null；由原生投影提供，最大65536字节。
+  /// 四类提及原始属性JSON快照；历史/手工用户投影可为null，正式投影最大65536字节。
   final String? mentionAttributes;
 
   /// 是否需要保留显式分段；公式/用户/会议/任务/文档即使没有文字格式也必须保留对象信息。

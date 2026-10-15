@@ -491,3 +491,8 @@ bridge 的 text 字段传递；正式图片写入 props.src、视频写入 props
 正文已按 `mentionType` 区分用户、会议、任务、文档。后三类显示类型图标和名称，支持点击查看引用ID、删除提及与独立撤销/重做；实体本身不被修改。原始状态、编号、文档类型和任务扩展属性参与完整历史恢复；普通文字编辑不会覆盖远端更新的业务元数据。仍未接入后三类的搜索选择器和业务详情跳转；实际支持范围及验证依据见 [块适配清单](docs/block-adaptation.md)。
 
 本轮验证：编辑包693项、宿主27项、Rust72项及两项目静态分析通过；Android已安装到HONOR手机，三类实体提及删除/撤销恢复与桌面双向同步通过，原始属性完整保留，见[四类提及验收记录](docs/verification/entity-mention-20261015.json)。
+
+
+### 宿主统一点击回调
+
+`CollabHostServices(onMentionTap: (mention) async { ... })` 可接管四类提及的详情跳转；公开参数为 `CollabMentionTap`，包含 `type/id/name/attributes`，其中type为 `CollabMentionType.user/meeting/task/doc`，原始属性及其嵌套集合为独立只读快照。回调应等待详情关闭再完成；预览也可跳转，重复点击被隔离，异常统一报告。未注入时保留原面板，包本身不内置业务页面。接入和路由示例见[协同包说明](packages/cses_document_collab/README.md#宿主统一提及点击回调)。本轮原始属性、异步/会话关闭及平台构建验证见[回调验收记录](docs/verification/mention-tap-callback-20261015.json)。

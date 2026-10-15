@@ -63,7 +63,7 @@ pub struct CollabTextSegment {
     pub mention_id: Option<String>,
     /// None 兼容已有用户投影；meeting/task/doc按各自实体语义展示，其他值拒绝写入。
     pub mention_type: Option<String>,
-    /// 非用户实体原始属性的稳定JSON，用于删除后撤销/重插入保留编号、状态及扩展字段。
+    /// 四类提及原始属性的稳定JSON，用于宿主点击及删除后恢复完整扩展字段。
     /// 不作为可编辑业务补丁；既有同身份对象以原生属性为准，最多65536字节。
     pub mention_attributes: Option<String>,
 }
@@ -838,10 +838,9 @@ fn text_segments_for_schema<T: ReadTxn>(
                 mention_type: mention
                     .as_ref()
                     .and_then(|m| (m.2 != "user").then(|| m.2.clone())),
-                mention_attributes: mention.as_ref().and_then(|m| {
-                    (m.2 != "user")
-                        .then(|| serialized_mention_attributes(chunk.attributes.as_deref()))
-                }),
+                mention_attributes: mention
+                    .as_ref()
+                    .map(|_| serialized_mention_attributes(chunk.attributes.as_deref())),
                 text,
                 bold: attribute_enabled(attributes, schema_attribute("bold", formal)),
                 italic: attribute_enabled(attributes, schema_attribute("italic", formal)),
@@ -906,7 +905,7 @@ fn inline_mention_identity(value: &Out, attrs: Option<&Attrs>) -> Option<(String
         .or_else(|| attribute_string(attrs, "d:mentionId"))?;
     if !matches!(kind.as_str(), "user" | "meeting" | "task" | "doc")
         || id.is_empty()
-        || (kind != "user" && serialized_mention_attributes(attrs).len() > 65_536)
+        || serialized_mention_attributes(attrs).len() > 65_536
     {
         return None;
     }
@@ -947,7 +946,7 @@ fn restored_mention_attributes(segment: &CollabTextSegment) -> Attrs {
         .unwrap_or_default()
 }
 
-/// 检查非用户实体的属性快照与声明身份一致，拒绝缺失、超限或伪造类型/ID。
+/// 检查四类提及的属性快照与声明身份一致，拒绝缺失、超限或伪造类型/ID。
 fn valid_entity_attributes(segment: &CollabTextSegment) -> bool {
     let Some(data) = segment
         .mention_attributes
@@ -965,7 +964,8 @@ fn valid_entity_attributes(segment: &CollabTextSegment) -> bool {
     let id = attribute_string(Some(&attrs), "mentionId")
         .filter(|v| !v.is_empty())
         .or_else(|| attribute_string(Some(&attrs), "d:mentionId"));
-    kind == segment.mention_type && id == segment.mention_id
+    kind.as_deref() == Some(segment.mention_type.as_deref().unwrap_or("user"))
+        && id == segment.mention_id
 }
 
 /// 原生行内对象的完整语义身份，用于差量对齐；不把 U+FFFC 文本当成对象。
@@ -1247,8 +1247,7 @@ fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(
                     !matches!(kind.as_str(), "user" | "meeting" | "task" | "doc")
                 })
                 || (s.mention_type.is_some() && s.inline_mention.is_none())
-                || (s.mention_attributes.is_some()
-                    && !matches!(s.mention_type.as_deref(), Some("meeting" | "task" | "doc")))
+                || (s.mention_attributes.is_some() && !valid_entity_attributes(s))
                 || (matches!(s.mention_type.as_deref(), Some("meeting" | "task" | "doc"))
                     && !valid_entity_attributes(s))
                 || s.inline_mention.as_ref().is_some_and(|name| {

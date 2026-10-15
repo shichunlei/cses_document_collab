@@ -1,12 +1,12 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
-import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
+import 'collab_mention_tap_handler.dart';
 import 'package:cses_document_collab/src/model/collab_entity_mention.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 /// 正文会议/任务/文档单字符对象，显示类型图标及名称；不附加@，不加载人员头像。
-/// 点击查看原始名称/ID并按权限删除提及；不持有连接，不修改实体业务数据。
+/// 点击优先交给宿主统一回调，未配置时查看原始名称/ID并按权限删除提及；不持有连接，不修改实体业务数据。
 /// ```dart
 /// import 'package:flutter/material.dart';
 /// import 'package:appflowy_editor/appflowy_editor.dart';
@@ -62,25 +62,13 @@ class CollabInlineEntityMention extends StatelessWidget {
           onTap: () async {
             final target = CollabEntityMentionTarget.capture(node, offset);
             if (target == null) return;
-            try {
-              await runEditorHeaderAction<void>(
-                context,
-                state,
-                () => _showEntity(context, state, target),
-              );
-            } catch (error, stack) {
-              CollabDiagnostics.report(
-                '实体提及操作失败',
-                error: error,
-                stackTrace: stack,
-                tag: 'DocCollab',
-              );
-              if (context.mounted) {
-                ScaffoldMessenger.maybeOf(
-                  context,
-                )?.showSnackBar(const SnackBar(content: Text('操作失败，请重试')));
-              }
-            }
+            await handleCollabMentionTap(
+              context,
+              state,
+              node,
+              offset,
+              defaultAction: () => _showEntity(context, state, target),
+            );
           },
           child: ConstrainedBox(
             constraints: BoxConstraints(

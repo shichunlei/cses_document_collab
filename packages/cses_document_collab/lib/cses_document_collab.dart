@@ -19,3 +19,6 @@ export 'src/controller/document_metadata_controller.dart';
 
 export 'src/model/collab_user_mention.dart'
     show CollabMentionUser, CollabMentionDirectory;
+
+export 'src/model/collab_mention_tap.dart'
+    show CollabMentionType, CollabMentionTap, CollabMentionTapCallback;

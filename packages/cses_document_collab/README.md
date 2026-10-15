@@ -118,3 +118,31 @@ tool/verify_portable_package.sh ../appflowy_editor
 正式 `{mention: name}` 配合 `mentionType=meeting/task/doc` 和稳定 `mentionId`（兼容历史 `d:` 前缀），在段落、标题、列表、引用及高亮正文中显示类型图标+名称，不附加@，不再降级为只读占位。每个对象仍占一个UTF-16位置；普通文字、用户头像和公式可混排。点击可查看共享名称/ID并删除提及，预览禁止删除；独立撤销/重做恢复原始实体属性。姓名最长20000 UTF-16单元，ID最长512 UTF-8字节，非用户实体属性JSON最大65536字节。
 
 原始编号、状态、文档类型、任务扩展等属性完整保留，嵌套对象的JSON排序稳定；属性快照仅供删除后恢复，普通编辑不回放陈旧业务状态。远端类型、身份、属性或同段正文变化使过期操作失效。新增搜索仍是人员入口，尚无会议/任务/文档选择器、业务详情跳转或业务实体修改；这三类提及保持部分支持，不代表对应会议/任务卡片块已适配。代码块和图片题注、未知实体与localDraft继续遵循保护边界。验证与真机联调记录见仓库 `docs/block-adaptation.md`。
+
+
+## 宿主统一提及点击回调
+
+通过公开入口的 `CollabHostServices.onMentionTap` 接管用户、会议、任务、文档点击。参数 `CollabMentionTap` 包含 `type`（`CollabMentionType.user/meeting/task/doc`）、`id`、`name` 和 `attributes`。名称是共享正文原名，空名称仍为空；属性来自Y.Text，保留历史d:键、格式及未知扩展，不从人员/实体详情接口拼装，不包含移动编辑器的cses私有属性。所有嵌套Map/List均深复制且只读，宿主可独立保留事件。
+
+未配置回调时保持原人员资料/实体信息面板；配置后点击由宿主接管，不同时打开内置面板，预览也允许导航。支持同步或异步处理；导航应返回直到详情退场完成的Future。回调期间暂停正文输入并忽略同编辑器的重复点击，完成后仅向仍有效的原页面恢复焦点。同步/异步异常向原宿主onError报告并在有效页面提示，不补开默认面板；已关闭或被新会话替代的编辑器不恢复键盘。宿主仍负责业务鉴权、跨账号异步失效、路由和外部资源生命周期。
+
+下面的函数返回可注入控制器的services，navigatorKey由宿主持有并传给MaterialApp；将示例builder替换为四类业务详情即可：
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:cses_document_collab/cses_document_collab.dart';
+
+CollabHostServices mentionServices(GlobalKey<NavigatorState> navigatorKey) =>
+    CollabHostServices(onMentionTap: (mention) async {
+      final navigator = navigatorKey.currentState;
+      if (navigator == null) return;
+      final route = MaterialPageRoute<void>(builder: (_) => Scaffold(
+        appBar: AppBar(title: Text(mention.name)),
+        body: SelectableText('${mention.type.name}: ${mention.id}'),
+      ));
+      await navigator.push(route);
+      await route.completed;
+    });
+```
+
+四类原始属性JSON均限制为65536字节；正式投影完整传递，未就绪或损坏的属性拒绝派发并报告失败，不制造原始属性。新插入用户的身份快照立即可用；原有手工用户投影仍可不带快照使用默认面板。编辑包不内置业务路由，回调接管时默认面板的删除入口由宿主选择如何提供。

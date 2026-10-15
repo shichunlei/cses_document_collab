@@ -12,7 +12,7 @@ const collabMentionIdAttribute = 'cses_mention_id';
 /// 内存中的实体类型；缺省是历史用户投影，meeting/task/doc使用各自展示与交互。
 const collabMentionTypeAttribute = 'cses_mention_type';
 
-/// 非用户实体原始属性的JSON快照，仅用于对象历史恢复，不作为普通文字格式。
+/// 四类提及原始属性JSON快照，用于宿主点击事件和对象历史恢复，不作为普通文字格式。
 const collabMentionAttributesAttribute = 'cses_mention_attributes';
 
 /// 宿主提供的人员快照；正文只保存 [id] 和 [name]，不持有资源。
@@ -175,6 +175,10 @@ Future<Selection?> insertCollabUserMention(
       attributes: {
         collabInlineMentionAttribute: user.name,
         collabMentionIdAttribute: user.id,
+        collabMentionAttributesAttribute: jsonEncode({
+          'mentionType': 'user',
+          'mentionId': user.id,
+        }),
       },
     )
     ..insert(' ');
