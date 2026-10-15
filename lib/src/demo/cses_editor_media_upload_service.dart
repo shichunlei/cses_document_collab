@@ -6,16 +6,15 @@ import 'package:cses_common/runtime/context/context.dart';
 import 'package:cses_common/runtime/session/user.dart';
 import 'package:cses_common/storage/oss/factory/oss_client_factory.dart';
 import 'package:cses_common/storage/oss/models/request_option.dart';
-import 'package:dio/dio.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:mime/mime.dart';
-
 import 'package:cses_document_collab/cses_document_collab.dart'
     show
         EditorLocalFile,
         EditorMediaSource,
         EditorMediaUploadService,
         validateEditorMediaFile;
+import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:mime/mime.dart';
 
 /// 借用Common登录、OSS和文件登记封装的宿主上传端口，不拥有编辑器或HTTP客户端。
 /// 文件选择与上传分开，等待期间检查取消和账号/企业/会话变化；仅稳定URL进入协同或头部业务。

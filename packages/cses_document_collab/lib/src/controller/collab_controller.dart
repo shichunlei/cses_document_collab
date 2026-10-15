@@ -1,21 +1,21 @@
 import 'document_feedback_controller.dart';
 import 'dart:async';
-import 'document_metadata_controller.dart';
-
-import 'package:cses_document_collab/src/model/collab_resource.dart';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
-import 'package:cses_document_collab/src/model/collab_code.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
-import 'package:cses_document_collab/src/model/collab_image.dart';
-import 'package:cses_document_collab/src/model/collab_ordered.dart';
-import 'package:cses_document_collab/src/sync/cses_collab_gateway.dart';
+import 'package:cses_document_collab/src/model/collab_code.dart';
 import 'package:cses_document_collab/src/model/collab_document_config.dart';
 import 'package:cses_document_collab/src/model/collab_host_services.dart';
-import 'package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart';
+import 'package:cses_document_collab/src/model/collab_image.dart';
+import 'package:cses_document_collab/src/model/collab_ordered.dart';
+import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/native/api/collab.dart' as rust;
+import 'package:cses_document_collab/src/native/collab_runtime.dart';
+import 'package:cses_document_collab/src/sync/cses_collab_gateway.dart';
+import 'package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart';
 import 'package:flutter/foundation.dart';
+
+import 'document_metadata_controller.dart';
 
 /// 本地加载、主连接握手及协同会话映射出的展示状态；online 不表示数据库落库。
 enum ConnectionStatus { starting, connecting, online, offline, error }

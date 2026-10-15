@@ -1,21 +1,19 @@
-import 'package:cses_document_collab/src/model/collab_entity_mention.dart';
-import 'package:cses_document_collab/src/model/collab_task_card.dart';
-import 'package:cses_document_collab/src/model/collab_meeting.dart';
-import 'package:cses_document_collab/src/model/collab_user_mention.dart';
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:cses_document_collab/src/model/collab_divider.dart';
-import 'package:cses_document_collab/src/model/collab_formula.dart';
-import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
-
-import 'package:cses_document_collab/src/model/collab_resource.dart';
-
 import 'package:appflowy_editor/appflowy_editor.dart';
-import 'package:cses_document_collab/src/model/collab_code.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
+import 'package:cses_document_collab/src/model/collab_code.dart';
+import 'package:cses_document_collab/src/model/collab_divider.dart';
+import 'package:cses_document_collab/src/model/collab_entity_mention.dart';
+import 'package:cses_document_collab/src/model/collab_formula.dart';
 import 'package:cses_document_collab/src/model/collab_image.dart';
+import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
+import 'package:cses_document_collab/src/model/collab_meeting.dart';
 import 'package:cses_document_collab/src/model/collab_ordered.dart';
+import 'package:cses_document_collab/src/model/collab_resource.dart';
+import 'package:cses_document_collab/src/model/collab_task_card.dart';
+import 'package:cses_document_collab/src/model/collab_user_mention.dart';
 import 'package:cses_document_collab/src/model/text_delta.dart' as collab;
 
 typedef LocalEditorBlocksChanged =

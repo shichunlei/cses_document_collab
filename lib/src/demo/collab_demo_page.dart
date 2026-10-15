@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:cses_document_collab/cses_document_collab.dart';
-import 'package:cses_mobile_collab_demo/src/demo/document_host.dart';
 import 'package:cses_mobile_collab_demo/src/demo/cses_connection_panel.dart';
+import 'package:cses_mobile_collab_demo/src/demo/document_host.dart';
 import 'package:flutter/material.dart';
 
 import 'markdown_file_picker.dart';

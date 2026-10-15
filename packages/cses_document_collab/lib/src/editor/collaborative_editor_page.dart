@@ -1,41 +1,39 @@
-import 'package:flutter/foundation.dart';
-import 'markdown_import.dart';
-import 'collab_task_card_block.dart';
-import 'package:cses_document_collab/src/model/collab_task_card.dart';
-import 'package:cses_document_collab/src/editor/collab_meeting_block.dart';
-import 'package:cses_document_collab/src/model/collab_meeting.dart';
-import 'collab_inline_entity_mention.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
-import 'package:cses_document_collab/src/editor/collab_inline_mention.dart';
-import 'package:cses_document_collab/src/model/collab_user_mention.dart';
-import 'package:cses_document_collab/src/editor/collab_inline_formula.dart';
-import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
-import 'package:cses_document_collab/src/editor/collab_formula_block.dart';
-import 'package:cses_document_collab/src/model/collab_formula.dart';
-import 'package:cses_document_collab/src/editor/collab_divider_block.dart';
-import 'package:cses_document_collab/src/model/collab_divider.dart';
-import 'document_header.dart';
-import 'document_feedback_footer.dart';
-
-import 'package:cses_document_collab/src/model/collab_resource.dart';
-import 'package:cses_document_collab/src/editor/collab_resource_block.dart';
-
-import 'package:cses_document_collab/src/editor/collab_unsupported_block.dart';
-
 import 'package:appflowy_editor/appflowy_editor.dart';
-import 'package:cses_document_collab/src/editor/collab_text_alignment.dart';
-import 'package:cses_document_collab/src/editor/collab_block_colors.dart';
-import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/controller/collab_controller.dart';
+import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
+import 'package:cses_document_collab/src/editor/collab_block_colors.dart';
 import 'package:cses_document_collab/src/editor/collab_block_delete.dart';
-import 'package:cses_document_collab/src/editor/collab_code_block.dart';
 import 'package:cses_document_collab/src/editor/collab_callout_block.dart';
-import 'package:cses_document_collab/src/model/collab_block_colors.dart';
+import 'package:cses_document_collab/src/editor/collab_code_block.dart';
+import 'package:cses_document_collab/src/editor/collab_divider_block.dart';
 import 'package:cses_document_collab/src/editor/collab_embed_block.dart';
+import 'package:cses_document_collab/src/editor/collab_formula_block.dart';
+import 'package:cses_document_collab/src/editor/collab_inline_formula.dart';
+import 'package:cses_document_collab/src/editor/collab_inline_mention.dart';
 import 'package:cses_document_collab/src/editor/collab_list_editing.dart';
+import 'package:cses_document_collab/src/editor/collab_meeting_block.dart';
 import 'package:cses_document_collab/src/editor/collab_ordered_marker.dart';
+import 'package:cses_document_collab/src/editor/collab_resource_block.dart';
+import 'package:cses_document_collab/src/editor/collab_text_alignment.dart';
+import 'package:cses_document_collab/src/editor/collab_unsupported_block.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
+import 'package:cses_document_collab/src/model/collab_block_colors.dart';
+import 'package:cses_document_collab/src/model/collab_divider.dart';
+import 'package:cses_document_collab/src/model/collab_formula.dart';
+import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
+import 'package:cses_document_collab/src/model/collab_meeting.dart';
+import 'package:cses_document_collab/src/model/collab_resource.dart';
+import 'package:cses_document_collab/src/model/collab_task_card.dart';
+import 'package:cses_document_collab/src/model/collab_user_mention.dart';
+import 'package:cses_document_collab/src/native/collab_runtime.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import 'collab_inline_entity_mention.dart';
+import 'collab_task_card_block.dart';
+import 'document_feedback_footer.dart';
+import 'document_header.dart';
+import 'markdown_import.dart';
 
 /// A portable, full-screen collaborative editor.
 ///
@@ -52,11 +50,7 @@ class CollaborativeEditorPage extends StatefulWidget {
   /// 借用 [collab] 展示文档；[key] 控制组件身份与状态复用。
   /// [pickMarkdown] 由宿主选择并读取 UTF-8 Markdown；取消返回 null，失败抛出异常。
   /// null 隐藏导入入口；页面不关闭宿主控制器，导入内容追加至文末。
-  const CollaborativeEditorPage({
-    super.key,
-    required this.collab,
-    this.pickMarkdown,
-  });
+  const CollaborativeEditorPage({super.key, required this.collab, this.pickMarkdown});
 
   /// 可选宿主文件选择器；宿主持有文件资源，返回前应限制文件大小并校验编码。
   final Future<String?> Function()? pickMarkdown;
@@ -137,10 +131,7 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
   /// 未注入服务/只读/代码块/范围选区返回false交给普通输入；等待面板结束恢复输入。
   Future<bool> _handleUserMention(EditorState state) async {
     final services = CollabRuntime.services;
-    if (!mounted ||
-        state.isDisposed ||
-        !state.editable ||
-        services.pickMentionUser == null) {
+    if (!mounted || state.isDisposed || !state.editable || services.pickMentionUser == null) {
       return false;
     }
     final selection = state.selection;
@@ -150,15 +141,9 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
     final offset = selection.start.offset;
     if (offset < 0 || offset > node.delta!.length) return false;
     final transaction = state.transaction..insertText(node, offset, '@');
-    transaction.afterSelection = Selection.single(
-      path: node.path,
-      startOffset: offset + 1,
-    );
+    transaction.afterSelection = Selection.single(path: node.path, startOffset: offset + 1);
     await state.apply(transaction);
-    if (mounted &&
-        !state.isDisposed &&
-        state.editable &&
-        identical(CollabRuntime.services, services)) {
+    if (mounted && !state.isDisposed && state.editable && identical(CollabRuntime.services, services)) {
       await showEditorUserMentionSheet(context, state, replaceTrigger: true);
     }
     return true;
@@ -183,39 +168,23 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('导入 Markdown'),
-          content: const Text(
-            '选择 UTF-8 编码的 .md 文件（最大 5 MB），内容将追加到文末，可撤销。表格转为文本行，独立网络图片转为图片块，其他图片保留地址；不上传本地资源。',
-          ),
+          content: const Text('选择 UTF-8 编码的 .md 文件（最大 5 MB），内容将追加到文末，可撤销。表格转为文本行，独立网络图片转为图片块，其他图片保留地址；不上传本地资源。'),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('取消'),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('选择文件'),
-            ),
+            TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('取消')),
+            FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('选择文件')),
           ],
         ),
       );
-      if (!mounted ||
-          !identical(owner, collab) ||
-          confirmed != true ||
-          _previewOnly) {
+      if (!mounted || !identical(owner, collab) || confirmed != true || _previewOnly) {
         return;
       }
       final source = await picker();
       if (source == null) return;
       final json = await compute(decodeMarkdownImport, source);
-      if (!mounted ||
-          !identical(owner, collab) ||
-          !owner.canEdit ||
-          state.isDisposed) {
+      if (!mounted || !identical(owner, collab) || !owner.canEdit || state.isDisposed) {
         return;
       }
-      final nodes = json
-          .map((value) => Node.fromJson(Map<String, Object>.from(value)))
-          .toList();
+      final nodes = json.map((value) => Node.fromJson(Map<String, Object>.from(value))).toList();
       final index = state.document.root.children.length;
       final transaction = state.transaction..insertNodes([index], nodes);
       transaction.afterSelection = null;
@@ -227,22 +196,14 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
       await state.apply(transaction, skipHistoryDebounce: true);
       if (owner.error != null) throw StateError(owner.error!);
       if (mounted && identical(owner, collab)) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Markdown 已追加到文末')));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Markdown 已追加到文末')));
       }
     } catch (error, stack) {
       services.report('Markdown 导入失败', error, stack, 'MarkdownImport');
       if (mounted && identical(owner, collab)) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              error is FormatException
-                  ? error.message.toString()
-                  : '导入失败，请重新选择文件',
-            ),
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(error is FormatException ? error.message.toString() : '导入失败，请重新选择文件')));
       }
     } finally {
       if (mounted) {
@@ -275,17 +236,13 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
                   IconButton(
                     key: const ValueKey('editor-undo'),
                     tooltip: '撤销',
-                    onPressed: _importing
-                        ? null
-                        : collab.editorState.undoManager.undo,
+                    onPressed: _importing ? null : collab.editorState.undoManager.undo,
                     icon: const Icon(Icons.undo),
                   ),
                   IconButton(
                     key: const ValueKey('editor-redo'),
                     tooltip: '重做',
-                    onPressed: _importing
-                        ? null
-                        : collab.editorState.undoManager.redo,
+                    onPressed: _importing ? null : collab.editorState.undoManager.redo,
                     icon: const Icon(Icons.redo),
                   ),
                 ],
@@ -293,30 +250,17 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
                   IconButton(
                     key: const ValueKey('editor-import-markdown'),
                     tooltip: '导入 Markdown',
-                    onPressed: !_importing && collab.initialized
-                        ? _importMarkdown
-                        : null,
+                    onPressed: !_importing && collab.initialized ? _importMarkdown : null,
                     icon: _importing
-                        ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
+                        ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
                         : const Icon(Icons.file_open_outlined),
                   ),
                 Tooltip(
                   message: _previewOnly ? '进入编辑' : '进入预览',
                   child: TextButton.icon(
                     key: const ValueKey('editor-mode-toggle'),
-                    onPressed: collab.canEdit && !_importing
-                        ? _toggleMode
-                        : null,
-                    icon: Icon(
-                      _previewOnly
-                          ? Icons.edit_outlined
-                          : Icons.visibility_outlined,
-                      size: 20,
-                    ),
+                    onPressed: collab.canEdit && !_importing ? _toggleMode : null,
+                    icon: Icon(_previewOnly ? Icons.edit_outlined : Icons.visibility_outlined, size: 20),
                     label: Text(_previewOnly ? '编辑' : '预览'),
                   ),
                 ),
@@ -333,10 +277,8 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
                     documentId: collab.documentId,
                     protocolEvent: collab.lastProtocolEvent,
                   ),
-                  if (collab.error != null)
-                    _EditorErrorBanner(message: collab.error!),
-                  if (collab.readOnlyReason != null)
-                    _EditorErrorBanner(message: '只读：${collab.readOnlyReason}'),
+                  if (collab.error != null) _EditorErrorBanner(message: collab.error!),
+                  if (collab.readOnlyReason != null) _EditorErrorBanner(message: '只读：${collab.readOnlyReason}'),
                   Expanded(
                     child: Stack(
                       fit: StackFit.expand,
@@ -344,23 +286,15 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
                         Padding(
                           // 正式头部使用完整宽度；正文左右留白由每个根块的样式提供。
                           // 本地草稿仍保留顶部留白，SafeArea 负责底部系统边距。
-                          padding: EdgeInsets.only(
-                            top: collab.header == null ? 20 : 0,
-                          ),
+                          padding: EdgeInsets.only(top: collab.header == null ? 20 : 0),
                           child: _previewOnly
                               ? _buildEditor()
-                              : EditorShortcutToolbar(
-                                  editorState: collab.editorState,
-                                  child: _buildEditor(),
-                                ),
+                              : EditorShortcutToolbar(editorState: collab.editorState, child: _buildEditor()),
                         ),
                         if (!collab.initialized)
                           const Align(
                             alignment: Alignment.topCenter,
-                            child: Padding(
-                              padding: EdgeInsets.all(24),
-                              child: Text('正在从 Rust/Yrs 加载本地文档……'),
-                            ),
+                            child: Padding(padding: EdgeInsets.all(24), child: Text('正在从 Rust/Yrs 加载本地文档……')),
                           ),
                       ],
                     ),
@@ -389,11 +323,7 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
           editorState: collab.editorState,
           header: collab.header == null
               ? null
-              : DocumentHeader(
-                  controller: collab.header!,
-                  editorState: collab.editorState,
-                  preview: _isPreview,
-                ),
+              : DocumentHeader(controller: collab.header!, editorState: collab.editorState, preview: _isPreview),
           footer: collab.hostServices.showDocumentFeedback
               ? DocumentFeedbackFooter(
                   key: ObjectKey(collab),
@@ -407,31 +337,20 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
           blockComponentBuilders: {
             ..._collabBlockComponentBuilders,
             PageBlockKeys.type: PageBlockComponentBuilder(
-              minimumBodyHeight: collab.hostServices.showDocumentFeedback
-                  ? null
-                  : 0,
+              minimumBodyHeight: collab.hostServices.showDocumentFeedback ? null : 0,
             ),
           },
           characterShortcutEvents: [
             collabListEnter,
-            CharacterShortcutEvent(
-              key: 'cses-user-mention',
-              character: '@',
-              handler: _handleUserMention,
-            ),
+            CharacterShortcutEvent(key: 'cses-user-mention', character: '@', handler: _handleUserMention),
             ...standardCharacterShortcutEvents,
           ],
           // 列表行首先逐级退级；非列表再保护容器边界/删除前置媒体，最后交标准退格。
           // 不能先让标准命令合并正文，或在退级前删除列表旁的图片/视频。
-          commandShortcutEvents: [
-            collabBlockBackspaceCommand,
-            ...standardCommandShortcutEvents,
-          ],
+          commandShortcutEvents: [collabBlockBackspaceCommand, ...standardCommandShortcutEvents],
           shrinkWrap: false,
           editorStyle: const EditorStyle.mobile(
-            padding: EdgeInsets.symmetric(
-              horizontal: DocumentHeader.contentInset,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: DocumentHeader.contentInset),
             cursorColor: Color(0xFF5B5BD6),
             dragHandleColor: Color(0xFF5B5BD6),
             selectionColor: Color(0x335B5BD6),
@@ -449,42 +368,27 @@ final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders =
       ...standardBlockComponentBuilderMap,
       // Renderer validation failures use the same card as native opaque blocks.
       errorBlockComponentBuilderKey: CollabUnsupportedBlockComponentBuilder(),
-      QuoteBlockKeys.type: QuoteBlockComponentBuilder(
-        iconBuilder: buildCollabQuoteBorder,
-      ),
+      QuoteBlockKeys.type: QuoteBlockComponentBuilder(iconBuilder: buildCollabQuoteBorder),
       ParagraphBlockKeys.type: ParagraphBlockComponentBuilder(
-        configuration:
-            standardBlockComponentBuilderMap[ParagraphBlockKeys.type]!
-                .configuration
-                .copyWith(padding: _paragraphBlockPadding),
+        configuration: standardBlockComponentBuilderMap[ParagraphBlockKeys.type]!.configuration.copyWith(
+          padding: _paragraphBlockPadding,
+        ),
       ),
       // 正式图片复用资源块选区外壳并展示尺寸/题注；离线图片仍使用 AppFlowy 原组件。
-      ImageBlockKeys.type: CollabEmbedBlockComponentBuilder(
-        kind: CollabEmbedKind.image,
-      ),
+      ImageBlockKeys.type: CollabEmbedBlockComponentBuilder(kind: CollabEmbedKind.image),
       // Links and videos remain first-class selectable editor blocks by providing
       // custom renderers whose URL attributes are synchronized through Rust/Yrs.
-      csesLinkBlockType: CollabEmbedBlockComponentBuilder(
-        kind: CollabEmbedKind.link,
-      ),
-      csesVideoBlockType: CollabEmbedBlockComponentBuilder(
-        kind: CollabEmbedKind.video,
-      ),
+      csesLinkBlockType: CollabEmbedBlockComponentBuilder(kind: CollabEmbedKind.link),
+      csesVideoBlockType: CollabEmbedBlockComponentBuilder(kind: CollabEmbedKind.video),
       BulletedListBlockKeys.type: BulletedListBlockComponentBuilder(
-        configuration: standardBlockComponentConfiguration.copyWith(
-          padding: _listBlockPadding,
-        ),
+        configuration: standardBlockComponentConfiguration.copyWith(padding: _listBlockPadding),
       ),
       NumberedListBlockKeys.type: NumberedListBlockComponentBuilder(
         iconBuilder: buildCollabOrderedMarker,
-        configuration: standardBlockComponentConfiguration.copyWith(
-          padding: _listBlockPadding,
-        ),
+        configuration: standardBlockComponentConfiguration.copyWith(padding: _listBlockPadding),
       ),
       TodoListBlockKeys.type: TodoListBlockComponentBuilder(
-        configuration: standardBlockComponentConfiguration.copyWith(
-          padding: _listBlockPadding,
-        ),
+        configuration: standardBlockComponentConfiguration.copyWith(padding: _listBlockPadding),
       ),
       collabDividerType: CollabDividerBlockComponentBuilder(),
       collabFormulaType: CollabFormulaBlockComponentBuilder(),
@@ -493,8 +397,7 @@ final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders =
       csesCodeBlockType: CollabCodeBlockComponentBuilder(),
       csesCalloutBlockType: CollabCalloutBlockComponentBuilder(),
       csesUnsupportedBlockType: CollabUnsupportedBlockComponentBuilder(),
-      for (final kind in collabResourceTypes)
-        kind: CollabResourceBlockComponentBuilder(),
+      for (final kind in collabResourceTypes) kind: CollabResourceBlockComponentBuilder(),
     }.map((type, builder) {
       const textTypes = {
         ParagraphBlockKeys.type,
@@ -504,17 +407,11 @@ final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders =
         NumberedListBlockKeys.type,
         TodoListBlockKeys.type,
       };
-      return MapEntry(
-        type,
-        textTypes.contains(type)
-            ? CollabTextAlignmentBuilder(builder)
-            : builder,
-      );
+      return MapEntry(type, textTypes.contains(type) ? CollabTextAlignmentBuilder(builder) : builder);
     });
 
 /// Reduces the extra gap between body paragraphs while preserving line height.
-EdgeInsets _paragraphBlockPadding(Node node) =>
-    const EdgeInsets.symmetric(vertical: 2);
+EdgeInsets _paragraphBlockPadding(Node node) => const EdgeInsets.symmetric(vertical: 2);
 
 EdgeInsets _listBlockPadding(Node node) {
   final value = node.attributes[csesBlockIndentAttribute];
@@ -532,29 +429,18 @@ InlineSpan _collabTextSpanDecorator(
   TextSpan before,
   TextSpan after,
 ) {
-  var decorated = mobileTextSpanDecoratorForAttribute(
-    context,
-    node,
-    index,
-    text,
-    before,
-    after,
-  );
+  var decorated = mobileTextSpanDecoratorForAttribute(context, node, index, text, before, after);
   // Container color is inherited only when the text has no explicit foreground.
   if (text.attributes?[AppFlowyRichTextKeys.textColor] == null) {
     Node? ancestor = node.parent;
     while (ancestor != null) {
       if (ancestor.type == csesCalloutBlockType) {
-        final color = parseCollabBlockColor(
-          ancestor.attributes[csesBlockTextColorAttribute] as String?,
-        );
+        final color = parseCollabBlockColor(ancestor.attributes[csesBlockTextColorAttribute] as String?);
         if (color != null) {
           decorated = TextSpan(
             text: decorated.text,
             children: decorated.children,
-            style: (decorated.style ?? const TextStyle()).copyWith(
-              color: color,
-            ),
+            style: (decorated.style ?? const TextStyle()).copyWith(color: color),
             recognizer: decorated.recognizer,
             mouseCursor: decorated.mouseCursor,
           );
@@ -576,50 +462,32 @@ InlineSpan _collabTextSpanDecorator(
           WidgetSpan(
             alignment: PlaceholderAlignment.middle,
             child:
-                mention is String &&
-                    const {
-                      'meeting',
-                      'task',
-                      'doc',
-                    }.contains(attributes?[collabMentionTypeAttribute])
+                mention is String && const {'meeting', 'task', 'doc'}.contains(attributes?[collabMentionTypeAttribute])
                 ? CollabInlineEntityMention(
                     node: node,
                     offset: offset,
                     name: mention,
-                    entityType:
-                        attributes![collabMentionTypeAttribute] as String,
-                    style:
-                        decorated.style ??
-                        before.style ??
-                        const TextStyle(fontSize: 16),
+                    entityType: attributes![collabMentionTypeAttribute] as String,
+                    style: decorated.style ?? before.style ?? const TextStyle(fontSize: 16),
                   )
                 : mention is String
                 ? CollabInlineMention(
                     node: node,
                     offset: offset,
                     name: mention,
-                    userId:
-                        attributes?[collabMentionIdAttribute] as String? ?? '',
-                    style:
-                        decorated.style ??
-                        before.style ??
-                        const TextStyle(fontSize: 16),
+                    userId: attributes?[collabMentionIdAttribute] as String? ?? '',
+                    style: decorated.style ?? before.style ?? const TextStyle(fontSize: 16),
                   )
                 : CollabInlineFormula(
                     node: node,
                     offset: offset,
                     latex: latex as String,
-                    style:
-                        decorated.style ??
-                        before.style ??
-                        const TextStyle(fontSize: 16),
+                    style: decorated.style ?? before.style ?? const TextStyle(fontSize: 16),
                   ),
           ),
         );
       } else {
-        spans.add(
-          TextSpan(text: String.fromCharCode(rune), style: decorated.style),
-        );
+        spans.add(TextSpan(text: String.fromCharCode(rune), style: decorated.style));
       }
       offset += rune > 0xffff ? 2 : 1;
     }
@@ -634,10 +502,7 @@ InlineSpan _collabTextSpanDecorator(
     text: decorated.text,
     children: decorated.children,
     style: (decorated.style ?? const TextStyle()).copyWith(
-      fontFeatures: [
-        if (superscript) const FontFeature.superscripts(),
-        if (subscript) const FontFeature.subscripts(),
-      ],
+      fontFeatures: [if (superscript) const FontFeature.superscripts(), if (subscript) const FontFeature.subscripts()],
     ),
     recognizer: decorated.recognizer,
     mouseCursor: decorated.mouseCursor,
@@ -651,11 +516,7 @@ InlineSpan _collabTextSpanDecorator(
 }
 
 class _EditorConnectionBar extends StatelessWidget {
-  const _EditorConnectionBar({
-    required this.status,
-    required this.documentId,
-    required this.protocolEvent,
-  });
+  const _EditorConnectionBar({required this.status, required this.documentId, required this.protocolEvent});
 
   final ConnectionStatus status;
   final String documentId;
@@ -690,9 +551,9 @@ class _EditorConnectionBar extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.end,
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.labelSmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
           ),
         ],
