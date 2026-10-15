@@ -440,7 +440,7 @@ class CollabTextSegment {
   /// None 兼容已有用户投影；meeting/task/doc按各自实体语义展示，其他值拒绝写入。
   final String? mentionType;
 
-  /// 非用户实体原始属性的稳定JSON，用于删除后撤销/重插入保留编号、状态及扩展字段。
+  /// 四类提及原始属性的稳定JSON，用于宿主点击及删除后恢复完整扩展字段。
   /// 不作为可编辑业务补丁；既有同身份对象以原生属性为准，最多65536字节。
   final String? mentionAttributes;
 

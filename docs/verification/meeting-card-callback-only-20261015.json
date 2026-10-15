@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-15",
+  "scope": "会议加入/查看按钮仅派发宿主回调，不触发详情加载",
+  "behavior": {
+    "button": "只执行onMeetingCardTap(meetingId,title,number)，等待宿主返回；成功/失败均不额外调用loadMeetingCard",
+    "detailLoading": "仅在卡片初次挂载、会议ID/宿主变化或手动失败重试时读取详情，普通按钮busy状态重建复用原详情请求",
+    "keyboard": "保留点击前关闭正文输入、回调完成后不自动恢复焦点/弹出键盘；防重入、错误报告和独立删除保留"
+  },
+  "verification": {
+    "tests": {
+      "passed": 28,
+      "files": [
+        "collab_meeting_card_test.dart",
+        "collab_meeting_test.dart"
+      ],
+      "log": "/tmp/meeting-callback-only-tests.log"
+    },
+    "specificCoverage": [
+      "加入/查看按钮的异步成功和失败均只有初次详情请求",
+      "点击后状态/按钮文字保持原快照",
+      "回调期间防重入、关闭键盘、完成后不产生TextInput.show",
+      "五种状态配色、只读、错误/重试、迟到详情与删除撤销回归"
+    ],
+    "analyze": {
+      "result": "No issues found",
+      "log": "/tmp/meeting-callback-only-analysis.log"
+    },
+    "format": "本次3个手写Dart文件dart format",
+    "diffCheck": "git diff --check"
+  },
+  "supersedes": "meeting-card-status-20261015.json中的主按钮回调结束后刷新详情行为；其他展示和数据契约不变",
+  "limits": [
+    "本轮未重新安装手机或桌面联调；未重复执行此前744项全量及宿主46项回归",
+    "本次无宿主/原生接口或生成代码修改"
+  ],
+  "adaptationCounts": {
+    "adapted": 10,
+    "partial": 9,
+    "structure": 1,
+    "unsupported": 21,
+    "total": 41
+  }
+}

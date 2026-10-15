@@ -1,0 +1,51 @@
+{
+  "date": "2026-10-15",
+  "scope": "公开宿主服务提供统一四类提及点击回调；未连接实际业务详情路由、未重新安装手机。",
+  "api": {
+    "injection": "CollabHostServices.onMentionTap",
+    "callback": "CollabMentionTapCallback (FutureOr<void>)",
+    "payload": "CollabMentionTap",
+    "fields": [
+      "type",
+      "id",
+      "name",
+      "attributes"
+    ],
+    "types": [
+      "user",
+      "meeting",
+      "task",
+      "doc"
+    ]
+  },
+  "behavior": {
+    "configured": "替代内置面板，编辑和预览均可调用，等待宿主Future结束后恢复原编辑器焦点。",
+    "notConfigured": "保留原用户资料/实体信息面板与删除操作。",
+    "rawAttributes": "四类正式Y.Text对象均透传原始属性，保留d:键、未知字段、格式；嵌套Map/List深复制冻结。新插入用户立即具有规范身份快照；缺失或损坏快照拒绝派发，不制造原始属性。",
+    "lifecycle": "每编辑器防重复点击，异常交原宿主报告；销毁或更换会话不恢复旧页面焦点，不向新宿主提示迟到错误。宿主持有路由和资源，负责业务权限及跨账号结果失效。"
+  },
+  "verification": {
+    "callbackTargeted": 13,
+    "flutterPackageFull": 706,
+    "flutterHost": 27,
+    "rust": 72,
+    "staticAnalysis": "package lib/test and host lib/test passed",
+    "native": "FRB2.13.0 regenerated from source; cargo fmt --check/check/test/build passed; Android debug build and iOS 3-architecture XCFramework rebuild passed",
+    "formatAndDiff": "changed hand-written Dart formatted; git diff --check passed",
+    "cases": [
+      "four entity kinds in edit and preview via public API",
+      "nested immutable original snapshot and invalid/cyclic JSON rejection",
+      "awaited host route returns to editor",
+      "pending callback duplicate-tap suppression",
+      "sync/async error handling with no default panel",
+      "disposal and account/session replacement reject late focus/error UI",
+      "missing attributes reject invented payload",
+      "default panel backwards compatibility",
+      "real FRB user extension and d: original attributes"
+    ]
+  },
+  "limitations": [
+    "宿主业务路由需自行接入，包不内置业务页面或鉴权。",
+    "本轮以真实Flutter路由Widget测试验证跳转生命周期，未重新进行手机或桌面实际业务详情联调。"
+  ]
+}

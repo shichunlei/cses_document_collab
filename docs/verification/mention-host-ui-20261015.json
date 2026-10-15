@@ -1,0 +1,78 @@
+{
+  "date": "2026-10-15",
+  "scope": "人员提及头像与单选人员界面迁至宿主；保留工作区已有会议卡片及其他改动",
+  "api": {
+    "mentionAvatarBuilder": "CollabMentionAvatarBuilder(context, {required userId, required name, required size, avatarUrl}) -> Widget",
+    "pickMentionUser": "CollabMentionUserPicker(context, {required keyword, required canEdit}) -> Future<CollabMentionUser?>",
+    "entry": "package:cses_document_collab/cses_document_collab.dart",
+    "default": "未注入头像只显示姓名且无占位间距/图片请求；未注入选人时@作为普通输入，工具栏提示",
+    "migration": "mentionDirectory不再启用选人，只用于默认资料面板load；宿主需显式注入pickMentionUser"
+  },
+  "ownership": {
+    "host": "创建头像、URL/缓存/加载与失败占位、人员搜索/去抖/重试/选择路由，管理认证与UI资源",
+    "package": "约束头像槽位尺寸，捕获稳定插入位置，等待宿主退场，校验权限/原内容/会话/页面，执行原子插入与恢复选区",
+    "canEdit": "本次调用期间借用，不得释放或保留；权限撤销或编辑器释放即变false；权限恢复不使旧选择重新有效",
+    "failure": "宿主取消返回null；同步/异步异常报告原宿主，失效页面不提示或恢复光标，单编辑器选人防重入"
+  },
+  "hostImplementation": [
+    "lib/src/demo/mention_avatar.dart",
+    "lib/src/demo/mention_picker.dart",
+    "lib/src/demo/document_host.dart"
+  ],
+  "removedFromPackage": [
+    "lib/src/editor/collab_mention_avatar.dart",
+    "lib/src/editor/collab_mention_sheet.dart"
+  ],
+  "verification": {
+    "packageFullSuite": {
+      "passed": 718,
+      "log": "/tmp/mention-ui-package-all.log",
+      "note": "全量通过后新增3项缺省/失败回归并补强旧更多面板的会话校验；最终受影响范围回归如下"
+    },
+    "finalPackageAffectedSuite": {
+      "passed": 57,
+      "log": "/tmp/mention-ui-guards-tests.log",
+      "tests": [
+        "collab_user_mention_test.dart",
+        "collab_host_mention_ui_test.dart",
+        "editor_modal_focus_test.dart",
+        "editor_shortcut_toolbar_test.dart"
+      ]
+    },
+    "unifiedTapCompatibility": {
+      "passed": 13,
+      "log": "/tmp/mention-ui-package-tests-final.log"
+    },
+    "hostFullSuite": {
+      "passed": 33,
+      "log": "/tmp/mention-ui-host-all.log"
+    },
+    "hostUiSuite": {
+      "passed": 6,
+      "log": "/tmp/mention-ui-host-tests-final.log",
+      "coverage": [
+        "头像URL编码/失败/空身份",
+        "初始关键词/无结果/确认/退场",
+        "过期搜索/失败重试/关闭迟到响应",
+        "权限禁用与监听释放"
+      ]
+    },
+    "packageAnalyze": "/tmp/mention-ui-package-analysis-clean.log",
+    "hostAnalyze": "/tmp/mention-ui-host-analysis-clean.log",
+    "format": "本次修改手写Dart文件dart format",
+    "diffCheck": "git diff --check",
+    "migrationSearch": "包lib/test无旧头像/选择器类与文件引用、头像业务域名或搜索控件；新增宿主代码仅引用协同包公开入口"
+  },
+  "limitations": [
+    "本轮未安装手机或重新做桌面双向联调；历史验收不替代本轮真机验证",
+    "未变更Rust/FRB接口，无需本轮原生再生成或平台重建",
+    "工作区既有会议卡片及测试文档ID变更不属于本次迁移"
+  ],
+  "adaptationCounts": {
+    "adapted": 10,
+    "partial": 9,
+    "structure": 1,
+    "unsupported": 21,
+    "total": 41
+  }
+}

@@ -1,3 +1,5 @@
+import 'package:cses_document_collab/src/editor/collab_meeting_block.dart';
+import 'package:cses_document_collab/src/model/collab_meeting.dart';
 import 'collab_inline_entity_mention.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/editor/collab_inline_mention.dart';
@@ -118,10 +120,11 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
   /// 在借用 [state] 的正文光标处先输入@再打开人员选择；取消保留普通@。
   /// 未注入服务/只读/代码块/范围选区返回false交给普通输入；等待面板结束恢复输入。
   Future<bool> _handleUserMention(EditorState state) async {
+    final services = CollabRuntime.services;
     if (!mounted ||
         state.isDisposed ||
         !state.editable ||
-        CollabRuntime.services.mentionDirectory == null) {
+        services.pickMentionUser == null) {
       return false;
     }
     final selection = state.selection;
@@ -136,7 +139,10 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
       startOffset: offset + 1,
     );
     await state.apply(transaction);
-    if (mounted && !state.isDisposed && state.editable) {
+    if (mounted &&
+        !state.isDisposed &&
+        state.editable &&
+        identical(CollabRuntime.services, services)) {
       await showEditorUserMentionSheet(context, state, replaceTrigger: true);
     }
     return true;
@@ -341,6 +347,7 @@ final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders =
       ),
       collabDividerType: CollabDividerBlockComponentBuilder(),
       collabFormulaType: CollabFormulaBlockComponentBuilder(),
+      collabMeetingType: CollabMeetingBlockComponentBuilder(),
       csesCodeBlockType: CollabCodeBlockComponentBuilder(),
       csesCalloutBlockType: CollabCalloutBlockComponentBuilder(),
       csesUnsupportedBlockType: CollabUnsupportedBlockComponentBuilder(),

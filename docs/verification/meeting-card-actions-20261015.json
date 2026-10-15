@@ -1,0 +1,56 @@
+{
+  "date": "2026-10-15",
+  "scope": "会议卡片右上角直接删除、整卡点击和详情事件屏蔽正文键盘",
+  "behavior": {
+    "delete": "编辑模式右上角删除按钮直接删除文档引用，不打开面板或调用onMeetingCardTap；业务会议不受影响",
+    "navigation": "卡片可见区域除删除按钮外（图标/标题/编号/内边距/留白）调用onMeetingCardTap；原编辑引用按钮移除；预览允许导航且隐藏删除",
+    "keyboard": "详情事件关闭正文键盘、清除正文选区；同步/异步完成或失败后不自动恢复输入焦点，不弹键盘；再次主动选择正文仍可输入",
+    "guards": "同卡片导航/删除防重入；删除校验稳定块ID、展示时完整属性及实时权限；目标变化、已删除、关闭或失效会话拒绝旧操作",
+    "history": "删除独立封闭历史，支持撤销/重做；删除父容器最后一项补空段落。沿用适配器历史身份策略，撤销后恢复的引用块不保证复用原块ID",
+    "limits": "仍为部分支持；删除撤销只恢复已投影引用字段，不保证恢复未知扩展/meta；卡片不提供引用字段编辑入口，保留既有引用修改工具"
+  },
+  "verification": {
+    "packageTests": {
+      "passed": 25,
+      "log": "/tmp/meeting-card-actions-tests.log",
+      "files": [
+        "collab_meeting_test.dart",
+        "editor_modal_focus_test.dart",
+        "collab_block_delete_test.dart"
+      ],
+      "coverage": [
+        "五处整卡点击且隐藏键盘不出现TextInput.show，重新选择正文可输入",
+        "异步挂起/失败不弹键盘，防重入且挂起期间禁用删除",
+        "右上角删除无详情回调/无弹窗，根级及高亮最后子项删除、撤销/重做",
+        "只读/撤权隐藏删除，陈旧按钮拒绝删除远端已修改引用",
+        "未注入详情回调仍可删除",
+        "既有会议引用编辑面板/冲突/插入及通用焦点/退格回归"
+      ]
+    },
+    "packageAnalyze": {
+      "result": "No issues found",
+      "log": "/tmp/meeting-card-actions-package-analysis.log"
+    },
+    "hostAnalyze": {
+      "result": "No issues found",
+      "log": "/tmp/meeting-card-actions-host-analysis.log"
+    },
+    "hostConsumerTest": {
+      "log": "/tmp/meeting-card-actions-host-tests.log",
+      "passed": 1
+    },
+    "format": "本次修改的五个手写Dart文件dart format",
+    "diffCheck": "git diff --check"
+  },
+  "limitations": [
+    "本轮未重新安装手机或进行真实桌面双向联调",
+    "本次无Rust/FRB接口修改，无需原生再生成；工作区既有其他改动保持"
+  ],
+  "adaptationCounts": {
+    "adapted": 10,
+    "partial": 9,
+    "structure": 1,
+    "unsupported": 21,
+    "total": 41
+  }
+}

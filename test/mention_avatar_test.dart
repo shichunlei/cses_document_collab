@@ -1,4 +1,4 @@
-import 'package:cses_document_collab/src/editor/collab_mention_avatar.dart';
+import 'package:cses_mobile_collab_demo/src/demo/mention_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -8,12 +8,12 @@ void main() {
     'public avatar path encodes one stable identity in each path segment',
     () {
       expect(
-        collabMentionAvatarUrl('999'),
+        demoMentionAvatarUrl('999'),
         'https://face.jinqidongli.com/999/999.jpg',
       );
-      expect(collabMentionAvatarUrl(''), isNull);
+      expect(demoMentionAvatarUrl(''), isNull);
       const id = 'u /?#%';
-      final uri = Uri.parse(collabMentionAvatarUrl(id)!);
+      final uri = Uri.parse(demoMentionAvatarUrl(id)!);
       expect(uri.host, 'face.jinqidongli.com');
       expect(uri.scheme, 'https');
       expect(uri.pathSegments, [id, '$id.jpg']);
@@ -27,7 +27,7 @@ void main() {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: CollabMentionAvatar(userId: '999', name: '测试员', size: 20),
+            body: DemoMentionAvatar(userId: '999', name: '测试员', size: 20),
           ),
         ),
       );
@@ -50,7 +50,7 @@ void main() {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: CollabMentionAvatar(userId: '', name: ''),
+            body: DemoMentionAvatar(userId: '', name: ''),
           ),
         ),
       );

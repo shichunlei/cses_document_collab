@@ -12,7 +12,7 @@ const collabMentionIdAttribute = 'cses_mention_id';
 /// 内存中的实体类型；缺省是历史用户投影，meeting/task/doc使用各自展示与交互。
 const collabMentionTypeAttribute = 'cses_mention_type';
 
-/// 非用户实体原始属性的JSON快照，仅用于对象历史恢复，不作为普通文字格式。
+/// 四类提及原始属性JSON快照，用于宿主点击事件和对象历史恢复，不作为普通文字格式。
 const collabMentionAttributesAttribute = 'cses_mention_attributes';
 
 /// 宿主提供的人员快照；正文只保存 [id] 和 [name]，不持有资源。
@@ -37,7 +37,7 @@ final class CollabMentionUser {
   /// 必填显示名，写入最多20000个UTF-16单元。
   final String name;
 
-  /// 可选宿主头像URL，不写正文；null按用户ID拼接公共头像，加载中/失败显示本地首字。
+  /// 可选宿主头像URL，不写正文；交给宿主头像构建器解释，null时由宿主决定默认地址/占位。
   final String? avatarUrl;
 
   /// 可选部门名称，不写正文。
@@ -47,7 +47,8 @@ final class CollabMentionUser {
   final String? position;
 }
 
-/// 借用宿主的人员查询端口；不关闭HTTP或账号资源，失败须抛出异常。
+/// 宿主选择器或详情页复用的人员查询端口；协同编辑器不直接读取目录。
+/// 实现方持有HTTP/账号资源，调用方不关闭它们，失败须抛出异常。
 /// ```dart
 /// import 'package:cses_document_collab/cses_document_collab.dart';
 /// class Directory implements CollabMentionDirectory {
@@ -59,7 +60,7 @@ final class CollabMentionUser {
 ///   Future<CollabMentionUser?> load(String userId) async =>
 ///       userId == 'u1' ? const CollabMentionUser(id: 'u1', name: '张三') : null;
 /// }
-/// final services = CollabHostServices(mentionDirectory: Directory());
+/// Future<List<CollabMentionUser>> query() => Directory().search('张');
 /// ```
 abstract interface class CollabMentionDirectory {
   /// 搜索当前企业用户，[keyword] 为空返回初始列表；失败抛异常。
@@ -175,6 +176,10 @@ Future<Selection?> insertCollabUserMention(
       attributes: {
         collabInlineMentionAttribute: user.name,
         collabMentionIdAttribute: user.id,
+        collabMentionAttributesAttribute: jsonEncode({
+          'mentionType': 'user',
+          'mentionId': user.id,
+        }),
       },
     )
     ..insert(' ');

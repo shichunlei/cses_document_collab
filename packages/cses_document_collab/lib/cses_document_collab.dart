@@ -19,3 +19,14 @@ export 'src/controller/document_metadata_controller.dart';
 
 export 'src/model/collab_user_mention.dart'
     show CollabMentionUser, CollabMentionDirectory;
+
+export 'src/model/collab_mention_tap.dart'
+    show CollabMentionType, CollabMentionTap, CollabMentionTapCallback;
+
+export 'src/model/collab_mention_ui.dart'
+    show CollabMentionAvatarBuilder, CollabMentionUserPicker;
+
+export 'src/model/collab_meeting_reference.dart';
+
+export 'src/model/collab_meeting_card_data.dart'
+    show CollabMeetingCardState, CollabMeetingCardData, CollabMeetingCardLoader;

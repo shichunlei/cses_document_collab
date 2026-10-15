@@ -1,8 +1,7 @@
-import 'cses_mention_directory.dart';
 import 'dart:async';
-import 'cses_document_metadata_service.dart';
 
 import 'package:cses_common/core/collections/objectid.dart';
+import 'package:cses_common/flutter/feedback/toast_util.dart';
 import 'package:cses_common/observability/api/log.dart';
 import 'package:cses_common/runtime/context/context.dart';
 import 'package:cses_common/runtime/session/user.dart';
@@ -13,6 +12,13 @@ import 'package:cses_mobile_collab_demo/src/demo/cses_demo_host.dart';
 import 'package:cses_mobile_collab_demo/src/demo/cses_editor_media_upload_service.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
+
+import 'cses_document_metadata_service.dart';
+import 'cses_meeting_card_service.dart';
+import 'cses_mention_directory.dart';
+import 'meeting_reference_picker.dart';
+import 'mention_avatar.dart';
+import 'mention_picker.dart';
 
 /// Demo composition root for package controllers and its owned Common socket.
 ///
@@ -45,7 +51,7 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
   /// Initialize once. Errors are logged and exposed while retaining the page.
   Future<void> initialize() => _initialization ??= _initialize();
 
-  /// 初始化存储并注入公开包服务；人员服务绑定当前账号/企业，草稿不启用人员查询。
+  /// 初始化存储并注入公开包服务；头像、人员与会议引用页面由宿主创建，人员服务绑定当前账号/企业，草稿不启用选人。
   /// 等待原生初始化与宿主连接，关闭期间迟到结果不安装页面监听。
   Future<void> _initialize() async {
     // 登录已在 Common 注入；即使本地存储初始化失败，退出也须清理该登录。
@@ -54,13 +60,33 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
       final directory = await getApplicationSupportDirectory();
       if (_disposed) return;
       final path = '${directory.path}/cses_mobile_collab_demo/updates.sqlite3';
+      final mentionDirectory = localDraft ? null : CsesMentionDirectory();
       final services = CollabHostServices(
         createId: () => ObjectId().toString(),
         onError: (message, error, stack, tag) =>
             Log.e(message, error: error, stackTrace: stack, tag: tag),
         mediaUpload: const CsesEditorMediaUploadService(),
         documentMetadata: localDraft ? null : CsesDocumentMetadataService(),
-        mentionDirectory: localDraft ? null : CsesMentionDirectory(),
+        mentionAvatarBuilder: buildDemoMentionAvatar,
+        pickMentionUser: mentionDirectory == null
+            ? null
+            : (context, {required keyword, required canEdit}) =>
+                  showDemoMentionPicker(
+                    context,
+                    directory: mentionDirectory,
+                    keyword: keyword,
+                    canEdit: canEdit,
+                  ),
+        pickMeetingReference: showDemoMeetingReferencePicker,
+        loadMeetingCard: localDraft ? null : CsesMeetingCardService().load,
+        onMeetingCardTap: (String meetingId, String title, String number) {
+          Log.d(meetingId.toString());
+          showToast(text: "打开会议页面");
+        },
+        onMentionTap: (CollabMentionTap mention) {
+          Log.json(mention.toJson());
+          showToast(text: "点击了${mention.name}");
+        },
       );
       if (localDraft) {
         _controller = CollabController.localDraft(
