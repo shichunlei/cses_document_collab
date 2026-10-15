@@ -72,7 +72,7 @@ Widget editor(CollabController controller) =>
 
 ## 原生构建与测试
 
-Android 通过本包 android/Cargokit 构建 rust。安装对应 Rust Android targets 和 NDK 后，从最终 App 执行 Flutter build。原生库名仍是 cses_collab_core。
+Android 通过本包 android/Cargokit 构建 rust。插件及宿主需使用 compileSdk 36 或更高版本，最终宿主的最低运行版本仍为 API 24。安装对应 Rust Android targets 和 NDK 后，从最终 App 执行 Flutter build。原生库名仍是 cses_collab_core。
 
 iOS 使用 `ios/cses_document_collab/Package.swift` 的本地动态 XCFramework。在 Flutter/Xcode 解析 SPM 之前执行：
 

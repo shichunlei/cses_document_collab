@@ -30,9 +30,9 @@ android {
         namespace 'com.flutter_rust_bridge.cses_collab_core'
     }
 
-    // Bumping the plugin compileSdkVersion requires all clients of this plugin
-    // to bump the version in their app.
-    compileSdkVersion 33
+    // Match the host's API 36 baseline; current AndroidX dependencies require
+    // at least API 34. Consumers must also compile against API 36 or later.
+    compileSdkVersion 36
 
     // Use the NDK version
     // declared in /android/app/build.gradle file of the Flutter project.
