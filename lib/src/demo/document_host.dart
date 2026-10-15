@@ -1,3 +1,4 @@
+import 'cses_mention_directory.dart';
 import 'dart:async';
 import 'cses_document_metadata_service.dart';
 
@@ -44,7 +45,8 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
   /// Initialize once. Errors are logged and exposed while retaining the page.
   Future<void> initialize() => _initialization ??= _initialize();
 
-  /// Choose the legacy SQLite location and assemble only public package APIs.
+  /// 初始化存储并注入公开包服务；人员服务绑定当前账号/企业，草稿不启用人员查询。
+  /// 等待原生初始化与宿主连接，关闭期间迟到结果不安装页面监听。
   Future<void> _initialize() async {
     // 登录已在 Common 注入；即使本地存储初始化失败，退出也须清理该登录。
     _ownsConnection = !localDraft;
@@ -58,6 +60,7 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
             Log.e(message, error: error, stackTrace: stack, tag: tag),
         mediaUpload: const CsesEditorMediaUploadService(),
         documentMetadata: localDraft ? null : CsesDocumentMetadataService(),
+        mentionDirectory: localDraft ? null : CsesMentionDirectory(),
       );
       if (localDraft) {
         _controller = CollabController.localDraft(

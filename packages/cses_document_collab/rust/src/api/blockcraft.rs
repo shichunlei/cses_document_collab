@@ -1,6 +1,7 @@
 //! 正式 BlockCraft 的 Yrs 适配。`blocks` 中的嵌套共享类型始终是权威数据，
 //! Flutter 快照只是投影；写入只修改明确支持的字段，保留 props/meta/行内未知属性。
-//! 高亮容器按父子关系投影；未知块/容器仅显示只读占位，原始子树不参与快照写入。
+//! 高亮容器按父子关系投影；未知块/容器及含未适配行内对象的正文仅显示只读占位，
+//! 原始子树和 Y.Text 不参与快照写入，不阻止其他已适配块编辑。
 
 use super::*;
 use std::collections::HashMap;
@@ -709,16 +710,18 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                     && kind != "divider"
                     && kind != "formula" =>
             {
-                text = projected_inline_text(&value, &txn);
-                segments = text_segments_for_schema(&value, &txn, true);
                 if value.diff(&txn, |_| ()).iter().any(|c| {
                     !matches!(&c.insert, Out::Any(Any::String(_)))
-                        && (kind == "code" || inline_latex_value(&c.insert).is_none())
+                        && (kind == "code"
+                            || inline_embed(&c.insert, c.attributes.as_deref()).is_none())
                 }) {
-                    result.reason = Some("文档含未适配的行内对象，当前仅可预览".into());
-                    text = value.get_string(&txn);
-                    segments.clear();
+                    // 整段作为不透明块保留，避免普通文字投影丢失对象或其业务属性。
+                    // 复用占位的删除/转换/父容器保护；其他正文仍可写入。
+                    result.blocks.push(placeholder(id, parent_id));
+                    continue;
                 }
+                text = projected_inline_text(&value, &txn);
+                segments = text_segments_for_schema(&value, &txn, true);
             }
             Some(Out::YArray(array))
                 if (kind == "image" && matches!(node_type.as_str(), "block" | "void"))
@@ -1278,11 +1281,11 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
                 _ => block.insert(&mut txn, "children", TextPrelim::new("")),
             };
             let before = projected_inline_text(&text, &txn);
-            let contains_formula = next.segments.iter().any(|s| s.inline_latex.is_some())
+            let contains_formula = next.segments.iter().any(|s| segment_embed(s).is_some())
                 || text
                     .diff(&txn, |_| ())
                     .iter()
-                    .any(|c| inline_latex_value(&c.insert).is_some());
+                    .any(|c| inline_embed(&c.insert, c.attributes.as_deref()).is_some());
             let delta = if before == next.text || !contains_formula {
                 compute_text_delta(&before, &next.text)
             } else {
@@ -1321,7 +1324,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
     Ok(())
 }
 
-/// 混合文字/公式差量按对象内容比较前后缀，避免新增公式误匹配已有 U+FFFC。
+/// 混合文字/公式/四类提及差量按对象内容比较前后缀，避免新增公式误匹配已有 U+FFFC。
 /// 普通文字按 Unicode 标量比较，返回的 index/delete_length 始终是 UTF-16 单位。
 fn compute_inline_text_delta<T: ReadTxn>(
     text: &TextRef,
@@ -1330,8 +1333,8 @@ fn compute_inline_text_delta<T: ReadTxn>(
 ) -> TextDelta {
     let mut actual = Vec::new();
     for chunk in text.diff(txn, |_| ()) {
-        if let Some(latex) = inline_latex_value(&chunk.insert) {
-            actual.push((format!("formula:{latex}"), 1u32));
+        if let Some(embed) = inline_embed(&chunk.insert, chunk.attributes.as_deref()) {
+            actual.push((format!("embed:{embed:?}"), 1u32));
         } else if let Out::Any(Any::String(value)) = chunk.insert {
             actual.extend(
                 value
@@ -1350,8 +1353,8 @@ fn compute_inline_text_delta<T: ReadTxn>(
         );
     } else {
         for segment in &desired.segments {
-            if let Some(latex) = &segment.inline_latex {
-                target.push((format!("formula:{latex}"), 1u32));
+            if let Some(embed) = segment_embed(segment) {
+                target.push((format!("embed:{embed:?}"), 1u32));
             } else {
                 target.extend(
                     segment
@@ -1391,7 +1394,7 @@ fn compute_inline_text_delta<T: ReadTxn>(
     }
 }
 
-/// 插入 desired 投影的 UTF-16 子区间；公式使用原生 insert_embed，不写占位文本。
+/// 插入 desired 投影的 UTF-16 子区间；公式和提及使用原生 insert_embed，不写占位文本。
 fn insert_inline_range(
     text: &TextRef,
     txn: &mut yrs::TransactionMut<'_>,
@@ -1416,15 +1419,10 @@ fn insert_inline_range(
         let from = start.max(offset);
         let to = (start + length).min(end);
         if from < to {
-            if let Some(latex) = &segment.inline_latex {
-                text.insert_embed(
-                    txn,
-                    cursor,
-                    Any::Map(std::sync::Arc::new(HashMap::from([(
-                        "latex".into(),
-                        Any::String(latex.clone().into()),
-                    )]))),
-                );
+            if let Some(embed) = segment_embed(segment) {
+                let mut attrs = restored_mention_attributes(segment);
+                let value = embed_value(&embed, &mut attrs);
+                text.insert_embed_with_attributes(txn, cursor, value, attrs);
             } else {
                 text.insert(
                     txn,
@@ -1439,7 +1437,7 @@ fn insert_inline_range(
     }
 }
 
-/// 比较原生对象与目标单字符投影；公式修改只替换该原子，保留未建模格式。
+/// 比较原生对象与目标单字符投影；公式及提及修改只替换该原子，保留未建模格式。
 /// 普通 U+FFFC 字符无 inline_latex 时仍是普通文字，不被误判为公式。
 fn reconcile_inline_formulas(
     text: &TextRef,
@@ -1449,10 +1447,10 @@ fn reconcile_inline_formulas(
     let mut actual = HashMap::new();
     let mut offset = 0;
     for chunk in text.diff(txn, |_| ()) {
-        if let Some(latex) = inline_latex_value(&chunk.insert) {
+        if let Some(embed) = inline_embed(&chunk.insert, chunk.attributes.as_deref()) {
             actual.insert(
                 offset,
-                (latex, chunk.attributes.map(|a| *a).unwrap_or_default()),
+                (embed, chunk.attributes.map(|a| *a).unwrap_or_default()),
             );
             offset += 1;
         } else if let Out::Any(Any::String(value)) = chunk.insert {
@@ -1462,8 +1460,8 @@ fn reconcile_inline_formulas(
     let mut wanted = HashMap::new();
     offset = 0;
     for segment in &desired.segments {
-        if let Some(latex) = &segment.inline_latex {
-            wanted.insert(offset, latex);
+        if let Some(embed) = segment_embed(segment) {
+            wanted.insert(offset, embed);
         }
         offset += segment.text.encode_utf16().count() as u32;
     }
@@ -1471,10 +1469,10 @@ fn reconcile_inline_formulas(
     for position in positions {
         let before = actual.get(&position);
         let after = wanted.get(&position);
-        if before.map(|v| &v.0) == after.copied() {
+        if before.map(|v| &v.0) == after {
             continue;
         }
-        let attributes = before.map(|v| v.1.clone()).unwrap_or_else(|| {
+        let mut attributes = before.map(|v| v.1.clone()).unwrap_or_else(|| {
             let mut offset = 0;
             for chunk in text.diff(txn, |_| ()) {
                 let length = match &chunk.insert {
@@ -1489,16 +1487,9 @@ fn reconcile_inline_formulas(
             Attrs::new()
         });
         text.remove_range(txn, position, 1);
-        if let Some(latex) = after {
-            text.insert_embed_with_attributes(
-                txn,
-                position,
-                Any::Map(std::sync::Arc::new(HashMap::from([(
-                    "latex".into(),
-                    Any::String((*latex).clone().into()),
-                )]))),
-                attributes,
-            );
+        if let Some(embed) = after {
+            let value = embed_value(embed, &mut attributes);
+            text.insert_embed_with_attributes(txn, position, value, attributes);
         } else {
             text.insert_with_attributes(txn, position, "\u{fffc}", attributes);
         }
@@ -1610,7 +1601,7 @@ fn apply_formats(text: &TextRef, txn: &mut yrs::TransactionMut<'_>, desired: &Co
                 s.encode_utf16().count() as u32,
                 c.attributes.map(|a| *a).unwrap_or_default(),
             )),
-            other if inline_latex_value(&other).is_some() => {
+            other if inline_embed(&other, c.attributes.as_deref()).is_some() => {
                 Some((1, c.attributes.map(|a| *a).unwrap_or_default()))
             }
             _ => None,
@@ -2946,12 +2937,10 @@ mod tests {
         }
     }
 
+    /// 锁仍然保护整个文档，不能因行内对象局部降级而绕过锁定语义。
     #[test]
-    fn unsupported_content_is_preserved_and_read_only() {
-        for bytes in [
-            include_bytes!("../../tests/fixtures/blockcraft-embed.update").as_slice(),
-            include_bytes!("../../tests/fixtures/blockcraft-locked.update").as_slice(),
-        ] {
+    fn locked_content_is_preserved_and_read_only() {
+        for bytes in [include_bytes!("../../tests/fixtures/blockcraft-locked.update").as_slice()] {
             let mut engine = engine(bytes);
             let before = engine
                 .doc
@@ -3665,6 +3654,411 @@ mod tests {
                 .find_map(|s| s.inline_latex.as_deref()),
             Some("remote^2")
         );
+    }
+
+    /// 正式/历史用户属性与公式混排，修改仅替换原子且保留扩展属性；无效快照不写入。
+    #[test]
+    fn user_mentions_roundtrip_preserve_identity_and_extensions() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-user-mention.update");
+        let mut e = engine(fixture);
+        assert!(project(&e.doc, "fixture-doc").reason.is_none());
+        let before = e.blocks();
+        assert_eq!(before[0].text, "前😀\u{fffc}\u{fffc}\u{fffc}\u{fffc}后");
+        assert_eq!(
+            before[0]
+                .segments
+                .iter()
+                .filter_map(|s| s.mention_id.as_deref())
+                .collect::<Vec<_>>(),
+            ["u1", "u2"]
+        );
+        let mut desired = before.clone();
+        desired[0]
+            .segments
+            .iter_mut()
+            .find(|s| s.mention_id.as_deref() == Some("u1"))
+            .unwrap()
+            .inline_mention = Some("新姓名".into());
+        e.apply_block_snapshot(desired).unwrap();
+        {
+            let txn = e.doc.transact();
+            let blocks = txn.get_map(ROOT_NAME).unwrap();
+            let p = map(&blocks, &txn, "p1").unwrap();
+            let Some(Out::YText(text)) = p.get(&txn, "children") else {
+                panic!()
+            };
+            let chunks = text.diff(&txn, |_| ());
+            let user = chunks
+                .iter()
+                .find(|c| {
+                    inline_mention_identity(&c.insert, c.attributes.as_deref())
+                        .is_some_and(|v| v.1 == "u1")
+                })
+                .unwrap();
+            assert_eq!(
+                user.attributes.as_ref().unwrap().get("customInline"),
+                Some(&Any::String("user".into()))
+            );
+            let legacy = chunks
+                .iter()
+                .find(|c| {
+                    inline_mention_identity(&c.insert, c.attributes.as_deref())
+                        .is_some_and(|v| v.1 == "u2")
+                })
+                .unwrap();
+            assert!(!legacy
+                .attributes
+                .as_ref()
+                .unwrap()
+                .contains_key("mentionId"));
+            assert_eq!(text.len(&txn), 8);
+        }
+        let unchanged = e.blocks();
+        let mut invalid = unchanged.clone();
+        invalid[0]
+            .segments
+            .iter_mut()
+            .find(|s| s.mention_id.is_some())
+            .unwrap()
+            .mention_id = None;
+        assert!(e
+            .apply_block_snapshot(invalid)
+            .unwrap_err()
+            .contains("INVALID_INLINE_MENTION"));
+        assert_eq!(e.blocks(), unchanged);
+        let mut desired = unchanged.clone();
+        let user = desired[0]
+            .segments
+            .iter()
+            .find(|s| s.mention_id.is_some())
+            .unwrap()
+            .clone();
+        desired[0].segments.insert(1, user);
+        desired[0].text = desired[0]
+            .segments
+            .iter()
+            .map(|s| s.text.as_str())
+            .collect();
+        e.apply_block_snapshot(desired).unwrap();
+        assert_eq!(
+            e.blocks()[0]
+                .segments
+                .iter()
+                .filter(|s| s.mention_id.is_some())
+                .count(),
+            3
+        );
+        let mut desired = e.blocks();
+        desired[0].segments.remove(1);
+        desired[0].text = desired[0]
+            .segments
+            .iter()
+            .map(|s| s.text.as_str())
+            .collect();
+        e.apply_block_snapshot(desired).unwrap();
+        assert_eq!(e.blocks(), unchanged);
+    }
+
+    /// 用户修改与另一端普通正文追加合并，不丢失用户ID、公式或未知属性。
+    #[test]
+    fn user_mention_and_text_edits_converge() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-user-mention.update");
+        let mut left = engine(fixture);
+        let mut right = engine(fixture);
+        let mut a = left.blocks();
+        a[0].segments
+            .iter_mut()
+            .find(|s| s.mention_id.is_some())
+            .unwrap()
+            .inline_mention = Some("新姓名".into());
+        let ua = left.apply_block_snapshot(a).unwrap();
+        let mut b = right.blocks();
+        b[0].text.push_str("追加");
+        b[0].segments.last_mut().unwrap().text.push_str("追加");
+        let ub = right.apply_block_snapshot(b).unwrap();
+        left.apply_cses_update(ub.v1_update).unwrap();
+        right.apply_cses_update(ua.v1_update).unwrap();
+        assert_eq!(left.blocks(), right.blocks());
+        assert_eq!(
+            left.blocks()[0]
+                .segments
+                .iter()
+                .find_map(|s| s.inline_mention.as_deref()),
+            Some("新姓名")
+        );
+        assert!(left.blocks()[0].text.ends_with("追加"));
+    }
+
+    /// 未知实体、缺身份与代码块对象只保护所在块；相邻编辑不改变原始对象。
+    #[test]
+    fn non_user_and_invalid_mentions_remain_protected() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-user-mention.update");
+        for (kind, node_kind, id) in [
+            ("future-doc", "paragraph", "u1"),
+            ("future-meeting", "paragraph", "meeting-1"),
+            ("future-task", "paragraph", "task-1"),
+            ("user", "code", "u1"),
+            ("user", "paragraph", ""),
+        ] {
+            let source = engine(fixture);
+            {
+                let mut txn = source.doc.transact_mut();
+                let blocks = txn.get_map(ROOT_NAME).unwrap();
+                let p = map(&blocks, &txn, "p1").unwrap();
+                p.try_update(&mut txn, "flavour", node_kind);
+                let Some(Out::YText(text)) = p.get(&txn, "children") else {
+                    panic!()
+                };
+                text.insert_embed_with_attributes(
+                    &mut txn,
+                    0,
+                    Any::Map(std::sync::Arc::new(HashMap::from([(
+                        "mention".into(),
+                        Any::String("姓名".into()),
+                    )]))),
+                    Attrs::from([
+                        ("mentionType".into(), Any::String(kind.into())),
+                        ("mentionId".into(), Any::String(id.into())),
+                    ]),
+                );
+            }
+            let state = source
+                .doc
+                .transact()
+                .encode_state_as_update_v1(&StateVector::default());
+            let mut e = engine(&state);
+            let projection = project(&e.doc, "fixture-doc");
+            assert!(projection.reason.is_none());
+            assert_eq!(projection.blocks[0], placeholder("p1".into(), None));
+            let original = {
+                let txn = e.doc.transact();
+                let blocks = txn.get_map(ROOT_NAME).unwrap();
+                {
+                    let block = map(&blocks, &txn, "p1").unwrap();
+                    let Some(Out::YText(text)) = block.get(&txn, "children") else {
+                        panic!()
+                    };
+                    (block.to_json(&txn), text.diff(&txn, |_| ()))
+                }
+            };
+            let mut desired = projection.blocks;
+            desired[2].text.push_str("手机修改");
+            desired[2]
+                .segments
+                .last_mut()
+                .unwrap()
+                .text
+                .push_str("手机修改");
+            e.apply_block_snapshot(desired.clone()).unwrap();
+            {
+                let txn = e.doc.transact();
+                let blocks = txn.get_map(ROOT_NAME).unwrap();
+                assert_eq!(
+                    {
+                        let block = map(&blocks, &txn, "p1").unwrap();
+                        let Some(Out::YText(text)) = block.get(&txn, "children") else {
+                            panic!()
+                        };
+                        (block.to_json(&txn), text.diff(&txn, |_| ()))
+                    },
+                    original
+                );
+            }
+            for operation in ["delete", "edit", "convert"] {
+                let vector = e.doc.transact().state_vector();
+                let mut invalid = desired.clone();
+                match operation {
+                    "delete" => {
+                        invalid.remove(0);
+                    }
+                    "edit" => invalid[0].text = "覆盖".into(),
+                    _ => invalid[0].block_type = "paragraph".into(),
+                }
+                assert!(e
+                    .apply_block_snapshot(invalid)
+                    .unwrap_err()
+                    .contains("READ_ONLY_BLOCK"));
+                assert_eq!(e.doc.transact().state_vector(), vector);
+            }
+            let mut restored = CollabEngine::open(e.document_id.clone(), e.database_path.clone())
+                .unwrap()
+                .0;
+            restored.blockcraft_root_id = Some("fixture-doc".into());
+            assert_eq!(restored.blocks(), desired);
+        }
+    }
+
+    /// 四类对象混排仍各占一位；三类业务实体删除后重插入完整恢复属性，非法快照不写入。
+    #[test]
+    fn entity_mentions_restore_full_attributes_and_validate_atomically() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-entity-mention.update");
+        for (block_index, kind) in [(0, "meeting"), (0, "task"), (0, "doc"), (1, "meeting")] {
+            let mut e = engine(fixture);
+            assert!(project(&e.doc, "fixture-doc").reason.is_none());
+            let original = e.blocks();
+            assert!(original
+                .iter()
+                .all(|b| b.block_type != UNSUPPORTED_BLOCK_TYPE));
+            let index = original[block_index]
+                .segments
+                .iter()
+                .position(|s| s.mention_type.as_deref() == Some(kind))
+                .unwrap();
+            let saved = original[block_index].segments[index].clone();
+            let metadata: Attrs =
+                serde_json::from_str(saved.mention_attributes.as_ref().unwrap()).unwrap();
+            assert!(metadata.contains_key("customInline"));
+            assert_eq!(
+                original[1].segments[0].mention_type.as_deref(),
+                Some("meeting")
+            );
+            assert_eq!(
+                original.last().unwrap().parent_id.as_deref(),
+                Some("entity-callout")
+            );
+            let mut removed = original.clone();
+            removed[block_index].segments.remove(index);
+            removed[block_index].text = removed[block_index]
+                .segments
+                .iter()
+                .map(|s| s.text.as_str())
+                .collect();
+            e.apply_block_snapshot(removed).unwrap();
+            e.apply_block_snapshot(original.clone()).unwrap();
+            assert_eq!(e.blocks(), original);
+            for invalid_data in [
+                None,
+                Some("[]".into()),
+                Some(r#"{"mentionType":"user","mentionId":"wrong"}"#.into()),
+                Some("x".repeat(65_537)),
+            ] {
+                let before = e.doc.transact().state_vector();
+                let mut invalid = original.clone();
+                invalid[block_index].segments[index].mention_attributes = invalid_data;
+                assert!(e
+                    .apply_block_snapshot(invalid)
+                    .unwrap_err()
+                    .contains("INVALID_INLINE_MENTION"));
+                assert_eq!(e.doc.transact().state_vector(), before);
+            }
+            let mut restored = CollabEngine::open(e.document_id.clone(), e.database_path.clone())
+                .unwrap()
+                .0;
+            restored.blockcraft_root_id = Some("fixture-doc".into());
+            assert_eq!(restored.blocks(), original);
+        }
+    }
+
+    /// 周围文字和名称的双端修改收敛；陈旧展示快照不能覆盖远端新状态。
+    #[test]
+    fn entity_mentions_converge_and_do_not_replay_stale_business_attributes() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-entity-mention.update");
+        let mut phone = engine(fixture);
+        let mut peer = engine(fixture);
+        let mut left = phone.blocks();
+        let mut right = peer.blocks();
+        left[0].segments[0].text.push_str("手机");
+        left[0].text = left[0].segments.iter().map(|s| s.text.as_str()).collect();
+        right[0]
+            .segments
+            .iter_mut()
+            .find(|s| s.mention_type.as_deref() == Some("meeting"))
+            .unwrap()
+            .inline_mention = Some("桌面更新的会议".into());
+        let a = phone.apply_block_snapshot(left).unwrap().v1_update;
+        let b = peer.apply_block_snapshot(right).unwrap().v1_update;
+        phone.apply_cses_update(b).unwrap();
+        peer.apply_cses_update(a).unwrap();
+        assert_eq!(phone.blocks(), peer.blocks());
+        let mut stale = phone.blocks();
+        let vector = peer.doc.transact().state_vector();
+        {
+            let mut txn = peer.doc.transact_mut();
+            let blocks = txn.get_map(ROOT_NAME).unwrap();
+            let Some(Out::YText(text)) = map(&blocks, &txn, "p1").unwrap().get(&txn, "children")
+            else {
+                panic!()
+            };
+            let offset = 5;
+            text.format(
+                &mut txn,
+                offset,
+                1,
+                Attrs::from([("status".into(), Any::String("远端新状态".into()))]),
+            );
+        }
+        phone
+            .apply_cses_update(peer.doc.transact().encode_state_as_update_v1(&vector))
+            .unwrap();
+        stale[2].text.push_str("继续编辑");
+        phone.apply_block_snapshot(stale).unwrap();
+        let current = phone.blocks();
+        let attrs = &current[0]
+            .segments
+            .iter()
+            .find(|s| s.mention_type.as_deref() == Some("meeting"))
+            .unwrap()
+            .mention_attributes;
+        assert!(attrs.as_ref().unwrap().contains("远端新状态"));
+    }
+
+    /// 嵌套会议对象保留父子关系与完整属性；双端相邻编辑收敛，父容器不可连带删除。
+    #[test]
+    fn opaque_inline_blocks_preserve_nested_data_and_converge() {
+        for fixture in [
+            include_bytes!("../../tests/fixtures/blockcraft-embed.update").as_slice(),
+            include_bytes!("../../tests/fixtures/blockcraft-opaque-mention.update").as_slice(),
+        ] {
+            let mut phone = engine(fixture);
+            let mut peer = engine(fixture);
+            let original = {
+                let txn = phone.doc.transact();
+                let blocks = txn.get_map(ROOT_NAME).unwrap();
+                ["p1", "opaque-child"].map(|id| {
+                    map(&blocks, &txn, id).map(|b| {
+                        let Some(Out::YText(text)) = b.get(&txn, "children") else {
+                            panic!()
+                        };
+                        (b.to_json(&txn), text.diff(&txn, |_| ()))
+                    })
+                })
+            };
+            let mut left = phone.blocks();
+            let mut right = peer.blocks();
+            assert!(project(&phone.doc, "fixture-doc").reason.is_none());
+            assert_eq!(left[0].block_type, UNSUPPORTED_BLOCK_TYPE);
+            left[1].text.push_str("手机");
+            right[2].text.push_str("桌面");
+            let a = phone.apply_block_snapshot(left).unwrap().v1_update;
+            let b = peer.apply_block_snapshot(right).unwrap().v1_update;
+            phone.apply_cses_update(b).unwrap();
+            peer.apply_cses_update(a).unwrap();
+            assert_eq!(phone.blocks(), peer.blocks());
+            {
+                let txn = phone.doc.transact();
+                let blocks = txn.get_map(ROOT_NAME).unwrap();
+                assert_eq!(
+                    original,
+                    ["p1", "opaque-child"].map(|id| map(&blocks, &txn, id).map(|b| {
+                        let Some(Out::YText(text)) = b.get(&txn, "children") else {
+                            panic!()
+                        };
+                        (b.to_json(&txn), text.diff(&txn, |_| ()))
+                    }))
+                );
+            }
+            if let Some(child) = phone.blocks().iter().find(|b| b.id == "opaque-child") {
+                assert_eq!(child.parent_id.as_deref(), Some("opaque-callout"));
+                let mut deleted_parent = phone.blocks();
+                deleted_parent.retain(|b| {
+                    b.id != "opaque-callout" && b.parent_id.as_deref() != Some("opaque-callout")
+                });
+                assert!(phone
+                    .apply_block_snapshot(deleted_parent)
+                    .unwrap_err()
+                    .contains("READ_ONLY_BLOCK"));
+            }
+        }
     }
 
     /// 公式保留 void 结构、扩展属性和 TeX 原文；非法补丁在任何写入前拒绝。

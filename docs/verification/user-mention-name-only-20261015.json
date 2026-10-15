@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-15",
+  "environment": "CSES PRE",
+  "device": {
+    "model": "HONOR X70 / MTN AN00",
+    "os": "Android 16"
+  },
+  "documentId": "6ac76e5375083c8c9f19cbd3",
+  "apk": {
+    "sha256": "91850acf56049ca487d3ed08224aed5e3e8b734e8f08681e312ce64590c4e61a",
+    "installed": true,
+    "build": "flutter build apk --debug passed; adb install -r Success"
+  },
+  "results": {
+    "nameOnlyRendering": {
+      "passed": true,
+      "evidence": "正文声波显示圆形真实头像+声波，测试员1显示姓名首字回退头像+测试员1；两处姓名均无生成的@前缀，截图目视与UI层级确认。"
+    },
+    "plainTextPreserved": {
+      "passed": true,
+      "evidence": "原有普通文字34353453535 2@保持原样，本次未编辑文档。"
+    },
+    "session": {
+      "evidence": "重新登录已有PRE测试账号，打开同一文档，状态为在线。文档因未适配行内对象处于只读预览；本次仅验证安装和渲染，不重新声称编辑或双向同步通过。"
+    }
+  },
+  "automated": {
+    "avatarAndMentionTargeted": 13,
+    "staticAnalysis": "changed source and mention test passed in package",
+    "format": "2 handwritten Dart files unchanged after formatting",
+    "diffCheck": "passed",
+    "note": "上述13项与静态检查在本次显示调整的前一轮执行，本轮新增Android构建、安装与真机目视验收。"
+  },
+  "screenshots": [
+    "mention-name-only-20261015.png"
+  ],
+  "limitations": [
+    "本轮未重新验证编辑操作、桌面双向联调、iOS或服务端持久化ACK；此前编辑与桌面联调见user-mention-20261014.json。"
+  ]
+}

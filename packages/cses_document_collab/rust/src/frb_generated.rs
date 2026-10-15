@@ -747,6 +747,10 @@ impl SseDecode for crate::api::collab::CollabTextSegment {
         let mut var_superscript = <bool>::sse_decode(deserializer);
         let mut var_subscript = <bool>::sse_decode(deserializer);
         let mut var_inlineLatex = <Option<String>>::sse_decode(deserializer);
+        let mut var_inlineMention = <Option<String>>::sse_decode(deserializer);
+        let mut var_mentionId = <Option<String>>::sse_decode(deserializer);
+        let mut var_mentionType = <Option<String>>::sse_decode(deserializer);
+        let mut var_mentionAttributes = <Option<String>>::sse_decode(deserializer);
         return crate::api::collab::CollabTextSegment {
             text: var_text,
             bold: var_bold,
@@ -759,6 +763,10 @@ impl SseDecode for crate::api::collab::CollabTextSegment {
             superscript: var_superscript,
             subscript: var_subscript,
             inline_latex: var_inlineLatex,
+            inline_mention: var_inlineMention,
+            mention_id: var_mentionId,
+            mention_type: var_mentionType,
+            mention_attributes: var_mentionAttributes,
         };
     }
 }
@@ -1193,6 +1201,10 @@ impl flutter_rust_bridge::IntoDart for crate::api::collab::CollabTextSegment {
             self.superscript.into_into_dart().into_dart(),
             self.subscript.into_into_dart().into_dart(),
             self.inline_latex.into_into_dart().into_dart(),
+            self.inline_mention.into_into_dart().into_dart(),
+            self.mention_id.into_into_dart().into_dart(),
+            self.mention_type.into_into_dart().into_dart(),
+            self.mention_attributes.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -1366,6 +1378,10 @@ impl SseEncode for crate::api::collab::CollabTextSegment {
         <bool>::sse_encode(self.superscript, serializer);
         <bool>::sse_encode(self.subscript, serializer);
         <Option<String>>::sse_encode(self.inline_latex, serializer);
+        <Option<String>>::sse_encode(self.inline_mention, serializer);
+        <Option<String>>::sse_encode(self.mention_id, serializer);
+        <Option<String>>::sse_encode(self.mention_type, serializer);
+        <Option<String>>::sse_encode(self.mention_attributes, serializer);
     }
 }
 

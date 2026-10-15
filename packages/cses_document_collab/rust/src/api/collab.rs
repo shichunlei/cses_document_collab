@@ -57,6 +57,15 @@ pub struct CollabTextSegment {
     /// 行内公式的 LaTeX 原文；Some 时 text 必须是单个 U+FFFC，None 为普通文本。
     /// 空字符串的桌面 embed 可读取；本地编辑为空按桌面语义删除对象。
     pub inline_latex: Option<String>,
+    /// 用户、会议、任务或文档显示名；Some 时 text 为 U+FFFC，与 inline_latex 互斥。
+    pub inline_mention: Option<String>,
+    /// 用户或业务实体稳定 ID；与 inline_mention 成对使用，不保存头像或宿主认证。
+    pub mention_id: Option<String>,
+    /// None 兼容已有用户投影；meeting/task/doc按各自实体语义展示，其他值拒绝写入。
+    pub mention_type: Option<String>,
+    /// 非用户实体原始属性的稳定JSON，用于删除后撤销/重插入保留编号、状态及扩展字段。
+    /// 不作为可编辑业务补丁；既有同身份对象以原生属性为准，最多65536字节。
+    pub mention_attributes: Option<String>,
 }
 
 /// 图片题注的编辑投影；正文仍属于原 caption 块的 Y.Text，格式与未知元数据留在 Doc 中。
@@ -813,14 +822,26 @@ fn text_segments_for_schema<T: ReadTxn>(
         .into_iter()
         .filter_map(|chunk| {
             let inline_latex = formal.then(|| inline_latex_value(&chunk.insert)).flatten();
+            let mention = formal
+                .then(|| inline_mention_identity(&chunk.insert, chunk.attributes.as_deref()))
+                .flatten();
             let text = match chunk.insert {
                 Out::Any(Any::String(value)) => value.to_string(),
-                _ if inline_latex.is_some() => "\u{fffc}".into(),
+                _ if inline_latex.is_some() || mention.is_some() => "\u{fffc}".into(),
                 _ => return None,
             };
             let attributes = chunk.attributes.as_deref();
             Some(CollabTextSegment {
                 inline_latex,
+                inline_mention: mention.as_ref().map(|m| m.0.clone()),
+                mention_id: mention.as_ref().map(|m| m.1.clone()),
+                mention_type: mention
+                    .as_ref()
+                    .and_then(|m| (m.2 != "user").then(|| m.2.clone())),
+                mention_attributes: mention.as_ref().and_then(|m| {
+                    (m.2 != "user")
+                        .then(|| serialized_mention_attributes(chunk.attributes.as_deref()))
+                }),
                 text,
                 bold: attribute_enabled(attributes, schema_attribute("bold", formal)),
                 italic: attribute_enabled(attributes, schema_attribute("italic", formal)),
@@ -865,6 +886,164 @@ fn inline_latex_value(value: &Out) -> Option<String> {
     }
 }
 
+/// 单键 mention 字符串按明确 user/meeting/task/doc 类型及稳定身份读取，兼容历史 d: 前缀。
+/// 未知类型、缺身份或过大的实体属性继续交由段落级保护处理。
+fn inline_mention_identity(value: &Out, attrs: Option<&Attrs>) -> Option<(String, String, String)> {
+    let Out::Any(Any::Map(values)) = value else {
+        return None;
+    };
+    if values.len() != 1 {
+        return None;
+    }
+    let Some(Any::String(name)) = values.get("mention") else {
+        return None;
+    };
+    let kind = attribute_string(attrs, "mentionType")
+        .filter(|v| !v.is_empty())
+        .or_else(|| attribute_string(attrs, "d:mentionType"))?;
+    let id = attribute_string(attrs, "mentionId")
+        .filter(|v| !v.is_empty())
+        .or_else(|| attribute_string(attrs, "d:mentionId"))?;
+    if !matches!(kind.as_str(), "user" | "meeting" | "task" | "doc")
+        || id.is_empty()
+        || (kind != "user" && serialized_mention_attributes(attrs).len() > 65_536)
+    {
+        return None;
+    }
+    Some((name.to_string(), id, kind))
+}
+
+/// 借用原始属性并按键排序编码，避免同一元数据因哈希迭代顺序造成伪冲突。
+fn serialized_mention_attributes(attrs: Option<&Attrs>) -> String {
+    let sorted: std::collections::BTreeMap<_, _> =
+        attrs.into_iter().flat_map(|a| a.iter()).collect();
+    let value = serde_json::to_value(&sorted).expect("Yrs原子属性可编码JSON");
+    serde_json::to_string(&canonical_mention_value(value)).expect("JSON值可重新编码")
+}
+
+/// 对嵌套对象递归排序，状态等子对象不因HashMap迭代顺序产生虚假的历史冲突。
+fn canonical_mention_value(value: serde_json::Value) -> serde_json::Value {
+    match value {
+        serde_json::Value::Object(map) => {
+            let sorted: std::collections::BTreeMap<_, _> = map
+                .into_iter()
+                .map(|(k, v)| (k, canonical_mention_value(v)))
+                .collect();
+            serde_json::Value::Object(sorted.into_iter().collect())
+        }
+        serde_json::Value::Array(values) => {
+            serde_json::Value::Array(values.into_iter().map(canonical_mention_value).collect())
+        }
+        other => other,
+    }
+}
+
+/// 只在新插入/历史恢复实体时使用完整属性；现存对象不接受投影覆盖业务元数据。
+fn restored_mention_attributes(segment: &CollabTextSegment) -> Attrs {
+    segment
+        .mention_attributes
+        .as_ref()
+        .and_then(|v| serde_json::from_str(v).ok())
+        .unwrap_or_default()
+}
+
+/// 检查非用户实体的属性快照与声明身份一致，拒绝缺失、超限或伪造类型/ID。
+fn valid_entity_attributes(segment: &CollabTextSegment) -> bool {
+    let Some(data) = segment
+        .mention_attributes
+        .as_ref()
+        .filter(|v| v.len() <= 65_536)
+    else {
+        return false;
+    };
+    let Ok(attrs) = serde_json::from_str::<Attrs>(data) else {
+        return false;
+    };
+    let kind = attribute_string(Some(&attrs), "mentionType")
+        .filter(|v| !v.is_empty())
+        .or_else(|| attribute_string(Some(&attrs), "d:mentionType"));
+    let id = attribute_string(Some(&attrs), "mentionId")
+        .filter(|v| !v.is_empty())
+        .or_else(|| attribute_string(Some(&attrs), "d:mentionId"));
+    kind == segment.mention_type && id == segment.mention_id
+}
+
+/// 原生行内对象的完整语义身份，用于差量对齐；不把 U+FFFC 文本当成对象。
+#[derive(Debug, Clone, PartialEq, Eq)]
+enum InlineEmbed {
+    Latex(String),
+    User(String, String),
+    Entity(String, String, String),
+}
+
+/// 从借用的原生值/属性提取已支持的对象身份。
+fn inline_embed(value: &Out, attrs: Option<&Attrs>) -> Option<InlineEmbed> {
+    inline_latex_value(value)
+        .map(InlineEmbed::Latex)
+        .or_else(|| {
+            inline_mention_identity(value, attrs).map(|(name, id, kind)| {
+                if kind != "user" {
+                    InlineEmbed::Entity(kind, name, id)
+                } else {
+                    InlineEmbed::User(name, id)
+                }
+            })
+        })
+}
+
+/// 从已验证的片段提取对象身份。
+fn segment_embed(segment: &CollabTextSegment) -> Option<InlineEmbed> {
+    segment
+        .inline_latex
+        .clone()
+        .map(InlineEmbed::Latex)
+        .or_else(|| {
+            let name = segment.inline_mention.clone()?;
+            let id = segment.mention_id.clone()?;
+            Some(
+                if let Some(kind @ ("meeting" | "task" | "doc")) = segment.mention_type.as_deref() {
+                    InlineEmbed::Entity(kind.into(), name, id)
+                } else {
+                    InlineEmbed::User(name, id)
+                },
+            )
+        })
+}
+
+/// 将对象恢复为桌面单键map；同身份属性原样保留历史键形态，新对象补齐实体身份。
+fn embed_value(embed: &InlineEmbed, attrs: &mut Attrs) -> Any {
+    let (key, value) = match embed {
+        InlineEmbed::Latex(latex) => ("latex", latex),
+        InlineEmbed::User(name, id) | InlineEmbed::Entity(_, name, id) => {
+            let kind = match embed {
+                InlineEmbed::Entity(kind, _, _) => kind.as_str(),
+                _ => "user",
+            };
+            let current_kind = attribute_string(Some(attrs), "mentionType")
+                .filter(|v| !v.is_empty())
+                .or_else(|| attribute_string(Some(attrs), "d:mentionType"));
+            let current_id = attribute_string(Some(attrs), "mentionId")
+                .filter(|v| !v.is_empty())
+                .or_else(|| attribute_string(Some(attrs), "d:mentionId"));
+            if current_kind.as_deref() != Some(kind) || current_id.as_ref() != Some(id) {
+                attrs.insert("mentionType".into(), Any::String(kind.into()));
+                if attrs.contains_key("d:mentionType") {
+                    attrs.insert("d:mentionType".into(), Any::String(kind.into()));
+                }
+                attrs.insert("mentionId".into(), Any::String(id.clone().into()));
+                if attrs.contains_key("d:mentionId") {
+                    attrs.insert("d:mentionId".into(), Any::String(id.clone().into()));
+                }
+            }
+            ("mention", name)
+        }
+    };
+    Any::Map(std::sync::Arc::new(std::collections::HashMap::from([(
+        key.into(),
+        Any::String(value.clone().into()),
+    )])))
+}
+
 /// 将混合 Y.Text 投影为 UTF-16 定位文本；每个非文字对象占一个 U+FFFC。
 /// 未适配对象仍由调用方施加只读保护，此函数不解包或覆盖它们。
 fn projected_inline_text<T: ReadTxn>(text: &yrs::TextRef, txn: &T) -> String {
@@ -903,6 +1082,7 @@ impl CollabTextSegment {
             || self.superscript
             || self.subscript
             || self.inline_latex.is_some()
+            || self.inline_mention.is_some()
     }
 
     fn attributes(&self) -> Attrs {
@@ -1061,7 +1241,29 @@ fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(
         }) {
             return Err("INVALID_INLINE_FORMULA: 行内公式位置或长度无效".into());
         }
-        if !allow_placeholders && block.segments.iter().any(|s| s.inline_latex.is_some()) {
+        if block.segments.iter().any(|s| {
+            s.inline_mention.is_some() != s.mention_id.is_some()
+                || s.mention_type.as_ref().is_some_and(|kind| {
+                    !matches!(kind.as_str(), "user" | "meeting" | "task" | "doc")
+                })
+                || (s.mention_type.is_some() && s.inline_mention.is_none())
+                || (s.mention_attributes.is_some()
+                    && !matches!(s.mention_type.as_deref(), Some("meeting" | "task" | "doc")))
+                || (matches!(s.mention_type.as_deref(), Some("meeting" | "task" | "doc"))
+                    && !valid_entity_attributes(s))
+                || s.inline_mention.as_ref().is_some_and(|name| {
+                    s.text != "\u{fffc}"
+                        || name.encode_utf16().count() > 20_000
+                        || s.mention_id
+                            .as_ref()
+                            .is_none_or(|id| id.is_empty() || id.len() > 512)
+                        || s.inline_latex.is_some()
+                        || block.block_type == "code"
+                })
+        }) {
+            return Err("INVALID_INLINE_MENTION: 实体提及位置或身份无效".into());
+        }
+        if !allow_placeholders && block.segments.iter().any(|s| segment_embed(s).is_some()) {
             return Err("INVALID_INLINE_FORMULA: 行内公式仅用于正式文档".into());
         }
         if !block.segments.is_empty()
@@ -1411,6 +1613,10 @@ mod tests {
     fn styled_segment(text: &str, bold: bool, strikethrough: bool) -> CollabTextSegment {
         CollabTextSegment {
             inline_latex: None,
+            inline_mention: None,
+            mention_id: None,
+            mention_type: None,
+            mention_attributes: None,
             text: text.to_owned(),
             bold,
             italic: false,

@@ -122,7 +122,13 @@ Future<Selection?> insertCollabInlineFormula(
       collabInlineFormulaCharacter,
       attributes: {collabInlineLatexAttribute: latex},
     );
-  await _applyInlineCommand(state, node, start, delta.slice(start, end), after);
+  await applyCollabInlineCommand(
+    state,
+    node,
+    start,
+    delta.slice(start, end),
+    after,
+  );
   return Selection.single(path: node.path, startOffset: start + 1);
 }
 
@@ -153,13 +159,32 @@ Future<bool> changeCollabInlineFormula(
     attrs[collabInlineLatexAttribute] = latex;
     after.insert(collabInlineFormulaCharacter, attributes: attrs);
   }
-  await _applyInlineCommand(state, node, target.offset, before, after);
+  await applyCollabInlineCommand(state, node, target.offset, before, after);
   return true;
 }
 
-/// 为借用 [state]/[node] 的 [offset] 生成正反命令，替换 [before] 为 [after]。
+/// 为公式或四类提及对象在借用 [state]/[node] 的 [offset] 生成正反命令，替换 [before] 为 [after]。
 /// 只记录该区间；真正的 Delta 在适配器 before 阶段据最新节点计算，避免历史覆盖其他属性。
-Future<void> _applyInlineCommand(
+/// 必须在已安装命令解析的适配器中调用，事务完成后返回，异常透传；不恢复焦点。
+/// ```dart
+/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
+/// import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
+/// Future<void> replaceAtom() async {
+///   final adapter = AppFlowyBlockEditorAdapter(initialBlocks: const [
+///     CollabEditorBlock(id: 'p', blockType: 'paragraph', text: 'A'),
+///   ], onLocalBlocksChanged: (_) {});
+///   try {
+///     final state = adapter.editorState;
+///     await applyCollabInlineCommand(state, state.document.first!, 0,
+///       Delta()..insert('A'), Delta()..insert(collabInlineFormulaCharacter,
+///         attributes: {collabInlineLatexAttribute: 'x^2'}));
+///   } finally {
+///     adapter.dispose();
+///   }
+/// }
+/// ```
+Future<void> applyCollabInlineCommand(
   EditorState state,
   Node node,
   int offset,
@@ -212,7 +237,7 @@ Future<void> _applyInlineCommand(
   );
 }
 
-/// 在借用 [state] 的 [transaction] 执行前解析行内公式命令及撤销/重做。
+/// 在借用 [state] 的 [transaction] 执行前解析公式及四类提及对象命令及撤销/重做。
 /// 按稳定块 ID 重定位；文本或目标内容被远端改动、权限撤销时丢弃陈旧操作，保留其他历史。
 /// 仅替换局部区间并保留当前其他格式，不执行事务、不拥有编辑器。
 void resolveCollabInlineFormulaCommands(

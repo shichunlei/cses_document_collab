@@ -66,7 +66,7 @@ Widget editor(CollabController controller) =>
 - Rust 是进程全局单 Doc。第二个独立控制器初始化抛 `COLLAB_DOCUMENT_IN_USE`，先等待旧控制器 close；多个视图可借用一个控制器。
 - `setEditable(false)` 立即禁止本地写入，并串行重建只读会话。只读握手只发送空 V1 update，缓存中的未同步修改仍被保留；恢复授权后向量同步补传。模型只读约束同时生效，服务端仍需逐次鉴权。
 - `resync()` 用于前台恢复，保留终止错误；`retry()` 是用户显式重试。控制器不创建或恢复物理连接。resetLocalCache 只清理当前分区，随后可调用 retry 重新 join。
-- `CollabHostServices` 注入 ID 工厂、错误报告和可选 `EditorMediaUploadService`。没有上传服务时只显示 URL 输入；上传实现持有宿主认证。现有接口使用 Dio CancelToken 表达取消。
+- `CollabHostServices` 注入 ID 工厂、错误报告、可选 `CollabMentionDirectory` 和 `EditorMediaUploadService`。没有上传服务时只显示 URL 输入；上传实现持有宿主认证。现有接口使用 Dio CancelToken 表达取消。
 - `localDraft` 是独立模式，保留旧 demo schema 和头部迁移；默认封面由宿主传入。正式模式不经过草稿初始化、不创建业务根/标题/封面。
 - FRB、Rust 原始 API、EditorState 和内部块类型是包内实现，宿主使用公开控制器状态/命令及编辑页。不要从 src 导入。
 
@@ -102,4 +102,19 @@ flutter analyze --no-pub
 tool/verify_portable_package.sh ../appflowy_editor
 ```
 
-包保留已有块支持范围、未知数据保护和模型只读规则。上传、私有资源鉴权、业务元数据、服务端保存及租户权限由宿主/服务端提供，真实环境联调须单独验收。
+包保留已有块支持范围、未知数据保护和模型只读规则。正式正文（含代码块）出现未适配行内对象时，仅将所在段落投影为不可编辑占位，完整保留原始Y.Text与属性；其他已适配块继续编辑，含占位的父容器不可连带删除。未知类型仍保持保护，用户、会议、任务、文档四类提及的普通正文支持另见下文，锁、修订和图片题注等既有只读保护仍生效。上传、私有资源鉴权、业务元数据、服务端保存及租户权限由宿主/服务端提供，真实环境联调须单独验收。
+
+## 人员提及端口
+
+宿主通过公开入口实现 `CollabMentionDirectory.search(keyword)` 与 `load(userId)`，并传入 `CollabHostServices(mentionDirectory: directory)`。搜索返回当前企业的真实 `CollabMentionUser` 列表，空关键词返回初始人员；资料不存在返回null、请求失败抛异常。编辑包不持有账号或HTTP资源，也不释放宿主目录；宿主必须校验账号/企业切换，不能复用旧会话缓存。Demo的Common实现及完整初始化示例见宿主源码和根README。
+
+正文只同步显示名/稳定ID，人员部门/职位属于本地资料。没有目录时新增入口说明缺少服务，既有用户仍可展示、复制或按权限删除；原子、历史和只读范围详见根README与 `docs/block-adaptation.md`。代码块/图片题注、未知实体提及与localDraft保持保护；会议/任务/文档普通正文支持见下文。同步任务参与人业务副作用尚未提供端口。
+
+人员头像由编辑器按 `https://face.jinqidongli.com/{userid}/{userid}.jpg` 拼接并本地加载，支持宿主 `avatarUrl` 覆盖；正文仅存姓名/ID。正文、列表及资料卡均使用圆形裁切，加载或失败回退首字，不附加认证信息。Android真实头像与提及操作、桌面双向同步验收见根仓库 `docs/verification/user-mention-20261014.json`；桌面观察由用户完成，iOS头像尚未验证。
+
+
+## 会议、任务和文档提及（普通正文）
+
+正式 `{mention: name}` 配合 `mentionType=meeting/task/doc` 和稳定 `mentionId`（兼容历史 `d:` 前缀），在段落、标题、列表、引用及高亮正文中显示类型图标+名称，不附加@，不再降级为只读占位。每个对象仍占一个UTF-16位置；普通文字、用户头像和公式可混排。点击可查看共享名称/ID并删除提及，预览禁止删除；独立撤销/重做恢复原始实体属性。姓名最长20000 UTF-16单元，ID最长512 UTF-8字节，非用户实体属性JSON最大65536字节。
+
+原始编号、状态、文档类型、任务扩展等属性完整保留，嵌套对象的JSON排序稳定；属性快照仅供删除后恢复，普通编辑不回放陈旧业务状态。远端类型、身份、属性或同段正文变化使过期操作失效。新增搜索仍是人员入口，尚无会议/任务/文档选择器、业务详情跳转或业务实体修改；这三类提及保持部分支持，不代表对应会议/任务卡片块已适配。代码块和图片题注、未知实体与localDraft继续遵循保护边界。验证与真机联调记录见仓库 `docs/block-adaptation.md`。

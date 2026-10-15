@@ -1,3 +1,7 @@
+import 'collab_inline_entity_mention.dart';
+import 'package:cses_document_collab/src/native/collab_runtime.dart';
+import 'package:cses_document_collab/src/editor/collab_inline_mention.dart';
+import 'package:cses_document_collab/src/model/collab_user_mention.dart';
 import 'package:cses_document_collab/src/editor/collab_inline_formula.dart';
 import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
 import 'package:cses_document_collab/src/editor/collab_formula_block.dart';
@@ -111,6 +115,33 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
     _syncEditorMode();
   }
 
+  /// 在借用 [state] 的正文光标处先输入@再打开人员选择；取消保留普通@。
+  /// 未注入服务/只读/代码块/范围选区返回false交给普通输入；等待面板结束恢复输入。
+  Future<bool> _handleUserMention(EditorState state) async {
+    if (!mounted ||
+        state.isDisposed ||
+        !state.editable ||
+        CollabRuntime.services.mentionDirectory == null) {
+      return false;
+    }
+    final selection = state.selection;
+    if (selection == null || !selection.isCollapsed) return false;
+    final node = state.getNodeAtPath(selection.start.path);
+    if (node?.delta == null || node!.type == 'code') return false;
+    final offset = selection.start.offset;
+    if (offset < 0 || offset > node.delta!.length) return false;
+    final transaction = state.transaction..insertText(node, offset, '@');
+    transaction.afterSelection = Selection.single(
+      path: node.path,
+      startOffset: offset + 1,
+    );
+    await state.apply(transaction);
+    if (mounted && !state.isDisposed && state.editable) {
+      await showEditorUserMentionSheet(context, state, replaceTrigger: true);
+    }
+    return true;
+  }
+
   /// 使用 [context] 渲染当前模式和能力；网络和监听由控制器及页面生命周期管理。
   /// 在借用的 [context] 中按连接状态构建编辑页面；业务头部占用header槽，正文仍使用协同块树。
   /// 页面仅管理视图/输入监听，预览隐藏编辑入口，不拥有宿主业务服务。
@@ -215,6 +246,7 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
   /// 构建原生编辑器，输入遵守用户模式与模型能力；有序/无序/Todo 列表 Enter 在标准快捷键
   /// 之前处理扁平 depth；行首退格先退级再交给容器/媒体边界处理。软键盘通过工具栏注册
   /// 同规则拦截器，硬件命令在下方优先派发，共用事务及现有协同发布链路。
+  /// @字符在普通可编辑正文打开宿主人员选择，无服务时保持普通输入。
   Widget _buildEditor() {
     return IgnorePointer(
       ignoring: !collab.initialized,
@@ -235,6 +267,11 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
           blockComponentBuilders: _collabBlockComponentBuilders,
           characterShortcutEvents: [
             collabListEnter,
+            CharacterShortcutEvent(
+              key: 'cses-user-mention',
+              character: '@',
+              handler: _handleUserMention,
+            ),
             ...standardCharacterShortcutEvents,
           ],
           // 列表行首先逐级退级；非列表再保护容器边界/删除前置媒体，最后交标准退格。
@@ -337,7 +374,7 @@ EdgeInsets _listBlockPadding(Node node) {
 }
 
 /// 在借用 [context]/[node] 中装饰 UTF-16 [index] 开始的 [text]。
-/// [before] 是内置格式，[after] 为调用方装饰；行内公式使用单字符 WidgetSpan，保留文字颜色。
+/// [before] 是内置格式，[after] 为调用方装饰；行内公式、用户和三类业务实体提及使用单字符 WidgetSpan，保留文字颜色。
 InlineSpan _collabTextSpanDecorator(
   BuildContext context,
   Node node,
@@ -380,7 +417,8 @@ InlineSpan _collabTextSpanDecorator(
   }
   final attributes = text.attributes;
   final latex = attributes?[collabInlineLatexAttribute];
-  if (latex is String) {
+  final mention = attributes?[collabInlineMentionAttribute];
+  if (latex is String || mention is String) {
     var offset = index;
     final spans = <InlineSpan>[];
     for (final rune in text.text.runes) {
@@ -388,15 +426,45 @@ InlineSpan _collabTextSpanDecorator(
         spans.add(
           WidgetSpan(
             alignment: PlaceholderAlignment.middle,
-            child: CollabInlineFormula(
-              node: node,
-              offset: offset,
-              latex: latex,
-              style:
-                  decorated.style ??
-                  before.style ??
-                  const TextStyle(fontSize: 16),
-            ),
+            child:
+                mention is String &&
+                    const {
+                      'meeting',
+                      'task',
+                      'doc',
+                    }.contains(attributes?[collabMentionTypeAttribute])
+                ? CollabInlineEntityMention(
+                    node: node,
+                    offset: offset,
+                    name: mention,
+                    entityType:
+                        attributes![collabMentionTypeAttribute] as String,
+                    style:
+                        decorated.style ??
+                        before.style ??
+                        const TextStyle(fontSize: 16),
+                  )
+                : mention is String
+                ? CollabInlineMention(
+                    node: node,
+                    offset: offset,
+                    name: mention,
+                    userId:
+                        attributes?[collabMentionIdAttribute] as String? ?? '',
+                    style:
+                        decorated.style ??
+                        before.style ??
+                        const TextStyle(fontSize: 16),
+                  )
+                : CollabInlineFormula(
+                    node: node,
+                    offset: offset,
+                    latex: latex as String,
+                    style:
+                        decorated.style ??
+                        before.style ??
+                        const TextStyle(fontSize: 16),
+                  ),
           ),
         );
       } else {

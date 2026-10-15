@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/model/collab_user_mention.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -208,7 +209,7 @@ void registerCsesRichTextAttributes() {
   }
 }
 
-/// 不可变富文本片段，行内公式仅占一个 U+FFFC，使用属性投影恢复原生对象。
+/// 不可变富文本片段，行内公式/用户/会议/任务/文档提及仅占一个 U+FFFC，使用属性投影恢复原生对象。
 /// 调用方持有原文；该类型不创建编辑器、连接或可释放资源。
 /// ```dart
 /// import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
@@ -216,6 +217,9 @@ void registerCsesRichTextAttributes() {
 /// ```
 final class CollabEditorTextSegment {
   /// [text] 为正文或公式单字符位置，[inlineLatex] 非 null 时只允许 U+FFFC。
+  /// [inlineMention] 为用户/实体显示名，[mentionId] 为稳定ID，两者成对且与公式互斥。
+  /// [mentionType] 为meeting/task/doc时展示对应实体，null兼容已有用户；[mentionAttributes] 为实体原生属性JSON，
+  /// 保留删除后撤销所需的业务信息，不能作为编辑实体业务数据的补丁。
   /// [bold]、[italic]、[underline]、[strikethrough]、[code] 默认 false，分别控制对应格式。
   /// [textColor] 和 [backgroundColor] 为原始颜色字符串，null 表示未显式指定。
   /// [superscript]、[subscript] 默认 false，分别控制上下标；原文及属性不自动规范化。
@@ -231,6 +235,10 @@ final class CollabEditorTextSegment {
     this.superscript = false,
     this.subscript = false,
     this.inlineLatex,
+    this.inlineMention,
+    this.mentionId,
+    this.mentionType,
+    this.mentionAttributes,
   });
 
   /// 正文文本；行内公式必须为单个 U+FFFC。
@@ -270,7 +278,19 @@ final class CollabEditorTextSegment {
   /// 行内公式源码；非 null 时 text 为单个 U+FFFC，原生层恢复 {latex: …} 对象。
   final String? inlineLatex;
 
-  /// 是否需要保留显式分段；公式即使没有文字格式也必须保留对象信息。
+  /// 用户/实体显示名；非 null 时仅占一个 U+FFFC，不写为普通文字。
+  final String? inlineMention;
+
+  /// 用户/实体稳定 ID；与显示名成对，null 表示无提及对象。
+  final String? mentionId;
+
+  /// meeting/task/doc区分三类实体；null兼容历史用户投影，不使用实体ID加载人员头像。
+  final String? mentionType;
+
+  /// 非用户实体原始属性JSON快照，用户为null；由原生投影提供，最大65536字节。
+  final String? mentionAttributes;
+
+  /// 是否需要保留显式分段；公式/用户/会议/任务/文档即使没有文字格式也必须保留对象信息。
   bool get isStyled =>
       bold ||
       italic ||
@@ -281,7 +301,8 @@ final class CollabEditorTextSegment {
       backgroundColor != null ||
       superscript ||
       subscript ||
-      inlineLatex != null;
+      inlineLatex != null ||
+      inlineMention != null;
 
   /// AppFlowy 内存属性；inlineLatex 使用私有键，不作为桌面文字格式保存。
   Attributes get attributes => {
@@ -296,9 +317,14 @@ final class CollabEditorTextSegment {
     if (superscript) csesSuperscriptAttribute: true,
     if (subscript) csesSubscriptAttribute: true,
     if (inlineLatex != null) collabInlineLatexAttribute: inlineLatex,
+    if (inlineMention != null) collabInlineMentionAttribute: inlineMention,
+    if (mentionId != null) collabMentionIdAttribute: mentionId,
+    if (mentionType != null) collabMentionTypeAttribute: mentionType,
+    if (mentionAttributes != null)
+      collabMentionAttributesAttribute: mentionAttributes,
   };
 
-  /// 基于全部原文、格式与公式字段计算哈希。
+  /// 基于全部原文、格式与公式/用户/会议/任务/文档身份及实体属性快照计算哈希。
   @override
   int get hashCode => Object.hash(
     text,
@@ -312,6 +338,10 @@ final class CollabEditorTextSegment {
     superscript,
     subscript,
     inlineLatex,
+    inlineMention,
+    mentionId,
+    mentionType,
+    mentionAttributes,
   );
 
   /// 将 [other] 与当前不可变片段的全部字段比较。
@@ -328,7 +358,11 @@ final class CollabEditorTextSegment {
         other.backgroundColor == backgroundColor &&
         other.superscript == superscript &&
         other.subscript == subscript &&
-        other.inlineLatex == inlineLatex;
+        other.inlineLatex == inlineLatex &&
+        other.inlineMention == inlineMention &&
+        other.mentionId == mentionId &&
+        other.mentionType == mentionType &&
+        other.mentionAttributes == mentionAttributes;
   }
 }
 
@@ -1292,7 +1326,7 @@ final class AppFlowyBlockEditorAdapter {
     return delta;
   }
 
-  /// 从借用 [node] 读取文字与单字符公式投影，拆开相同属性合并的多个原子。
+  /// 从借用 [node] 读取文字与单字符公式/用户/会议/任务/文档投影，拆开相同属性合并的多个原子。
   /// 普通字符不继承公式身份；未知 AppFlowy 属性由其他适配边界处理。
   static List<CollabEditorTextSegment> _readNodeSegments(Node node) {
     final delta = node.delta;
@@ -1302,7 +1336,8 @@ final class AppFlowyBlockEditorAdapter {
     final segments = delta
         .whereType<TextInsert>()
         .expand((operation) {
-          if (operation.attributes?[collabInlineLatexAttribute] is! String) {
+          if (operation.attributes?[collabInlineLatexAttribute] is! String &&
+              operation.attributes?[collabInlineMentionAttribute] is! String) {
             return [operation];
           }
           return operation.text.runes.map(
@@ -1311,6 +1346,10 @@ final class AppFlowyBlockEditorAdapter {
               attributes: {
                 ...?operation.attributes,
                 if (rune != 0xfffc) collabInlineLatexAttribute: null,
+                if (rune != 0xfffc) collabInlineMentionAttribute: null,
+                if (rune != 0xfffc) collabMentionIdAttribute: null,
+                if (rune != 0xfffc) collabMentionTypeAttribute: null,
+                if (rune != 0xfffc) collabMentionAttributesAttribute: null,
               },
             ),
           );
@@ -1321,6 +1360,11 @@ final class AppFlowyBlockEditorAdapter {
             text: operation.text,
             inlineLatex:
                 operation.attributes?[collabInlineLatexAttribute] as String?,
+            inlineMention: attributes[collabInlineMentionAttribute] as String?,
+            mentionId: attributes[collabMentionIdAttribute] as String?,
+            mentionType: attributes[collabMentionTypeAttribute] as String?,
+            mentionAttributes:
+                attributes[collabMentionAttributesAttribute] as String?,
             bold: attributes[AppFlowyRichTextKeys.bold] == true,
             italic: attributes[AppFlowyRichTextKeys.italic] == true,
             underline: attributes[AppFlowyRichTextKeys.underline] == true,

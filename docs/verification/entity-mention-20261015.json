@@ -1,0 +1,104 @@
+{
+  "date": "2026-10-15",
+  "environment": "CSES PRE",
+  "device": {
+    "model": "HONOR X70 / MTN AN00",
+    "os": "Android 16"
+  },
+  "documentId": "6ac76e5375083c8c9f19cbd3",
+  "apk": {
+    "sha256": "b9b83ae7b463a7eba94f07fb6f31bf99d80e6063fd655c8e9b5f3f9f0b3c23e2",
+    "installed": true,
+    "bidirectionalSyncVerifiedSha256": "fba885bc854868e9d5ce9654e4b19037c7c649c9a7b9934926213e9e2c67c64b",
+    "finalReinstall": "历史d:属性恢复补丁后重新构建安装；693项编辑包及72项原生回归再次通过，最终包登录并重开同一在线文档，四类提及及原内容正常显示。"
+  },
+  "scope": {
+    "user": "现有头像+姓名、不附加@，保留人员搜索/资料/插入与历史能力。",
+    "meetingTaskDoc": "普通正文类型图标+原始名称，不附加@；点击查看名称/引用ID，删除及完整属性撤销/重做。",
+    "preservation": "仍为单UTF-16对象，保留mentionType/mentionId及所有原始属性；普通编辑不回放陈旧业务状态；属性递归排序避免虚假历史冲突。",
+    "limits": "名称20000 UTF-16、ID512 UTF-8字节、非用户实体属性JSON65536字节。代码/题注/旧localDraft和未知实体继续保护；锁与修订约束仍生效。"
+  },
+  "results": {
+    "display": {
+      "passed": true,
+      "evidence": "手机在线可编辑：会议123123+你好，用户声波/测试员1头像+姓名，文档CSES文档编辑器使用指南，任务666创建任务均正确显示，无只读占位、无生成@。"
+    },
+    "details": {
+      "passed": true,
+      "evidence": "逐个点击会议/文档/任务，弹出原始名称及正确引用ID，删除按钮正常。"
+    },
+    "deleteAndUndo": {
+      "passed": true,
+      "evidence": "手机依次删除会议→文档→任务，三者消失但你好、两个用户提及、普通34353453535 2@与公式均保留；随后逐个撤销，按任务→文档→会议顺序恢复。"
+    },
+    "desktopToMobile": {
+      "passed": true,
+      "evidence": "用户桌面新增会议同段你好、文档和任务并提供截图；手机实际同步到这三类原始对象，安装后正常展示，实体身份与截图名称一致。"
+    },
+    "mobileToDesktopDelete": {
+      "passed": true,
+      "confirmationSource": "user",
+      "evidence": "用户明确回复：桌面三处均已移除。"
+    },
+    "mobileToDesktopRestore": {
+      "passed": true,
+      "confirmationSource": "user",
+      "evidence": "用户明确回复：桌面三处均恢复，原内容保留。三处均以对应图标和名称显示，原你好、两个人员提及和公式仍在。"
+    },
+    "rawDataComparison": {
+      "passed": true,
+      "evidence": "从手机SQLite重建删除前后Yjs，规范化相邻文字分片后全部172块正文/格式/结构一致，三类完整对象及业务属性逐项相等；审计更新时间正常变化，不回滚审计字段。",
+      "details": {
+        "totalBlocks": 172,
+        "contentChangedBlockIds": [],
+        "entities": [
+          {
+            "type": "meeting",
+            "name": "123123",
+            "fullAttributesUnchanged": true,
+            "attributeBytes": 222
+          },
+          {
+            "type": "doc",
+            "name": "CSES文档编辑器使用指南",
+            "fullAttributesUnchanged": true,
+            "attributeBytes": 74
+          },
+          {
+            "type": "task",
+            "name": "666创建任务",
+            "fullAttributesUnchanged": true,
+            "attributeBytes": 17078
+          }
+        ]
+      }
+    },
+    "finalReopen": {
+      "passed": true,
+      "evidence": "最终APK安装后重开在线可编辑文档，会议123123/你好、用户声波和测试员1头像、文档指南与任务666创建任务均正常显示，无只读占位，键盘关闭。"
+    }
+  },
+  "automated": {
+    "rust": 72,
+    "flutterPackageFull": 693,
+    "flutterHost": 27,
+    "entityUserAndFrbTargeted": 21,
+    "staticAnalysis": "package lib/test and host lib/test passed; hand-written Dart formatted; git diff --check passed",
+    "native": "FRB2.13.0 regenerated; cargo fmt --check/check/test/build passed; Android debug built and installed; iOS three-architecture native XCFramework rebuilt",
+    "coverage": "四类混排、普通U+FFFC/emoji/公式、类型/身份隔离、三类完整属性删除与恢复、格式继承清理、窄屏大字/预览、过期状态/正文/权限、非法元数据原子拒绝、双端增量收敛、陈旧业务状态不回放、FRB与SQLite恢复、未知类型局部保护。 历史d:键形态删除/恢复不添加额外身份键，保持历史操作可重做。"
+  },
+  "screenshots": [
+    "entity-displayed-20261015.png",
+    "entity-meeting-panel-20261015.png",
+    "entity-doc-panel-20261015.png",
+    "entity-task-panel-20261015.png",
+    "entity-three-deleted-20261015.png",
+    "entity-three-restored-20261015.png",
+    "entity-finished-20261015.png"
+  ],
+  "limitations": [
+    "会议/任务/文档搜索选择器、业务详情跳转和业务实体编辑尚未接入；文档当前为通用文档图标。",
+    "本轮桌面操作与观察由用户完成；不声称原生桌面UI自动化。",
+    "未验证iOS界面/真机、断线恢复或服务端持久化ACK。"
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-14",
+  "environment": "CSES PRE",
+  "device": {
+    "model": "HONOR X70 / MTN AN00",
+    "os": "Android 16"
+  },
+  "documentId": "6ac76e5375083c8c9f19cbd3",
+  "apk": {
+    "sha256": "060a7f00b080cb9a6f1ee37fdc97819b3ab8e7fefc4233e1afad63d15ea432e2",
+    "installed": true
+  },
+  "results": {
+    "search": {
+      "passed": true,
+      "evidence": "真实企业组织列表加载；zzzz_mention_no_user显示没有匹配的人员；复制并粘贴中文测试员后返回测试员（销售部）和测试员1（生产部）"
+    },
+    "insert": {
+      "passed": true,
+      "evidence": "真实软键盘输入@触发面板；选择测试员（ID999），在E=mc2下的原空段落插入真正提及，光标与键盘恢复；头像版本重复通过"
+    },
+    "profile": {
+      "passed": true,
+      "evidence": "点击测试员读取用户ID999、销售部、监控员；复制姓名正常，头像版本可点击"
+    },
+    "deleteUndoRedo": {
+      "passed": true,
+      "evidence": "点击删除移除测试员→AppBar撤销恢复→重做移除；头像版本再完整复验通过。声波与测试员1及桌面正文变化保留"
+    },
+    "desktopToMobile": {
+      "passed": true,
+      "evidence": "用户在实际桌面新增@声波，手机收到并解除旧版本行内只读；随后用户桌面普通文字34353453535、2@及@测试员1实时到达手机"
+    },
+    "mobileToDesktopInsert": {
+      "passed": true,
+      "confirmationSource": "user",
+      "evidence": "用户明确确认桌面已收到手机在E=mc2下新增的@测试员"
+    },
+    "mobileToDesktopDelete": {
+      "passed": true,
+      "confirmationSource": "user",
+      "evidence": "用户明确确认桌面已移除手机删除/撤销/重做后最终的@测试员"
+    },
+    "avatars": {
+      "passed": true,
+      "urlTemplate": "https://face.jinqidongli.com/{userid}/{userid}.jpg",
+      "evidence": "最新APK正文@声波和@测试员显示真实圆形图片；选择列表大黄蜂/测试员/惊天雷及资料面板头像正常；缺图时保留首字，大小与布局稳定",
+      "httpProbe": {
+        "url": "https://face.jinqidongli.com/999/999.jpg",
+        "status": 200,
+        "contentType": "image/jpeg",
+        "contentLength": 320392
+      }
+    },
+    "cleanup": {
+      "passed": true,
+      "evidence": "两轮手机新增的@测试员、尾随空格与输入触发@均清理，原空段落恢复；保留用户桌面的@声波、@测试员1、34353453535与2@以及原公式和其他正文；最终手机停在在线正文，已收起键盘"
+    }
+  },
+  "automated": {
+    "flutterPackageFull": 682,
+    "avatarAndMentionTargeted": 13,
+    "staticAnalysis": "package lib/test and host lib/test passed; hand-written Dart formatted; git diff check passed",
+    "androidDebugBuild": "passed",
+    "flutterHost": 27
+  },
+  "screenshots": [
+    "mention-search-empty-20261014.png",
+    "mention-search-result-20261014.png",
+    "mention-inserted-20261014.png",
+    "mention-deleted-20261014.png",
+    "mention-undo-20261014.png",
+    "mention-redo-20261014.png",
+    "mention-desktop-received-20261014.png",
+    "mention-avatar-picker-20261014.png",
+    "mention-avatar-inserted-20261014.png",
+    "mention-avatar-profile-20261014.png",
+    "mention-avatar-undo-20261014.png",
+    "mention-avatar-redo-20261014.png",
+    "mention-avatar-finished-20261014.png"
+  ],
+  "limitations": [
+    "桌面观察/编辑由用户执行确认，不声称原生桌面UI自动化",
+    "未验证服务端持久化ACK、断线恢复或iOS真机头像；在线状态仅表示客户端完成同步",
+    "拼音/首字母搜索、对象剪贴板与同步任务参与人业务副作用尚未接入"
+  ]
+}

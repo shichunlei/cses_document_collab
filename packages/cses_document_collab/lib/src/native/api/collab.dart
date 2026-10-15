@@ -6,9 +6,9 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions are ignored because they are not marked as `pub`: `apply_block_snapshot`, `apply_cses_update`, `apply_remote_update`, `apply_text_segments_for_schema`, `apply_text_segments`, `attribute_enabled`, `attribute_string`, `attributes`, `block_text_name`, `blocks`, `compute_text_delta`, `create_compatible_doc`, `handle_wire_message`, `ignored_message`, `inline_latex_value`, `is_indentable_block_type`, `is_resource_block_type`, `is_styled`, `is_supported_alignment`, `is_supported_block_type`, `load_updates`, `migrate_legacy_text`, `open_result`, `open`, `out_bool`, `out_string`, `out_u32`, `persist_update`, `projected_inline_text`, `raw_block_ids`, `reconcile_order`, `remove_legacy_headers`, `schema_attribute`, `sync_step1`, `text_segments_for_schema`, `text_segments`, `utf16_len`, `validate_blocks`, `with_engine_mut`, `with_engine`
-// These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `CollabEngine`, `TextDelta`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `assert_fields_are_eq`, `assert_fields_are_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`
+// These functions are ignored because they are not marked as `pub`: `apply_block_snapshot`, `apply_cses_update`, `apply_remote_update`, `apply_text_segments_for_schema`, `apply_text_segments`, `attribute_enabled`, `attribute_string`, `attributes`, `block_text_name`, `blocks`, `canonical_mention_value`, `compute_text_delta`, `create_compatible_doc`, `embed_value`, `handle_wire_message`, `ignored_message`, `inline_embed`, `inline_latex_value`, `inline_mention_identity`, `is_indentable_block_type`, `is_resource_block_type`, `is_styled`, `is_supported_alignment`, `is_supported_block_type`, `load_updates`, `migrate_legacy_text`, `open_result`, `open`, `out_bool`, `out_string`, `out_u32`, `persist_update`, `projected_inline_text`, `raw_block_ids`, `reconcile_order`, `remove_legacy_headers`, `restored_mention_attributes`, `schema_attribute`, `segment_embed`, `serialized_mention_attributes`, `sync_step1`, `text_segments_for_schema`, `text_segments`, `utf16_len`, `valid_entity_attributes`, `validate_blocks`, `with_engine_mut`, `with_engine`
+// These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `CollabEngine`, `InlineEmbed`, `TextDelta`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `assert_fields_are_eq`, `assert_fields_are_eq`, `assert_fields_are_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`
 
 OpenDocumentResult openDocument({
   required String documentId,
@@ -431,6 +431,19 @@ class CollabTextSegment {
   /// 空字符串的桌面 embed 可读取；本地编辑为空按桌面语义删除对象。
   final String? inlineLatex;
 
+  /// 用户、会议、任务或文档显示名；Some 时 text 为 U+FFFC，与 inline_latex 互斥。
+  final String? inlineMention;
+
+  /// 用户或业务实体稳定 ID；与 inline_mention 成对使用，不保存头像或宿主认证。
+  final String? mentionId;
+
+  /// None 兼容已有用户投影；meeting/task/doc按各自实体语义展示，其他值拒绝写入。
+  final String? mentionType;
+
+  /// 非用户实体原始属性的稳定JSON，用于删除后撤销/重插入保留编号、状态及扩展字段。
+  /// 不作为可编辑业务补丁；既有同身份对象以原生属性为准，最多65536字节。
+  final String? mentionAttributes;
+
   const CollabTextSegment({
     required this.text,
     required this.bold,
@@ -443,6 +456,10 @@ class CollabTextSegment {
     required this.superscript,
     required this.subscript,
     this.inlineLatex,
+    this.inlineMention,
+    this.mentionId,
+    this.mentionType,
+    this.mentionAttributes,
   });
 
   @override
@@ -457,7 +474,11 @@ class CollabTextSegment {
       backgroundColor.hashCode ^
       superscript.hashCode ^
       subscript.hashCode ^
-      inlineLatex.hashCode;
+      inlineLatex.hashCode ^
+      inlineMention.hashCode ^
+      mentionId.hashCode ^
+      mentionType.hashCode ^
+      mentionAttributes.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -474,7 +495,11 @@ class CollabTextSegment {
           backgroundColor == other.backgroundColor &&
           superscript == other.superscript &&
           subscript == other.subscript &&
-          inlineLatex == other.inlineLatex;
+          inlineLatex == other.inlineLatex &&
+          inlineMention == other.inlineMention &&
+          mentionId == other.mentionId &&
+          mentionType == other.mentionType &&
+          mentionAttributes == other.mentionAttributes;
 }
 
 class OpenDocumentResult {

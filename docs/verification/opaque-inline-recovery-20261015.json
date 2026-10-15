@@ -1,0 +1,76 @@
+{
+  "date": "2026-10-15",
+  "environment": "CSES PRE",
+  "device": {
+    "model": "HONOR X70 / MTN AN00",
+    "os": "Android 16"
+  },
+  "documentId": "6ac76e5375083c8c9f19cbd3",
+  "rootCause": {
+    "blockId": "cqD2JnaEGPWhknDXp9",
+    "blockType": "paragraph",
+    "offsetUtf16": 0,
+    "embed": {
+      "mention": "123123"
+    },
+    "mentionType": "meeting",
+    "explanation": "该会议提及不属于用户提及；原投影把任何未支持正文行内对象升级为整篇文档只读。头像或姓名显示调整没有改变其业务类型。"
+  },
+  "fix": {
+    "scope": "仅将含未适配对象的正文段落投影为不透明只读块，保留原Y.Text/全部对象属性/父子关系；其他已适配块继续编辑。",
+    "guards": "受保护段落不可编辑、删除或转换，不能连带删除父容器；锁、修订和图片题注等既有保护仍生效。",
+    "notAdapted": "会议提及业务展示与操作仍未适配，当前只读占位。"
+  },
+  "apk": {
+    "sha256": "2f247bcd4a323302a882c45ed4fc5526a4bddad5ebec438e5ecc395d16ee2ea1",
+    "installed": true,
+    "build": "Android debug build passed; adb install -r Success"
+  },
+  "phoneVerification": {
+    "editable": {
+      "passed": true,
+      "evidence": "同一文档在线，整篇只读提示消失，顶部显示撤销/重做/预览，点击已有编号正文可以打开键盘。"
+    },
+    "inputAndUndoCleanup": {
+      "passed": true,
+      "evidence": "在原rrrrfcf段落中部输入mobile_edit_1015，实际显示含mobileedit1015的临时内容；逐次核对并撤销输入及IME修正，最终恢复rrrrfcf，键盘收起。"
+    },
+    "meetingProtected": {
+      "passed": true,
+      "evidence": "原会议段落显示未适配的块（不可编辑）/原始内容已保留；从手机本地SQLite重建Yjs，完整对象与全部属性逐项对比不变。"
+    },
+    "existingContentPreserved": {
+      "passed": true,
+      "evidence": "重建前后全部171个块，规范化相邻文字分片后正文、格式、属性和结构一致；用户声波/测试员1头像+姓名无@前缀及原普通2@、公式均保留。仅实际编辑段落的审计更新时间meta.mt变化，不回滚合法审计记录。",
+      "comparison": {
+        "meetingFullDeltaAndAttributesUnchanged": true,
+        "contentChangedBlockIds": [],
+        "auditModifiedTimeChangedBlockIds": [
+          "d2fPRH"
+        ],
+        "totalBlocks": 171
+      }
+    }
+  },
+  "automated": {
+    "rustTests": 70,
+    "cargoFmtCheck": "passed",
+    "cargoCheck": "passed",
+    "hostNativeBuild": "passed",
+    "androidDebugBuild": "passed",
+    "existingFlutterTests": 682,
+    "newFrbSqliteIntegration": 1,
+    "flutterNote": "首次全量运行682个既有用例通过，新增用例的重开断言因生成类型列表使用引用相等而失败；改为比较块身份/类型/正文/父子及状态向量后，新增用例单独重跑通过。",
+    "staticAnalysis": "new hand-written Dart test passed in package; dart format and git diff --check passed",
+    "coverage": "未知对象/会议/任务/缺身份/代码块隔离；相邻编辑；对象完整delta/属性保留；双端增量收敛；嵌套段落及父容器删除保护；SQLite与真实FRB重开；既有锁和修订全篇保护。"
+  },
+  "screenshots": [
+    "opaque-inline-editable-20261015.png",
+    "opaque-inline-typed-20261015.png",
+    "opaque-inline-restored-20261015.png"
+  ],
+  "limitations": [
+    "会议提及仍为段落级只读占位，不宣称会议业务已适配。",
+    "本轮未重新执行实际桌面双向界面联调、服务器持久化ACK、断线恢复或iOS原生重建/真机验收。"
+  ]
+}

@@ -431,7 +431,8 @@ class CollabController extends ChangeNotifier {
     if (!_disposed) notifyListeners();
   }
 
-  /// 将 Rust [blocks] 映射为编辑器快照，保留块身份和全部受支持的富文本属性。
+  /// 将 Rust [blocks] 映射为编辑器快照，保留块身份与格式；公式/用户/业务实体按单字符及身份字段传递，业务实体携带原始属性以恢复历史。
+  /// 不持有原生资源，不在边界写入共享内容。
   static List<CollabEditorBlock> _toEditorBlocks(
     List<rust.CollabBlock> blocks,
   ) {
@@ -446,6 +447,10 @@ class CollabController extends ChangeNotifier {
                   (segment) => CollabEditorTextSegment(
                     text: segment.text,
                     inlineLatex: segment.inlineLatex,
+                    inlineMention: segment.inlineMention,
+                    mentionId: segment.mentionId,
+                    mentionType: segment.mentionType,
+                    mentionAttributes: segment.mentionAttributes,
                     bold: segment.bold,
                     italic: segment.italic,
                     underline: segment.underline,
@@ -480,7 +485,8 @@ class CollabController extends ChangeNotifier {
         .toList(growable: false);
   }
 
-  /// 将编辑器 [blocks] 映射为 Rust 输入，不在边界外进行 JSON 或 WS 编码。
+  /// 将编辑器 [blocks] 映射为 Rust 输入，传递用户/实体显示名、ID与原始属性快照，由Rust验证对象与模式。
+  /// 不在边界外进行 JSON 或 WS 编码。
   static List<rust.CollabBlock> _toRustBlocks(List<CollabEditorBlock> blocks) {
     return blocks
         .map(
@@ -493,6 +499,10 @@ class CollabController extends ChangeNotifier {
                   (segment) => rust.CollabTextSegment(
                     text: segment.text,
                     inlineLatex: segment.inlineLatex,
+                    inlineMention: segment.inlineMention,
+                    mentionId: segment.mentionId,
+                    mentionType: segment.mentionType,
+                    mentionAttributes: segment.mentionAttributes,
                     bold: segment.bold,
                     italic: segment.italic,
                     underline: segment.underline,

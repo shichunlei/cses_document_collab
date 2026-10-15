@@ -1,3 +1,5 @@
+import 'package:cses_document_collab/src/editor/collab_mention_sheet.dart';
+import 'package:cses_document_collab/src/model/collab_user_mention.dart';
 import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
 import 'dart:async';
@@ -23,21 +25,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show ScrollCacheExtent;
 import 'package:flutter/services.dart';
 
-/// Mobile editor shell matching the keyboard toolbar in the supplied reference.
+/// 移动键盘工具栏，借用正文编辑器并隔离添加面板的输入与选区。
+/// ```dart
+/// import 'package:flutter/material.dart';
+/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
+/// final state = EditorState.blank();
+/// final toolbar = EditorShortcutToolbar(editorState: state, child: AppFlowyEditor(editorState: state));
+/// // 从树中移除toolbar后由创建方state.dispose()。
+/// ```
 ///
 /// Only commands represented by the current collaborative schema are active.
 /// Unsupported actions stay visible so the interaction model can be evaluated
 /// without silently creating local-only nodes that Rust/Yrs cannot preserve.
 class EditorShortcutToolbar extends StatefulWidget {
+  /// [key] 控制身份与状态复用，[editorState] 为借用编辑器，[child] 为必填正文。
   const EditorShortcutToolbar({
     super.key,
     required this.editorState,
     required this.child,
   });
 
+  /// 必填借用编辑器；本组件管理工具栏状态，不释放它。
   final EditorState editorState;
+
+  /// 必填正文组件，工具栏随键盘在其下方显示。
   final Widget child;
 
+  /// 创建并持有工具栏控制器与键盘拦截器。
   @override
   createState() => _EditorShortcutToolbarState();
 }
@@ -180,6 +195,7 @@ class _EditorShortcutToolbarState extends State<EditorShortcutToolbar> {
     await SystemChannels.textInput.invokeMethod<void>('TextInput.show');
   }
 
+  /// 在借用 [context] 中按平台提供移动工具栏，包括人员提及入口。
   @override
   Widget build(BuildContext context) {
     if (defaultTargetPlatform != TargetPlatform.android &&
@@ -199,11 +215,7 @@ class _EditorShortcutToolbarState extends State<EditorShortcutToolbar> {
         _textDecorationToolbarItem(_inlineStyleController),
         _blockLayoutToolbarItem,
         _imageToolbarItem,
-        _unsupportedToolbarItem(
-          key: const ValueKey('editor-shortcut-mention'),
-          icon: const Icon(Icons.alternate_email),
-          label: '提及',
-        ),
+        _mentionToolbarItem,
       ],
       child: widget.child,
     );
@@ -429,6 +441,99 @@ final _imageToolbarItem = MobileToolbarItem.action(
     );
   },
 );
+
+/// 人员工具栏入口；异步错误由完整弹窗流程报告，正文位置独立保存。
+final _mentionToolbarItem = MobileToolbarItem.action(
+  itemIconBuilder: (_, _, _) => const Tooltip(
+    message: '@用户',
+    child: KeyedSubtree(
+      key: ValueKey('editor-shortcut-mention'),
+      child: Icon(Icons.alternate_email),
+    ),
+  ),
+  actionHandler: (context, state) {
+    unawaited(showEditorUserMentionSheet(context, state));
+  },
+);
+
+/// 在借用 [context]/[editorState] 中搜索并插入用户；[directory] 可注入查询服务。
+/// [keyword] 为初始搜索词，默认空字符串；[replaceTrigger] 为true时替换光标前的@。
+/// 保存稳定块身份和原正文，远端重排可重定位，正文变化/删除/权限撤销拒绝提交。
+/// 关闭动画完成后恢复原选区或插入后的光标；取消不写正文，失败报告并保留内容。
+Future<void> showEditorUserMentionSheet(
+  BuildContext context,
+  EditorState editorState, {
+  CollabMentionDirectory? directory,
+  String keyword = '',
+  bool replaceTrigger = false,
+}) async {
+  if (editorState.isDisposed || !editorState.editable) return;
+  final selection = editorState.selection;
+  if (selection == null || !selection.isSingle) {
+    _showToolbarMessage(context, '请选择同一段正文中的位置');
+    return;
+  }
+  final node = editorState.getNodeAtPath(selection.start.path);
+  if (node?.delta == null || node!.type == 'code') {
+    _showToolbarMessage(context, '此位置不支持用户提及');
+    return;
+  }
+  final id = _mediaTargetId(node);
+  final original = node.delta!.toPlainText();
+  final range = selection.normalized;
+  final originalRange = node.delta!.slice(range.start.offset, range.end.offset);
+  final session = _EditorModalSession(editorState);
+  Selection? landing;
+  try {
+    final user = await showCollabMentionPicker(
+      context,
+      editorState,
+      directory: directory,
+      keyword: keyword,
+    );
+    if (user == null || !context.mounted) return;
+    final current = session.bookmark?.resolve(editorState);
+    final target = findCollabInlineTextNode(editorState, id);
+    if (current == null ||
+        target?.delta?.toPlainText() != original ||
+        target!.delta!.slice(
+              current.normalized.start.offset,
+              current.normalized.end.offset,
+            ) !=
+            originalRange) {
+      _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
+      return;
+    }
+    var insertion = current;
+    if (replaceTrigger) {
+      final offset = current.start.offset;
+      if (!current.isCollapsed ||
+          offset <= 0 ||
+          target.delta!.toPlainText()[offset - 1] != '@') {
+        return;
+      }
+      insertion = Selection.single(
+        path: current.start.path,
+        startOffset: offset - 1,
+        endOffset: offset,
+      );
+    }
+    landing = await insertCollabUserMention(editorState, insertion, user);
+    if (context.mounted && landing == null) {
+      _showToolbarMessage(context, '无法插入此用户提及');
+    }
+  } catch (error, stack) {
+    CollabDiagnostics.report(
+      '插入用户提及失败',
+      error: error,
+      stackTrace: stack,
+      tag: 'DocCollab',
+    );
+    if (context.mounted) _showToolbarMessage(context, '插入失败，请重试');
+  } finally {
+    await session.finish(context.mounted ? context : null, landing);
+  }
+}
 
 MobileToolbarItem _textDecorationToolbarItem(
   _InlineStyleController inlineStyleController,
@@ -1427,20 +1532,6 @@ class _InlineStyleAction {
   final IconData icon;
 }
 
-MobileToolbarItem _unsupportedToolbarItem({
-  required Key key,
-  required Widget icon,
-  required String label,
-}) {
-  return MobileToolbarItem.action(
-    itemIconBuilder: (_, _, _) => Tooltip(
-      message: '$label（后续阶段）',
-      child: KeyedSubtree(key: key, child: icon),
-    ),
-    actionHandler: (context, _) => _showUnsupportedMessage(context, label),
-  );
-}
-
 void _showUnsupportedMessage(BuildContext context, String label) {
   _showToolbarMessage(context, '$label 尚未进入当前 Rust/Yrs 协同 Schema');
 }
@@ -1766,6 +1857,7 @@ class _AddBlockSheet extends StatelessWidget {
   /// 使用借用的 [context] 构建块入口；代码块与标题、列表复用同一插入及关闭流程。
   /// 返回面板 Widget，不持有或释放编辑器；未支持的入口继续显示占位提示。
   /// 在借用 [context] 中渲染可用块入口；插入按保存的稳定选区定位并等待事务完成。
+  /// 在借用[context]中构建块/行内入口；用户选择复用人员目录与稳定插入位置。
   @override
   Widget build(BuildContext context) {
     final height = math.min(MediaQuery.sizeOf(context).height * 0.72, 640.0);
@@ -2037,6 +2129,12 @@ class _AddBlockSheet extends StatelessWidget {
                             },
                           ),
                           _ActionShortcutTile(
+                            key: const ValueKey('editor-shortcut-mention-more'),
+                            icon: Icons.alternate_email,
+                            label: '@用户',
+                            onTap: () => _insertMention(context),
+                          ),
+                          _ActionShortcutTile(
                             key: const ValueKey(
                               'editor-shortcut-inline-formula',
                             ),
@@ -2148,6 +2246,45 @@ class _AddBlockSheet extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  /// 在借用[context]的更多面板内打开人员选择；按原书签插入，父面板退场后恢复正文。
+  /// 子面板期间正文/身份变化拒绝提交；取消保留父面板与原选区，失败报告并提示。
+  Future<void> _insertMention(BuildContext context) async {
+    final captured = bookmark.resolve(editorState);
+    if (captured == null || !captured.isSingle) return;
+    final node = editorState.getNodeAtPath(captured.start.path);
+    if (node?.delta == null || node!.type == 'code') {
+      _showToolbarMessage(context, '此位置不支持用户提及');
+      return;
+    }
+    final original = Delta.fromJson(node.delta!.toJson());
+    try {
+      final user = await showCollabMentionPicker(context, editorState);
+      if (!context.mounted || user == null) return;
+      final selection = bookmark.resolve(editorState);
+      if (selection == null ||
+          editorState.getNodeAtPath(selection.start.path)?.delta != original) {
+        _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
+        return;
+      }
+      final landing = await insertCollabUserMention(
+        editorState,
+        selection,
+        user,
+      );
+      if (context.mounted && landing != null) {
+        Navigator.pop<Selection>(context, landing);
+      }
+    } catch (error, stack) {
+      CollabDiagnostics.report(
+        '插入用户提及失败',
+        error: error,
+        stackTrace: stack,
+        tag: 'DocCollab',
+      );
+      if (context.mounted) _showToolbarMessage(context, '插入失败，请重试');
+    }
   }
 
   /// 按稳定块标记解析插入位置，将 [shortcut] 应用于借用的编辑器。

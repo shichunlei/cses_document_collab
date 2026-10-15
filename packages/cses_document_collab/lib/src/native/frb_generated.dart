@@ -737,8 +737,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   CollabTextSegment dco_decode_collab_text_segment(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 11)
-      throw Exception('unexpected arr length: expect 11 but see ${arr.length}');
+    if (arr.length != 15)
+      throw Exception('unexpected arr length: expect 15 but see ${arr.length}');
     return CollabTextSegment(
       text: dco_decode_String(arr[0]),
       bold: dco_decode_bool(arr[1]),
@@ -751,6 +751,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       superscript: dco_decode_bool(arr[8]),
       subscript: dco_decode_bool(arr[9]),
       inlineLatex: dco_decode_opt_String(arr[10]),
+      inlineMention: dco_decode_opt_String(arr[11]),
+      mentionId: dco_decode_opt_String(arr[12]),
+      mentionType: dco_decode_opt_String(arr[13]),
+      mentionAttributes: dco_decode_opt_String(arr[14]),
     );
   }
 
@@ -1082,6 +1086,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_superscript = sse_decode_bool(deserializer);
     var var_subscript = sse_decode_bool(deserializer);
     var var_inlineLatex = sse_decode_opt_String(deserializer);
+    var var_inlineMention = sse_decode_opt_String(deserializer);
+    var var_mentionId = sse_decode_opt_String(deserializer);
+    var var_mentionType = sse_decode_opt_String(deserializer);
+    var var_mentionAttributes = sse_decode_opt_String(deserializer);
     return CollabTextSegment(
       text: var_text,
       bold: var_bold,
@@ -1094,6 +1102,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       superscript: var_superscript,
       subscript: var_subscript,
       inlineLatex: var_inlineLatex,
+      inlineMention: var_inlineMention,
+      mentionId: var_mentionId,
+      mentionType: var_mentionType,
+      mentionAttributes: var_mentionAttributes,
     );
   }
 
@@ -1460,6 +1472,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_bool(self.superscript, serializer);
     sse_encode_bool(self.subscript, serializer);
     sse_encode_opt_String(self.inlineLatex, serializer);
+    sse_encode_opt_String(self.inlineMention, serializer);
+    sse_encode_opt_String(self.mentionId, serializer);
+    sse_encode_opt_String(self.mentionType, serializer);
+    sse_encode_opt_String(self.mentionAttributes, serializer);
   }
 
   @protected

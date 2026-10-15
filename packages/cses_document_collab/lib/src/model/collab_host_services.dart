@@ -1,3 +1,4 @@
+import 'collab_user_mention.dart';
 import 'dart:math';
 import 'document_metadata.dart';
 
@@ -15,20 +16,28 @@ typedef CollabErrorReporter =
 
 /// Host integrations used by the single active document, without session globals.
 ///
-/// Example: `CollabHostServices(createId: () => host.newId(),
-/// onError: (message, error, stack, tag) => host.report(message, error, stack))`.
+/// ```dart
+/// import 'package:cses_document_collab/cses_document_collab.dart';
+/// const services = CollabHostServices();
+/// // 将services注入由宿主持有的CollabController。
+/// ```
 /// Optional media upload enables the local-file tab; URL editing is always usable.
 class CollabHostServices {
   /// [createId] generates unique block/session IDs; null uses secure 24-digit
   /// hexadecimal IDs. [onError] reports failures; null prints error and stack.
   /// [mediaUpload] is borrowed and must use the host's current authentication.
+  /// [mentionDirectory] 提供当前企业人员查询；null禁用新增，已有提及仍可展示/删除。
   /// [documentMetadata] 提供正式头部的业务读写；草稿不使用该端口。
   const CollabHostServices({
     this.createId,
     this.onError,
     this.mediaUpload,
     this.documentMetadata,
+    this.mentionDirectory,
   });
+
+  /// 借用的人员查询端口；宿主持有认证与资源，编辑器不关闭它。
+  final CollabMentionDirectory? mentionDirectory;
 
   /// 正式文档头部业务接口；null 时宿主不提供头部能力。
   final DocumentMetadataService? documentMetadata;

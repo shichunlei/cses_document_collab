@@ -54,6 +54,21 @@ fixture('blockcraft-unknown', (_, m) => {
   m.set('cell', block('cell', 'paragraph', 'editable', [{ insert: '嵌套内容' }]));
 });
 fixture('blockcraft-embed', (_, m) => m.get('p1').get('children').insertEmbed(1, { mention: 'fixture-user' }));
+
+// 未知未来实体只保护所在段落，嵌套对象同样保留父子边界；全为合成数据。
+fixture('blockcraft-opaque-mention', (_, m) => {
+  const meeting = { mentionId: 'meeting-fixture', mentionType: 'future-meeting',
+    meetingId: 'meeting-fixture', number: '123456',
+    status: { name: '未开始', fontColor: '#8c8c8c', backgroundColor: '#eeeeee' },
+    customInline: { keep: true } };
+  m.get('p1').get('children').insertEmbed(1, { mention: '会议示例' }, meeting);
+  m.get('fixture-doc').get('children').push(['opaque-callout']);
+  m.set('opaque-callout', block('opaque-callout', 'callout', 'block', ['opaque-child', 'editable-child']));
+  m.set('opaque-child', block('opaque-child', 'paragraph', 'editable', [
+    { insert: '前😀' }, { insert: { mention: '嵌套会议' }, attributes: meeting }, { insert: '后' },
+  ]));
+  m.set('editable-child', block('editable-child', 'paragraph', 'editable', [{ insert: '可编辑的相邻正文' }]));
+});
 fixture('blockcraft-locked', (_, m) => m.get('p1').get('meta').set('lock', 'fixture-owner'));
 
 // 当前 ImageBlockSchema 使用 block + caption 子块，不能以 void 的空 children 自证兼容。
@@ -179,5 +194,49 @@ fixture('blockcraft-inline-formula', (_, m) => {
   m.set('inline-callout', block('inline-callout', 'callout', 'block', ['inline-child'], { prefix: '💡' }));
   m.set('inline-child', block('inline-child', 'paragraph', 'editable', [
     { insert: '嵌套' }, { insert: { latex: 'E=mc^2' } }, { insert: '文字' },
+  ]));
+});
+
+// 桌面用户mention: 单键对象 + 无前缀或历史d:属性；姓名可重名，ID始终独立。
+fixture('blockcraft-user-mention', (_, m) => {
+  const text = m.get('p1').get('children');
+  text.delete(0, text.length);
+  text.insert(0, '前😀', { 'a:link': 'https://example.test', customInline: 'text' });
+  text.insertEmbed(text.length, { mention: '张三' }, { mentionId: 'u1', mentionType: 'user', 'a:bold': true, customInline: 'user' });
+  text.insertEmbed(text.length, { mention: '张三' }, { 'd:mentionId': 'u2', 'd:mentionType': 'user', customInline: 'legacy' });
+  text.insertEmbed(text.length, { latex: 'x^2' });
+  text.insert(text.length, '\ufffc后');
+  m.get('p2').get('children').insertEmbed(0, { mention: '标题用户' }, { mentionId: 'u1', mentionType: 'user' });
+  m.get('todo').get('children').insertEmbed(0, { mention: '待办用户' }, { mentionId: 'u2', mentionType: 'user' });
+  m.get('fixture-doc').get('children').push(['mention-callout']);
+  m.set('mention-callout', block('mention-callout', 'callout', 'block', ['mention-child']));
+  m.set('mention-child', block('mention-child', 'paragraph', 'editable', [
+    { insert: { mention: '嵌套用户' }, attributes: { mentionId: 'u3', mentionType: 'user' } }
+  ]));
+});
+
+// 四类提及可混排，业务元数据用于原子删除/历史恢复；不含线上内容或身份。
+fixture('blockcraft-entity-mention', (_, m) => {
+  const text = m.get('p1').get('children');
+  text.delete(0, text.length);
+  text.insert(0, '前😀');
+  for (const kind of ['meeting', 'task', 'doc']) {
+    text.insertEmbed(text.length, { mention: `${kind}名称` }, {
+      mentionType: kind, mentionId: `${kind}-fixture`,
+      [`${kind}Id`]: `${kind}-fixture`, number: '123456',
+      status: { name: '未开始', fontColor: '#8c8c8c' },
+      ...(kind === 'doc' ? { dc_t: 'sheets', ac_t: 'pdf' } : {}),
+      customInline: { keep: true },
+    });
+  }
+  text.insertEmbed(text.length, { mention: '同ID用户' }, { mentionId: 'meeting-fixture', mentionType: 'user' });
+  text.insertEmbed(text.length, { latex: 'x^2' });
+  text.insert(text.length, '\ufffc后');
+  m.get('p2').get('children').insertEmbed(0, { mention: '历史会议' }, { 'd:mentionId': 'legacy-meeting', 'd:mentionType': 'meeting', customInline: true });
+  m.get('fixture-doc').get('children').push(['entity-callout']);
+  m.set('entity-callout', block('entity-callout', 'callout', 'block', ['entity-child']));
+  m.set('entity-child', block('entity-child', 'paragraph', 'editable', [
+    { insert: { mention: '嵌套任务' }, attributes: { mentionType: 'task', mentionId: 'task-child', taskId: 'task-child' } },
+    { insert: '周围正文' },
   ]));
 });
