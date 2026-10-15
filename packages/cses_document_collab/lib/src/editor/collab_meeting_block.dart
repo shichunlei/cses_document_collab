@@ -561,7 +561,7 @@ class _MeetingCardView extends StatelessWidget {
                             foregroundColor: const Color(0xFF86909C),
                           ),
                           icon: const Icon(Icons.delete_outline, size: 18),
-                          label: const Text('删除引用'),
+                          label: const Text('删除卡片'),
                         ),
                       FilledButton(
                         key: ValueKey('meeting-open-$blockId'),

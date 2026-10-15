@@ -5,7 +5,7 @@ import 'package:cses_common/runtime/context/context.dart';
 import 'package:cses_common/runtime/session/user.dart';
 
 /// 固定测试文档；登录仅改变身份，不创建或切换业务文档。
-const csesDemoDocumentId = '6ac76e5375083c8c9f19cbd3';
+const csesDemoDocumentId = '6ad06c992a6b14f42c256937';
 
 /// 可向用户显示的登录失败；不包含请求体或原始凭证。
 final class CsesLoginFailure implements Exception {

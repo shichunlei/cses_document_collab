@@ -40,10 +40,7 @@ class _CsesCollabDemoAppState extends State<CsesCollabDemoApp> {
       ],
       supportedLocales: const [Locale('zh'), Locale('en')],
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF5B5BD6),
-          brightness: Brightness.light,
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF5B5BD6), brightness: Brightness.light),
         scaffoldBackgroundColor: const Color(0xFFF7F7FA),
         useMaterial3: true,
       ),
