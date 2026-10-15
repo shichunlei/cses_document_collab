@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/model/collab_task_card.dart';
 import 'package:cses_document_collab/src/model/collab_meeting.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
@@ -155,9 +156,9 @@ bool canDeletePreviousUrlBackedBlock(EditorState editorState) {
 
 /// Deletes the resource immediately before a caret at text offset zero.
 ///
-/// [editorState] 为借用的编辑器；仅在前置资源、分割线、公式或会议引用可删除时执行。完成事务返回 true，
+/// [editorState] 为借用的编辑器；仅在前置资源、分割线、公式、会议或任务引用可删除时执行。完成事务返回true，
 /// 不满足条件返回 false；异常通过 Future 传播，资源的组件生命周期由编辑器负责。
-/// 分割线与公式删除单独封闭撤销记录，避免与插入/相邻正文输入合并。
+/// 分割线、公式、会议与任务卡片删除单独封闭撤销记录，避免与相邻正文输入合并。
 /// The current text block is deliberately retained. Removing its previous
 /// sibling shifts it onto the deleted block's path, so [previousNode.path] is
 /// also the correct post-transaction caret path. This keeps the software
@@ -181,7 +182,8 @@ Future<bool> deletePreviousUrlBackedBlock(EditorState editorState) async {
     ..customSelectionType = SelectionType.inline;
   if ((previousNode.type == collabDividerType ||
           previousNode.type == collabFormulaType ||
-          previousNode.type == collabMeetingType) &&
+          previousNode.type == collabMeetingType ||
+          previousNode.type == collabTaskCardType) &&
       editorState.undoManager.undoStack.isNonEmpty) {
     editorState.undoManager.undoStack.last.seal();
   }
@@ -190,16 +192,18 @@ Future<bool> deletePreviousUrlBackedBlock(EditorState editorState) async {
     skipHistoryDebounce:
         previousNode.type == collabDividerType ||
         previousNode.type == collabFormulaType ||
-        previousNode.type == collabMeetingType,
+        previousNode.type == collabMeetingType ||
+        previousNode.type == collabTaskCardType,
   );
   return true;
 }
 
-/// 判断 [type] 是否属于可通过后置段落行首退格删除的资源、分割线、公式或会议引用，无副作用。
+/// 判断[type]是否属于可通过后置段落行首退格删除的资源、分割线、公式、会议或任务卡片。
 bool _isUrlBackedBlock(String type) =>
     type == collabDividerType ||
     type == collabFormulaType ||
     type == collabMeetingType ||
+    type == collabTaskCardType ||
     isCollabResourceType(type) ||
     type == csesLinkBlockType ||
     type == ImageBlockKeys.type ||

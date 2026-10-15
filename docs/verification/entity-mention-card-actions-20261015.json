@@ -1,0 +1,93 @@
+{
+  "date": "2026-10-15",
+  "scope": "非用户提及操作面板、打开详情回调和卡片视图",
+  "desktopSources": [
+    "reference-interactions/mention/index.ts",
+    "reference-interactions/mention/widgets/task-embed-toolbar.ts",
+    "reference-interactions/mention/embed-convert.util.ts",
+    "embedded-references/task-card/index.ts"
+  ],
+  "behavior": {
+    "user": "保持头像+姓名直接回调，无卡片切换菜单",
+    "entities": "会议/任务/文档点击先显示底部操作面板；仅打开详情调用onMentionTap并传原始Y.Text属性；无回调禁用打开详情，预览禁用转换和删除",
+    "conversion": "会议/任务使用正式meeting/task void引用，保留原块前文、后方插卡并将后文拆为新段落，格式/相邻对象保留；根和高亮容器支持；不调用宿主点击回调或直接查询实体接口",
+    "history": "独立撤销/重做，稳定源块身份重定位；前文、卡片或后文改变时整组拒绝旧历史，不覆盖协同编辑",
+    "document": "经用户确认只做手机当前组件生命周期的局部卡片/链接切换，不写Y.Text、无共享结构变化和新历史，桌面仍为原链接；正文/原子失效后恢复链接",
+    "taskCard": "正式taskId/title展示、onMentionTap详情按钮（attributes为投影引用props），删除引用及撤销/重做；未知原生props保留，业务详情不内置",
+    "meetingCard": "沿用原状态加载和onMeetingCardTap主按钮；转换不调用点击回调，卡片初次展示可通过既有loadMeetingCard加载状态",
+    "input": "面板期间暂停正文输入，等待路由退场后执行，复核目标/权限/会话，失败由原宿主报告"
+  },
+  "verification": {
+    "packageFullSuite": {
+      "passed": 765,
+      "log": "/tmp/mention-card-package-all.log"
+    },
+    "hostFullSuite": {
+      "passed": 47,
+      "log": "/tmp/mention-card-host-all.log"
+    },
+    "targetSuite": {
+      "passed": 74,
+      "log": "/tmp/mention-card-target-tests.log",
+      "includes": [
+        "三类提及显示/删除/历史",
+        "四类原始属性回调及路由/异步失败/关闭/会话",
+        "会议/任务转换根与高亮、远端重排及陈旧历史拒绝",
+        "文档局部卡片往返和320px/1.5倍文字",
+        "会议原按钮/状态/删除/键盘回归",
+        "任务卡片真实FRB与SQLite重开"
+      ]
+    },
+    "previewSuite": {
+      "passed": 6,
+      "log": "/tmp/mention-card-previews.log",
+      "images": [
+        "entity-mention-task-menu-20261015.png",
+        "entity-mention-task-card-20261015.png",
+        "entity-mention-document-card-20261015.png"
+      ],
+      "note": "真实Flutter测试渲染，390px常规与320px/1.5倍文字；本机Songti+MaterialIcons测试字体。新菜单和卡片字体完整，正文区域测试字体仍有缺字；合成数据，不代表真机字体"
+    },
+    "rust": {
+      "passed": 75,
+      "log": "/tmp/mention-card-rust-tests.log",
+      "coverage": [
+        "正式task结构/扩展属性保留、非法写入原子拒绝",
+        "任务卡片双副本增量收敛、陈旧快照不重放",
+        "会议/任务拆分保留相邻对象原始属性、undo/redo双副本收敛"
+      ]
+    },
+    "packageAnalyze": {
+      "result": "No issues found",
+      "log": "/tmp/mention-card-analyze.log"
+    },
+    "hostAnalyze": {
+      "result": "No issues found",
+      "log": "/tmp/mention-card-host-analyze.log"
+    },
+    "rustChecks": "cargo fmt --check、cargo check及宿主动态库重建通过，既有FRB载体，无桥接签名变化",
+    "android": {
+      "result": "debug APK构建成功，Android原生库重建",
+      "log": "/tmp/mention-card-android-build.log",
+      "apk": "build/app/outputs/flutter-apk/app-debug.apk",
+      "sha256": "daf1fe6a0c845c9af3f2907c99411141a877c0e0fc411a976aa0833eb9928ead"
+    },
+    "format": "本次修改的15个手写Dart文件dart format",
+    "diffCheck": "git diff --check"
+  },
+  "limits": [
+    "未安装手机或进行本轮真实桌面双向联调，iOS平台本轮未重建/验收",
+    "文档布局偏好不跨组件/页面持久化，不增加桌面文档卡片schema",
+    "暂无会议/任务卡片转回行内；任务业务状态/选择器未内置，保持部分支持",
+    "会议转换标题上限2000 UTF-16；任务20000，超限保持原提及并提示失败",
+    "任务/会议卡片删除撤销仅恢复已投影字段，不保证未知props/meta；转换撤销保留原提及完整属性",
+    "保留工作区既有测试文档ID、app格式及会议删除按钮“删除卡片”文案改动"
+  ],
+  "adaptationCounts": {
+    "adapted": 10,
+    "partial": 10,
+    "structure": 1,
+    "unsupported": 20,
+    "total": 41
+  }
+}

@@ -6,6 +6,7 @@ import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.da
 import 'package:cses_document_collab/src/editor/collab_inline_entity_mention.dart';
 import 'package:cses_document_collab/src/editor/collaborative_editor_page.dart';
 import 'package:cses_document_collab/src/model/collab_entity_mention.dart';
+import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/model/collab_user_mention.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -88,6 +89,160 @@ void main() {
       },
     );
 
+    if (kind != 'doc') {
+      for (final nested in [false, true]) {
+        test(
+          '$kind conversion preserves split atoms and undo, nested=$nested',
+          () async {
+            final body = _body(kind);
+            final adapter = AppFlowyBlockEditorAdapter(
+              initialBlocks: [
+                if (nested)
+                  const CollabEditorBlock(
+                    id: 'container',
+                    blockType: 'callout',
+                    text: '',
+                  ),
+                if (nested)
+                  CollabEditorBlock(
+                    id: body.id,
+                    blockType: body.blockType,
+                    text: body.text,
+                    segments: body.segments,
+                    parentId: 'container',
+                  )
+                else
+                  body,
+                _tail,
+              ],
+              onLocalBlocksChanged: (_) {},
+            );
+            addTearDown(adapter.dispose);
+            final state = adapter.editorState;
+            final source = nested
+                ? state.document.first!.children.first
+                : state.document.first!;
+            final target = CollabEntityMentionTarget.capture(source, 3)!;
+            expect(
+              await convertCollabEntityMentionToCard(state, target),
+              isTrue,
+            );
+            final blocks = adapter.blocks
+                .where((b) => b.blockType != 'callout')
+                .toList();
+            expect(blocks.map((b) => b.text), ['前😀', '', '后', '后文']);
+            expect(blocks[1].blockType, kind);
+            expect(
+              blocks[1].resource!.string(
+                kind == 'task' ? 'taskId' : 'meetingId',
+              ),
+              '$kind-id',
+            );
+            expect(blocks[1].parentId, nested ? 'container' : null);
+            state.undoManager.undo();
+            await pumpEventQueue();
+            expect(
+              adapter.blocks.where((b) => b.id == 'body').single.segments,
+              body.segments,
+            );
+            expect(adapter.blocks.where((b) => b.blockType == kind), isEmpty);
+            state.undoManager.redo();
+            await pumpEventQueue();
+            expect(
+              adapter.blocks.where((b) => b.blockType == kind),
+              hasLength(1),
+            );
+            expect(
+              adapter.blocks.where((b) => b.id == 'body').single.text,
+              '前😀',
+            );
+          },
+        );
+      }
+      test(
+        '$kind conversion undo follows stable source after remote reorder',
+        () async {
+          final adapter = _adapter(kind);
+          addTearDown(adapter.dispose);
+          final state = adapter.editorState;
+          final target = CollabEntityMentionTarget.capture(
+            state.document.first!,
+            3,
+          )!;
+          await convertCollabEntityMentionToCard(state, target);
+          final converted = adapter.blocks;
+          await adapter.replaceFromRemote([
+            converted.last,
+            ...converted.take(converted.length - 1),
+          ]);
+          state.undoManager.undo();
+          await pumpEventQueue();
+          expect(adapter.blocks.map((b) => b.id), ['tail', 'body']);
+          expect(adapter.blocks.last.text, '前😀\uFFFC后');
+          state.undoManager.redo();
+          await pumpEventQueue();
+          expect(adapter.blocks.map((b) => b.text), ['后文', '前😀', '', '后']);
+        },
+      );
+      test(
+        '$kind conversion undo refuses remote card edits atomically',
+        () async {
+          final adapter = _adapter(kind);
+          addTearDown(adapter.dispose);
+          final state = adapter.editorState;
+          final target = CollabEntityMentionTarget.capture(
+            state.document.first!,
+            3,
+          )!;
+          await convertCollabEntityMentionToCard(state, target);
+          final converted = adapter.blocks;
+          final card = converted[1];
+          final remote = CollabEditorBlock(
+            id: card.id,
+            blockType: card.blockType,
+            text: '',
+            resource: CollabResource.fromValues({
+              ...card.resource!.values,
+              'title': '远端新标题',
+            }),
+          );
+          await adapter.replaceFromRemote([
+            converted[0],
+            remote,
+            ...converted.skip(2),
+          ]);
+          state.undoManager.undo();
+          await pumpEventQueue();
+          expect(adapter.blocks.map((b) => b.text), ['前😀', '', '后', '后文']);
+          expect(adapter.blocks[1].resource!.string('title'), '远端新标题');
+        },
+      );
+      test(
+        '$kind conversion refuses stale target and read-only state',
+        () async {
+          final adapter = _adapter(kind);
+          addTearDown(adapter.dispose);
+          final state = adapter.editorState;
+          final target = CollabEntityMentionTarget.capture(
+            state.document.first!,
+            3,
+          )!;
+          state.editable = false;
+          expect(
+            await convertCollabEntityMentionToCard(state, target),
+            isFalse,
+          );
+          state.editable = true;
+          await adapter.replaceFromRemote([_body(kind, status: '远端'), _tail]);
+          expect(
+            await convertCollabEntityMentionToCard(state, target),
+            isFalse,
+          );
+          expect(adapter.blocks.where((b) => b.blockType == kind), isEmpty);
+        },
+      );
+    }
+
     testWidgets(
       '$kind name renders in narrow large text and preview prevents delete',
       (tester) async {
@@ -114,7 +269,7 @@ void main() {
           find.byKey(const ValueKey('collab-inline-entity-body-3')),
         );
         await tester.pumpAndSettle();
-        expect(find.text('引用ID：$kind-id'), findsOneWidget);
+        expect(find.text('切换为卡片视图'), findsOneWidget);
         await tester.tap(find.byKey(const ValueKey('entity-mention-delete')));
         await tester.pumpAndSettle();
         expect(adapter.blocks.first.text, '前😀后');

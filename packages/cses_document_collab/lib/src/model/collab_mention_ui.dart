@@ -5,7 +5,7 @@ import 'collab_user_mention.dart';
 
 /// 宿主构建人员头像；[context] 借用当前展示位置，[userId] 为稳定身份，
 /// [name] 为该位置显示名，[size] 为正逻辑像素边长，[avatarUrl] 为可选资料URL。
-/// 正文传null；宿主决定图片地址、缓存、裁切及失败占位。
+/// 正文传null，任务负责人可传宿主详情中的URL；宿主决定图片地址、缓存、裁切及失败占位。
 /// 编辑器只约束尺寸并排除重复无障碍描述；返回组件的State按Flutter生命周期释放。
 /// ```dart
 /// import 'package:flutter/material.dart';

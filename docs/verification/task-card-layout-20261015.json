@@ -1,0 +1,107 @@
+{
+  "date": "2026-10-15",
+  "scope": "按桌面截图重新实现原生任务卡片，宿主提供本地详情和头像",
+  "desktopSources": [
+    "packages/docs/src/editor/embedded-references/task-card/task-card.block.html",
+    "packages/docs/src/editor/embedded-references/task-card/task-card.block.ts",
+    "packages/docs/src/editor/embedded-references/reference-color.util.ts",
+    "packages/task/src/services/task-api.service.ts#getDetailById",
+    "packages/task/src/utils/task-api-contract.util.ts#TASK_TABLE_NAME",
+    "packages/task/src/task-contracts/task-progress.util.ts#normalizeTaskProgress"
+  ],
+  "behavior": {
+    "layout": "白底细边、任务图标/优先级、标题/状态、负责人头像组、起止时间、进度线、空间/项目/工作项路径及附件/子任务计数；路径省略，时间可换行",
+    "api": "公开CollabTaskCardData/Tag/Path/Loader，CollabHostServices.loadTaskCard可选；Demo Common POST /taskManage/task/detail {queryType:detail,tableName:task_v3,id}",
+    "avatar": "复用宿主mentionAvatarBuilder，最多3位+其余人数，不创建默认头像或在包内请求图片",
+    "data": "仅本地展示，不写共享taskId/title或Y.Text；未知标签/时间/路径/计数隐藏，未知进度仅灰色轨道，已知0%在起点显示圆点",
+    "details": "仅右上展开图标调用onMentionTap，传共享引用taskId/title/props；背景/标签/路径/统计不触发。回调成功/失败均不额外加载，完成不恢复正文键盘",
+    "delete": "更多菜单删除卡片只移除文档引用，捕获菜单打开时的属性和宿主，换引用/撤权/会话变化拒绝旧菜单；预览隐藏菜单，保留详情",
+    "lifecycle": "挂载、任务ID/宿主变化或失败手动重试才加载；普通重建复用，关闭/换任务/换会话忽略迟到数据及错误；不存在/删除/加载中/失败禁用详情，仍可移除引用"
+  },
+  "verification": {
+    "taskCardTests": {
+      "passed": 17,
+      "log": "/tmp/task-card-preview-tests.log",
+      "coverage": [
+        "冻结数据及非法进度/计数拒绝",
+        "390px正常和320px/1.5倍文字布局与最多3头像",
+        "0/50/100进度边界",
+        "详情只回调、防重入及成功/失败不重载不弹键盘",
+        "更多删除/撤销/预览及陈旧菜单拒绝",
+        "加载失败重试、缺失/删除",
+        "换任务/会话/销毁/身份不匹配隔离",
+        "缺端口不伪造业务数据"
+      ]
+    },
+    "hostLoaderTests": {
+      "passed": 9,
+      "log": "/tmp/task-card-host-target.log",
+      "coverage": [
+        "真实Common headers/参数",
+        "完整item标签/人员/时间/路径/统计",
+        "进度归一保留两位小数",
+        "可选字段/明确缺失",
+        "非法响应/字段拒绝",
+        "请求前后账号/会话隔离"
+      ]
+    },
+    "packageFullSuite": {
+      "passed": 782,
+      "log": "/tmp/task-card-package-all.log"
+    },
+    "hostFullSuite": {
+      "passed": 56,
+      "log": "/tmp/task-card-host-all.log"
+    },
+    "packageAnalyze": {
+      "result": "No issues found",
+      "log": "/tmp/task-card-package-analyze.log"
+    },
+    "hostAnalyze": {
+      "result": "No issues found",
+      "log": "/tmp/task-card-host-analyze.log"
+    },
+    "format": "本次新增/修改的手写Dart文件已dart format",
+    "diffCheck": "git diff --check",
+    "android": {
+      "result": "debug APK构建成功",
+      "log": "/tmp/task-card-android-build.log",
+      "apk": "build/app/outputs/flutter-apk/app-debug.apk",
+      "sha256": "bb03de711ee9cb8237a116352c969d2f4fb3a4a8ba4af9b12921812dc3f5b645"
+    },
+    "previews": {
+      "images": [
+        "task-card-normal-20261015.png",
+        "task-card-narrow-20261015.png"
+      ],
+      "note": "真实Flutter编辑器渲染并截取卡片区域；合成数据、宿主测试头像、本机Songti与MaterialIcons，不代表真机字体或真实照片。"
+    },
+    "native": "本轮未修改Rust或FRB签名，无需桥接再生成；APK沿用已验证的正式task资源载体",
+    "finalAnalyze": {
+      "log": "/tmp/task-card-final-analyze.log",
+      "result": "No issues found"
+    },
+    "finalTaskCardTests": {
+      "passed": 17,
+      "log": "/tmp/task-card-final-tests.log"
+    },
+    "androidPhone": {
+      "result": "HONOR X70 Android16覆盖安装、PRE真实任务展示、回调、键盘及删除历史通过（审计恢复限制见记录）",
+      "record": "task-card-phone-20261015.json"
+    }
+  },
+  "limits": [
+    "已追加HONOR X70真机及PRE真实任务接口验收；实际桌面双向联调与iOS未验收，详见task-card-phone-20261015.json",
+    "无实时业务推送、任务状态流转编辑或业务任务选择器，仍为部分支持",
+    "业务详情标题只覆盖展示，onMentionTap.name/attributes仍是共享引用快照",
+    "卡片删除撤销仍仅恢复已投影字段，不保证未知props/meta",
+    "保留既有工作区改动，无自动提交"
+  ],
+  "adaptationCounts": {
+    "adapted": 10,
+    "partial": 10,
+    "structure": 1,
+    "unsupported": 20,
+    "total": 41
+  }
+}

@@ -30,3 +30,10 @@ export 'src/model/collab_meeting_reference.dart';
 
 export 'src/model/collab_meeting_card_data.dart'
     show CollabMeetingCardState, CollabMeetingCardData, CollabMeetingCardLoader;
+
+export 'src/model/collab_task_card_data.dart'
+    show
+        CollabTaskCardData,
+        CollabTaskCardTag,
+        CollabTaskCardPath,
+        CollabTaskCardLoader;

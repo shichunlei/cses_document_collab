@@ -118,7 +118,7 @@ void main() {
   });
   for (final kind in CollabMentionType.values) {
     testWidgets(
-      '${kind.name} delegates full snapshot in edit and preview; no default panel',
+      '${kind.name} opens details with full snapshot in edit and preview',
       (tester) async {
         final received = <CollabMentionTap>[];
         final adapter = await _mount(
@@ -126,7 +126,7 @@ void main() {
           kind,
           CollabHostServices(onMentionTap: received.add),
         );
-        await tester.tap(_chip(kind));
+        await _tapDetails(tester, kind);
         await tester.pumpAndSettle();
         expect(received, hasLength(1));
         final tap = received.single;
@@ -140,7 +140,7 @@ void main() {
         expect(adapter.blocks.single.text, '前\uFFFC后');
         await tester.tap(find.text('预览'));
         await tester.pumpAndSettle();
-        await tester.tap(_chip(kind));
+        await _tapDetails(tester, kind);
         await tester.pumpAndSettle();
         expect(received, hasLength(2));
         expect(adapter.editorState.editable, isFalse);
@@ -168,7 +168,7 @@ void main() {
         path: [0],
         startOffset: 2,
       );
-      await tester.tap(_chip(CollabMentionType.meeting));
+      await _tapDetails(tester, CollabMentionType.meeting);
       await tester.pump();
       expect(adapter.editorState.selection, isNull);
       await tester.tap(_chip(CollabMentionType.meeting));
@@ -210,7 +210,7 @@ void main() {
         path: [0],
         startOffset: 2,
       );
-      await tester.tap(_chip(CollabMentionType.doc));
+      await _tapDetails(tester, CollabMentionType.doc);
       await tester.pumpAndSettle();
       expect(find.text('doc-id'), findsOneWidget);
       expect(adapter.editorState.selection, isNull);
@@ -240,7 +240,7 @@ void main() {
         ),
       );
       for (var i = 0; i < 2; i++) {
-        await tester.tap(_chip(CollabMentionType.task));
+        await _tapDetails(tester, CollabMentionType.task);
         await tester.pumpAndSettle();
         expect(errors, hasLength(i + 1));
         expect(find.text('操作失败，请重试'), findsWidgets);
@@ -386,9 +386,28 @@ void main() {
     await _mount(tester, CollabMentionType.meeting, const CollabHostServices());
     await tester.tap(_chip(CollabMentionType.meeting));
     await tester.pumpAndSettle();
-    expect(find.text('引用ID：meeting-id'), findsOneWidget);
+    expect(find.text('打开会议详情'), findsOneWidget);
+    expect(
+      tester
+          .widget<ListTile>(
+            find.byKey(const ValueKey('entity-mention-open-detail')),
+          )
+          .enabled,
+      isFalse,
+    );
+    expect(find.text('切换为卡片视图'), findsOneWidget);
     expect(find.text('删除提及'), findsOneWidget);
   });
+}
+
+/// 点击[tester]中的[kind]提及；非用户必须明确选择打开详情。
+Future<void> _tapDetails(WidgetTester tester, CollabMentionType kind) async {
+  await tester.tap(_chip(kind));
+  if (kind != CollabMentionType.user) {
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('entity-mention-open-detail')));
+    await tester.pumpAndSettle();
+  }
 }
 
 /// 取得 [kind] 对应的真实正文点击区域。

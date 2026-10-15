@@ -488,14 +488,14 @@ bridge 的 text 字段传递；正式图片写入 props.src、视频写入 props
 
 ### 会议、任务、文档提及
 
-正文已按 `mentionType` 区分用户、会议、任务、文档。后三类显示类型图标和名称，支持点击查看引用ID、删除提及与独立撤销/重做；实体本身不被修改。原始状态、编号、文档类型和任务扩展属性参与完整历史恢复；普通文字编辑不会覆盖远端更新的业务元数据。仍未接入后三类的搜索选择器和业务详情跳转；实际支持范围及验证依据见 [块适配清单](docs/block-adaptation.md)。
+正文已按 `mentionType` 区分用户、会议、任务、文档。后三类显示类型图标和名称，点击显示打开详情、切换卡片及删除操作；删除提及支持独立撤销/重做，实体本身不被修改。原始状态、编号、文档类型和任务扩展属性参与完整历史恢复；普通文字编辑不会覆盖远端更新的业务元数据。仍未接入后三类的搜索选择器；业务详情由宿主onMentionTap处理，实际支持范围及验证依据见 [块适配清单](docs/block-adaptation.md)。
 
 本轮验证：编辑包693项、宿主27项、Rust72项及两项目静态分析通过；Android已安装到HONOR手机，三类实体提及删除/撤销恢复与桌面双向同步通过，原始属性完整保留，见[四类提及验收记录](docs/verification/entity-mention-20261015.json)。
 
 
 ### 宿主统一点击回调
 
-`CollabHostServices(onMentionTap: (mention) async { ... })` 可接管四类提及的详情跳转；公开参数为 `CollabMentionTap`，包含 `type/id/name/attributes`，其中type为 `CollabMentionType.user/meeting/task/doc`，原始属性及其嵌套集合为独立只读快照。回调应等待详情关闭再完成；预览也可跳转，重复点击被隔离，异常统一报告。用户提及未注入时不响应，其他三类保留实体信息面板；包本身不内置业务页面。接入和路由示例见[协同包说明](packages/cses_document_collab/README.md#宿主统一提及点击回调)。本轮原始属性、异步/会话关闭及平台构建验证见[回调验收记录](docs/verification/mention-tap-callback-20261015.json)。
+`CollabHostServices(onMentionTap: (mention) async { ... })` 可接管四类提及的详情跳转；公开参数为 `CollabMentionTap`，包含 `type/id/name/attributes`，其中type为 `CollabMentionType.user/meeting/task/doc`，原始属性及其嵌套集合为独立只读快照。回调应等待详情关闭再完成；预览也可跳转，重复点击被隔离，异常统一报告。用户提及未注入时不响应；其他三类点击先打开操作面板，只有“打开详情”调用回调，未注入时详情禁用；切换卡片与删除不派发。包本身不内置业务页面。接入和路由示例见[协同包说明](packages/cses_document_collab/README.md#宿主统一提及点击回调)。本轮原始属性、异步/会话关闭及平台构建验证见[回调验收记录](docs/verification/mention-tap-callback-20261015.json)。
 
 头像与人员选择器的宿主注入、生命周期契约和迁移示例见[协同包说明](packages/cses_document_collab/README.md#人员提及端口)。
 
@@ -506,3 +506,9 @@ bridge 的 text 字段传递；正式图片写入 props.src、视频写入 props
 会议详情由宿主`loadMeetingCard`提供，Demo复用Common的`/meeting/getDetail`。未开始蓝色、进行中绿色、暂停橙色、结束/取消灰色；结束或取消显示“查看会议”，其余显示“加入会议”。仅主按钮触发`onMeetingCardTap`，执行前后不额外请求详情；标题/背景/留白不派发事件，回调结束不自动弹正文键盘。删除引用放在底部作为独立次要操作，预览隐藏，窄屏大字可分行。状态、时间、主持人与人数不写入协同文档；失败可重试，迟到结果隔离，暂不订阅实时状态推送，真实入会/业务详情仍由宿主负责。
 
 接入示例见[协同包说明](packages/cses_document_collab/README.md#会议引用卡片)，验证与预览见[状态卡片记录](docs/verification/meeting-card-status-20261015.json)。
+
+
+会议/任务/文档提及操作现包含“打开详情”和“切换为卡片视图”。会议、任务转为桌面正式卡片块，前后文字拆分保留，支持撤销/重做；任务卡片详情复用onMentionTap，会议卡片主按钮继续使用onMeetingCardTap。文档经确认先做手机当前页面的卡片/链接布局，桌面仍显示原链接，不写共享内容。只有打开详情触发宿主回调；转换、局部布局与删除均不触发。任务卡片为部分支持，正文块当前统计10/10/1/20（41）；范围和验证见[适配表](docs/block-adaptation.md)与[提及卡片操作说明](packages/cses_document_collab/README.md#提及操作与卡片视图)。
+
+
+任务卡片现按桌面截图展示优先级、状态、负责人、起止时间、进度及路径/附件/子任务统计，白底细边布局支持窄屏大字。数据经宿主`loadTaskCard`注入，Demo复用Common task_v3详情；头像继续由宿主构建。右上展开图标只派发`onMentionTap`，不额外刷新数据；删除位于更多菜单，预览隐藏删除。业务详情不写协同正文，任务卡片仍为部分支持，统计10/10/1/20（41）不变。见[任务卡片说明](packages/cses_document_collab/README.md#任务卡片详情与布局)与[验证记录](docs/verification/task-card-layout-20261015.json)。 HONOR X70/Android16已完成PRE真实任务展示、详情回调、键盘与删除历史复验；审计恢复限制及截图见[真机记录](docs/verification/task-card-phone-20261015.json)。

@@ -446,7 +446,14 @@ void main() {
               .string('meetingId'),
           'm1',
         );
-        expect(find.text('删除引用'), findsOneWidget);
+        expect(
+          find.byKey(
+            ValueKey(
+              'meeting-delete-${adapter.blocks.firstWhere((b) => b.blockType == 'meeting').id}',
+            ),
+          ),
+          findsOneWidget,
+        );
         adapter.editorState.undoManager.redo();
         await tester.runAsync(() => pumpEventQueue());
         await tester.pumpAndSettle();

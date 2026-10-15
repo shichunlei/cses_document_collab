@@ -1,0 +1,81 @@
+{
+  "date": "2026-10-15",
+  "scope": "任务卡片最新Android版本真实设备安装、PRE真实账号登录和交互验收",
+  "device": {
+    "model": "HONOR X70 (MTN AN00)",
+    "android": "16",
+    "resolution": "1200x2640",
+    "package": "com.cses.cses_mobile_collab_demo"
+  },
+  "apk": {
+    "path": "build/app/outputs/flutter-apk/app-debug.apk",
+    "sha256": "bb03de711ee9cb8237a116352c969d2f4fb3a4a8ba4af9b12921812dc3f5b645",
+    "install": "adb install -r成功，已启动并登录PRE；不记录密码或会话凭据"
+  },
+  "document": {
+    "id": "6ad06c992a6b14f42c256937",
+    "title": "任务描述",
+    "taskId": "6a0423d85bf3b9d5528c2a86",
+    "taskTitle": "测试状态111-111",
+    "blockId": "m7oSPK-WuK3At-vHyX",
+    "beforeAndFinalLiveBlocksIncludingRoot": 35
+  },
+  "checks": [
+    {
+      "name": "真实任务加载和布局",
+      "result": "通过",
+      "details": "共享卡片仅有taskId/title，宿主实际详情返回一般、待开始、负责人照片、05-29 00:00至06-14 23:59、0%轨道、企业空间/测试状态-默认/普通任务、附件0和子任务0；显示正常，无只读占位或溢出"
+    },
+    {
+      "name": "详情按钮",
+      "result": "通过",
+      "details": "编辑和预览模式点击右上展开图标均出现宿主Toast：点击了测试状态111-111；当前Demo宿主仅Toast，不是实际业务详情路由"
+    },
+    {
+      "name": "键盘抑制",
+      "result": "通过",
+      "details": "点击卡片正文、编辑/预览详情按钮后实际界面无键盘，adb dumpsys input_method的mInputShown=false"
+    },
+    {
+      "name": "预览权限",
+      "result": "通过",
+      "details": "预览保留详情，隐藏更多及删除入口；回到编辑后更多菜单正常显示删除卡片"
+    },
+    {
+      "name": "删除及历史",
+      "result": "通过但保留已知审计恢复限制",
+      "details": "删除后34块无task；撤销恢复35块；重做再次34块；最终撤销恢复35块。仅移除文档引用，未调用任务删除/修改业务接口"
+    },
+    {
+      "name": "最终原始文档核对",
+      "result": "正文及引用恢复，元数据不完全相同",
+      "details": "使用手机SQLite文档更新经Yjs解码比较：全部35块ID与顺序一致，其他34块所有字段一致；任务taskId/title、flavour、children、parent等不变。任务props新增默认depth=0；原meta.mu/mn/mt被createdTime替代，现有删除撤销仅恢复投影字段，不能声称原始数据逐字节恢复"
+    },
+    {
+      "name": "运行稳定性",
+      "result": "通过",
+      "details": "本次运行进程日志未发现FATAL EXCEPTION、Unhandled Exception或RenderFlex overflowed；未导出含账号/请求头的原始日志"
+    }
+  ],
+  "images": [
+    "task-card-phone-20261015.png",
+    "task-card-phone-callback-20261015.png",
+    "task-card-phone-preview-20261015.png",
+    "task-card-phone-menu-20261015.png"
+  ],
+  "limits": [
+    "未进行本轮真实桌面双向观察或iOS验收",
+    "未验收真实业务详情导航（宿主当前只显示Toast）",
+    "真机未采集网络计数，回调不额外请求由既有自动化验证，不能用无请求日志推断网络次数",
+    "未验证断线恢复、服务器持久化ACK、实时业务推送或任务状态编辑",
+    "删除撤销会重建审计meta并补默认depth；卡片仍为部分支持"
+  ],
+  "previousAutomatedVerification": "task-card-layout-20261015.json",
+  "adaptationCounts": {
+    "adapted": 10,
+    "partial": 10,
+    "structure": 1,
+    "unsupported": 20,
+    "total": 41
+  }
+}

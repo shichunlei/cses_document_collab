@@ -15,6 +15,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'cses_document_metadata_service.dart';
 import 'cses_meeting_card_service.dart';
+import 'cses_task_card_service.dart';
 import 'cses_mention_directory.dart';
 import 'meeting_reference_picker.dart';
 import 'mention_avatar.dart';
@@ -51,7 +52,7 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
   /// Initialize once. Errors are logged and exposed while retaining the page.
   Future<void> initialize() => _initialization ??= _initialize();
 
-  /// 初始化存储并注入公开包服务；头像、人员与会议引用页面由宿主创建，人员服务绑定当前账号/企业，草稿不启用选人。
+  /// 初始化存储并注入公开包服务；头像、人员与会议引用页面由宿主创建，会议/任务详情绑定账号会话，草稿不启用业务加载。
   /// 等待原生初始化与宿主连接，关闭期间迟到结果不安装页面监听。
   Future<void> _initialize() async {
     // 登录已在 Common 注入；即使本地存储初始化失败，退出也须清理该登录。
@@ -79,6 +80,7 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
                   ),
         pickMeetingReference: showDemoMeetingReferencePicker,
         loadMeetingCard: localDraft ? null : CsesMeetingCardService().load,
+        loadTaskCard: localDraft ? null : CsesTaskCardService().load,
         onMeetingCardTap: (String meetingId, String title, String number) {
           Log.d(meetingId.toString());
           showToast(text: "打开会议页面");

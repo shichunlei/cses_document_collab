@@ -1,3 +1,5 @@
+import 'package:cses_document_collab/src/model/collab_entity_mention.dart';
+import 'package:cses_document_collab/src/model/collab_task_card.dart';
 import 'package:cses_document_collab/src/model/collab_meeting.dart';
 import 'package:cses_document_collab/src/model/collab_user_mention.dart';
 import 'dart:async';
@@ -549,7 +551,7 @@ final class AppFlowyBlockEditorAdapter {
   /// Applies canonical Rust/Yrs blocks without publishing them as local edits.
   /// 行内公式或格式更新采用 Delta 局部差量，保留对象外的正文与光标位置。
   /// [nextBlocks] 是当前权威投影，空列表显示一个 UI 空段落；Future 在事务完成后结束。
-  /// 块身份、类型、顺序一致时原位更新文字、媒体、分割线、公式及会议引用属性，保留组件、选区与输入连接；
+  /// 块身份、类型、顺序一致时原位更新文字、媒体、分割线、公式及会议/任务引用属性，保留组件、选区与输入连接；
   /// URL、尺寸和题注复用节点映射，移除的可选投影显式清空。结构不同才重建节点。
   /// 不记录本地撤销或发送 WS；销毁后不执行，事务异常向调用边界传播。
   /// 正式编号及原始设置更新内存投影，不进入历史；成功转换后清除 replacesId。
@@ -585,6 +587,7 @@ final class AppFlowyBlockEditorAdapter {
                   currentNodes[index].type == collabDividerType ||
                   currentNodes[index].type == collabFormulaType ||
                   currentNodes[index].type == collabMeetingType ||
+                  currentNodes[index].type == collabTaskCardType ||
                   currentNodes[index].delta != null ||
                   _isUrlBackedBlock(targetBlocks[index].blockType)),
         ).every((matches) => matches);
@@ -598,7 +601,8 @@ final class AppFlowyBlockEditorAdapter {
         if (_isUrlBackedBlock(target.blockType) ||
             target.blockType == collabDividerType ||
             target.blockType == collabFormulaType ||
-            target.blockType == collabMeetingType) {
+            target.blockType == collabMeetingType ||
+            target.blockType == collabTaskCardType) {
           if (currentBlocks[index] != target) {
             // 统一复用创建节点时的协议映射，避免 URL/布局/题注形成两套编码。
             // updateNode 合并属性，故可选图片投影缺失时需要显式 null 删除旧值。
@@ -710,7 +714,7 @@ final class AppFlowyBlockEditorAdapter {
   }
 
   /// 在本地 [value] 的 before 阶段按稳定 ID 重定位编号历史，after 阶段发布快照；
-  /// 类型转换生成新身份并记录来源供 Rust 保留扩展数据。
+  /// 类型转换生成新身份并记录来源供Rust保留扩展数据；提及卡片转换历史在写入前整组预检。
   /// 远端回放及销毁后不发布；Undo/Redo 的历史身份经文档内映射恢复为当前可替换来源。
   /// 仅明确修改编号设置属性的 UpdateOperation 生成编号写入意图；普通文字/结构快照
   /// 即使携带旧设置也不会覆盖原生 start/continuePrevious。分割线和公式同样只发布明确的单字段补丁。
@@ -720,6 +724,7 @@ final class AppFlowyBlockEditorAdapter {
       return;
     }
     if (value.$1 == TransactionTime.before) {
+      resolveCollabMentionCardCommand(editorState, value.$2);
       resolveCollabInlineFormulaCommands(editorState, value.$2);
       _resolveNumberingTargets(value.$2);
       _protectUnsupportedBlocks(value.$2);
@@ -989,13 +994,24 @@ final class AppFlowyBlockEditorAdapter {
 
   /// 将权威 [block] 转为 AppFlowy 节点，图片保存强类型专属数据的 Map 投影。
   /// 题注留在资源属性而非 AppFlowy children；实际父子关系由 Rust 的共享类型持有。
-  /// 分割线、公式与会议引用保存白名单原始属性和独立历史字段，不生成 Delta 或 URL。
+  /// 分割线、公式与会议引用保存白名单原始属性和独立历史字段，任务卡片保存只读引用props；均不生成Delta或URL。
   static Node _nodeFromBlock(CollabEditorBlock block) {
     if (block.blockType == csesUnsupportedBlockType) {
       return Node(
         type: csesUnsupportedBlockType,
         id: block.id,
         attributes: {collabBlockIdAttribute: block.id},
+      );
+    }
+    if (block.blockType == collabTaskCardType) {
+      return Node(
+        type: collabTaskCardType,
+        id: block.id,
+        attributes: {
+          collabBlockIdAttribute: block.id,
+          collabResourceAttribute: (block.resource ?? const CollabResource())
+              .toJson(),
+        },
       );
     }
     if (block.blockType == collabMeetingType) {
@@ -1221,7 +1237,9 @@ final class AppFlowyBlockEditorAdapter {
         blockTextColor: node.type == csesCalloutBlockType
             ? node.attributes[csesBlockTextColorAttribute] as String?
             : null,
-        resource: node.type == collabMeetingType
+        resource: node.type == collabTaskCardType
+            ? CollabTaskCard.read(node.attributes)
+            : node.type == collabMeetingType
             ? CollabMeeting.readAttributes(
                 node.attributes,
                 edited: resourceEdits[node] ?? const {},
@@ -1317,12 +1335,13 @@ final class AppFlowyBlockEditorAdapter {
     return value is String && value.isNotEmpty ? value : node.id;
   }
 
-  /// 将借用 [node] 映射为投影类型，分割线、公式与会议保持无正文的独立类型。
+  /// 将借用[node]映射为投影类型，分割线、公式、会议和任务卡片保持无正文的独立类型。
   static String _nodeBlockType(Node node) {
     if (isCollabResourceType(node.type) ||
         node.type == collabDividerType ||
         node.type == collabFormulaType ||
-        node.type == collabMeetingType) {
+        node.type == collabMeetingType ||
+        node.type == collabTaskCardType) {
       return node.type;
     }
     if (node.type == csesUnsupportedBlockType) return csesUnsupportedBlockType;
@@ -1432,12 +1451,13 @@ final class AppFlowyBlockEditorAdapter {
       blockType == NumberedListBlockKeys.type ||
       blockType == TodoListBlockKeys.type;
 
-  /// 读取借用 [node] 的正文或资源地址，容器、分割线、公式和会议不提供文字。
+  /// 读取借用[node]的正文或资源地址，容器、分割线、公式、会议和任务卡片不提供文字。
   static String _readNodePlainText(Node node) {
     if (node.type == csesCalloutBlockType ||
         node.type == collabDividerType ||
         node.type == collabFormulaType ||
-        node.type == collabMeetingType) {
+        node.type == collabMeetingType ||
+        node.type == collabTaskCardType) {
       return "";
     }
     // Media/embed nodes intentionally have no Delta. Their URL is serialized

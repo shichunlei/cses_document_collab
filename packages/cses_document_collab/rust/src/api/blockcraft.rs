@@ -332,7 +332,9 @@ fn mobile_type<T: ReadTxn>(block: &MapRef, props: &MapRef, txn: &T) -> Option<St
         "ordered" => "numbered_list".to_owned(),
         "todo" => "todo_list".to_owned(),
         "blockquote" => "quote".to_owned(),
-        "code" | "image" | "video" | "callout" | "divider" | "formula" | "meeting" => flavour,
+        "code" | "image" | "video" | "callout" | "divider" | "formula" | "meeting" | "task" => {
+            flavour
+        }
         s if is_resource_block_type(s) => flavour,
         _ => return None,
     })
@@ -390,11 +392,12 @@ fn is_divider_style(style: &str) -> bool {
     )
 }
 
-/// 已适配 void 块的属性白名单；会议、分割线和公式复用属性载体，不使用资源 URL。
+/// 已适配 void 块的属性白名单；会议、任务、分割线和公式复用属性载体，不使用资源 URL。
 fn resource_keys(kind: &str) -> &'static [&'static str] {
     match kind {
         "formula" => &["latex"],
         "meeting" => &["meetingId", "title", "number"],
+        "task" => &["taskId", "title"],
         "divider" => &[
             "style",
             "length",
@@ -452,22 +455,30 @@ fn parse_resource_edit(
     initial: bool,
 ) -> Result<HashMap<String, Option<Any>>, String> {
     let fail = || "INVALID_RESOURCE: 资源属性无效".to_owned();
-    if input.len() > (if kind == "formula" { 160_128 } else { 32768 }) {
+    if input.len()
+        > (if matches!(kind, "formula" | "task") {
+            160_128
+        } else {
+            32768
+        })
+    {
         return Err(fail());
     }
     let Any::Map(values) = Any::from_json(input).map_err(|_| fail())? else {
         return Err(fail());
     };
-    if kind == "meeting"
+    if matches!(kind, "meeting" | "task")
         && initial
-        && !matches!(values.get("meetingId"), Some(Any::String(id)) if !id.trim().is_empty() && id.len() <= 512)
+        && !matches!(values.get(if kind == "meeting" { "meetingId" } else { "taskId" }), Some(Any::String(id)) if !id.trim().is_empty() && id.len() <= 512)
     {
         return Err(fail());
     }
     let mut result = HashMap::new();
     for (key, wrapper) in values.iter() {
         if !resource_keys(kind).contains(&key.as_str())
-            && (initial || key != "url" || matches!(kind, "divider" | "formula" | "meeting"))
+            && (initial
+                || key != "url"
+                || matches!(kind, "divider" | "formula" | "meeting" | "task"))
         {
             return Err(fail());
         }
@@ -482,7 +493,11 @@ fn parse_resource_edit(
             }
             v.get("value").cloned()
         };
-        if kind == "meeting" && key == "meetingId" && value.is_none() {
+        if matches!(
+            (kind, key.as_str()),
+            ("meeting", "meetingId") | ("task", "taskId")
+        ) && value.is_none()
+        {
             return Err(fail());
         }
         if let Some(v) = &value {
@@ -491,6 +506,19 @@ fn parse_resource_edit(
                     .is_some_and(|url| valid_resource_url(kind, &url))
             {
                 return Err(fail());
+            }
+            if kind == "task" {
+                let valid = match (key.as_str(), v) {
+                    ("taskId", Any::String(id)) => !id.trim().is_empty() && id.len() <= 512,
+                    ("title", Any::String(title)) => title.encode_utf16().count() <= 20_000,
+                    ("title", Any::Null) => true,
+                    _ => false,
+                };
+                if !valid {
+                    return Err(fail());
+                }
+                result.insert(key.clone(), value);
+                continue;
             }
             if kind == "meeting" {
                 let valid = match (key.as_str(), v) {
@@ -693,13 +721,8 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
             result.blocks.push(placeholder(id, parent_id));
             continue;
         };
-        if kind == "meeting"
-            && parse_resource_edit(
-                "meeting",
-                &resource_properties("meeting", &props, &txn),
-                true,
-            )
-            .is_err()
+        if matches!(kind.as_str(), "meeting" | "task")
+            && parse_resource_edit(&kind, &resource_properties(&kind, &props, &txn), true).is_err()
         {
             result.blocks.push(placeholder(id, parent_id));
             continue;
@@ -717,7 +740,7 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                 }
             }
             Some(Out::YArray(array))
-                if matches!(kind.as_str(), "divider" | "formula" | "meeting")
+                if matches!(kind.as_str(), "divider" | "formula" | "meeting" | "task")
                     && node_type == "void"
                     && array.len(&txn) == 0 => {}
             Some(Out::YArray(array))
@@ -744,7 +767,8 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                     && kind != "callout"
                     && kind != "divider"
                     && kind != "formula"
-                    && kind != "meeting" =>
+                    && kind != "meeting"
+                    && kind != "task" =>
             {
                 if value.diff(&txn, |_| ()).iter().any(|c| {
                     !matches!(&c.insert, Out::Any(Any::String(_)))
@@ -827,7 +851,7 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                 property_edits: None,
             }),
             resource: (is_resource_block_type(&kind)
-                || matches!(kind.as_str(), "divider" | "formula" | "meeting"))
+                || matches!(kind.as_str(), "divider" | "formula" | "meeting" | "task"))
             .then(|| CollabResource {
                 properties: resource_properties(&kind, &props, &txn),
                 property_edits: None,
@@ -880,6 +904,7 @@ fn formal_type(kind: &str) -> Option<(&str, bool)> {
         "divider" => ("divider", true),
         "formula" => ("formula", true),
         "meeting" => ("meeting", true),
+        "task" => ("task", true),
         "attachment" => ("attachment", true),
         "audio" => ("audio", true),
         "bookmark" => ("bookmark", true),
@@ -961,12 +986,15 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
         } else {
             previous.get(block.id.as_str()).copied()
         };
-        if block.block_type == "meeting" && block.resource.is_none() {
-            return Err("INVALID_RESOURCE: 会议引用缺少属性".into());
+        if matches!(block.block_type.as_str(), "meeting" | "task") && block.resource.is_none() {
+            return Err("INVALID_RESOURCE: 实体卡片引用缺少属性".into());
         }
         if let Some(resource) = &block.resource {
             if !is_resource_block_type(&block.block_type)
-                && !matches!(block.block_type.as_str(), "divider" | "formula" | "meeting")
+                && !matches!(
+                    block.block_type.as_str(),
+                    "divider" | "formula" | "meeting" | "task"
+                )
             {
                 return Err("INVALID_RESOURCE: 资源属性与块类型不符".into());
             }
@@ -1286,7 +1314,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
                     ArrayPrelim::from(Vec::<String>::new()),
                 );
             }
-            if !matches!(flavour, "divider" | "formula" | "meeting")
+            if !matches!(flavour, "divider" | "formula" | "meeting" | "task")
                 && ((!is_resource_block_type(flavour)
                     && old.is_none_or(|b| b.text != next.text || b.block_type != next.block_type))
                     || (is_resource_block_type(flavour)
@@ -4099,6 +4127,155 @@ mod tests {
                     .contains("READ_ONLY_BLOCK"));
             }
         }
+    }
+
+    /// 行内提及转换遵循桌面拆分结构；前后对象原始属性跨增量保留，撤销和重做收敛。
+    #[test]
+    fn mention_card_split_preserves_neighbor_atoms_and_converges() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-entity-mention.update");
+        for kind in ["meeting", "task"] {
+            let mut phone = engine(fixture);
+            let mut peer = engine(fixture);
+            let before = phone.blocks();
+            let source = &before[0];
+            let index = source
+                .segments
+                .iter()
+                .position(|s| s.mention_type.as_deref() == Some(kind))
+                .unwrap();
+            let atom = &source.segments[index];
+            let mut desired = before.clone();
+            desired[0].segments.truncate(index);
+            desired[0].text = desired[0]
+                .segments
+                .iter()
+                .map(|s| s.text.as_str())
+                .collect();
+            let mut card = source.clone();
+            card.id = format!("converted-{kind}");
+            card.block_type = kind.into();
+            card.text.clear();
+            card.segments.clear();
+            let id_key = if kind == "meeting" {
+                "meetingId"
+            } else {
+                "taskId"
+            };
+            let mut props = serde_json::Map::new();
+            props.insert(id_key.into(), atom.mention_id.clone().unwrap().into());
+            props.insert("title".into(), atom.inline_mention.clone().unwrap().into());
+            card.resource = Some(CollabResource {
+                properties: serde_json::Value::Object(props).to_string(),
+                property_edits: None,
+            });
+            let mut tail = source.clone();
+            tail.id = "split-tail".into();
+            tail.segments = source.segments[index + 1..].to_vec();
+            tail.text = tail.segments.iter().map(|s| s.text.as_str()).collect();
+            desired.insert(1, card);
+            desired.insert(2, tail);
+            let a = phone
+                .apply_block_snapshot(desired.clone())
+                .unwrap()
+                .v1_update;
+            peer.apply_cses_update(a).unwrap();
+            assert_eq!(phone.blocks(), peer.blocks());
+            assert_eq!(phone.blocks()[2].segments, source.segments[index + 1..]);
+            let undo = phone
+                .apply_block_snapshot(before.clone())
+                .unwrap()
+                .v1_update;
+            peer.apply_cses_update(undo).unwrap();
+            assert_eq!(phone.blocks(), before);
+            assert_eq!(phone.blocks(), peer.blocks());
+            let redo = phone.apply_block_snapshot(desired).unwrap().v1_update;
+            peer.apply_cses_update(redo).unwrap();
+            assert_eq!(phone.blocks(), peer.blocks());
+            assert_eq!(phone.blocks()[1].block_type, kind);
+        }
+    }
+
+    /// 任务正式void结构和原生属性保留；并发标题更新与新增卡片增量收敛，非法写入原子拒绝。
+    #[test]
+    fn task_cards_preserve_properties_validate_and_converge() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-task-card.update");
+        let mut phone = engine(fixture);
+        let mut peer = engine(fixture);
+        let before = phone.blocks();
+        assert!(project(&phone.doc, "fixture-doc").reason.is_none());
+        assert_eq!(before.iter().filter(|b| b.block_type == "task").count(), 1);
+        assert!(before
+            .iter()
+            .filter(|b| b.id == "task-invalid" || b.id == "task-bad-children")
+            .all(|b| b.block_type == UNSUPPORTED_BLOCK_TYPE));
+        let original = before.iter().find(|b| b.id == "task-card").unwrap().clone();
+        let mut desired = before.clone();
+        let mut card = original.clone();
+        card.id = "new-task-card".into();
+        card.resource.as_mut().unwrap().properties =
+            r#"{"taskId":"new-id","title":"新引用"}"#.into();
+        desired.push(card);
+        let a = phone.apply_block_snapshot(desired).unwrap().v1_update;
+        let mut remote = before.clone();
+        remote
+            .iter_mut()
+            .find(|b| b.id == "task-card")
+            .unwrap()
+            .resource
+            .as_mut()
+            .unwrap()
+            .property_edits = Some(r#"{"title":{"value":"桌面标题"}}"#.into());
+        let b = peer.apply_block_snapshot(remote).unwrap().v1_update;
+        phone.apply_cses_update(b).unwrap();
+        peer.apply_cses_update(a).unwrap();
+        assert_eq!(phone.blocks(), peer.blocks());
+        let mut stale = phone.blocks();
+        *stale.iter_mut().find(|b| b.id == "task-card").unwrap() = original;
+        phone.apply_block_snapshot(stale).unwrap();
+        let txn = phone.doc.transact();
+        let blocks = txn.get_map(ROOT_NAME).unwrap();
+        let card = map(&blocks, &txn, "task-card").unwrap();
+        let props = map(&card, &txn, "props").unwrap();
+        assert_eq!(
+            out_string(props.get(&txn, "title")).as_deref(),
+            Some("桌面标题")
+        );
+        assert!(props.contains_key(&txn, "customTask") && props.contains_key(&txn, "priority"));
+        assert!(!props.contains_key(&txn, "url") && !props.contains_key(&txn, "src"));
+        let new_card = map(&blocks, &txn, "new-task-card").unwrap();
+        assert!(matches!(
+            new_card.get(&txn, "children"),
+            Some(Out::YArray(_))
+        ));
+        assert_eq!(
+            out_string(new_card.get(&txn, "nodeType")).as_deref(),
+            Some("void")
+        );
+        drop(txn);
+        for patch in [
+            r#"{"taskId":{"value":""}}"#,
+            r#"{"taskId":{}}"#,
+            r#"{"url":{"value":"https://example.test"}}"#,
+            r#"{"title":{"value":5}}"#,
+        ] {
+            let before = phone.blocks();
+            let mut invalid = before.clone();
+            invalid
+                .iter_mut()
+                .find(|b| b.id == "task-card")
+                .unwrap()
+                .resource
+                .as_mut()
+                .unwrap()
+                .property_edits = Some(patch.into());
+            assert!(phone.apply_block_snapshot(invalid).is_err());
+            assert_eq!(phone.blocks(), before);
+        }
+        let txn = phone.doc.transact();
+        let update = txn.encode_state_as_update_v1(&StateVector::default());
+        drop(txn);
+        let restored = engine(&update);
+        assert_eq!(phone.blocks(), restored.blocks());
     }
 
     /// 会议引用的正式结构、精确补丁、并发与未知数据保护。

@@ -1,3 +1,4 @@
+import 'collab_task_card_data.dart';
 import 'collab_meeting_card_data.dart';
 import 'collab_meeting_reference.dart';
 import 'dart:async';
@@ -32,10 +33,11 @@ class CollabHostServices {
   /// [mediaUpload] is borrowed and must use the host's current authentication.
   /// [mentionAvatarBuilder] 由宿主构建头像；null仅显示姓名，无默认头像或图片请求。
   /// [pickMentionUser] 由宿主打开单选人员界面；null禁用选人，已有提及不受影响。
-  /// [onMentionTap] 接收四类提及点击；用户未配置时不响应，其他实体保留默认面板。
-  /// 配置后等待宿主详情关闭再恢复输入，包不创建用户资料界面。
+  /// [onMentionTap] 接收用户直接点击、其他提及面板的打开详情及任务卡片详情；切换卡片不调用。
+  /// 等待宿主详情关闭；行内提及恢复原输入，卡片不恢复正文键盘，包不创建用户资料界面。
   /// [pickMeetingReference] 由宿主选择或创建业务会议后返回引用；null时不提供新增入口。
   /// [loadMeetingCard] 加载会议本地详情及状态，null展示引用和未知状态，资源由宿主持有。
+  /// [loadTaskCard] 加载任务本地详情，null仅展示共享标题；不拥有宿主网络资源。
   /// [onMeetingCardTap] 由卡片加入/查看按钮打开会议；null禁用该按钮，仍可删除引用。
   /// [documentMetadata] 提供正式头部的业务读写；草稿不使用该端口。
   const CollabHostServices({
@@ -48,12 +50,17 @@ class CollabHostServices {
     this.onMentionTap,
     this.onMeetingCardTap,
     this.loadMeetingCard,
+    this.loadTaskCard,
     this.pickMeetingReference,
   });
 
   /// 借用宿主会议引用流程；宿主持有表单、选择/创建会议页面及业务资源。
   /// null不提供新增会议入口；包不构建默认会议表单，不创建业务会议。
   final CollabMeetingReferencePicker? pickMeetingReference;
+
+  /// 可选任务卡片详情，业务标题/标签/人员/时间/统计仅本地展示。
+  /// null保留共享标题且隐藏未知数据；明确缺失/失败禁用详情，失败可重试。
+  final CollabTaskCardLoader? loadTaskCard;
 
   /// 可选会议详情加载器；宿主持有认证和请求，包只借用，不写协同文档。
   /// null展示共享引用及未知状态；不存在/失败禁用主按钮，失败可重试。
@@ -66,10 +73,11 @@ class CollabHostServices {
   onMeetingCardTap;
 
   /// 可选统一提及点击处理，宿主持有其路由/业务资源；预览可调用，异常由编辑器报告。
-  /// 用户未配置时不响应；会议/任务/文档未配置时保留实体信息面板，不改变正文。
+  /// 用户未配置时不响应；其他提及点击先显示操作面板，只有打开详情调用此回调。
+  /// null禁用详情操作，编辑时仍可切换卡片或删除引用；任务卡片详情传共享引用props。
   final CollabMentionTapCallback? onMentionTap;
 
-  /// 可选宿主头像构建器，用于正文用户提及；null只显示姓名。
+  /// 可选宿主头像构建器，用于正文用户提及和任务负责人；null正文只显示姓名，任务隐藏头像组。
   /// 头像加载、缓存和占位由宿主负责，编辑器只约束尺寸，不写正文。
   final CollabMentionAvatarBuilder? mentionAvatarBuilder;
 

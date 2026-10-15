@@ -5,7 +5,7 @@ import 'package:cses_document_collab/src/native/frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// 真实 FRB 与 SQLite 恢复回归；缺少宿主库直接失败，不将跳过当作通过。
+/// 会议/任务引用的真实FRB与SQLite恢复回归；缺库直接失败，不将跳过当作通过。
 void main() {
   setUpAll(() async {
     final library = File(
@@ -22,6 +22,66 @@ void main() {
       externalLibrary: ExternalLibrary.open(library.absolute.path),
     );
   });
+  test(
+    'desktop task card crosses FRB and SQLite reopen without becoming a text block',
+    () async {
+      final dir = await Directory.systemTemp.createTemp('task-card-frb-');
+      try {
+        final database = '${dir.path}/updates.sqlite';
+        native.openCsesDocument(
+          documentId: 'fixture-doc',
+          cacheDocumentId: 'task-cache',
+          databasePath: database,
+        );
+        native.applyDocumentUpdate(
+          bytes: await File(
+            'rust/tests/fixtures/blockcraft-task-card.update',
+          ).readAsBytes(),
+        );
+        expect(native.documentReadOnlyReason(), isNull);
+        final original = native.currentBlocks().firstWhere(
+          (b) => b.id == 'task-card',
+        );
+        expect(original.blockType, 'task');
+        expect(original.resource!.properties, contains('task-fixture'));
+        expect(original.text, isEmpty);
+        expect(original.segments, isEmpty);
+        final before = native.currentBlocks();
+        final index = before.indexWhere((b) => b.id == 'task-card');
+        before[index] = native.CollabBlock(
+          id: original.id,
+          blockType: original.blockType,
+          text: '',
+          checked: false,
+          alignment: original.alignment,
+          indent: 0,
+          segments: [],
+          resource: native.CollabResource(
+            properties: original.resource!.properties,
+            propertyEdits: '{"title":{"value":"手机任务标题"}}',
+          ),
+        );
+        expect(native.applyBlockSnapshot(blocks: before).v1Update, isNotEmpty);
+        native.closeDocument();
+        final reopened = native.openCsesDocument(
+          documentId: 'fixture-doc',
+          cacheDocumentId: 'task-cache',
+          databasePath: database,
+        );
+        final card = reopened.blocks.firstWhere((b) => b.id == 'task-card');
+        expect(card.blockType, 'task');
+        expect(card.resource!.properties, contains('手机任务标题'));
+        expect(card.text, isEmpty);
+        expect(
+          reopened.blocks.where((b) => b.id == 'task-invalid').single.blockType,
+          'unsupported',
+        );
+      } finally {
+        native.closeDocument();
+        await dir.delete(recursive: true);
+      }
+    },
+  );
   test(
     'desktop meeting props cross FRB, field edits and SQLite reopen',
     () async {

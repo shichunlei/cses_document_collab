@@ -251,3 +251,14 @@ fixture('blockcraft-meeting', (_, m) => {
   m.set('meeting-callout', block('meeting-callout', 'callout', 'block', ['nested-meeting']));
   m.set('nested-meeting', block('nested-meeting', 'meeting', 'void', [], { meetingId: 'nested', title: null, number: null }));
 });
+
+// 正式TaskCardBlockSchema：合法引用、未知扩展及损坏身份/结构。
+fixture('blockcraft-task-card', (_, m) => {
+  m.get('fixture-doc').get('children').push(['task-card', 'task-invalid', 'task-bad-children']);
+  m.set('task-card', block('task-card', 'task', 'void', [], {
+    taskId: 'task-fixture', title: '任务卡片😀', priority: { name: '高' }, customTask: { keep: true },
+  }));
+  m.set('task-invalid', block('task-invalid', 'task', 'void', [], {}));
+  m.set('task-bad-children', block('task-bad-children', 'task', 'block', ['task-child'], {taskId: 'bad'}));
+  m.set('task-child', block('task-child', 'paragraph', 'editable', [{insert: '保留'}]));
+});

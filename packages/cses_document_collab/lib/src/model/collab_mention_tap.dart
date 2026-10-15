@@ -31,7 +31,8 @@ enum CollabMentionType {
 /// ```
 final class CollabMentionTap {
   /// [type] 为实体类型，[id] 为非空稳定身份，[name] 为共享正文原名，可为空。
-  /// [attributes] 是原始Y.Text属性（含历史d:键和扩展），不含移动端私有投影键。
+  /// [attributes] 对行内提及为原始Y.Text属性（含历史d:键和扩展），任务卡片为共享taskId/title引用props。
+  /// 不含移动端私有投影键，不从业务详情接口拼装。
   /// 属性仅允许JSON值；空ID、非字符串Map键或非JSON值抛ArgumentError。
   /// 构造时深复制并冻结属性，不持有调用方可变集合。
   CollabMentionTap({

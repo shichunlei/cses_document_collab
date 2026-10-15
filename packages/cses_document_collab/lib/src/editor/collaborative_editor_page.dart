@@ -1,3 +1,5 @@
+import 'collab_task_card_block.dart';
+import 'package:cses_document_collab/src/model/collab_task_card.dart';
 import 'package:cses_document_collab/src/editor/collab_meeting_block.dart';
 import 'package:cses_document_collab/src/model/collab_meeting.dart';
 import 'collab_inline_entity_mention.dart';
@@ -302,7 +304,7 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
   }
 }
 
-/// 正式协同块的渲染器工厂；分割线与公式保持无正文结构，未知块使用保护占位。
+/// 正式协同块的渲染器工厂；分割线、公式、会议/任务卡片保持无正文结构，未知块使用保护占位。
 final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders =
     {
       ...standardBlockComponentBuilderMap,
@@ -348,6 +350,7 @@ final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders =
       collabDividerType: CollabDividerBlockComponentBuilder(),
       collabFormulaType: CollabFormulaBlockComponentBuilder(),
       collabMeetingType: CollabMeetingBlockComponentBuilder(),
+      collabTaskCardType: CollabTaskCardBlockComponentBuilder(),
       csesCodeBlockType: CollabCodeBlockComponentBuilder(),
       csesCalloutBlockType: CollabCalloutBlockComponentBuilder(),
       csesUnsupportedBlockType: CollabUnsupportedBlockComponentBuilder(),

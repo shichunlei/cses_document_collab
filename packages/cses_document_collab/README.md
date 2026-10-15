@@ -143,16 +143,16 @@ Demo在`lib/src/demo/mention_avatar.dart`实现公共头像地址、圆形裁切
 
 ## 会议、任务和文档提及（普通正文）
 
-正式 `{mention: name}` 配合 `mentionType=meeting/task/doc` 和稳定 `mentionId`（兼容历史 `d:` 前缀），在段落、标题、列表、引用及高亮正文中显示类型图标+名称，不附加@，不再降级为只读占位。每个对象仍占一个UTF-16位置；普通文字、用户头像和公式可混排。点击可查看共享名称/ID并删除提及，预览禁止删除；独立撤销/重做恢复原始实体属性。姓名最长20000 UTF-16单元，ID最长512 UTF-8字节，非用户实体属性JSON最大65536字节。
+正式 `{mention: name}` 配合 `mentionType=meeting/task/doc` 和稳定 `mentionId`（兼容历史 `d:` 前缀），在段落、标题、列表、引用及高亮正文中显示类型图标+名称，不附加@，不再降级为只读占位。每个对象仍占一个UTF-16位置；普通文字、用户头像和公式可混排。点击先打开操作面板，明确选择“打开会议/任务/文档详情”才调用`onMentionTap`；未注入时详情禁用。另提供“切换为卡片视图”和删除提及，预览禁止转换与删除；独立撤销/重做恢复原始实体属性。姓名最长20000 UTF-16单元，ID最长512 UTF-8字节，非用户实体属性JSON最大65536字节。
 
-原始编号、状态、文档类型、任务扩展等属性完整保留，嵌套对象的JSON排序稳定；属性快照仅供删除后恢复，普通编辑不回放陈旧业务状态。远端类型、身份、属性或同段正文变化使过期操作失效。新增搜索仍是人员入口，尚无会议/任务/文档选择器、业务详情跳转或业务实体修改；这三类提及保持部分支持，不代表对应会议/任务卡片块已适配。代码块和图片题注、未知实体与localDraft继续遵循保护边界。验证与真机联调记录见仓库 `docs/block-adaptation.md`。
+原始编号、状态、文档类型、任务扩展等属性完整保留，嵌套对象的JSON排序稳定；属性快照仅供删除后恢复，普通编辑不回放陈旧业务状态。远端类型、身份、属性或同段正文变化使过期操作失效。新增搜索仍是人员入口，尚无会议/任务/文档提及搜索选择器或业务实体修改；业务详情导航由宿主实现；这三类提及保持部分支持，会议/任务引用卡片另为部分支持。代码块和图片题注、未知实体与localDraft继续遵循保护边界。验证与真机联调记录见仓库 `docs/block-adaptation.md`。
 
 
 ## 宿主统一提及点击回调
 
 通过公开入口的 `CollabHostServices.onMentionTap` 接管用户、会议、任务、文档点击。参数 `CollabMentionTap` 包含 `type`（`CollabMentionType.user/meeting/task/doc`）、`id`、`name` 和 `attributes`。名称是共享正文原名，空名称仍为空；属性来自Y.Text，保留历史d:键、格式及未知扩展，不从人员/实体详情接口拼装，不包含移动编辑器的cses私有属性。所有嵌套Map/List均深复制且只读，宿主可独立保留事件。`mention.toJson()`返回`type/id/name/attributes`，其中`type`为`user/meeting/task/doc`字符串，可直接`jsonEncode(mention)`；每次返回独立顶层Map，内部属性沿用只读快照。
 
-用户提及仅在配置回调时响应点击，编辑包不提供用户资料面板；未配置时不处理点击，也不暂停输入或恢复光标。会议/任务/文档未配置回调时继续使用实体信息面板；配置后点击由宿主接管，不同时打开内置面板，预览也允许导航。支持同步或异步处理；导航应返回直到详情退场完成的Future。回调期间暂停正文输入并忽略同编辑器的重复点击，完成后仅向仍有效的原页面恢复焦点。同步/异步异常向原宿主onError报告并在有效页面提示，不补开默认面板；已关闭或被新会话替代的编辑器不恢复键盘。宿主仍负责业务鉴权、跨账号异步失效、路由和外部资源生命周期。
+用户提及仅在配置回调时响应点击，编辑包不提供用户资料面板；未配置时不处理点击，也不暂停输入或恢复光标。会议/任务/文档始终先打开操作面板，“打开详情”才调用宿主；未配置回调时该操作禁用。预览也可通过打开详情导航，切换卡片和删除禁用。任务卡片的详情按钮复用该回调，attributes为已投影的taskId/title引用props。支持同步或异步处理；导航应返回直到详情退场完成的Future。回调期间暂停正文输入并忽略同编辑器的重复点击，完成后仅向仍有效的原页面恢复焦点。同步/异步异常向原宿主onError报告并在有效页面提示，不补开默认面板；已关闭或被新会话替代的编辑器不恢复键盘。宿主仍负责业务鉴权、跨账号异步失效、路由和外部资源生命周期。
 
 下面的函数返回可注入控制器的services，navigatorKey由宿主持有并传给MaterialApp；将示例builder替换为四类业务详情即可：
 
@@ -236,3 +236,50 @@ Rust内部映射复用现有属性桥接载体，没有FRB签名/ABI变化，不
 历史整卡点击、直接删除与键盘抑制验证见`docs/verification/meeting-card-actions-20261015.json`；当前状态配色、按钮点击及底部删除布局已取代整卡点击，验证见根仓库`docs/verification/meeting-card-status-20261015.json`。
 
 主按钮仅回调宿主、执行前后不新增详情请求的后续验证见`docs/verification/meeting-card-callback-only-20261015.json`。
+
+
+## 提及操作与卡片视图
+
+用户提及保持头像+姓名并直接通知宿主。其他三类点击先显示底部操作面板：打开详情、切换为卡片视图、删除提及。关闭面板不派发事件；只有打开详情调用`onMentionTap`，携带该原子的原始属性。切换、删除均只处理文档引用，不调用详情接口或宿主点击回调。面板期间暂停正文输入，等待退场动画后执行；操作前复核稳定身份、原子属性、正文及宿主会话，预览禁用转换/删除。
+
+会议/任务转换使用桌面正式`meeting`/`task` void块。原段落保留前文，卡片插在它后面，后文拆成新段落，富文本、相邻提及和公式继续保留。支持根与高亮容器内普通正文；空前文仍保留原块，与桌面一致。转换是一项独立撤销记录，撤销/重做跟随稳定源块位置；远端修改前文、卡片或拆出后文后旧转换历史整体拒绝，避免覆盖协同内容。会议引用标题沿用2000 UTF-16上限，超限转换被拒绝，原提及仍保留；任务标题上限20000。转换不复制提及业务状态到卡片，保留身份与标题；撤销恢复原提及完整属性。
+
+任务卡片按下方详情端口展示业务快照或共享标题，右上展开图标调用`onMentionTap(type=task,id=taskId,name=title,attributes={taskId,title})`，删除位于右上更多菜单，仅移除引用，支持撤销/重做和后置段落行首退格。未知原生任务props保留；删除卡片后撤销仅恢复已投影字段，不能保证未知props/meta。损坏引用/非void结构继续受保护。会议卡片沿用状态加载与`onMeetingCardTap`主按钮，转换本身不调用任何点击回调；详情加载仍仅由卡片展示生命周期触发。
+
+文档按当前桌面能力仅实现手机局部卡片样式：图标+类型+名称，可在同一面板切回链接视图，不拆块、不写Y.Text、不新增历史，也不派发回调。桌面和其他设备继续显示文档链接；偏好仅在当前提及组件有效期间保留，重新打开文档或正文/原子变化后恢复链接。文档提及的原始dc_t/ac_t与未知属性完全不变。未新增桌面文档卡片flavour。
+
+本轮验证与限制见根仓库`docs/verification/entity-mention-card-actions-20261015.json`；尚未进行真机安装与真实桌面同步验收。
+
+
+## 任务卡片详情与布局
+
+正式task引用的共享字段仍只有taskId/title。通过可选的`CollabHostServices.loadTaskCard`提供`CollabTaskCardData`本地展示快照，包不直接请求业务接口，不将详情写入Y.Text或共享props。
+
+卡片按桌面样式使用白底细边：左上任务图标和优先级，右上负责人头像及展开/更多图标，中间标题和只读状态、起止时间，下方以分割线展示进度，再显示空间/项目/工作项路径和附件/子任务数。色板与桌面一致；长标题最多两行，路径单行省略，窄屏和大字号时间可换行。计数大于999时显示999+，语义保留原值。
+
+`leaders`复用`CollabMentionUser`与宿主`mentionAvatarBuilder`，最多展示3位及其余人数；包不创建默认头像或请求图片，无头像构建器时隐藏头像组。时间按设备本地时区显示MM-dd HH:mm；progress为0～100百分数，已知0%仍在轨道起点显示圆点，null只显示灰色轨道。未提供标签、时间、路径或计数时隐藏对应信息，不伪造“一般/待开始/0”。
+
+只有右上展开图标调用`onMentionTap`，传type=task、共享taskId/title及原始投影引用props；卡片背景、标题、标签、路径和统计不触发导航，状态仅展示。业务详情标题只覆盖本地外观，回调name仍为共享标题。打开详情成功/失败均不额外调用加载器，完成后不恢复正文键盘。编辑时更多菜单提供“删除卡片”，只删除文档引用；预览隐藏更多菜单但保留详情入口。菜单捕获打开时的引用属性与宿主，远端改换引用、撤权或换会话后旧菜单不能删除新引用。
+
+```dart
+import 'package:cses_document_collab/cses_document_collab.dart';
+
+final services = CollabHostServices(
+  loadTaskCard: (taskId) async => CollabTaskCardData(
+    taskId: taskId, title: '测试状态111–111',
+    priority: const CollabTaskCardTag(name: '一般', color: '#59B463'),
+    status: const CollabTaskCardTag(name: '待开始', color: '#E6E6E6'),
+    progress: 0, fileCount: 0, subTaskCount: 0,
+  ),
+  onMentionTap: (mention) async {
+    // 使用mention.id和type打开宿主页面，并等待页面完全退场。
+  },
+);
+// 将services注入宿主持有的CollabController；关闭时await controller.close()。
+```
+
+加载器只在卡片挂载、任务ID/宿主变化或失败手动重试时执行；普通重建和详情回调复用当前快照。返回null表示任务不存在，data.deleted=true表示删除，异常显示重试并报告原宿主；加载中、失败、缺失/删除禁用详情，仍允许移除引用。换ID/宿主、关闭组件后迟到响应或错误被忽略，包不取消或关闭宿主持有的网络资源。
+
+Demo的`CsesTaskCardService`复用Common POST `/taskManage/task/detail`，参数`{queryType:'detail',tableName:'task_v3',id}`，解析item中的priority/status/leaders[].user、startTime/endTime毫秒、progress、space/project/workItem及fileCount/subCount。请求前后检查账号、企业及会话；进度沿用桌面归一规则，限制0～100并保留两位小数。无详情端口只显示共享引用，不做隐藏的默认网络请求。尚无实时详情推送、任务状态流转编辑或内置业务路由，仍为部分支持。
+
+验证与预览见根仓库`docs/verification/task-card-layout-20261015.json`。HONOR X70/Android16已安装并完成PRE真实任务卡片展示、编辑/预览详情回调、键盘抑制和删除/撤销/重做；最终任务引用及其他正文恢复，但删除撤销会重建审计meta并补默认depth=0。详情由Demo Toast确认，实际业务路由、本轮真实桌面同步联调和iOS未验收，见`docs/verification/task-card-phone-20261015.json`。

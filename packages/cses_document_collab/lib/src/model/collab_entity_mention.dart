@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
+import 'package:cses_document_collab/src/model/collab_meeting.dart';
+import 'package:cses_document_collab/src/model/collab_resource.dart';
+import 'package:cses_document_collab/src/model/collab_task_card.dart';
 import 'package:cses_document_collab/src/model/collab_user_mention.dart';
 
 /// 实体原子操作的稳定身份，连同原始属性检测远端变化；不持有编辑器资源。
@@ -106,4 +109,142 @@ Future<bool> deleteCollabEntityMention(
     Delta(),
   );
   return true;
+}
+
+/// 将借用[state]中的稳定[target]转换为正式会议/任务卡片，不调用宿主详情回调。
+/// 与桌面相同，原块保留前文，卡片插在原块之后，后文拆为新段落并保留其格式和对象。
+/// 仅根/高亮内的正文支持；关闭、只读、目标变化或引用超限返回false，事务异常透传。
+/// 转换作为单独一项历史提交，不创建或更改业务实体；焦点由调用方管理。
+Future<bool> convertCollabEntityMentionToCard(
+  EditorState state,
+  CollabEntityMentionTarget target,
+) async {
+  if (state.isDisposed || !state.editable) return false;
+  final source = target.resolve(state);
+  if (source == null ||
+      source.children.isNotEmpty ||
+      !const {'page', 'callout'}.contains(source.parent?.type)) {
+    return false;
+  }
+  final properties = <String, dynamic>{
+    if (target.entityType == 'meeting') 'meetingId': target.entityId,
+    if (target.entityType == 'task') 'taskId': target.entityId,
+    'title': target.name,
+  };
+  final resource = CollabResource.fromValues(properties);
+  final Map<String, dynamic> attributes;
+  if (target.entityType == 'meeting' && CollabMeeting.valid(properties)) {
+    attributes = CollabMeeting.nodeAttributes(resource);
+  } else if (target.entityType == 'task' && CollabTaskCard.valid(properties)) {
+    attributes = {collabResourceAttribute: resource.toJson()};
+  } else {
+    return false;
+  }
+  final card = Node(type: target.entityType, attributes: attributes);
+  card.updateAttributes({'cses_collab_block_id': card.id});
+  final delta = source.delta!;
+  final tail = delta.slice(target.offset + 1);
+  final tailNode = tail.isNotEmpty ? paragraphNode(delta: tail) : null;
+  tailNode?.updateAttributes({'cses_collab_block_id': tailNode.id});
+  final transaction = state.transaction
+    ..deleteText(source, target.offset, delta.length - target.offset)
+    ..insertNodes(source.path.next, [card, ?tailNode], deepCopy: false);
+  final command = <String, dynamic>{
+    'sourceId': target.blockId,
+    'sourceType': source.type,
+    'before': delta.toJson(),
+    'after': delta.slice(0, target.offset).toJson(),
+    'cardId': card.id,
+    'cardType': card.type,
+    'properties': resource.properties,
+    'tailId': tailNode?.id,
+    'tail': tail.toJson(),
+  };
+  transaction.add(
+    UpdateOperation(
+      source.path,
+      {
+        collabMentionCardCommandAttribute: jsonEncode({
+          ...command,
+          'forward': true,
+        }),
+      },
+      {
+        collabMentionCardCommandAttribute: jsonEncode({
+          ...command,
+          'forward': false,
+        }),
+      },
+    ),
+  );
+  if (state.undoManager.undoStack.isNonEmpty) {
+    state.undoManager.undoStack.last.seal();
+  }
+  await state.apply(
+    transaction,
+    withUpdateSelection: false,
+    skipHistoryDebounce: true,
+  );
+  return true;
+}
+
+/// 转换历史的内存标记，不投影到原生共享属性。
+const collabMentionCardCommandAttribute = 'cses_mention_card_command';
+
+/// 在借用[state]中预检[transaction]的转换历史，按稳定源块身份重定位整组操作。
+/// 前文、卡片引用或拆出后文已改变时原子拒绝该历史，避免撤销吞掉协同编辑。
+/// 只处理包含转换标记的事务，不提交事务，也不修改共享模型。
+void resolveCollabMentionCardCommand(
+  EditorState state,
+  Transaction transaction,
+) {
+  final marker = transaction.operations
+      .whereType<UpdateOperation>()
+      .where((op) => op.attributes[collabMentionCardCommandAttribute] is String)
+      .firstOrNull;
+  if (marker == null) return;
+  final command =
+      jsonDecode(marker.attributes[collabMentionCardCommandAttribute] as String)
+          as Map;
+  final source = findCollabInlineTextNode(state, command['sourceId'] as String);
+  final forward = command['forward'] == true;
+  var valid =
+      !state.isDisposed &&
+      state.editable &&
+      source != null &&
+      source.type == command['sourceType'] &&
+      source.delta == Delta.fromJson(command[forward ? 'before' : 'after']);
+  if (valid && !forward) {
+    final card = source.next;
+    valid =
+        card != null &&
+        card.type == command['cardType'] &&
+        (card.attributes['cses_collab_block_id'] ?? card.id) ==
+            command['cardId'] &&
+        (card.type == collabMeetingType
+                    ? CollabMeeting.readAttributes(card.attributes)
+                    : CollabTaskCard.read(card.attributes))
+                .properties ==
+            command['properties'];
+    if (valid && command['tailId'] != null) {
+      final tail = card.next;
+      valid =
+          tail != null &&
+          tail.type == 'paragraph' &&
+          (tail.attributes['cses_collab_block_id'] ?? tail.id) ==
+              command['tailId'] &&
+          tail.delta == Delta.fromJson(command['tail']);
+    }
+  }
+  if (!valid) {
+    transaction.operations = [];
+    transaction.afterSelection = state.selection;
+    return;
+  }
+  final oldPath = marker.path;
+  final path = source!.path;
+  final shift = path.last - oldPath.last;
+  transaction.operations = transaction.operations
+      .map((op) => op.copyWith(path: [...path.parent, op.path.last + shift]))
+      .toList();
 }

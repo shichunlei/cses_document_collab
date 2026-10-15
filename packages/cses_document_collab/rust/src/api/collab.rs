@@ -1207,10 +1207,14 @@ fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(
         } else {
             ancestors.clear();
         }
-        if matches!(block.block_type.as_str(), "divider" | "formula" | "meeting")
-            && (!block.text.is_empty() || !block.segments.is_empty())
+        if matches!(
+            block.block_type.as_str(),
+            "divider" | "formula" | "meeting" | "task"
+        ) && (!block.text.is_empty() || !block.segments.is_empty())
         {
-            return Err(if block.block_type == "meeting" {
+            return Err(if block.block_type == "task" {
+                "INVALID_TASK: 任务卡片不能存储正文".into()
+            } else if block.block_type == "meeting" {
                 "INVALID_MEETING: 会议卡片不能存储正文".into()
             } else if block.block_type == "formula" {
                 "INVALID_FORMULA: 公式不能存储正文".into()
@@ -1336,6 +1340,7 @@ fn is_supported_block_type(block_type: &str) -> bool {
             | "divider"
             | "formula"
             | "meeting"
+            | "task"
             // URL-backed blocks reuse the existing per-block Y.Text payload:
             // their `text` contains the resource URL rather than editable
             // paragraph content. This preserves convergence without a schema
