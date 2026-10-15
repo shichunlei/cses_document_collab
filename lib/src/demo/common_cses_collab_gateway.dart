@@ -1,7 +1,6 @@
 import 'package:cses_common/network/websocket/cses_websocket_client.dart';
 import 'package:cses_common/network/websocket/models/socket_subscribe_header.dart';
 import 'package:cses_common/network/websocket/websocket_init_entry.dart';
-
 import 'package:cses_document_collab/cses_document_collab.dart';
 
 /// 使用 Common 原有接口连接 CSES，不创建物理 Socket，不修改 Common。

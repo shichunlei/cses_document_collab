@@ -1,6 +1,6 @@
-import 'package:flutter/foundation.dart';
-import 'package:cses_document_collab/src/model/document_metadata.dart';
 import 'package:cses_document_collab/src/model/collab_host_services.dart';
+import 'package:cses_document_collab/src/model/document_metadata.dart';
+import 'package:flutter/foundation.dart';
 
 /// 独立持有正式头部读写状态；只在业务ACK后更新，不改正文或正文历史。
 /// 借用宿主端口，合并并发刷新并隔离迟到响应；创建方关闭并等待已发出的业务请求。

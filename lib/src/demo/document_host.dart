@@ -15,8 +15,8 @@ import 'package:path_provider/path_provider.dart';
 
 import 'cses_document_metadata_service.dart';
 import 'cses_meeting_card_service.dart';
-import 'cses_task_card_service.dart';
 import 'cses_mention_directory.dart';
+import 'cses_task_card_service.dart';
 import 'meeting_reference_picker.dart';
 import 'mention_avatar.dart';
 import 'mention_picker.dart';

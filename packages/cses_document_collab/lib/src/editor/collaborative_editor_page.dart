@@ -1,40 +1,38 @@
-import 'package:flutter/foundation.dart';
-import 'markdown_import.dart';
-import 'collab_task_card_block.dart';
-import 'package:cses_document_collab/src/model/collab_task_card.dart';
-import 'package:cses_document_collab/src/editor/collab_meeting_block.dart';
-import 'package:cses_document_collab/src/model/collab_meeting.dart';
-import 'collab_inline_entity_mention.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
-import 'package:cses_document_collab/src/editor/collab_inline_mention.dart';
-import 'package:cses_document_collab/src/model/collab_user_mention.dart';
-import 'package:cses_document_collab/src/editor/collab_inline_formula.dart';
-import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
-import 'package:cses_document_collab/src/editor/collab_formula_block.dart';
-import 'package:cses_document_collab/src/model/collab_formula.dart';
-import 'package:cses_document_collab/src/editor/collab_divider_block.dart';
-import 'package:cses_document_collab/src/model/collab_divider.dart';
-import 'document_header.dart';
-
-import 'package:cses_document_collab/src/model/collab_resource.dart';
-import 'package:cses_document_collab/src/editor/collab_resource_block.dart';
-
-import 'package:cses_document_collab/src/editor/collab_unsupported_block.dart';
-
 import 'package:appflowy_editor/appflowy_editor.dart';
-import 'package:cses_document_collab/src/editor/collab_text_alignment.dart';
-import 'package:cses_document_collab/src/editor/collab_block_colors.dart';
-import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/controller/collab_controller.dart';
+import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
+import 'package:cses_document_collab/src/editor/collab_block_colors.dart';
 import 'package:cses_document_collab/src/editor/collab_block_delete.dart';
-import 'package:cses_document_collab/src/editor/collab_code_block.dart';
 import 'package:cses_document_collab/src/editor/collab_callout_block.dart';
-import 'package:cses_document_collab/src/model/collab_block_colors.dart';
+import 'package:cses_document_collab/src/editor/collab_code_block.dart';
+import 'package:cses_document_collab/src/editor/collab_divider_block.dart';
 import 'package:cses_document_collab/src/editor/collab_embed_block.dart';
+import 'package:cses_document_collab/src/editor/collab_formula_block.dart';
+import 'package:cses_document_collab/src/editor/collab_inline_formula.dart';
+import 'package:cses_document_collab/src/editor/collab_inline_mention.dart';
 import 'package:cses_document_collab/src/editor/collab_list_editing.dart';
+import 'package:cses_document_collab/src/editor/collab_meeting_block.dart';
 import 'package:cses_document_collab/src/editor/collab_ordered_marker.dart';
+import 'package:cses_document_collab/src/editor/collab_resource_block.dart';
+import 'package:cses_document_collab/src/editor/collab_text_alignment.dart';
+import 'package:cses_document_collab/src/editor/collab_unsupported_block.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
+import 'package:cses_document_collab/src/model/collab_block_colors.dart';
+import 'package:cses_document_collab/src/model/collab_divider.dart';
+import 'package:cses_document_collab/src/model/collab_formula.dart';
+import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
+import 'package:cses_document_collab/src/model/collab_meeting.dart';
+import 'package:cses_document_collab/src/model/collab_resource.dart';
+import 'package:cses_document_collab/src/model/collab_task_card.dart';
+import 'package:cses_document_collab/src/model/collab_user_mention.dart';
+import 'package:cses_document_collab/src/native/collab_runtime.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import 'collab_inline_entity_mention.dart';
+import 'collab_task_card_block.dart';
+import 'document_header.dart';
+import 'markdown_import.dart';
 
 /// A portable, full-screen collaborative editor.
 ///

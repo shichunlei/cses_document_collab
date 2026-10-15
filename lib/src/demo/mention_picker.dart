@@ -1,12 +1,13 @@
-import 'mention_avatar.dart';
-import 'package:flutter/scheduler.dart' show SchedulerPhase;
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:cses_common/observability/api/log.dart';
 import 'package:cses_document_collab/cses_document_collab.dart'
     show CollabMentionUser, CollabMentionDirectory;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart' show SchedulerPhase;
+
+import 'mention_avatar.dart';
 
 /// Demo宿主在借用 [context] 上选择人员；[directory] 提供当前企业查询。
 /// [canEdit] 为借用的权限信号，false禁止确认；本函数不访问编辑器内部状态。
