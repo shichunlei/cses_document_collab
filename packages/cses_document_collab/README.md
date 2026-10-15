@@ -283,3 +283,14 @@ final services = CollabHostServices(
 Demo的`CsesTaskCardService`复用Common POST `/taskManage/task/detail`，参数`{queryType:'detail',tableName:'task_v3',id}`，解析item中的priority/status/leaders[].user、startTime/endTime毫秒、progress、space/project/workItem及fileCount/subCount。请求前后检查账号、企业及会话；进度沿用桌面归一规则，限制0～100并保留两位小数。无详情端口只显示共享引用，不做隐藏的默认网络请求。尚无实时详情推送、任务状态流转编辑或内置业务路由，仍为部分支持。
 
 验证与预览见根仓库`docs/verification/task-card-layout-20261015.json`。HONOR X70/Android16已安装并完成PRE真实任务卡片展示、编辑/预览详情回调、键盘抑制和删除/撤销/重做；最终任务引用及其他正文恢复，但删除撤销会重建审计meta并补默认depth=0。详情由Demo Toast确认，实际业务路由、本轮真实桌面同步联调和iOS未验收，见`docs/verification/task-card-phone-20261015.json`。
+
+
+## Markdown 文件导入
+
+宿主向 `CollaborativeEditorPage(collab: controller, pickMarkdown: pickMarkdown)` 注入 `Future<String?> Function()` 文件选择器。返回已校验的 UTF-8 文本，取消返回 null，失败抛异常；不注入时隐藏导入入口。Demo 使用系统单文件选择器，只接受 `.md` / `.markdown`，上限 5 MiB，文件读取和解析在后台执行。
+
+编辑页右上角“导入 Markdown”说明范围后选择文件，内容以独立事务追加到文末，可整体撤销/重做，并沿现有协同及 SQLite 持久化链路发布。选择/解析期间禁止重复导入和正文输入；权限收回、控制器替换或退出页面后丢弃迟到结果。
+
+支持段落、H1～H6、加粗/斜体/删除线/行内代码/链接、两种列表、待办、0～6级列表缩进、引用、围栏代码及语言、分割线、独立 HTTP(S) 图片。每个有序列表保留起始编号。表格按行转为带 ` | ` 分隔的富文本；行内图片及非 HTTP(S) 图片保留 Markdown 地址文字，不读取或上传本地资源。HTML 按文本保留，公式语法按普通文本保留；不增加表格、HTML或公式导入能力。超过六级的列表缩进按六级显示。
+
+Android 真机验收（2026-10-15）：HONOR X70/Android16 从系统下载目录选择 `.md` 后成功追加15块；整批撤销/重做、说明页取消与系统选择器取消通过。实际手机 SQLite/WAL 回读核对原34块的ID、顺序和所检查投影保持，最终清理测试块且在线。见根仓库[验收记录](../../docs/verification/markdown-import-phone-20261015.json)；iOS、服务器持久化ACK和实际桌面双端观察尚未验收。

@@ -5,6 +5,8 @@ import 'package:cses_mobile_collab_demo/src/demo/document_host.dart';
 import 'package:cses_mobile_collab_demo/src/demo/cses_connection_panel.dart';
 import 'package:flutter/material.dart';
 
+import 'markdown_file_picker.dart';
+
 /// 登录后的文档入口，拥有编辑器控制器并装配 CSES 状态面板。
 class CollabDemoPage extends StatefulWidget {
   /// 创建文档状态页；控制器随此页生命周期创建与释放。
@@ -156,12 +158,15 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
     if (mounted) widget.onLogout?.call();
   }
 
-  /// 打开独立正文页，Future 在返回文档状态页时完成；控制器继续持有文档。
+  /// 打开独立正文页并注入宿主 Markdown 文件选择器；Future 在返回状态页时完成，控制器继续持有文档。
   Future<void> _openCollaborativeEditor() {
     FocusManager.instance.primaryFocus?.unfocus();
     return Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (context) => CollaborativeEditorPage(collab: _collab),
+        builder: (context) => CollaborativeEditorPage(
+          collab: _collab,
+          pickMarkdown: pickMarkdownFile,
+        ),
       ),
     );
   }

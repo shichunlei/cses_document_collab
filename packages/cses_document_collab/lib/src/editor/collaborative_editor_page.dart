@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import 'markdown_import.dart';
 import 'collab_task_card_block.dart';
 import 'package:cses_document_collab/src/model/collab_task_card.dart';
 import 'package:cses_document_collab/src/editor/collab_meeting_block.dart';
@@ -41,14 +43,22 @@ import 'package:flutter/material.dart';
 /// lifecycle is longer than this route.
 ///
 /// ```dart
-/// import 'package:cses_document_collab/src/controller/collab_controller.dart';
-/// import 'package:cses_document_collab/src/editor/collaborative_editor_page.dart';
+/// import 'package:cses_document_collab/cses_document_collab.dart';
 /// final controller = CollabController.localDraft(databasePath: '/host/updates.sqlite');
 /// final page = CollaborativeEditorPage(collab: controller);
 /// ```
 class CollaborativeEditorPage extends StatefulWidget {
-  /// 借用 [collab] 展示文档与能力，不创建或关闭其协同会话。
-  const CollaborativeEditorPage({super.key, required this.collab});
+  /// 借用 [collab] 展示文档；[key] 控制组件身份与状态复用。
+  /// [pickMarkdown] 由宿主选择并读取 UTF-8 Markdown；取消返回 null，失败抛出异常。
+  /// null 隐藏导入入口；页面不关闭宿主控制器，导入内容追加至文末。
+  const CollaborativeEditorPage({
+    super.key,
+    required this.collab,
+    this.pickMarkdown,
+  });
+
+  /// 可选宿主文件选择器；宿主持有文件资源，返回前应限制文件大小并校验编码。
+  final Future<String?> Function()? pickMarkdown;
 
   /// 宿主持有的协同控制器；锁和修订等只读约束由该控制器提供。
   final CollabController collab;
@@ -61,6 +71,9 @@ class CollaborativeEditorPage extends StatefulWidget {
 /// 页面持有用户预览选择，并与 Rust 模型能力共同决定编辑器是否允许修改。
 class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
   bool _isPreview = false;
+
+  /// 导入选择、解析与应用期间禁止重复操作和正文输入。
+  bool _importing = false;
 
   /// 当前借用的文档控制器，不拥有其资源。
   CollabController get collab => widget.collab;
@@ -76,9 +89,9 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
     _syncEditorMode();
   }
 
-  /// 根据控制器的当前能力同步输入状态；不连接网络或更改正文。
+  /// 根据控制器能力、预览与导入状态同步输入；不连接网络或更改正文。
   void _syncEditorMode() {
-    collab.editorState.editable = !_previewOnly;
+    collab.editorState.editable = !_previewOnly && !_importing;
     if (_previewOnly) {
       collab.editorState.service.keyboardService?.closeKeyboard();
     }
@@ -107,7 +120,7 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
 
   /// 切换用户预览选择；Rust 模型只读时拒绝进入编辑，预览会关闭键盘并清除选区。
   void _toggleMode() {
-    if (!collab.canEdit) return;
+    if (!collab.canEdit || _importing) return;
     final nextPreview = !_isPreview;
     final editorState = collab.editorState;
     if (nextPreview) {
@@ -150,6 +163,94 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
     return true;
   }
 
+  /// 选择文件后在后台解析，返回当前文档且仍有编辑权限时以单个事务追加。
+  /// 取消或失败不写正文；迟到结果不写入已关闭或被替换的文档。
+  Future<void> _importMarkdown() async {
+    final owner = collab;
+    final picker = widget.pickMarkdown;
+    if (_importing || _previewOnly || !owner.initialized || picker == null) {
+      return;
+    }
+    final state = owner.editorState;
+    final services = CollabRuntime.services;
+    setState(() => _importing = true);
+    _syncEditorMode();
+    state.service.keyboardService?.closeKeyboard();
+    FocusManager.instance.primaryFocus?.unfocus();
+    try {
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('导入 Markdown'),
+          content: const Text(
+            '选择 UTF-8 编码的 .md 文件（最大 5 MB），内容将追加到文末，可撤销。表格转为文本行，独立网络图片转为图片块，其他图片保留地址；不上传本地资源。',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('取消'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('选择文件'),
+            ),
+          ],
+        ),
+      );
+      if (!mounted ||
+          !identical(owner, collab) ||
+          confirmed != true ||
+          _previewOnly) {
+        return;
+      }
+      final source = await picker();
+      if (source == null) return;
+      final json = await compute(decodeMarkdownImport, source);
+      if (!mounted ||
+          !identical(owner, collab) ||
+          !owner.canEdit ||
+          state.isDisposed) {
+        return;
+      }
+      final nodes = json
+          .map((value) => Node.fromJson(Map<String, Object>.from(value)))
+          .toList();
+      final index = state.document.root.children.length;
+      final transaction = state.transaction..insertNodes([index], nodes);
+      transaction.afterSelection = null;
+      // AppFlowy 对事务也检查 editable；只在提交时打开，页面交互仍由导入状态禁用。
+      state.editable = true;
+      if (state.undoManager.undoStack.isNonEmpty) {
+        state.undoManager.undoStack.last.seal();
+      }
+      await state.apply(transaction, skipHistoryDebounce: true);
+      if (owner.error != null) throw StateError(owner.error!);
+      if (mounted && identical(owner, collab)) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Markdown 已追加到文末')));
+      }
+    } catch (error, stack) {
+      services.report('Markdown 导入失败', error, stack, 'MarkdownImport');
+      if (mounted && identical(owner, collab)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              error is FormatException
+                  ? error.message.toString()
+                  : '导入失败，请重新选择文件',
+            ),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _importing = false);
+        _syncEditorMode();
+      }
+    }
+  }
+
   /// 使用 [context] 渲染当前模式和能力；网络和监听由控制器及页面生命周期管理。
   /// 在借用的 [context] 中按连接状态构建编辑页面；业务头部占用header槽，正文仍使用协同块树。
   /// 页面仅管理视图/输入监听，预览隐藏编辑入口，不拥有宿主业务服务。
@@ -173,21 +274,42 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
                   IconButton(
                     key: const ValueKey('editor-undo'),
                     tooltip: '撤销',
-                    onPressed: collab.editorState.undoManager.undo,
+                    onPressed: _importing
+                        ? null
+                        : collab.editorState.undoManager.undo,
                     icon: const Icon(Icons.undo),
                   ),
                   IconButton(
                     key: const ValueKey('editor-redo'),
                     tooltip: '重做',
-                    onPressed: collab.editorState.undoManager.redo,
+                    onPressed: _importing
+                        ? null
+                        : collab.editorState.undoManager.redo,
                     icon: const Icon(Icons.redo),
                   ),
                 ],
+                if (!_previewOnly && widget.pickMarkdown != null)
+                  IconButton(
+                    key: const ValueKey('editor-import-markdown'),
+                    tooltip: '导入 Markdown',
+                    onPressed: !_importing && collab.initialized
+                        ? _importMarkdown
+                        : null,
+                    icon: _importing
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.file_open_outlined),
+                  ),
                 Tooltip(
                   message: _previewOnly ? '进入编辑' : '进入预览',
                   child: TextButton.icon(
                     key: const ValueKey('editor-mode-toggle'),
-                    onPressed: collab.canEdit ? _toggleMode : null,
+                    onPressed: collab.canEdit && !_importing
+                        ? _toggleMode
+                        : null,
                     icon: Icon(
                       _previewOnly
                           ? Icons.edit_outlined
@@ -270,7 +392,7 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
                   editorState: collab.editorState,
                   preview: _isPreview,
                 ),
-          editable: !_previewOnly,
+          editable: !_previewOnly && !_importing,
           disableKeyboardService: _previewOnly,
           blockComponentBuilders: _collabBlockComponentBuilders,
           characterShortcutEvents: [

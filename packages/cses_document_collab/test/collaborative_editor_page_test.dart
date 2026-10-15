@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/controller/document_metadata_controller.dart';
 import 'package:cses_document_collab/src/model/document_metadata.dart';
@@ -23,6 +24,101 @@ void main() {
           ),
         );
   });
+
+  for (final scenario in [
+    'success',
+    'cancel',
+    'invalid',
+    'revoked',
+    'closed',
+  ]) {
+    testWidgets(
+      'Markdown import $scenario respects transaction and lifecycle',
+      (tester) async {
+        final changes = <List<CollabEditorBlock>>[];
+        final adapter = AppFlowyBlockEditorAdapter(
+          initialBlocks: const [
+            CollabEditorBlock(
+              id: 'original',
+              blockType: 'paragraph',
+              text: '原正文',
+            ),
+          ],
+          onLocalBlocksChanged: changes.add,
+        );
+        addTearDown(adapter.dispose);
+        final controller = _ReadyCollabController(
+          testEditorState: adapter.editorState,
+        );
+        addTearDown(controller.dispose);
+        final picked = Completer<String?>();
+        await tester.pumpWidget(
+          MaterialApp(
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              AppFlowyEditorLocalizations.delegate,
+            ],
+            home: CollaborativeEditorPage(
+              collab: controller,
+              pickMarkdown: () => picked.future,
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const ValueKey('editor-import-markdown')));
+        await tester.pump(const Duration(milliseconds: 300));
+        expect(find.textContaining('追加到文末'), findsOneWidget);
+        await tester.tap(find.text('选择文件'));
+        await tester.pump(const Duration(milliseconds: 300));
+        expect(adapter.editorState.editable, isFalse);
+        if (scenario == 'revoked') controller.setReadOnlyReason('权限收回');
+        if (scenario == 'closed') {
+          await tester.pumpWidget(const SizedBox.shrink());
+        }
+        picked.complete(
+          scenario == 'cancel'
+              ? null
+              : scenario == 'invalid'
+              ? ' '
+              : '# 导入标题\n\n**导入内容**',
+        );
+        // compute 使用真实 Isolate；离开测试的虚拟时钟等待其完成。
+        await tester.runAsync(() async {
+          for (var attempt = 0; attempt < 100; attempt++) {
+            await Future<void>.delayed(const Duration(milliseconds: 20));
+            if (scenario == 'closed' || scenario == 'revoked') {
+              if (attempt > 10) break;
+            } else if (adapter.editorState.editable) {
+              break;
+            }
+          }
+        });
+        await tester.pumpAndSettle();
+        if (scenario == 'success') {
+          expect(adapter.blocks.map((e) => e.text), [
+            '原正文',
+            '导入标题',
+            '导入内容',
+            '',
+          ]);
+          expect(changes.length, 1);
+          adapter.editorState.undoManager.undo();
+          await tester.pumpAndSettle();
+          expect(adapter.blocks.single.text, '原正文');
+          adapter.editorState.undoManager.redo();
+          await tester.pumpAndSettle();
+          expect(adapter.blocks.length, 4);
+        } else {
+          expect(adapter.blocks.single.text, '原正文');
+          expect(changes, isEmpty);
+        }
+        expect(tester.takeException(), isNull);
+        await tester.pumpWidget(const SizedBox.shrink());
+      },
+    );
+  }
 
   for (final source in [
     '',

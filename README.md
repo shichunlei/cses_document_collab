@@ -21,6 +21,7 @@
 - 代码块使用白底细边框和浅色标题栏，支持修改名称、搜索选择语言、折叠/展开、复制完整源码和语法高亮；`props.blockName` / `props.lang` / `props.collapse` 与桌面同步并支持逐字段撤销，预览折叠只影响本机，着色不写入 Y.Text
 - 高亮块兼容桌面 `callout` 容器；点击前方表情打开表情弹窗，可更换/移除、自定义表情；点击右侧设置打开独立颜色弹窗，可修改背景色和边框色。文字颜色使用键盘上方 Aa 菜单设置。支持逐项撤销和离线恢复，块内多段正文保持独立编辑和协同
 - AppBar 撤销/重做；远端 transaction 不进入本机 UndoManager
+- AppBar 导入 Markdown（UTF-8、`.md` / `.markdown`、最大 5 MiB），追加到文末并整体撤销；表格转文本行，独立网络图片转图片块，其他图片保留地址，不上传本地资源
 - AppFlowy transaction 与 Rust/Yrs 块级 Schema 适配层：离线草稿沿用 Demo 模型，CSES 文档使用正式 BlockCraft 模型
 - `paragraph`、`heading_1`～`heading_9`、`bulleted_list`、
   `numbered_list`、`todo_list`、`quote`、`code`、`callout`、`link`、`image`、`video`

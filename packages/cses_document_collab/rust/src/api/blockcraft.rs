@@ -919,6 +919,7 @@ fn formal_type(kind: &str) -> Option<(&str, bool)> {
 /// 未改动的块/属性/格式不重放；删除仅处理本次已投影的块，隐藏与孤立数据原样保留。
 /// 新身份类型替换只清理源类型专有的编号/勾选键，其他扩展属性继续克隆；恢复有序历史时
 /// 仅初始化经过白名单校验的原始编号设置和投影样式，派生 order 始终重新计算。
+/// 新插入的有序块从编号投影初始化起点，代码块从语言投影初始化 lang；既有块不被普通快照覆盖。
 pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result<(), String> {
     validate(doc, root_id)?;
     let current = project(doc, root_id);
@@ -1037,9 +1038,9 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
             }
             numbering_edits.insert(block.id.clone(), parse_numbering_edit(edit)?);
         }
-        // 只有新身份的有序替换允许从历史投影初始化设置；同类型普通快照仍然只读。
+        // 新块及新身份的有序替换从投影初始化设置；既有同类型普通快照仍然只读。
         // 在取得写事务前验证 JSON，避免任一选中项非法时发生部分根替换。
-        if block.replaces_id.is_some() && block.block_type == "numbered_list" {
+        if (old.is_none() || block.replaces_id.is_some()) && block.block_type == "numbered_list" {
             if let Some(ordered) = &block.ordered {
                 numbering_edits.insert(block.id.clone(), parse_numbering_edit(&ordered.numbering)?);
             }
@@ -1176,7 +1177,12 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
                 props.insert(&mut txn, "created", now);
             }
             if flavour == "code" {
-                props.insert(&mut txn, "lang", "PlainText");
+                // 新代码块可携带导入语言；既有代码语言仍仅通过显式属性补丁修改。
+                let language = next
+                    .code
+                    .as_ref()
+                    .map_or("PlainText", |code| code.language.as_str());
+                props.insert(&mut txn, "lang", language);
             }
         }
         if let Some(values) = code_edits.get(&next.id) {

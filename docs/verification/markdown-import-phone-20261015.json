@@ -1,0 +1,76 @@
+{
+  "date": "2026-10-15",
+  "scope": "Android 真机 Markdown 系统文件导入验收",
+  "device": {
+    "model": "HONOR X70 / MTN-AN00",
+    "os": "Android 16",
+    "screen": "1200×2640"
+  },
+  "build": {
+    "artifact": "build/app/outputs/flutter-apk/app-debug.apk",
+    "install": "adb install -r 成功；真实PRE登录后进入正式文档；不记录登录凭据"
+  },
+  "fixture": {
+    "name": "import-phone-20261015.md",
+    "bytes": 371,
+    "sha256": "67fd40b82254369c7aadccd37d78644e473818e45650fc8e91c93f9ca662fdae",
+    "marker": "MDIMPORT_20261015",
+    "source": "# MDIMPORT_20261015\n\nMDIMPORT_BODY **bold** *italic* `inline` [link](https://example.com)\n\n3. MDIMPORT_THIRD\n4. MDIMPORT_FOURTH\n   - MDIMPORT_NESTED\n\n- [x] MDIMPORT_DONE\n- [ ] MDIMPORT_TODO\n\n> MDIMPORT_QUOTE\n\n```dart\nprint('MDIMPORT_CODE');\n```\n\n---\n\n| Header A | Header B |\n| --- | --- |\n| MDIMPORT_CELL | **value** |\n\n![MDIMPORT_LOCAL](./local-image.png)\n\nMDIMPORT_END\n"
+  },
+  "checks": [
+    {
+      "name": "说明弹窗取消",
+      "result": "通过，返回编辑器，未写入测试内容"
+    },
+    {
+      "name": "系统选择器",
+      "result": "通过，com.android.documentsui 下载内容中选择 .md，返回编辑器并显示追加成功"
+    },
+    {
+      "name": "内容展示",
+      "result": "标题、加粗/斜体/行内代码/链接；编号3与4、一级嵌套列表、完成与未完成待办、引用、Dart语言与代码高亮、分割线均显示；表格按文本行，本地图片按地址文字保留"
+    },
+    {
+      "name": "整批撤销与重做",
+      "result": "通过，34→49→34→49→34块；最后一步撤销清理所有15个新增块"
+    },
+    {
+      "name": "系统选择器取消",
+      "result": "通过，从DocumentsUI返回后仍为正文页，无测试标记"
+    },
+    {
+      "name": "输入焦点",
+      "result": "导入后未弹起正文键盘，dumpsys input_method mInputShown=false"
+    },
+    {
+      "name": "SQLite恢复核对",
+      "result": "从手机实际数据库及WAL分别提取前/导入/撤销/重做/清理快照，用包内真实FRB重开；34个原块在所有阶段的ID/顺序和所核对投影完全一致；导入与重做49块，撤销与清理34块，无MDIMPORT残留"
+    },
+    {
+      "name": "在线状态",
+      "result": "导入后滚动阶段曾短暂显示连接中，随后恢复在线；最终清理后在线"
+    }
+  ],
+  "original_projection_fields_checked": [
+    "id",
+    "type",
+    "text",
+    "parent",
+    "checked",
+    "indent",
+    "alignment",
+    "code.language",
+    "ordered.order",
+    "ordered.start",
+    "resource.properties",
+    "segments.text/bold/italic/code/strikethrough/underline"
+  ],
+  "screenshot": "markdown-import-phone-20261015.png",
+  "limits": [
+    "未核对投影之外的原始共享props/meta与隐藏结构",
+    "未验证服务器持久化ACK或真实桌面双端观察",
+    "iOS未验收",
+    "真机本轮未测5MiB边界、非法UTF-8、远端权限撤销及独立网络图片；相关解析与权限回归已有自动测试"
+  ],
+  "final_state": "手机保留新版并停在已登录的正式编辑页，原有34块恢复；Download中保留可复测的md文件"
+}
