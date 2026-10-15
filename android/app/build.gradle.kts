@@ -9,8 +9,8 @@ plugins {
 
 android {
     namespace = "com.cses.cses_mobile_collab_demo"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    compileSdk = 36
+    ndkVersion = "28.2.13676358"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -27,9 +27,9 @@ android {
         // explicit so dependency resolution cannot produce an incompatible
         // merged manifest on devices older than Android 7.0.
         minSdk = 24
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        targetSdk = 36
+        versionCode = 1
+        versionName = "1.0.0"
     }
 
     buildTypes {
