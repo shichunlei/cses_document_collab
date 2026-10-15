@@ -1,0 +1,126 @@
+{
+  "date": "2026-10-15",
+  "scope": "会议状态配色、加入/查看按钮与独立底部删除；取代整卡详情点击",
+  "dataSources": {
+    "desktopStateSource": "/System/Volumes/Data/workspace/cses-client/packages/docs/src/editor/embedded-references/meeting-card/meeting-state.util.ts",
+    "desktopCardSource": "/System/Volumes/Data/workspace/cses-client/packages/docs/src/editor/embedded-references/meeting-card/meeting-card.block.ts",
+    "desktopStyleSource": "/System/Volumes/Data/workspace/cses-client/packages/docs/src/editor/embedded-references/meeting-card/meeting-card.block.scss",
+    "hostEndpoint": "Common POST /meeting/getDetail, params={meetingId}",
+    "sharedSchema": "保持meetingId/title/number；状态、时间、主持人及人数属于宿主本地详情，不写入协同props"
+  },
+  "stateMapping": {
+    "NotStarted": {
+      "label": "未开始",
+      "color": "#4A7AFE",
+      "action": "加入会议"
+    },
+    "InProgress": {
+      "label": "进行中",
+      "color": "#00B42A",
+      "action": "加入会议"
+    },
+    "Pause": {
+      "label": "已暂停",
+      "color": "#FF7D00",
+      "action": "加入会议"
+    },
+    "Completed": {
+      "label": "已结束",
+      "color": "#86909C",
+      "action": "查看会议"
+    },
+    "Canceled": {
+      "label": "已取消",
+      "color": "#86909C",
+      "action": "查看会议"
+    },
+    "Delete": {
+      "label": "已删除",
+      "actionDisabled": true
+    },
+    "unknown": {
+      "label": "状态未知",
+      "note": "未提供详情端口或无法识别状态；不伪造未开始"
+    }
+  },
+  "api": {
+    "entry": "package:cses_document_collab/cses_document_collab.dart",
+    "newTypes": [
+      "CollabMeetingCardState",
+      "CollabMeetingCardData",
+      "CollabMeetingCardLoader"
+    ],
+    "service": "CollabHostServices.loadMeetingCard(meetingId) -> Future<CollabMeetingCardData?>",
+    "loaderContract": "null表示不存在，异常表示可重试失败；宿主持有认证/HTTP，包不关闭借用资源",
+    "refresh": "挂载、ID/宿主变化、失败重试、主按钮回调结束后读取；同一卡片普通重建复用请求，不含实时推送",
+    "navigation": "仅加入/查看按钮调用原onMeetingCardTap(meetingId,title,number)，使用当前有效业务展示字段；背景/标题/状态/留白不派发",
+    "keyboard": "按钮调用前关闭正文输入，完成/失败不恢复旧光标或弹键盘；主动选择正文仍可继续输入",
+    "delete": "底部独立中性色次要操作，普通宽度左侧、主按钮右侧；窄屏大字必要时分行，预览隐藏删除。删除不派发详情回调，沿用原独立历史/权限/原属性校验及最后子项补段落",
+    "failure": "加载中/失败/不存在/删除禁用主按钮；失败报告原宿主并可重试。换ID/会话/关闭后的迟到响应和错误不回写"
+  },
+  "verification": {
+    "packageFullSuite": {
+      "passed": 744,
+      "log": "/tmp/meeting-status-package-all.log"
+    },
+    "hostFullSuite": {
+      "passed": 46,
+      "log": "/tmp/meeting-status-host-all.log"
+    },
+    "cardTests": {
+      "passed": 14,
+      "file": "packages/cses_document_collab/test/collab_meeting_card_test.dart",
+      "coverage": [
+        "五种状态标签/颜色/主按钮及展示不写正文",
+        "业务标题/时间/主持人/人数",
+        "仅主按钮事件、回调结束刷新及键盘隐藏",
+        "加载/失败重试/不存在/已删除",
+        "换ID/错误身份/销毁/会话替换隔离",
+        "未注入详情端口保持未知状态",
+        "320px 1.5倍文字、预览隐藏删除且可查看"
+      ]
+    },
+    "hostLoaderTests": {
+      "passed": 11,
+      "file": "test/cses_meeting_card_service_test.dart",
+      "coverage": [
+        "真实Common拦截器/headers与参数",
+        "所有服务端状态及未知状态",
+        "flat/item/data详情与明确缺失",
+        "可选元信息和人数回退",
+        "错误身份/非法时间及人数/失败响应",
+        "请求前及迟到响应会话隔离"
+      ]
+    },
+    "compatibility": "collab_meeting_test.dart更新为主按钮命中和底部删除，原根/高亮删除撤销、陈旧按钮和预览回归通过；保留宿主pickMeetingReference改动",
+    "packageAnalyze": {
+      "result": "No issues found",
+      "log": "/tmp/meeting-status-package-analysis.log"
+    },
+    "hostAnalyze": {
+      "result": "No issues found",
+      "log": "/tmp/meeting-status-host-analysis.log"
+    },
+    "format": "本次修改的9个手写Dart文件dart format",
+    "diffCheck": "git diff --check",
+    "previews": [
+      "meeting-card-status-paused-20261015.png",
+      "meeting-card-status-completed-20261015.png",
+      "meeting-card-status-narrow-20261015.png"
+    ],
+    "previewNote": "真实Flutter编辑器渲染，390px常规与320px/1.5倍文字；预览使用本机Songti与MaterialIcons，未使用真实会议数据"
+  },
+  "limits": [
+    "未进行本轮手机安装、真实业务会议HTTP请求或桌面双向联调，宿主HTTP由真实Common封装加传输替身验证",
+    "暂无会议状态推送订阅；业务入会/详情路由由宿主onMeetingCardTap实现，Demo当前回调仅记录事件",
+    "引用删除撤销仍只恢复已投影字段，不保证未知扩展/meta",
+    "本轮无Rust/FRB接口修改或生成，不改变既有原生格式"
+  ],
+  "adaptationCounts": {
+    "adapted": 10,
+    "partial": 9,
+    "structure": 1,
+    "unsupported": 21,
+    "total": 41
+  }
+}

@@ -240,3 +240,14 @@ fixture('blockcraft-entity-mention', (_, m) => {
     { insert: '周围正文' },
   ]));
 });
+
+// MeetingCardBlockSchema: void引用，业务详情留在宿主，未知属性/损坏结构继续保留。
+fixture('blockcraft-meeting', (_, m) => {
+  m.get('fixture-doc').get('children').push(['meeting-1', 'meeting-empty', 'meeting-bad', 'meeting-callout']);
+  m.set('meeting-1', block('meeting-1', 'meeting', 'void', [], { meetingId: 'm1', title: '项目周会😀', number: '123456', customMeeting: { keep: true } }));
+  m.set('meeting-empty', block('meeting-empty', 'meeting', 'void', [], {}));
+  m.set('meeting-bad', block('meeting-bad', 'meeting', 'block', ['meeting-child'], {meetingId: 'bad'}));
+  m.set('meeting-child', block('meeting-child', 'paragraph', 'editable', [{insert: '保留子树'}]));
+  m.set('meeting-callout', block('meeting-callout', 'callout', 'block', ['nested-meeting']));
+  m.set('nested-meeting', block('nested-meeting', 'meeting', 'void', [], { meetingId: 'nested', title: null, number: null }));
+});

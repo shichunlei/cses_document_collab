@@ -1,22 +1,33 @@
-import 'collab_mention_avatar.dart';
+import 'mention_avatar.dart';
 import 'package:flutter/scheduler.dart' show SchedulerPhase;
 import 'dart:async';
 
-import 'package:appflowy_editor/appflowy_editor.dart';
-import 'package:cses_document_collab/src/model/collab_user_mention.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
+import 'package:flutter/foundation.dart';
+import 'package:cses_common/observability/api/log.dart';
+import 'package:cses_document_collab/cses_document_collab.dart'
+    show CollabMentionUser, CollabMentionDirectory;
 import 'package:flutter/material.dart';
 
-/// 在借用 [context]/[editor] 上选择人员，查询通过借用 [directory] 或宿主服务。
+/// Demo宿主在借用 [context] 上选择人员；[directory] 提供当前企业查询。
+/// [canEdit] 为借用的权限信号，false禁止确认；本函数不访问编辑器内部状态。
 /// [keyword] 是初始搜索词，默认空字符串。
+/// ```dart
+/// import 'package:flutter/material.dart';
+/// import 'package:cses_document_collab/cses_document_collab.dart';
+/// import 'package:cses_mobile_collab_demo/src/demo/mention_picker.dart';
+/// CollabHostServices pickerServices(CollabMentionDirectory directory) => CollabHostServices(
+///   pickMentionUser: (context, {required keyword, required canEdit}) =>
+///     showDemoMentionPicker(context, directory: directory, canEdit: canEdit, keyword: keyword),
+/// );
+/// ```
 /// 返回真实人员快照；取消/关闭/权限撤销为null，等待退场动画后完成，不写正文。
-Future<CollabMentionUser?> showCollabMentionPicker(
-  BuildContext context,
-  EditorState editor, {
-  CollabMentionDirectory? directory,
+Future<CollabMentionUser?> showDemoMentionPicker(
+  BuildContext context, {
+  required ValueListenable<bool> canEdit,
+  required CollabMentionDirectory directory,
   String keyword = '',
 }) async {
-  if (editor.isDisposed || !editor.editable) return null;
+  if (!canEdit.value) return null;
   ModalRoute<CollabMentionUser>? route;
   final result = await showModalBottomSheet<CollabMentionUser>(
     context: context,
@@ -25,37 +36,37 @@ Future<CollabMentionUser?> showCollabMentionPicker(
     builder: (context) {
       route = ModalRoute.of(context);
       return _MentionPicker(
-        editor: editor,
-        directory: directory ?? CollabRuntime.services.mentionDirectory,
+        canEdit: canEdit,
+        directory: directory,
         keyword: keyword,
       );
     },
   );
   await route?.completed;
-  return result;
+  return canEdit.value ? result : null;
 }
 
-/// 拥有搜索输入和请求状态的底部面板，借用编辑器/目录，不释放它们。
+/// 拥有搜索输入和请求状态的底部面板，借用权限信号/目录，不释放它们。
 class _MentionPicker extends StatefulWidget {
-  /// [editor] 提供权限，[directory] 为查询端口，null显示缺少服务，[keyword] 为初始搜索词。
+  /// [canEdit] 提供权限，[directory] 为查询端口，[keyword] 为初始搜索词。
   const _MentionPicker({
-    required this.editor,
+    required this.canEdit,
     required this.directory,
     required this.keyword,
   });
 
-  /// 借用的编辑器，提供权限，面板不释放。
-  final EditorState editor;
+  /// 借用的权限信号，面板移除监听但不释放。
+  final ValueListenable<bool> canEdit;
 
-  /// 借用的人员目录；null禁用搜索并展示说明。
-  final CollabMentionDirectory? directory;
+  /// 借用的当前会话人员目录，组件不释放。
+  final CollabMentionDirectory directory;
 
   /// 初始关键词，默认由入口提供空字符串。
   final String keyword;
 
   /// 创建所属输入、去抖定时器与过期请求防护。
   @override
-  State<_MentionPicker> createState() => _MentionPickerState();
+  createState() => _MentionPickerState();
 }
 
 /// 拥有输入和定时器；查询串行身份由generation判定，退出/输入变化使迟到结果失效。
@@ -68,8 +79,14 @@ class _MentionPickerState extends State<_MentionPicker> {
 
   /// 每次输入/权限变化/关闭递增，使旧请求失效。
   int _generation = 0;
+
+  /// 仅保留当前关键词已完成且有效的结果。
   List<CollabMentionUser> _users = const [];
+
+  /// 当前查询是否尚未结束，输入变化时清空列表并置true。
   bool _loading = true;
+
+  /// 当前有效请求的可重试错误文案。
   String? _error;
 
   /// 初始化输入与权限监听，首个请求立即查询当前企业人员。
@@ -77,15 +94,16 @@ class _MentionPickerState extends State<_MentionPicker> {
   void initState() {
     super.initState();
     _input = TextEditingController(text: widget.keyword);
-    widget.editor.editableNotifier.addListener(_permissionChanged);
+    widget.canEdit.addListener(_permissionChanged);
     unawaited(_search(++_generation));
   }
 
   /// 权限撤销使异步结果失效并刷新禁用状态，不恢复正文输入。
   void _permissionChanged() {
     if (!mounted) return;
+    _debounce?.cancel();
     final generation = ++_generation;
-    if (widget.editor.editable && !widget.editor.isDisposed) {
+    if (widget.canEdit.value) {
       _loading = true;
       _error = null;
       _users = const [];
@@ -117,22 +135,11 @@ class _MentionPickerState extends State<_MentionPicker> {
 
   /// 查询 [generation] 对应输入；捕获失败供重试，关闭/权限变化/过期时不回写。
   Future<void> _search(int generation) async {
+    if (!mounted || generation != _generation || !widget.canEdit.value) return;
     final directory = widget.directory;
-    if (directory == null) {
-      if (mounted) {
-        setState(() {
-          _loading = false;
-          _error = '当前未提供人员查询服务';
-        });
-      }
-      return;
-    }
     try {
       final users = await directory.search(_input.text);
-      if (!mounted ||
-          generation != _generation ||
-          widget.editor.isDisposed ||
-          !widget.editor.editable) {
+      if (!mounted || generation != _generation || !widget.canEdit.value) {
         return;
       }
       setState(() {
@@ -141,13 +148,10 @@ class _MentionPickerState extends State<_MentionPicker> {
         _error = null;
       });
     } catch (error, stack) {
-      if (!mounted || generation != _generation) return;
-      CollabDiagnostics.report(
-        '人员搜索失败',
-        error: error,
-        stackTrace: stack,
-        tag: 'DocCollab',
-      );
+      if (!mounted || generation != _generation || !widget.canEdit.value) {
+        return;
+      }
+      Log.e('人员搜索失败', error: error, stackTrace: stack, tag: 'DocCollab');
       setState(() {
         _loading = false;
         _error = '人员加载失败，请重试';
@@ -160,7 +164,7 @@ class _MentionPickerState extends State<_MentionPicker> {
   void dispose() {
     ++_generation;
     _debounce?.cancel();
-    widget.editor.editableNotifier.removeListener(_permissionChanged);
+    widget.canEdit.removeListener(_permissionChanged);
     _input.dispose();
     super.dispose();
   }
@@ -168,7 +172,7 @@ class _MentionPickerState extends State<_MentionPicker> {
   /// 在借用 [context] 中固定标题/搜索，仅惰性人员列表滚动，适应键盘与窄屏大字。
   @override
   Widget build(BuildContext context) {
-    final enabled = !widget.editor.isDisposed && widget.editor.editable;
+    final enabled = widget.canEdit.value;
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
       child: SizedBox(
@@ -202,7 +206,7 @@ class _MentionPickerState extends State<_MentionPicker> {
               child: TextField(
                 key: const ValueKey('mention-search'),
                 controller: _input,
-                enabled: enabled && widget.directory != null,
+                enabled: enabled,
                 onChanged: _changed,
                 decoration: const InputDecoration(
                   labelText: '搜索人员',
@@ -219,18 +223,17 @@ class _MentionPickerState extends State<_MentionPicker> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(_error!),
-                          if (widget.directory != null)
-                            TextButton(
-                              key: const ValueKey('mention-retry'),
-                              onPressed: () {
-                                setState(() {
-                                  _loading = true;
-                                  _error = null;
-                                });
-                                unawaited(_search(++_generation));
-                              },
-                              child: const Text('重试'),
-                            ),
+                          TextButton(
+                            key: const ValueKey('mention-retry'),
+                            onPressed: () {
+                              setState(() {
+                                _loading = true;
+                                _error = null;
+                              });
+                              unawaited(_search(++_generation));
+                            },
+                            child: const Text('重试'),
+                          ),
                         ],
                       ),
                     )
@@ -245,7 +248,7 @@ class _MentionPickerState extends State<_MentionPicker> {
                         final user = _users[index];
                         return ListTile(
                           key: ValueKey('mention-user-${user.id}'),
-                          leading: CollabMentionAvatar(
+                          leading: DemoMentionAvatar(
                             userId: user.id,
                             name: user.name,
                             avatarUrl: user.avatarUrl,
@@ -255,8 +258,7 @@ class _MentionPickerState extends State<_MentionPicker> {
                               ? null
                               : Text(user.department!),
                           onTap: () {
-                            if (!widget.editor.isDisposed &&
-                                widget.editor.editable) {
+                            if (widget.canEdit.value) {
                               Navigator.pop(context, user);
                             }
                           },

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
+import 'package:cses_document_collab/src/editor/collab_mention_tap_handler.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -51,6 +52,39 @@ void main() {
         () => (tap.attributes['tags'] as List).add(0),
         throwsUnsupportedError,
       );
+    },
+  );
+  test(
+    'toJson supports automatic JSON encoding for all mention types and preserves raw attributes',
+    () {
+      final attributes = <String, Object?>{
+        'd:mentionId': '原始-ID',
+        'status': {'name': '未开始'},
+        'values': [null, true, 123, 1.25, '😀'],
+      };
+      for (final type in CollabMentionType.values) {
+        final tap = CollabMentionTap(
+          type: type,
+          id: '实体-ID',
+          name: '',
+          attributes: attributes,
+        );
+        expect(jsonDecode(jsonEncode(tap)), {
+          'type': type.name,
+          'id': '实体-ID',
+          'name': '',
+          'attributes': attributes,
+        });
+        final json = tap.toJson();
+        json['name'] = '仅修改导出结果';
+        json['attributes'] = {};
+        expect(tap.toJson()['name'], isEmpty);
+        expect(tap.toJson()['attributes'], attributes);
+        expect(
+          () => (tap.toJson()['attributes'] as Map)['extra'] = true,
+          throwsUnsupportedError,
+        );
+      }
     },
   );
   test('invalid payloads fail explicitly', () {
@@ -300,20 +334,61 @@ void main() {
       expect(find.text('用户ID：user-id'), findsNothing);
     },
   );
-  testWidgets(
-    'missing callback retains user profile and entity default panel',
-    (tester) async {
-      await _mount(
-        tester,
-        CollabMentionType.meeting,
-        const CollabHostServices(),
-      );
-      await tester.tap(_chip(CollabMentionType.meeting));
-      await tester.pumpAndSettle();
-      expect(find.text('引用ID：meeting-id'), findsOneWidget);
-      expect(find.text('删除提及'), findsOneWidget);
-    },
-  );
+  for (final includeRaw in [false, true]) {
+    testWidgets(
+      'user without callback has no profile or input side effects, raw=$includeRaw',
+      (tester) async {
+        final errors = <Object>[];
+        final adapter = await _mount(
+          tester,
+          CollabMentionType.user,
+          CollabHostServices(onError: (_, error, _, _) => errors.add(error)),
+          includeRaw: includeRaw,
+        );
+        final state = adapter.editorState;
+        final selection = Selection.single(path: [0], startOffset: 2);
+        state.selection = selection;
+        final beforeExtraInfo = state.selectionExtraInfo;
+        final chip = tester.widget<GestureDetector>(
+          _chip(CollabMentionType.user),
+        );
+        expect(chip.onTap, isNull);
+        // Even a direct dispatch without fallback does not suspend editor input.
+        await handleCollabMentionTap(
+          tester.element(_chip(CollabMentionType.user)),
+          state,
+          state.document.first!,
+          1,
+        );
+        expect(state.selection, selection);
+        expect(state.selectionExtraInfo, beforeExtraInfo);
+        await tester.tap(_chip(CollabMentionType.user));
+        await tester.pumpAndSettle();
+        expect(find.byType(BottomSheet), findsNothing);
+        expect(find.text('复制姓名'), findsNothing);
+        expect(find.text('删除提及'), findsNothing);
+        expect(adapter.blocks.single.text, '前\uFFFC后');
+        await tester.tap(find.text('预览'));
+        await tester.pumpAndSettle();
+        expect(
+          tester.widget<GestureDetector>(_chip(CollabMentionType.user)).onTap,
+          isNull,
+        );
+        await tester.tap(_chip(CollabMentionType.user));
+        await tester.pumpAndSettle();
+        expect(find.byType(BottomSheet), findsNothing);
+        expect(errors, isEmpty);
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+  testWidgets('missing callback retains entity default panel', (tester) async {
+    await _mount(tester, CollabMentionType.meeting, const CollabHostServices());
+    await tester.tap(_chip(CollabMentionType.meeting));
+    await tester.pumpAndSettle();
+    expect(find.text('引用ID：meeting-id'), findsOneWidget);
+    expect(find.text('删除提及'), findsOneWidget);
+  });
 }
 
 /// 取得 [kind] 对应的真实正文点击区域。

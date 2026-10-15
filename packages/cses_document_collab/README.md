@@ -106,12 +106,40 @@ tool/verify_portable_package.sh ../appflowy_editor
 
 ## 人员提及端口
 
-宿主通过公开入口实现 `CollabMentionDirectory.search(keyword)` 与 `load(userId)`，并传入 `CollabHostServices(mentionDirectory: directory)`。搜索返回当前企业的真实 `CollabMentionUser` 列表，空关键词返回初始人员；资料不存在返回null、请求失败抛异常。编辑包不持有账号或HTTP资源，也不释放宿主目录；宿主必须校验账号/企业切换，不能复用旧会话缓存。Demo的Common实现及完整初始化示例见宿主源码和根README。
+人员头像和选择器由宿主创建，协同包不提供默认头像组件、图片URL规则或人员搜索界面。通过公开入口配置：
 
-正文只同步显示名/稳定ID，人员部门/职位属于本地资料。没有目录时新增入口说明缺少服务，既有用户仍可展示、复制或按权限删除；原子、历史和只读范围详见根README与 `docs/block-adaptation.md`。代码块/图片题注、未知实体提及与localDraft保持保护；会议/任务/文档普通正文支持见下文。同步任务参与人业务副作用尚未提供端口。
+- `mentionAvatarBuilder(context, {userId, name, size, avatarUrl})`：返回宿主头像Widget。`size`为逻辑像素边长；正文的`avatarUrl`为null，人员选择器自行使用宿主人员资料URL。协同包只约束尺寸并排除重复无障碍描述。未配置时只显示姓名，无头像间距或图片请求。
+- `pickMentionUser(context, {keyword, canEdit})`：宿主打开单选界面，等待界面完全退场后返回`CollabMentionUser`；取消返回null，异常由编辑器报告。`canEdit`是本次调用期间借用的只读权限信号，不得释放或保留；false后禁止确认。宿主负责搜索、鉴权、界面/监听/定时器的创建与释放。未配置时输入@作为普通文字，工具栏提示宿主未提供选择器。
+- 用户提及点击仅调用`onMentionTap`，传递类型、ID、原始姓名与完整只读属性；不提供人员资料/复制/删除面板。未注入点击回调时不响应，不暂停正文输入。人员目录由宿主选择器/详情页持有，`CollabHostServices.mentionDirectory`已移除；宿主仍可复用公开的`CollabMentionDirectory`数据契约。
 
-人员头像由编辑器按 `https://face.jinqidongli.com/{userid}/{userid}.jpg` 拼接并本地加载，支持宿主 `avatarUrl` 覆盖；正文仅存姓名/ID。正文、列表及资料卡均使用圆形裁切，加载或失败回退首字，不附加认证信息。Android真实头像与提及操作、桌面双向同步验收见根仓库 `docs/verification/user-mention-20261014.json`；桌面观察由用户完成，iOS头像尚未验证。
+```dart
+import 'package:flutter/material.dart';
+import 'package:cses_document_collab/cses_document_collab.dart';
 
+// 用宿主自己的头像和人员路由替换示例内容。
+final services = CollabHostServices(
+  mentionAvatarBuilder: (context, {required userId, required name,
+    required size, avatarUrl}) => CircleAvatar(
+      radius: size / 2, child: const Icon(Icons.person)),
+  pickMentionUser: (context, {required keyword, required canEdit}) async {
+    final route = MaterialPageRoute<CollabMentionUser>(builder: (context) =>
+      Scaffold(body: Center(child: TextButton(
+        onPressed: () => Navigator.pop(context, canEdit.value
+          ? const CollabMentionUser(id: 'u1', name: '张三') : null),
+        child: const Text('张三'),
+      ))));
+    final selected = await Navigator.of(context).push(route);
+    await route.completed;
+    return selected;
+  },
+);
+```
+
+输入@、键盘工具栏及更多面板统一调用宿主选人端口。协同包保存稳定块位置，暂停正文输入，等待结果后校验权限、会话、页面与原内容，拒绝重复调用和迟到/失效结果；权限一旦撤销，本次结果即作废，重新授权需重新选人。取消或失败保留正文；有效完成后恢复光标/键盘。宿主必须校验账号/企业，不能复用旧会话缓存。正文只同步人员显示名/ID及原有提及属性，头像URL、搜索和部门/职位属于本地资料。
+
+Demo在`lib/src/demo/mention_avatar.dart`实现公共头像地址、圆形裁切和失败首字，在`mention_picker.dart`实现搜索/去抖/列表/重试，`document_host.dart`注入两个回调。其他宿主可完全替换这些UI而无需依赖Demo。迁移时请显式配置`pickMentionUser`与`mentionAvatarBuilder`，旧`mentionDirectory`构造参数须移除，目录改由宿主的选人回调捕获；点击详情使用`onMentionTap`。
+
+代码块/图片题注、未知实体与localDraft保持原保护范围；同步任务参与人业务副作用尚未提供端口。历史Android头像与桌面联调见根仓库`docs/verification/user-mention-20261014.json`；本次UI迁移尚未重做真机/桌面联调。
 
 ## 会议、任务和文档提及（普通正文）
 
@@ -122,9 +150,9 @@ tool/verify_portable_package.sh ../appflowy_editor
 
 ## 宿主统一提及点击回调
 
-通过公开入口的 `CollabHostServices.onMentionTap` 接管用户、会议、任务、文档点击。参数 `CollabMentionTap` 包含 `type`（`CollabMentionType.user/meeting/task/doc`）、`id`、`name` 和 `attributes`。名称是共享正文原名，空名称仍为空；属性来自Y.Text，保留历史d:键、格式及未知扩展，不从人员/实体详情接口拼装，不包含移动编辑器的cses私有属性。所有嵌套Map/List均深复制且只读，宿主可独立保留事件。
+通过公开入口的 `CollabHostServices.onMentionTap` 接管用户、会议、任务、文档点击。参数 `CollabMentionTap` 包含 `type`（`CollabMentionType.user/meeting/task/doc`）、`id`、`name` 和 `attributes`。名称是共享正文原名，空名称仍为空；属性来自Y.Text，保留历史d:键、格式及未知扩展，不从人员/实体详情接口拼装，不包含移动编辑器的cses私有属性。所有嵌套Map/List均深复制且只读，宿主可独立保留事件。`mention.toJson()`返回`type/id/name/attributes`，其中`type`为`user/meeting/task/doc`字符串，可直接`jsonEncode(mention)`；每次返回独立顶层Map，内部属性沿用只读快照。
 
-未配置回调时保持原人员资料/实体信息面板；配置后点击由宿主接管，不同时打开内置面板，预览也允许导航。支持同步或异步处理；导航应返回直到详情退场完成的Future。回调期间暂停正文输入并忽略同编辑器的重复点击，完成后仅向仍有效的原页面恢复焦点。同步/异步异常向原宿主onError报告并在有效页面提示，不补开默认面板；已关闭或被新会话替代的编辑器不恢复键盘。宿主仍负责业务鉴权、跨账号异步失效、路由和外部资源生命周期。
+用户提及仅在配置回调时响应点击，编辑包不提供用户资料面板；未配置时不处理点击，也不暂停输入或恢复光标。会议/任务/文档未配置回调时继续使用实体信息面板；配置后点击由宿主接管，不同时打开内置面板，预览也允许导航。支持同步或异步处理；导航应返回直到详情退场完成的Future。回调期间暂停正文输入并忽略同编辑器的重复点击，完成后仅向仍有效的原页面恢复焦点。同步/异步异常向原宿主onError报告并在有效页面提示，不补开默认面板；已关闭或被新会话替代的编辑器不恢复键盘。宿主仍负责业务鉴权、跨账号异步失效、路由和外部资源生命周期。
 
 下面的函数返回可注入控制器的services，navigatorKey由宿主持有并传给MaterialApp；将示例builder替换为四类业务详情即可：
 
@@ -145,4 +173,66 @@ CollabHostServices mentionServices(GlobalKey<NavigatorState> navigatorKey) =>
     });
 ```
 
-四类原始属性JSON均限制为65536字节；正式投影完整传递，未就绪或损坏的属性拒绝派发并报告失败，不制造原始属性。新插入用户的身份快照立即可用；原有手工用户投影仍可不带快照使用默认面板。编辑包不内置业务路由，回调接管时默认面板的删除入口由宿主选择如何提供。
+四类原始属性JSON均限制为65536字节；正式投影完整传递，未就绪或损坏的属性拒绝派发并报告失败，不制造原始属性。新插入用户的身份快照立即可用；原有手工用户投影可不带快照展示，但配置回调后须等待真实属性就绪才能派发；未配置回调不报属性缺失。编辑包不内置用户业务路由或资料面板。用户引用仍可用正文选区删除并撤销/重做。
+
+用户点击面板移除、缺省不响应及统一回调兼容验证见根仓库`docs/verification/mention-user-tap-only-20261015.json`。
+
+
+## 会议引用卡片
+
+正式 `meeting` 是无正文、无子块的引用卡片，保留 `props.meetingId/title/number`。
+移动端先使用共享标题和编号，空标题显示“未命名会议”。可通过宿主`loadMeetingCard`加载本地会议详情，展示状态、开始时间（设备本地时区）、主持人和参与人数；业务标题/编号可覆盖本地展示，但不写回共享props。
+“更多→会议”调用宿主注入的 `pickMeetingReference` 选择/创建会议引用；未注入时隐藏新增入口。包不提供会议输入表单或业务创建逻辑；卡片底部独立的“删除引用”按钮直接移除本文档引用，无需打开面板，业务会议不受影响。卡片不再显示“编辑引用”入口。
+插入按稳定正文位置定位，支持根/高亮容器、空段替换与非空段后插入、撤销/重做。
+引用修改工具保留逐字段补丁和版本校验；卡片删除按稳定块ID和展示时属性校验，远端变化或撤权拒绝过期删除。删除父容器最后一项时补空段落，支持独立撤销/重做；预览/只读隐藏删除按钮。
+ID不可为空且最多512 UTF-8字节，标题最多2000、编号最多256 UTF-16单元；超限、缺身份或非void结构仍作为受保护占位保留。
+非删除操作保留原始未知属性；删除后的撤销仅恢复已投影的引用字段，不保证恢复未知扩展或meta。
+
+宿主通过`CollabHostServices.onMeetingCardTap`处理“加入会议／查看会议”按钮；只有该按钮派发回调，标题、状态、卡片背景和留白均不派发。预览也允许主按钮操作，删除仅移除引用，不触发详情事件。
+
+状态配色与桌面一致：`NotStarted`未开始为蓝色、`InProgress`进行中为绿色、`Pause`已暂停为橙色，`Completed`已结束和`Canceled`已取消为灰色。已结束/已取消显示“查看会议”，其他状态显示“加入会议”；真实入会/查看逻辑由宿主回调负责。删除引用为底部左侧中性色次要按钮，主操作在右侧；窄屏/大字空间不足时分行，避免两个操作重叠。
+这是独立会议卡片的端口，与正文`onMentionTap`分开；参数是会议ID及当前展示的业务标题/编号（详情未提供时沿用共享引用）。
+未配置回调时禁用主按钮，编辑模式仍可删除引用。宿主持有路由、认证与业务资源，并返回直到详情退场完成的Future；点击关闭正文键盘并暂停输入，完成或失败后均不恢复原正文焦点、不自动弹键盘，只有用户重新选择正文才进入输入。回调期间禁用同一卡片导航和删除；失败上报原宿主，失效会话不提示。
+
+```dart
+import 'package:cses_document_collab/cses_document_collab.dart';
+
+CollabHostServices meetingServices(
+  CollabMeetingCardLoader loadMeetingCard,
+  Future<void> Function(String meetingId) openMeeting,
+) => CollabHostServices(
+  loadMeetingCard: loadMeetingCard,
+  onMeetingCardTap: (meetingId, title, number) async {
+    await openMeeting(meetingId);
+  },
+);
+// 将返回的services注入宿主持有的CollabController，关闭时await controller.close()。
+```
+
+`loadMeetingCard(meetingId)`返回`Future<CollabMeetingCardData?>`，`state`使用公开`CollabMeetingCardState`；可用`fromValue`映射服务端原始状态。宿主拥有认证/HTTP，包不释放它们。仅在卡片挂载、会议ID或宿主变化、手动失败重试时读取详情；加入/查看按钮只调用宿主回调，执行前后均不额外请求详情，同一卡片重建复用请求，换ID/会话或销毁后忽略迟到结果，不把业务状态写入协同文档。
+
+未配置加载器时保留共享引用并显示“状态未知”；明确返回null表示会议不存在，`Delete`表示已删除，二者均禁用主按钮。未知状态不伪造未开始；加载中或失败也禁用主按钮，失败显示重试并向原宿主报告。Demo通过`lib/src/demo/cses_meeting_card_service.dart`及Common的`POST /meeting/getDetail`加载详情，前后校验账号、企业和会话。
+
+新增引用的宿主端口如下，宿主页面自行处理会议搜索/创建及认证，返回引用值并等待退场；取消返回null。`canEdit`仅在本次调用期间借用，false后不得确认，不保留或释放它。包拒绝撤权、关闭、会话替换与插入位置失效的迟到结果。
+
+```dart
+import 'package:cses_document_collab/cses_document_collab.dart';
+
+final services = CollabHostServices(
+  pickMeetingReference: (context, {required canEdit}) async {
+    // 在这里等待宿主会议选择或创建页面，成功后返回真实业务身份。
+    // 本示例取消；业务创建请求必须在宿主完成，包只插入引用。
+    return null;
+  },
+);
+```
+
+Demo实现在根项目`lib/src/demo/meeting_reference_picker.dart`，只填写已有引用，不创建业务会议；通过公开包入口使用`CollabMeetingReference`，不传EditorState或包内类型。
+
+当前为部分支持：没有会议搜索选择器或详情实时推送订阅；状态按上述时机重新读取。主按钮仅派发宿主回调，Demo当前回调只记录事件，不实际入会或打开业务详情；纪要/回放或收集KR也未内置。
+引用编辑不创建或修改业务会议，会议KR列表仍未适配；Android/iOS真机与实际桌面双端待验收。
+Rust内部映射复用现有属性桥接载体，没有FRB签名/ABI变化，不需要重新生成桥接文件。
+
+历史整卡点击、直接删除与键盘抑制验证见`docs/verification/meeting-card-actions-20261015.json`；当前状态配色、按钮点击及底部删除布局已取代整卡点击，验证见根仓库`docs/verification/meeting-card-status-20261015.json`。
+
+主按钮仅回调宿主、执行前后不新增详情请求的后续验证见`docs/verification/meeting-card-callback-only-20261015.json`。

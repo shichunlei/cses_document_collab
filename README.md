@@ -140,7 +140,7 @@ scripts/ios.sh run -d <ios-device-id>
 
 启动后进入用户名、密码登录页，使用 PRE 环境的真实账号登录；不预填账号密码，
 不再手动填写 userId、cookieId、companyId 或 WS 地址。登录成功后自动连接固定正式测试文档
-`6ac76e5375083c8c9f19cbd3`。文档页可重新连接、清理本机缓存或退出登录。
+`6ad06c992a6b14f42c256937`。文档页可重新连接、清理本机缓存或退出登录。
 会话只驻留内存，重启后重新登录；SQLite 正文缓存仍按地址/企业/用户/文档隔离并保留。
 
 两台设备分别登录各自账号，deviceId 自动读取本机标识，测试文档 ID 相同。
@@ -478,9 +478,9 @@ bridge 的 text 字段传递；正式图片写入 props.src、视频写入 props
 
 - 段落/标题、列表、引用和高亮正文支持真实 `Y.Text` 用户对象 `{mention: name}`，身份保存为 `mentionId` 与 `mentionType: user`，兼容历史 `d:` 前缀。一个对象占一个UTF-16位置，普通U+FFFC、emoji、重名/连续相同用户和行内公式分别保留；未知原生格式不回写为移动端私有属性。
 - 输入 `@`、键盘工具栏及更多面板均可搜索并选择当前企业人员。插入替换原同块选区并追加空格；输入触发后取消保留普通@，取消面板恢复原选区。弹窗隔离正文输入，按稳定块身份跟随重排，正文/选中内容变化或权限撤销时拒绝提交。
-- 正文提及、人员选择列表和资料面板按 `https://face.jinqidongli.com/{userid}/{userid}.jpg` 加载圆形头像。路径段按ID编码，不附加认证信息；加载中/失败显示姓名首字，保持布局。头像URL仅用于本地展示，不进入Y.Text。
-- 点击查看部门/职位、复制姓名/用户ID、删除和独立撤销/重做。预览可查看但禁止删除；人员消失/资料失败仍保留文档原姓名与ID。旧历史不会覆盖远端改动。
-- 宿主通过公开 `CollabMentionDirectory` 注入搜索/资料；Demo使用Common同源 `/Company/readAllChildren`，账号/企业/cookie在请求前后核对。组织解析和搜索在后台执行，成功缓存仅属于当前宿主实例，失败可重试，面板忽略过期/关闭请求。
+- 头像及人员选择器均由宿主通过`CollabHostServices.mentionAvatarBuilder/pickMentionUser`注入，协同包不创建头像或搜索选择界面；未注入头像时只显示姓名，未注入选人时不打开选择界面。Demo宿主为正文提及及人员选择列表按 `https://face.jinqidongli.com/{userid}/{userid}.jpg` 加载圆形头像。路径段按ID编码，不附加认证信息；加载中/失败显示姓名首字，保持布局。头像URL仅用于本地展示，不进入Y.Text。
+- 用户卡片点击仅通知宿主`onMentionTap`，由宿主处理人员详情；无回调不响应。协同包不再提供用户资料/复制/删除面板。正文选区删除和独立撤销/重做保留，预览禁止修改正文。
+- 人员目录由宿主的选择器/详情页持有，不再注入协同包；可复用公开`CollabMentionDirectory`契约。Demo使用Common同源 `/Company/readAllChildren`，账号/企业/cookie在请求前后核对。组织解析和搜索在后台执行，成功缓存仅属于当前宿主实例，失败可重试，面板忽略过期/关闭请求。
 - 行内适配按“部分支持”记录，正文块仍为10/8/1/22（41）。未接入拼音/首字母搜索及对象剪贴板；普通待办可保存提及，但同步任务待办的“添加参与人”业务副作用尚未接入。代码块、图片题注、未知实体提及、旧localDraft继续保护；会议/任务/文档普通正文提及见下文。显示名最多20000 UTF-16单元，用户ID最多512 UTF-8字节；Android16/HONOR X70真实搜索、插入、删除/撤销/重做及头像版复验通过；手机收到桌面新增声波/测试员1及普通文字，用户确认桌面收到手机新增和最终删除测试员。测试数据已清理；桌面操作/观察由用户完成。iOS真机、断线恢复和服务器持久化ACK尚未验证，见[验收记录](docs/verification/user-mention-20261014.json)。
 
 验证：编辑包682项（头像前基线679项）、宿主27项、Rust69项测试通过；头像/提及13项回归及包内静态分析再次通过。两项目静态分析、Rust格式/check、手写Dart格式及diff检查通过。FRB由2.13.0生成，宿主原生库和iOS三架构库已重建，Android调试APK与iOS模拟器构建通过。完整范围见[适配表](docs/block-adaptation.md)。
@@ -495,4 +495,14 @@ bridge 的 text 字段传递；正式图片写入 props.src、视频写入 props
 
 ### 宿主统一点击回调
 
-`CollabHostServices(onMentionTap: (mention) async { ... })` 可接管四类提及的详情跳转；公开参数为 `CollabMentionTap`，包含 `type/id/name/attributes`，其中type为 `CollabMentionType.user/meeting/task/doc`，原始属性及其嵌套集合为独立只读快照。回调应等待详情关闭再完成；预览也可跳转，重复点击被隔离，异常统一报告。未注入时保留原面板，包本身不内置业务页面。接入和路由示例见[协同包说明](packages/cses_document_collab/README.md#宿主统一提及点击回调)。本轮原始属性、异步/会话关闭及平台构建验证见[回调验收记录](docs/verification/mention-tap-callback-20261015.json)。
+`CollabHostServices(onMentionTap: (mention) async { ... })` 可接管四类提及的详情跳转；公开参数为 `CollabMentionTap`，包含 `type/id/name/attributes`，其中type为 `CollabMentionType.user/meeting/task/doc`，原始属性及其嵌套集合为独立只读快照。回调应等待详情关闭再完成；预览也可跳转，重复点击被隔离，异常统一报告。用户提及未注入时不响应，其他三类保留实体信息面板；包本身不内置业务页面。接入和路由示例见[协同包说明](packages/cses_document_collab/README.md#宿主统一提及点击回调)。本轮原始属性、异步/会话关闭及平台构建验证见[回调验收记录](docs/verification/mention-tap-callback-20261015.json)。
+
+头像与人员选择器的宿主注入、生命周期契约和迁移示例见[协同包说明](packages/cses_document_collab/README.md#人员提及端口)。
+
+用户提及已移除内置资料面板与`mentionDirectory`服务参数；点击只通知宿主。验证见[用户点击回调记录](docs/verification/mention-user-tap-only-20261015.json)。
+
+### 会议状态卡片
+
+会议详情由宿主`loadMeetingCard`提供，Demo复用Common的`/meeting/getDetail`。未开始蓝色、进行中绿色、暂停橙色、结束/取消灰色；结束或取消显示“查看会议”，其余显示“加入会议”。仅主按钮触发`onMeetingCardTap`，执行前后不额外请求详情；标题/背景/留白不派发事件，回调结束不自动弹正文键盘。删除引用放在底部作为独立次要操作，预览隐藏，窄屏大字可分行。状态、时间、主持人与人数不写入协同文档；失败可重试，迟到结果隔离，暂不订阅实时状态推送，真实入会/业务详情仍由宿主负责。
+
+接入示例见[协同包说明](packages/cses_document_collab/README.md#会议引用卡片)，验证与预览见[状态卡片记录](docs/verification/meeting-card-status-20261015.json)。

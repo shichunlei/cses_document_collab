@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/controller/collab_controller.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
@@ -7,9 +5,11 @@ import 'package:cses_document_collab/src/editor/collab_inline_mention.dart';
 import 'package:cses_document_collab/src/editor/collaborative_editor_page.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_host_services.dart';
+import 'package:cses_document_collab/src/model/collab_mention_tap.dart';
 import 'package:cses_document_collab/src/model/collab_user_mention.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -152,9 +152,66 @@ void main() {
     },
   );
   testWidgets(
-    'picker searches and inserts at saved block after reorder; cancel restores backward selection',
+    'missing picker leaves IME trigger to ordinary input and preserves toolbar selection',
     (tester) async {
       final adapter = await _mount(tester);
+      final state = adapter.editorState;
+      final selection = Selection.single(path: [1], startOffset: 1);
+      state.selection = selection;
+      final editor = tester.widget<AppFlowyEditor>(find.byType(AppFlowyEditor));
+      final trigger = editor.characterShortcutEvents.firstWhere(
+        (event) => event.key == 'cses-user-mention',
+      );
+      expect(await trigger.handler(state), isFalse);
+      await showEditorUserMentionSheet(
+        tester.element(find.byType(CollaborativeEditorPage)),
+        state,
+      );
+      await tester.pumpAndSettle();
+      expect(state.selection, selection);
+      expect(adapter.blocks.last.text, '尾部');
+      expect(find.text('宿主未提供人员选择器'), findsOneWidget);
+    },
+  );
+
+  for (final asynchronous in [false, true]) {
+    testWidgets(
+      'host picker failure asynchronous=$asynchronous reports and restores without inserting',
+      (tester) async {
+        final adapter = await _mount(tester);
+        final errors = <Object>[];
+        _installPicker(
+          services: CollabHostServices(
+            onError: (_, error, _, _) => errors.add(error),
+            pickMentionUser: (context, {required keyword, required canEdit}) {
+              if (asynchronous) {
+                return Future.error(StateError('host picker failed'));
+              }
+              throw StateError('host picker failed');
+            },
+          ),
+        );
+        final state = adapter.editorState;
+        final selection = Selection.single(path: [1], startOffset: 1);
+        state.selection = selection;
+        final action = showEditorUserMentionSheet(
+          tester.element(find.byType(CollaborativeEditorPage)),
+          state,
+        );
+        await _finish(tester, action);
+        expect(errors, hasLength(1));
+        expect(state.selection, selection);
+        expect(adapter.blocks.last.text, '尾部');
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+
+  testWidgets(
+    'host picker inserts at saved block after reorder; cancel restores backward selection',
+    (tester) async {
+      final adapter = await _mount(tester);
+      _installPicker();
       final state = adapter.editorState;
       state.selection = Selection.single(
         path: [1],
@@ -164,13 +221,9 @@ void main() {
       final action = showEditorUserMentionSheet(
         tester.element(find.byType(CollaborativeEditorPage)),
         state,
-        directory: _Directory(),
       );
       await tester.pumpAndSettle();
       expect(state.selection, isNull);
-      await tester.enterText(find.byKey(const ValueKey('mention-search')), '张');
-      await tester.pump(const Duration(milliseconds: 260));
-      await tester.pumpAndSettle();
       await adapter.replaceFromRemote([_tail, _body()]);
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('mention-user-u1')));
@@ -191,7 +244,6 @@ void main() {
       final cancel = showEditorUserMentionSheet(
         tester.element(find.byType(CollaborativeEditorPage)),
         state,
-        directory: _Directory(),
       );
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('mention-close')));
@@ -202,61 +254,15 @@ void main() {
     },
   );
   testWidgets(
-    'late results cannot replace newer query; failures retry and closed requests are ignored',
-    (tester) async {
-      final adapter = await _mount(tester);
-      adapter.editorState.selection = Selection.single(
-        path: [1],
-        startOffset: 1,
-      );
-      final directory = _PendingDirectory();
-      final action = showEditorUserMentionSheet(
-        tester.element(find.byType(CollaborativeEditorPage)),
-        adapter.editorState,
-        directory: directory,
-      );
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 400));
-      // A pending spinner never settles; drive finite frames for query races.
-      await tester.enterText(find.byKey(const ValueKey('mention-search')), '新');
-      await tester.pump(const Duration(milliseconds: 260));
-      directory.requests['新']!.complete([
-        const CollabMentionUser(id: 'new', name: '新用户'),
-      ]);
-      await tester.pumpAndSettle();
-      directory.requests['']!.complete([_user]);
-      await tester.pumpAndSettle();
-      expect(find.byKey(const ValueKey('mention-user-new')), findsOneWidget);
-      expect(find.byKey(const ValueKey('mention-user-u1')), findsNothing);
-      await tester.enterText(
-        find.byKey(const ValueKey('mention-search')),
-        '失败',
-      );
-      await tester.pump(const Duration(milliseconds: 260));
-      directory.requests['失败']!.completeError(StateError('expected failure'));
-      await tester.pumpAndSettle();
-      expect(find.text('人员加载失败，请重试'), findsOneWidget);
-      await tester.tap(find.byKey(const ValueKey('mention-retry')));
-      await tester.pump();
-      await tester.tap(find.byKey(const ValueKey('mention-close')));
-      await tester.pump(const Duration(milliseconds: 400));
-      await _finish(tester, action);
-      directory.requests['失败']!.complete([_user]);
-      await tester.pumpAndSettle();
-      expect(adapter.blocks.last.text, '尾部');
-      expect(tester.takeException(), isNull);
-    },
-  );
-  testWidgets(
     'remote text change or permission revocation prevents insertion',
     (tester) async {
       final adapter = await _mount(tester);
+      _installPicker();
       final state = adapter.editorState;
       state.selection = Selection.single(path: [1], startOffset: 1);
       final action = showEditorUserMentionSheet(
         tester.element(find.byType(CollaborativeEditorPage)),
         state,
-        directory: _Directory(),
       );
       await tester.pumpAndSettle();
       await adapter.replaceFromRemote([
@@ -276,7 +282,6 @@ void main() {
       final second = showEditorUserMentionSheet(
         tester.element(find.byType(CollaborativeEditorPage)),
         state,
-        directory: _Directory(),
       );
       await tester.pumpAndSettle();
       final controller =
@@ -294,7 +299,7 @@ void main() {
       controller.allowed = true;
       controller.notifyListeners();
       await tester.pumpAndSettle();
-      expect(find.byKey(const ValueKey('mention-user-u1')), findsOneWidget);
+      expect(find.byKey(const ValueKey('mention-user-u1')), findsNothing);
       await tester.tap(find.byKey(const ValueKey('mention-close')));
       await tester.pumpAndSettle();
       await _finish(tester, second);
@@ -302,9 +307,33 @@ void main() {
     },
   );
   testWidgets(
-    'inline chips and profile work on narrow large text; preview disables deletion',
+    'inline user card uses host avatar and click callback in edit and preview on narrow large text',
     (tester) async {
       final adapter = await _mount(tester);
+      final sizes = <double>[];
+      final taps = <CollabMentionTap>[];
+      _installPicker(
+        services: CollabHostServices(
+          onMentionTap: taps.add,
+          mentionAvatarBuilder:
+              (
+                context, {
+                required userId,
+                required name,
+                required size,
+                avatarUrl,
+              }) {
+                expect(userId, 'u1');
+                expect(name, '张三');
+                expect(avatarUrl, isNull);
+                sizes.add(size);
+                return const ColoredBox(
+                  key: ValueKey('host-avatar'),
+                  color: Colors.green,
+                );
+              },
+        ),
+      );
       await tester.binding.setSurfaceSize(const Size(320, 568));
       tester.platformDispatcher.textScaleFactorTestValue = 1.5;
       addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
@@ -318,39 +347,44 @@ void main() {
         findsOneWidget,
       );
       expect(find.text('@张三'), findsNothing);
-      await tester.tap(
-        find.byKey(const ValueKey('collab-inline-mention-body-3')),
-      );
-      await tester.pumpAndSettle();
-      expect(find.text('用户ID：u1'), findsOneWidget);
-      await tester.tap(find.byKey(const ValueKey('mention-delete')));
-      await tester.pumpAndSettle();
-      expect(adapter.blocks.first.text, '前😀后');
-      adapter.editorState.undoManager.undo();
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('预览'));
-      await tester.pumpAndSettle();
-      await tester.tap(
-        find.byKey(const ValueKey('collab-inline-mention-body-3')),
-      );
-      await tester.pumpAndSettle();
-      expect(
-        tester
-            .widget<TextButton>(find.byKey(const ValueKey('mention-delete')))
-            .onPressed,
-        isNull,
-      );
+      for (final preview in [false, true]) {
+        if (preview) {
+          await tester.tap(find.text('预览'));
+          await tester.pumpAndSettle();
+        }
+        await tester.tap(
+          find.byKey(const ValueKey('collab-inline-mention-body-3')),
+        );
+        await tester.pumpAndSettle();
+        await tester.pump(const Duration(milliseconds: 400));
+        await tester.pumpAndSettle();
+        expect(taps, hasLength(preview ? 2 : 1));
+        expect(taps.last.type, CollabMentionType.user);
+        expect(taps.last.id, 'u1');
+        expect(taps.last.name, '张三');
+        expect(taps.last.attributes, {
+          'mentionType': 'user',
+          'mentionId': 'u1',
+        });
+        expect(adapter.blocks.first.text, '前😀\uFFFC后');
+        expect(find.text('用户ID：u1'), findsNothing);
+        expect(find.text('复制姓名'), findsNothing);
+        expect(find.text('删除提及'), findsNothing);
+      }
+      expect(find.byKey(const ValueKey('host-avatar')), findsOneWidget);
+      expect(sizes, isNotEmpty);
+      expect(sizes, everyElement(lessThan(36)));
       expect(tester.takeException(), isNull);
     },
   );
   testWidgets(
-    'more menu shares directory and preserves original insertion location',
+    'more menu uses host picker and preserves original insertion location',
     (tester) async {
       final adapter = await _mount(tester);
       final owner = Object();
       CollabRuntime.acquire(
         owner,
-        CollabHostServices(mentionDirectory: _Directory()),
+        CollabHostServices(pickMentionUser: _pickUser),
       );
       addTearDown(() => CollabRuntime.release(owner));
       adapter.editorState.selection = Selection.single(
@@ -380,7 +414,7 @@ void main() {
       final owner = Object();
       CollabRuntime.acquire(
         owner,
-        CollabHostServices(mentionDirectory: _Directory()),
+        CollabHostServices(pickMentionUser: _pickUser),
       );
       addTearDown(() => CollabRuntime.release(owner));
       final state = adapter.editorState;
@@ -405,7 +439,7 @@ void main() {
       );
       await tester.pump(const Duration(milliseconds: 150));
       await tester.pumpAndSettle();
-      expect(find.byKey(const ValueKey('mention-search')), findsOneWidget);
+      expect(find.byKey(const ValueKey('mention-user-u1')), findsOneWidget);
       await tester.tap(find.byKey(const ValueKey('mention-user-u1')));
       await tester.pumpAndSettle();
       for (var i = 0; i < 10; i++) {
@@ -441,7 +475,7 @@ void main() {
       final owner = Object();
       CollabRuntime.acquire(
         owner,
-        CollabHostServices(mentionDirectory: _Directory()),
+        CollabHostServices(pickMentionUser: _pickUser),
       );
       addTearDown(() => CollabRuntime.release(owner));
       final state = adapter.editorState;
@@ -485,6 +519,7 @@ CollabEditorBlock _body({String userId = 'u1'}) => CollabEditorBlock(
       text: '\uFFFC',
       inlineMention: '张三',
       mentionId: userId,
+      mentionAttributes: '{"mentionType":"user","mentionId":"$userId"}',
     ),
     const CollabEditorTextSegment(text: '后'),
   ],
@@ -537,33 +572,6 @@ class _ReadyController extends CollabController {
   bool allowed = true;
 }
 
-/// 返回一个确定的企业人员列表，无网络资源。
-class _Directory implements CollabMentionDirectory {
-  /// 按 [keyword] 过滤测试姓名。
-  @override
-  Future<List<CollabMentionUser>> search(String keyword) async =>
-      keyword.isEmpty || _user.name.contains(keyword) ? [_user] : [];
-
-  /// [userId] 对应的测试资料，不存在返回null。
-  @override
-  Future<CollabMentionUser?> load(String userId) async =>
-      userId == 'u1' ? _user : null;
-}
-
-/// 将每次搜索显式挂起，用于请求竞态。
-class _PendingDirectory implements CollabMentionDirectory {
-  final requests = <String, Completer<List<CollabMentionUser>>>{};
-
-  /// 新建 [keyword] 的挂起请求，测试负责完成。
-  @override
-  Future<List<CollabMentionUser>> search(String keyword) =>
-      (requests[keyword] = Completer()).future;
-
-  /// [userId] 在此目录中没有详情。
-  @override
-  Future<CollabMentionUser?> load(String userId) async => null;
-}
-
 /// 推进[tester]中的退场动画与Android键盘恢复定时器，再等待[future]完成。
 Future<T> _finish<T>(WidgetTester tester, Future<T> future) async {
   var completed = false;
@@ -576,4 +584,52 @@ Future<T> _finish<T>(WidgetTester tester, Future<T> future) async {
   }
   expect(completed, isTrue);
   return result;
+}
+
+/// 安装测试宿主[services]，null使用固定选人回调；测试结束释放会话，界面仅为契约夹具。
+void _installPicker({CollabHostServices? services}) {
+  final owner = Object();
+  CollabRuntime.acquire(
+    owner,
+    services ?? CollabHostServices(pickMentionUser: _pickUser),
+  );
+  addTearDown(() => CollabRuntime.release(owner));
+}
+
+/// 模拟宿主路由；[context] 为入口，[keyword] 不参与固定测试列表，
+/// [canEdit] 控制确认；关闭动画后返回结果，不依赖包内人员选择器。
+Future<CollabMentionUser?> _pickUser(
+  BuildContext context, {
+  required String keyword,
+  required ValueListenable<bool> canEdit,
+}) async {
+  final route = DialogRoute<CollabMentionUser>(
+    context: context,
+    builder: (context) => AlertDialog(
+      content: ValueListenableBuilder<bool>(
+        valueListenable: canEdit,
+        builder: (context, enabled, _) => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (enabled)
+              TextButton(
+                key: const ValueKey('mention-user-u1'),
+                onPressed: () => Navigator.pop(context, _user),
+                child: const Text('张三'),
+              )
+            else
+              const Text('当前不可编辑'),
+            TextButton(
+              key: const ValueKey('mention-close'),
+              onPressed: () => Navigator.pop(context),
+              child: const Text('关闭'),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+  final user = await Navigator.of(context).push(route);
+  await route.completed;
+  return user;
 }

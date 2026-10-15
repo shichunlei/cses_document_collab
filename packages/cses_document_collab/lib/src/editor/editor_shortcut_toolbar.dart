@@ -1,4 +1,6 @@
-import 'package:cses_document_collab/src/editor/collab_mention_sheet.dart';
+import 'package:cses_document_collab/src/model/collab_meeting.dart';
+import 'package:cses_document_collab/src/editor/collab_host_meeting_ui.dart';
+import 'package:cses_document_collab/src/editor/collab_host_mention_ui.dart';
 import 'package:cses_document_collab/src/model/collab_user_mention.dart';
 import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
@@ -456,18 +458,22 @@ final _mentionToolbarItem = MobileToolbarItem.action(
   },
 );
 
-/// 在借用 [context]/[editorState] 中搜索并插入用户；[directory] 可注入查询服务。
+/// 在借用 [context]/[editorState] 中调用宿主选择并插入用户；未注入选人端口不打开界面。
 /// [keyword] 为初始搜索词，默认空字符串；[replaceTrigger] 为true时替换光标前的@。
 /// 保存稳定块身份和原正文，远端重排可重定位，正文变化/删除/权限撤销拒绝提交。
 /// 关闭动画完成后恢复原选区或插入后的光标；取消不写正文，失败报告并保留内容。
 Future<void> showEditorUserMentionSheet(
   BuildContext context,
   EditorState editorState, {
-  CollabMentionDirectory? directory,
   String keyword = '',
   bool replaceTrigger = false,
 }) async {
   if (editorState.isDisposed || !editorState.editable) return;
+  final services = CollabRuntime.services;
+  if (services.pickMentionUser == null) {
+    _showToolbarMessage(context, '宿主未提供人员选择器');
+    return;
+  }
   final selection = editorState.selection;
   if (selection == null || !selection.isSingle) {
     _showToolbarMessage(context, '请选择同一段正文中的位置');
@@ -485,10 +491,9 @@ Future<void> showEditorUserMentionSheet(
   final session = _EditorModalSession(editorState);
   Selection? landing;
   try {
-    final user = await showCollabMentionPicker(
+    final user = await pickHostMentionUser(
       context,
       editorState,
-      directory: directory,
       keyword: keyword,
     );
     if (user == null || !context.mounted) return;
@@ -523,15 +528,17 @@ Future<void> showEditorUserMentionSheet(
       _showToolbarMessage(context, '无法插入此用户提及');
     }
   } catch (error, stack) {
-    CollabDiagnostics.report(
-      '插入用户提及失败',
-      error: error,
-      stackTrace: stack,
-      tag: 'DocCollab',
-    );
-    if (context.mounted) _showToolbarMessage(context, '插入失败，请重试');
+    services.report('插入用户提及失败', error, stack, 'DocCollab');
+    if (context.mounted && identical(CollabRuntime.services, services)) {
+      _showToolbarMessage(context, '插入失败，请重试');
+    }
   } finally {
-    await session.finish(context.mounted ? context : null, landing);
+    await session.finish(
+      context.mounted && identical(CollabRuntime.services, services)
+          ? context
+          : null,
+      landing,
+    );
   }
 }
 
@@ -1638,6 +1645,8 @@ class _EditorModalSession {
   }
 }
 
+/// 在借用 [context]/[editorState] 上展示添加入口并保存稳定书签。
+/// 嵌套宿主选择器退场后才恢复正文；取消不写入，权限或会话失效不恢复旧光标。
 Future<void> showEditorAddBlockSheet(
   BuildContext context,
   EditorState editorState,
@@ -1647,6 +1656,7 @@ Future<void> showEditorAddBlockSheet(
     _showToolbarMessage(context, '请先把光标放入正文');
     return;
   }
+  final services = CollabRuntime.services;
   final session = _EditorModalSession(editorState);
   Selection? appliedSelection;
   ModalRoute<Selection>? route;
@@ -1662,12 +1672,18 @@ Future<void> showEditorAddBlockSheet(
         return _AddBlockSheet(
           editorState: editorState,
           bookmark: session.bookmark!,
+          canUseHost: () => identical(CollabRuntime.services, services),
         );
       },
     );
     await route?.completed;
   } finally {
-    await session.finish(context.mounted ? context : null, appliedSelection);
+    await session.finish(
+      context.mounted && identical(CollabRuntime.services, services)
+          ? context
+          : null,
+      appliedSelection,
+    );
   }
 }
 
@@ -1848,10 +1864,22 @@ bool _editorKeyboardIsVisible(BuildContext context) {
 /// 完整块选择面板，借用编辑器和打开面板时捕获的稳定选区。
 /// 支持的操作复用现有块命令；成功后返回目标选区，由外层在退场后恢复正文输入。
 class _AddBlockSheet extends StatelessWidget {
-  const _AddBlockSheet({required this.editorState, required this.bookmark});
+  /// [editorState] 为借用编辑器，[bookmark] 是原始稳定位置，
+  /// [canUseHost] 检查打开面板时的宿主会话是否仍有效，不持有业务资源。
+  const _AddBlockSheet({
+    required this.editorState,
+    required this.bookmark,
+    required this.canUseHost,
+  });
 
+  /// 借用的正文状态，面板不释放。
   final EditorState editorState;
+
+  /// 打开时保存的稳定选区，随远端重排解析。
   final _EditorSelectionBookmark bookmark;
+
+  /// 原宿主会话有效性检查，失效面板不得调用新宿主选人。
+  final bool Function() canUseHost;
 
   // The add/more sheet is the exhaustive block picker, unlike the compact T
   // menu that progressively discloses deep headings. Expose every heading
@@ -1862,7 +1890,7 @@ class _AddBlockSheet extends StatelessWidget {
   /// 使用借用的 [context] 构建块入口；代码块与标题、列表复用同一插入及关闭流程。
   /// 返回面板 Widget，不持有或释放编辑器；未支持的入口继续显示占位提示。
   /// 在借用 [context] 中渲染可用块入口；插入按保存的稳定选区定位并等待事务完成。
-  /// 在借用[context]中构建块/行内入口；用户选择复用人员目录与稳定插入位置。
+  /// 在借用[context]中构建块/行内入口；用户选择调用宿主选择器并复用稳定插入位置。
   @override
   Widget build(BuildContext context) {
     final height = math.min(MediaQuery.sizeOf(context).height * 0.72, 640.0);
@@ -2093,6 +2121,68 @@ class _AddBlockSheet extends StatelessWidget {
                               }
                             },
                           ),
+                          if (CollabRuntime.services.pickMeetingReference !=
+                              null)
+                            _ActionShortcutTile(
+                              key: const ValueKey('editor-shortcut-meeting'),
+                              icon: Icons.groups_outlined,
+                              label: '会议',
+                              onTap: () async {
+                                final services = CollabRuntime.services;
+                                try {
+                                  final reference =
+                                      await pickHostMeetingReference(
+                                        context,
+                                        editorState,
+                                      );
+                                  if (!context.mounted || reference == null) {
+                                    return;
+                                  }
+                                  final selection = bookmark.resolve(
+                                    editorState,
+                                  );
+                                  if (selection == null) {
+                                    _showToolbarMessage(
+                                      context,
+                                      '插入位置已变化，请重新选择正文位置',
+                                    );
+                                    return;
+                                  }
+                                  final landing = await insertCollabMeeting(
+                                    editorState,
+                                    selection,
+                                    {
+                                      'meetingId': reference.meetingId,
+                                      'title': reference.title,
+                                      'number': reference.number,
+                                    },
+                                  );
+                                  if (context.mounted && landing != null) {
+                                    Navigator.pop<Selection>(context, landing);
+                                  } else if (context.mounted &&
+                                      editorState.editable) {
+                                    _showToolbarMessage(
+                                      context,
+                                      '会议引用无效或插入位置已变化',
+                                    );
+                                  }
+                                } catch (error, stack) {
+                                  services.report(
+                                    '插入会议引用失败',
+                                    error,
+                                    stack,
+                                    'DocCollab',
+                                  );
+                                  if (context.mounted &&
+                                      identical(
+                                        services,
+                                        CollabRuntime.services,
+                                      )) {
+                                    _showToolbarMessage(context, '插入失败，请重试');
+                                  }
+                                }
+                              },
+                            ),
                           _ActionShortcutTile(
                             key: const ValueKey('editor-shortcut-formula'),
                             icon: Icons.functions,
@@ -2256,6 +2346,8 @@ class _AddBlockSheet extends StatelessWidget {
   /// 在借用[context]的更多面板内打开人员选择；按原书签插入，父面板退场后恢复正文。
   /// 子面板期间正文/身份变化拒绝提交；取消保留父面板与原选区，失败报告并提示。
   Future<void> _insertMention(BuildContext context) async {
+    if (!canUseHost()) return;
+    final services = CollabRuntime.services;
     final captured = bookmark.resolve(editorState);
     if (captured == null || !captured.isSingle) return;
     final node = editorState.getNodeAtPath(captured.start.path);
@@ -2265,7 +2357,7 @@ class _AddBlockSheet extends StatelessWidget {
     }
     final original = Delta.fromJson(node.delta!.toJson());
     try {
-      final user = await showCollabMentionPicker(context, editorState);
+      final user = await pickHostMentionUser(context, editorState);
       if (!context.mounted || user == null) return;
       final selection = bookmark.resolve(editorState);
       if (selection == null ||
@@ -2282,13 +2374,10 @@ class _AddBlockSheet extends StatelessWidget {
         Navigator.pop<Selection>(context, landing);
       }
     } catch (error, stack) {
-      CollabDiagnostics.report(
-        '插入用户提及失败',
-        error: error,
-        stackTrace: stack,
-        tag: 'DocCollab',
-      );
-      if (context.mounted) _showToolbarMessage(context, '插入失败，请重试');
+      services.report('插入用户提及失败', error, stack, 'DocCollab');
+      if (context.mounted && identical(CollabRuntime.services, services)) {
+        _showToolbarMessage(context, '插入失败，请重试');
+      }
     }
   }
 

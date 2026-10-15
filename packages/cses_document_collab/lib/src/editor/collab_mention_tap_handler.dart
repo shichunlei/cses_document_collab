@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 final _pendingMentionTap = Expando<bool>('pendingMentionTap');
 
 /// 处理借用 [context]/[state] 中 [node] 的UTF-16 [offset] 点击。
-/// 有宿主回调时传递原始属性并等待完成，否则执行 [defaultAction] 展示现有面板。
+/// 有宿主回调时传递原始属性并等待完成，否则执行可选 [defaultAction]；两者均未配置时直接返回，不改变输入或选区。
 /// 挂起期间同编辑器其他提及点击被忽略；预览允许调用，不写正文。
 /// 关闭、失效节点或会话替换时不派发，异常向原宿主报告并在仍有效页面提示。
 /// 完成后归还输入控制，已销毁或被新路由覆盖的页面不恢复键盘。
@@ -21,7 +21,7 @@ Future<void> handleCollabMentionTap(
   EditorState state,
   Node node,
   int offset, {
-  required Future<void> Function() defaultAction,
+  Future<void> Function()? defaultAction,
 }) async {
   if (!context.mounted ||
       state.isDisposed ||
@@ -29,6 +29,7 @@ Future<void> handleCollabMentionTap(
     return;
   }
   final services = CollabRuntime.services;
+  if (services.onMentionTap == null && defaultAction == null) return;
   _pendingMentionTap[state] = true;
   try {
     final blockId =
@@ -49,7 +50,7 @@ Future<void> handleCollabMentionTap(
       }
       final callback = services.onMentionTap;
       if (callback == null) {
-        await defaultAction();
+        await defaultAction?.call();
         return;
       }
       final operation = current.delta!.slice(offset, offset + 1).first;

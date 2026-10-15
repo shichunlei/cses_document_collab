@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/model/collab_meeting.dart';
 import 'package:cses_document_collab/src/model/collab_user_mention.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -548,7 +549,7 @@ final class AppFlowyBlockEditorAdapter {
   /// Applies canonical Rust/Yrs blocks without publishing them as local edits.
   /// 行内公式或格式更新采用 Delta 局部差量，保留对象外的正文与光标位置。
   /// [nextBlocks] 是当前权威投影，空列表显示一个 UI 空段落；Future 在事务完成后结束。
-  /// 块身份、类型、顺序一致时原位更新文字、媒体、分割线及公式属性，保留组件、选区与输入连接；
+  /// 块身份、类型、顺序一致时原位更新文字、媒体、分割线、公式及会议引用属性，保留组件、选区与输入连接；
   /// URL、尺寸和题注复用节点映射，移除的可选投影显式清空。结构不同才重建节点。
   /// 不记录本地撤销或发送 WS；销毁后不执行，事务异常向调用边界传播。
   /// 正式编号及原始设置更新内存投影，不进入历史；成功转换后清除 replacesId。
@@ -583,6 +584,7 @@ final class AppFlowyBlockEditorAdapter {
                   currentNodes[index].type == csesCalloutBlockType ||
                   currentNodes[index].type == collabDividerType ||
                   currentNodes[index].type == collabFormulaType ||
+                  currentNodes[index].type == collabMeetingType ||
                   currentNodes[index].delta != null ||
                   _isUrlBackedBlock(targetBlocks[index].blockType)),
         ).every((matches) => matches);
@@ -595,7 +597,8 @@ final class AppFlowyBlockEditorAdapter {
         if (node.type == csesUnsupportedBlockType) continue;
         if (_isUrlBackedBlock(target.blockType) ||
             target.blockType == collabDividerType ||
-            target.blockType == collabFormulaType) {
+            target.blockType == collabFormulaType ||
+            target.blockType == collabMeetingType) {
           if (currentBlocks[index] != target) {
             // 统一复用创建节点时的协议映射，避免 URL/布局/题注形成两套编码。
             // updateNode 合并属性，故可选图片投影缺失时需要显式 null 删除旧值。
@@ -731,6 +734,13 @@ final class AppFlowyBlockEditorAdapter {
           node.type == collabFormulaType &&
           operation.attributes.containsKey(collabFormulaAttribute)) {
         resourceEdits.putIfAbsent(node, () => {}).add('latex');
+      }
+      if (node != null && node.type == collabMeetingType) {
+        for (final key in collabMeetingKeys) {
+          if (operation.attributes.containsKey(meetingPropertyAttribute(key))) {
+            resourceEdits.putIfAbsent(node, () => {}).add(key);
+          }
+        }
       }
       if (node != null && node.type == collabDividerType) {
         for (final key in collabDividerKeys) {
@@ -979,13 +989,25 @@ final class AppFlowyBlockEditorAdapter {
 
   /// 将权威 [block] 转为 AppFlowy 节点，图片保存强类型专属数据的 Map 投影。
   /// 题注留在资源属性而非 AppFlowy children；实际父子关系由 Rust 的共享类型持有。
-  /// 分割线与公式保存白名单原始属性和独立历史字段，不生成 Delta 或 URL。
+  /// 分割线、公式与会议引用保存白名单原始属性和独立历史字段，不生成 Delta 或 URL。
   static Node _nodeFromBlock(CollabEditorBlock block) {
     if (block.blockType == csesUnsupportedBlockType) {
       return Node(
         type: csesUnsupportedBlockType,
         id: block.id,
         attributes: {collabBlockIdAttribute: block.id},
+      );
+    }
+    if (block.blockType == collabMeetingType) {
+      return Node(
+        type: collabMeetingType,
+        id: block.id,
+        attributes: {
+          collabBlockIdAttribute: block.id,
+          ...CollabMeeting.nodeAttributes(
+            block.resource ?? const CollabResource(),
+          ),
+        },
       );
     }
     if (block.blockType == collabFormulaType) {
@@ -1199,7 +1221,12 @@ final class AppFlowyBlockEditorAdapter {
         blockTextColor: node.type == csesCalloutBlockType
             ? node.attributes[csesBlockTextColorAttribute] as String?
             : null,
-        resource: node.type == collabFormulaType
+        resource: node.type == collabMeetingType
+            ? CollabMeeting.readAttributes(
+                node.attributes,
+                edited: resourceEdits[node] ?? const {},
+              )
+            : node.type == collabFormulaType
             ? readCollabFormula(
                 node.attributes,
                 edited: resourceEdits[node]?.contains('latex') == true,
@@ -1290,11 +1317,12 @@ final class AppFlowyBlockEditorAdapter {
     return value is String && value.isNotEmpty ? value : node.id;
   }
 
-  /// 将借用 [node] 映射为投影类型，分割线与公式保持无正文的独立类型。
+  /// 将借用 [node] 映射为投影类型，分割线、公式与会议保持无正文的独立类型。
   static String _nodeBlockType(Node node) {
     if (isCollabResourceType(node.type) ||
         node.type == collabDividerType ||
-        node.type == collabFormulaType) {
+        node.type == collabFormulaType ||
+        node.type == collabMeetingType) {
       return node.type;
     }
     if (node.type == csesUnsupportedBlockType) return csesUnsupportedBlockType;
@@ -1404,11 +1432,12 @@ final class AppFlowyBlockEditorAdapter {
       blockType == NumberedListBlockKeys.type ||
       blockType == TodoListBlockKeys.type;
 
-  /// 读取借用 [node] 的正文或资源地址，容器、分割线和公式不提供文字。
+  /// 读取借用 [node] 的正文或资源地址，容器、分割线、公式和会议不提供文字。
   static String _readNodePlainText(Node node) {
     if (node.type == csesCalloutBlockType ||
         node.type == collabDividerType ||
-        node.type == collabFormulaType) {
+        node.type == collabFormulaType ||
+        node.type == collabMeetingType) {
       return "";
     }
     // Media/embed nodes intentionally have no Delta. Their URL is serialized

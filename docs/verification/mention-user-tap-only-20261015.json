@@ -1,0 +1,59 @@
+{
+  "date": "2026-10-15",
+  "scope": "用户提及移除内置资料面板，只向宿主派发点击事件",
+  "behavior": {
+    "userTap": "复用CollabHostServices.onMentionTap，事件type=user，附ID、原始姓名、深只读原始属性；编辑及预览都可触发",
+    "noCallback": "用户卡片不绑定onTap、不标记按钮；处理器缺省直接返回，不隔离正文输入或恢复选区；原始属性缺失也不报错",
+    "removed": "_showProfile、内置复制姓名/用户ID及删除按钮；无人员资料加载和默认用户弹窗",
+    "directory": "移除CollabHostServices.mentionDirectory参数/字段；目录由宿主选择器或详情页持有，公开CollabMentionDirectory数据契约保留",
+    "preserved": "宿主头像和选人注入、统一回调的异步等待/防重入/错误报告/会话失效防护、正文选区删除和撤销重做；会议/任务/文档默认面板不变"
+  },
+  "verification": {
+    "targetTests": {
+      "passed": 36,
+      "log": "/tmp/mention-profile-removed-tests.log",
+      "files": [
+        "collab_user_mention_test.dart",
+        "collab_mention_tap_test.dart",
+        "collab_host_mention_ui_test.dart"
+      ],
+      "coverage": [
+        "用户头像+姓名窄屏大字及编辑/预览回调",
+        "无回调且有/无原始属性时无弹窗、不隔离选区",
+        "四类原始事件属性、异步/重复点击/异常/会话失效",
+        "其他实体默认面板保留",
+        "用户原子删除/撤销重做、宿主选人和真实IME输入"
+      ]
+    },
+    "hostFullSuite": {
+      "passed": 33,
+      "log": "/tmp/mention-user-tap-only-host-all.log"
+    },
+    "packageFullSuite": {
+      "log": "/tmp/mention-user-tap-only-package-all.log",
+      "passed": 723
+    },
+    "packageAnalyze": {
+      "result": "No issues found",
+      "log": "/tmp/mention-profile-removed-package-analysis.log"
+    },
+    "hostAnalyze": {
+      "result": "No issues found",
+      "log": "/tmp/mention-profile-removed-host-analysis.log"
+    },
+    "format": "仅修改的手写Dart文件dart format",
+    "migrationSearch": "lib/test及包lib/test无_showProfile、mentionDirectory字段调用或原用户面板按钮残留",
+    "diffCheck": "git diff --check"
+  },
+  "limitations": [
+    "本轮未重新安装手机或进行桌面联调",
+    "本次无Rust/FRB接口改动，工作区原有会议卡片等改动保持"
+  ],
+  "adaptationCounts": {
+    "adapted": 10,
+    "partial": 9,
+    "structure": 1,
+    "unsupported": 21,
+    "total": 41
+  }
+}

@@ -23,6 +23,7 @@ enum CollabMentionType {
 ///   id: 'm1', name: '周会', attributes: {
 ///     'mentionType': 'meeting', 'mentionId': 'm1', 'number': '123456',
 ///   });
+/// final json = tap.toJson(); // type/id/name/attributes，可直接jsonEncode。
 /// final services = CollabHostServices(onMentionTap: (mention) async {
 ///   print('${mention.type.name}: ${mention.id} ${mention.name}');
 /// });
@@ -53,6 +54,15 @@ final class CollabMentionTap {
 
   /// 必填原始属性快照，嵌套集合只读；不是业务服务返回的实时详情或授权凭据。
   final Map<String, Object?> attributes;
+
+  /// 返回可直接JSON编码的type/id/name/attributes对象，type使用user/meeting/task/doc字符串。
+  /// 每次返回独立可变的顶层Map；attributes复用已深冻结的原始快照，保留空名、历史键及嵌套值。
+  Map<String, Object?> toJson() => {
+    'type': type.name,
+    'id': id,
+    'name': name,
+    'attributes': attributes,
+  };
 }
 
 /// 宿主接管提及点击；[mention] 为独立、深只读的原始快照。

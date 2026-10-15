@@ -37,7 +37,7 @@ final class CollabMentionUser {
   /// 必填显示名，写入最多20000个UTF-16单元。
   final String name;
 
-  /// 可选宿主头像URL，不写正文；null按用户ID拼接公共头像，加载中/失败显示本地首字。
+  /// 可选宿主头像URL，不写正文；交给宿主头像构建器解释，null时由宿主决定默认地址/占位。
   final String? avatarUrl;
 
   /// 可选部门名称，不写正文。
@@ -47,7 +47,8 @@ final class CollabMentionUser {
   final String? position;
 }
 
-/// 借用宿主的人员查询端口；不关闭HTTP或账号资源，失败须抛出异常。
+/// 宿主选择器或详情页复用的人员查询端口；协同编辑器不直接读取目录。
+/// 实现方持有HTTP/账号资源，调用方不关闭它们，失败须抛出异常。
 /// ```dart
 /// import 'package:cses_document_collab/cses_document_collab.dart';
 /// class Directory implements CollabMentionDirectory {
@@ -59,7 +60,7 @@ final class CollabMentionUser {
 ///   Future<CollabMentionUser?> load(String userId) async =>
 ///       userId == 'u1' ? const CollabMentionUser(id: 'u1', name: '张三') : null;
 /// }
-/// final services = CollabHostServices(mentionDirectory: Directory());
+/// Future<List<CollabMentionUser>> query() => Directory().search('张');
 /// ```
 abstract interface class CollabMentionDirectory {
   /// 搜索当前企业用户，[keyword] 为空返回初始列表；失败抛异常。
