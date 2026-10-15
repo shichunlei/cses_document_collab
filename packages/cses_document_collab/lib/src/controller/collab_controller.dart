@@ -1,3 +1,4 @@
+import 'document_feedback_controller.dart';
 import 'dart:async';
 import 'document_metadata_controller.dart';
 
@@ -60,6 +61,10 @@ class CollabController extends ChangeNotifier {
           )
         : null;
     header?.addListener(_notify);
+    feedback = DocumentFeedbackController(
+      documentId: config.documentId,
+      services: _services,
+    );
     _editorAdapter = AppFlowyBlockEditorAdapter(
       onLocalBlocksChanged: _applyEditorBlocks,
     );
@@ -70,8 +75,14 @@ class CollabController extends ChangeNotifier {
 
   /// 正式业务头部，独立于原生正文；草稿或宿主未注入服务时为 null。
   late final DocumentMetadataController? header;
+
+  /// 本控制器拥有的文末业务状态；不属于正文，close时等待并释放。
+  late final DocumentFeedbackController feedback;
   final CsesCollabGateway? _gateway;
   final CollabHostServices _services;
+
+  /// 当前文档借用的宿主能力与展示配置；资源始终由宿主持有。
+  CollabHostServices get hostServices => _services;
   bool _editable;
   Future<void>? _initializationTask;
   Future<void> _accessTransition = Future<void>.value();
@@ -693,7 +704,7 @@ class CollabController extends ChangeNotifier {
     return true;
   }
 
-  /// Wait for header business requests, document subscriptions, projection and native shutdown.
+  /// Wait for header/feedback business requests, document subscriptions, projection and native shutdown.
   /// Borrowed host services and the physical socket are not closed.
   Future<void> close() {
     dispose();
@@ -708,12 +719,13 @@ class CollabController extends ChangeNotifier {
     _disposed = true;
     header?.removeListener(_notify);
     header?.dispose();
+    feedback.dispose();
     _shutdownTask = _shutdown();
     unawaited(_shutdownTask!);
     super.dispose();
   }
 
-  /// 等待业务头部读写、会话释放及已排队投影，再关闭所属全局Rust引擎；宿主端口不释放。
+  /// 等待业务头部/文末互动读写、会话释放及已排队投影，再关闭所属全局Rust引擎；宿主端口不释放。
   Future<void> _shutdown() async {
     try {
       await _initializationTask?.then<void>(
@@ -721,6 +733,7 @@ class CollabController extends ChangeNotifier {
         onError: (Object _, StackTrace _) {},
       );
       await header?.close();
+      await feedback.close();
       await _accessTransition;
       await _releaseSession();
       await _projection;

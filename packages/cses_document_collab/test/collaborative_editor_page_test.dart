@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/controller/document_metadata_controller.dart';
 import 'package:cses_document_collab/src/model/document_metadata.dart';
+import 'package:cses_document_collab/src/model/collab_host_services.dart';
+import 'package:cses_document_collab/src/model/collab_document_feedback.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/controller/collab_controller.dart';
 import 'package:cses_document_collab/src/editor/collab_block_delete.dart';
@@ -23,6 +25,66 @@ void main() {
             onListen: (_, events) => events.success(0.0),
           ),
         );
+  });
+
+  testWidgets('host feedback flag controls scrolling footer in both modes', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 844));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    tester.view.padding = const FakeViewPadding(bottom: 24);
+    addTearDown(tester.view.resetPadding);
+    final calls = <String>[];
+    final collab = _ReadyCollabController(
+      services: CollabHostServices(
+        showDocumentFeedback: true,
+        onDocumentLike: (id, likes) {
+          calls.add(id);
+          return CollabDocumentLikes(isLiked: true);
+        },
+        onDocumentComment: (id, count) {
+          calls.add(id);
+          return count + 2;
+        },
+      ),
+    );
+    addTearDown(collab.dispose);
+    await tester.pumpWidget(
+      MaterialApp(home: CollaborativeEditorPage(collab: collab)),
+    );
+    await tester.pumpAndSettle();
+    final editor = tester.widget<AppFlowyEditor>(find.byType(AppFlowyEditor));
+    expect(editor.footer, isNotNull);
+    final before = collab.editorState.document.toJson();
+    expect(
+      find.byKey(const ValueKey('document-like')).hitTestable(),
+      findsNothing,
+    );
+    expect(
+      find.byKey(const ValueKey('document-comment')).hitTestable(),
+      findsNothing,
+    );
+    await tester.drag(find.byType(AppFlowyEditor), const Offset(0, -600));
+    await tester.pumpAndSettle();
+    final viewportBottom = tester.getBottomLeft(find.byType(AppFlowyEditor)).dy;
+    expect(
+      tester.getBottomLeft(find.byKey(const ValueKey('document-comment'))).dy,
+      closeTo(viewportBottom - 20, 1),
+    );
+    await tester.tap(find.byKey(const ValueKey('document-like')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('editor-mode-toggle')));
+    await tester.pumpAndSettle();
+    await tester.drag(find.byType(AppFlowyEditor), const Offset(0, -600));
+    await tester.pumpAndSettle();
+    expect(find.text('你已赞'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('document-comment')));
+    await tester.pumpAndSettle();
+    expect(calls, [collab.documentId, collab.documentId]);
+    expect(find.text('评论全文（2）'), findsOneWidget);
+    expect(collab.editorState.document.toJson(), before);
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox.shrink());
   });
 
   for (final scenario in [
@@ -645,6 +707,11 @@ void main() {
     expect(editor.blockComponentBuilders, isNot(contains('document_cover')));
     expect(editor.blockComponentBuilders, isNot(contains('document_title')));
     expect(editor.header, isNull); // 本地草稿只显示正文。
+    expect(editor.footer, isNull); // 未启用时整区隐藏。
+    expect(
+      find.byKey(const ValueKey('document-feedback-footer')),
+      findsNothing,
+    );
     expect(
       editor.commandShortcutEvents.first,
       same(collabBlockBackspaceCommand),
@@ -749,11 +816,21 @@ void main() {
 
 /// 不加载原生库的页面宿主 Fake；只模拟已初始化文档的能力变化。
 class _ReadyCollabController extends CollabController {
-  _ReadyCollabController({this.testEditorState, this.testHeader})
-    : super.localDraft(databasePath: '/unused');
+  /// [testEditorState]借用正文，[testHeader]借用头部，null使用默认空正文/无头部。
+  /// [services]注入宿主展示配置和事件；均不加载原生库。
+  _ReadyCollabController({
+    this.testEditorState,
+    this.testHeader,
+    super.services,
+  }) : super.localDraft(databasePath: '/unused');
 
+  /// 可选借用的正文，由测试创建者释放。
   final EditorState? testEditorState;
+
+  /// 可选借用的业务头部，由测试创建者释放。
   final DocumentMetadataController? testHeader;
+
+  /// 使用测试头部替代原生正式文档初始化。
   @override
   DocumentMetadataController? get header => testHeader;
 

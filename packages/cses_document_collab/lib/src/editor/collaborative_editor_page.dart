@@ -15,6 +15,7 @@ import 'package:cses_document_collab/src/model/collab_formula.dart';
 import 'package:cses_document_collab/src/editor/collab_divider_block.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
 import 'document_header.dart';
+import 'document_feedback_footer.dart';
 
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/editor/collab_resource_block.dart';
@@ -377,6 +378,7 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
   /// 之前处理扁平 depth；行首退格先退级再交给容器/媒体边界处理。软键盘通过工具栏注册
   /// 同规则拦截器，硬件命令在下方优先派发，共用事务及现有协同发布链路。
   /// @字符在普通可编辑正文打开宿主人员选择，无服务时保持普通输入。
+  /// 宿主启用文末互动时，正文至少占满当前编辑视口，footer随后滚动且不属于可编辑块树。
   Widget _buildEditor() {
     return IgnorePointer(
       ignoring: !collab.initialized,
@@ -392,9 +394,24 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
                   editorState: collab.editorState,
                   preview: _isPreview,
                 ),
+          footer: collab.hostServices.showDocumentFeedback
+              ? DocumentFeedbackFooter(
+                  key: ObjectKey(collab),
+                  controller: collab.feedback,
+                  editorState: collab.editorState,
+                  enabled: !_importing,
+                )
+              : null,
           editable: !_previewOnly && !_importing,
           disableKeyboardService: _previewOnly,
-          blockComponentBuilders: _collabBlockComponentBuilders,
+          blockComponentBuilders: {
+            ..._collabBlockComponentBuilders,
+            PageBlockKeys.type: PageBlockComponentBuilder(
+              minimumBodyHeight: collab.hostServices.showDocumentFeedback
+                  ? null
+                  : 0,
+            ),
+          },
           characterShortcutEvents: [
             collabListEnter,
             CharacterShortcutEvent(

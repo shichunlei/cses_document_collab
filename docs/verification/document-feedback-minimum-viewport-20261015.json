@@ -1,0 +1,83 @@
+{
+  "date": "2026-10-15",
+  "scope": "文末互动布局修正：头部与正文最小一视口，互动区排在其后，评论底部安全距离20逻辑像素",
+  "device": {
+    "model": "HONOR X70 / MTN AN00",
+    "android": "16 / API 36",
+    "physicalSize": [
+      1200,
+      2640
+    ],
+    "pixelRatio": 3.25,
+    "systemBottomInsetPhysicalPixels": 0
+  },
+  "installation": {
+    "package": "com.cses.cses_mobile_collab_demo.feedbackcheck",
+    "originalDemoStillRunning": true,
+    "data": "独立localDraft测试文档与宿主测试回调；不改真实在线文档",
+    "apk": "/tmp/document-feedback-phone-check/app-feedback-check-debug.apk",
+    "sha256": "0610fae6e6c8b108162c3755f651c1e98cfc50c64b216e58255908b132ff2e67",
+    "androidConfigRestored": true
+  },
+  "checks": [
+    {
+      "name": "空文档首屏",
+      "result": "通过",
+      "detail": "真实初始屏幕无点赞、评论；头部/正文独立占满编辑视口"
+    },
+    {
+      "name": "上滑显示互动区",
+      "result": "通过",
+      "detail": "上滑后出现点赞和评论全文（3），评论可触发宿主回调"
+    },
+    {
+      "name": "评论安全间距",
+      "result": "通过",
+      "commentBoundsPhysicalPixels": [
+        65,
+        2419,
+        1135,
+        2575
+      ],
+      "safeBottomPhysicalPixels": 2640,
+      "gapPhysicalPixels": 65,
+      "gapLogicalPixels": 20
+    },
+    {
+      "name": "互动功能回归",
+      "result": "通过",
+      "detail": "点赞变黄并显示宿主头像，评论3更新为4，取消点赞移除头像；预览可继续点赞，取消评论保留4，切回编辑保留已赞/头像/数量4"
+    },
+    {
+      "name": "键盘与稳定性",
+      "result": "通过（当前保留日志范围）",
+      "detail": "mInputShown=false，当前进程保留日志无崩溃、未处理异常或布局溢出；环形日志只保留部分回调事件"
+    }
+  ],
+  "implementation": {
+    "body": "根渲染器minimumBodyHeight=null跟随有界编辑视口，非索引footer之前只补正文缺少的高度",
+    "longDocuments": "保留惰性Sliver列表和原文档节点高度；千项列表与索引跳转回归通过",
+    "bottom": "DocumentFeedbackFooter底部padding由40改为20，页面SafeArea另行处理安全区",
+    "compatibility": "默认不启用视口填充，保持原IntrinsicHeight/shrinkWrap嵌入能力；仅footer可见时允许空正文可见范围"
+  },
+  "verification": {
+    "appflowyTestsPassed": 13,
+    "collabTestsPassed": 42,
+    "analyze": "两个受影响Flutter包目标范围无问题",
+    "diffCheck": "通过",
+    "nativeAndroidBuild": "当前源码debug包构建和安装成功"
+  },
+  "retainedCallbackEvents": [
+    "I/flutter ( 3809): FEEDBACK_CHECK like: document=feedback-phone-verification before=false after=true members=1",
+    "I/flutter ( 3809): FEEDBACK_CHECK comments: document=feedback-phone-verification before=4 after=4"
+  ],
+  "images": [
+    "document-feedback-minimum-first-screen-android-20261015.png",
+    "document-feedback-minimum-scrolled-android-20261015.png",
+    "document-feedback-minimum-liked-android-20261015.png"
+  ],
+  "limitations": [
+    "真机使用独立测试安装与宿主测试数据，未接入服务器点赞/评论持久化",
+    "本轮未验证iOS，安全区非零情况由Widget测试覆盖"
+  ]
+}

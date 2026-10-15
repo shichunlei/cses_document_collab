@@ -54,6 +54,7 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
 
   /// 初始化存储并注入公开包服务；头像、人员与会议引用页面由宿主创建，会议/任务详情绑定账号会话，草稿不启用业务加载。
   /// 等待原生初始化与宿主连接，关闭期间迟到结果不安装页面监听。
+  /// 文末点赞回调返回演示成员快照，评论回调返回当前数量；不进行业务持久化。
   Future<void> _initialize() async {
     // 登录已在 Common 注入；即使本地存储初始化失败，退出也须清理该登录。
     _ownsConnection = !localDraft;
@@ -63,6 +64,29 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
       final path = '${directory.path}/cses_mobile_collab_demo/updates.sqlite3';
       final mentionDirectory = localDraft ? null : CsesMentionDirectory();
       final services = CollabHostServices(
+        showDocumentFeedback: true,
+        onDocumentLike: (documentId, likes) {
+          final user = User();
+          final userId = localDraft ? 'demo-user' : (user.userId ?? '');
+          final name = localDraft
+              ? '演示用户'
+              : (user.name.isNotEmpty ? user.name : user.userName);
+          showToast(
+            text: likes.isLiked ? '取消点赞：$documentId' : '点赞文档：$documentId',
+          );
+          return CollabDocumentLikes(
+            isLiked: !likes.isLiked,
+            members: [
+              ...likes.members.where((member) => member.userId != userId),
+              if (!likes.isLiked)
+                CollabDocumentLikeMember(userId: userId, name: name),
+            ],
+          );
+        },
+        onDocumentComment: (documentId, commentCount) {
+          showToast(text: '评论全文：$documentId，当前$commentCount条');
+          return commentCount;
+        },
         createId: () => ObjectId().toString(),
         onError: (message, error, stack, tag) =>
             Log.e(message, error: error, stackTrace: stack, tag: tag),

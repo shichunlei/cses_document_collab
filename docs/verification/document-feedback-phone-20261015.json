@@ -1,0 +1,91 @@
+{
+  "date": "2026-10-15",
+  "scope": "文末点赞、取消点赞、宿主成员头像、评论数量及编辑/预览切换的Android真机验收",
+  "device": {
+    "model": "HONOR X70 / MTN AN00",
+    "android": "16 / API 36",
+    "resolution": "1200x2640"
+  },
+  "installation": {
+    "package": "com.cses.cses_mobile_collab_demo.feedbackcheck",
+    "mode": "独立验证安装，复用当前源码的真实CollaborativeEditorPage、CollabController和宿主buildDemoMentionAvatar",
+    "apk": "/tmp/document-feedback-phone-check/app-feedback-check-debug.apk",
+    "sha256": "c0cd5b3c18e37d55223aa00074a705436f49cf02e99c690efce8495191fcada1",
+    "originalDemoStillRunning": true,
+    "configurationRestored": "构建时临时设置独立applicationId，构建结束后恢复android/app/build.gradle.kts，无该配置差异"
+  },
+  "fixture": {
+    "documentId": "feedback-phone-verification",
+    "mode": "localDraft / native Rust-Yrs-SQLite",
+    "initialLiked": false,
+    "initialMembers": 0,
+    "initialCommentCount": 3,
+    "comments": "宿主验证弹窗模拟返回数量+1；非服务器评论数据",
+    "avatars": "使用真实Demo宿主头像构建器加载公共头像URL；姓名为测试标记"
+  },
+  "checks": [
+    {
+      "name": "初始状态",
+      "result": "通过",
+      "detail": "显示描边点赞、提示文案和评论全文（3）"
+    },
+    {
+      "name": "点赞与成员头像",
+      "result": "通过",
+      "detail": "真实点击后回调收到未赞状态，返回已赞/1名成员；按钮黄色实心、白色点赞图标，显示你已赞，宿主照片加载成功"
+    },
+    {
+      "name": "评论数量回传",
+      "result": "通过",
+      "detail": "点击评论全文（3），宿主弹窗显示收到当前评论数3；模拟新增后界面更新为评论全文（4）"
+    },
+    {
+      "name": "取消点赞",
+      "result": "通过",
+      "detail": "再次点击后恢复描边、未赞文案，成员头像移除；评论数仍为4"
+    },
+    {
+      "name": "预览与状态保留",
+      "result": "通过",
+      "detail": "预览仍显示评论数4并可点赞；预览中评论弹窗收到4，取消保留4，切回编辑后已赞状态、头像、数量4均保留"
+    },
+    {
+      "name": "键盘",
+      "result": "通过",
+      "detail": "完成操作后mInputShown=false"
+    },
+    {
+      "name": "文案居中",
+      "result": "发现并修复后通过",
+      "detail": "原Flexible行使短文案偏左，改为居中Row和等宽短分割线；已赞/未赞截图均居中，增加Widget位置断言"
+    },
+    {
+      "name": "运行稳定性",
+      "result": "本次捕获范围内通过",
+      "detail": "该进程保留日志中无FATAL EXCEPTION、Unhandled Exception、RenderFlex overflowed或FEEDBACK_CHECK ERROR；环形日志只保留部分回调事件，完整业务链路依据界面断言及截图"
+    }
+  ],
+  "retainedCallbackEvents": [
+    "I/flutter ( 1453): FEEDBACK_CHECK like: document=feedback-phone-verification before=true after=false members=0",
+    "I/flutter ( 1453): FEEDBACK_CHECK like: document=feedback-phone-verification before=false after=true members=1",
+    "I/flutter ( 1453): FEEDBACK_CHECK comments: document=feedback-phone-verification before=4 after=4"
+  ],
+  "automatedVerification": {
+    "affectedWidgetTests": 6,
+    "flutterAnalyze": "受影响footer和测试文件无问题",
+    "androidBuild": "debug APK含Android原生插件构建成功",
+    "diffCheck": "git diff --check通过"
+  },
+  "images": [
+    "document-feedback-initial-android-20261015.png",
+    "document-feedback-liked-android-20261015.png",
+    "document-feedback-unliked-android-20261015.png",
+    "document-feedback-comment-dialog-android-20261015.png",
+    "document-feedback-preview-android-20261015.png"
+  ],
+  "limitations": [
+    "使用独立验证包及宿主测试数据，未接入真实业务点赞/评论接口或服务器持久化",
+    "未替换原已登录的Demo安装或修改真实协同文档",
+    "未进行iOS真机验收"
+  ]
+}

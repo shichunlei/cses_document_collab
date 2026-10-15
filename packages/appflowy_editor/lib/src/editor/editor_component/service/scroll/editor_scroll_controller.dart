@@ -224,12 +224,15 @@ class EditorScrollController {
   }
 
   // listen to the visible item positions
+  /// Publishes the visible document range; a non-indexed footer alone yields no visible blocks.
   void _listenItemPositions() {
     // the value from itemPositions is the list of item positions, we need to filter
     //  the list to find the first and last visible items.
     final positions = _itemPositionsListener.itemPositions.value;
 
-    if (positions.isEmpty) {
+    if (positions.isEmpty ||
+        !positions.any((position) => position.itemTrailingEdge > 0) ||
+        !positions.any((position) => position.itemLeadingEdge < 1)) {
       visibleRangeNotifier.value = (-1, -1);
       return;
     }

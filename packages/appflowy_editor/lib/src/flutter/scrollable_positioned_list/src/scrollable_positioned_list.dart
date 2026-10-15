@@ -36,9 +36,28 @@ const int _screenScrollCount = 2;
 /// changes.
 ///
 /// All other parameters are the same as specified in [ListView].
+///
+/// ```dart
+/// import 'package:flutter/widgets.dart';
+/// import 'package:appflowy_editor/src/flutter/scrollable_positioned_list/scrollable_positioned_list.dart';
+/// final list = ScrollablePositionedList.builder(
+///   itemCount: 1, itemBuilder: (_, index) => Text('Item $index'),
+///   minimumContentExtent: 600, footer: const Text('Footer'),
+/// );
+/// ```
 class ScrollablePositionedList extends StatefulWidget {
   /// Create a [ScrollablePositionedList] whose items are provided by
   /// [itemBuilder].
+  /// [itemCount] is the number of indexed items; [itemBuilder] builds each index.
+  /// [key] controls identity and state reuse; [itemScrollController] controls indexed navigation.
+  /// [shrinkWrap] defaults to false; [itemPositionsListener] reports laid-out items.
+  /// [scrollOffsetController] controls relative scrolling; [scrollOffsetListener] reports deltas.
+  /// [initialScrollIndex] defaults to zero; [initialAlignment] is its viewport fraction, default zero.
+  /// [scrollDirection] defaults to vertical; [reverse] defaults to false; [physics] overrides scroll behavior.
+  /// [semanticChildCount] overrides the accessible count; [padding] insets indexed content.
+  /// [addSemanticIndexes], [addAutomaticKeepAlives] and [addRepaintBoundaries] default to true.
+  /// [minCacheExtent] overrides the minimum layout cache in logical pixels.
+  /// [footer] is non-indexed trailing content; [minimumContentExtent] reserves non-negative logical pixels before it, default zero.
   const ScrollablePositionedList.builder({
     required this.itemCount,
     required this.itemBuilder,
@@ -59,12 +78,28 @@ class ScrollablePositionedList extends StatefulWidget {
     this.addAutomaticKeepAlives = true,
     this.addRepaintBoundaries = true,
     this.minCacheExtent,
-  })  : itemPositionsNotifier = itemPositionsListener as ItemPositionsNotifier?,
-        scrollOffsetNotifier = scrollOffsetListener as ScrollOffsetNotifier?,
-        separatorBuilder = null;
+    this.footer,
+    this.minimumContentExtent = 0,
+  }) : assert(
+         minimumContentExtent >= 0 && minimumContentExtent < double.infinity,
+       ),
+       itemPositionsNotifier = itemPositionsListener as ItemPositionsNotifier?,
+       scrollOffsetNotifier = scrollOffsetListener as ScrollOffsetNotifier?,
+       separatorBuilder = null;
 
   /// Create a [ScrollablePositionedList] whose items are provided by
   /// [itemBuilder] and separators provided by [separatorBuilder].
+  /// [itemCount] is the number of indexed items; [itemBuilder] builds each index.
+  /// [key] controls identity and state reuse; [itemScrollController] controls indexed navigation.
+  /// [shrinkWrap] defaults to false; [itemPositionsListener] reports laid-out items.
+  /// [scrollOffsetController] controls relative scrolling; [scrollOffsetListener] reports deltas.
+  /// [initialScrollIndex] defaults to zero; [initialAlignment] is its viewport fraction, default zero.
+  /// [scrollDirection] defaults to vertical; [reverse] defaults to false; [physics] overrides scroll behavior.
+  /// [semanticChildCount] overrides the accessible count; [padding] insets indexed content.
+  /// [addSemanticIndexes], [addAutomaticKeepAlives] and [addRepaintBoundaries] default to true.
+  /// [minCacheExtent] overrides the minimum layout cache in logical pixels.
+  /// [footer] is non-indexed trailing content; [minimumContentExtent] reserves non-negative logical pixels before it, default zero.
+  /// [separatorBuilder] builds between adjacent indexed items, never between the gap and footer.
   const ScrollablePositionedList.separated({
     required this.itemCount,
     required this.itemBuilder,
@@ -86,9 +121,21 @@ class ScrollablePositionedList extends StatefulWidget {
     this.addAutomaticKeepAlives = true,
     this.addRepaintBoundaries = true,
     this.minCacheExtent,
-  })  : assert(separatorBuilder != null),
-        itemPositionsNotifier = itemPositionsListener as ItemPositionsNotifier?,
-        scrollOffsetNotifier = scrollOffsetListener as ScrollOffsetNotifier?;
+    this.footer,
+    this.minimumContentExtent = 0,
+  }) : assert(
+         minimumContentExtent >= 0 && minimumContentExtent < double.infinity,
+       ),
+       assert(separatorBuilder != null),
+       itemPositionsNotifier = itemPositionsListener as ItemPositionsNotifier?,
+       scrollOffsetNotifier = scrollOffsetListener as ScrollOffsetNotifier?;
+
+  /// Optional content after the indexed items and their padding; does not consume an index.
+  final Widget? footer;
+
+  /// Minimum main-axis extent of indexed content before [footer], in logical pixels.
+  /// Defaults to zero; short content receives a gap before the footer, long lists stay lazy.
+  final double minimumContentExtent;
 
   /// Number of items the [itemBuilder] can produce.
   final int itemCount;
@@ -420,6 +467,7 @@ class _ScrollablePositionedListState extends State<ScrollablePositionedList>
     }
   }
 
+  /// Builds primary/transition lists in [context], forwarding the same non-indexed footer and extent constraints.
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -437,6 +485,8 @@ class _ScrollablePositionedListState extends State<ScrollablePositionedList>
                   child: NotificationListener<ScrollNotification>(
                     onNotification: (_) => _isTransitioning,
                     child: PositionedList(
+                      footer: widget.footer,
+                      minimumContentExtent: widget.minimumContentExtent,
                       itemBuilder: widget.itemBuilder,
                       separatorBuilder: widget.separatorBuilder,
                       itemCount: widget.itemCount,
@@ -467,6 +517,8 @@ class _ScrollablePositionedListState extends State<ScrollablePositionedList>
                     child: NotificationListener<ScrollNotification>(
                       onNotification: (_) => false,
                       child: PositionedList(
+                        footer: widget.footer,
+                        minimumContentExtent: widget.minimumContentExtent,
                         itemBuilder: widget.itemBuilder,
                         separatorBuilder: widget.separatorBuilder,
                         itemCount: widget.itemCount,

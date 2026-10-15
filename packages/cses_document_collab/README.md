@@ -294,3 +294,43 @@ Demo的`CsesTaskCardService`复用Common POST `/taskManage/task/detail`，参数
 支持段落、H1～H6、加粗/斜体/删除线/行内代码/链接、两种列表、待办、0～6级列表缩进、引用、围栏代码及语言、分割线、独立 HTTP(S) 图片。每个有序列表保留起始编号。表格按行转为带 ` | ` 分隔的富文本；行内图片及非 HTTP(S) 图片保留 Markdown 地址文字，不读取或上传本地资源。HTML 按文本保留，公式语法按普通文本保留；不增加表格、HTML或公式导入能力。超过六级的列表缩进按六级显示。
 
 Android 真机验收（2026-10-15）：HONOR X70/Android16 从系统下载目录选择 `.md` 后成功追加15块；整批撤销/重做、说明页取消与系统选择器取消通过。实际手机 SQLite/WAL 回读核对原34块的ID、顺序和所检查投影保持，最终清理测试块且在线。见根仓库[验收记录](../../docs/verification/markdown-import-phone-20261015.json)；iOS、服务器持久化ACK和实际桌面双端观察尚未验收。
+
+## 文末点赞与全文评论
+
+在 `CollabHostServices` 设置 `showDocumentFeedback: true` 显示整个文末区域，默认false。编辑、预览和只读正文均可显示，业务权限由宿主判断。启用后，头部及正文的最小高度为当前编辑视口的一屏（不包含点赞和评论），短文档首屏不显示互动区，上滑后才出现。长文档保持按需渲染；滚到文末时评论按钮下方仅留20个逻辑像素，系统安全区由页面另行保留。区域随正文滚动，不属于协同块，不参与撤销或同步。
+
+```dart
+import 'package:cses_document_collab/cses_document_collab.dart';
+
+final controller = CollabController.localDraft(
+  databasePath: '/host/updates.sqlite',
+  services: CollabHostServices(
+    showDocumentFeedback: true,
+    loadDocumentFeedback: (documentId) async => CollabDocumentFeedback(
+      likes: CollabDocumentLikes(isLiked: true, members: [
+        const CollabDocumentLikeMember(userId: 'u1', name: '张三'),
+      ]),
+      commentCount: 3,
+    ), // 替换为宿主读取接口。
+    onDocumentLike: (documentId, likes) async {
+      // likes.members为只读成员列表，likes.isLiked为点击前当前用户状态。
+      // 调用点赞/取消接口，返回服务端确认后的CollabDocumentLikes。
+      return null; // 取消或无变更时保留原状态。
+    },
+    onDocumentComment: (documentId, commentCount) async {
+      // 打开宿主全文评论页面并等待关闭，返回最新评论数量。
+      return commentCount;
+    },
+  ),
+);
+final page = CollaborativeEditorPage(collab: controller);
+// 路由退出后由宿主 await controller.close()。
+```
+
+`loadDocumentFeedback(documentId)`提供初始成员、用户点赞状态和评论数量；不配置时初始为未点赞、空成员、0条评论。加载失败显示重试并禁用业务按钮，避免用未知状态发起点赞。宿主可通过`controller.feedback.refresh()`刷新数据；进行中的读写串行，不允许旧读取覆盖新写入。
+
+`onDocumentLike(documentId, likes)`返回`CollabDocumentLikes?`，其中包含完整成员列表与当前用户状态。已点赞显示黄色实心按钮、“你已赞”和成员头像，再次点击由宿主处理取消点赞。成员头像复用`mentionAvatarBuilder`并传入成员`avatarUrl`；未提供构建器时显示姓名首字，不发起默认图片请求。成员列表由宿主保证身份唯一和排序，编辑器复制为不可修改快照。文末最多展示前10位成员头像，超出显示剩余人数；回调始终传递完整列表。
+
+`onDocumentComment(documentId, commentCount)`返回`int?`，正数显示“评论全文（数量）”，0显示“评论全文…”。两个回调可同步或异步返回，null表示取消/不更新；失败和负评论数保留原值并报告重试提示。未配置回调时对应按钮禁用。点击先关闭正文键盘，等待期间禁用整个区域；状态和防重复操作由文档控制器持有，切换编辑/预览或滚动重建不会重置。关闭时忽略迟到结果并等待已发出的宿主操作，不自动恢复正文键盘。
+
+点赞、评论、认证、成员资料和持久化均由宿主负责；包不创建评论输入框。开关在控制器创建时注入，变更配置需重建控制器。Demo提供内存点赞/取消演示及评论数量回传，尚未接入业务持久化接口。旧的单参数void回调须迁移至上述双参数、返回结果的签名。

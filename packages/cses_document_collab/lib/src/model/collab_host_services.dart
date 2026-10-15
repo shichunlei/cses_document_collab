@@ -1,3 +1,4 @@
+import 'collab_document_feedback.dart';
 import 'collab_task_card_data.dart';
 import 'collab_meeting_card_data.dart';
 import 'collab_meeting_reference.dart';
@@ -40,7 +41,15 @@ class CollabHostServices {
   /// [loadTaskCard] 加载任务本地详情，null仅展示共享标题；不拥有宿主网络资源。
   /// [onMeetingCardTap] 由卡片加入/查看按钮打开会议；null禁用该按钮，仍可删除引用。
   /// [documentMetadata] 提供正式头部的业务读写；草稿不使用该端口。
+  /// [showDocumentFeedback] 默认false；true在正文末尾显示点赞和全文评论入口。
+  /// [loadDocumentFeedback]加载当前文档的初始互动快照；null使用未点赞、空成员、0条评论。
+  /// [onDocumentLike]接收文档ID和当前点赞快照，返回宿主确认的最新点赞快照；null禁用。
+  /// [onDocumentComment]接收文档ID和当前评论数量，返回最新评论数量；null禁用。
   const CollabHostServices({
+    this.showDocumentFeedback = false,
+    this.loadDocumentFeedback,
+    this.onDocumentLike,
+    this.onDocumentComment,
     this.createId,
     this.onError,
     this.mediaUpload,
@@ -53,6 +62,30 @@ class CollabHostServices {
     this.loadTaskCard,
     this.pickMeetingReference,
   });
+
+  /// 是否显示整个文末点赞/全文评论区域，默认false；编辑和预览均适用。
+  /// 配置随控制器生命周期固定；变更时由宿主重建控制器，不写入协同文档。
+  final bool showDocumentFeedback;
+
+  /// 加载[documentId]的初始点赞/评论快照；null使用空状态，不进行网络请求。
+  /// 由宿主持有认证与请求，失败可重试；编辑器不释放宿主资源。
+  final FutureOr<CollabDocumentFeedback> Function(String documentId)?
+  loadDocumentFeedback;
+
+  /// 点赞入口回调，[documentId]为稳定文档ID，[likes]包含点击前的完整成员和当前用户点赞状态。
+  /// 宿主根据likes.isLiked执行点赞/取消，返回确认后的完整快照；返回null表示取消并保留原状态。
+  /// 等待期间禁止重复操作，失败保留旧值并报告；业务鉴权、计数和持久化均由宿主负责。
+  final FutureOr<CollabDocumentLikes?> Function(
+    String documentId,
+    CollabDocumentLikes likes,
+  )?
+  onDocumentLike;
+
+  /// 全文评论入口回调，[documentId]为稳定文档ID，[commentCount]为当前非负评论数。
+  /// 宿主等待评论页面关闭后返回最新非负数量；null保留原数量，负数作为失败处理。
+  /// 点击收起正文键盘且不自动恢复；包不创建评论输入框或写入正文。
+  final FutureOr<int?> Function(String documentId, int commentCount)?
+  onDocumentComment;
 
   /// 借用宿主会议引用流程；宿主持有表单、选择/创建会议页面及业务资源。
   /// null不提供新增会议入口；包不构建默认会议表单，不创建业务会议。

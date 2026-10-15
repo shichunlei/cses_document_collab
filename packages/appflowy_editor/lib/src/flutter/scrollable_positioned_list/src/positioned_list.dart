@@ -27,6 +27,15 @@ import 'wrapping.dart';
 /// All other parameters are the same as specified in [ListView].
 class PositionedList extends StatefulWidget {
   /// Create a [PositionedList].
+  /// [key] controls identity; [itemCount] and [itemBuilder] define indexed children.
+  /// [separatorBuilder] optionally separates indexed children; [controller] supplies scrolling.
+  /// [itemPositionsNotifier] receives laid-out positions; [positionedIndex] is the anchor index, default zero.
+  /// [alignment] is its viewport fraction, default zero; [scrollDirection] defaults to vertical.
+  /// [reverse] and [shrinkWrap] default to false; [physics] overrides scrolling behavior.
+  /// [padding] insets indexed content; [cacheExtent] is the logical-pixel layout cache.
+  /// [semanticChildCount] overrides accessible count; [addSemanticIndexes],
+  /// [addRepaintBoundaries] and [addAutomaticKeepAlives] default to true.
+  /// [footer] is non-indexed trailing content; [minimumContentExtent] reserves non-negative logical pixels before it, default zero.
   const PositionedList({
     super.key,
     required this.itemCount,
@@ -46,7 +55,18 @@ class PositionedList extends StatefulWidget {
     this.addSemanticIndexes = true,
     this.addRepaintBoundaries = true,
     this.addAutomaticKeepAlives = true,
-  }) : assert((positionedIndex == 0) || (positionedIndex < itemCount));
+    this.footer,
+    this.minimumContentExtent = 0,
+  }) : assert(
+         minimumContentExtent >= 0 && minimumContentExtent < double.infinity,
+       ),
+       assert((positionedIndex == 0) || (positionedIndex < itemCount));
+
+  /// Optional non-indexed content rendered after the list and minimum extent gap.
+  final Widget? footer;
+
+  /// Minimum main-axis extent before [footer], in logical pixels; zero disables filling.
+  final double minimumContentExtent;
 
   /// Number of items the [itemBuilder] can produce.
   final int itemCount;
@@ -137,6 +157,9 @@ class PositionedList extends StatefulWidget {
 class _PositionedListState extends State<PositionedList> {
   final Key _centerKey = UniqueKey();
 
+  /// Measures reverse content before the anchor, so index jumps retain the same minimum extent.
+  final GlobalKey _leadingKey = GlobalKey();
+
   final registeredElements = ValueNotifier<Set<Element>?>(null);
   late final ScrollController scrollController;
 
@@ -164,6 +187,8 @@ class _PositionedListState extends State<PositionedList> {
     _schedulePositionNotificationUpdate();
   }
 
+  /// Builds lazily indexed content in [context] and fills only its missing minimum extent before the footer.
+  /// The reverse sliver contributes its extent when navigation changes the anchor index.
   @override
   Widget build(BuildContext context) => RegistryWidget(
     elementNotifier: registeredElements,
@@ -182,6 +207,7 @@ class _PositionedListState extends State<PositionedList> {
       slivers: <Widget>[
         if (widget.positionedIndex > 0)
           SliverPadding(
+            key: _leadingKey,
             padding: _leadingSliverPadding,
             sliver: SliverList(
               delegate: SliverChildBuilderDelegate(
@@ -238,6 +264,34 @@ class _PositionedListState extends State<PositionedList> {
                 addAutomaticKeepAlives: widget.addAutomaticKeepAlives,
               ),
             ),
+          ),
+        if (widget.footer != null)
+          SliverLayoutBuilder(
+            builder: (context, constraints) {
+              final leading =
+                  _leadingKey.currentContext?.findRenderObject()
+                      as RenderSliver?;
+              final preceding =
+                  constraints.precedingScrollExtent +
+                  (widget.positionedIndex > 0
+                      ? leading?.geometry?.scrollExtent ?? 0
+                      : 0);
+              final gap = (widget.minimumContentExtent - preceding).clamp(
+                0.0,
+                double.infinity,
+              );
+              return SliverToBoxAdapter(
+                child: Padding(
+                  padding: switch (constraints.axisDirection) {
+                    AxisDirection.down => EdgeInsets.only(top: gap),
+                    AxisDirection.up => EdgeInsets.only(bottom: gap),
+                    AxisDirection.right => EdgeInsets.only(left: gap),
+                    AxisDirection.left => EdgeInsets.only(right: gap),
+                  },
+                  child: widget.footer,
+                ),
+              );
+            },
           ),
       ],
     ),
