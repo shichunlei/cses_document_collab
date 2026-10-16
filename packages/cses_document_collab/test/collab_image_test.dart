@@ -1,4 +1,5 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/model/collab_image.dart';
 import 'package:cses_document_collab/src/editor/collab_image_content.dart';
@@ -228,7 +229,7 @@ void main() {
   );
 
   testWidgets(
-    'image dialog saves caption and layout and releases controllers after close',
+    'image layout preserves captions and caption menu edits them separately',
     (tester) async {
       final adapter = AppFlowyBlockEditorAdapter(
         initialBlocks: [_block(image)],
@@ -253,6 +254,12 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('collab-image-edit')));
       await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('collab-image-delete')), findsNothing);
+      expect(find.text('删除图片'), findsNothing);
+      expect(
+        tester.widget<AlertDialog>(find.byType(AlertDialog)).actions,
+        hasLength(2),
+      );
       await tester.enterText(
         find.byKey(const ValueKey('collab-image-width-input')),
         '0',
@@ -264,9 +271,9 @@ void main() {
         find.byKey(const ValueKey('collab-image-width-input')),
         '45',
       );
-      await tester.enterText(
+      expect(
         find.byKey(const ValueKey('collab-image-caption-input-0')),
-        '手机新题注',
+        findsNothing,
       );
       await tester.tap(find.byKey(const ValueKey('collab-image-save')));
       await tester.pumpAndSettle();
@@ -275,11 +282,118 @@ void main() {
         findsNothing,
       );
       expect(adapter.blocks.single.image!.widthRatio, 45);
+      expect(adapter.blocks.single.image!.captions.single.text, '图片题注😀');
+      await tester.tap(find.byKey(const ValueKey('block-more-image-1')));
+      await tester.pumpAndSettle();
+      expect(find.text('编辑题注'), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('collab-image-caption')));
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('collab-image-url-input')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const ValueKey('collab-image-width-input')),
+        findsNothing,
+      );
+      await tester.enterText(
+        find.byKey(const ValueKey('collab-image-caption-input-0')),
+        '手机新题注',
+      );
+      await tester.tap(find.byKey(const ValueKey('collab-image-save')));
+      await tester.pumpAndSettle();
+      expect(adapter.blocks.single.image!.widthRatio, 45);
       expect(adapter.blocks.single.image!.captions.single.text, '手机新题注');
       expect(adapter.blocks.single.image!.rotation, 15);
       expect(tester.takeException(), isNull);
     },
   );
+
+  for (final operation in ['cancel', 'empty', 'save', 'conflict', 'readonly']) {
+    testWidgets('new caption from more menu handles $operation', (
+      tester,
+    ) async {
+      final changes = <List<CollabEditorBlock>>[];
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: [
+          _block(const CollabImage(widthRatio: 70, aspectRatio: 2)),
+        ],
+        onLocalBlocksChanged: changes.add,
+      );
+      addTearDown(adapter.dispose);
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SizedBox(
+              width: 300,
+              child: CollabImageContent(
+                node: adapter.editorState.document.first!,
+                editorState: adapter.editorState,
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.byKey(const ValueKey('block-more-image-1')));
+      await tester.pumpAndSettle();
+      expect(find.text('添加题注'), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('collab-image-caption')));
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('collab-image-url-input')),
+        findsNothing,
+      );
+      if (operation != 'empty') {
+        await tester.enterText(
+          find.byKey(const ValueKey('collab-image-caption-input-0')),
+          '新增题注😀',
+        );
+      }
+      if (operation == 'conflict') {
+        await adapter.replaceFromRemote([
+          _block(
+            const CollabImage(
+              widthRatio: 30,
+              aspectRatio: 3,
+              captions: [
+                CollabImageCaption(id: 'remote-caption', text: '远端题注'),
+              ],
+            ),
+          ),
+        ]);
+      } else if (operation == 'save') {
+        await adapter.replaceFromRemote([
+          _block(const CollabImage(widthRatio: 30, aspectRatio: 3)),
+        ]);
+      } else if (operation == 'readonly') {
+        adapter.editorState.editable = false;
+      }
+      await tester.pumpAndSettle();
+      await tester.tap(
+        operation == 'cancel'
+            ? find.text('取消')
+            : find.byKey(const ValueKey('collab-image-save')),
+      );
+      await tester.pumpAndSettle();
+      final actual = adapter.blocks.single.image!;
+      if (operation == 'save') {
+        expect(actual.captions.single.text, '新增题注😀');
+        expect(actual.captions.single.id, isNotEmpty);
+        expect(actual.widthRatio, 30);
+        expect(actual.aspectRatio, 3);
+      } else if (operation == 'conflict') {
+        expect(actual.captions.single.id, 'remote-caption');
+        expect(actual.captions.single.text, '远端题注');
+        expect(find.text('图片已被其他端修改，请重新打开编辑'), findsOneWidget);
+        expect(changes, isEmpty);
+      } else {
+        expect(actual.captions, isEmpty);
+        expect(changes, isEmpty);
+      }
+      await tester.pumpWidget(const SizedBox.shrink());
+      expect(tester.takeException(), isNull);
+    });
+  }
 
   testWidgets('same node URL changes replace the network image provider', (
     tester,
@@ -303,7 +417,9 @@ void main() {
     );
     await tester.pumpWidget(view());
     expect(
-      (tester.widget<Image>(find.byType(Image)).image as NetworkImage).url,
+      tester
+          .widget<CachedNetworkImage>(find.byType(CachedNetworkImage))
+          .imageUrl,
       'https://example.test/first.png',
     );
     await adapter.editorState.apply(
@@ -314,7 +430,9 @@ void main() {
     );
     await tester.pumpWidget(view());
     expect(
-      (tester.widget<Image>(find.byType(Image)).image as NetworkImage).url,
+      tester
+          .widget<CachedNetworkImage>(find.byType(CachedNetworkImage))
+          .imageUrl,
       'https://example.test/second.png',
     );
     expect(tester.takeException(), isNull);

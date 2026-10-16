@@ -1,0 +1,61 @@
+{
+  "date": "2026-10-16",
+  "base_commit": "371afb0eb41748bdb294fdb210b4929333b14af9",
+  "problem": "CachedNetworkImage使用位图解码器，SVG被当作无效位图。",
+  "implementation": [
+    "SVG后缀链接读取共享缓存文件，使用SvgPicture.memory绘制；不创建或释放第二个全局缓存管理器。",
+    "无后缀链接仍先走CachedNetworkImage；解码失败后仅读取已有缓存文件，在compute后台识别SVG，不额外发网络请求。",
+    "SVG data URI按MIME选择矢量渲染，普通位图和blob上传占位保留；FutureBuilder与URL身份隔离旧请求。"
+  ],
+  "upstream": {
+    "latest": "0.11.21",
+    "desktop_declared": "0.11.17",
+    "desktop_yarn_locked": "0.11.17",
+    "desktop_installed": "0.11.17",
+    "registry": "http://npm.runtongqiuben.com/",
+    "scope": "重新核对版本未变，沿用本日两版随包技能/迁移/图片实现核对，不声明新版全量兼容。"
+  },
+  "dependencies": {
+    "cached_network_image": "^3.4.1（已解析3.4.1）",
+    "flutter_svg": "既有^2.3.0",
+    "flutter_cache_manager": "直接声明^3.4.1（已解析3.4.5），通过CachedNetworkImageProvider借用默认管理器",
+    "file": "dev_dependency ^7.0.1，仅用于内存缓存测试"
+  },
+  "validation": {
+    "widget_tests": 51,
+    "tests_command": "flutter test --no-pub test/collab_image_svg_test.dart test/collab_image_test.dart test/collab_block_actions_test.dart",
+    "tests_cwd": "packages/cses_document_collab",
+    "tests_log": "/tmp/svg-image-tests-verified.log",
+    "coverage": [
+      "显式.svg、大小写SVG后缀与查询参数",
+      "无扩展名SVG、带长XML头的SVG，fallback不新增下载",
+      "SVG data URI、正常PNG缓存解码",
+      "下载失败、无效SVG解析、位图失败保持占位",
+      "旧源迟到结果不覆盖新图，保持原尺寸、旋转和题注，展示不触发协同写入"
+    ],
+    "package_analysis": "3个目标文件无问题，/tmp/svg-image-analyze-verified.log",
+    "host_analysis": "宿主lib无问题，/tmp/svg-image-host-analyze.log",
+    "dependency_resolution": "两包offline解析成功；复用已安装缓存，无平台构建配置变更。",
+    "format": "修改的手写文件已dart format",
+    "diff_check": "通过",
+    "isolated_commit_review": {
+      "passed": true,
+      "method": "从暂存区导出完整仓库；不包含其他工作区划词菜单、段落样式、宿主或Rust/FRB改动。",
+      "widget_tests": 51,
+      "analysis_targets": 4,
+      "dependency_resolution": "隔离副本offline解析通过",
+      "tests_log": "/tmp/image-commit-tests.log",
+      "analysis_log": "/tmp/image-commit-analyze.log"
+    }
+  },
+  "limitations": [
+    "SVG测试通过内存缓存端口与合成数据，不访问真实网络/磁盘缓存。",
+    "未复测Android/iOS真机或Web下载/缓存路径。",
+    "复杂SVG能力受flutter_svg支持范围限制；不提供浏览器脚本或外部资源执行。"
+  ],
+  "source_sha256": {
+    "packages/cses_document_collab/lib/src/editor/collab_image_content.dart": "87aaa649bd60d16cc0068fc7126196bffcf62b9a4b9225664c596e9e8335d97c",
+    "packages/cses_document_collab/test/collab_image_svg_test.dart": "9782159ffb42f1b2610b0065cbfcfa968e78dfe81513e23553bdf3dba0c41a66",
+    "packages/cses_document_collab/pubspec.yaml": "9e057f19e3b02fd123b147ae0d0c4d7de26827437c9710334476e01de54ccc99"
+  }
+}
