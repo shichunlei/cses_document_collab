@@ -1,6 +1,6 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:cses_document_collab/src/editor/collab_cached_image.dart';
 
 import 'package:cses_document_collab/src/controller/document_metadata_controller.dart';
 import 'package:cses_document_collab/src/model/document_metadata.dart';
@@ -388,7 +388,7 @@ Future<T?> _sheet<T>(
 }
 
 /// 根据业务 [banner] 的url及0～100百分比y展示裁切图片；异常y钳制到合法范围。
-/// 非HTTP(S)地址或网络解码失败返回占位视图，不修改Map或写入业务数据。
+/// HTTP(S)位图及SVG共用图片文件缓存；非法地址或加载失败显示占位，不写业务数据。
 Widget _bannerImage(Map<String, dynamic> banner) {
   final y = banner['y'];
   final position = y is num ? y.toDouble().clamp(0, 100) : 0.0;
@@ -402,19 +402,21 @@ Widget _bannerImage(Map<String, dynamic> banner) {
       child: Center(child: Icon(Icons.broken_image_outlined)),
     );
   }
-  return Image.network(
-    url as String,
+  return CollabCachedImage(
+    key: ValueKey('document-banner:$url'),
+    url: url as String,
     fit: BoxFit.cover,
     alignment: Alignment(0, position / 50 - 1),
-    errorBuilder: (_, _, _) => const ColoredBox(
+    loading: const ColoredBox(color: Color(0xFFF1F5F9)),
+    failure: const ColoredBox(
       color: Color(0xFFF1F5F9),
       child: Center(child: Icon(Icons.broken_image_outlined)),
     ),
   );
 }
 
-/// 根据业务 icon.type 展示文字表情或图片；image 的 SVG 地址使用矢量解码，
-/// [icon] 是借用的type/value Map；只检查URI路径后缀，查询参数不影响SVG判断。
+/// 根据业务 icon.type 展示文字表情或缓存图片，SVG读取同一文件缓存后矢量解码，
+/// [icon] 是借用的type/value Map；无后缀SVG在位图解码失败后检查缓存内容。
 /// 图片加载失败和未知类型返回通用图标，原数据不修改；返回值适配48px父占位。
 Widget _documentIcon(Map<String, dynamic> icon) {
   if (icon['type'] == 'emoji' && icon['value'] is String) {
@@ -432,27 +434,17 @@ Widget _documentIcon(Map<String, dynamic> icon) {
       uri != null &&
       ['http', 'https'].contains(uri.scheme) &&
       uri.host.isNotEmpty) {
-    if (uri.path.toLowerCase().endsWith('.svg')) {
-      return SvgPicture.network(
-        uri.toString(),
-        width: 48,
-        height: 48,
-        fit: BoxFit.contain,
-        semanticsLabel: '文档图标',
-        placeholderBuilder: (_) => const SizedBox.square(dimension: 48),
-        errorBuilder: (_, _, _) => const SizedBox.square(
-          dimension: 48,
-          child: Icon(Icons.description_outlined, size: 44),
-        ),
-      );
-    }
-    return Image.network(
-      uri.toString(),
+    return CollabCachedImage(
+      key: ValueKey('document-icon:$uri'),
+      url: uri.toString(),
       width: 48,
       height: 48,
-      fit: BoxFit.contain,
-      errorBuilder: (_, _, _) =>
-          const Icon(Icons.description_outlined, size: 44),
+      semanticsLabel: '文档图标',
+      loading: const SizedBox.square(dimension: 48),
+      failure: const SizedBox.square(
+        dimension: 48,
+        child: Icon(Icons.description_outlined, size: 44),
+      ),
     );
   }
   return FittedBox(child: const Icon(Icons.description_outlined, size: 44));

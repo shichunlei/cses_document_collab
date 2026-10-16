@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:appflowy_editor/appflowy_editor.dart';
@@ -13,8 +14,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:http/http.dart' as http;
-import 'package:http/testing.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:file/memory.dart';
+import 'package:file/file.dart' as files;
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 /// 可配置头部详情与ACK延迟的测试服务，不创建网络资源，记录所有业务命令。
 class _Service implements DocumentMetadataService {
@@ -85,29 +88,96 @@ class _IconUpload extends EditorMediaUploadService {
   }
 }
 
-/// 用 [description] 注册 [callback] Widget回归；仅替换公开图片HTTP响应，保留真实SVG解析/绘制。
-/// 异步测试与HTTP替身生命周期由测试框架及runWithClient管理，失败按原测试语义上报。
-void svgTestWidgets(String description, WidgetTesterCallback callback) {
-  testWidgets(
-    description,
-    (tester) => http.runWithClient(
-      () => callback(tester),
-      () => MockClient(
-        (request) async => http.Response(
-          await File(
-            'test/fixtures/document-header-image-icon.svg',
-          ).readAsString(),
-          200,
-          headers: {'content-type': 'image/svg+xml'},
+/// 为[description]注册[callback]，图片由内存文件缓存提供，保留真实矢量解码。
+void svgTestWidgets(String description, WidgetTesterCallback callback) =>
+    testWidgets(description, callback);
+
+/// 在真实异步区域等待[tester]的内存缓存读取和矢量后台编译。
+Future<void> _settleImages(WidgetTester tester) async {
+  for (var i = 0; i < 6; i++) {
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 30)),
+    );
+    await tester.pump();
+  }
+  await tester.pumpAndSettle();
+}
+
+/// 头部测试独占的内存缓存，不启动磁盘插件或真实下载。
+class _HeaderCache extends Fake implements BaseCacheManager {
+  /// 此替身独占的内存文件系统。
+  final fs = MemoryFileSystem();
+
+  /// 记录缓存下载调用，验证展示未绕过共享管理器。
+  final fetches = <String>[];
+
+  /// 记录位图加载调用，保留完整URL身份。
+  final rasterLoads = <String>[];
+
+  /// 为[url]提供本地SVG/PNG；包含missing的地址模拟加载失败。
+  Future<files.File> _file(String url) async {
+    if (url.contains('missing')) throw StateError('fixture cache failure');
+    final file = fs.file('/${url.hashCode}.image');
+    if (Uri.parse(url).path.toLowerCase().endsWith('.svg') ||
+        url.contains('vector-no-extension')) {
+      file.writeAsStringSync(
+        await File(
+          'test/fixtures/document-header-image-icon.svg',
+        ).readAsString(),
+      );
+    } else {
+      file.writeAsBytesSync(
+        base64Decode(
+          'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
         ),
-      ),
-    ),
-  );
+      );
+    }
+    return file;
+  }
+
+  /// 记录[url]下载并返回内存文件；[key]与[headers]不改变测试来源。
+  @override
+  Future<files.File> getSingleFile(
+    String url, {
+    String? key,
+    Map<String, String>? headers,
+  }) async {
+    fetches.add(url);
+    return _file(url);
+  }
+
+  /// 为[url]返回缓存流；[key]、[headers]和[withProgress]不产生外部副作用。
+  @override
+  Stream<FileResponse> getFileStream(
+    String url, {
+    String? key,
+    Map<String, String>? headers,
+    bool withProgress = false,
+  }) async* {
+    rasterLoads.add(url);
+    yield FileInfo(await _file(url), FileSource.Cache, DateTime(2100), url);
+  }
+
+  /// 按[key]仅读取既有内存文件；[ignoreMemCache]不影响本替身。
+  @override
+  Future<FileInfo?> getFileFromCache(
+    String key, {
+    bool ignoreMemCache = false,
+  }) async {
+    final file = fs.file('/${key.hashCode}.image');
+    return file.existsSync()
+        ? FileInfo(file, FileSource.Cache, DateTime(2100), key)
+        : null;
+  }
 }
 
 /// 注册正式头部界面回归，逐例创建并关闭元数据控制器和编辑器，验证业务保存、焦点与布局。
 /// 本函数同步完成用例注册；异步验证及资源释放由测试框架执行。
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  CachedNetworkImageProvider.defaultCacheManager = _HeaderCache();
+  late _HeaderCache cache;
+  late BaseCacheManager originalCache;
   setUpAll(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockStreamHandler(
@@ -155,7 +225,7 @@ void main() {
         ),
       ),
     );
-    await tester.pumpAndSettle();
+    await _settleImages(tester);
     addTearDown(() async {
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.binding.setSurfaceSize(null);
@@ -163,6 +233,11 @@ void main() {
   }
 
   setUp(() {
+    originalCache = CachedNetworkImageProvider.defaultCacheManager;
+    cache = _HeaderCache();
+    CachedNetworkImageProvider.defaultCacheManager = cache;
+    PaintingBinding.instance.imageCache.clear();
+    PaintingBinding.instance.imageCache.clearLiveImages();
     service = _Service();
     controller = DocumentMetadataController(
       documentId: 'doc',
@@ -177,6 +252,9 @@ void main() {
     );
   });
   tearDown(() async {
+    CachedNetworkImageProvider.defaultCacheManager = originalCache;
+    PaintingBinding.instance.imageCache.clear();
+    PaintingBinding.instance.imageCache.clearLiveImages();
     await controller.close();
     adapter.dispose();
   });
@@ -186,7 +264,9 @@ void main() {
       await mount(tester, preview: true);
       expect(find.text('桌面文档标题'), findsOneWidget);
       expect(find.text('😘'), findsOneWidget);
-      final image = tester.widget<Image>(find.byType(Image).first);
+      final image = tester.widget<CachedNetworkImage>(
+        find.byType(CachedNetworkImage).first,
+      );
       expect(image.alignment, const Alignment(0, -0.5));
       expect(find.byKey(const ValueKey('document-banner-edit')), findsNothing);
       expect(adapter.blocks.single.blockType, 'paragraph');
@@ -194,20 +274,60 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
+  testWidgets(
+    'cached cover keeps crop, handles SVG and remote source replacement',
+    (tester) async {
+      const svgUrl = 'https://example.test/cover.SVG?token=one';
+      service.banner = {'url': svgUrl, 'y': 75};
+      await mount(tester, preview: true);
+      var svg = tester.widget<SvgPicture>(find.byType(SvgPicture));
+      expect(svg.fit, BoxFit.cover);
+      expect(svg.alignment, const Alignment(0, .5));
+      expect(cache.fetches, [svgUrl]);
+      service.banner = {'url': svgUrl, 'y': 150};
+      await controller.refresh();
+      await _settleImages(tester);
+      svg = tester.widget<SvgPicture>(find.byType(SvgPicture));
+      expect(svg.alignment, const Alignment(0, 1));
+      expect(cache.fetches, [svgUrl], reason: '调位置无需重新读取SVG');
+      service.banner = {'url': 'https://example.test/new-cover.png', 'y': 0};
+      await controller.refresh();
+      await _settleImages(tester);
+      expect(find.byType(SvgPicture), findsNothing);
+      final raster = tester.widget<CachedNetworkImage>(
+        find.byType(CachedNetworkImage),
+      );
+      expect(raster.imageUrl, 'https://example.test/new-cover.png');
+      expect(raster.alignment, const Alignment(0, -1));
+      service.banner = {'url': 'https://example.test/missing.svg'};
+      await controller.refresh();
+      await _settleImages(tester);
+      expect(find.byIcon(Icons.broken_image_outlined), findsOneWidget);
+      expect(service.patches, isEmpty);
+      expect(adapter.blocks.single.text, '原始正文');
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   for (final url in [
     'http://attachment.example.test/header.svg',
     'https://attachment.example.test/header.SVG?version=2#icon',
+    'https://attachment.example.test/vector-no-extension?version=2',
   ]) {
     svgTestWidgets('image icon SVG uses vector renderer: $url', (tester) async {
       service.icon = {'type': 'image', 'value': url};
       await mount(tester, preview: true);
+      if (url.contains('vector-no-extension')) {
+        await _settleImages(tester);
+      }
       final svgFinder = find.descendant(
         of: find.byKey(const ValueKey('document-icon-edit')),
         matching: find.byType(SvgPicture),
       );
       expect(svgFinder, findsOneWidget);
       final svg = tester.widget<SvgPicture>(svgFinder);
-      expect((svg.bytesLoader as SvgNetworkLoader).url, url);
+      expect(svg.bytesLoader, isA<SvgBytesLoader>());
+      expect([...cache.fetches, ...cache.rasterLoads], contains(url));
       expect(svg.width, 48);
       expect(svg.height, 48);
       expect(svg.colorFilter, isNull); // 保留原始多色 SVG。
@@ -265,10 +385,11 @@ void main() {
       };
       await mount(tester, preview: true);
       final area = find.byKey(const ValueKey('document-icon-edit'));
-      final image = tester.widget<Image>(
-        find.descendant(of: area, matching: find.byType(Image)),
+      final image = tester.widget<CachedNetworkImage>(
+        find.descendant(of: area, matching: find.byType(CachedNetworkImage)),
       );
-      expect((image.image as NetworkImage).url, service.icon!['value']);
+      expect(image.imageUrl, service.icon!['value']);
+      expect(cache.rasterLoads, contains(service.icon!['value']));
       expect(
         find.descendant(of: area, matching: find.byType(SvgPicture)),
         findsNothing,
@@ -279,10 +400,14 @@ void main() {
       };
       await controller.refresh();
       await tester.pumpAndSettle();
-      final svg = tester.widget<SvgPicture>(
-        find.descendant(of: area, matching: find.byType(SvgPicture)),
+      await _settleImages(tester);
+      expect(
+        find.descendant(
+          of: area,
+          matching: find.byIcon(Icons.description_outlined),
+        ),
+        findsOneWidget,
       );
-      expect(svg.errorBuilder, isNotNull);
       expect(controller.value!.icon, service.icon);
       expect(tester.takeException(), isNull);
     },

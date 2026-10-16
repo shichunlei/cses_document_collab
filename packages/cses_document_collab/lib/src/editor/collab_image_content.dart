@@ -1,9 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:appflowy_editor/appflowy_editor.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cses_document_collab/src/editor/collab_cached_image.dart';
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/editor/collab_image_editor.dart';
 import 'package:cses_document_collab/src/model/collab_image.dart';
@@ -190,32 +189,24 @@ class _CollabImageContentState extends State<CollabImageContent> {
           errorBuilder: (_, _, _) => _placeholder('图片加载失败'),
         );
       }
-      return Image.memory(_data!, fit: BoxFit.contain, errorBuilder: (_, _, _) => _placeholder('图片加载失败'));
+      return Image.memory(
+        _data!,
+        fit: BoxFit.contain,
+        errorBuilder: (_, _, _) => _placeholder('图片加载失败'),
+      );
     }
-    if (uri == null || !['http', 'https'].contains(uri.scheme) || uri.host.isEmpty) {
+    if (uri == null ||
+        !['http', 'https'].contains(uri.scheme) ||
+        uri.host.isEmpty) {
       return _placeholder('暂不支持的图片来源');
     }
-    if (uri.path.toLowerCase().endsWith('.svg')) {
-      return _svgImage(cacheOnly: false);
-    }
-    return CachedNetworkImage(
+    return CollabCachedImage(
       key: ValueKey('collab-image-network:$_url'),
-      imageUrl: _url,
-      fit: BoxFit.contain,
-      placeholder: (_, _) => _placeholder('图片加载中'),
-      errorWidget: (_, _, _) => _svgImage(cacheOnly: true),
+      url: _url,
+      loading: _placeholder('图片加载中'),
+      failure: _placeholder('图片加载失败'),
     );
   }
-
-  /// 为当前源创建SVG视图。[cacheOnly]为true时仅检查位图加载器已缓存的文件；
-  /// false允许缓存管理器下载。URL身份及FutureBuilder共同隔离旧请求。
-  Widget _svgImage({required bool cacheOnly}) => _CachedSvgImage(
-    key: ValueKey('collab-image-svg:$_url:$cacheOnly'),
-    url: _url,
-    cacheOnly: cacheOnly,
-    loading: _placeholder('图片加载中'),
-    failure: _placeholder('图片加载失败'),
-  );
 
   /// 显示 [message] 描述的资源状态；占位不触发写入或网络重试。
   Widget _placeholder(String message) => ColoredBox(
@@ -228,96 +219,6 @@ class _CollabImageContentState extends State<CollabImageContent> {
     ),
   );
 }
-
-/// Reuses the image provider's borrowed global cache for SVG bytes.
-/// Only this view's future is retained; the shared manager is never disposed here.
-class _CachedSvgImage extends StatefulWidget {
-  /// [key] controls identity; [url] is the complete cache/download address.
-  /// [cacheOnly] disables downloads for raster-error fallback. [loading] and
-  /// [failure] are borrowed status widgets, also used during vector parsing.
-  const _CachedSvgImage({
-    super.key,
-    required this.url,
-    required this.cacheOnly,
-    required this.loading,
-    required this.failure,
-  });
-
-  /// Source URL, including query parameters, used as the cache identity.
-  final String url;
-
-  /// Whether only an already cached file may be read.
-  final bool cacheOnly;
-
-  /// Loading surface borrowed from the enclosing image block.
-  final Widget loading;
-
-  /// Failure surface for unavailable, invalid or unsupported SVG data.
-  final Widget failure;
-
-  /// Creates the request state; no global resources are acquired.
-  @override
-  createState() => _CachedSvgImageState();
-}
-
-/// Retains one request future; FutureBuilder ignores completions from old sources.
-class _CachedSvgImageState extends State<_CachedSvgImage> {
-  /// Current source read; its bytes are owned by this view until it is removed.
-  late Future<Uint8List?> _request;
-
-  /// Starts the initial cache read without allocating a second cache manager.
-  @override
-  void initState() {
-    super.initState();
-    _request = _read();
-  }
-
-  /// Replaces the request when borrowed [oldWidget] had a different source or policy.
-  @override
-  void didUpdateWidget(covariant _CachedSvgImage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.url != widget.url || oldWidget.cacheOnly != widget.cacheOnly) {
-      _request = _read();
-    }
-  }
-
-  /// Reads the cache file asynchronously; fallback identifies SVG in a worker
-  /// isolate and never fetches missing files. Missing/non-SVG cached data returns
-  /// null; FutureBuilder consumes read failures. The global manager is borrowed.
-  Future<Uint8List?> _read() async {
-    final manager = CachedNetworkImageProvider.defaultCacheManager;
-    final file = widget.cacheOnly
-        ? (await manager.getFileFromCache(widget.url))?.file
-        : await manager.getSingleFile(widget.url);
-    if (file == null) return null;
-    final bytes = await file.readAsBytes();
-    if (!widget.cacheOnly) return bytes;
-    return await compute(_looksLikeSvg, bytes) ? bytes : null;
-  }
-
-  /// Renders with borrowed [context]; unsupported files never reach the SVG parser.
-  @override
-  Widget build(BuildContext context) => FutureBuilder<Uint8List?>(
-    future: _request,
-    builder: (context, snapshot) {
-      if (snapshot.connectionState != ConnectionState.done) {
-        return widget.loading;
-      }
-      if (snapshot.hasError || snapshot.data == null) return widget.failure;
-      return SvgPicture.memory(
-        snapshot.data!,
-        fit: BoxFit.contain,
-        placeholderBuilder: (_) => widget.loading,
-        errorBuilder: (_, _, _) => widget.failure,
-      );
-    },
-  );
-}
-
-/// Recognizes an SVG root in cached [bytes]; called through compute so long XML
-/// comments/metadata do not block the UI. BOM and namespace prefixes are accepted.
-bool _looksLikeSvg(Uint8List bytes) =>
-    RegExp(r'<(?:[A-Za-z_][\w.-]*:)?svg(?:\s|>)').hasMatch(utf8.decode(bytes, allowMalformed: true));
 
 /// 在后台解码 [source] 的 image/* data URI，最大接受 32 MiB 的编码文本。
 /// 类型、大小或 Base64 不合法时抛出 FormatException，不尝试把它当本地路径。

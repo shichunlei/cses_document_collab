@@ -1,0 +1,61 @@
+{
+  "date": "2026-10-16",
+  "base_commit": "c50a7a6a87a66ec81b9c9d4064ca30c988101a99",
+  "scope": "文档头图和图片型icon接入正文共用缓存图片视图。",
+  "implementation": [
+    "抽取CollabCachedImage，普通位图使用CachedNetworkImage；SVG异步读取CachedNetworkImageProvider默认缓存后使用SvgPicture.memory。",
+    "无后缀SVG在位图解码失败后仅读取已缓存文件，并在compute中识别；不重复下载、不新建或释放默认缓存管理器。",
+    "封面与位置调整预览使用cover及y裁切，SVG/位图行为一致；icon保持48逻辑像素、原始颜色和失败占位；Emoji保持文字。",
+    "源变化按URL和Future身份隔离旧读取；位置变化不重新读取SVG文件，不修改元数据或正文。"
+  ],
+  "upstream": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.21",
+    "desktop_declared": "0.11.21",
+    "desktop_yarn_locked": "0.11.21",
+    "desktop_installed": "0.11.17",
+    "scope": "重新查询并核对版本，沿用本日发布产物技能/迁移与图片渲染核对；业务头部独立于BlockCraft块结构，本次不更改协议或扩大兼容验收。"
+  },
+  "validation": {
+    "widget_tests": {
+      "count": 44,
+      "result": "passed",
+      "command": "flutter test --no-pub test/document_header_test.dart test/collab_image_svg_test.dart test/collab_image_test.dart",
+      "cwd": "packages/cses_document_collab",
+      "log": "/tmp/header-cache-tests-verified.log",
+      "coverage": [
+        "封面缓存位图、SVG的cover与y裁切、调整y无需重新读取、换源和失败占位",
+        "图标HTTP(S) SVG、大小写/查询参数、无后缀SVG、缓存位图、失败及Emoji",
+        "头部现有编辑/上传/权限/焦点/窄屏回归与业务数据/正文保留",
+        "正文SVG/位图/data URI、无后缀回退、换源迟到结果与图片布局/题注回归"
+      ]
+    },
+    "analysis": {
+      "targets": 4,
+      "result": "passed",
+      "log": "/tmp/header-cache-analyze-final.log",
+      "latest_test_check": "/tmp/header-cache-test-analyze.log"
+    },
+    "format": "已格式化修改的手写Dart文件，恢复无关历史区域排版。",
+    "diff_check": "passed",
+    "isolated_commit": {
+      "result": "passed",
+      "dependency_resolution": "offline passed",
+      "widget_tests": 44,
+      "analysis_targets": 4,
+      "tests_log": "/tmp/header-cache-commit-tests.log",
+      "analysis_log": "/tmp/header-cache-commit-analyze.log",
+      "scope": "从暂存区导出完整仓库，仅包含本次缓存渲染改动；排除其他段落/划词菜单/宿主/原生修改和头部两处无关createState签名改动。"
+    }
+  },
+  "limitations": [
+    "使用内存文件缓存和合成资源验证，不验证真实网络下载、磁盘命中或真机断网恢复。",
+    "Android/iOS/Web未复测；图库缩略图、头像及网页缩略图不在范围。"
+  ],
+  "source_sha256": {
+    "packages/cses_document_collab/lib/src/editor/collab_cached_image.dart": "3ed3ca90a197663357a8e46ea3f5c19f132e999dcfdf80f30b9890ea46c4265c",
+    "packages/cses_document_collab/lib/src/editor/collab_image_content.dart": "25710adf3f0ba6bbc9b35263ee8d0aae2f0c2bf103438854fc27130fb82dad04",
+    "packages/cses_document_collab/lib/src/editor/document_header.dart": "57b5ddc0ca33fce868a2fcb77d864c8a42e6a69237df8a3b5a08961b9f52da9f",
+    "packages/cses_document_collab/test/document_header_test.dart": "f14131816d815e217b922eb95626631d084b80c2e0766d5f155b2355edcf9bb0"
+  }
+}
