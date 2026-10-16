@@ -109,7 +109,7 @@ class EditorMediaSourcePanel extends StatefulWidget {
 
   /// 创建拥有输入、滚动和取消令牌的状态，借用业务上传端口。
   @override
-  State<EditorMediaSourcePanel> createState() => _MediaSourceSheetState();
+  createState() => _MediaSourceSheetState();
 }
 
 /// 持有来源切换、输入、文件选择及上传状态；销毁时释放自有控制器并取消当前上传。

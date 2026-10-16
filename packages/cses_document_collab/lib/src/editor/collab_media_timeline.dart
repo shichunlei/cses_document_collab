@@ -42,7 +42,7 @@ class CollabMediaTimeline extends StatefulWidget {
 
   /// 创建仅持有拖动预览和跳转状态的局部State。
   @override
-  State<CollabMediaTimeline> createState() => _CollabMediaTimelineState();
+  createState() => _CollabMediaTimelineState();
 }
 
 /// 拖动只更新本地预览，松手后跳转一次；迟到结果不影响换源或退出后的组件。
@@ -72,11 +72,7 @@ class _CollabMediaTimelineState extends State<CollabMediaTimeline> {
   Future<void> _seek(double value) async {
     final controller = widget.controller;
     final duration = controller.value.duration.inMilliseconds;
-    if (!mounted ||
-        _seeking ||
-        !controller.value.isInitialized ||
-        controller.value.hasError ||
-        duration <= 0) {
+    if (!mounted || _seeking || !controller.value.isInitialized || controller.value.hasError || duration <= 0) {
       return;
     }
     final request = ++_request;
@@ -88,9 +84,7 @@ class _CollabMediaTimelineState extends State<CollabMediaTimeline> {
     try {
       await widget.onSeek(Duration(milliseconds: target.round()));
     } catch (error, stackTrace) {
-      if (!mounted ||
-          !identical(controller, widget.controller) ||
-          request != _request) {
+      if (!mounted || !identical(controller, widget.controller) || request != _request) {
         return;
       }
       CollabDiagnostics.report(
@@ -99,15 +93,11 @@ class _CollabMediaTimelineState extends State<CollabMediaTimeline> {
         stackTrace: stackTrace,
         tag: 'DocCollab',
       );
-      ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-        SnackBar(
-          content: Text('${widget.mediaKind == 'audio' ? '音频' : '视频'}跳转失败，请重试'),
-        ),
-      );
+      ScaffoldMessenger.maybeOf(
+        context,
+      )?.showSnackBar(SnackBar(content: Text('${widget.mediaKind == 'audio' ? '音频' : '视频'}跳转失败，请重试')));
     } finally {
-      if (mounted &&
-          identical(controller, widget.controller) &&
-          request == _request) {
+      if (mounted && identical(controller, widget.controller) && request == _request) {
         setState(() {
           _seeking = false;
           _previewMs = null;
@@ -118,17 +108,13 @@ class _CollabMediaTimelineState extends State<CollabMediaTimeline> {
 
   /// 借用[context]构建局部进度监听；拖动期间不被播放计时覆盖，零时长不允许跳转。
   @override
-  Widget build(
-    BuildContext context,
-  ) => ValueListenableBuilder<VideoPlayerValue>(
+  Widget build(BuildContext context) => ValueListenableBuilder<VideoPlayerValue>(
     valueListenable: widget.controller,
     builder: (context, value, _) {
       final duration = value.duration.inMilliseconds;
       final max = duration > 0 ? duration.toDouble() : 1.0;
-      final position = (_previewMs ?? value.position.inMilliseconds.toDouble())
-          .clamp(0.0, duration > 0 ? max : 0.0);
-      final enabled =
-          value.isInitialized && !value.hasError && duration > 0 && !_seeking;
+      final position = (_previewMs ?? value.position.inMilliseconds.toDouble()).clamp(0.0, duration > 0 ? max : 0.0);
+      final enabled = value.isInitialized && !value.hasError && duration > 0 && !_seeking;
       return Padding(
         padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
         child: Column(
@@ -138,28 +124,18 @@ class _CollabMediaTimelineState extends State<CollabMediaTimeline> {
               child: SizedBox(
                 height: 32,
                 child: SliderTheme(
-                  data: SliderTheme.of(context).copyWith(
-                    trackHeight: 3,
-                    thumbShape: const RoundSliderThumbShape(
-                      enabledThumbRadius: 5,
-                    ),
-                  ),
+                  data: SliderTheme.of(
+                    context,
+                  ).copyWith(trackHeight: 3, thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 5)),
                   child: Slider(
                     key: ValueKey('collab-${widget.mediaKind}-progress'),
                     value: position,
                     max: max,
                     activeColor: const Color(0xFF818CF8),
-                    inactiveColor: widget.overlay
-                        ? Colors.white24
-                        : const Color(0xFFE2E8F0),
-                    semanticFormatterCallback: (v) =>
-                        _mediaTime(Duration(milliseconds: v.round())),
-                    onChangeStart: enabled
-                        ? (v) => setState(() => _previewMs = v)
-                        : null,
-                    onChanged: enabled
-                        ? (v) => setState(() => _previewMs = v)
-                        : null,
+                    inactiveColor: widget.overlay ? Colors.white24 : const Color(0xFFE2E8F0),
+                    semanticFormatterCallback: (v) => _mediaTime(Duration(milliseconds: v.round())),
+                    onChangeStart: enabled ? (v) => setState(() => _previewMs = v) : null,
+                    onChanged: enabled ? (v) => setState(() => _previewMs = v) : null,
                     onChangeEnd: enabled ? _seek : null,
                   ),
                 ),
@@ -174,12 +150,7 @@ class _CollabMediaTimelineState extends State<CollabMediaTimeline> {
                     key: ValueKey('collab-${widget.mediaKind}-position'),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: widget.overlay
-                          ? Colors.white70
-                          : const Color(0xFF64748B),
-                      fontSize: 11,
-                    ),
+                    style: TextStyle(color: widget.overlay ? Colors.white70 : const Color(0xFF64748B), fontSize: 11),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -189,12 +160,7 @@ class _CollabMediaTimelineState extends State<CollabMediaTimeline> {
                     key: ValueKey('collab-${widget.mediaKind}-duration'),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: widget.overlay
-                          ? Colors.white70
-                          : const Color(0xFF64748B),
-                      fontSize: 11,
-                    ),
+                    style: TextStyle(color: widget.overlay ? Colors.white70 : const Color(0xFF64748B), fontSize: 11),
                   ),
                 ),
               ],
@@ -211,7 +177,5 @@ String _mediaTime(Duration duration) {
   final seconds = duration.inSeconds < 0 ? 0 : duration.inSeconds;
   final minutes = ((seconds ~/ 60) % 60).toString().padLeft(2, '0');
   final tail = (seconds % 60).toString().padLeft(2, '0');
-  return seconds >= 3600
-      ? '${seconds ~/ 3600}:$minutes:$tail'
-      : '$minutes:$tail';
+  return seconds >= 3600 ? '${seconds ~/ 3600}:$minutes:$tail' : '$minutes:$tail';
 }

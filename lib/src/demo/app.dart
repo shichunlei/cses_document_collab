@@ -31,7 +31,7 @@ class _CsesCollabDemoAppState extends State<CsesCollabDemoApp> {
     return MaterialApp(
       builder: BotToastInit(),
       navigatorObservers: [BotToastNavigatorObserver()],
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: true,
       title: 'CSES Mobile Collab Demo',
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,

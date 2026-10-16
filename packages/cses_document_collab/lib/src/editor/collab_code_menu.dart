@@ -57,7 +57,7 @@ class _CodeNameEditor extends StatefulWidget {
   final String name;
 
   @override
-  State<_CodeNameEditor> createState() => _CodeNameEditorState();
+  createState() => _CodeNameEditorState();
 }
 
 class _CodeNameEditorState extends State<_CodeNameEditor> {
@@ -122,7 +122,7 @@ class _CodeLanguagePicker extends StatefulWidget {
   final String language;
 
   @override
-  State<_CodeLanguagePicker> createState() => _CodeLanguagePickerState();
+  createState() => _CodeLanguagePickerState();
 }
 
 class _CodeLanguagePickerState extends State<_CodeLanguagePicker> {

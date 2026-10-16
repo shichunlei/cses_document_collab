@@ -107,7 +107,7 @@ class _ResourceBlock extends BlockComponentStatefulWidget {
 
   /// Returns selection state; the parent editor retains ownership of the node.
   @override
-  State<_ResourceBlock> createState() => _ResourceBlockState();
+  createState() => _ResourceBlockState();
 }
 
 /// Borrows editor state for selection and routes explicit resource edits.
@@ -619,7 +619,7 @@ class _AudioPlayer extends StatefulWidget {
 
   /// 创建拥有单个播放器资源的状态。
   @override
-  State<_AudioPlayer> createState() => _AudioPlayerState();
+  createState() => _AudioPlayerState();
 }
 
 /// 持有并释放音频播放器，局部进度借用控制器；换源通过Widget键重建。
@@ -795,7 +795,7 @@ class _ResourceSettings extends StatefulWidget {
   final String url;
   final CollabResource props;
   @override
-  State<_ResourceSettings> createState() => _ResourceSettingsState();
+  createState() => _ResourceSettingsState();
 }
 
 /// Owns settings fields and serializes explicit, conflict-checked property edits.
