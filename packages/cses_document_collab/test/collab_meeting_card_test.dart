@@ -85,6 +85,49 @@ void main() {
   }
 
   testWidgets(
+    'selected meeting card still receives primary and delete button taps',
+    (tester) async {
+      var opens = 0;
+      final harness = await _mount(
+        tester,
+        services: CollabHostServices(
+          onMeetingCardTap: (_, _, _) {
+            opens++;
+          },
+        ),
+      );
+      final editor = harness.adapter.editorState;
+      await tester.tap(find.text('共享周会'));
+      editor.selectionType = SelectionType.block;
+      editor.selection = Selection.single(
+        path: [0],
+        startOffset: 0,
+        endOffset: 1,
+      );
+      await tester.pumpAndSettle();
+      expect(editor.selectionType, SelectionType.block);
+      expect(editor.selection, isNotNull);
+      await tester.tap(_open);
+      await tester.pumpAndSettle();
+      expect(opens, 1);
+      editor.selectionType = SelectionType.block;
+      editor.selection = Selection.single(
+        path: [0],
+        startOffset: 0,
+        endOffset: 1,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(_delete);
+      await tester.pumpAndSettle();
+      expect(
+        harness.adapter.blocks.any((b) => b.blockType == 'meeting'),
+        isFalse,
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
     'only primary button dispatches and never reopens a hidden keyboard',
     (tester) async {
       final received = <List<String>>[];

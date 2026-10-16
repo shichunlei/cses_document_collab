@@ -84,6 +84,8 @@ class _BlockSelectionAreaState extends State<BlockSelectionArea> {
     super.dispose();
   }
 
+  /// 在借用的[context]中绘制选区或光标；整块高亮仅用于显示，
+  /// 不参与命中测试，避免位于内容上方时遮挡卡片按钮或正文选择手势。
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
@@ -116,11 +118,13 @@ class _BlockSelectionAreaState extends State<BlockSelectionArea> {
           );
           return Positioned.fromRect(
             rect: prevBlockRect!,
-            child: Container(
-              margin: padding,
-              decoration: BoxDecoration(
-                color: widget.blockColor,
-                borderRadius: BorderRadius.circular(4),
+            child: IgnorePointer(
+              child: Container(
+                margin: padding,
+                decoration: BoxDecoration(
+                  color: widget.blockColor,
+                  borderRadius: BorderRadius.circular(4),
+                ),
               ),
             ),
           );

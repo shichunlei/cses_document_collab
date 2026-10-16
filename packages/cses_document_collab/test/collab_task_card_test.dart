@@ -126,6 +126,48 @@ void main() {
   }
 
   testWidgets(
+    'selected task card still receives detail and menu deletion taps',
+    (tester) async {
+      var opens = 0;
+      final harness = await _mount(
+        tester,
+        services: CollabHostServices(
+          onMentionTap: (_) {
+            opens++;
+          },
+        ),
+      );
+      final editor = harness.adapter.editorState;
+      await tester.tap(find.text('共享任务标题'));
+      editor.selectionType = SelectionType.block;
+      editor.selection = Selection.single(
+        path: [0],
+        startOffset: 0,
+        endOffset: 1,
+      );
+      await tester.pumpAndSettle();
+      expect(editor.selectionType, SelectionType.block);
+      expect(editor.selection, isNotNull);
+      await tester.tap(_open);
+      await tester.pumpAndSettle();
+      expect(opens, 1);
+      editor.selectionType = SelectionType.block;
+      editor.selection = Selection.single(
+        path: [0],
+        startOffset: 0,
+        endOffset: 1,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(_more);
+      await tester.pumpAndSettle();
+      await tester.tap(_delete);
+      await tester.pumpAndSettle();
+      expect(harness.adapter.blocks.any((b) => b.blockType == 'task'), isFalse);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
     'only expand icon dispatches raw reference and never reloads or reopens keyboard',
     (tester) async {
       final pending = Completer<void>();
