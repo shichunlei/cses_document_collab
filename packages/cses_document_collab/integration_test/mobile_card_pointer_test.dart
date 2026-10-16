@@ -76,8 +76,14 @@ void main() {
           await tester.pumpAndSettle();
           expect(opened, 1);
           await _selectCard(tester, editor);
-          if (kind == 'task') {
-            await tester.tap(find.byKey(const ValueKey('task-card-more-card')));
+          if (kind == 'task' || kind == 'meeting') {
+            await tester.tap(
+              find.byKey(
+                ValueKey(
+                  kind == 'task' ? 'task-card-more-card' : 'block-more-card',
+                ),
+              ),
+            );
             await tester.pumpAndSettle();
           }
           await tester.tap(
@@ -90,6 +96,16 @@ void main() {
             ),
           );
         } else {
+          await tester.tap(
+            find.byKey(
+              ValueKey(
+                const {'audio', 'attachment'}.contains(kind)
+                    ? 'block-more-card'
+                    : 'resource-more-card',
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
           await tester.tap(find.byKey(const ValueKey('resource-edit-card')));
           await tester.pumpAndSettle();
           expect(
@@ -99,6 +115,16 @@ void main() {
           await tester.tap(find.text('取消'));
           await tester.pumpAndSettle();
           await _selectCard(tester, editor);
+          await tester.tap(
+            find.byKey(
+              ValueKey(
+                const {'audio', 'attachment'}.contains(kind)
+                    ? 'block-more-card'
+                    : 'resource-more-card',
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
           await tester.tap(find.byKey(const ValueKey('resource-delete-card')));
         }
         await tester.pumpAndSettle();
@@ -149,16 +175,19 @@ void main() {
         await _layout(tester);
         expect(adapter.editorState.selection!.isCollapsed, isTrue);
         expect(_type('MobileCollapsedHandle'), findsNothing);
+        expect(find.byType(IconButton), findsNWidgets(kind == 'video' ? 2 : 1));
         if (kind == 'video') {
           await tester.tap(
             find.byKey(const ValueKey('collab-video-block-play')),
           );
-          await _layout(tester);
+          await tester.pumpAndSettle();
           expect(player.played, contains(0));
           await tester.tap(
             find.byKey(const ValueKey('collab-video-block-play')),
           );
         } else {
+          await tester.tap(find.byKey(const ValueKey('block-more-media')));
+          await tester.pumpAndSettle();
           await tester.tap(find.byKey(const ValueKey('collab-image-edit')));
           await tester.pumpAndSettle();
           expect(find.byType(ModalBarrier), findsWidgets);

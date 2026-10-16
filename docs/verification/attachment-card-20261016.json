@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-16",
+  "base_commit": "644868a453df35c4e831fd1a53020b965384a594",
+  "scope": "附件展示重设计：文件类型配色图标、双行文件名、类型与字节大小；管理入口和协同字段保持既有契约。",
+  "upstream": {
+    "latest": "0.11.20",
+    "desktop_declared": "0.11.17",
+    "desktop_yarn_locked": "0.11.17",
+    "desktop_installed": "0.11.17",
+    "registry": "http://npm.runtongqiuben.com/",
+    "scope": "重新查询并核对版本未变；两版技能/迁移说明和附件实现见同日媒体菜单核对。未声明0.11.20全量兼容。"
+  },
+  "validation": {
+    "widget_tests": {
+      "passed": 43,
+      "command": "flutter test --no-pub test/collab_resource_block_test.dart test/collab_block_actions_test.dart",
+      "cwd": "packages/cses_document_collab",
+      "log": "/tmp/attachment-redesign-tests-final.log",
+      "coverage": [
+        "PDF/表格/压缩/未知类型图标与标签、MIME回落、0B/KB/GB大小",
+        "缺失/负数大小、空名字、URL中文解码和未命名回落",
+        "280逻辑像素窄屏、双倍字号、超长文件名与更多菜单可操作，无RenderFlex溢出",
+        "保留编辑/删除/独立撤销、只读打开、过期/权限保护；展示不触发本地写入"
+      ]
+    },
+    "analysis": {
+      "passed": true,
+      "command": "flutter analyze --no-pub lib/src/editor/collab_resource_block.dart test/collab_resource_block_test.dart",
+      "log": "/tmp/attachment-redesign-analyze-final.log"
+    },
+    "render_preview": {
+      "passed": true,
+      "path": "docs/verification/attachment-card-20261016.png",
+      "viewport": "390×450 logical pixels",
+      "method": "真实Flutter资源渲染器Widget截图，加载本机STHeiti及MaterialIcons字体，仅用于核对布局；临时预览测试已清理。",
+      "log": "/tmp/attachment-redesign-preview-final.log"
+    },
+    "format": "已格式化本次修改的两个手写Dart文件。",
+    "diff_check": "通过",
+    "isolated_commit_review": {
+      "passed": true,
+      "method": "从Git暂存区导出完整仓库副本；只包含本次附件与媒体菜单变更，不包含工作区划词/段落样式/FRB等改动。",
+      "widget_tests": 53,
+      "analysis_targets": 9,
+      "tests_log": "/tmp/attachment-commit-tests.log",
+      "analysis_log": "/tmp/attachment-commit-analyze.log",
+      "source_note": "同日media-more-menu记录对应附件重设计前的源快照；本记录及提交隔离回归覆盖最终附件布局。"
+    }
+  },
+  "limitations": [
+    "本次未复测Android/iOS真机及真实附件下载。",
+    "文件图标按扩展名或MIME本地推断，不读取附件内容或加载远程自定义图标。",
+    "既有附件上传/下载管理及桌面双向验收范围不扩大；不修改其他工作区功能。"
+  ],
+  "source_sha256": {
+    "packages/cses_document_collab/lib/src/editor/collab_resource_block.dart": "7c40590b1c8bbbbb89f68527cdbb0df1a30d406b1da5022b74dc55a5e6a3b3a6",
+    "packages/cses_document_collab/test/collab_resource_block_test.dart": "cf00a23f5e8d975fb9a8064cee2e64b94d00b4aaa647f539b896538451d35280",
+    "docs/verification/attachment-card-20261016.png": "56a008dc112ea5b1332df4fa93429baf67c44935eec7b8035a779ad63eaa66c0"
+  }
+}

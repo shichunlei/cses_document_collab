@@ -209,7 +209,17 @@ void main() {
       );
       expect(find.text('图片题注😀'), findsOneWidget);
       expect(find.text('图片正在其他设备上传'), findsOneWidget);
+      expect(find.byKey(const ValueKey('collab-image-edit')), findsNothing);
+      expect(find.byType(IconButton), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('block-more-image-1')));
+      await tester.pumpAndSettle();
       expect(find.byKey(const ValueKey('collab-image-edit')), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('collab-image-menu-delete')),
+        findsOneWidget,
+      );
+      await tester.tapAt(const Offset(5, 5));
+      await tester.pumpAndSettle();
       adapter.editorState.editable = false;
       await tester.pumpWidget(view());
       expect(find.byKey(const ValueKey('collab-image-edit')), findsNothing);
@@ -239,6 +249,8 @@ void main() {
           ),
         ),
       );
+      await tester.tap(find.byKey(const ValueKey('block-more-image-1')));
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('collab-image-edit')));
       await tester.pumpAndSettle();
       await tester.enterText(

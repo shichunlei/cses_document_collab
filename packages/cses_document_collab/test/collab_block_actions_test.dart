@@ -115,6 +115,62 @@ void main() {
         );
   });
 
+  for (final changePermission in [false, true]) {
+    testWidgets(
+      'preview command validates permission lifetime ($changePermission)',
+      (tester) async {
+        final adapter = AppFlowyBlockEditorAdapter(
+          initialBlocks: _blocks('attachment'),
+          onLocalBlocksChanged: (_) {},
+        );
+        addTearDown(adapter.dispose);
+        final editor = adapter.editorState..editable = false;
+        var invoked = 0;
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: CollabBlockMoreButton(
+                editor: editor,
+                node: editor.document.first!,
+                actions: [
+                  (
+                    label: '禁止编辑',
+                    key: null,
+                    run: () async {
+                      fail('readonly mutation');
+                    },
+                  ),
+                ],
+                readOnlyActions: [
+                  (
+                    label: '打开资源',
+                    key: null,
+                    run: () async {
+                      invoked++;
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+        await tester.tap(find.byTooltip('更多操作'));
+        await tester.pumpAndSettle();
+        expect(find.text('禁止编辑'), findsNothing);
+        expect(find.text('在下方插入'), findsNothing);
+        if (changePermission) {
+          editor.editable = true;
+          editor.editable = false;
+        }
+        await tester.tap(find.text('打开资源'));
+        await tester.pumpAndSettle();
+        expect(invoked, changePermission ? 0 : 1);
+        await tester.pumpWidget(const SizedBox.shrink());
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+
   for (final kind in [
     'callout',
     'meeting',
@@ -178,7 +234,17 @@ void main() {
       adapter.editorState.editable = false;
       await _mount(tester, adapter);
       await tester.pumpAndSettle();
-      expect(find.byTooltip('更多操作'), findsNothing);
+      if (const {'audio', 'video', 'attachment'}.contains(kind)) {
+        expect(find.byTooltip('更多操作'), findsOneWidget);
+        await tester.tap(find.byTooltip('更多操作'));
+        await tester.pumpAndSettle();
+        expect(
+          find.byKey(const ValueKey('block-insert-below-card')),
+          findsNothing,
+        );
+      } else {
+        expect(find.byTooltip('更多操作'), findsNothing);
+      }
       expect(adapter.editorState.undoManager.undoStack.isEmpty, isTrue);
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.pumpAndSettle();

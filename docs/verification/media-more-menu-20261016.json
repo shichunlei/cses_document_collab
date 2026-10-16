@@ -1,0 +1,90 @@
+{
+  "date": "2026-10-16",
+  "base_commit": "644868a453df35c4e831fd1a53020b965384a594",
+  "change": "音视频播放/暂停直接显示，音频保留进度条；外部打开、编辑、删除和下方插入等管理操作集中到更多菜单。",
+  "behavior": [
+    "图片编辑和删除/下方插入统一更多入口，外层不重复添加更多按钮。",
+    "音频在进度条旁、视频在画面中央直接显示播放/暂停，编辑与预览均可使用；外部打开仍在更多菜单，加载/失败占位不增加独立打开按钮。",
+    "附件和音频修改/删除从更多菜单进入；菜单完全退场后执行，按稳定ID重新定位编辑/删除目标。",
+    "菜单期间权限变化、源属性变化、删除和会话变化拒绝旧操作；借用编辑器和宿主，不新增业务能力或持久化字段。"
+  ],
+  "upstream": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.20",
+    "desktop_declared": "0.11.17",
+    "desktop_yarn_locked": "0.11.17",
+    "desktop_installed": "0.11.17",
+    "reviewed": [
+      "两版随包技能的媒体/工具栏说明与MIGRATIONS.md",
+      "两版ImageBlockComponent、AttachmentBlockComponent、VideoBlockComponent、AudioBlockComponent中资源字段和只读操作保护"
+    ],
+    "scope": "本次只合并移动端入口，不宣称0.11.20全量兼容；段落默认样式等现有差异继续待同步。"
+  },
+  "validation": {
+    "widget_tests": {
+      "passed": 46,
+      "command": "flutter test --no-pub test/collab_resource_block_test.dart test/collab_image_test.dart test/collab_video_update_test.dart test/collab_block_actions_test.dart",
+      "cwd": "packages/cses_document_collab",
+      "log": "/tmp/media-play-visible-tests.log",
+      "coverage": [
+        "音视频直接播放/暂停、菜单中无重复播放项，图片/附件单一管理入口、编辑保存/撤销和菜单删除",
+        "只读菜单非修改回调能执行，权限反复切换拒绝旧回调",
+        "远端重排后按稳定ID删除/撤销、链接变化和权限撤销拒绝陈旧删除",
+        "下方插入、键盘恢复、历史、播放器换源/释放"
+      ]
+    },
+    "analysis": {
+      "passed": true,
+      "targets": [
+        "lib/src/editor/collab_resource_block.dart",
+        "lib/src/editor/collab_embed_block.dart",
+        "test/collab_resource_block_test.dart",
+        "test/collab_video_update_test.dart",
+        "integration_test/mobile_card_pointer_test.dart"
+      ],
+      "log": "/tmp/media-play-visible-analyze.log"
+    },
+    "format": "已对修改的手写Dart文件运行dart format；保留触达范围外原有排版。",
+    "android": {
+      "passed": true,
+      "device": "MTN-AN00 / Android 16",
+      "test_widgets": 12,
+      "runner_count_including_setup_teardown": 14,
+      "command": "flutter drive --driver packages/cses_document_collab/test_driver/integration_test.dart --target packages/cses_document_collab/integration_test/mobile_card_pointer_test.dart -d ANDROID_DEVICE_ID --no-pub --keep-app-running",
+      "log": "/tmp/media-play-visible-android.log",
+      "coverage": "10类卡片背景/真实媒体主体触摸后的菜单或按钮命中，视频无需打开更多菜单即可播放/暂停；以及正文光标、长按选词、范围手柄与跨卡片拖动。音频直接播放/暂停由Widget回归验证。"
+    },
+    "iterations": [
+      "首次Android打包缺失kernel_blob.bin，未安装测试应用；重新构建成功。",
+      "Android首轮菜单回归图片/视频夹具使用了错误的card ID；修正为实际media ID后12项全部通过。",
+      "组件测试补全本地播放器的play/getPosition/setPlaybackSpeed端口后，46项全部通过。",
+      "按用户纠正恢复播放器上的直接播放/暂停按钮；此前将播放也收进更多的验收被本次记录替代。",
+      "恢复普通入口首次打包缺少kernel_blob.bin，测试结束后重新构建成功，覆盖安装返回Success。"
+    ],
+    "normal_demo_restored": {
+      "passed": true,
+      "build_log": "/tmp/media-play-visible-demo-build-final.log",
+      "install_log": "/tmp/media-play-visible-demo-restore.log",
+      "entry_check": "APK包含普通Demo入口，不含测试入口",
+      "method": "flutter build apk --debug --no-pub -t lib/main.dart；adb install -r覆盖安装；不卸载或清理应用数据。"
+    },
+    "diff_check": "通过"
+  },
+  "limitations": [
+    "真机用例使用合成文档、本地业务回调、WebView和播放器替身，不登录、不读写在线文档。",
+    "键盘服务在手机手柄用例中关闭以固定坐标，不能替代真实输入法验收。",
+    "未验收iOS真机、真实网络媒体解码、在线桌面双向或服务器持久化ACK。",
+    "本次媒体入口改动未更改Rust/FRB；工作区其他功能变更保留。"
+  ],
+  "source_sha256": {
+    "packages/cses_document_collab/lib/src/editor/collab_block_actions.dart": "3de7c397a9863e61cd182eb1292d637d8d3c0c807e7ed46076db32fd99149ba7",
+    "packages/cses_document_collab/lib/src/editor/collab_resource_block.dart": "77e210036d4d84820abbd28761c87a7eb7ea281232e40bf208de45fe3a1a5763",
+    "packages/cses_document_collab/lib/src/editor/collab_image_content.dart": "c5d33739606a303cfafdffcd540a1b5e386ab2ba95d289b3082a1e64eec7f9d0",
+    "packages/cses_document_collab/lib/src/editor/collab_embed_block.dart": "8ebfdaf1eeedde81c25358ec91a949cb436b59db0884290f21ca2b0c5a8e4f2a",
+    "packages/cses_document_collab/test/collab_block_actions_test.dart": "24679eebaa9c057976e745d9f2205f55293aca51b2003497484fe2b77ee852b6",
+    "packages/cses_document_collab/test/collab_resource_block_test.dart": "05151c1db3296260a05c9ad254b27985a94912262f6185c956f8371d2641c3e8",
+    "packages/cses_document_collab/test/collab_image_test.dart": "09d7a529cb18c45b06a5404b088762f708995bc6173f53ffb4abf4668b625eca",
+    "packages/cses_document_collab/test/collab_video_update_test.dart": "6b781126c698bb3ae8593fa3de032c9cdaecfc381e795455af2804ec5d087cac",
+    "packages/cses_document_collab/integration_test/mobile_card_pointer_test.dart": "556760f9c7d62689186389ed9f29486c63ef3853dc8c30a19a70231a0afc462b"
+  }
+}

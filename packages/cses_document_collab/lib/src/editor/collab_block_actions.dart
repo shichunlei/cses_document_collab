@@ -70,9 +70,12 @@ Future<Node?> insertCollabParagraphBelow(EditorState editor, Node source) async 
 /// ```
 class CollabBlockMoreButton extends StatelessWidget {
   /// [key] controls widget identity; [editor]/[node] identify the borrowed block.
-  /// [enabled] defaults to true; readonly/unsupported parents always hide the menu.
+  /// [enabled] defaults to true; unsupported editing parents hide the menu.
+  /// Preview shows only [readOnlyActions], if supplied.
   /// [actions] supplies additional labeled commands with optional test/semantic keys;
   /// callbacks run after dismissal and keep their own mutation/failure contracts.
+  /// [readOnlyActions] supplies non-mutating commands shown in both editing and
+  /// preview; empty by default. Permission changes invalidate an open menu.
   /// [protectSubtree] also rejects child content changes while the menu is open;
   /// defaults to false for leaf cards and is useful for whole-container deletion.
   const CollabBlockMoreButton({
@@ -81,6 +84,7 @@ class CollabBlockMoreButton extends StatelessWidget {
     required this.node,
     this.enabled = true,
     this.actions = const [],
+    this.readOnlyActions = const [],
     this.protectSubtree = false,
   });
 
@@ -96,6 +100,10 @@ class CollabBlockMoreButton extends StatelessWidget {
   /// Extra commands displayed after insertion; empty by default, callbacks borrowed.
   final List<({String label, Key? key, Future<void> Function() run})> actions;
 
+  /// Borrowed non-mutating commands available in editing and preview; empty by default.
+  final List<({String label, Key? key, Future<void> Function() run})>
+  readOnlyActions;
+
   /// Whether child content changes invalidate the open menu; defaults to false.
   final bool protectSubtree;
 
@@ -104,12 +112,17 @@ class CollabBlockMoreButton extends StatelessWidget {
   Widget build(BuildContext context) => ListenableBuilder(
     listenable: editor.editableNotifier,
     builder: (context, _) =>
-        editor.isDisposed || !editor.editable || !const {'page', 'callout'}.contains(node.parent?.type)
+        editor.isDisposed ||
+            (editor.editable
+                ? !const {'page', 'callout'}.contains(node.parent?.type)
+                : readOnlyActions.isEmpty)
         ? const SizedBox.shrink()
         : ExcludeFocus(
             child: IconButton(
               tooltip: '更多操作',
-              style: const ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+              style: const ButtonStyle(
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
               constraints: const BoxConstraints.tightFor(width: 32, height: 32),
               padding: EdgeInsets.zero,
               icon: const Icon(Icons.more_horiz, size: 18),
@@ -120,21 +133,27 @@ class CollabBlockMoreButton extends StatelessWidget {
 
   /// Opens one sheet in borrowed [context], rejects stale targets and catches failures.
   Future<void> _show(BuildContext context) async {
-    if (editor.isDisposed || !editor.editable || _pending[editor] == true) {
+    if (editor.isDisposed ||
+        (!editor.editable && readOnlyActions.isEmpty) ||
+        _pending[editor] == true) {
       return;
     }
+    final wasEditable = editor.editable;
+    final commands = [...readOnlyActions, if (wasEditable) ...actions];
     final host = collabBlockActionContext(context);
     final services = CollabRuntime.services;
     final id = node.attributes['cses_collab_block_id'] as String? ?? node.id;
     final type = node.type;
-    final snapshot = jsonEncode(protectSubtree ? node.toJson() : node.attributes);
+    final snapshot = jsonEncode(
+      protectSubtree ? node.toJson() : node.attributes,
+    );
     String? insertedId;
     int? choice;
     var permissionRevoked = false;
 
     /// Remembers revocation so restoring permissions cannot revive an old menu.
     void trackPermission() {
-      if (!editor.editable) permissionRevoked = true;
+      if (editor.editable != wasEditable) permissionRevoked = true;
     }
 
     editor.editableNotifier.addListener(trackPermission);
@@ -151,16 +170,17 @@ class CollabBlockMoreButton extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    ListTile(
-                      key: ValueKey('block-insert-below-$id'),
-                      leading: const Icon(Icons.add),
-                      title: const Text('在下方插入'),
-                      onTap: () => Navigator.pop(sheet, -1),
-                    ),
-                    for (var i = 0; i < actions.length; i++)
+                    if (wasEditable)
                       ListTile(
-                        key: actions[i].key,
-                        title: Text(actions[i].label),
+                        key: ValueKey('block-insert-below-$id'),
+                        leading: const Icon(Icons.add),
+                        title: const Text('在下方插入'),
+                        onTap: () => Navigator.pop(sheet, -1),
+                      ),
+                    for (var i = 0; i < commands.length; i++)
+                      ListTile(
+                        key: commands[i].key,
+                        title: Text(commands[i].label),
                         onTap: () => Navigator.pop(sheet, i),
                       ),
                   ],
@@ -174,19 +194,24 @@ class CollabBlockMoreButton extends StatelessWidget {
               permissionRevoked ||
               !host.mounted ||
               editor.isDisposed ||
-              !editor.editable ||
+              editor.editable != wasEditable ||
               !identical(CollabRuntime.services, services)) {
             return;
           }
           final source = findCollabActionNode(editor, id);
           if (source == null ||
               source.type != type ||
-              jsonEncode(protectSubtree ? source.toJson() : source.attributes) != snapshot) {
-            ScaffoldMessenger.maybeOf(host)?.showSnackBar(const SnackBar(content: Text('内容已更新，请重新选择')));
+              jsonEncode(
+                    protectSubtree ? source.toJson() : source.attributes,
+                  ) !=
+                  snapshot) {
+            ScaffoldMessenger.maybeOf(
+              host,
+            )?.showSnackBar(const SnackBar(content: Text('内容已更新，请重新选择')));
             return;
           }
           if (choice! >= 0) {
-            await actions[choice!].run();
+            await commands[choice!].run();
             return;
           }
           final paragraph = await insertCollabParagraphBelow(editor, source);
@@ -206,8 +231,12 @@ class CollabBlockMoreButton extends StatelessWidget {
       );
     } catch (error, stack) {
       services.report('块操作失败', error, stack, 'DocCollab');
-      if (host.mounted && !editor.isDisposed && identical(CollabRuntime.services, services)) {
-        ScaffoldMessenger.maybeOf(host)?.showSnackBar(const SnackBar(content: Text('操作失败，请重试')));
+      if (host.mounted &&
+          !editor.isDisposed &&
+          identical(CollabRuntime.services, services)) {
+        ScaffoldMessenger.maybeOf(
+          host,
+        )?.showSnackBar(const SnackBar(content: Text('操作失败，请重试')));
       }
     } finally {
       editor.editableNotifier.removeListener(trackPermission);

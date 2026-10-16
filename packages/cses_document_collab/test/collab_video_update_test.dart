@@ -48,6 +48,39 @@ void main() {
         );
         await tester.pumpAndSettle();
         expect(platform.sources, ['https://example.test/a.mp4']);
+        expect(find.byType(IconButton), findsNWidgets(pending ? 1 : 2));
+        expect(
+          find.byKey(const ValueKey('collab-video-block-play')),
+          pending ? findsNothing : findsOneWidget,
+        );
+        if (!pending) {
+          for (final label in ['播放视频', '暂停视频']) {
+            await tester.tap(
+              find.byKey(const ValueKey('collab-video-block-play')),
+            );
+            await tester.pumpAndSettle();
+            final controller = tester
+                .widget<VideoPlayer>(find.byType(VideoPlayer))
+                .controller;
+            expect(controller.value.isPlaying, label == '播放视频');
+          }
+        }
+        state.editable = false;
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const ValueKey('block-more-video')));
+        await tester.pumpAndSettle();
+        expect(
+          find.byKey(const ValueKey('block-insert-below-video')),
+          findsNothing,
+        );
+        expect(find.text('在外部应用打开'), findsOneWidget);
+        expect(find.widgetWithText(ListTile, '播放视频'), findsNothing);
+        expect(find.widgetWithText(ListTile, '暂停视频'), findsNothing);
+        await tester.tapAt(const Offset(5, 5));
+        await tester.pumpAndSettle();
+        state.editable = true;
+        await tester.pumpAndSettle();
+
         expect(
           tester
               .widget<BlockComponentStatefulWidget>(
@@ -144,6 +177,18 @@ class _MemoryVideoPlatform extends VideoPlayerPlatform {
     disposed.add(playerId);
     await _events.remove(playerId)?.close();
   }
+
+  /// Accepts playback for borrowed [playerId] without a native decoder.
+  @override
+  Future<void> play(int playerId) async {}
+
+  /// Applies [speed] for borrowed [playerId] without native playback.
+  @override
+  Future<void> setPlaybackSpeed(int playerId, double speed) async {}
+
+  /// Returns a stable zero position for borrowed [playerId].
+  @override
+  Future<Duration> getPosition(int playerId) async => Duration.zero;
 
   /// 接收 [playerId] 的 [looping] 设置；内存平台不执行播放，立即完成。
   @override

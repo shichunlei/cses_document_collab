@@ -13,29 +13,39 @@ import 'package:cses_document_collab/src/editor/collab_link_preview.dart';
 
 /// Returns a localized editor harness borrowing [state] and [loadPreview].
 /// Null [loadPreview] uses fixture HTML; no real network request is required.
-Widget _app(EditorState state, {CollabLinkPreviewLoader? loadPreview}) =>
-    MaterialApp(
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        AppFlowyEditorLocalizations.delegate,
-      ],
-      home: Scaffold(
-        body: AppFlowyEditor(
-          editorState: state,
-          editable: state.editable,
-          disableKeyboardService: true,
-          blockComponentBuilders: {
-            ...standardBlockComponentBuilderMap,
-            for (final kind in collabResourceTypes)
-              kind: CollabResourceBlockComponentBuilder(
-                loadPreview: loadPreview ?? _metadata,
-              ),
-          },
+/// Optional [textScaler] overrides the platform scaling for accessibility layout checks.
+Widget _app(
+  EditorState state, {
+  CollabLinkPreviewLoader? loadPreview,
+  TextScaler? textScaler,
+}) => MaterialApp(
+  builder: textScaler == null
+      ? null
+      : (context, child) => MediaQuery(
+          data: MediaQuery.of(context).copyWith(textScaler: textScaler),
+          child: child!,
         ),
-      ),
-    );
+  localizationsDelegates: const [
+    GlobalMaterialLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+    AppFlowyEditorLocalizations.delegate,
+  ],
+  home: Scaffold(
+    body: AppFlowyEditor(
+      editorState: state,
+      editable: state.editable,
+      disableKeyboardService: true,
+      blockComponentBuilders: {
+        ...standardBlockComponentBuilderMap,
+        for (final kind in collabResourceTypes)
+          kind: CollabResourceBlockComponentBuilder(
+            loadPreview: loadPreview ?? _metadata,
+          ),
+      },
+    ),
+  ),
+);
 CollabEditorBlock _block(
   String kind,
   String url, {
@@ -49,6 +59,147 @@ CollabEditorBlock _block(
 
 /// Registers resource UI, collaboration, readonly and controller lifecycle checks.
 void main() {
+  for (final sample in [
+    (
+      name: '设计方案.pdf',
+      mime: '',
+      bytes: 2048,
+      metadata: 'PDF · 2.0 KB',
+      icon: Icons.picture_as_pdf_outlined,
+    ),
+    (
+      name: '项目预算.xlsx',
+      mime: '',
+      bytes: 1073741824,
+      metadata: 'XLSX · 1.0 GB',
+      icon: Icons.table_chart_outlined,
+    ),
+    (
+      name: '下载文件',
+      mime: 'application/pdf',
+      bytes: 0,
+      metadata: 'PDF · 0 B',
+      icon: Icons.picture_as_pdf_outlined,
+    ),
+    (
+      name: 'archive.7z',
+      mime: '',
+      bytes: 12,
+      metadata: '7Z · 12 B',
+      icon: Icons.folder_zip_outlined,
+    ),
+    (
+      name: '未知文件',
+      mime: '',
+      bytes: -1,
+      metadata: '文件 · 大小未知',
+      icon: Icons.insert_drive_file_outlined,
+    ),
+  ]) {
+    testWidgets('attachment identity shows ${sample.metadata}', (tester) async {
+      final changes = <List<CollabEditorBlock>>[];
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: [
+          _block(
+            'attachment',
+            'https://example.test/file',
+            props: {
+              'name': sample.name,
+              'type': sample.mime,
+              'size': sample.bytes,
+            },
+          ),
+        ],
+        onLocalBlocksChanged: changes.add,
+      );
+      addTearDown(adapter.dispose);
+      await tester.pumpWidget(_app(adapter.editorState));
+      await tester.pumpAndSettle();
+      expect(find.text(sample.name), findsOneWidget);
+      expect(find.text(sample.metadata), findsOneWidget);
+      expect(find.byIcon(sample.icon), findsOneWidget);
+      expect(find.byType(IconButton), findsOneWidget);
+      expect(find.textContaining('example.test'), findsNothing);
+      expect(changes, isEmpty);
+      await tester.pumpWidget(const SizedBox.shrink());
+      expect(tester.takeException(), isNull);
+    });
+  }
+
+  testWidgets('attachment long name wraps on narrow screens with large text', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(280, 700));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final adapter = AppFlowyBlockEditorAdapter(
+      initialBlocks: [
+        _block(
+          'attachment',
+          'https://example.test/file',
+          props: {'name': '项目技术设计方案以及补充材料最终确认版本.pdf'},
+        ),
+      ],
+      onLocalBlocksChanged: (_) {},
+    );
+    addTearDown(adapter.dispose);
+    await tester.pumpWidget(
+      _app(adapter.editorState, textScaler: const TextScaler.linear(2)),
+    );
+    await tester.pumpAndSettle();
+    final name = tester.widget<Text>(
+      find.byKey(const ValueKey('attachment-file-name')),
+    );
+    expect(
+      MediaQuery.textScalerOf(
+        tester.element(find.byKey(const ValueKey('attachment-file-name'))),
+      ).scale(14),
+      28,
+    );
+    expect(name.maxLines, 2);
+    expect(name.overflow, TextOverflow.ellipsis);
+    expect(find.text('PDF · 大小未知'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('block-more-resource')));
+    await tester.pumpAndSettle();
+    expect(
+      find.byKey(const ValueKey('resource-open-resource')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('resource-edit-resource')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('resource-delete-resource')),
+      findsOneWidget,
+    );
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
+
+  testWidgets(
+    'attachment missing name falls back to decoded URL and unnamed label',
+    (tester) async {
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: [
+          _block('attachment', 'https://example.test/%E8%B5%84%E6%96%99.zip'),
+        ],
+        onLocalBlocksChanged: (_) {},
+      );
+      addTearDown(adapter.dispose);
+      await tester.pumpWidget(_app(adapter.editorState));
+      await tester.pumpAndSettle();
+      expect(find.text('资料.zip'), findsOneWidget);
+      await adapter.replaceFromRemote([
+        _block('attachment', 'https://example.test/'),
+      ]);
+      await tester.pumpAndSettle();
+      expect(find.text('未命名附件'), findsOneWidget);
+      expect(find.text('文件 · 大小未知'), findsOneWidget);
+      await tester.pumpWidget(const SizedBox.shrink());
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   testWidgets(
     'attachment fields edit and undo; readonly hides editing but retains opening',
     (tester) async {
@@ -68,6 +219,9 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('方案.pdf'), findsOneWidget);
       expect(find.textContaining('2.0 KB'), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('block-more-resource')));
+      await tester.pumpAndSettle();
+      expect(find.byType(IconButton), findsNWidgets(1));
       await tester.tap(find.byKey(const ValueKey('resource-edit-resource')));
       await tester.pumpAndSettle();
       await tester.enterText(
@@ -84,6 +238,21 @@ void main() {
       adapter.editorState.editable = false;
       await tester.pumpWidget(_app(adapter.editorState));
       await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('resource-edit-resource')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const ValueKey('resource-delete-resource')),
+        findsNothing,
+      );
+      expect(find.byType(IconButton), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('block-more-resource')));
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('block-insert-below-resource')),
+        findsNothing,
+      );
       expect(
         find.byKey(const ValueKey('resource-edit-resource')),
         findsNothing,
@@ -227,6 +396,63 @@ void main() {
     );
   }
 
+  for (final mutation in ['reorder', 'url', 'revokeRestore']) {
+    testWidgets('attachment menu protects target after $mutation', (
+      tester,
+    ) async {
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: [
+          _block('attachment', 'https://example.test/a.pdf'),
+          const CollabEditorBlock(
+            id: 'text',
+            blockType: 'paragraph',
+            text: '正文',
+          ),
+        ],
+        onLocalBlocksChanged: (_) {},
+      );
+      addTearDown(adapter.dispose);
+      await tester.pumpWidget(_app(adapter.editorState));
+      await tester.pumpAndSettle();
+      expect(find.byType(IconButton), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('resource-delete-resource')),
+        findsNothing,
+      );
+      await tester.tap(find.byKey(const ValueKey('block-more-resource')));
+      await tester.pumpAndSettle();
+      if (mutation == 'revokeRestore') {
+        adapter.editorState.editable = false;
+        adapter.editorState.editable = true;
+      } else {
+        final blocks = adapter.blocks;
+        await adapter.replaceFromRemote(
+          mutation == 'reorder'
+              ? blocks.reversed.toList()
+              : [
+                  _block('attachment', 'https://example.test/new.pdf'),
+                  blocks.last,
+                ],
+        );
+      }
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('resource-delete-resource')));
+      await tester.pumpAndSettle();
+      expect(
+        adapter.blocks.any((b) => b.id == 'resource'),
+        mutation != 'reorder',
+      );
+      expect(adapter.blocks.any((b) => b.text == '正文'), isTrue);
+      if (mutation == 'reorder') {
+        adapter.editorState.undoManager.undo();
+        await tester.pumpAndSettle();
+        expect(adapter.blocks.last.id, 'resource');
+      }
+      await tester.pumpWidget(const SizedBox.shrink());
+      expect(tester.takeException(), isNull);
+    });
+  }
+
   for (final pending in [false, true]) {
     testWidgets(
       'audio controls and source replacement release controllers (pending=$pending)',
@@ -253,11 +479,18 @@ void main() {
         await tester.pump(const Duration(milliseconds: 100));
         if (!pending) {
           await tester.pumpAndSettle();
+          expect(find.byType(IconButton), findsNWidgets(2));
           await tester.tap(find.byTooltip('播放音频'));
-          await tester.pump();
+          await tester.pumpAndSettle();
           expect(platform.played, [0]);
           await tester.tap(find.byTooltip('暂停音频'));
-          await tester.pump();
+          await tester.pumpAndSettle();
+          await tester.tap(find.byKey(const ValueKey('block-more-resource')));
+          await tester.pumpAndSettle();
+          expect(find.widgetWithText(ListTile, '播放音频'), findsNothing);
+          expect(find.widgetWithText(ListTile, '暂停音频'), findsNothing);
+          await tester.tapAt(const Offset(5, 5));
+          await tester.pumpAndSettle();
           tester.widget<Slider>(find.byType(Slider)).onChanged!(30000);
           await tester.pump();
           expect(platform.positions.last, const Duration(seconds: 30));

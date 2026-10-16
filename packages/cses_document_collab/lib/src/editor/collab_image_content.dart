@@ -5,6 +5,7 @@ import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/model/collab_image.dart';
 import 'package:cses_document_collab/src/editor/collab_image_editor.dart';
+import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -86,9 +87,15 @@ class _CollabImageContentState extends State<CollabImageContent> {
     }
   }
 
-  /// 使用 [context] 的当前正文宽度解析尺寸，纯展示计算不写入 wr/ar 或题注。
+  /// 使用 [context] 的正文宽度解析尺寸，更多菜单集中编辑、删除和下方插入。
+  /// 布局计算不写入 wr/ar 或题注；编辑前等待菜单退场并验证当前身份及权限。
   @override
   Widget build(BuildContext context) {
+    final host = collabBlockActionContext(context);
+    final editor = widget.editorState;
+    final id =
+        widget.node.attributes['cses_collab_block_id'] as String? ??
+        widget.node.id;
     final image = CollabImage.fromJson(
       Map<String, dynamic>.from(
         widget.node.attributes[collabImageAttribute] as Map,
@@ -103,50 +110,72 @@ class _CollabImageContentState extends State<CollabImageContent> {
     return LayoutBuilder(
       builder: (context, constraints) {
         final (width, height) = image.resolveSize(constraints.maxWidth);
-        return Column(
-          mainAxisSize: MainAxisSize.min,
+        return Stack(
           children: [
-            Align(
-              alignment: alignment,
-              child: SizedBox(
-                key: const ValueKey('collab-image-box'),
-                width: width,
-                height: height,
-                child: Transform.rotate(
-                  angle: (image.rotation ?? 0) * math.pi / 180,
-                  child: _buildImage(),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Align(
+                  alignment: alignment,
+                  child: SizedBox(
+                    key: const ValueKey('collab-image-box'),
+                    width: width,
+                    height: height,
+                    child: Transform.rotate(
+                      angle: (image.rotation ?? 0) * math.pi / 180,
+                      child: _buildImage(),
+                    ),
+                  ),
+                ),
+                for (final caption in image.captions)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 6),
+                    child: Text(
+                      caption.text,
+                      key: ValueKey('collab-image-caption-${caption.id}'),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Color(0xFF64748B),
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            Positioned(
+              top: 4,
+              right: 4,
+              child: Material(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(6),
+                child: CollabBlockMoreButton(
+                  key: ValueKey(
+                    'block-more-${widget.node.attributes['cses_collab_block_id'] ?? widget.node.id}',
+                  ),
+                  editor: widget.editorState,
+                  node: widget.node,
+                  actions: [
+                    (
+                      label: '编辑图片',
+                      key: const ValueKey('collab-image-edit'),
+                      run: () async {
+                        final source = findCollabActionNode(editor, id);
+                        if (source != null) {
+                          await showCollabImageEditor(host, editor, source);
+                        }
+                      },
+                    ),
+                    (
+                      label: '删除图片',
+                      key: const ValueKey('collab-image-menu-delete'),
+                      run: () async {
+                        await deleteCollabImage(editor, id);
+                      },
+                    ),
+                  ],
                 ),
               ),
             ),
-            for (final caption in image.captions)
-              Padding(
-                padding: const EdgeInsets.only(top: 6),
-                child: Text(
-                  caption.text,
-                  key: ValueKey('collab-image-caption-${caption.id}'),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Color(0xFF64748B),
-                    fontSize: 13,
-                  ),
-                ),
-              ),
-            if (widget.editorState.editable)
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton.icon(
-                  key: const ValueKey('collab-image-edit'),
-                  onPressed: () => unawaited(
-                    showCollabImageEditor(
-                      context,
-                      widget.editorState,
-                      widget.node,
-                    ),
-                  ),
-                  icon: const Icon(Icons.edit_outlined, size: 16),
-                  label: const Text('编辑图片'),
-                ),
-              ),
           ],
         );
       },

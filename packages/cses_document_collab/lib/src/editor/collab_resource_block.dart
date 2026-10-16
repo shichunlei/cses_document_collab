@@ -1,7 +1,7 @@
-import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/editor/collab_unsupported_block.dart';
@@ -159,23 +159,37 @@ class _ResourceBlockState extends State<_ResourceBlock> with SelectableMixin {
     await _editor.apply(transaction, skipHistoryDebounce: true);
   }
 
-  /// Returns a selectable resource surface using inherited [context].
-  /// Link resources offer desktop-compatible views and expose editing/deletion only in
-  /// editable mode; audio and attachments retain separate opening controls.
-  /// Metadata stays local, while explicit edits use the borrowed editor.
-  /// Renders resource content and insertion/editing controls in borrowed [context].
+  /// Builds the card in borrowed [context]; audio owns its player below this state.
+  /// Management commands use one menu; audio playback stays on the player.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => widget.node.type == 'audio'
+      ? _AudioPlayer(
+          key: ValueKey('audio:$_url'),
+          url: _url,
+          builder: (context, progress) =>
+              _buildCard(context, audioProgress: progress),
+        )
+      : _buildCard(context);
+
+  /// Renders the resource in borrowed [context], with optional [audioProgress]
+  /// containing the owned audio player controls. Null omits the audio surface.
+  Widget _buildCard(BuildContext context, {Widget? audioProgress}) {
     final node = widget.node;
     final kind = node.type;
     final host = collabBlockActionContext(context);
+    final id = _id;
     final props = CollabResource.fromAttributes(node.attributes);
     final label = collabResourceLabel(kind);
-    final title = props.string('name');
+    final title = kind == 'attachment'
+        ? props.string('name').trim()
+        : props.string('name');
     final name = title.isNotEmpty
         ? title
         : (kind == 'attachment'
-              ? Uri.parse(_url).pathSegments.lastOrNull ?? label
+              ? Uri.parse(_url).pathSegments
+                        .where((part) => part.trim().isNotEmpty)
+                        .lastOrNull ??
+                    '未命名附件'
               : label);
     final isCard = {
       'bookmark',
@@ -187,7 +201,7 @@ class _ResourceBlockState extends State<_ResourceBlock> with SelectableMixin {
       key: _bodyKey,
       margin: const EdgeInsets.symmetric(vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: kind == 'attachment' ? const Color(0xFFF8FAFC) : Colors.white,
         border: Border.all(color: const Color(0xFFE5E7EB)),
         borderRadius: BorderRadius.circular(12),
       ),
@@ -197,50 +211,90 @@ class _ResourceBlockState extends State<_ResourceBlock> with SelectableMixin {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(12, 8, 4, 8),
+            padding: kind == 'attachment'
+                ? const EdgeInsets.fromLTRB(14, 14, 8, 14)
+                : const EdgeInsets.fromLTRB(12, 8, 4, 8),
             child: Row(
               children: [
-                Icon(_icon(kind), size: 22, color: const Color(0xFF64748B)),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
+                if (kind == 'attachment')
+                  Expanded(
+                    child: _AttachmentInfo(name: name, props: props),
+                  )
+                else ...[
+                  Icon(_icon(kind), size: 22, color: const Color(0xFF64748B)),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
-                      Text(
-                        _subtitle(kind, props, _url),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 11,
-                          color: Color(0xFF87909E),
+                        Text(
+                          _subtitle(kind, props, _url),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: Color(0xFF87909E),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                if (!isCard)
-                  ExcludeFocus(
-                    child: IconButton(
-                      key: ValueKey('resource-open-$_id'),
-                      tooltip: kind == 'attachment' ? '下载或打开附件' : '在浏览器打开',
-                      icon: const Icon(Icons.open_in_new, size: 18),
-                      onPressed: () => _open(context, _url),
+                      ],
                     ),
                   ),
+                ],
                 if (!isCard)
                   CollabBlockMoreButton(
                     key: ValueKey('block-more-$_id'),
                     editor: _editor,
                     node: node,
+                    readOnlyActions: [
+                      (
+                        label: kind == 'attachment' ? '下载或打开附件' : '在浏览器打开',
+                        key: ValueKey('resource-open-$_id'),
+                        run: () => _open(host, _url),
+                      ),
+                    ],
+                    actions: [
+                      (
+                        label: '修改$label',
+                        key: ValueKey('resource-edit-$_id'),
+                        run: () async {
+                          final source = findCollabActionNode(_editor, id);
+                          if (source == null) return;
+                          final route = DialogRoute<void>(
+                            context: host,
+                            builder: (_) => _ResourceSettings(
+                              editor: _editor,
+                              id: id,
+                              kind: kind,
+                              url:
+                                  source.attributes[csesEmbedUrlAttribute]
+                                      as String,
+                              props: CollabResource.fromAttributes(
+                                source.attributes,
+                              ),
+                            ),
+                          );
+                          await Navigator.of(host).push(route);
+                          await route.completed;
+                        },
+                      ),
+                      (
+                        label: '删除$label',
+                        key: ValueKey('resource-delete-$_id'),
+                        run: () async {
+                          final source = findCollabActionNode(_editor, id);
+                          if (source != null) await _delete(source);
+                        },
+                      ),
+                    ],
                   ),
                 if (isCard)
                   ExcludeFocus(
@@ -276,38 +330,10 @@ class _ResourceBlockState extends State<_ResourceBlock> with SelectableMixin {
                       ),
                     ),
                   ),
-                if (_editor.editable && !isCard) ...[
-                  ExcludeFocus(
-                    child: IconButton(
-                      key: ValueKey('resource-edit-$_id'),
-                      tooltip: '修改$label',
-                      icon: const Icon(Icons.tune, size: 18),
-                      onPressed: () => showDialog<void>(
-                        context: context,
-                        builder: (_) => _ResourceSettings(
-                          editor: _editor,
-                          id: _id,
-                          kind: kind,
-                          url: _url,
-                          props: props,
-                        ),
-                      ),
-                    ),
-                  ),
-                  ExcludeFocus(
-                    child: IconButton(
-                      key: ValueKey('resource-delete-$_id'),
-                      tooltip: '删除$label',
-                      icon: const Icon(Icons.close, size: 18),
-                      onPressed: _delete,
-                    ),
-                  ),
-                ],
               ],
             ),
           ),
-          if (kind == 'audio')
-            _AudioPlayer(key: ValueKey('audio:$_url'), url: _url),
+          ?audioProgress,
           if (isCard)
             LayoutBuilder(
               builder: (context, constraints) {
@@ -397,6 +423,171 @@ class _ResourceBlockState extends State<_ResourceBlock> with SelectableMixin {
       (context.findRenderObject() as RenderBox).localToGlobal(offset);
 }
 
+/// Displays a file badge, readable name and metadata; borrows immutable props.
+/// Display fallbacks never write back into the document or fetch remote icons.
+class _AttachmentInfo extends StatelessWidget {
+  /// [name] is the display filename, with URL fallback already resolved.
+  /// [props] supplies optional MIME type and size in bytes; neither is mutated.
+  const _AttachmentInfo({required this.name, required this.props});
+
+  /// Required display filename; long names occupy at most two lines.
+  final String name;
+
+  /// Borrowed file metadata; missing/invalid sizes display an explicit fallback.
+  final CollabResource props;
+
+  /// Builds the file identity in borrowed [context]; the parent owns the more menu.
+  /// Narrow layouts use a smaller badge; metadata wraps under large text scaling.
+  @override
+  Widget build(BuildContext context) {
+    final (icon, color, type) = _attachmentType(name, props.string('type'));
+    final size = _attachmentSize(props.number('size'));
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final badgeSize = constraints.maxWidth < 220
+            ? constraints.maxWidth.clamp(0.0, 40.0)
+            : 48.0;
+        final badge = ExcludeSemantics(
+          child: Container(
+            key: const ValueKey('attachment-file-icon'),
+            width: badgeSize,
+            height: badgeSize,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.10),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, size: 26, color: color),
+          ),
+        );
+        final details = Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              name,
+              key: const ValueKey('attachment-file-name'),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 14,
+                height: 1.4,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF1E293B),
+              ),
+            ),
+            const SizedBox(height: 5),
+            Text(
+              '$type · $size',
+              key: const ValueKey('attachment-file-metadata'),
+              style: const TextStyle(
+                fontSize: 12,
+                height: 1.4,
+                color: Color(0xFF64748B),
+              ),
+            ),
+          ],
+        );
+        if (constraints.maxWidth < 120) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [badge, const SizedBox(height: 8), details],
+          );
+        }
+        return Row(
+          children: [
+            badge,
+            const SizedBox(width: 12),
+            Expanded(child: details),
+          ],
+        );
+      },
+    );
+  }
+}
+
+/// Resolves a local file badge from [name]'s extension, then [mime] as fallback.
+/// Unknown formats use a generic file icon and bounded extension label.
+(IconData, Color, String) _attachmentType(String name, String mime) {
+  final dot = name.lastIndexOf('.');
+  final extension = dot > 0 && dot < name.length - 1
+      ? name.substring(dot + 1).toLowerCase()
+      : '';
+  final normalizedMime = mime.split(';').first.trim().toLowerCase();
+  final kind = switch (extension) {
+    'pdf' => 'pdf',
+    'doc' || 'docx' || 'odt' || 'rtf' => 'document',
+    'xls' || 'xlsx' || 'csv' || 'ods' => 'spreadsheet',
+    'ppt' || 'pptx' || 'odp' => 'presentation',
+    'zip' || 'rar' || '7z' || 'tar' || 'gz' => 'archive',
+    'png' || 'jpg' || 'jpeg' || 'gif' || 'webp' || 'svg' || 'heic' => 'image',
+    'mp3' || 'wav' || 'm4a' || 'aac' || 'ogg' || 'flac' => 'audio',
+    'mp4' || 'mov' || 'mkv' || 'avi' || 'webm' => 'video',
+    'txt' || 'md' || 'json' || 'xml' || 'log' => 'text',
+    _ => switch (normalizedMime) {
+      'application/pdf' => 'pdf',
+      'application/msword' ||
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document' =>
+        'document',
+      'application/vnd.ms-excel' ||
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' =>
+        'spreadsheet',
+      'application/vnd.ms-powerpoint' ||
+      'application/vnd.openxmlformats-officedocument.presentationml.presentation' =>
+        'presentation',
+      'application/zip' ||
+      'application/x-zip-compressed' ||
+      'application/x-rar-compressed' ||
+      'application/x-7z-compressed' => 'archive',
+      _ when normalizedMime.startsWith('image/') => 'image',
+      _ when normalizedMime.startsWith('audio/') => 'audio',
+      _ when normalizedMime.startsWith('video/') => 'video',
+      _ when normalizedMime.startsWith('text/') => 'text',
+      _ => 'file',
+    },
+  };
+  final label = extension.isNotEmpty && extension.length <= 8
+      ? extension.toUpperCase()
+      : switch (kind) {
+          'pdf' => 'PDF',
+          'document' => '文档',
+          'spreadsheet' => '表格',
+          'presentation' => '演示文稿',
+          'archive' => '压缩文件',
+          'image' => '图片',
+          'audio' => '音频',
+          'video' => '视频',
+          'text' => '文本',
+          _ => '文件',
+        };
+  final (icon, color) = switch (kind) {
+    'pdf' => (Icons.picture_as_pdf_outlined, const Color(0xFFDC5B54)),
+    'document' => (Icons.description_outlined, const Color(0xFF3976D3)),
+    'spreadsheet' => (Icons.table_chart_outlined, const Color(0xFF269468)),
+    'presentation' => (Icons.slideshow_outlined, const Color(0xFFD78636)),
+    'archive' => (Icons.folder_zip_outlined, const Color(0xFF8B65C4)),
+    'image' => (Icons.image_outlined, const Color(0xFF4B88B5)),
+    'audio' => (Icons.audio_file_outlined, const Color(0xFF8B65C4)),
+    'video' => (Icons.video_file_outlined, const Color(0xFF3976D3)),
+    'text' => (Icons.article_outlined, const Color(0xFF64748B)),
+    _ => (Icons.insert_drive_file_outlined, const Color(0xFF64748B)),
+  };
+  return (icon, color, label);
+}
+
+/// Formats [bytes] in binary-scaled B/KB/MB/GB/TB units; null, negative and
+/// non-finite values display unknown size. Zero is a known empty file.
+String _attachmentSize(double? bytes) {
+  if (bytes == null || !bytes.isFinite || bytes < 0) return '大小未知';
+  const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+  var value = bytes;
+  var unit = 0;
+  while (value >= 1024 && unit < units.length - 1) {
+    value /= 1024;
+    unit++;
+  }
+  return '${unit == 0 ? value.toStringAsFixed(0) : value.toStringAsFixed(1)} ${units[unit]}';
+}
+
 String _subtitle(String kind, CollabResource props, String url) {
   final host = Uri.parse(url).host;
   if (kind != 'attachment') return host;
@@ -414,8 +605,15 @@ String _subtitle(String kind, CollabResource props, String url) {
 
 /// Owns one audio controller. Keyed by URL so replacement disposes the old stream.
 class _AudioPlayer extends StatefulWidget {
-  const _AudioPlayer({super.key, required this.url});
+  /// [key] controls identity; [url] keys the owned player source. [builder] renders
+  /// its progress and direct playback controls; callbacks stop after disposal.
+  const _AudioPlayer({super.key, required this.url, required this.builder});
+
+  /// Network source owned by this player's controller.
   final String url;
+
+  /// Card renderer borrowing the progress widget and direct playback controls.
+  final Widget Function(BuildContext, Widget) builder;
   @override
   State<_AudioPlayer> createState() => _AudioPlayerState();
 }
@@ -443,7 +641,9 @@ class _AudioPlayerState extends State<_AudioPlayer> {
     }
   }
 
+  /// Runs [action] on the live owned controller; failures stay local to the card.
   Future<void> _act(Future<void> Function() action) async {
+    if (!mounted) return;
     try {
       await action();
     } catch (_) {
@@ -458,29 +658,38 @@ class _AudioPlayerState extends State<_AudioPlayer> {
     super.dispose();
   }
 
+  /// Renders progress and direct play/pause in borrowed [context], in both editing
+  /// and preview. Loading or failure status replaces unavailable playback controls.
   @override
   Widget build(BuildContext context) {
     final value = _controller.value;
     if (_error != null || value.hasError) {
-      return Padding(
-        padding: const EdgeInsets.all(12),
-        child: Text(
-          _error ?? '音频加载失败，可在浏览器打开',
-          style: const TextStyle(color: Color(0xFF87909E), fontSize: 12),
+      return widget.builder(
+        context,
+        Padding(
+          padding: const EdgeInsets.all(12),
+          child: Text(
+            _error ?? '音频加载失败，可在浏览器打开',
+            style: const TextStyle(color: Color(0xFF87909E), fontSize: 12),
+          ),
         ),
       );
     }
     if (!value.isInitialized) {
-      return const Padding(
-        padding: EdgeInsets.all(12),
-        child: LinearProgressIndicator(minHeight: 2),
+      return widget.builder(
+        context,
+        const Padding(
+          padding: EdgeInsets.all(12),
+          child: LinearProgressIndicator(minHeight: 2),
+        ),
       );
     }
     final duration = value.duration.inMilliseconds.toDouble();
-    return Row(
+    final progress = Row(
       children: [
         ExcludeFocus(
           child: IconButton(
+            key: const ValueKey('resource-audio-play'),
             tooltip: value.isPlaying ? '暂停音频' : '播放音频',
             icon: Icon(
               value.isPlaying
@@ -515,6 +724,7 @@ class _AudioPlayerState extends State<_AudioPlayer> {
         ),
       ],
     );
+    return widget.builder(context, progress);
   }
 }
 

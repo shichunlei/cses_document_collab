@@ -183,14 +183,18 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
     }
   }
 
-  /// 使用 [context] 渲染资源内容、更多插入入口及选区外壳，不创建主连接。
+  /// 使用 [context] 渲染资源及选区；视频播放按钮直接显示，外部打开收进更多菜单。
+  /// 图片自带更多入口，外层不重复添加；借用编辑器，不创建主连接。
   @override
   Widget build(BuildContext context) {
     final editorState = context.read<EditorState>();
     final child = switch (widget.kind) {
       CollabEmbedKind.link => _buildLinkCard(context),
       CollabEmbedKind.video => _buildVideoCard(context),
-      CollabEmbedKind.image => CollabImageContent(node: node, editorState: editorState),
+      CollabEmbedKind.image => CollabImageContent(
+        node: node,
+        editorState: editorState,
+      ),
     };
 
     Widget selectableChild = Padding(
@@ -199,19 +203,33 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
       child: Stack(
         children: [
           child,
-          Positioned(
-            top: 4,
-            right: widget.kind == CollabEmbedKind.video ? 60 : 4,
-            child: Material(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(6),
-              child: CollabBlockMoreButton(
-                key: ValueKey('block-more-${node.attributes['cses_collab_block_id'] ?? node.id}'),
-                editor: editorState,
-                node: node,
+          if (widget.kind != CollabEmbedKind.image)
+            Positioned(
+              top: 4,
+              right: 4,
+              child: Material(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(6),
+                child: CollabBlockMoreButton(
+                  key: ValueKey(
+                    'block-more-${node.attributes['cses_collab_block_id'] ?? node.id}',
+                  ),
+                  editor: editorState,
+                  node: node,
+                  readOnlyActions: widget.kind == CollabEmbedKind.video
+                      ? [
+                          (
+                            label: '在外部应用打开',
+                            key: const ValueKey('collab-video-open'),
+                            run: () => _openExternally(
+                              collabBlockActionContext(context),
+                            ),
+                          ),
+                        ]
+                      : const [],
+                ),
               ),
             ),
-          ),
         ],
       ),
     );
@@ -223,7 +241,11 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
       blockColor: editorState.editorStyle.selectionColor,
       cursorColor: editorState.editorStyle.cursorColor,
       selectionColor: editorState.editorStyle.selectionColor,
-      supportTypes: const [BlockSelectionType.block, BlockSelectionType.cursor, BlockSelectionType.selection],
+      supportTypes: const [
+        BlockSelectionType.block,
+        BlockSelectionType.cursor,
+        BlockSelectionType.selection,
+      ],
       child: selectableChild,
     );
 
@@ -289,14 +311,16 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
     );
   }
 
+  /// Builds video pixels and direct play/pause in borrowed [context], including preview.
   Widget _buildVideoCard(BuildContext context) {
     final controller = _videoController;
-    final initialized = controller?.value.isInitialized == true;
-    if (!initialized) {
-      return _VideoPlaceholder(url: _url, hasError: _videoError != null, onOpen: () => _openExternally(context));
+    if (controller?.value.isInitialized != true) {
+      return _VideoPlaceholder(url: _url, hasError: _videoError != null);
     }
 
-    final aspectRatio = controller!.value.aspectRatio > 0 ? controller.value.aspectRatio : 16 / 9;
+    final aspectRatio = controller!.value.aspectRatio > 0
+        ? controller.value.aspectRatio
+        : 16 / 9;
     return ClipRRect(
       borderRadius: BorderRadius.circular(14),
       child: ColoredBox(
@@ -308,29 +332,17 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
             children: [
               VideoPlayer(controller),
               Center(
-                child: IconButton.filled(
-                  key: const ValueKey('collab-video-block-play'),
-                  tooltip: controller.value.isPlaying ? '暂停' : '播放',
-                  onPressed: () async {
-                    if (controller.value.isPlaying) {
-                      await controller.pause();
-                    } else {
-                      await controller.play();
-                    }
-                    if (mounted) {
-                      setState(() {});
-                    }
-                  },
-                  icon: Icon(controller.value.isPlaying ? Icons.pause : Icons.play_arrow),
-                ),
-              ),
-              Positioned(
-                right: 6,
-                top: 6,
-                child: IconButton.filledTonal(
-                  tooltip: '在外部应用打开',
-                  onPressed: () => _openExternally(context),
-                  icon: const Icon(Icons.open_in_new, size: 18),
+                child: ExcludeFocus(
+                  child: IconButton.filled(
+                    key: const ValueKey('collab-video-block-play'),
+                    tooltip: controller.value.isPlaying ? '暂停' : '播放',
+                    onPressed: _toggleVideo,
+                    icon: Icon(
+                      controller.value.isPlaying
+                          ? Icons.pause
+                          : Icons.play_arrow,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -338,6 +350,33 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
         ),
       ),
     );
+  }
+
+  /// Toggles the current owned player directly; replaced/disposed controllers
+  /// never refresh the view. Playback failures are reported and shown locally.
+  Future<void> _toggleVideo() async {
+    if (!mounted) return;
+    final controller = _videoController;
+    if (controller == null || !controller.value.isInitialized) return;
+    try {
+      if (controller.value.isPlaying) {
+        await controller.pause();
+      } else {
+        await controller.play();
+      }
+      if (mounted && identical(_videoController, controller)) setState(() {});
+    } catch (error, stackTrace) {
+      if (!mounted || !identical(_videoController, controller)) return;
+      CollabDiagnostics.report(
+        '视频播放操作失败',
+        error: error,
+        stackTrace: stackTrace,
+        tag: 'DocCollab',
+      );
+      ScaffoldMessenger.maybeOf(
+        context,
+      )?.showSnackBar(const SnackBar(content: Text('播放操作失败，请重试')));
+    }
   }
 
   Future<void> _openExternally(BuildContext context) async {
@@ -410,25 +449,40 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
   }
 }
 
+/// Displays loading/failure status without a second operation button.
 class _VideoPlaceholder extends StatelessWidget {
-  const _VideoPlaceholder({required this.url, required this.hasError, required this.onOpen});
+  /// [url] labels failed content; [hasError] selects failure rather than loading.
+  const _VideoPlaceholder({required this.url, required this.hasError});
 
+  /// Borrowed source URL, displayed only on failure.
   final String url;
-  final bool hasError;
-  final VoidCallback onOpen;
 
+  /// Whether initialization failed; false displays loading.
+  final bool hasError;
+
+  /// Builds the status surface using borrowed [context].
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
       aspectRatio: 16 / 9,
       child: DecoratedBox(
-        decoration: BoxDecoration(color: const Color(0xFF111827), borderRadius: BorderRadius.circular(14)),
+        decoration: BoxDecoration(
+          color: const Color(0xFF111827),
+          borderRadius: BorderRadius.circular(14),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(hasError ? Icons.broken_image_outlined : Icons.movie_outlined, color: Colors.white, size: 42),
+            Icon(
+              hasError ? Icons.broken_image_outlined : Icons.movie_outlined,
+              color: Colors.white,
+              size: 42,
+            ),
             const SizedBox(height: 10),
-            Text(hasError ? '视频加载失败' : '正在加载视频…', style: const TextStyle(color: Colors.white)),
+            Text(
+              hasError ? '视频加载失败' : '正在加载视频…',
+              style: const TextStyle(color: Colors.white),
+            ),
             if (hasError) ...[
               const SizedBox(height: 6),
               Padding(
@@ -437,13 +491,11 @@ class _VideoPlaceholder extends StatelessWidget {
                   url,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 11),
+                  style: const TextStyle(
+                    color: Color(0xFF94A3B8),
+                    fontSize: 11,
+                  ),
                 ),
-              ),
-              TextButton.icon(
-                onPressed: onOpen,
-                icon: const Icon(Icons.open_in_new, size: 17),
-                label: const Text('外部打开'),
               ),
             ],
           ],
