@@ -1,7 +1,10 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
+import 'package:cses_document_collab/src/editor/collab_color_picker.dart';
+import 'package:cses_document_collab/src/editor/collab_emoji_picker.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
+import 'package:cses_document_collab/src/model/collab_color_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,14 +23,15 @@ class _CalloutBlock extends BlockComponentStatefulWidget {
   const _CalloutBlock({super.key, required super.node, required super.configuration});
 
   @override
-  State<_CalloutBlock> createState() => _CalloutBlockState();
+  createState() => _CalloutBlockState();
 }
 
 class _CalloutBlockState extends State<_CalloutBlock> with SelectableMixin {
   final _bodyKey = GlobalKey();
   late final _editor = context.read<EditorState>();
 
-  /// Renders child blocks with insertion, colors and safe container deletion in [context].
+  /// 在 [context] 中渲染子块，背景按桌面82%不透明度混合，不改变原始颜色属性。
+  /// 保留输入、选区、只读展示和安全容器删除。
   @override
   Widget build(BuildContext context) {
     final node = widget.node;
@@ -39,9 +43,7 @@ class _CalloutBlockState extends State<_CalloutBlock> with SelectableMixin {
       child: Container(
         key: _bodyKey,
         decoration: BoxDecoration(
-          color:
-              parseCollabBlockColor(node.attributes[csesBlockBackgroundColorAttribute] as String?) ??
-              Colors.transparent,
+          color: _calloutBackground(node.attributes[csesBlockBackgroundColorAttribute] as String?),
           border: Border.all(
             color:
                 parseCollabBlockColor(node.attributes[csesBlockBorderColorAttribute] as String?) ?? Colors.transparent,
@@ -173,6 +175,12 @@ class _CalloutBlockState extends State<_CalloutBlock> with SelectableMixin {
       (context.findRenderObject() as RenderBox).localToGlobal(offset);
 }
 
+/// 将已有 [value] 仅在渲染时按桌面82%不透明度混合，保留源alpha及原始属性。
+Color _calloutBackground(String? value) {
+  final color = parseCollabBlockColor(value) ?? Colors.transparent;
+  return color.withValues(alpha: color.a * .82);
+}
+
 /// Reports whether borrowed [node] contains an opaque unsupported descendant.
 /// These subtrees cannot be reconstructed by local history and must not be deleted.
 bool _containsUnsupportedCalloutContent(Node node) =>
@@ -277,42 +285,32 @@ Future<void> _showCalloutSettings(
   );
 }
 
+/// 借用编辑器和稳定块身份的外观面板，不拥有编辑器资源。
 class _CalloutSettings extends StatefulWidget {
+  /// [editor] 由宿主持有，[id] 为稳定块身份，[kind] 决定颜色或表情面板。
   const _CalloutSettings({required this.editor, required this.id, required this.kind});
 
+  /// 借用的编辑器，保存前检查存活及编辑权限。
   final EditorState editor;
+
+  /// 必填稳定块身份，避免远端重排后写入其他块。
   final String id;
+
+  /// 必填面板类型。
   final _CalloutSettingsKind kind;
 
+  /// 创建仅管理面板回显的状态，不接管文档资源。
   @override
-  State<_CalloutSettings> createState() => _CalloutSettingsState();
+  createState() => _CalloutSettingsState();
 }
 
+/// 用字段级事务处理外观，不保存正文或替换已有自定义颜色。
 class _CalloutSettingsState extends State<_CalloutSettings> {
-  TextEditingController? _prefix;
-
+  /// 每次保存重新查找稳定目标，不持有可能被远端删除的旧节点。
   Node? get _node => widget.editor.isDisposed ? null : _findCallout(widget.editor, widget.id);
 
-  @override
-  void initState() {
-    super.initState();
-    if (widget.kind == _CalloutSettingsKind.emoji) {
-      _prefix = TextEditingController(text: _node?.attributes[csesCalloutPrefixAttribute] as String? ?? '');
-    }
-  }
-
-  static const _emoji = ['📢', '💡', '🤪', '😀', '📝', '✅', '⚠️', '❗', '⭐', '🎯', '🔥', '❤️', '🚀', '📌', '💬', '🎉'];
-  static const _colors = [
-    ('orange', '橙色', '#FFE6CD'),
-    ('pink', '粉色', '#F6E5F0'),
-    ('yellow', '黄色', '#FFF4C2'),
-    ('green', '绿色', '#DDF3E4'),
-    ('blue', '蓝色', '#DFEAFC'),
-    ('purple', '紫色', '#EAE3FA'),
-    ('gray', '灰色', '#F0F1F3'),
-    ('white', '白色', '#FFFFFF'),
-  ];
-
+  /// 保存 [attribute] 对应的 [value]；只提交一个字段，空值语义由所属属性决定。
+  /// 表情保存后关闭面板，颜色保存后继续选择；失败交由共用选择器提示。
   Future<void> _set(String attribute, String? value) async {
     if (widget.editor.isDisposed || !widget.editor.editable || _node == null) {
       return;
@@ -326,53 +324,24 @@ class _CalloutSettingsState extends State<_CalloutSettings> {
     }
   }
 
-  @override
-  void dispose() {
-    _prefix?.dispose();
-    super.dispose();
-  }
+  /// 为 [label] 与 [attribute] 构建共用色板，使用 [key] 保持入口标识。
+  /// 字色使用深色、背景和边框使用浅色，既有自定义值按原文回显。
+  Widget _colorRow(String label, String attribute, String key) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+      const SizedBox(height: 8),
+      CollabColorPicker(
+        keyPrefix: 'callout-$key',
+        enabled: !widget.editor.isDisposed && widget.editor.editable && _node != null,
+        textColors: attribute == csesBlockTextColorAttribute,
+        selection: CollabColorSelection(_node?.attributes[attribute] as String?),
+        onSelected: (value) => _set(attribute, value),
+      ),
+    ],
+  );
 
-  Widget _colorRow(String label, String attribute, String key) {
-    final current = parseCollabBlockColor(_node?.attributes[attribute] as String?);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-        const SizedBox(height: 8),
-        Wrap(
-          spacing: 4,
-          runSpacing: 4,
-          children: [
-            IconButton(
-              key: ValueKey('callout-$key-clear'),
-              tooltip: '透明',
-              onPressed: () => _set(attribute, null),
-              icon: const Icon(Icons.format_color_reset),
-            ),
-            for (final option in _colors)
-              IconButton(
-                key: ValueKey('callout-$key-${option.$1}'),
-                tooltip: option.$2,
-                onPressed: () => _set(attribute, option.$3),
-                icon: Container(
-                  width: 26,
-                  height: 26,
-                  decoration: BoxDecoration(
-                    color: parseCollabBlockColor(option.$3),
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: const Color(0x22000000)),
-                  ),
-                  child: current == parseCollabBlockColor(option.$3)
-                      ? const Icon(Icons.check, size: 17, color: Color(0xFF333333))
-                      : null,
-                ),
-              ),
-          ],
-        ),
-      ],
-    );
-  }
-
+  /// 按 [context] 约束展示共用表情或三组颜色，保存时重新核对目标和权限。
   @override
   Widget build(BuildContext context) {
     final enabled = !widget.editor.isDisposed && widget.editor.editable && _node != null;
@@ -409,55 +378,18 @@ class _CalloutSettingsState extends State<_CalloutSettings> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        if (widget.kind == _CalloutSettingsKind.emoji) ...[
-                          const Text('表情'),
+                        if (widget.kind == _CalloutSettingsKind.emoji)
+                          CollabEmojiPicker(
+                            keyPrefix: 'callout-emoji',
+                            current: _node?.attributes[csesCalloutPrefixAttribute] as String?,
+                            enabled: enabled,
+                            onSelected: (value) => _set(csesCalloutPrefixAttribute, value),
+                            onClear: () => _set(csesCalloutPrefixAttribute, ''),
+                          )
+                        else ...[
                           const SizedBox(height: 8),
-                          Wrap(
-                            spacing: 2,
-                            children: [
-                              for (final emoji in _emoji)
-                                TextButton(
-                                  key: ValueKey('callout-emoji-$emoji'),
-                                  onPressed: () {
-                                    _prefix!.text = emoji;
-                                    _set(csesCalloutPrefixAttribute, emoji);
-                                  },
-                                  style: TextButton.styleFrom(
-                                    minimumSize: const Size(42, 42),
-                                    padding: const EdgeInsets.all(4),
-                                  ),
-                                  child: Text(emoji, style: const TextStyle(fontSize: 24)),
-                                ),
-                              TextButton(
-                                key: const ValueKey('callout-emoji-clear'),
-                                onPressed: () {
-                                  _prefix!.clear();
-                                  _set(csesCalloutPrefixAttribute, '');
-                                },
-                                child: const Text('移除'),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: TextField(
-                                  key: const ValueKey('callout-custom-prefix'),
-                                  controller: _prefix,
-                                  maxLength: 32,
-                                  decoration: const InputDecoration(hintText: '输入或粘贴其他表情', counterText: ''),
-                                  onSubmitted: (value) => _set(csesCalloutPrefixAttribute, value),
-                                ),
-                              ),
-                              TextButton(
-                                key: const ValueKey('callout-prefix-apply'),
-                                onPressed: () => _set(csesCalloutPrefixAttribute, _prefix!.text),
-                                child: const Text('应用'),
-                              ),
-                            ],
-                          ),
-                        ] else ...[
-                          const SizedBox(height: 8),
+                          _colorRow('文字颜色', csesBlockTextColorAttribute, 'text'),
+                          const SizedBox(height: 16),
                           _colorRow('背景色', csesBlockBackgroundColorAttribute, 'background'),
                           const SizedBox(height: 16),
                           _colorRow('边框色', csesBlockBorderColorAttribute, 'border'),

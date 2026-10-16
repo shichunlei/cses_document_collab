@@ -1,0 +1,1986 @@
+{
+  "version": "0.11.20",
+  "source": "fesm2022/ccc-blockcraft-framework-block-std-typography.mjs",
+  "normalization": [
+    {
+      "input": null,
+      "expected": {}
+    },
+    {
+      "input": [],
+      "expected": {}
+    },
+    {
+      "input": {},
+      "expected": {}
+    },
+    {
+      "input": {
+        "t:px": "0x18",
+        "t:ls": -0.0755
+      },
+      "expected": {
+        "t:px": 24,
+        "t:ls": -0.075
+      }
+    },
+    {
+      "input": {
+        "t:fs": "Infinity",
+        "t:px": "NaN",
+        "t:ls": 0.5
+      },
+      "expected": {
+        "t:ls": 0.5
+      }
+    },
+    {
+      "input": {
+        "a:bold": true,
+        "a:italic": false,
+        "a:link": "https://private.test",
+        "mentionId": "id",
+        "r:insert": "revision",
+        "s:color": "#ff0000",
+        "t:px": "24.12345678",
+        "t:fs": "1.1254",
+        "t:ls": -0.075,
+        "t:ff": "xingkai"
+      },
+      "expected": {
+        "a:bold": true,
+        "s:color": "#ff0000",
+        "t:ff": "xingkai",
+        "t:px": 24.123457,
+        "t:fs": 1.125,
+        "t:ls": -0.075
+      }
+    },
+    {
+      "input": {
+        "a:sub": true,
+        "a:sup": true,
+        "s:fontFamily": "KaiTi",
+        "s:fontSize": "1.25em",
+        "s:letterSpacing": "0.1em",
+        "t:ff": "invalid",
+        "t:px": 4097,
+        "t:fs": 0.49,
+        "t:ls": 0.501
+      },
+      "expected": {
+        "a:sub": true,
+        "a:sup": true,
+        "s:fontFamily": "KaiTi",
+        "s:fontSize": "1.25em",
+        "s:letterSpacing": "0.1em"
+      }
+    },
+    {
+      "input": {
+        "t:ff": "sans"
+      },
+      "expected": {
+        "t:ff": "sans"
+      }
+    },
+    {
+      "input": {
+        "t:ff": "arial"
+      },
+      "expected": {
+        "t:ff": "arial"
+      }
+    },
+    {
+      "input": {
+        "t:ff": "calibri"
+      },
+      "expected": {
+        "t:ff": "calibri"
+      }
+    },
+    {
+      "input": {
+        "t:ff": "verdana"
+      },
+      "expected": {
+        "t:ff": "verdana"
+      }
+    },
+    {
+      "input": {
+        "t:ff": "tahoma"
+      },
+      "expected": {
+        "t:ff": "tahoma"
+      }
+    },
+    {
+      "input": {
+        "t:ff": "hei"
+      },
+      "expected": {
+        "t:ff": "hei"
+      }
+    },
+    {
+      "input": {
+        "t:ff": "yahei"
+      },
+      "expected": {
+        "t:ff": "yahei"
+      }
+    },
+    {
+      "input": {
+        "t:ff": "pingfang"
+      },
+      "expected": {
+        "t:ff": "pingfang"
+      }
+    },
+    {
+      "input": {
+        "t:ff": "serif"
+      },
+      "expected": {
+        "t:ff": "serif"
+      }
+    },
+    {
+      "input": {
+        "t:ff": "times"
+      },
+      "expected": {
+        "t:ff": "times"
+      }
+    },
+    {
+      "input": {
+        "t:ff": "georgia"
+      },
+      "expected": {
+        "t:ff": "georgia"
+      }
+    },
+    {
+      "input": {
+        "t:ff": "simsun"
+      },
+      "expected": {
+        "t:ff": "simsun"
+      }
+    },
+    {
+      "input": {
+        "t:ff": "kai"
+      },
+      "expected": {
+        "t:ff": "kai"
+      }
+    },
+    {
+      "input": {
+        "t:ff": "xingkai"
+      },
+      "expected": {
+        "t:ff": "xingkai"
+      }
+    },
+    {
+      "input": {
+        "t:ff": "fang"
+      },
+      "expected": {
+        "t:ff": "fang"
+      }
+    },
+    {
+      "input": {
+        "t:ff": "dengxian"
+      },
+      "expected": {
+        "t:ff": "dengxian"
+      }
+    },
+    {
+      "input": {
+        "t:ff": "lishu"
+      },
+      "expected": {
+        "t:ff": "lishu"
+      }
+    },
+    {
+      "input": {
+        "t:ff": "youyuan"
+      },
+      "expected": {
+        "t:ff": "youyuan"
+      }
+    },
+    {
+      "input": {
+        "t:ff": "cambria"
+      },
+      "expected": {
+        "t:ff": "cambria"
+      }
+    },
+    {
+      "input": {
+        "t:ff": "palatino"
+      },
+      "expected": {
+        "t:ff": "palatino"
+      }
+    },
+    {
+      "input": {
+        "t:ff": "trebuchet"
+      },
+      "expected": {
+        "t:ff": "trebuchet"
+      }
+    },
+    {
+      "input": {
+        "t:ff": "courier"
+      },
+      "expected": {
+        "t:ff": "courier"
+      }
+    },
+    {
+      "input": {
+        "t:ff": "mono"
+      },
+      "expected": {
+        "t:ff": "mono"
+      }
+    }
+  ],
+  "next": [
+    {
+      "flavour": "paragraph",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "paragraph",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          }
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "paragraph",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "paragraph",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          }
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "paragraph",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "nextParagraphStyle": "same"
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "paragraph",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "nextParagraphStyle": "same"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "paragraph",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "nextParagraphStyle": "same"
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "paragraph",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "nextParagraphStyle": "same"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "paragraph",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "nextParagraphStyle": "body"
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "paragraph",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "nextParagraphStyle": "body"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "paragraph",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "nextParagraphStyle": "body"
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "paragraph",
+        "props": {
+          "depth": 0
+        },
+        "continueTextFormat": false
+      }
+    },
+    {
+      "flavour": "paragraph",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "paragraph",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "heading": 2
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "paragraph",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "paragraph",
+        "props": {
+          "depth": 0
+        },
+        "continueTextFormat": false
+      }
+    },
+    {
+      "flavour": "paragraph",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2,
+        "nextParagraphStyle": "same"
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "paragraph",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "heading": 2,
+          "nextParagraphStyle": "same"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "paragraph",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2,
+        "nextParagraphStyle": "same"
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "paragraph",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "heading": 2,
+          "nextParagraphStyle": "same"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "paragraph",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2,
+        "nextParagraphStyle": "body"
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "paragraph",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "heading": 2,
+          "nextParagraphStyle": "body"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "paragraph",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2,
+        "nextParagraphStyle": "body"
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "paragraph",
+        "props": {
+          "depth": 0
+        },
+        "continueTextFormat": false
+      }
+    },
+    {
+      "flavour": "bullet",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "bullet",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          }
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "bullet",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "bullet",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          }
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "bullet",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "nextParagraphStyle": "same"
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "bullet",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "nextParagraphStyle": "same"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "bullet",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "nextParagraphStyle": "same"
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "bullet",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "nextParagraphStyle": "same"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "bullet",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "nextParagraphStyle": "body"
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "bullet",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "nextParagraphStyle": "body"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "bullet",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "nextParagraphStyle": "body"
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "paragraph",
+        "props": {
+          "depth": 0
+        },
+        "continueTextFormat": false
+      }
+    },
+    {
+      "flavour": "bullet",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "bullet",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "heading": 2
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "bullet",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "paragraph",
+        "props": {
+          "depth": 0
+        },
+        "continueTextFormat": false
+      }
+    },
+    {
+      "flavour": "bullet",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2,
+        "nextParagraphStyle": "same"
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "bullet",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "heading": 2,
+          "nextParagraphStyle": "same"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "bullet",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2,
+        "nextParagraphStyle": "same"
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "bullet",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "heading": 2,
+          "nextParagraphStyle": "same"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "bullet",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2,
+        "nextParagraphStyle": "body"
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "bullet",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "heading": 2,
+          "nextParagraphStyle": "body"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "bullet",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2,
+        "nextParagraphStyle": "body"
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "paragraph",
+        "props": {
+          "depth": 0
+        },
+        "continueTextFormat": false
+      }
+    },
+    {
+      "flavour": "ordered",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "ordered",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          }
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "ordered",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "ordered",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          }
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "ordered",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "nextParagraphStyle": "same"
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "ordered",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "nextParagraphStyle": "same"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "ordered",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "nextParagraphStyle": "same"
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "ordered",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "nextParagraphStyle": "same"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "ordered",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "nextParagraphStyle": "body"
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "ordered",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "nextParagraphStyle": "body"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "ordered",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "nextParagraphStyle": "body"
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "paragraph",
+        "props": {
+          "depth": 0
+        },
+        "continueTextFormat": false
+      }
+    },
+    {
+      "flavour": "ordered",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "ordered",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "heading": 2
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "ordered",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "paragraph",
+        "props": {
+          "depth": 0
+        },
+        "continueTextFormat": false
+      }
+    },
+    {
+      "flavour": "ordered",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2,
+        "nextParagraphStyle": "same"
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "ordered",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "heading": 2,
+          "nextParagraphStyle": "same"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "ordered",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2,
+        "nextParagraphStyle": "same"
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "ordered",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "heading": 2,
+          "nextParagraphStyle": "same"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "ordered",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2,
+        "nextParagraphStyle": "body"
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "ordered",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "heading": 2,
+          "nextParagraphStyle": "body"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "ordered",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2,
+        "nextParagraphStyle": "body"
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "paragraph",
+        "props": {
+          "depth": 0
+        },
+        "continueTextFormat": false
+      }
+    },
+    {
+      "flavour": "todo",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "todo",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          }
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "todo",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "todo",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          }
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "todo",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "nextParagraphStyle": "same"
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "todo",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "nextParagraphStyle": "same"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "todo",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "nextParagraphStyle": "same"
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "todo",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "nextParagraphStyle": "same"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "todo",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "nextParagraphStyle": "body"
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "todo",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "nextParagraphStyle": "body"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "todo",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "nextParagraphStyle": "body"
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "paragraph",
+        "props": {
+          "depth": 0
+        },
+        "continueTextFormat": false
+      }
+    },
+    {
+      "flavour": "todo",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "todo",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "heading": 2
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "todo",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "paragraph",
+        "props": {
+          "depth": 0
+        },
+        "continueTextFormat": false
+      }
+    },
+    {
+      "flavour": "todo",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2,
+        "nextParagraphStyle": "same"
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "todo",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "heading": 2,
+          "nextParagraphStyle": "same"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "todo",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2,
+        "nextParagraphStyle": "same"
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "todo",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "heading": 2,
+          "nextParagraphStyle": "same"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "todo",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2,
+        "nextParagraphStyle": "body"
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "todo",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "heading": 2,
+          "nextParagraphStyle": "body"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "todo",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2,
+        "nextParagraphStyle": "body"
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "paragraph",
+        "props": {
+          "depth": 0
+        },
+        "continueTextFormat": false
+      }
+    },
+    {
+      "flavour": "blockquote",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "blockquote",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          }
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "blockquote",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "paragraph",
+        "props": {
+          "depth": 0
+        },
+        "continueTextFormat": false
+      }
+    },
+    {
+      "flavour": "blockquote",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "nextParagraphStyle": "same"
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "blockquote",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "nextParagraphStyle": "same"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "blockquote",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "nextParagraphStyle": "same"
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "blockquote",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "nextParagraphStyle": "same"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "blockquote",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "nextParagraphStyle": "body"
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "blockquote",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "nextParagraphStyle": "body"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "blockquote",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "nextParagraphStyle": "body"
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "paragraph",
+        "props": {
+          "depth": 0
+        },
+        "continueTextFormat": false
+      }
+    },
+    {
+      "flavour": "blockquote",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "blockquote",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "heading": 2
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "blockquote",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "paragraph",
+        "props": {
+          "depth": 0
+        },
+        "continueTextFormat": false
+      }
+    },
+    {
+      "flavour": "blockquote",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2,
+        "nextParagraphStyle": "same"
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "blockquote",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "heading": 2,
+          "nextParagraphStyle": "same"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "blockquote",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2,
+        "nextParagraphStyle": "same"
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "blockquote",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "heading": 2,
+          "nextParagraphStyle": "same"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "blockquote",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2,
+        "nextParagraphStyle": "body"
+      },
+      "atEnd": false,
+      "expected": {
+        "flavour": "blockquote",
+        "props": {
+          "depth": 2,
+          "textAlign": "center",
+          "backColor": "#ffeedd",
+          "textDefaults": {
+            "a:bold": true
+          },
+          "heading": 2,
+          "nextParagraphStyle": "body"
+        },
+        "continueTextFormat": true
+      }
+    },
+    {
+      "flavour": "blockquote",
+      "props": {
+        "depth": 2,
+        "textAlign": "center",
+        "backColor": "#ffeedd",
+        "textDefaults": {
+          "a:bold": true
+        },
+        "order": 9,
+        "start": 5,
+        "continuePrevious": false,
+        "checked": 1,
+        "heading": 2,
+        "nextParagraphStyle": "body"
+      },
+      "atEnd": true,
+      "expected": {
+        "flavour": "paragraph",
+        "props": {
+          "depth": 0
+        },
+        "continueTextFormat": false
+      }
+    }
+  ]
+}

@@ -638,26 +638,27 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   CollabBlock dco_decode_collab_block(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 17)
-      throw Exception('unexpected arr length: expect 17 but see ${arr.length}');
+    if (arr.length != 18)
+      throw Exception('unexpected arr length: expect 18 but see ${arr.length}');
     return CollabBlock(
-      id: dco_decode_String(arr[0]),
-      blockType: dco_decode_String(arr[1]),
-      text: dco_decode_String(arr[2]),
-      segments: dco_decode_list_collab_text_segment(arr[3]),
-      checked: dco_decode_bool(arr[4]),
-      alignment: dco_decode_String(arr[5]),
-      indent: dco_decode_u_32(arr[6]),
-      image: dco_decode_opt_box_autoadd_collab_image(arr[7]),
-      ordered: dco_decode_opt_box_autoadd_collab_ordered(arr[8]),
-      code: dco_decode_opt_box_autoadd_collab_code(arr[9]),
-      resource: dco_decode_opt_box_autoadd_collab_resource(arr[10]),
-      replacesId: dco_decode_opt_String(arr[11]),
-      blockBackgroundColor: dco_decode_opt_String(arr[12]),
-      blockBorderColor: dco_decode_opt_String(arr[13]),
-      parentId: dco_decode_opt_String(arr[14]),
-      calloutPrefix: dco_decode_opt_String(arr[15]),
-      blockTextColor: dco_decode_opt_String(arr[16]),
+      paragraphStyle: dco_decode_opt_box_autoadd_collab_resource(arr[0]),
+      id: dco_decode_String(arr[1]),
+      blockType: dco_decode_String(arr[2]),
+      text: dco_decode_String(arr[3]),
+      segments: dco_decode_list_collab_text_segment(arr[4]),
+      checked: dco_decode_bool(arr[5]),
+      alignment: dco_decode_String(arr[6]),
+      indent: dco_decode_u_32(arr[7]),
+      image: dco_decode_opt_box_autoadd_collab_image(arr[8]),
+      ordered: dco_decode_opt_box_autoadd_collab_ordered(arr[9]),
+      code: dco_decode_opt_box_autoadd_collab_code(arr[10]),
+      resource: dco_decode_opt_box_autoadd_collab_resource(arr[11]),
+      replacesId: dco_decode_opt_String(arr[12]),
+      blockBackgroundColor: dco_decode_opt_String(arr[13]),
+      blockBorderColor: dco_decode_opt_String(arr[14]),
+      parentId: dco_decode_opt_String(arr[15]),
+      calloutPrefix: dco_decode_opt_String(arr[16]),
+      blockTextColor: dco_decode_opt_String(arr[17]),
     );
   }
 
@@ -737,25 +738,26 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   CollabTextSegment dco_decode_collab_text_segment(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 16)
-      throw Exception('unexpected arr length: expect 16 but see ${arr.length}');
+    if (arr.length != 17)
+      throw Exception('unexpected arr length: expect 17 but see ${arr.length}');
     return CollabTextSegment(
-      text: dco_decode_String(arr[0]),
-      href: dco_decode_opt_String(arr[1]),
-      bold: dco_decode_bool(arr[2]),
-      italic: dco_decode_bool(arr[3]),
-      underline: dco_decode_bool(arr[4]),
-      strikethrough: dco_decode_bool(arr[5]),
-      code: dco_decode_bool(arr[6]),
-      textColor: dco_decode_opt_String(arr[7]),
-      backgroundColor: dco_decode_opt_String(arr[8]),
-      superscript: dco_decode_bool(arr[9]),
-      subscript: dco_decode_bool(arr[10]),
-      inlineLatex: dco_decode_opt_String(arr[11]),
-      inlineMention: dco_decode_opt_String(arr[12]),
-      mentionId: dco_decode_opt_String(arr[13]),
-      mentionType: dco_decode_opt_String(arr[14]),
-      mentionAttributes: dco_decode_opt_String(arr[15]),
+      typography: dco_decode_opt_String(arr[0]),
+      text: dco_decode_String(arr[1]),
+      href: dco_decode_opt_String(arr[2]),
+      bold: dco_decode_bool(arr[3]),
+      italic: dco_decode_bool(arr[4]),
+      underline: dco_decode_bool(arr[5]),
+      strikethrough: dco_decode_bool(arr[6]),
+      code: dco_decode_bool(arr[7]),
+      textColor: dco_decode_opt_String(arr[8]),
+      backgroundColor: dco_decode_opt_String(arr[9]),
+      superscript: dco_decode_bool(arr[10]),
+      subscript: dco_decode_bool(arr[11]),
+      inlineLatex: dco_decode_opt_String(arr[12]),
+      inlineMention: dco_decode_opt_String(arr[13]),
+      mentionId: dco_decode_opt_String(arr[14]),
+      mentionType: dco_decode_opt_String(arr[15]),
+      mentionAttributes: dco_decode_opt_String(arr[16]),
     );
   }
 
@@ -955,6 +957,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @protected
   CollabBlock sse_decode_collab_block(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_paragraphStyle = sse_decode_opt_box_autoadd_collab_resource(
+      deserializer,
+    );
     var var_id = sse_decode_String(deserializer);
     var var_blockType = sse_decode_String(deserializer);
     var var_text = sse_decode_String(deserializer);
@@ -973,6 +978,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_calloutPrefix = sse_decode_opt_String(deserializer);
     var var_blockTextColor = sse_decode_opt_String(deserializer);
     return CollabBlock(
+      paragraphStyle: var_paragraphStyle,
       id: var_id,
       blockType: var_blockType,
       text: var_text,
@@ -1076,6 +1082,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     SseDeserializer deserializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_typography = sse_decode_opt_String(deserializer);
     var var_text = sse_decode_String(deserializer);
     var var_href = sse_decode_opt_String(deserializer);
     var var_bold = sse_decode_bool(deserializer);
@@ -1093,6 +1100,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_mentionType = sse_decode_opt_String(deserializer);
     var var_mentionAttributes = sse_decode_opt_String(deserializer);
     return CollabTextSegment(
+      typography: var_typography,
       text: var_text,
       href: var_href,
       bold: var_bold,
@@ -1386,6 +1394,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @protected
   void sse_encode_collab_block(CollabBlock self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_opt_box_autoadd_collab_resource(self.paragraphStyle, serializer);
     sse_encode_String(self.id, serializer);
     sse_encode_String(self.blockType, serializer);
     sse_encode_String(self.text, serializer);
@@ -1464,6 +1473,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     SseSerializer serializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_opt_String(self.typography, serializer);
     sse_encode_String(self.text, serializer);
     sse_encode_opt_String(self.href, serializer);
     sse_encode_bool(self.bold, serializer);

@@ -14,6 +14,8 @@ use yrs::{
 
 #[path = "blockcraft.rs"]
 mod blockcraft;
+#[path = "paragraph_style.rs"]
+mod paragraph_style;
 
 const BLOCK_ORDER_NAME: &str = "cses_mobile_block_order";
 const BLOCK_META_NAME: &str = "cses_mobile_block_meta";
@@ -31,6 +33,8 @@ static ENGINE: Lazy<Mutex<Option<CollabEngine>>> = Lazy::new(|| Mutex::new(None)
 /// `inline_latex` 只携带桌面 embed 原文，不作为 Y.Text 格式属性保存。
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CollabTextSegment {
+    /// 白名单字体、字号和字距的JSON；None 表示继承，不携带链接或业务属性。
+    pub typography: Option<String>,
     /// 正文或单个对象替换字符；长度采用 UTF-16，与 Yjs/Flutter 光标一致。
     pub text: String,
     /// Optional original link target; formal documents map it to a:link, None means unlinked.
@@ -132,6 +136,8 @@ pub(super) fn is_resource_block_type(kind: &str) -> bool {
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct CollabBlock {
+    /// 段落族属性原始投影；既有块仅消费显式字段补丁，避免旧快照覆盖远端设置。
+    pub paragraph_style: Option<CollabResource>,
     pub id: String,
     pub block_type: String,
     pub text: String,
@@ -300,6 +306,14 @@ impl CollabEngine {
                     0
                 };
                 Some(CollabBlock {
+                    paragraph_style: out_string(
+                        self.block_colors
+                            .get(&transaction, &format!("{id}:paragraph")),
+                    )
+                    .map(|properties| CollabResource {
+                        properties,
+                        property_edits: None,
+                    }),
                     id: id.clone(),
                     block_type,
                     text: text_ref.get_string(&transaction),
@@ -369,6 +383,13 @@ impl CollabEngine {
             });
         }
         let current_blocks = self.blocks();
+        for block in &blocks {
+            if !current_blocks.iter().any(|b| b.id == block.id) {
+                if let Some(style) = &block.paragraph_style {
+                    paragraph_style::parse(&style.properties, true)?;
+                }
+            }
+        }
         let current_order = self.raw_block_ids();
         let desired_order = blocks
             .iter()
@@ -419,7 +440,7 @@ impl CollabEngine {
                         .remove(&mut transaction, &format!("{id}:background"));
                     self.block_colors
                         .remove(&mut transaction, &format!("{id}:border"));
-                    for suffix in ["parent", "prefix", "text", "resource"] {
+                    for suffix in ["parent", "prefix", "text", "resource", "paragraph"] {
                         self.block_colors
                             .remove(&mut transaction, &format!("{id}:{suffix}"));
                     }
@@ -462,6 +483,36 @@ impl CollabEngine {
                             .try_update(&mut transaction, key, color.clone());
                     } else {
                         self.block_colors.remove(&mut transaction, &key);
+                    }
+                }
+                if let Some(style) = &block.paragraph_style {
+                    let key = format!("{}:paragraph", block.id);
+                    let before = out_string(self.block_colors.get(&transaction, &key))
+                        .unwrap_or_else(|| "{}".into());
+                    let mut values: std::collections::BTreeMap<String, Any> =
+                        serde_json::from_str(&before).unwrap_or_default();
+                    let edits = if current_blocks.iter().any(|b| b.id == block.id) {
+                        style
+                            .property_edits
+                            .as_deref()
+                            .map(|s| paragraph_style::parse(s, false))
+                            .transpose()?
+                    } else {
+                        Some(paragraph_style::parse(&style.properties, true)?)
+                    };
+                    if let Some(edits) = edits {
+                        for (key, value) in edits {
+                            if let Some(v) = value {
+                                values.insert(key, v);
+                            } else {
+                                values.remove(&key);
+                            }
+                        }
+                        self.block_colors.try_update(
+                            &mut transaction,
+                            key,
+                            serde_json::to_string(&values).unwrap(),
+                        );
                     }
                 }
                 let key = format!("{}:resource", block.id);
@@ -668,6 +719,7 @@ impl CollabEngine {
             return Ok(false);
         }
         self.apply_block_snapshot(vec![CollabBlock {
+            paragraph_style: None,
             id: LEGACY_BLOCK_ID.to_owned(),
             block_type: "paragraph".to_owned(),
             text,
@@ -834,6 +886,7 @@ fn text_segments_for_schema<T: ReadTxn>(
             };
             let attributes = chunk.attributes.as_deref();
             Some(CollabTextSegment {
+                typography: paragraph_style::read_typography(chunk.attributes.as_deref()),
                 href: attribute_string(attributes, schema_attribute("href", formal)),
                 inline_latex,
                 inline_mention: mention.as_ref().map(|m| m.0.clone()),
@@ -1075,7 +1128,8 @@ fn attribute_string(attributes: Option<&Attrs>, key: &str) -> Option<String> {
 
 impl CollabTextSegment {
     fn is_styled(&self) -> bool {
-        self.href.is_some()
+        self.typography.is_some()
+            || self.href.is_some()
             || self.bold
             || self.italic
             || self.underline
@@ -1090,7 +1144,8 @@ impl CollabTextSegment {
     }
 
     fn attributes(&self) -> Attrs {
-        let mut attributes = Attrs::new();
+        let mut attributes =
+            paragraph_style::typography(self.typography.as_deref()).unwrap_or_default();
         if let Some(href) = &self.href {
             attributes.insert("href".into(), Any::String(href.clone().into()));
         }
@@ -1141,7 +1196,7 @@ fn apply_text_segments_for_schema(
     if length == 0 {
         return;
     }
-    let clear_attributes = Attrs::from([
+    let mut clear_attributes: Attrs = Attrs::from([
         // Every supported rich-text attribute is explicitly cleared before
         // replaying canonical segments, preventing removed remote highlights
         // from surviving on a peer that previously formatted the same range.
@@ -1159,6 +1214,9 @@ fn apply_text_segments_for_schema(
     .into_iter()
     .map(|(key, value)| (schema_attribute(&key, formal).into(), value))
     .collect();
+    for key in paragraph_style::TYPOGRAPHY_KEYS {
+        clear_attributes.insert((*key).into(), Any::Null);
+    }
     text_ref.format(transaction, 0, length, clear_attributes);
 
     let mut offset = 0;
@@ -1201,6 +1259,14 @@ fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(
     let mut ids = HashSet::new();
     let mut ancestors = Vec::<&str>::new();
     for block in blocks {
+        for segment in &block.segments {
+            paragraph_style::typography(segment.typography.as_deref())?;
+        }
+        if let Some(style) = &block.paragraph_style {
+            if let Some(edits) = &style.property_edits {
+                paragraph_style::parse(edits, false)?;
+            }
+        }
         if block.id.trim().is_empty() {
             return Err("block id must not be empty".to_owned());
         }
@@ -1619,6 +1685,7 @@ mod tests {
 
     fn block(id: &str, block_type: &str, text: &str) -> CollabBlock {
         CollabBlock {
+            paragraph_style: None,
             id: id.to_owned(),
             block_type: block_type.to_owned(),
             text: text.to_owned(),
@@ -1639,8 +1706,42 @@ mod tests {
         }
     }
 
+    /// 离线草稿的段落默认格式可重开；非法初始化在创建共享文字之前拒绝。
+    #[test]
+    fn legacy_paragraph_defaults_reopen_and_invalid_initialization_is_atomic() {
+        let directory = tempdir().unwrap();
+        let path = directory
+            .path()
+            .join("paragraph.sqlite")
+            .to_string_lossy()
+            .to_string();
+        let mut engine = CollabEngine::open("legacy-paragraph".into(), path.clone())
+            .unwrap()
+            .0;
+        let mut paragraph = block("empty", "paragraph", "");
+        paragraph.paragraph_style = Some(CollabResource {
+            properties: r#"{"textDefaults":{"a:bold":true},"nextParagraphStyle":"body"}"#.into(),
+            property_edits: None,
+        });
+        engine.apply_block_snapshot(vec![paragraph]).unwrap();
+        let saved = engine.blocks();
+        let reopened = CollabEngine::open("legacy-paragraph".into(), path)
+            .unwrap()
+            .0;
+        assert_eq!(reopened.blocks(), saved);
+        let before = engine.doc.transact().state_vector();
+        let mut invalid = block("invalid", "paragraph", "");
+        invalid.paragraph_style = Some(CollabResource {
+            properties: r#"{"textDefaults":{"mentionId":"bad"}}"#.into(),
+            property_edits: None,
+        });
+        assert!(engine.apply_block_snapshot(vec![invalid]).is_err());
+        assert_eq!(engine.doc.transact().state_vector(), before);
+    }
+
     fn styled_segment(text: &str, bold: bool, strikethrough: bool) -> CollabTextSegment {
         CollabTextSegment {
+            typography: None,
             href: None,
             inline_latex: None,
             inline_mention: None,

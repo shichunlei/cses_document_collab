@@ -1,0 +1,112 @@
+{
+  "date": "2026-10-16",
+  "scope": "修复未提交代码审查发现的远端空段默认格式、划词面板类型转换及旧CSS字号三个问题；不表示全量0.11.21兼容验收。",
+  "versions": {
+    "registry_latest": "0.11.21",
+    "desktop_declared": "0.11.21",
+    "desktop_locked": "0.11.21",
+    "desktop_installed": "0.11.17",
+    "queried_before_changes": true,
+    "combination_changed": false,
+    "desktop_dependencies_changed": false
+  },
+  "upstream": {
+    "package": "/tmp/blockcraft-image-caption-0.11.21/package",
+    "typography_source": "fesm2022/ccc-blockcraft-framework-block-std-typography.mjs",
+    "typography_sha256": "a8c1e7f85c57533839778a171f5e638ab048930e5c3a8a154359d5ce394c4b85",
+    "input_source": "fesm2022/ccc-blockcraft.mjs",
+    "input_sha256": "037b9b0325f164baac79bf0416dc400a4d2787214d0a3a6e4bdc0cf4514fa4b9",
+    "references": [
+      "ai-skills/blockcraft.md",
+      "ai-skills/blockcraft-debug.md",
+      "ai-skills/blockcraft-test.md",
+      "ai-skills/blockcraft-input.md: 持续输入格式与段落默认值",
+      "ai-skills/MIGRATIONS.md",
+      "TypingFormatState.get/sync; InputTransformer.setNextInsertAttrs",
+      "readInlineFontSize; normalizeFontSizePixels; normalizeParagraphFontScale; resolveEditableBlockFontSize"
+    ],
+    "rules": [
+      "未显式选定的空段输入格式取当前textDefaults；本地明确选定的输入格式优先，主动导航后重读落点。",
+      "标题属于段落属性；本地菜单类型转换仍在同一文字范围继续格式操作。移动端只接续自身命令同步产生的稳定范围，远端改字/改类型/删除或撤权不被接受。",
+      "旧CSS字号trim后用不区分大小写的px/em语法读取；px为0.1至4096、六位精度，倍率为0.5至3、三位精度；紧凑属性优先。段落fs/pfs按同一发布函数范围和精度读取。"
+    ]
+  },
+  "fixes": [
+    {
+      "issue": "远端清除/替换空段默认格式后旧输入样式残留",
+      "implementation": "仅更新继承值及已有受管理输入键，缺失键显式清除；无格式普通段落保持空输入Map。额外监听用户显式输入格式，远端更新保留其选择/取消，主动导航清除；监听随适配器释放。",
+      "coverage": "8项段落/标题/引用/无序列表远端清除或替换，核对旧字样/字号/字体/颜色/字距不再输入且可撤销；2项空/非空段落显式输入优先及导航重读。"
+    },
+    {
+      "issue": "格式面板切换标题后误判旧选区失效",
+      "implementation": "面板持有可更新快照；类型/缩进命令同步写入后立即捕获结果，异步完成只交付该快照。未放宽CollabTextRange对远端类型/正文/身份的校验。",
+      "coverage": "强化原有标题切换后继续加粗/对齐；新增连续6种类型转换、零级列表退回正文后继续格式，以及本地转换后的远端类型/删除/只读/改字/重排5种场景。"
+    },
+    {
+      "issue": "旧CSS字号大小写/空白/非法值与桌面解析不同",
+      "implementation": "统一旧px/em语法、数值范围/量化及紧凑属性优先级；段落fs/pfs同样按发布版读取；不改写已有共享原值。",
+      "coverage": "生成4组段落/标题配置、每组14种新旧字号组合的实际发布函数期望。新增5种对齐完整页面回归，检查编辑/预览/再编辑最终RenderParagraph逐字符字号及正文不被展示操作改写。"
+    }
+  ],
+  "oracle": {
+    "generator": "packages/cses_document_collab/tool/generate_heading_typography_oracle.mjs",
+    "fixture": "packages/cses_document_collab/test/fixtures/blockcraft-0.11.21-heading-fonts.json",
+    "fixture_sha256": "f9a2f382748a110a6e4c8480e1933ad5fa517302488e08f0f0172b2b6cd14459",
+    "compiled_fixture": "packages/cses_document_collab/test/fixtures/heading_typography_oracle.dart",
+    "compiled_fixture_sha256": "deadb8c8967dd2a3c7c9b4a00b6cbac61c131a5778c30baa6cb2480001b1dc91",
+    "repeat_generation_identical": true,
+    "legacy_configurations": 4,
+    "legacy_runs_per_configuration": 14,
+    "generated_files_edited_by_hand": false
+  },
+  "validation": {
+    "targeted": {
+      "directory": "packages/cses_document_collab",
+      "command": "flutter test --no-pub test/paragraph_style_test.dart test/editor_shortcut_toolbar_test.dart test/mobile_selection_menu_test.dart test/heading_typography_test.dart --reporter expanded",
+      "passed": 176,
+      "failed": 0,
+      "new_cases_for_this_fix": 22
+    },
+    "full_package": {
+      "directory": "packages/cses_document_collab",
+      "command": "flutter test --no-pub --reporter expanded",
+      "passed": 1130,
+      "failed": 0,
+      "note": "统计包含当前工作区其他并行改动的用例，不将全部新增数量归于这三处修复。"
+    },
+    "consumer": {
+      "directory": ".",
+      "command": "flutter test --no-pub --reporter expanded",
+      "passed": 56,
+      "failed": 0
+    },
+    "native": {
+      "directory": "packages/cses_document_collab/rust",
+      "command": "cargo fmt --check; cargo check; cargo test --lib",
+      "passed": 86,
+      "failed": 0,
+      "rust_api_changed_by_this_task": false
+    },
+    "static_analysis": {
+      "package": "flutter analyze --no-pub lib test/paragraph_style_test.dart test/mobile_selection_menu_test.dart test/heading_typography_test.dart: no issues found",
+      "consumer": "root flutter analyze --no-pub lib: no issues found"
+    },
+    "format": "本次修改的手写Dart文件已运行dart format；生成常量仅由发布函数生成工具更新。",
+    "diff_check": "git diff --check and git diff --cached --check passed",
+    "durable_log": "docs/verification/selection-format-review-fixes-20261016.txt",
+    "device": "本次未重新运行真机；此前Android30项记录保留为历史，不扩大到新增35项字号场景。"
+  },
+  "remaining": [
+    "iOS真机、在线桌面双向协同/重连/持久化ACK尚未针对本轮重新验收。",
+    "桌面实际安装仍为0.11.17，声明/锁定0.11.21的安装升级尚未完成。",
+    "完整字体/段间距设置、列表通用8级Tab及混合类型/跨父容器缩进等既有待办保持。",
+    "共享Schema/FRB ABI未在本轮改变，不重新生成或手改桥接文件；保留无关工作区改动。"
+  ],
+  "adaptation_counts": {
+    "adapted": 13,
+    "partial": 10,
+    "structural": 1,
+    "unsupported": 17,
+    "total": 41
+  }
+}

@@ -1,0 +1,137 @@
+{
+  "date": "2026-10-16",
+  "scope": "BlockCraft 0.11.20 paragraph textDefaults and nextParagraphStyle mobile compatibility; not full release certification",
+  "versions": {
+    "registry_latest": "0.11.20",
+    "desktop_declared": "0.11.17",
+    "desktop_locked": "0.11.17",
+    "desktop_installed": "0.11.17",
+    "desktop_head": "d6d1754e24",
+    "published_tgz_sha256": "e5b047d7c909d4807f637c84c284fe335e45f4c32f65232d4b2f6b9676aaf124",
+    "frb_codegen": "2.13.0"
+  },
+  "upstream_oracle": {
+    "source": "fesm2022/ccc-blockcraft-framework-block-std-typography.mjs",
+    "source_sha256": "a8c1e7f85c57533839778a171f5e638ab048930e5c3a8a154359d5ce394c4b85",
+    "generator": "packages/cses_document_collab/tool/generate_paragraph_oracle.mjs",
+    "fixture": "packages/cses_document_collab/test/fixtures/blockcraft-0.11.20-paragraph.json",
+    "fixture_sha256": "834210acba2bcc942a692da33a4eedfdda3fc1d05847013f71aa28734e4129a8",
+    "normalization_cases": 30,
+    "font_catalog_ids": 23,
+    "next_paragraph_cases": 60,
+    "notes": "Executes actual normalization and next-style functions from published artifact; migration headings still say unreleased."
+  },
+  "implemented": [
+    "Field-only persisted paragraph defaults and next-style settings; nested JSON canonicalization; unknown props retained.",
+    "Empty paragraph format, whole-range format including empty paragraphs, partial-range isolation and common-appearance preservation when deleting all selected text.",
+    "Typing whitelist excludes href, entity and revision metadata; navigation and undo/redo restore local typing state.",
+    "Same/body/default layout controls; middle/end and line-start Enter, reverse same-parent range replacement, empty heading/quote exit, list empty outdent, unchecked new todo and no explicit ordered restart cloning.",
+    "Typography JSON travels through actual FRB fields and Y.Text formats; empty text presentation introduces no content character; fonts use platform fallbacks.",
+    "Body reset clears original paragraph depth and modeled layout/character overrides; new paragraphs have new identities.",
+    "Formal Yjs V1 two-replica convergence, FRB and SQLite reopen; localDraft defaults reopen and invalid initialization atomicity.",
+    "ARGB editor colors convert to desktop CSS in paragraph defaults and restore editor alpha on navigation/reopen.",
+    "Empty ordinary paragraphs/quotes and explicit-same headings outdent raw paragraph depth before exiting; body headings still reset to body first."
+  ],
+  "validation": {
+    "flutter": {
+      "status": "passed",
+      "directory": "packages/cses_document_collab",
+      "passed": 324,
+      "files": [
+        "test/paragraph_input_test.dart",
+        "test/paragraph_style_test.dart",
+        "test/editor_shortcut_toolbar_test.dart",
+        "test/paragraph_style_native_test.dart",
+        "test/collaborative_editor_page_test.dart",
+        "test/mobile_selection_menu_test.dart",
+        "test/appflowy_block_editor_adapter_test.dart",
+        "test/collab_list_enter_test.dart",
+        "test/collab_list_enter_focus_test.dart",
+        "test/editor_modal_focus_test.dart",
+        "test/collab_controller_native_test.dart",
+        "test/ordered_numbering_native_test.dart",
+        "test/inline_formula_native_integration_test.dart"
+      ],
+      "new_paragraph_native_cases": 2,
+      "notes": "Actual macOS debug native library rebuilt; no missing-library skips.",
+      "final_source_recheck": {
+        "files": [
+          "test/paragraph_style_test.dart",
+          "test/paragraph_input_test.dart"
+        ],
+        "passed": 78,
+        "notes": "After replacing the empty-depth continuation await with a direct returned Future; formatting/lint-only brace fixes do not alter behavior."
+      }
+    },
+    "rust": {
+      "status": "passed",
+      "tests": 86,
+      "checks": [
+        "cargo fmt --check",
+        "cargo check",
+        "cargo build",
+        "cargo test"
+      ]
+    },
+    "analysis": {
+      "status": "passed",
+      "package_target_files": 13,
+      "consumer_scope": "root lib/src/demo",
+      "consumer_result": "No issues found"
+    },
+    "consumer_tests": {
+      "status": "passed",
+      "file": "test/collab_cache_compatibility_test.dart",
+      "passed": 2
+    },
+    "android": {
+      "status": "passed",
+      "device": "HONOR X70 MTN-AN00",
+      "device_id": "A92G6R5704004108",
+      "os": "Android 16",
+      "target": "packages/cses_document_collab/integration_test/paragraph_input_test.dart",
+      "command": "flutter drive --driver packages/cses_document_collab/test_driver/integration_test.dart --target packages/cses_document_collab/integration_test/paragraph_input_test.dart -d A92G6R5704004108 --no-pub --keep-app-running",
+      "checks": [
+        "Styled empty heading typing",
+        "Continue heading on soft Enter",
+        "Layout menu next paragraph body choice",
+        "Empty heading reset in place",
+        "Plain body typing continues with attached input connection"
+      ],
+      "limits": "Runs on physical Android with TestTextInput-injected IME updates and a local editor adapter. Does not certify actual Sogou/system IME behavior or online desktop synchronization.",
+      "recovered_attempts": [
+        "First Gradle native merge/strip outputs were unreadable; fresh build succeeded.",
+        "Initial integration harness did not register TestTextInput under the live binding; registration and cleanup were corrected and device run passed."
+      ]
+    },
+    "android_normal_demo": {
+      "build": "passed: final flutter build apk --debug --no-pub after all functional changes; debug APK includes rebuilt native libraries",
+      "restore": "passed: adb install -r succeeded and normal MainActivity launched; app data preserved"
+    },
+    "git_diff_check": "passed",
+    "ios_native": {
+      "status": "passed",
+      "command": "packages/cses_document_collab/tool/build_rust_ios.sh debug",
+      "targets": [
+        "aarch64-apple-ios",
+        "aarch64-apple-ios-sim",
+        "x86_64-apple-ios"
+      ],
+      "artifact": "packages/cses_document_collab/ios/cses_document_collab/cses_collab_core.xcframework",
+      "xcode": "26.5 (17F42)"
+    },
+    "ios_simulator": {
+      "status": "failed",
+      "command": "flutter build ios --debug --simulator --no-pub",
+      "reason": "FlutterGeneratedPluginSwiftPackage declares iOS 13.0, but cses-document-collab and file-picker-darwin require 14.0. Runner project settings already specify 14.0; generated package was not hand-edited.",
+      "native_framework": "All three iOS architectures rebuilt successfully; host simulator build is not counted as passed."
+    }
+  },
+  "remaining": [
+    "Desktop has not adopted 0.11.20; actual project remains 0.11.17.",
+    "Generic Tab maximum 8, previous-sibling depth constraint, full legacy deep-indent interaction; mobile list controls still 0..6.",
+    "Complete font and paragraph-spacing controls; spacing/decoration props preserved without full presentation or editing.",
+    "Online desktop two-way synchronization, reconnection and persistence ACK; revision editing and physical IME manual verification not certified.",
+    "iOS simulator host minimum-platform mismatch (generated Swift package 13.0 vs dependencies 14.0); iOS device and manual input-method behavior remain unverified."
+  ]
+}

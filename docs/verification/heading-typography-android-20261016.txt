@@ -1,0 +1,22 @@
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+Installing build/app/outputs/flutter-apk/app-debug.apk...           6.1s
+I/flutter (28038): 00:00 +0: (setUpAll)
+I/flutter (28038): 00:00 +1: final heading sizes left follow published defaults
+I/flutter (28038): 00:03 +2: final heading sizes left preserve mixed run overrides
+I/flutter (28038): 00:05 +3: empty heading sizes left match placeholders and defaults
+I/flutter (28038): 00:07 +4: final heading sizes center follow published defaults
+I/flutter (28038): 00:09 +5: final heading sizes center preserve mixed run overrides
+I/flutter (28038): 00:11 +6: empty heading sizes center match placeholders and defaults
+I/flutter (28038): 00:13 +7: final heading sizes right follow published defaults
+I/flutter (28038): 00:15 +8: final heading sizes right preserve mixed run overrides
+I/flutter (28038): 00:17 +9: empty heading sizes right match placeholders and defaults
+I/flutter (28038): 00:18 +10: final heading sizes justify follow published defaults
+I/flutter (28038): 00:20 +11: final heading sizes justify preserve mixed run overrides
+I/flutter (28038): 00:22 +12: empty heading sizes justify match placeholders and defaults
+I/flutter (28038): 00:24 +13: final heading sizes distributed follow published defaults
+I/flutter (28038): 00:26 +14: final heading sizes distributed preserve mixed run overrides
+I/flutter (28038): 00:28 +15: empty heading sizes distributed match placeholders and defaults
+I/flutter (28038): 00:30 +16: (tearDownAll)
+I/flutter (28038): 00:30 +17: All tests passed!
+All tests passed.
+Leaving the application running.

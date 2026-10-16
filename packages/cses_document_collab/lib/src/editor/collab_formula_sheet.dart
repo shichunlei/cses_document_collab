@@ -36,12 +36,14 @@ Future<void> showCollabFormulaEditor(
 /// 在借用 [context] 和 [editor] 中输入公式，等待退场动画后返回原文或取消的 null。
 /// [id] 非 null 时编辑独立块；[inlineTarget] 非 null 时编辑单字符行内对象，两者互斥。
 /// 两者均 null 时只返回插入草稿；既有目标拒绝覆盖远端变化。
+/// [initialLatex] 为插入模式的初始原文，默认空；编辑既有目标时忽略它。
 /// 调用方须隔离正文输入，并在返回后重新核对权限与插入位置；面板拥有并释放输入控制器。
 Future<String?> showCollabFormulaInput(
   BuildContext context,
   EditorState editor, {
   String? id,
   CollabInlineFormulaTarget? inlineTarget,
+  String initialLatex = '',
 }) async {
   if (editor.isDisposed ||
       !editor.editable ||
@@ -56,7 +58,12 @@ Future<String?> showCollabFormulaInput(
     showDragHandle: true,
     builder: (context) {
       route = ModalRoute.of<String>(context);
-      return _FormulaSheet(editor: editor, id: id, inlineTarget: inlineTarget);
+      return _FormulaSheet(
+        editor: editor,
+        id: id,
+        inlineTarget: inlineTarget,
+        initialLatex: initialLatex,
+      );
     },
   );
   await route?.completed;
@@ -66,7 +73,16 @@ Future<String?> showCollabFormulaInput(
 /// 借用编辑器，持有输入、预览及目标变化监听；确认前不写共享数据。
 class _FormulaSheet extends StatefulWidget {
   /// [editor] 由页面持有，[id] 为独立块身份，[inlineTarget] 为行内位置，两者均 null 表示插入。
-  const _FormulaSheet({required this.editor, this.id, this.inlineTarget});
+  /// [initialLatex] 为插入草稿，默认空；既有目标使用权威原文。
+  const _FormulaSheet({
+    required this.editor,
+    this.id,
+    this.inlineTarget,
+    this.initialLatex = '',
+  });
+
+  /// 插入模式的初始 LaTeX，不直接写入正文。
+  final String initialLatex;
 
   /// 必需的借用编辑器，面板不释放其资源。
   final EditorState editor;
@@ -141,7 +157,7 @@ class _FormulaSheetState extends State<_FormulaSheet> {
     _input.text = widget.inlineTarget != null
         ? (_field ?? '')
         : node == null
-        ? ''
+        ? widget.initialLatex
         : readCollabFormula(node.attributes).string('latex');
     _error = null;
   }

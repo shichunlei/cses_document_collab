@@ -680,7 +680,7 @@ void main() {
     expect(
       state.document.first!.delta!.first.attributes?[AppFlowyRichTextKeys
           .textColor],
-      '0xff2196f3',
+      '0xff0b6e99',
     );
     await tester.drag(
       find.byKey(const ValueKey('editor-text-color-menu')),
@@ -692,7 +692,7 @@ void main() {
     final colorIcon = tester.widget<Icon>(
       find.byKey(const ValueKey('editor-inline-text-color-icon')),
     );
-    expect(colorIcon.color, const Color(0xFF2196F3));
+    expect(colorIcon.color, const Color(0xFF0B6E99));
 
     await tester.tap(find.byKey(const ValueKey('editor-shortcut-block-style')));
     await tester.pump();
@@ -921,7 +921,7 @@ void main() {
     expect(
       state.document.first!.delta!.first.attributes?[AppFlowyRichTextKeys
           .backgroundColor],
-      '0x4dffc107',
+      '0xfffbf3db',
     );
     await tester.drag(
       find.byKey(const ValueKey('editor-background-color-menu')),
@@ -935,7 +935,7 @@ void main() {
     final backgroundIcon = tester.widget<Icon>(
       find.byKey(const ValueKey('editor-inline-background-color-icon')),
     );
-    expect(backgroundIcon.color, const Color(0x4DFFC107));
+    expect(backgroundIcon.color, const Color(0xFFFBF3DB));
     expect(tester.takeException(), isNull);
   });
 
@@ -1107,7 +1107,9 @@ void main() {
     // AppFlowy's upcoming-input attributes. Returning initializes them again.
     state.selection = Selection.single(path: [1], startOffset: 1);
     await tester.pump();
-    expect(state.toggledStyle, isEmpty);
+    // Explicit nulls suppress AppFlowy's fallback to the previous paragraph.
+    // An unformatted caret must have no active value, regardless of key presence.
+    expect(state.toggledStyle.values.where((value) => value != null), isEmpty);
 
     state.selection = Selection.single(path: [0], startOffset: 6);
     await tester.pump();
@@ -1144,7 +1146,7 @@ void main() {
       await tester.pumpAndSettle();
       final node = state.document.first!;
       final border = node.attributes[csesBlockBorderColorAttribute];
-      expect(border, contains('244, 67, 54'));
+      expect(border, '#FBE4E4');
       expect(state.selection?.startIndex, 2);
       await tester.tap(
         find.byKey(const ValueKey('editor-block-border-color-back')),
@@ -1159,7 +1161,7 @@ void main() {
       );
       await tester.pumpAndSettle();
       final background = node.attributes[csesBlockBackgroundColorAttribute];
-      expect(background, contains('255, 193, 7'));
+      expect(background, '#FBF3DB');
       expect(node.attributes[csesBlockBorderColorAttribute], border);
       expect(node.delta!.toPlainText(), '引用正文');
       expect(

@@ -208,8 +208,13 @@ void main() {
       await tester.tap(find.byKey(const ValueKey('formula-close')));
       await tester.pumpAndSettle();
       expect(state.selection, selection);
+      expect(find.byKey(const ValueKey('editor-selection-menu')), findsNothing);
       await tester.tap(find.byKey(const ValueKey('collab-formula-math')));
       await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('collab-formula-sheet')),
+        findsOneWidget,
+      );
       await tester.enterText(
         find.byKey(const ValueKey('formula-input')),
         r'\frac{x}{2}',

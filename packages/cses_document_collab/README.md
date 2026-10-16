@@ -335,6 +335,16 @@ final page = CollaborativeEditorPage(collab: controller);
 
 点赞、评论、认证、成员资料和持久化均由宿主负责；包不创建评论输入框。开关在控制器创建时注入，变更配置需重建控制器。Demo提供内存点赞/取消演示及评论数量回传，尚未接入业务持久化接口。旧的单参数void回调须迁移至上述双参数、返回结果的签名。
 
+## 移动端划词菜单
+
+`CollaborativeEditorPage` 为 Android/iOS 挂载 `CollabMobileSelectionMenu`，与正文共用页面持有的滚动控制器；浮栏在长按或拖选结束后显示，滚动及选区变化由 AppFlowy 浮栏管理，不依赖键盘工具栏。编辑时提供复制、剪切、纯文本粘贴、全选、格式、链接及转行内公式；只读仅复制与全选。剪切等待剪贴板写入成功才删除，粘贴用单个事务保留前后正文及格式。
+
+格式入口复用 `editor_shortcut_toolbar.dart` 的 T、Aa、布局控件，允许连续格式调整。文字链接仅修改 `href`（正式协同映射为 `a:link`），可预填共同链接、修改和移除，保留其余格式；支持完整 http(s)、mailto、tel 地址。公式入口预填选中文字并预览，确认后复用 `insertCollabInlineFormula` 原子替换和独立历史；取消不改正文，撤销恢复原文及格式。
+
+`CollabTextRange` 保存块身份、父身份、正文与格式快照，整组重排可重定位；文字/格式变化、目标删除、权限撤销或页面退出后拒绝迟到写入。格式面板允许自身的格式变化，正文变化后禁用操作。同级跨段文字可格式化，链接/公式仅同段普通文字；跨容器/跨单元格、代码、题注和未知占位不开放本菜单。任务、会议、划词评论、背景图形及富文本剪贴板不在第一阶段。
+
+回归覆盖见 `test/mobile_selection_menu_test.dart`。真实 Android 手势用本包 `integration_test/mobile_selection_menu_test.dart`，由 Demo 的 `flutter drive` 配合本包 `test_driver/integration_test.dart` 驱动并使用 `--keep-app-running` 保留既有应用数据；测试不登录、不访问在线文档。
+
 ## 普通及合并表格
 
 正式 `table → table-row → table-cell → 正文块` 保留独立身份和共享类型。更多→表格直接在稳定正文位置后插入2×2表格，不弹出行列选择；窄表默认与正文左边缘对齐，编辑和预览一致，超宽时仍可横向滚动；顶部列操作条及左侧行操作条默认隐藏，点击表格后显示，点击外部收起；操作条选中整列/整行，蓝色高亮并打开浮动插入/删除菜单；插入再选择上下/左右方向。拖动列条右缘预览宽度，松手一次保存。每格右上角更多面板仅保留合并范围、合并和拆分；增删行列及列宽不在此处重复提供。跨越新增/删除位置的合并范围同步扩缩，删除主格所在行/列时将主格移动到存活覆盖区域。合并按行序移动非空正文到左上格，其他逻辑格仍以 `display=none` 保留；拆分后正文留在左上格，空格补空段落，与桌面契约一致。
@@ -382,6 +392,40 @@ SVG图片使用flutter_svg绘制：带`.svg`后缀的远端图片复用CachedNet
 音视频的播放/暂停按钮直接显示在播放器上，音视频共用`CollabMediaTimeline`进度条，统一细轨道、圆滑块及当前/总时长；音频使用浅色卡片配色，视频进度条叠放在画面内底部。拖动预览目标时间，松手跳转一次。未知时长不允许跳转，进度只在局部更新，换源/退出等待已有跳转完成再释放控制器。音频、视频、图片和附件的管理操作统一收进一个“更多操作”按钮，各块已有的外部打开/下载、编辑、删除和下方插入从菜单进入。预览模式下仍可直接播放/暂停，音视频和附件的菜单仅保留打开，不显示编辑、删除和插入；图片预览隐藏更多按钮。菜单退场后才执行操作，期间权限变化或资源属性更新会使旧操作失效，重排后按稳定块ID定位。
 
 本次按钮归并的验证范围见根仓库 `docs/verification/media-more-menu-20261016.json`。
+
+
+### 普通文本段Tab缩进（BlockCraft 0.11.21）
+
+普通段落、H1～H9和引用读取桌面`props.depth`，每级增加32逻辑像素的左侧布局偏移，并减少相同排版宽度；字号不改变。布局按钮与硬件Tab/Shift+Tab写同一字段级事务，保留文字、标题级别和选区；使用稳定块身份支持远端重排后的撤销。新增缩进最多8级，首目标不能超过前一兄弟深度+1，多选任一项达8级则整次增加不写入；旧的超深数据原样展示，可逐级减少。
+
+代码Tab和表格键盘导航保留各自规则。列表沿用已有独立0～6级操作，普通文本与列表混选、跨父容器范围不开放这次文本缩进命令，未把它们标成通用8级Tab已完成。验证覆盖`test/paragraph_indent_test.dart`、完整页面字号/布局回归，以及真实FRB/SQLite的8级保存与历史。下方设备命令同时验证普通段落、标题、引用的0/1/2级位置与剩余宽度。
+
+### 标题字号与分散对齐回归（BlockCraft 0.11.21）
+
+标题与分散对齐共用段落/行内字号规则。`test/heading_typography_test.dart` 直接核对完整页面 `RenderParagraph` 的逐字符最终字号，覆盖五种对齐、段落depth偏移及剩余宽度、真实换行、混排链接、空标题和编辑/预览切换。期望数据从发布包生成，同时输出 JSON 与供真机编译的 Dart 常量，不读取手机上的宿主文件路径：
+
+```bash
+node packages/cses_document_collab/tool/generate_heading_typography_oracle.mjs /path/to/extracted/blockcraft-0.11.21/package
+flutter drive --driver packages/cses_document_collab/test_driver/integration_test.dart --target packages/cses_document_collab/integration_test/heading_typography_test.dart -d ANDROID_DEVICE_ID --no-pub --keep-app-running
+```
+
+设备用例保留真机实际视口并检查移动选区服务；使用临时测试正文，不登录或访问正式文档。运行后按上文约定重新构建普通 Demo，并以 `adb install -r` 覆盖恢复，保留既有应用数据。代码块不附加段落专用历史标记；弹窗退出恢复选区时只临时抑制划词浮栏，归还原选区附加信息，后续用户划词仍可显示菜单。
+
+### BlockCraft 0.11.20 段落默认格式与下一段
+
+正文段落/标题、三类列表和引用支持 `textDefaults` 与 `nextParagraphStyle`。空段落 Aa 格式、整段格式和删空后的共同格式与正文同事务保存；字体/字号/字距随输入往返，链接和业务身份不会成为段落默认值。布局面板可选择下一段按默认规则、延续样式或回正文；段中保留样式，段尾标题/引用默认回正文并清理字符及布局覆盖。Undo/Redo 同时恢复本地输入格式，空段落重开后继续使用共享默认格式。
+
+0.11.21 后续核对补齐三处边界：远端清除/替换空段默认格式会清除本机继承的旧字样、字号、字体、颜色和字距，本地明确选择的输入格式仍优先，主动导航后重新继承；划词格式面板接续自身类型转换与列表退回正文后的稳定选区，远端改字、改类型、删除或撤权仍使旧选区失效；旧CSS字号按发布版去首尾空白、不区分单位大小写，并统一像素/倍率范围、精度及新旧属性优先级。
+
+回归包含远端默认值更新后的实际输入与撤销、连续类型转换后继续格式化，以及发布函数生成的旧字号对照数据；完整页面在五种对齐和编辑/预览切换中检查最终渲染字号。验证结果与未覆盖范围见[修复记录](../../docs/verification/selection-format-review-fixes-0.11.21-20261016.json)。
+
+对应发布产物的对照数据可在仓库根目录重新生成：
+
+```bash
+node packages/cses_document_collab/tool/generate_paragraph_oracle.mjs /path/to/extracted/blockcraft-0.11.20/package
+```
+
+本轮包含真实 FRB/SQLite 与 Android 集成验证；Android IME 事件由测试连接注入。字体依平台回退，完整字体/段间距设置、0.11.20 的通用 8 级 Tab 规则、iOS 和在线桌面互操作仍待补齐，详见仓库 `docs/block-adaptation.md`。
 
 ### 附件卡片布局
 

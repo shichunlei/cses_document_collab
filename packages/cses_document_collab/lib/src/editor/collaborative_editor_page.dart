@@ -1,4 +1,5 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/src/editor/collab_paragraph_indent.dart';
 import 'package:cses_document_collab/src/controller/collab_controller.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_block_colors.dart';
@@ -10,8 +11,11 @@ import 'package:cses_document_collab/src/editor/collab_embed_block.dart';
 import 'package:cses_document_collab/src/editor/collab_formula_block.dart';
 import 'package:cses_document_collab/src/editor/collab_inline_formula.dart';
 import 'package:cses_document_collab/src/editor/collab_inline_mention.dart';
-import 'package:cses_document_collab/src/editor/collab_list_editing.dart';
+import 'package:cses_document_collab/src/editor/collab_paragraph_editing.dart';
+import 'package:cses_document_collab/src/editor/collab_paragraph_presentation.dart';
+import 'package:cses_document_collab/src/model/collab_paragraph_style.dart';
 import 'package:cses_document_collab/src/editor/collab_meeting_block.dart';
+import 'package:cses_document_collab/src/editor/collab_mobile_selection_menu.dart';
 import 'package:cses_document_collab/src/editor/collab_ordered_marker.dart';
 import 'package:cses_document_collab/src/editor/collab_resource_block.dart';
 import 'package:cses_document_collab/src/editor/collab_text_alignment.dart';
@@ -65,8 +69,11 @@ class CollaborativeEditorPage extends StatefulWidget {
   createState() => _CollaborativeEditorPageState();
 }
 
-/// 页面持有用户预览选择，并与 Rust 模型能力共同决定编辑器是否允许修改。
+/// 页面持有用户预览选择和共用滚动控制器，并与 Rust 模型能力共同决定编辑器是否允许修改。
 class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
+  /// 页面创建和释放的正文滚动控制器，编辑器与划词浮栏共同借用。
+  late EditorScrollController _editorScrollController;
+
   bool _isPreview = false;
 
   /// 导入选择、解析与应用期间禁止重复操作和正文输入。
@@ -78,10 +85,13 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
   /// 用户预览和模型只读约束任意一个生效时都使用只读展示。
   bool get _previewOnly => _isPreview || !collab.canEdit;
 
-  /// 注册能力监听，使远端锁定或修订到达后立即关闭本地输入。
+  /// 创建共用滚动控制器并注册能力监听，使远端锁定或修订到达后立即关闭本地输入。
   @override
   void initState() {
     super.initState();
+    _editorScrollController = EditorScrollController(
+      editorState: collab.editorState,
+    );
     collab.addListener(_syncEditorMode);
     _syncEditorMode();
   }
@@ -94,11 +104,15 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
     }
   }
 
-  /// [oldWidget] 的控制器被替换时解绑旧监听，再绑定新实例，避免借用对象泄漏。
+  /// [oldWidget] 的文档控制器被替换时释放旧滚动资源、解绑旧监听，再创建滚动控制器并绑定新实例。
   @override
   void didUpdateWidget(covariant CollaborativeEditorPage oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.collab != widget.collab) {
+      _editorScrollController.dispose();
+      _editorScrollController = EditorScrollController(
+        editorState: collab.editorState,
+      );
       oldWidget.collab.removeListener(_syncEditorMode);
       oldWidget.collab.editorState.editable = oldWidget.collab.canEdit;
       _isPreview = false;
@@ -107,10 +121,11 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
     }
   }
 
-  /// 注销页面监听，并恢复宿主能力约束下的模式；不释放借用控制器。
+  /// 注销页面监听并释放自有滚动资源，恢复宿主能力约束下的模式；不释放借用文档控制器。
   @override
   void dispose() {
     collab.removeListener(_syncEditorMode);
+    _editorScrollController.dispose();
     collab.editorState.editable = collab.canEdit;
     super.dispose();
   }
@@ -315,48 +330,74 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
   /// 同规则拦截器，硬件命令在下方优先派发，共用事务及现有协同发布链路。
   /// @字符在普通可编辑正文打开宿主人员选择，无服务时保持普通输入。
   /// 宿主启用文末互动时，正文至少占满当前编辑视口，footer随后滚动且不属于可编辑块树。
+  /// 移动端挂载独立于键盘显示的划词菜单，和正文借用同一页面滚动控制器。
+  /// 普通文本段的Tab/Shift+Tab先写平面depth，不交给标准命令建立嵌套块。
   Widget _buildEditor() {
-    return IgnorePointer(
-      ignoring: !collab.initialized,
-      child: Opacity(
-        opacity: collab.initialized ? 1 : 0.45,
-        child: AppFlowyEditor(
-          key: const ValueKey('collaborative-appflowy-editor'),
-          editorState: collab.editorState,
-          header: collab.header == null
-              ? null
-              : DocumentHeader(controller: collab.header!, editorState: collab.editorState, preview: _isPreview),
-          footer: collab.hostServices.showDocumentFeedback
-              ? DocumentFeedbackFooter(
-                  key: ObjectKey(collab),
-                  controller: collab.feedback,
-                  editorState: collab.editorState,
-                  enabled: !_importing,
-                )
-              : null,
-          editable: !_previewOnly && !_importing,
-          disableKeyboardService: _previewOnly,
-          blockComponentBuilders: {
-            ..._collabBlockComponentBuilders,
-            PageBlockKeys.type: PageBlockComponentBuilder(
-              minimumBodyHeight: collab.hostServices.showDocumentFeedback ? null : 0,
+    return CollabMobileSelectionMenu(
+      key: ObjectKey(collab.editorState),
+      editorState: collab.editorState,
+      scrollController: _editorScrollController,
+      enabled: collab.initialized,
+      child: IgnorePointer(
+        ignoring: !collab.initialized,
+        child: Opacity(
+          opacity: collab.initialized ? 1 : 0.45,
+          child: AppFlowyEditor(
+            key: const ValueKey('collaborative-appflowy-editor'),
+            editorState: collab.editorState,
+            editorScrollController: _editorScrollController,
+            header: collab.header == null
+                ? null
+                : DocumentHeader(
+                    controller: collab.header!,
+                    editorState: collab.editorState,
+                    preview: _isPreview,
+                  ),
+            footer: collab.hostServices.showDocumentFeedback
+                ? DocumentFeedbackFooter(
+                    key: ObjectKey(collab),
+                    controller: collab.feedback,
+                    editorState: collab.editorState,
+                    enabled: !_importing,
+                  )
+                : null,
+            editable: !_previewOnly && !_importing,
+            disableKeyboardService: _previewOnly,
+            blockComponentBuilders: {
+              ..._collabBlockComponentBuilders,
+              PageBlockKeys.type: PageBlockComponentBuilder(
+                minimumBodyHeight: collab.hostServices.showDocumentFeedback
+                    ? null
+                    : 0,
+              ),
+            },
+            characterShortcutEvents: [
+              collabParagraphEnter,
+              CharacterShortcutEvent(
+                key: 'cses-user-mention',
+                character: '@',
+                handler: _handleUserMention,
+              ),
+              ...standardCharacterShortcutEvents,
+            ],
+            // 列表行首先逐级退级；非列表再保护容器边界/删除前置媒体，最后交标准退格。
+            // 不能先让标准命令合并正文，或在退级前删除列表旁的图片/视频。
+            commandShortcutEvents: [
+              collabBlockBackspaceCommand,
+              collabParagraphTabCommand,
+              collabParagraphShiftTabCommand,
+              ...standardCommandShortcutEvents,
+            ],
+            shrinkWrap: false,
+            editorStyle: const EditorStyle.mobile(
+              padding: EdgeInsets.symmetric(
+                horizontal: DocumentHeader.contentInset,
+              ),
+              cursorColor: Color(0xFF5B5BD6),
+              dragHandleColor: Color(0xFF5B5BD6),
+              selectionColor: Color(0x335B5BD6),
+              textSpanDecorator: _collabTextSpanDecorator,
             ),
-          },
-          characterShortcutEvents: [
-            collabListEnter,
-            CharacterShortcutEvent(key: 'cses-user-mention', character: '@', handler: _handleUserMention),
-            ...standardCharacterShortcutEvents,
-          ],
-          // 列表行首先逐级退级；非列表再保护容器边界/删除前置媒体，最后交标准退格。
-          // 不能先让标准命令合并正文，或在退级前删除列表旁的图片/视频。
-          commandShortcutEvents: [collabBlockBackspaceCommand, ...standardCommandShortcutEvents],
-          shrinkWrap: false,
-          editorStyle: const EditorStyle.mobile(
-            padding: EdgeInsets.symmetric(horizontal: DocumentHeader.contentInset),
-            cursorColor: Color(0xFF5B5BD6),
-            dragHandleColor: Color(0xFF5B5BD6),
-            selectionColor: Color(0x335B5BD6),
-            textSpanDecorator: _collabTextSpanDecorator,
           ),
         ),
       ),
@@ -370,27 +411,42 @@ final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders =
       ...standardBlockComponentBuilderMap,
       // Renderer validation failures use the same card as native opaque blocks.
       errorBlockComponentBuilderKey: CollabUnsupportedBlockComponentBuilder(),
-      QuoteBlockKeys.type: QuoteBlockComponentBuilder(iconBuilder: buildCollabQuoteBorder),
+      QuoteBlockKeys.type: QuoteBlockComponentBuilder(
+        iconBuilder: buildCollabQuoteBorder,
+      ),
       ParagraphBlockKeys.type: ParagraphBlockComponentBuilder(
-        configuration: standardBlockComponentBuilderMap[ParagraphBlockKeys.type]!.configuration.copyWith(
-          padding: _paragraphBlockPadding,
-        ),
+        configuration:
+            standardBlockComponentBuilderMap[ParagraphBlockKeys.type]!
+                .configuration
+                .copyWith(padding: _paragraphBlockPadding),
       ),
       // 正式图片复用资源块选区外壳并展示尺寸/题注；离线图片仍使用 AppFlowy 原组件。
-      ImageBlockKeys.type: CollabEmbedBlockComponentBuilder(kind: CollabEmbedKind.image),
+      ImageBlockKeys.type: CollabEmbedBlockComponentBuilder(
+        kind: CollabEmbedKind.image,
+      ),
       // Links and videos remain first-class selectable editor blocks by providing
       // custom renderers whose URL attributes are synchronized through Rust/Yrs.
-      csesLinkBlockType: CollabEmbedBlockComponentBuilder(kind: CollabEmbedKind.link),
-      csesVideoBlockType: CollabEmbedBlockComponentBuilder(kind: CollabEmbedKind.video),
+      csesLinkBlockType: CollabEmbedBlockComponentBuilder(
+        kind: CollabEmbedKind.link,
+      ),
+      csesVideoBlockType: CollabEmbedBlockComponentBuilder(
+        kind: CollabEmbedKind.video,
+      ),
       BulletedListBlockKeys.type: BulletedListBlockComponentBuilder(
-        configuration: standardBlockComponentConfiguration.copyWith(padding: _listBlockPadding),
+        configuration: standardBlockComponentConfiguration.copyWith(
+          padding: _listBlockPadding,
+        ),
       ),
       NumberedListBlockKeys.type: NumberedListBlockComponentBuilder(
         iconBuilder: buildCollabOrderedMarker,
-        configuration: standardBlockComponentConfiguration.copyWith(padding: _listBlockPadding),
+        configuration: standardBlockComponentConfiguration.copyWith(
+          padding: _listBlockPadding,
+        ),
       ),
       TodoListBlockKeys.type: TodoListBlockComponentBuilder(
-        configuration: standardBlockComponentConfiguration.copyWith(padding: _listBlockPadding),
+        configuration: standardBlockComponentConfiguration.copyWith(
+          padding: _listBlockPadding,
+        ),
       ),
       collabDividerType: CollabDividerBlockComponentBuilder(),
       collabFormulaType: CollabFormulaBlockComponentBuilder(),
@@ -401,7 +457,8 @@ final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders =
       for (final type in ['table', 'table-row', 'table-cell'])
         type: CollabTableBlockComponentBuilder(),
       csesUnsupportedBlockType: CollabUnsupportedBlockComponentBuilder(),
-      for (final kind in collabResourceTypes) kind: CollabResourceBlockComponentBuilder(),
+      for (final kind in collabResourceTypes)
+        kind: CollabResourceBlockComponentBuilder(),
     }.map((type, builder) {
       const textTypes = {
         ParagraphBlockKeys.type,
@@ -411,7 +468,14 @@ final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders =
         NumberedListBlockKeys.type,
         TodoListBlockKeys.type,
       };
-      return MapEntry(type, textTypes.contains(type) ? CollabTextAlignmentBuilder(builder) : builder);
+      return MapEntry(
+        type,
+        textTypes.contains(type)
+            ? CollabTextAlignmentBuilder(
+                configureCollabParagraphPresentation(builder, type),
+              )
+            : builder,
+      );
     });
 
 /// Reduces the extra gap between body paragraphs while preserving line height.
@@ -424,7 +488,10 @@ EdgeInsets _listBlockPadding(Node node) {
 }
 
 /// 在借用 [context]/[node] 中装饰 UTF-16 [index] 开始的 [text]。
-/// [before] 是内置格式，[after] 为调用方装饰；行内公式、用户和三类业务实体提及使用单字符 WidgetSpan，保留文字颜色；整段链接点击提供打开和三视图切换，混排正文维持原链接行为。
+/// [before] 是内置字符格式，[after] 已应用段落/标题样式；段落族保留后者，
+/// 再应用行内字号和倍率，避免丢失标题字号或重复乘算段落倍率。
+/// 行内公式、用户和三类业务实体提及使用单字符 WidgetSpan，保留文字颜色；
+/// 整段链接点击提供打开和三视图切换，混排正文维持原链接行为。
 InlineSpan _collabTextSpanDecorator(
   BuildContext context,
   Node node,
@@ -441,10 +508,20 @@ InlineSpan _collabTextSpanDecorator(
       node,
       index,
       text,
-      before,
+      supportsCollabParagraph(node) ? after : before,
       after,
     ),
   );
+  if (supportsCollabParagraph(node)) {
+    decorated = decorated.copyWith(
+      style: collabParagraphTextStyle(
+        node,
+        decorated.style ?? const TextStyle(),
+        text.attributes ?? const {},
+        applyParagraph: false,
+      ),
+    );
+  }
   // Container color is inherited only when the text has no explicit foreground.
   if (text.attributes?[AppFlowyRichTextKeys.textColor] == null) {
     Node? ancestor = node.parent;

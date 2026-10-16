@@ -1,0 +1,101 @@
+{
+  "date": "2026-10-16",
+  "scope": "移动端划词菜单第一阶段",
+  "desktop_reference": {
+    "package": "@ccc/blockcraft",
+    "installed_version": "0.11.17",
+    "scope": "本机桌面浮栏及 CSES 扩展源码核对，不修改桌面包或现有块注册清单"
+  },
+  "behavior": [
+    "Android/iOS 系统样式浮栏；只读仅复制与全选，独立于软键盘显示",
+    "复用现有 T/Aa/布局；同级跨段格式化",
+    "单段普通文字添加/修改/移除链接，保留原文和其他格式",
+    "选中文字预填公式输入预览，确认后原子替换，独立撤销恢复原文与格式",
+    "纯文本复制与粘贴；剪切等待剪贴板成功，粘贴单事务",
+    "稳定块及父身份、UTF-16偏移、原文和格式快照；重排重定位，变化或当前只读时拒绝迟到提交"
+  ],
+  "validation": {
+    "widget_regression": {
+      "passed": 89,
+      "files": [
+        "mobile_selection_menu_test.dart",
+        "editor_shortcut_toolbar_test.dart",
+        "editor_modal_focus_test.dart",
+        "collab_inline_formula_test.dart",
+        "collab_list_toolbar_focus_test.dart"
+      ],
+      "note": "最终5个文件共89项通过，其中划词目标20项；格式改文及重排用例在修复前2项均失败，修复后全部通过。"
+    },
+    "final_target": {
+      "passed": 20,
+      "file": "test/mobile_selection_menu_test.dart",
+      "coverage": [
+        "反向选区、emoji UTF-16、链接校验/回显/移除/历史",
+        "弹窗期间远端修改正文/格式/删除/重排和权限撤销",
+        "公式预填/替换/取消/历史/冲突",
+        "复用加粗、字色、标题、对齐",
+        "同级跨段及跨单元格/代码/整块限制",
+        "纯文本分段粘贴单次撤销、剪切剪贴板竞态、全选后继续操作",
+        "格式面板远端改文后禁止旧操作，远端重排后只格式化原稳定块"
+      ]
+    },
+    "page_table_native_regression": {
+      "passed": 59,
+      "files": [
+        "collab_table_test.dart",
+        "collaborative_editor_page_test.dart",
+        "inline_formula_native_integration_test.dart",
+        "link_view_native_test.dart"
+      ],
+      "real_native_tests": 5,
+      "note": "使用已存在真实宿主动态库验证 FRB 和 SQLite；无 Rust/生成桥接接口变化。"
+    },
+    "unique_directed_tests_passed": 148,
+    "analyze": {
+      "status": "passed",
+      "scope": "6个触达手写实现文件、目标测试和设备入口，共8项"
+    },
+    "android_device": {
+      "status": "passed",
+      "model": "MTN-AN00 (HONOR X70)",
+      "os": "Android 16 / API 36",
+      "test_cases": 1,
+      "target": "packages/cses_document_collab/integration_test/mobile_selection_menu_test.dart",
+      "command": "flutter drive --driver packages/cses_document_collab/test_driver/integration_test.dart --target packages/cses_document_collab/integration_test/mobile_selection_menu_test.dart -d ANDROID_DEVICE_ID --no-pub --keep-app-running",
+      "observed": [
+        "实际 MobileSelectionServiceWidget",
+        "长按松手产生文字选区和菜单",
+        "真实点击复制",
+        "与 EditorShortcutToolbar 实际组合，触摸格式入口并应用斜体，完成后继续链接/公式操作",
+        "通过实际溢出按钮进入文字链接并保存",
+        "通过实际溢出按钮进入公式预览，预填原文、转换及撤销恢复"
+      ],
+      "isolation": "仅本地 AppFlowy 适配器，不登录、不请求业务接口、不写在线协同文档。使用 keep-app-running 避免测试结束卸载应用和清除数据。",
+      "note": "最终设备回归在格式实时选区修复后重新构建并通过；主机20项目标和89项相关回归均通过。"
+    },
+    "android_app": {
+      "build": "passed: flutter build apk --debug --no-pub",
+      "installation": "passed: adb install -r，未卸载、未清除数据",
+      "launch": "正常 main 应用已启动，未保留集成测试入口",
+      "apk_sha256": "36aa5043a5ad293e8518efbe1ecd924202ff789b8144628ff2312f8b14e10f29"
+    },
+    "diff_check": "passed: git diff --check"
+  },
+  "limitations": [
+    "未进行本轮 iOS 真机验收",
+    "手机触摸测试不验证在线协同、真实桌面双向或服务端持久化ACK",
+    "不支持跨容器或跨单元格范围菜单、代码着色、题注、背景图形、富文本剪贴板",
+    "划词任务、会议、评论不在本阶段",
+    "旧 localDraft 的行内公式兼容范围沿用现有适配表"
+  ],
+  "sha256": {
+    "packages/cses_document_collab/lib/src/editor/collab_mobile_selection_menu.dart": "73f14c7ada14f5affd8c013bc8d941016f68ea4ea52db10fc0013093952630c9",
+    "packages/cses_document_collab/lib/src/editor/editor_selection_actions.dart": "86459cfe53e0562e283ecec557b84da05cb3dc1d7dc57298901fd2b5b0d5807c",
+    "packages/cses_document_collab/lib/src/model/collab_text_range.dart": "96faf4b1cabf25595d06e5b56c659c2060c9fb48471e2a0d1b5c45c4ab696f5a",
+    "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart": "1df942fa119c2733d0b70bb10cd4429dd1703bf4c76185399955d0af2f0baf60",
+    "packages/cses_document_collab/lib/src/editor/collab_formula_sheet.dart": "d4731eb4680e66c6b318eed2a9f960b6b1dc0cb6a052e8d0c845f1ea73f2887e",
+    "packages/cses_document_collab/lib/src/editor/collaborative_editor_page.dart": "7bf8a40ede6636394c916f39c6b9ee9e74d2c5131f9442021cebbd5b4d8ec537",
+    "packages/cses_document_collab/test/mobile_selection_menu_test.dart": "4123b735ec3e43c929885b28e9b747fb113a340577ba67228053a1a32143c12d",
+    "packages/cses_document_collab/integration_test/mobile_selection_menu_test.dart": "9fea4196d1cbdfadcfb0c3ac870e50582388dc635cae01ddd068028bdb0167bd"
+  }
+}

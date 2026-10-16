@@ -1,0 +1,139 @@
+{
+  "date": "2026-10-16",
+  "scope": "Fix code text undo and formula sheet reopening; full affected-package regression and Android hardware verification of final heading/distributed typography.",
+  "versions": {
+    "registry_latest": "0.11.21",
+    "desktop_declared": "0.11.21",
+    "desktop_locked": "0.11.21",
+    "desktop_installed": "0.11.17",
+    "verified_again_before_changes": true,
+    "changed": false,
+    "desktop_dependencies_modified": false,
+    "upstream_source": "/tmp/blockcraft-image-caption-0.11.21/package",
+    "skills_and_sources": [
+      "ai-skills/blockcraft.md",
+      "ai-skills/blockcraft-debug.md",
+      "ai-skills/MIGRATIONS.md",
+      "fesm2022/ccc-blockcraft-framework-block-std-typography.mjs",
+      "themes/blocks/heading-block.scss"
+    ]
+  },
+  "fixes": [
+    {
+      "issue": "Code block text undo discarded by paragraph history resolution",
+      "cause": "Code nodes were given paragraph-only props and cses_paragraph_target. AppFlowy text inverse snapshots carry original node attributes, so the resolver treated code text undo as an invalid paragraph target and removed it.",
+      "change": "Only paragraph-family nodes receive paragraph formatting/history projection; code nodes retain code-specific attrs and ordinary text undo.",
+      "regression": "Remote header refresh, text edit, undo, redo and undo again preserve the current Rust/name header and expected text."
+    },
+    {
+      "issue": "Formula sheet cannot reopen after cancelling with a text range selected",
+      "cause": "Restoring the range also reopened the mobile selection toolbar above the formula. The toolbar intercepted the next formula tap.",
+      "change": "Modal completion temporarily marks its restoration events as disableFloatingToolbar, including Android input recovery, then restores prior selection extra info only if the session still owns it.",
+      "regression": "Cancellation restores the original range, leaves no selection-menu overlay, and a subsequent real tap opens the formula editor; save and undo still work. Existing modal-focus and later selection-menu tests remain passing."
+    }
+  ],
+  "regression_validation": {
+    "before_fix": {
+      "command": "flutter test --no-pub test/collab_code_block_test.dart test/collab_formula_test.dart --reporter expanded",
+      "passed": 13,
+      "failed": 2,
+      "failures": [
+        "remote header refresh preserves node, caret, and undo history",
+        "editing preview is local until save; cancel restores selected body"
+      ]
+    },
+    "targeted": {
+      "passed": 45,
+      "failed": 0,
+      "files": [
+        "test/collab_code_block_test.dart",
+        "test/collab_formula_test.dart",
+        "test/editor_modal_focus_test.dart",
+        "test/mobile_selection_menu_test.dart"
+      ]
+    },
+    "heading_widget": {
+      "passed": 15,
+      "failed": 0,
+      "test": "test/heading_typography_test.dart"
+    },
+    "full_package": {
+      "directory": "packages/cses_document_collab",
+      "command": "flutter test --no-pub --reporter expanded",
+      "passed": 1072,
+      "failed": 0,
+      "status": "passed"
+    },
+    "static_analysis": {
+      "package": "flutter analyze --no-pub lib/src/editor/appflowy_block_editor_adapter.dart lib/src/editor/editor_shortcut_toolbar.dart test/collab_code_block_test.dart test/collab_formula_test.dart test/heading_typography_test.dart integration_test/heading_typography_test.dart: no issues found",
+      "consumer": "root flutter analyze --no-pub lib: no issues found"
+    },
+    "format": "Changed handwritten declarations and new integration/test files formatted; unrelated declarations preserved; generated Dart fixture maintained through generator.",
+    "diff_check": "git diff --check and git diff --cached --check passed"
+  },
+  "android_hardware": {
+    "device_model": "MTN-AN00",
+    "device_id": "A92G6R5704004108",
+    "platform": "Android 16 / API 36",
+    "emulator": false,
+    "physical_resolution": "1200x2640",
+    "density_dpi": 520,
+    "system_font_scale": 1.0,
+    "command": "flutter drive --driver packages/cses_document_collab/test_driver/integration_test.dart --target packages/cses_document_collab/integration_test/heading_typography_test.dart -d A92G6R5704004108 --no-pub --keep-app-running",
+    "result": "passed",
+    "functional_scenarios": 15,
+    "runner_count_including_two_setup_hooks": 17,
+    "viewport": "Actual device viewport; no fixed test surface override. Real MobileSelectionServiceWidget asserted present.",
+    "coverage": [
+      "H1-H9 and body default final sizes",
+      "left/center/right/justify/distributed",
+      "per-character RenderParagraph sizes including inherited nested styles and TextScaler",
+      "paragraph fs/pfs and inline t:px/t:fs, legacy units and precedence",
+      "mixed linked text on multiple actual lines",
+      "empty heading defaults and placeholders",
+      "edit -> preview -> edit; document JSON preserved and no local block changes emitted"
+    ],
+    "default_sizes_at_base_16": {
+      "H1": 32,
+      "H2": 28.8,
+      "H3": 25.6,
+      "H4": 22.4,
+      "H5-H9": 16
+    },
+    "fixture": "test/fixtures/heading_typography_oracle.dart",
+    "fixture_generator": "tool/generate_heading_typography_oracle.mjs",
+    "fixture_regeneration": "JSON and compiled Dart payload both reproduce byte-for-byte from published 0.11.21 functions",
+    "log": "docs/verification/heading-typography-android-20261016.txt",
+    "screenshot": {
+      "path": "docs/verification/screenshots/heading-typography-android-mixed-20261016.png",
+      "description": "Android hardware capture during right-aligned mixed typography scenario; paragraph and inline overrides intentionally vary glyph size. This is not the default heading overview.",
+      "sha256": "37ba532c6db5afe22cede7a1f7b384825de6182435bd8cb3a342da42a6d7c405"
+    },
+    "test_data": "Local test documents with fake initialized controller; no account login, real-document mutation or online collaboration. Keyboard-height stream is fixed at zero for deterministic layout; no IME entry is tested."
+  },
+  "normal_app_restoration": {
+    "build_command": "flutter build apk --debug --no-pub",
+    "build_status": "passed",
+    "apk": "build/app/outputs/flutter-apk/app-debug.apk",
+    "apk_sha256": "dcfb3aaa983e02862d43512d14f759f97a3aafc340c88fb84922cd25e5afc66a",
+    "install": "adb install -r: Success",
+    "launch": "com.cses.cses_mobile_collab_demo/.MainActivity; state=RESUMED",
+    "data_preservation": "Integration run used --keep-app-running; ordinary APK replaced via install -r. No uninstall or clear-data commands executed.",
+    "first_install_time_before": "2026-10-16 15:56:46",
+    "first_install_time_after": "2026-10-16 15:56:46",
+    "normal_apk_update_time": "2026-10-16 17:32:57"
+  },
+  "source_hashes": {
+    "packages/cses_document_collab/lib/src/editor/appflowy_block_editor_adapter.dart": "e4f92c0b40e5b0f93d427c786c17e6fa4469c2be7dbb4dbff01c830684cc9a32",
+    "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart": "7cb1621b6905808cd17a270879453bce6da85f2267f68d56183c73d2f020a1dd",
+    "packages/cses_document_collab/test/heading_typography_test.dart": "f4758852f4f71f427e6b3feb6bd559304a6637100428d7d994c0d25da6acf608",
+    "packages/cses_document_collab/integration_test/heading_typography_test.dart": "cf1e92b0de02871a0bf456dbbb671369e77dfc04e723cc734150ea9999b3cf42",
+    "packages/cses_document_collab/test/fixtures/heading_typography_oracle.dart": "642e39cf80283778a1b89c1886f144e63f27a3f7abf0f48291b004ee51dfe24c"
+  },
+  "limitations": [
+    "iOS device verification and online desktop collaboration/reconnect/persistent ACK not rerun.",
+    "Code/formula interactions were verified through Widget tests; this hardware run specifically checks typography, not manual code/formula interaction or IME compatibility.",
+    "Not a full BlockCraft 0.11.21 release certification; desktop installed artifact still 0.11.17 at start-of-task verification."
+  ],
+  "supersedes_open_failures_in": "docs/verification/heading-font-size-fix-20261016.json"
+}

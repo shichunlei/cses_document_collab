@@ -408,8 +408,10 @@ class CollabController extends ChangeNotifier {
   }
 
   /// 将 Rust [blocks] 映射为编辑器快照，保留块身份、链接地址与格式；公式/用户/业务实体按单字符及身份字段传递，业务实体携带原始属性以恢复历史。
-  /// 不持有原生资源，不在边界写入共享内容。
-  static List<CollabEditorBlock> _toEditorBlocks(List<rust.CollabBlock> blocks) {
+  /// 同时投影段落默认字符格式、下一段设置与字体分段；不持有原生资源，不在边界写入共享内容。
+  static List<CollabEditorBlock> _toEditorBlocks(
+    List<rust.CollabBlock> blocks,
+  ) {
     return blocks
         .map(
           (block) => CollabEditorBlock(
@@ -421,6 +423,7 @@ class CollabController extends ChangeNotifier {
                   (segment) => CollabEditorTextSegment(
                     text: segment.text,
                     href: segment.href,
+                    typography: segment.typography,
                     inlineLatex: segment.inlineLatex,
                     inlineMention: segment.inlineMention,
                     mentionId: segment.mentionId,
@@ -451,7 +454,15 @@ class CollabController extends ChangeNotifier {
             image: _toEditorImage(block.image),
             ordered: _toEditorOrdered(block.ordered),
             code: _toEditorCode(block.code),
-            resource: block.resource == null ? null : CollabResource(properties: block.resource!.properties),
+            resource: block.resource == null
+                ? null
+                : CollabResource(properties: block.resource!.properties),
+            paragraphStyle: block.paragraphStyle == null
+                ? null
+                : CollabResource(
+                    properties: block.paragraphStyle!.properties,
+                    propertyEdits: block.paragraphStyle!.propertyEdits,
+                  ),
             replacesId: block.replacesId,
           ),
         )
@@ -459,7 +470,7 @@ class CollabController extends ChangeNotifier {
   }
 
   /// 将编辑器 [blocks] 映射为 Rust 输入，传递链接地址、用户/实体显示名、ID与原始属性快照，由Rust验证对象与模式。
-  /// 不在边界外进行 JSON 或 WS 编码。
+  /// 段落设置仅传递显式字段补丁，字体原值随文字分段往返；不在边界外进行 JSON 或 WS 编码。
   static List<rust.CollabBlock> _toRustBlocks(List<CollabEditorBlock> blocks) {
     return blocks
         .map(
@@ -472,6 +483,7 @@ class CollabController extends ChangeNotifier {
                   (segment) => rust.CollabTextSegment(
                     text: segment.text,
                     href: segment.href,
+                    typography: segment.typography,
                     inlineLatex: segment.inlineLatex,
                     inlineMention: segment.inlineMention,
                     mentionId: segment.mentionId,
@@ -500,6 +512,12 @@ class CollabController extends ChangeNotifier {
             alignment: block.alignment,
             indent: block.indent,
             image: _toRustImage(block.image),
+            paragraphStyle: block.paragraphStyle == null
+                ? null
+                : rust.CollabResource(
+                    properties: block.paragraphStyle!.properties,
+                    propertyEdits: block.paragraphStyle!.propertyEdits,
+                  ),
             resource: block.resource == null
                 ? null
                 : rust.CollabResource(

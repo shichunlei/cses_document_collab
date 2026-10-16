@@ -1,0 +1,131 @@
+{
+  "date": "2026-10-16",
+  "scope": "Ordinary paragraph, H1-H9 and quote depth rendering plus mobile layout controls and flat Tab/Shift+Tab commands; not full universal indentation certification.",
+  "versions": {
+    "registry_latest": "0.11.21",
+    "desktop_declared": "0.11.21",
+    "desktop_locked": "0.11.21",
+    "desktop_installed": "0.11.17",
+    "queried_before_changes": true,
+    "combination_changed": false,
+    "desktop_dependencies_changed": false
+  },
+  "upstream": {
+    "package": "/tmp/blockcraft-image-caption-0.11.21/package",
+    "source": "fesm2022/ccc-blockcraft.mjs",
+    "source_sha256": "037b9b0325f164baac79bf0416dc400a4d2787214d0a3a6e4bdc0cf4514fa4b9",
+    "references": [
+      "BaseBlockComponent.marginLeft, lines 6962-6966: (depth || 0) * 2 * 16 px",
+      "MAX_TAB_INDENT_DEPTH = 8",
+      "InputTransformer._handlerTab, lines 24675-24717",
+      "ai-skills/blockcraft.md",
+      "ai-skills/blockcraft-block.md",
+      "ai-skills/MIGRATIONS.md: Tab maximum 8 entry"
+    ],
+    "indent_step_logical_pixels": 32,
+    "new_indent_max_depth": 8,
+    "range_rules": "First target cannot exceed previous sibling depth + 1; any selected block at >=8 rejects increasing the whole range. First zero depth rejects outdent; later zero-depth blocks stay zero. Old over-cap data is not clipped."
+  },
+  "cause": "ParagraphStyle already preserved desktop props.depth, but ordinary text builders did not use it for layout; mobile indentation controls only dispatched list commands. Standard AppFlowy Tab would use nested block structure rather than the desktop flat depth field.",
+  "implemented": [
+    "Shared paragraph presentation adds depth * 32 to left padding for paragraphs, headings and quotes. Distributed alignment receives the resulting reduced layout constraints before measuring lines.",
+    "Mobile layout buttons and new high-priority Tab/Shift+Tab commands write depth-only stable-ID transactions, preserving text, heading, formatting, selection and independent undo boundaries.",
+    "Eight-level and previous-sibling guards prevent partial multi-target changes. Existing over-cap values remain visible and can be explicitly decreased.",
+    "Code Tab and table keyboard navigation are not intercepted. List layout commands retain their existing independent behavior."
+  ],
+  "validation": {
+    "targeted": {
+      "command": "flutter test --no-pub test/paragraph_indent_test.dart test/heading_typography_test.dart test/paragraph_style_native_test.dart --reporter expanded",
+      "passed": 42,
+      "failed": 0,
+      "breakdown": {
+        "command_and_history": 9,
+        "complete_page_typography_and_layout": 30,
+        "actual_frb_and_sqlite": 3
+      }
+    },
+    "full_package": {
+      "directory": "packages/cses_document_collab",
+      "command": "flutter test --no-pub --reporter expanded",
+      "passed": 1097,
+      "failed": 0
+    },
+    "native_depth_case": "Writes heading depth 7 -> 8 through real FRB applyBlockSnapshot, undo to 7, redo to 8, closes/reopens the same SQLite cache and verifies 8 persists. No Rust/FRB interface changes were required.",
+    "history_case": "Undo after remote reorder targets the original block and preserves new remote text and fs; reverse ranges are atomic, readonly/mixed code ranges do not write.",
+    "static_analysis": {
+      "package": "flutter analyze --no-pub lib/src/editor/collab_paragraph_indent.dart lib/src/editor/collab_paragraph_presentation.dart lib/src/editor/collaborative_editor_page.dart lib/src/editor/editor_shortcut_toolbar.dart test/paragraph_indent_test.dart test/paragraph_style_native_test.dart test/heading_typography_test.dart integration_test/heading_typography_test.dart: no issues found",
+      "consumer": "root flutter analyze --no-pub lib: no issues found"
+    },
+    "format": "Changed handwritten declarations and tests formatted; generated files not edited manually; unrelated workspace edits preserved.",
+    "diff_check": "git diff --check and git diff --cached --check passed"
+  },
+  "android_hardware": {
+    "device": "MTN-AN00",
+    "device_id": "A92G6R5704004108",
+    "os": "Android 16 / API 36",
+    "emulator": false,
+    "viewport": "Actual device viewport; real MobileSelectionServiceWidget asserted present.",
+    "command": "flutter drive --driver packages/cses_document_collab/test_driver/integration_test.dart --target packages/cses_document_collab/integration_test/heading_typography_test.dart -d A92G6R5704004108 --no-pub --keep-app-running",
+    "result": "passed",
+    "functional_scenarios": 30,
+    "runner_count_with_setup_hooks": 32,
+    "layout_scenarios": {
+      "types": [
+        "paragraph",
+        "heading_3",
+        "quote"
+      ],
+      "alignments": [
+        "left",
+        "center",
+        "right",
+        "justify",
+        "distributed"
+      ],
+      "depths": [
+        0,
+        1,
+        2,
+        0
+      ],
+      "expected_constraint_width_reductions": [
+        0,
+        32,
+        64,
+        0
+      ],
+      "checks": "Per-character final font size and actual RenderParagraph position/maxWidth in edit -> preview -> edit. Intrinsic text position follows its alignment anchor: full step for left/justify/distributed, half for center, unchanged right edge for right alignment."
+    },
+    "remaining_scenarios": "Existing H1-H9 defaults, mixed paragraph/inline font overrides and links with real wrapping, and empty heading placeholders across five alignments.",
+    "log": "docs/verification/text-paragraph-indent-android-20261016.txt",
+    "screenshot": {
+      "path": "docs/verification/screenshots/text-paragraph-indent-android-20261016.png",
+      "description": "Hardware capture during justified heading_3 layout at depth 0,1,2,0; all four runs keep the same heading size.",
+      "sha256": "41fc403b71bd9bc825dca922ed1e41fdb4f54811e97ae67601e7111862f70a9c"
+    },
+    "test_data": "Temporary local test paragraphs with fake initialized controller; no account login or online document access. Keyboard-height stream fixed at zero; this is layout verification, not real IME/hardware-keyboard interaction."
+  },
+  "normal_app_restoration": {
+    "build": "flutter build apk --debug --no-pub: passed",
+    "apk": "build/app/outputs/flutter-apk/app-debug.apk",
+    "apk_sha256": "2e874e4a5d1d2c0c509c7341f37665b630ade5913411b0e05e08f54e200013e5",
+    "install": "adb install -r: Success",
+    "launch": "com.cses.cses_mobile_collab_demo/.MainActivity; state=RESUMED",
+    "first_install_time_unchanged": "2026-10-16 15:56:46",
+    "normal_apk_update_time": "2026-10-16 17:54:49",
+    "data_preservation": "--keep-app-running during integration and install -r during restoration; no uninstall or clear-data commands."
+  },
+  "remaining_limits": [
+    "Lists retain existing 0-6 indentation and existing list operations; 8-level generic list Tab is not completed.",
+    "Text/list mixed selections and cross-parent indentation are not supported by the new text command.",
+    "iOS, online desktop bidirectional/reconnect/persistent ACK and real external hardware-keyboard behavior were not verified.",
+    "Other BlockCraft 0.11.21 features and full paragraph spacing/font settings are outside this fix."
+  ],
+  "source_hashes": {
+    "packages/cses_document_collab/lib/src/editor/collab_paragraph_indent.dart": "14858b0f952d006baf1fce44d5e231dd0f594bc09c1ceed38d54bfb96f3b9801",
+    "packages/cses_document_collab/lib/src/editor/collab_paragraph_presentation.dart": "ea2c27b194a7a6a4f7d3e22e017fdcccd4c578dfa13d777d99a410b0b0a8e203",
+    "packages/cses_document_collab/test/paragraph_indent_test.dart": "e81f5472032768a142f6f80fd9a26899762a83f3dcdb0e1fa5b9998b3d203172",
+    "packages/cses_document_collab/test/heading_typography_test.dart": "0a82f4fc3eaeee39b7a04704f69dd2e3e8f1a993b7b211da47813963ae6c3783",
+    "packages/cses_document_collab/test/paragraph_style_native_test.dart": "5d6dc193c241b16ea622538097adf78577133663661fc86622153913e900489b"
+  }
+}

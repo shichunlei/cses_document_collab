@@ -124,6 +124,8 @@ class BlockChangeResult {
 }
 
 class CollabBlock {
+  /// 段落族属性原始投影；既有块仅消费显式字段补丁，避免旧快照覆盖远端设置。
+  final CollabResource? paragraphStyle;
   final String id;
   final String blockType;
   final String text;
@@ -157,6 +159,7 @@ class CollabBlock {
   final String? blockTextColor;
 
   const CollabBlock({
+    this.paragraphStyle,
     required this.id,
     required this.blockType,
     required this.text,
@@ -178,6 +181,7 @@ class CollabBlock {
 
   @override
   int get hashCode =>
+      paragraphStyle.hashCode ^
       id.hashCode ^
       blockType.hashCode ^
       text.hashCode ^
@@ -201,6 +205,7 @@ class CollabBlock {
       identical(this, other) ||
       other is CollabBlock &&
           runtimeType == other.runtimeType &&
+          paragraphStyle == other.paragraphStyle &&
           id == other.id &&
           blockType == other.blockType &&
           text == other.text &&
@@ -394,6 +399,9 @@ class CollabResource {
 /// 富文本片段投影；行内公式以单个对象替换字符占据一个 UTF-16 光标位置。
 /// `inline_latex` 只携带桌面 embed 原文，不作为 Y.Text 格式属性保存。
 class CollabTextSegment {
+  /// 白名单字体、字号和字距的JSON；None 表示继承，不携带链接或业务属性。
+  final String? typography;
+
   /// 正文或单个对象替换字符；长度采用 UTF-16，与 Yjs/Flutter 光标一致。
   final String text;
 
@@ -448,6 +456,7 @@ class CollabTextSegment {
   final String? mentionAttributes;
 
   const CollabTextSegment({
+    this.typography,
     required this.text,
     this.href,
     required this.bold,
@@ -468,6 +477,7 @@ class CollabTextSegment {
 
   @override
   int get hashCode =>
+      typography.hashCode ^
       text.hashCode ^
       href.hashCode ^
       bold.hashCode ^
@@ -490,6 +500,7 @@ class CollabTextSegment {
       identical(this, other) ||
       other is CollabTextSegment &&
           runtimeType == other.runtimeType &&
+          typography == other.typography &&
           text == other.text &&
           href == other.href &&
           bold == other.bold &&

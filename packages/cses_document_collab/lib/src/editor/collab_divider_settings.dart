@@ -1,7 +1,8 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_divider_visual.dart';
+import 'package:cses_document_collab/src/editor/collab_color_picker.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
-import 'package:cses_document_collab/src/model/collab_block_colors.dart';
+import 'package:cses_document_collab/src/model/collab_color_palette.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/material.dart';
@@ -324,23 +325,13 @@ class _DividerSettingsState extends State<_DividerSettings> {
                     if (_tab != 1) ...[
                       const SizedBox(height: 16),
                       const Text('线色'),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: [
-                          _colorOption('', current.lineColor, enabled),
-                          for (final hex in const [
-                            '#9CA3AF',
-                            '#333333',
-                            '#EF4444',
-                            '#F59E0B',
-                            '#22C55E',
-                            '#3B82F6',
-                            '#8B5CF6',
-                            '#EC4899',
-                          ])
-                            _colorOption(hex, current.lineColor, enabled),
-                        ],
+                      CollabColorPicker(
+                        keyPrefix: 'divider-color',
+                        resetKey: const ValueKey('divider-color-clear'),
+                        textColors: true,
+                        enabled: enabled,
+                        selection: CollabColorSelection(current.lineColor),
+                        onSelected: (value) => _change('lineColor', value ?? ''),
                       ),
                     ],
                     const SizedBox(height: 12),
@@ -381,57 +372,6 @@ class _DividerSettingsState extends State<_DividerSettings> {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  /// 构建 [value] 对应的36px色块，空字符串表示清除颜色，其他值为预设HEX颜色。
-  /// [currentColor] 是借用的当前颜色，按解析后的颜色匹配预设，空白值选中清除块。
-  /// [enabled] 控制交互和无障碍可用状态；选中项重复点击不写入、不生成历史。
-  /// 返回拥有提示及选中边框的Widget，点击仅提交lineColor，不修改其他属性。
-  Widget _colorOption(String value, String currentColor, bool enabled) {
-    final clear = value.isEmpty;
-    final color = parseCollabBlockColor(value);
-    final selected = clear
-        ? currentColor.trim().isEmpty
-        : color != null && parseCollabBlockColor(currentColor) == color;
-    final label = clear ? '清除颜色' : '线色 $value';
-    return Tooltip(
-      message: label,
-      excludeFromSemantics: true,
-      child: Semantics(
-        label: label,
-        selected: selected,
-        enabled: enabled,
-        button: true,
-        child: InkWell(
-          key: ValueKey(clear ? 'divider-color-clear' : 'divider-color-$value'),
-          onTap: enabled
-              ? () async {
-                  if (!selected) {
-                    await _change('lineColor', value);
-                  }
-                }
-              : null,
-          child: Opacity(
-            opacity: enabled ? 1 : .38,
-            child: Container(
-              width: 36,
-              height: 36,
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                border: Border.all(color: selected ? Theme.of(context).colorScheme.primary : Colors.transparent),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              alignment: clear ? Alignment.center : null,
-              child: clear
-                  ? const Icon(Icons.clear, size: 20)
-                  : DecoratedBox(
-                      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(5)),
-                    ),
-            ),
-          ),
         ),
       ),
     );

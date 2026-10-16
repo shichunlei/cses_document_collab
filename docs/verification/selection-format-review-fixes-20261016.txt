@@ -1,0 +1,22 @@
+2026-10-16 BlockCraft 0.11.21 三项审查问题修复验证
+
+相关目标回归
+00:08 +176: All tests passed!
+
+cses_document_collab全包
+00:34 +1130: All tests passed!
+
+Demo宿主全包
+00:10 +56: All tests passed!
+
+Rust
+test result: ok. 86 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.25s
+
+包静态检查
+No issues found! (ran in 15.8s)
+
+宿主静态检查
+No issues found! (ran in 6.2s)
+
+本次未重新进行真机或在线双端联调。
+完整规则、修复范围与新增用例见同目录JSON记录。

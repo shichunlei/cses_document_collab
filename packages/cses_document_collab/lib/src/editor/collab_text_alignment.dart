@@ -54,7 +54,7 @@ class _DistributedTextBlock extends BlockComponentStatefulWidget {
     super.actionTrailingBuilder,
   });
   @override
-  State<_DistributedTextBlock> createState() => _DistributedTextBlockState();
+  createState() => _DistributedTextBlockState();
 }
 
 class _DistributedTextBlockState extends State<_DistributedTextBlock>
@@ -109,6 +109,8 @@ class _DistributedTextBlockState extends State<_DistributedTextBlock>
     }
   }
 
+  /// 在借用 [context] 中复用块配置和段落字号，只通过额外字距展开自然行。
+  /// 行内固定字号、倍率及链接样式由编辑器文字装饰处理，不在完整树上覆盖。
   @override
   Widget build(BuildContext context) {
     final direction = calculateTextDirection(
@@ -138,17 +140,6 @@ class _DistributedTextBlockState extends State<_DistributedTextBlock>
                 TextStyle(
                   decoration: TextDecoration.lineThrough,
                   color: Colors.grey.shade400,
-                ),
-              );
-            }
-            if (node.type == HeadingBlockKeys.type) {
-              final level =
-                  node.attributes[HeadingBlockKeys.level] as int? ?? 1;
-              const sizes = [32.0, 28.0, 24.0, 18.0, 18.0, 18.0];
-              styled = styled.updateTextStyle(
-                TextStyle(
-                  fontSize: level < sizes.length ? sizes[level] : 18,
-                  fontWeight: FontWeight.bold,
                 ),
               );
             }

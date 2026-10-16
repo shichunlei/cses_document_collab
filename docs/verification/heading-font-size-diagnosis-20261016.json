@@ -1,0 +1,256 @@
+{
+  "date": "2026-10-16",
+  "scope": "Diagnosis only: H1/H2/H3 final rendered font size; application code remains unchanged and defect remains open.",
+  "versions": {
+    "registry_latest": "0.11.21",
+    "desktop_declared": "0.11.21",
+    "desktop_locked": "0.11.21",
+    "desktop_installed": "0.11.17",
+    "note": "Desktop declaration/lock advanced from 0.11.17 to 0.11.21 during inspection; installed artifact remains 0.11.17. Target source is the actual published 0.11.21 artifact."
+  },
+  "upstream": {
+    "artifact_directory": "/tmp/blockcraft-image-caption-0.11.21/package",
+    "source": "fesm2022/ccc-blockcraft-framework-block-std-typography.mjs",
+    "source_sha256": "a8c1e7f85c57533839778a171f5e638ab048930e5c3a8a154359d5ce394c4b85",
+    "theme": "themes/blocks/heading-block.scss",
+    "base_size": 16,
+    "overrides": null,
+    "expected": {
+      "heading_1": 32,
+      "heading_2": 28.8,
+      "heading_3": 25.6
+    }
+  },
+  "diagnostic": {
+    "command": "flutter test --no-pub test/heading_presentation_diagnostic_test.dart --reporter expanded",
+    "scenarios_completed": 3,
+    "modes": [
+      "edit",
+      "preview"
+    ],
+    "harness": "Actual CollaborativeEditorPage, AppFlowyBlockEditorAdapter, and page text-span decorator, with fake initialized controller and no native/network mutations. Probe was temporary and removed after recording.",
+    "probe_source_sha256": "6989a09e2a094e1310805cccd99d07d13bcad4e9723aef945cd9d5ac204b20b4",
+    "original_types_and_levels_preserved": true,
+    "observations": [
+      {
+        "alignment": "left",
+        "mode": "edit",
+        "type": "heading_1",
+        "font_size": 16.0,
+        "font_weight": "700"
+      },
+      {
+        "alignment": "left",
+        "mode": "edit",
+        "type": "heading_2",
+        "font_size": 16.0,
+        "font_weight": "700"
+      },
+      {
+        "alignment": "left",
+        "mode": "edit",
+        "type": "heading_3",
+        "font_size": 16.0,
+        "font_weight": "700"
+      },
+      {
+        "alignment": "left",
+        "mode": "edit",
+        "type": "paragraph",
+        "font_size": 16.0,
+        "font_weight": "null"
+      },
+      {
+        "alignment": "left",
+        "mode": "preview",
+        "type": "heading_1",
+        "font_size": 16.0,
+        "font_weight": "700"
+      },
+      {
+        "alignment": "left",
+        "mode": "preview",
+        "type": "heading_2",
+        "font_size": 16.0,
+        "font_weight": "700"
+      },
+      {
+        "alignment": "left",
+        "mode": "preview",
+        "type": "heading_3",
+        "font_size": 16.0,
+        "font_weight": "700"
+      },
+      {
+        "alignment": "left",
+        "mode": "preview",
+        "type": "paragraph",
+        "font_size": 16.0,
+        "font_weight": "null"
+      },
+      {
+        "alignment": "justify",
+        "mode": "edit",
+        "type": "heading_1",
+        "font_size": 16.0,
+        "font_weight": "700"
+      },
+      {
+        "alignment": "justify",
+        "mode": "edit",
+        "type": "heading_2",
+        "font_size": 16.0,
+        "font_weight": "700"
+      },
+      {
+        "alignment": "justify",
+        "mode": "edit",
+        "type": "heading_3",
+        "font_size": 16.0,
+        "font_weight": "700"
+      },
+      {
+        "alignment": "justify",
+        "mode": "edit",
+        "type": "paragraph",
+        "font_size": 16.0,
+        "font_weight": "null"
+      },
+      {
+        "alignment": "justify",
+        "mode": "preview",
+        "type": "heading_1",
+        "font_size": 16.0,
+        "font_weight": "700"
+      },
+      {
+        "alignment": "justify",
+        "mode": "preview",
+        "type": "heading_2",
+        "font_size": 16.0,
+        "font_weight": "700"
+      },
+      {
+        "alignment": "justify",
+        "mode": "preview",
+        "type": "heading_3",
+        "font_size": 16.0,
+        "font_weight": "700"
+      },
+      {
+        "alignment": "justify",
+        "mode": "preview",
+        "type": "paragraph",
+        "font_size": 16.0,
+        "font_weight": "null"
+      },
+      {
+        "alignment": "distributed",
+        "mode": "edit",
+        "type": "heading_1",
+        "font_size": 28.0,
+        "font_weight": "700"
+      },
+      {
+        "alignment": "distributed",
+        "mode": "edit",
+        "type": "heading_2",
+        "font_size": 24.0,
+        "font_weight": "700"
+      },
+      {
+        "alignment": "distributed",
+        "mode": "edit",
+        "type": "heading_3",
+        "font_size": 18.0,
+        "font_weight": "700"
+      },
+      {
+        "alignment": "distributed",
+        "mode": "edit",
+        "type": "paragraph",
+        "font_size": 16.0,
+        "font_weight": "null"
+      },
+      {
+        "alignment": "distributed",
+        "mode": "preview",
+        "type": "heading_1",
+        "font_size": 28.0,
+        "font_weight": "700"
+      },
+      {
+        "alignment": "distributed",
+        "mode": "preview",
+        "type": "heading_2",
+        "font_size": 24.0,
+        "font_weight": "700"
+      },
+      {
+        "alignment": "distributed",
+        "mode": "preview",
+        "type": "heading_3",
+        "font_size": 18.0,
+        "font_weight": "700"
+      },
+      {
+        "alignment": "distributed",
+        "mode": "preview",
+        "type": "paragraph",
+        "font_size": 16.0,
+        "font_weight": "null"
+      }
+    ],
+    "decorator_traces": [
+      "HEADING_TRACE left heading_1 before=16.0 after=32.0 decorated=16.0",
+      "HEADING_TRACE left heading_2 before=16.0 after=28.8 decorated=16.0",
+      "HEADING_TRACE left heading_3 before=16.0 after=25.6 decorated=16.0",
+      "HEADING_TRACE left paragraph before=16.0 after=16.0 decorated=16.0",
+      "HEADING_TRACE justify heading_1 before=16.0 after=32.0 decorated=16.0",
+      "HEADING_TRACE justify heading_2 before=16.0 after=28.8 decorated=16.0",
+      "HEADING_TRACE justify heading_3 before=16.0 after=25.6 decorated=16.0",
+      "HEADING_TRACE justify paragraph before=16.0 after=16.0 decorated=16.0",
+      "HEADING_TRACE distributed heading_1 before=16.0 after=28.0 decorated=16.0",
+      "HEADING_TRACE distributed heading_2 before=16.0 after=24.0 decorated=16.0",
+      "HEADING_TRACE distributed heading_3 before=16.0 after=18.0 decorated=16.0",
+      "HEADING_TRACE distributed paragraph before=16.0 after=16.0 decorated=16.0"
+    ],
+    "interpretation": "Diagnostic execution succeeded; font-size parity FAILED. This is not a fix-validation pass.",
+    "temporary_probe_source": "/tmp/heading_presentation_diagnostic_20261016_test.dart",
+    "source_format": "dart format completed",
+    "static_analysis": "flutter analyze --no-pub test/heading_presentation_diagnostic_test.dart: no issues found",
+    "diff_check": "git diff --check: passed"
+  },
+  "cause": [
+    {
+      "file": "packages/cses_document_collab/lib/src/editor/collaborative_editor_page.dart",
+      "line": 499,
+      "finding": "Passes before/after to mobileTextSpanDecoratorForAttribute, which returns before and drops after containing the computed heading/paragraph font size."
+    },
+    {
+      "file": "packages/cses_document_collab/lib/src/editor/collaborative_editor_page.dart",
+      "line": 514,
+      "finding": "applyParagraph:false assumes paragraph size survived; operates on the restored body 16 style. Heading bold is still applied."
+    },
+    {
+      "file": "packages/cses_document_collab/lib/src/editor/collab_paragraph_presentation.dart",
+      "line": 160,
+      "finding": "Nonempty complete text tree returns empty style to preserve per-run typography; therefore no later semantic heading size is applied. Heading builder is replaced with ParagraphBlockComponentBuilder."
+    },
+    {
+      "file": "packages/cses_document_collab/lib/src/editor/collab_text_alignment.dart",
+      "line": 147,
+      "finding": "Distributed alignment separately forces a legacy size array, indexed by one-based level without subtracting 1; final H1/H2/H3 are 28/24/18 and override explicit per-run typography."
+    }
+  ],
+  "coverage_gap": "Previous paragraph tests exercised model/input/history and isolated style helper; alignment tests checked text/alignment/caret, not final H1/H2/H3 font sizes through the actual page decorator.",
+  "next_fix_requirements": [
+    "Resolve paragraph/semantic font size exactly once in the actual page decoration chain, preserving explicit paragraph fs and inline t:px/t:fs precedence.",
+    "Unify distributed alignment with the same typography resolution; remove legacy heading-size override.",
+    "Add permanent final-span font-size assertions for H1/H2/H3 in edit/preview and normal/distributed alignment, including explicit typography overrides."
+  ],
+  "limitations": [
+    "User screenshot document data was not inspected; reproduction uses headings with no explicit font-size overrides.",
+    "No application source fix, phone rerun, native rebuild or desktop collaborative round-trip in this diagnosis."
+  ]
+}

@@ -346,6 +346,16 @@ void main() {
       adapter.blocks.single.code,
       const CollabCode(language: 'Rust', name: '远端名称'),
     );
+    adapter.editorState.undoManager.redo();
+    await tester.pumpAndSettle();
+    expect(adapter.blocks.single.text, '$_source// local');
+    expect(
+      adapter.blocks.single.code,
+      const CollabCode(language: 'Rust', name: '远端名称'),
+    );
+    adapter.editorState.undoManager.undo();
+    await tester.pumpAndSettle();
+    expect(adapter.blocks.single.text, _source);
     expect(tester.takeException(), isNull);
     await tester.pumpWidget(const SizedBox.shrink());
   });

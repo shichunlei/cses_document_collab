@@ -1,6 +1,7 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:cses_document_collab/src/editor/collab_cached_image.dart';
+import 'package:cses_document_collab/src/editor/collab_emoji_picker.dart';
 
 import 'package:cses_document_collab/src/controller/document_metadata_controller.dart';
 import 'package:cses_document_collab/src/model/document_metadata.dart';
@@ -43,7 +44,7 @@ class DocumentHeader extends StatefulWidget {
 
   /// 创建仅拥有弹窗互斥标记的视图状态；业务资源继续由宿主持有。
   @override
-  State<DocumentHeader> createState() => _DocumentHeaderState();
+  createState() => _DocumentHeaderState();
 }
 
 /// 将借用的业务快照渲染为头部，按当前权限执行单字段编辑，不创建正文块。
@@ -460,7 +461,7 @@ class _TitleSheet extends StatefulWidget {
 
   /// 创建拥有输入控制器的面板状态，退场时释放。
   @override
-  State<_TitleSheet> createState() => _TitleSheetState();
+  createState() => _TitleSheetState();
 }
 
 /// 持有标题输入副本，仅输出校验后的改名命令；原业务状态由外层控制器管理。
@@ -522,18 +523,19 @@ class _TitleSheetState extends State<_TitleSheet> {
   );
 }
 
-/// 图标三种来源共用一层面板，借用共享图片选择逻辑；emoji直接选择，无表单或输入控制器。
+/// 图标三种来源共用一层面板，图片与表情分别复用共享选择器。
+/// 搜索输入由表情选择器持有并释放，业务保存仍由宿主元数据控制器完成。
 class _IconSheet extends StatelessWidget {
   /// [icon] 为当前业务图标，null表示未设置；[canEdit] 是确认时读取的借用权限回调。
   const _IconSheet({required this.icon, required this.canEdit});
 
-  /// 当前图标，仅用于预填图片链接；emoji展示为固定选择列表。
+  /// 当前图标，用于预填图片链接或回显完整原生表情。
   final Map<String, dynamic>? icon;
 
   /// 输出命令前读取的权限门禁；false时保持面板，不提交。
   final bool Function() canEdit;
 
-  /// 在面板 [context] 中输出列表emoji [value] 并关闭；权限失效时忽略，不执行网络保存。
+  /// 在面板 [context] 中输出原生表情 [value] 并关闭；权限失效时忽略，不执行网络保存。
   void _select(BuildContext context, String value) {
     if (!canEdit()) return;
     Navigator.pop(
@@ -569,28 +571,12 @@ class _IconSheet extends StatelessWidget {
       icon: const Icon(Icons.remove_circle_outline, size: 16),
       label: const Text('移除'),
     ),
-    firstTab: Wrap(
-      spacing: 8,
-      children: [
-        for (final emoji in [
-          '😘',
-          '😀',
-          '📄',
-          '📌',
-          '⭐',
-          '🚀',
-          '🎯',
-          '💡',
-          '❤️',
-          '✅',
-          '📚',
-          '🌈',
-        ])
-          TextButton(
-            onPressed: () => _select(context, emoji),
-            child: Text(emoji, style: const TextStyle(fontSize: 28)),
-          ),
-      ],
+    firstTab: CollabEmojiPicker(
+      keyPrefix: 'document-icon-emoji',
+      current: icon?['type'] == 'emoji' && icon?['value'] is String
+          ? (icon?['value'] as String)
+          : null,
+      onSelected: (value) async => _select(context, value),
     ),
   );
 }

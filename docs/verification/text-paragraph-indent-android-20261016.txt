@@ -1,0 +1,37 @@
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+Installing build/app/outputs/flutter-apk/app-debug.apk...           6.3s
+I/flutter ( 7225): 00:00 +0: (setUpAll)
+I/flutter ( 7225): 00:00 +1: text depth left heading_3 uses published 32px layout steps
+I/flutter ( 7225): 00:03 +2: text depth left paragraph uses published 32px layout steps
+I/flutter ( 7225): 00:05 +3: text depth left quote uses published 32px layout steps
+I/flutter ( 7225): 00:07 +4: final heading sizes left follow published defaults
+I/flutter ( 7225): 00:09 +5: final heading sizes left preserve mixed run overrides
+I/flutter ( 7225): 00:11 +6: empty heading sizes left match placeholders and defaults
+I/flutter ( 7225): 00:13 +7: text depth center heading_3 uses published 32px layout steps
+I/flutter ( 7225): 00:15 +8: text depth center paragraph uses published 32px layout steps
+I/flutter ( 7225): 00:17 +9: text depth center quote uses published 32px layout steps
+I/flutter ( 7225): 00:18 +10: final heading sizes center follow published defaults
+I/flutter ( 7225): 00:20 +11: final heading sizes center preserve mixed run overrides
+I/flutter ( 7225): 00:22 +12: empty heading sizes center match placeholders and defaults
+I/flutter ( 7225): 00:24 +13: text depth right heading_3 uses published 32px layout steps
+I/flutter ( 7225): 00:26 +14: text depth right paragraph uses published 32px layout steps
+I/flutter ( 7225): 00:28 +15: text depth right quote uses published 32px layout steps
+I/flutter ( 7225): 00:30 +16: final heading sizes right follow published defaults
+I/flutter ( 7225): 00:31 +17: final heading sizes right preserve mixed run overrides
+I/flutter ( 7225): 00:33 +18: empty heading sizes right match placeholders and defaults
+I/flutter ( 7225): 00:35 +19: text depth justify heading_3 uses published 32px layout steps
+I/flutter ( 7225): 00:37 +20: text depth justify paragraph uses published 32px layout steps
+I/flutter ( 7225): 00:39 +21: text depth justify quote uses published 32px layout steps
+I/flutter ( 7225): 00:41 +22: final heading sizes justify follow published defaults
+I/flutter ( 7225): 00:42 +23: final heading sizes justify preserve mixed run overrides
+I/flutter ( 7225): 00:44 +24: empty heading sizes justify match placeholders and defaults
+I/flutter ( 7225): 00:46 +25: text depth distributed heading_3 uses published 32px layout steps
+I/flutter ( 7225): 00:48 +26: text depth distributed paragraph uses published 32px layout steps
+I/flutter ( 7225): 00:50 +27: text depth distributed quote uses published 32px layout steps
+I/flutter ( 7225): 00:52 +28: final heading sizes distributed follow published defaults
+I/flutter ( 7225): 00:54 +29: final heading sizes distributed preserve mixed run overrides
+I/flutter ( 7225): 00:56 +30: empty heading sizes distributed match placeholders and defaults
+I/flutter ( 7225): 00:57 +31: (tearDownAll)
+I/flutter ( 7225): 00:57 +32: All tests passed!
+All tests passed.
+Leaving the application running.

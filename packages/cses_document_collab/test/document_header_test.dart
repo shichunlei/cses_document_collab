@@ -568,6 +568,8 @@ void main() {
             find.byKey(const ValueKey('document-icon-emoji-tab')),
           );
           await tester.pumpAndSettle();
+          await tester.ensureVisible(find.text('🚀'));
+          await tester.pumpAndSettle();
           await tester.tap(find.text('🚀'));
           await tester.pumpAndSettle();
           await tester.tap(find.byKey(const ValueKey('document-icon-remove')));
@@ -687,6 +689,8 @@ void main() {
       await tester.pumpAndSettle();
       expect(controller.value!.name, '手机标题');
       await tester.tap(find.byKey(const ValueKey('document-icon-edit')));
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('🚀'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('🚀'));
       await tester.pumpAndSettle();

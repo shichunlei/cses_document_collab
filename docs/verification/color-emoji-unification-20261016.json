@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-16",
+  "scope": "移动端共用颜色与表情选择器",
+  "upstream": {
+    "latest": "0.11.21",
+    "desktopDeclared": "0.11.21",
+    "desktopLocked": "0.11.21",
+    "desktopInstalled": "0.11.17",
+    "query": "桌面配置仓库 npm view @ccc/blockcraft dist-tags --json",
+    "paletteParity": "BUILTIN_COLOR_LIST / BUILTIN_BG_COLOR_LIST 的九色值及顺序与0.11.21发布产物逐项一致"
+  },
+  "changes": [
+    "新增collabColorPalette、CollabColorSelection和共用CollabColorPicker；文字使用深色，背景/边框使用浅色，分割线使用深色",
+    "接入正文和划词、块背景、引用边框、高亮文字/背景/边框、分割线；保留自定义项与未知CSS原文，无打开时迁移",
+    "按8位通道比较CSS/ARGB等价值及alpha，显式区分混合选区与默认色；仅用户选择时写入",
+    "高亮块背景展示alpha乘以0.82，原始CSS属性不变",
+    "文档图标和高亮prefix共用CollabEmojiPicker：62项中英文搜索、四类、进程内最近12项、目录外当前值及粘贴",
+    "保留Unicode组合序列；最多32字素/256 UTF-8字节；异步保存串行且失败可见，输入控制器由组件释放",
+    "保留正文事务与业务metadata各自写入边界，未修改Rust/FRB/Schema/依赖/公开入口",
+    "工具栏回归按无实际激活格式判断默认输入状态，允许显式null阻止AppFlowy继承上一段格式"
+  ],
+  "verification": [
+    {
+      "command": "flutter test --no-pub test/editor_shortcut_toolbar_test.dart test/collab_callout_block_test.dart test/collab_divider_test.dart test/document_header_test.dart test/mobile_selection_menu_test.dart test/collab_color_emoji_picker_test.dart --reporter expanded",
+      "cwd": "packages/cses_document_collab",
+      "result": "passed",
+      "tests": 116
+    },
+    {
+      "command": "flutter test --no-pub --reporter expanded",
+      "cwd": "packages/cses_document_collab",
+      "result": "passed",
+      "tests": 1128
+    },
+    {
+      "command": "flutter analyze --no-pub（7个受影响源文件及6个相关测试文件）",
+      "cwd": "packages/cses_document_collab",
+      "result": "No issues found"
+    },
+    {
+      "command": "flutter analyze --no-pub lib",
+      "cwd": ".",
+      "result": "No issues found"
+    },
+    {
+      "command": "flutter test --no-pub test/collab_demo_page_test.dart test/mention_picker_test.dart test/meeting_reference_picker_test.dart --reporter expanded",
+      "cwd": ".",
+      "result": "passed",
+      "tests": 6
+    },
+    {
+      "command": "dart format（仅本次触达的手写Dart文件，旧长行文件沿用120列）",
+      "result": "passed"
+    },
+    {
+      "command": "检索旧私有色板/表情列表和旧选色实现残留；git diff --check",
+      "result": "passed"
+    }
+  ],
+  "newRegressionCoverage": [
+    "CSS尾部alpha与Flutter ARGB转换",
+    "等价rgb/HEX/ARGB回显",
+    "未知CSS与默认值区分",
+    "混合选区不选中默认",
+    "文字/背景/边框桌面值",
+    "打开和重复选择自定义项不写入",
+    "独立修改及撤销恢复旧自定义色原文",
+    "保存期间禁重入与销毁后完成",
+    "保存失败可见且可重试",
+    "组合肤色/ZWJ表情粘贴及目录外当前值",
+    "共用表情分类与只读交互"
+  ],
+  "limitations": [
+    "未复验Android/iOS真机、新面板手动IME及在线桌面双向协同",
+    "表情目录为62项，不是桌面完整Unicode数据集；无肤色选择菜单，复杂变体通过粘贴",
+    "最近表情仅进程内缓存，不跨启动持久化",
+    "本轮仅基础桌面色板与旧色保留，未实现桌面53+10高级自由取色器",
+    "未知CSS表达式原文保留并标记自定义，不承诺Flutter可对所有表达式求值"
+  ],
+  "blockStatusCounts": {
+    "adapted": 13,
+    "partial": 10,
+    "structural": 1,
+    "unsupported": 17,
+    "total": 41
+  }
+}

@@ -213,11 +213,15 @@ void main() {
         CollabDivider(adapter.blocks.first.resource!.values).style,
         'edge-vine',
       );
-      await tester.tap(find.byKey(const ValueKey('divider-color-#EF4444')));
+      await tester.ensureVisible(
+        find.byKey(const ValueKey('divider-color-red')),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('divider-color-red')));
       await tester.pumpAndSettle();
       expect(
         CollabDivider(adapter.blocks.first.resource!.values).lineColor,
-        '#EF4444',
+        '#E03E3E',
       );
       await tester.ensureVisible(
         find.byKey(const ValueKey('divider-length-short')),
@@ -311,7 +315,7 @@ void main() {
       await tester.tap(find.byKey(const ValueKey('collab-divider-line')));
       await tester.pumpAndSettle();
       final clear = find.byKey(const ValueKey('divider-color-clear'));
-      final red = find.byKey(const ValueKey('divider-color-#EF4444'));
+      final red = find.byKey(const ValueKey('divider-color-red'));
       await tester.ensureVisible(clear);
       await tester.pumpAndSettle();
 
@@ -332,24 +336,18 @@ void main() {
             node.flagsCollection.isEnabled,
             enabled ? ui.Tristate.isTrue : ui.Tristate.isFalse,
           );
-          final box = tester.widget<Container>(
-            find
-                .descendant(of: option.$1, matching: find.byType(Container))
-                .first,
+          final button = tester.widget<IconButton>(
+            find.descendant(of: option.$1, matching: find.byType(IconButton)),
           );
-          final decoration = box.decoration! as BoxDecoration;
-          final border = decoration.border! as Border;
+          final side = button.style!.side!.resolve({});
           expect(
-            border.top.color,
+            side!.color,
             option.$2
                 ? Theme.of(tester.element(option.$1)).colorScheme.primary
                 : Colors.transparent,
           );
-          expect(tester.getSize(option.$1), const Size(36, 36));
-          expect(
-            tester.widget<InkWell>(option.$1).onTap,
-            enabled ? isNotNull : isNull,
-          );
+          expect(tester.getSize(option.$1).width, greaterThanOrEqualTo(44));
+          expect(button.onPressed, enabled ? isNotNull : isNull);
         }
       }
 
@@ -372,7 +370,7 @@ void main() {
       adapter.editorState.undoManager.undo();
       await tester.pumpAndSettle();
       expectSelection(false, true);
-      expect(adapter.blocks.first.resource!.values['lineColor'], '#EF4444');
+      expect(adapter.blocks.first.resource!.values['lineColor'], '#E03E3E');
       adapter.editorState.undoManager.redo();
       await tester.pumpAndSettle();
       expectSelection(true, false);
@@ -382,7 +380,7 @@ void main() {
           blockType: 'divider',
           text: '',
           resource: CollabResource(
-            properties: '{"lineColor":"rgb(239, 68, 68)"}',
+            properties: '{"lineColor":"rgb(224, 62, 62)"}',
           ),
         ),
         _fixture[1],
@@ -395,7 +393,7 @@ void main() {
       expect(changes, hasLength(count));
       expect(
         adapter.blocks.first.resource!.values['lineColor'],
-        'rgb(239, 68, 68)',
+        'rgb(224, 62, 62)',
       );
       adapter.editorState.editable = false;
       await tester.pumpAndSettle();
@@ -462,10 +460,7 @@ void main() {
             find.byKey(const ValueKey('divider-color-clear')),
             colorMatcher,
           );
-          expect(
-            find.byKey(const ValueKey('divider-color-#EF4444')),
-            colorMatcher,
-          );
+          expect(find.byKey(const ValueKey('divider-color-red')), colorMatcher);
           for (final tabLabel in ['线型', '贴纸胶带', '花边']) {
             final paragraph = tester.renderObject<RenderParagraph>(
               find.text(tabLabel),

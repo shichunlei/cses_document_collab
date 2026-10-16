@@ -272,7 +272,7 @@ void main() {
           (widget) =>
               widget.decoration is BoxDecoration &&
               (widget.decoration as BoxDecoration).color ==
-                  const Color(0xFFF6E5F0) &&
+                  const Color(0xFFF6E5F0).withValues(alpha: .82) &&
               (widget.decoration as BoxDecoration).border ==
                   Border.all(color: const Color(0xFFFFE6CD)),
         ),
@@ -297,6 +297,69 @@ void main() {
       expect(adapter.blocks, _fixture);
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox.shrink());
+    },
+  );
+
+  testWidgets(
+    'shared appearance picker preserves custom colors and independent undo',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final changes = <List<CollabEditorBlock>>[];
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: const [
+          CollabEditorBlock(
+            id: 'custom',
+            blockType: 'callout',
+            text: '',
+            calloutPrefix: '👩🏽‍💻',
+            blockTextColor: '#123456',
+            blockBackgroundColor: 'rgba(10, 20, 30, .25)',
+            blockBorderColor: '#ABCDEF80',
+          ),
+          CollabEditorBlock(
+            id: 'body',
+            parentId: 'custom',
+            blockType: 'paragraph',
+            text: '已有正文',
+          ),
+        ],
+        onLocalBlocksChanged: changes.add,
+      );
+      addTearDown(adapter.dispose);
+      await _pump(tester, adapter);
+      final original = adapter.blocks.first;
+      await tester.tap(find.byKey(const ValueKey('block-more-custom')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('collab-callout-settings')));
+      await tester.pumpAndSettle();
+      expect(changes, isEmpty);
+      expect(find.byKey(const ValueKey('callout-text-custom')), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('callout-background-custom')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey('callout-border-custom')),
+        findsOneWidget,
+      );
+      final border = find.byKey(const ValueKey('callout-border-blue'));
+      await tester.ensureVisible(border);
+      await tester.pumpAndSettle();
+      await tester.tap(border);
+      await tester.pumpAndSettle();
+      expect(adapter.blocks.first.blockBorderColor, '#DDEBF1');
+      expect(adapter.blocks.first.blockTextColor, original.blockTextColor);
+      expect(
+        adapter.blocks.first.blockBackgroundColor,
+        original.blockBackgroundColor,
+      );
+      expect(adapter.blocks.first.calloutPrefix, '👩🏽‍💻');
+      adapter.editorState.undoManager.undo();
+      await tester.pumpAndSettle();
+      expect(adapter.blocks.first, original);
+      expect(adapter.blocks.last.text, '已有正文');
+      expect(tester.takeException(), isNull);
     },
   );
 
@@ -347,7 +410,7 @@ void main() {
       );
       expect(find.byKey(const ValueKey('callout-custom-prefix')), findsNothing);
       expect(find.byKey(const ValueKey('callout-emoji-💡')), findsNothing);
-      expect(find.text('文字颜色'), findsNothing);
+      expect(find.text('文字颜色'), findsOneWidget);
       await tester.tap(find.byKey(const ValueKey('callout-background-blue')));
       await tester.pumpAndSettle();
       expect(
@@ -363,18 +426,18 @@ void main() {
         findsOneWidget,
       );
       expect(adapter.blocks.first.calloutPrefix, '💡');
-      expect(adapter.blocks.first.blockBackgroundColor, '#DFEAFC');
-      expect(adapter.blocks.first.blockBorderColor, '#DDF3E4');
+      expect(adapter.blocks.first.blockBackgroundColor, '#DDEBF1');
+      expect(adapter.blocks.first.blockBorderColor, '#DDEDEA');
       expect(adapter.blocks[1].parentId, 'callout');
       expect(adapter.blocks[1].text, '这是高亮块儿');
       expect(changes.length, 3);
       state.undoManager.undo();
       await tester.pumpAndSettle();
       expect(adapter.blocks.first.blockBorderColor, '#FFE6CD');
-      expect(adapter.blocks.first.blockBackgroundColor, '#DFEAFC');
+      expect(adapter.blocks.first.blockBackgroundColor, '#DDEBF1');
       state.undoManager.redo();
       await tester.pumpAndSettle();
-      expect(adapter.blocks.first.blockBorderColor, '#DDF3E4');
+      expect(adapter.blocks.first.blockBorderColor, '#DDEDEA');
       expect(tester.takeException(), isNull);
       Navigator.of(
         tester.element(

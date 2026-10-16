@@ -14,6 +14,7 @@ pub(super) const UNSUPPORTED_BLOCK_TYPE: &str = "unsupported";
 /// 占位只保存真实身份和已适配父容器；正文、属性和隐藏子树始终留在原共享类型。
 fn placeholder(id: String, parent_id: Option<String>) -> CollabBlock {
     CollabBlock {
+        paragraph_style: None,
         id,
         parent_id,
         block_type: UNSUPPORTED_BLOCK_TYPE.into(),
@@ -1096,6 +1097,12 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
             }
         }
         result.blocks.push(CollabBlock {
+            paragraph_style: paragraph_style::supports(&kind)
+                .then(|| CollabResource {
+                    properties: paragraph_style::project(&kind, &props, &txn),
+                    property_edits: None,
+                })
+                .filter(|s| s.properties != "{}"),
             parent_id,
             callout_prefix: (kind == "callout")
                 .then(|| out_string(props.get(&txn, "prefix")))
@@ -1235,6 +1242,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
     let mut numbering_edits = HashMap::new();
     let mut code_edits = HashMap::new();
     let mut resource_edits = HashMap::new();
+    let mut paragraph_edits = HashMap::new();
     let mut restored = HashSet::new();
     // 新 UI 身份不能复用未展示的块或孤立块，避免覆盖隐藏内容。
     for block in desired {
@@ -1273,6 +1281,21 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
         } else {
             previous.get(block.id.as_str()).copied()
         };
+        if let Some(style) = block
+            .paragraph_style
+            .as_ref()
+            .filter(|_| paragraph_style::supports(&block.block_type))
+        {
+            let initial = old.is_none() || block.replaces_id.is_some();
+            let input = if initial {
+                Some(style.properties.as_str())
+            } else {
+                style.property_edits.as_deref()
+            };
+            if let Some(input) = input {
+                paragraph_edits.insert(block.id.clone(), paragraph_style::parse(input, initial)?);
+            }
+        }
         if matches!(block.block_type.as_str(), "meeting" | "task") && block.resource.is_none() {
             return Err("INVALID_RESOURCE: 实体卡片引用缺少属性".into());
         }
@@ -1631,6 +1654,15 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
         }
         if old.is_none_or(|b| b.indent != next.indent) {
             props.try_update(&mut txn, "depth", next.indent as i64);
+        }
+        if let Some(values) = paragraph_edits.get(&next.id) {
+            for (key, value) in values {
+                if let Some(value) = value {
+                    props.try_update(&mut txn, key.as_str(), value.clone());
+                } else {
+                    props.remove(&mut txn, key);
+                }
+            }
         }
         if flavour == "todo"
             && old.is_none_or(|b| b.checked != next.checked || b.block_type != next.block_type)
@@ -2090,6 +2122,13 @@ fn apply_formats(text: &TextRef, txn: &mut yrs::TransactionMut<'_>, desired: &Co
         "s:background",
         "a:sup",
         "a:sub",
+        "t:ff",
+        "t:px",
+        "t:fs",
+        "t:ls",
+        "s:fontFamily",
+        "s:fontSize",
+        "s:letterSpacing",
     ];
     let (mut i, mut j, mut used_a, mut used_b, mut offset) = (0, 0, 0, 0, 0);
     while i < actual.len() && j < target.len() {
@@ -2143,6 +2182,133 @@ mod tests {
         engine.blockcraft_root_id = Some("fixture-doc".into());
         engine.apply_cses_update(bytes.to_vec()).unwrap();
         engine
+    }
+
+    /// 段落字段补丁不会重放旧快照；远端其他字段和未知属性仍为权威值。
+    #[test]
+    fn paragraph_defaults_patch_preserves_remote_next_style_and_metadata() {
+        let mut e = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-basic.update"
+        ));
+        let blocks = e.doc.get_or_insert_map(ROOT_NAME);
+        {
+            let mut txn = e.doc.transact_mut();
+            let props = map(&blocks, &txn, "p1")
+                .and_then(|b| map(&b, &txn, "props"))
+                .unwrap();
+            props.insert(&mut txn, "nextParagraphStyle", "same");
+            props.insert(&mut txn, "custom", "keep");
+        }
+        let mut stale = e.blocks();
+        {
+            let mut txn = e.doc.transact_mut();
+            let props = map(&blocks, &txn, "p1")
+                .and_then(|b| map(&b, &txn, "props"))
+                .unwrap();
+            props.insert(&mut txn, "nextParagraphStyle", "body");
+        }
+        let target = stale.iter_mut().find(|b| b.id == "p1").unwrap();
+        target.paragraph_style.as_mut().unwrap().property_edits = Some(
+            r##"{"textDefaults":{"value":{"a:bold":true,"s:color":"#123456","t:px":24}}}"##.into(),
+        );
+        e.apply_block_snapshot(stale).unwrap();
+        let txn = e.doc.transact();
+        let props = map(&blocks, &txn, "p1")
+            .and_then(|b| map(&b, &txn, "props"))
+            .unwrap();
+        assert_eq!(
+            out_string(props.get(&txn, "nextParagraphStyle")).as_deref(),
+            Some("body")
+        );
+        assert_eq!(
+            out_string(props.get(&txn, "custom")).as_deref(),
+            Some("keep")
+        );
+        assert!(matches!(
+            props.get(&txn, "textDefaults"),
+            Some(Out::Any(Any::Map(_)))
+        ));
+    }
+
+    /// 新段落默认格式和输入的字体区间经 V1 增量及 SQLite 重开保持一致。
+    #[test]
+    fn paragraph_defaults_typography_converge_and_reopen() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-basic.update");
+        let mut e = engine(fixture);
+        let mut peer = engine(fixture);
+        let mut desired = e.blocks();
+        let mut next = desired.iter().find(|b| b.id == "p1").unwrap().clone();
+        next.id = "typed-defaults".into();
+        next.text = "样式".into();
+        next.paragraph_style = Some(CollabResource { properties: r#"{"textDefaults":{"a:bold":true,"t:px":24,"t:ff":"courier"},"nextParagraphStyle":"same"}"#.into(), property_edits: None });
+        next.segments[0].text = next.text.clone();
+        next.segments[0].typography = Some(r#"{"t:ff":"courier","t:px":24}"#.into());
+        desired.push(next);
+        let update = e.apply_block_snapshot(desired).unwrap();
+        peer.apply_cses_update(update.v1_update).unwrap();
+        assert_eq!(e.blocks(), peer.blocks());
+        let mut reopened = CollabEngine::open(e.document_id.clone(), e.database_path.clone())
+            .unwrap()
+            .0;
+        reopened.blockcraft_root_id = Some("fixture-doc".into());
+        assert_eq!(reopened.blocks(), e.blocks());
+        let block = reopened
+            .blocks()
+            .into_iter()
+            .find(|b| b.id == "typed-defaults")
+            .unwrap();
+        assert_eq!(
+            block.segments[0].typography.as_deref(),
+            Some(r#"{"t:ff":"courier","t:px":24}"#)
+        );
+    }
+
+    /// 空标题回正文显式清除原始缩进，不能被投影默认值掩盖。
+    #[test]
+    fn paragraph_body_reset_clears_native_depth_and_typography() {
+        let mut e = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-basic.update"
+        ));
+        let blocks = e.doc.get_or_insert_map(ROOT_NAME);
+        {
+            let mut txn = e.doc.transact_mut();
+            let props = map(&blocks, &txn, "p2")
+                .and_then(|b| map(&b, &txn, "props"))
+                .unwrap();
+            props.insert(&mut txn, "depth", 3);
+            props.insert(&mut txn, "fs", 28);
+        }
+        let mut desired = e.blocks();
+        let target = desired.iter_mut().find(|b| b.id == "p2").unwrap();
+        target.block_type = "paragraph".into();
+        target.paragraph_style.as_mut().unwrap().property_edits = Some(r#"{"depth":{"value":0},"fs":{"value":null},"textDefaults":{"value":null},"nextParagraphStyle":{"value":null}}"#.into());
+        e.apply_block_snapshot(desired).unwrap();
+        let txn = e.doc.transact();
+        let props = map(&blocks, &txn, "p2")
+            .and_then(|b| map(&b, &txn, "props"))
+            .unwrap();
+        assert_eq!(out_u32(props.get(&txn, "depth")), Some(0));
+        assert_eq!(props.get(&txn, "fs"), Some(Out::Any(Any::Null)));
+        assert_eq!(
+            e.blocks().iter().find(|b| b.id == "p2").unwrap().block_type,
+            "paragraph"
+        );
+    }
+
+    /// 非外观字段不能进入段落默认格式；失败在写事务前整次拒绝。
+    #[test]
+    fn paragraph_invalid_defaults_are_atomic() {
+        let mut e = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-basic.update"
+        ));
+        let before = e.doc.transact().state_vector();
+        let mut desired = e.blocks();
+        desired[0].paragraph_style = Some(CollabResource {properties:"{}".into(), property_edits:Some(r#"{"textDefaults":{"value":{"a:link":"https://invalid.test","mentionId":"business"}}}"#.into())});
+        assert!(e
+            .apply_block_snapshot(desired)
+            .unwrap_err()
+            .contains("INVALID_PARAGRAPH_STYLE"));
+        assert_eq!(e.doc.transact().state_vector(), before);
     }
 
     /// 表格/行/单元格保留共享身份与未知属性，正文修改可收敛并从 SQLite 恢复。
@@ -3844,6 +4010,7 @@ mod tests {
         desired.insert(
             0,
             CollabBlock {
+                paragraph_style: None,
                 id: "new-p".into(),
                 block_type: "quote".into(),
                 text: "新引用".into(),
@@ -3946,6 +4113,7 @@ mod tests {
         assert!(engine.blocks().is_empty());
         assert!(project(&engine.doc, "fixture-doc").reason.is_none());
         let mut block = CollabBlock {
+            paragraph_style: None,
             id: "media".into(),
             block_type: "image".into(),
             text: "https://example.test/image.png".into(),
