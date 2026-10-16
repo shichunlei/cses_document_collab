@@ -123,6 +123,45 @@ void main() {
     expect(state.document.root.children, hasLength(1));
   });
 
+  testWidgets(
+    'more directly creates a 2x2 table without a dialog and undo removes it',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      final state = _editorState(text: '原文');
+      state.selection = Selection.single(path: [0], startOffset: 1);
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        state.dispose();
+        await tester.binding.setSurfaceSize(null);
+      });
+      await tester.pumpWidget(_toolbarApp(state));
+      await tester.pump();
+      await tester.tap(find.byKey(const ValueKey('editor-shortcut-add')));
+      await tester.pumpAndSettle();
+      final tile = find.byKey(const ValueKey('editor-shortcut-table'));
+      await tester.ensureVisible(tile);
+      await tester.tap(tile);
+      await tester.pumpAndSettle();
+      expect(find.byType(AlertDialog), findsNothing);
+      // 等待添加面板退场后的360ms键盘恢复窗口。
+      await tester.pump(const Duration(milliseconds: 400));
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('editor-add-block-sheet')),
+        findsNothing,
+      );
+      expect(state.document.first!.delta!.toPlainText(), '原文');
+      final table = state.document.root.children[1];
+      expect(table.type, 'table');
+      expect(table.children.length, 2);
+      expect(table.children.first.children.length, 2);
+      state.undoManager.undo();
+      await tester.pumpAndSettle();
+      expect(state.document.root.children.length, 1);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   testWidgets('plus toolbar exposes H1 through H9 and applies H9', (
     tester,
   ) async {

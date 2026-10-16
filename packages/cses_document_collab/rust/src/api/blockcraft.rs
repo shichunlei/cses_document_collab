@@ -1,6 +1,6 @@
 //! 正式 BlockCraft 的 Yrs 适配。`blocks` 中的嵌套共享类型始终是权威数据，
 //! Flutter 快照只是投影；写入只修改明确支持的字段，保留 props/meta/行内未知属性。
-//! 高亮容器按父子关系投影；未知块/容器及含未适配行内对象的正文仅显示只读占位，
+//! 高亮及普通/合并表格容器按父子关系投影；未知块/容器及含未适配行内对象的正文仅显示只读占位，
 //! 原始子树和 Y.Text 不参与快照写入，不阻止其他已适配块编辑。
 
 use super::*;
@@ -320,6 +320,240 @@ pub(super) fn validate(doc: &Doc, root_id: &str) -> Result<(), String> {
     Ok(())
 }
 
+/// 表格结构节点保留独立身份，正文继续使用各自的共享 Y.Text。
+fn is_table_container(kind: &str) -> bool {
+    matches!(kind, "table" | "table-row" | "table-cell")
+}
+
+/// 校验包含隐藏占位的桌面矩形网格，拒绝越界、交叠、悬空隐藏和超限结构。
+fn valid_table_grid(rows: &[Vec<(usize, usize, bool)>]) -> bool {
+    let columns = rows.first().map_or(0, Vec::len);
+    if rows.is_empty()
+        || rows.len() > 100
+        || columns == 0
+        || columns > 50
+        || rows.len() * columns > 500
+        || rows.iter().any(|row| row.len() != columns)
+    {
+        return false;
+    }
+    let mut covered = vec![vec![false; columns]; rows.len()];
+    for (r, row) in rows.iter().enumerate() {
+        for (c, &(height, width, hidden)) in row.iter().enumerate() {
+            if hidden {
+                if !covered[r][c] {
+                    return false;
+                }
+                continue;
+            }
+            if height == 0 || width == 0 || r + height > rows.len() || c + width > columns {
+                return false;
+            }
+            for rr in r..r + height {
+                for cc in c..c + width {
+                    if covered[rr][cc] || ((rr != r || cc != c) && !rows[rr][cc].2) {
+                        return false;
+                    }
+                    covered[rr][cc] = true;
+                }
+            }
+        }
+    }
+    true
+}
+
+/// 从真实共享类型验证桌面网格；无法完整解释时整张表保留为占位。
+fn supported_table<T: ReadTxn>(table: &MapRef, blocks: &MapRef, txn: &T) -> bool {
+    let mut grid = Vec::new();
+    for id in children(table, txn) {
+        let Some(row) = map(blocks, txn, &id) else {
+            return false;
+        };
+        if out_string(row.get(txn, "flavour")).as_deref() != Some("table-row")
+            || out_string(row.get(txn, "nodeType")).as_deref() != Some("block")
+        {
+            return false;
+        }
+        let mut cells = Vec::new();
+        for id in children(&row, txn) {
+            let Some(cell) = map(blocks, txn, &id) else {
+                return false;
+            };
+            let Some(props) = map(&cell, txn, "props") else {
+                return false;
+            };
+            if out_string(cell.get(txn, "flavour")).as_deref() != Some("table-cell")
+                || out_string(cell.get(txn, "nodeType")).as_deref() != Some("block")
+            {
+                return false;
+            }
+            cells.push((
+                out_u32(props.get(txn, "rowspan")).unwrap_or(1) as usize,
+                out_u32(props.get(txn, "colspan")).unwrap_or(1) as usize,
+                out_string(props.get(txn, "display")).as_deref() == Some("none"),
+            ));
+        }
+        grid.push(cells);
+    }
+    if !valid_table_grid(&grid) {
+        return false;
+    }
+    if let Some(props) = map(table, txn, "props") {
+        if let Some(Out::Any(Any::Array(widths))) = props.get(txn, "colWidths") {
+            if widths.len() != grid[0].len() {
+                return false;
+            }
+        }
+    }
+    true
+}
+
+/// 判断投影节点是否位于表格子树中，支持删除后按原身份恢复未知属性与审计数据。
+fn in_table(block: &CollabBlock, all: &HashMap<&str, &CollabBlock>) -> bool {
+    let mut current = block;
+    for _ in 0..256 {
+        if current.block_type == "table" {
+            return true;
+        }
+        let Some(parent) = current.parent_id.as_deref().and_then(|id| all.get(id)) else {
+            return false;
+        };
+        current = parent;
+    }
+    false
+}
+
+/// 解析表格白名单属性；显式补丁用 value 包装区分移除与null，未经触碰的扩展数据不回放。
+fn table_properties(
+    kind: &str,
+    input: &str,
+    initial: bool,
+) -> Result<HashMap<String, Option<Any>>, String> {
+    let fail = || "INVALID_TABLE: 表格属性无效".to_owned();
+    let value: serde_json::Value = serde_json::from_str(input).map_err(|_| fail())?;
+    let object = value.as_object().ok_or_else(fail)?;
+    let mut result = HashMap::new();
+    for (key, value) in object {
+        if !resource_keys(kind).contains(&key.as_str()) {
+            return Err(fail());
+        }
+        let value = if initial {
+            Some(value)
+        } else {
+            value.as_object().ok_or_else(fail)?.get("value")
+        };
+        if let Some(value) = value.filter(|v| !v.is_null()) {
+            let valid = match key.as_str() {
+                "colWidths" => value.as_array().is_some_and(|values| {
+                    !values.is_empty()
+                        && values.len() <= 50
+                        && values.iter().all(|v| {
+                            v.as_f64()
+                                .is_some_and(|v| v.is_finite() && v > 0.0 && v <= 10000.0)
+                        })
+                }),
+                "rowspan" | "colspan" => value.as_u64().is_some_and(|v| (1..=100).contains(&v)),
+                "height" => value
+                    .as_f64()
+                    .is_some_and(|v| v.is_finite() && v > 0.0 && v <= 10000.0),
+                "display" => value.as_str().is_some_and(|v| matches!(v, "" | "none")),
+                "verticalAlign" => value
+                    .as_str()
+                    .is_some_and(|v| matches!(v, "top" | "middle" | "bottom")),
+                _ => false,
+            };
+            if !valid {
+                return Err(fail());
+            }
+        }
+        result.insert(
+            key.clone(),
+            match value {
+                Some(value) => Some(serde_json::from_value(value.clone()).map_err(|_| fail())?),
+                None => None,
+            },
+        );
+    }
+    Ok(result)
+}
+
+/// 在取得写事务前检查表格层级、列宽数和合并覆盖关系，错误不会产生部分写入。
+fn validate_tables(desired: &[CollabBlock]) -> Result<(), String> {
+    let by_id: HashMap<_, _> = desired.iter().map(|b| (b.id.as_str(), b)).collect();
+    let mut children_by_parent: HashMap<&str, Vec<&CollabBlock>> = HashMap::new();
+    for block in desired {
+        if let Some(parent) = block.parent_id.as_deref() {
+            children_by_parent.entry(parent).or_default().push(block);
+        }
+    }
+    let fail = || "INVALID_TABLE: 表格层级、尺寸或合并范围无效".to_owned();
+    for block in desired {
+        let parent = block.parent_id.as_deref().and_then(|id| by_id.get(id));
+        match block.block_type.as_str() {
+            "table" if parent.is_some_and(|p| p.block_type != "callout") => return Err(fail()),
+            "table-row" if parent.is_none_or(|p| p.block_type != "table") => return Err(fail()),
+            "table-cell" if parent.is_none_or(|p| p.block_type != "table-row") => {
+                return Err(fail())
+            }
+            _ if parent.is_some_and(|p| {
+                (p.block_type == "table" && block.block_type != "table-row")
+                    || (p.block_type == "table-row" && block.block_type != "table-cell")
+            }) =>
+            {
+                return Err(fail())
+            }
+            _ => {}
+        }
+        if block.block_type != "table" {
+            continue;
+        }
+        let mut grid = Vec::new();
+        for row in children_by_parent
+            .get(block.id.as_str())
+            .into_iter()
+            .flatten()
+        {
+            let mut cells = Vec::new();
+            for cell in children_by_parent
+                .get(row.id.as_str())
+                .into_iter()
+                .flatten()
+            {
+                let props: serde_json::Value = serde_json::from_str(
+                    cell.resource
+                        .as_ref()
+                        .map_or("{}", |v| v.properties.as_str()),
+                )
+                .map_err(|_| fail())?;
+                cells.push((
+                    props.get("rowspan").and_then(|v| v.as_u64()).unwrap_or(1) as usize,
+                    props.get("colspan").and_then(|v| v.as_u64()).unwrap_or(1) as usize,
+                    props.get("display").and_then(|v| v.as_str()) == Some("none"),
+                ));
+            }
+            grid.push(cells);
+        }
+        if !valid_table_grid(&grid) {
+            return Err(fail());
+        }
+        let props: serde_json::Value = serde_json::from_str(
+            block
+                .resource
+                .as_ref()
+                .map_or("{}", |v| v.properties.as_str()),
+        )
+        .map_err(|_| fail())?;
+        if props
+            .get("colWidths")
+            .and_then(|v| v.as_array())
+            .is_some_and(|v| v.len() != grid[0].len())
+        {
+            return Err(fail());
+        }
+    }
+    Ok(())
+}
+
 /// 将正式 flavour/props 转为手机可编辑类型；不支持的类型返回 None，不降级写回 paragraph。
 fn mobile_type<T: ReadTxn>(block: &MapRef, props: &MapRef, txn: &T) -> Option<String> {
     let flavour = out_string(block.get(txn, "flavour"))?;
@@ -332,6 +566,7 @@ fn mobile_type<T: ReadTxn>(block: &MapRef, props: &MapRef, txn: &T) -> Option<St
         "ordered" => "numbered_list".to_owned(),
         "todo" => "todo_list".to_owned(),
         "blockquote" => "quote".to_owned(),
+        "table" | "table-row" | "table-cell" => flavour,
         "code" | "image" | "video" | "callout" | "divider" | "formula" | "meeting" | "task" => {
             flavour
         }
@@ -392,12 +627,15 @@ fn is_divider_style(style: &str) -> bool {
     )
 }
 
-/// 已适配 void 块的属性白名单；会议、任务、分割线和公式复用属性载体，不使用资源 URL。
+/// 已适配块的属性白名单；表格布局通过显式补丁写入，会议/任务/分割线/公式不使用资源 URL。
 fn resource_keys(kind: &str) -> &'static [&'static str] {
     match kind {
         "formula" => &["latex"],
         "meeting" => &["meetingId", "title", "number"],
         "task" => &["taskId", "title"],
+        "table" => &["colWidths"],
+        "table-row" => &["height"],
+        "table-cell" => &["verticalAlign", "rowspan", "colspan", "display"],
         "divider" => &[
             "style",
             "length",
@@ -727,12 +965,34 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
             result.blocks.push(placeholder(id, parent_id));
             continue;
         }
+        if matches!(kind.as_str(), "table-row" | "table-cell")
+            && !parent_id
+                .as_ref()
+                .and_then(|id| map(&blocks, &txn, id))
+                .is_some_and(|parent| {
+                    out_string(parent.get(&txn, "flavour")).as_deref()
+                        == Some(if kind == "table-row" {
+                            "table"
+                        } else {
+                            "table-row"
+                        })
+                })
+        {
+            result.blocks.push(placeholder(id, parent_id));
+            continue;
+        }
+        if kind == "table" && !supported_table(&block, &blocks, &txn) {
+            result.blocks.push(placeholder(id, parent_id));
+            continue;
+        }
         let mut text = String::new();
         let mut segments = Vec::new();
         let mut image = None;
         let is_media = matches!(kind.as_str(), "image" | "video");
         match block.get(&txn, "children") {
-            Some(Out::YArray(_)) if kind == "callout" && node_type == "block" => {
+            Some(Out::YArray(_))
+                if (kind == "callout" || is_table_container(&kind)) && node_type == "block" =>
+            {
                 let ids = children(&block, &txn);
                 ordered.extend(ordered_projection(&blocks, &txn, &ids));
                 for child in ids.into_iter().rev() {
@@ -851,6 +1111,7 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                 property_edits: None,
             }),
             resource: (is_resource_block_type(&kind)
+                || is_table_container(&kind)
                 || matches!(kind.as_str(), "divider" | "formula" | "meeting" | "task"))
             .then(|| CollabResource {
                 properties: resource_properties(&kind, &props, &txn),
@@ -899,6 +1160,9 @@ fn formal_type(kind: &str) -> Option<(&str, bool)> {
         "quote" => ("blockquote", false),
         "code" => ("code", false),
         "callout" => ("callout", false),
+        "table" => ("table", false),
+        "table-row" => ("table-row", false),
+        "table-cell" => ("table-cell", false),
         "image" => ("image", true),
         "video" => ("video", true),
         "divider" => ("divider", true),
@@ -917,6 +1181,7 @@ fn formal_type(kind: &str) -> Option<(&str, bool)> {
 
 /// 在全部前置校验通过后才更新既有共享类型。外部负责取得向量、持久化增量和广播。
 /// 未改动的块/属性/格式不重放；删除仅处理本次已投影的块，隐藏与孤立数据原样保留。
+/// 表格结构在完整网格预检后更新，布局只消费显式字段补丁；删除的表格节点保留为可恢复孤立节点。
 /// 新身份类型替换只清理源类型专有的编号/勾选键，其他扩展属性继续克隆；恢复有序历史时
 /// 仅初始化经过白名单校验的原始编号设置和投影样式，派生 order 始终重新计算。
 /// 新插入的有序块从编号投影初始化起点，代码块从语言投影初始化 lang；既有块不被普通快照覆盖。
@@ -936,6 +1201,16 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
             return Err("READ_ONLY_BLOCK: 未适配的块不可编辑或删除".into());
         }
     }
+    let mut desired_children: HashMap<&str, Vec<String>> = HashMap::new();
+    for block in desired {
+        if let Some(parent) = block.parent_id.as_deref() {
+            desired_children
+                .entry(parent)
+                .or_default()
+                .push(block.id.clone());
+        }
+    }
+    validate_tables(desired)?;
     for block in desired {
         if block.block_type == UNSUPPORTED_BLOCK_TYPE
             && previous.get(block.id.as_str()).copied() == Some(block)
@@ -960,10 +1235,21 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
     let mut numbering_edits = HashMap::new();
     let mut code_edits = HashMap::new();
     let mut resource_edits = HashMap::new();
+    let mut restored = HashSet::new();
     // 新 UI 身份不能复用未展示的块或孤立块，避免覆盖隐藏内容。
     for block in desired {
         if !previous.contains_key(block.id.as_str()) && blocks.contains_key(&txn, &block.id) {
-            return Err("BLOCK_ID_CONFLICT: 新块 ID 已被原文档占用".into());
+            let archived = map(&blocks, &txn, &block.id).filter(|native| {
+                out_string(native.get(&txn, "flavour")).as_deref()
+                    == formal_type(&block.block_type).map(|v| v.0)
+                    && map(native, &txn, "meta").is_some_and(|meta| {
+                        out_bool(meta.get(&txn, "csesMobileTableDeleted")) == Some(true)
+                    })
+            });
+            if archived.is_none() || !in_table(block, &desired_by_id) {
+                return Err("BLOCK_ID_CONFLICT: 新块 ID 已被原文档占用".into());
+            }
+            restored.insert(block.id.clone());
         }
         let old = if let Some(source) = &block.replaces_id {
             if source == &block.id
@@ -990,7 +1276,25 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
         if matches!(block.block_type.as_str(), "meeting" | "task") && block.resource.is_none() {
             return Err("INVALID_RESOURCE: 实体卡片引用缺少属性".into());
         }
-        if let Some(resource) = &block.resource {
+        if is_table_container(&block.block_type) {
+            let resource = block.resource.as_ref();
+            let source = if old.is_none() {
+                resource.map(|r| r.properties.as_str())
+            } else {
+                resource.and_then(|r| r.property_edits.as_deref())
+            };
+            if let Some(source) = source {
+                resource_edits.insert(
+                    block.id.clone(),
+                    table_properties(&block.block_type, source, old.is_none())?,
+                );
+            }
+        }
+        if let Some(resource) = block
+            .resource
+            .as_ref()
+            .filter(|_| !is_table_container(&block.block_type))
+        {
             if !is_resource_block_type(&block.block_type)
                 && !matches!(
                     block.block_type.as_str(),
@@ -1050,7 +1354,10 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
         }) {
             return Err("INVALID_BLOCK_CONVERSION: flavour 转换需要新块身份和 replacesId".into());
         }
-        if old.is_some_and(|b| b.block_type == "callout") && block.block_type != "callout" {
+        if old.is_some_and(|b| {
+            (b.block_type == "callout" || is_table_container(&b.block_type))
+                && b.block_type != block.block_type
+        }) {
             return Err("UNSUPPORTED_BLOCK_TYPE: 高亮容器不能直接转换为正文块".into());
         }
         if old.is_some_and(|b| {
@@ -1075,9 +1382,10 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
                 return Err("INVALID_IMAGE_PROPERTIES: 图片尺寸必须为有限正数".into());
             }
             for caption in &image.captions {
-                let original = old
-                    .and_then(|b| b.image.as_ref())
-                    .is_some_and(|i| i.captions.iter().any(|c| c.id == caption.id));
+                let original = restored.contains(&block.id)
+                    || old
+                        .and_then(|b| b.image.as_ref())
+                        .is_some_and(|i| i.captions.iter().any(|c| c.id == caption.id));
                 if caption.id.is_empty()
                     || caption.id == root_id
                     || !desired_ids.insert(caption.id.clone())
@@ -1086,6 +1394,34 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
                     return Err("BLOCK_ID_CONFLICT: 图片题注 ID 已被占用".into());
                 }
             }
+        }
+    }
+    for block in desired.iter().filter(|b| is_table_container(&b.block_type)) {
+        let mut effective: HashMap<String, Any> = previous
+            .get(block.id.as_str())
+            .and_then(|old| old.resource.as_ref())
+            .map(|r| serde_json::from_str(&r.properties))
+            .transpose()
+            .map_err(|_| "INVALID_TABLE: 布局属性无效")?
+            .unwrap_or_default();
+        if let Some(edits) = resource_edits.get(&block.id) {
+            for (key, value) in edits {
+                if let Some(value) = value {
+                    effective.insert(key.clone(), value.clone());
+                } else {
+                    effective.remove(key);
+                }
+            }
+        }
+        let target: HashMap<String, Any> = serde_json::from_str(
+            block
+                .resource
+                .as_ref()
+                .map_or("{}", |r| r.properties.as_str()),
+        )
+        .map_err(|_| "INVALID_TABLE: 布局属性无效")?;
+        if effective != target {
+            return Err("INVALID_TABLE: 布局变化缺少明确字段补丁".into());
         }
     }
     drop(txn);
@@ -1101,19 +1437,35 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
     let keep: HashSet<_> = next_ids.iter().collect();
     for id in &ids {
         if !keep.contains(id) {
-            if let Some(image) = previous.get(id.as_str()).and_then(|b| b.image.as_ref()) {
+            if let Some(image) = previous
+                .get(id.as_str())
+                .filter(|b| !in_table(b, &previous))
+                .and_then(|b| b.image.as_ref())
+            {
                 for caption in &image.captions {
                     blocks.remove(&mut txn, &caption.id);
                 }
             }
-            blocks.remove(&mut txn, id);
+            if previous
+                .get(id.as_str())
+                .is_some_and(|b| in_table(b, &previous))
+            {
+                if let Some(meta) = map(&blocks, &txn, id).and_then(|b| map(&b, &txn, "meta")) {
+                    meta.insert(&mut txn, "csesMobileTableDeleted", true);
+                }
+            } else {
+                blocks.remove(&mut txn, id);
+            }
         }
     }
     for next in desired {
         let old = previous
             .get(next.replaces_id.as_deref().unwrap_or(&next.id))
             .copied();
-        if old == Some(next) && next.block_type != "callout" {
+        if old == Some(next)
+            && next.block_type != "callout"
+            && !is_table_container(&next.block_type)
+        {
             continue;
         }
         let (flavour, media) = formal_type(&next.block_type).unwrap();
@@ -1164,7 +1516,16 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
                 }
             }
         }
-        if old.is_none() {
+        if restored.contains(&next.id) {
+            if let Some(meta) = map(&block, &txn, "meta") {
+                meta.remove(&mut txn, "csesMobileTableDeleted");
+            }
+            // 未投影期间到达的远端正文仍是权威内容，撤销删除不能以旧UI快照覆盖它。
+            if !is_table_container(&next.block_type) && next.block_type != "callout" {
+                continue;
+            }
+        }
+        if old.is_none() && !restored.contains(&next.id) {
             block.insert(&mut txn, "id", next.id.clone());
             let meta = block.insert(&mut txn, "meta", MapPrelim::default());
             let now = std::time::SystemTime::now()
@@ -1199,7 +1560,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
             block.try_update(
                 &mut txn,
                 "nodeType",
-                if matches!(flavour, "image" | "callout") {
+                if matches!(flavour, "image" | "callout") || is_table_container(flavour) {
                     "block"
                 } else if media {
                     "void"
@@ -1276,7 +1637,18 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
         {
             props.try_update(&mut txn, "checked", i64::from(next.checked));
         }
-        if flavour == "callout" {
+        if is_table_container(flavour) {
+            if let Some(edits) = resource_edits.get(&next.id) {
+                for (key, value) in edits {
+                    if let Some(value) = value {
+                        props.try_update(&mut txn, key.as_str(), value.clone());
+                    } else {
+                        props.remove(&mut txn, key);
+                    }
+                }
+            }
+        }
+        if flavour == "callout" || is_table_container(flavour) {
             let array = match block.get(&txn, "children") {
                 Some(Out::YArray(v)) => v,
                 _ => block.insert(
@@ -1286,11 +1658,10 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
                 ),
             };
             let before = children(&block, &txn);
-            let after: Vec<_> = desired
-                .iter()
-                .filter(|b| b.parent_id.as_deref() == Some(&next.id))
-                .map(|b| b.id.clone())
-                .collect();
+            let after = desired_children
+                .get(next.id.as_str())
+                .cloned()
+                .unwrap_or_default();
             reconcile_order(&array, &mut txn, &before, &after);
         } else if media {
             if let Some(edits) = resource_edits.get(&next.id) {
@@ -1387,13 +1758,15 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
         .map(|b| b.id.clone())
         .collect();
     update_ordered_counters(&blocks, &mut txn, &root_ids, &inserted);
-    for container in desired.iter().filter(|b| b.block_type == "callout") {
-        let ids: Vec<_> = desired
-            .iter()
-            .filter(|b| b.parent_id.as_deref() == Some(&container.id))
-            .map(|b| b.id.clone())
-            .collect();
-        update_ordered_counters(&blocks, &mut txn, &ids, &inserted);
+    for container in desired
+        .iter()
+        .filter(|b| matches!(b.block_type.as_str(), "callout" | "table-cell"))
+    {
+        let ids = desired_children
+            .get(container.id.as_str())
+            .map(Vec::as_slice)
+            .unwrap_or(&[]);
+        update_ordered_counters(&blocks, &mut txn, ids, &inserted);
     }
     Ok(())
 }
@@ -1770,6 +2143,286 @@ mod tests {
         engine.blockcraft_root_id = Some("fixture-doc".into());
         engine.apply_cses_update(bytes.to_vec()).unwrap();
         engine
+    }
+
+    /// 表格/行/单元格保留共享身份与未知属性，正文修改可收敛并从 SQLite 恢复。
+    #[test]
+    fn table_body_sync_and_sqlite_preserve_native_tree() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-table.update");
+        let mut phone = engine(fixture);
+        let mut desktop = engine(fixture);
+        let before = phone.blocks();
+        assert_eq!(before.len(), 18);
+        assert_eq!(
+            before
+                .iter()
+                .find(|b| b.id == "body-0-0")
+                .unwrap()
+                .parent_id
+                .as_deref(),
+            Some("cell-0-0")
+        );
+        assert_eq!(
+            before
+                .iter()
+                .find(|b| b.id == "table-1")
+                .unwrap()
+                .resource
+                .as_ref()
+                .unwrap()
+                .properties,
+            "{\"colWidths\":[120,160,200]}"
+        );
+        let mut desired = before.clone();
+        let body = desired.iter_mut().find(|b| b.id == "body-0-0").unwrap();
+        body.text.push_str("手机");
+        body.segments[0].text.push_str("手机");
+        let update = phone.apply_block_snapshot(desired).unwrap();
+        let mut remote = desktop.blocks();
+        let body = remote.iter_mut().find(|b| b.id == "body-1-2").unwrap();
+        body.text.push_str("桌面");
+        body.segments[0].text.push_str("桌面");
+        let remote_update = desktop.apply_block_snapshot(remote).unwrap();
+        desktop.apply_cses_update(update.v1_update).unwrap();
+        phone.apply_cses_update(remote_update.v1_update).unwrap();
+        assert_eq!(phone.blocks(), desktop.blocks());
+        {
+            let txn = phone.doc.transact();
+            let blocks = txn.get_map(ROOT_NAME).unwrap();
+            for id in ["table-1", "row-0", "cell-0-0"] {
+                let native = map(&blocks, &txn, id).unwrap();
+                let source_txn = desktop.doc.transact();
+                let source_blocks = source_txn.get_map(ROOT_NAME).unwrap();
+                assert_eq!(
+                    native.to_json(&txn),
+                    map(&source_blocks, &source_txn, id)
+                        .unwrap()
+                        .to_json(&source_txn)
+                );
+                assert!(map(&native, &txn, "meta")
+                    .unwrap()
+                    .contains_key(&txn, "customAudit"));
+            }
+        }
+        let expected = phone.blocks();
+        let vector = phone.doc.transact().state_vector();
+        phone.apply_block_snapshot(expected.clone()).unwrap();
+        assert_eq!(phone.doc.transact().state_vector(), vector);
+        let mut reopened =
+            CollabEngine::open(phone.document_id.clone(), phone.database_path.clone())
+                .unwrap()
+                .0;
+        reopened.blockcraft_root_id = Some("fixture-doc".into());
+        assert_eq!(reopened.blocks(), expected);
+    }
+
+    /// 单元格内类型转换和插入有序列表后，桌面派生 order 与移动端投影一致。
+    #[test]
+    fn table_cell_ordered_lists_update_native_counters() {
+        let mut phone = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-table.update"
+        ));
+        let mut desired = phone.blocks();
+        let index = desired.iter().position(|b| b.id == "body-0-0").unwrap();
+        let mut first = desired[index].clone();
+        first.replaces_id = Some(first.id.clone());
+        first.id = "table-list-1".into();
+        first.block_type = "numbered_list".into();
+        desired[index] = first.clone();
+        first.id = "table-list-2".into();
+        first.replaces_id = None;
+        desired.insert(index + 1, first);
+        phone.apply_block_snapshot(desired).unwrap();
+        let txn = phone.doc.transact();
+        let blocks = txn.get_map(ROOT_NAME).unwrap();
+        for (id, number) in [("table-list-1", 0), ("table-list-2", 1)] {
+            let props = map(&map(&blocks, &txn, id).unwrap(), &txn, "props").unwrap();
+            assert_eq!(out_u32(props.get(&txn, "order")), Some(number));
+        }
+    }
+
+    /// 直接读取Yjs桌面合并样本，隐藏格及正文身份保留，普通正文仍可编辑并恢复。
+    #[test]
+    fn desktop_merged_table_fixture_projects_without_flattening() {
+        let mut phone = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-table-merged.update"
+        ));
+        assert!(project(&phone.doc, "fixture-doc").reason.is_none());
+        let mut blocks = phone.blocks();
+        assert_eq!(
+            blocks
+                .iter()
+                .filter(|b| b.block_type == "table-cell")
+                .count(),
+            4
+        );
+        assert_eq!(
+            blocks
+                .iter()
+                .find(|b| b.id == "merged-d")
+                .unwrap()
+                .parent_id
+                .as_deref(),
+            Some("merged-c00")
+        );
+        let hidden = blocks.iter().find(|b| b.id == "merged-c11").unwrap();
+        assert!(hidden
+            .resource
+            .as_ref()
+            .unwrap()
+            .properties
+            .contains("none"));
+        blocks[0].text.push_str("可编辑");
+        blocks[0].segments[0].text.push_str("可编辑");
+        phone.apply_block_snapshot(blocks).unwrap();
+        let expected = phone.blocks();
+        let mut reopened =
+            CollabEngine::open(phone.document_id.clone(), phone.database_path.clone())
+                .unwrap()
+                .0;
+        reopened.blockcraft_root_id = Some("fixture-doc".into());
+        assert_eq!(reopened.blocks(), expected);
+    }
+
+    /// 删除行的原始共享类型保留供撤销；恢复时不得覆盖删除期间到达的远端正文。
+    #[test]
+    fn table_row_removal_restores_unknown_meta_and_latest_archived_text() {
+        let mut phone = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-table.update"
+        ));
+        let original = phone.blocks();
+        let original_meta = {
+            let txn = phone.doc.transact();
+            let blocks = txn.get_map(ROOT_NAME).unwrap();
+            map(&map(&blocks, &txn, "cell-0-0").unwrap(), &txn, "meta")
+                .unwrap()
+                .to_json(&txn)
+        };
+        let remaining = original
+            .iter()
+            .filter(|b| {
+                b.id != "row-0" && !b.id.starts_with("cell-0-") && !b.id.starts_with("body-0-")
+            })
+            .cloned()
+            .collect();
+        phone.apply_block_snapshot(remaining).unwrap();
+        {
+            let blocks = phone.doc.get_or_insert_map(ROOT_NAME);
+            let mut txn = phone.doc.transact_mut();
+            let body = map(&blocks, &txn, "body-0-0").unwrap();
+            let Some(Out::YText(text)) = body.get(&txn, "children") else {
+                panic!("archived Y.Text")
+            };
+            text.insert(&mut txn, 0, "远端更新");
+        }
+        phone.apply_block_snapshot(original).unwrap();
+        assert!(phone
+            .blocks()
+            .iter()
+            .find(|b| b.id == "body-0-0")
+            .unwrap()
+            .text
+            .starts_with("远端更新"));
+        let txn = phone.doc.transact();
+        let blocks = txn.get_map(ROOT_NAME).unwrap();
+        let cell = map(&blocks, &txn, "cell-0-0").unwrap();
+        assert_eq!(
+            map(&cell, &txn, "meta").unwrap().to_json(&txn),
+            original_meta
+        );
+        assert_eq!(
+            out_string(map(&cell, &txn, "props").unwrap().get(&txn, "customCell")).as_deref(),
+            Some("preserve")
+        );
+    }
+
+    /// 列宽显式补丁与另一端正文编辑并发收敛，未触碰属性和共享内容不回放。
+    #[test]
+    fn table_width_patch_converges_with_remote_body_and_invalid_grid_is_atomic() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-table.update");
+        let mut phone = engine(fixture);
+        let mut desktop = engine(fixture);
+        let mut desired = phone.blocks();
+        desired
+            .iter_mut()
+            .find(|b| b.id == "table-1")
+            .unwrap()
+            .resource = Some(CollabResource {
+            properties: "{\"colWidths\":[120,240,200]}".into(),
+            property_edits: Some("{\"colWidths\":{\"value\":[120,240,200]}}".into()),
+        });
+        let local = phone.apply_block_snapshot(desired).unwrap();
+        let mut remote = desktop.blocks();
+        let body = remote.iter_mut().find(|b| b.id == "body-1-2").unwrap();
+        body.text.push_str("另一端");
+        body.segments[0].text.push_str("另一端");
+        let update = desktop.apply_block_snapshot(remote).unwrap();
+        phone.apply_cses_update(update.v1_update).unwrap();
+        desktop.apply_cses_update(local.v1_update).unwrap();
+        assert_eq!(phone.blocks(), desktop.blocks());
+        let before = phone.doc.transact().state_vector();
+        let mut bad = phone.blocks();
+        let cell = bad.iter_mut().find(|b| b.id == "cell-0-0").unwrap();
+        cell.resource = Some(CollabResource {
+            properties: "{\"colspan\":50,\"verticalAlign\":\"top\"}".into(),
+            property_edits: Some("{\"colspan\":{\"value\":50}}".into()),
+        });
+        assert!(phone.apply_block_snapshot(bad).is_err());
+        assert_eq!(phone.doc.transact().state_vector(), before);
+    }
+
+    /// 非法删除父块、跨行错置或伪造空行必须在事务前拒绝；不一致合并保留原始子树。
+    #[test]
+    fn invalid_table_structure_and_inconsistent_merges_are_atomic() {
+        let mut phone = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-table.update"
+        ));
+        let before = phone.blocks();
+        for mode in 0..4 {
+            let mut desired = before.clone();
+            match mode {
+                0 => desired.retain(|b| b.id != "table-1"),
+                1 => {
+                    desired
+                        .iter_mut()
+                        .find(|b| b.id == "cell-0-0")
+                        .unwrap()
+                        .parent_id = Some("row-1".into())
+                }
+                2 => {
+                    desired
+                        .iter_mut()
+                        .find(|b| b.id == "table-1")
+                        .unwrap()
+                        .resource = None
+                }
+                _ => {
+                    let mut row = desired.iter().find(|b| b.id == "row-0").unwrap().clone();
+                    row.id = "new-row".into();
+                    desired.push(row);
+                }
+            }
+            let vector = phone.doc.transact().state_vector();
+            assert!(phone.apply_block_snapshot(desired).is_err());
+            assert_eq!(phone.doc.transact().state_vector(), vector);
+            assert_eq!(phone.blocks(), before);
+        }
+        {
+            let blocks = phone.doc.get_or_insert_map(ROOT_NAME);
+            let mut txn = phone.doc.transact_mut();
+            map(&map(&blocks, &txn, "cell-0-0").unwrap(), &txn, "props")
+                .unwrap()
+                .insert(&mut txn, "colspan", 2);
+        }
+        let projected = phone.blocks();
+        assert_eq!(projected.last().unwrap().block_type, UNSUPPORTED_BLOCK_TYPE);
+        assert_eq!(projected.len(), 4);
+        let mut desired = projected;
+        desired[1].text.push_str("仍可编辑");
+        phone.apply_block_snapshot(desired).unwrap();
+        let txn = phone.doc.transact();
+        let blocks = txn.get_map(ROOT_NAME).unwrap();
+        assert!(map(&blocks, &txn, "body-0-0").is_some());
     }
 
     #[test]

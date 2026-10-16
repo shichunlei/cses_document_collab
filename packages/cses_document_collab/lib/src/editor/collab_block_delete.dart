@@ -5,6 +5,7 @@ import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/src/model/collab_table.dart';
 import 'package:cses_document_collab/src/model/collab_formula.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
@@ -209,7 +210,8 @@ bool _isUrlBackedBlock(String type) =>
     type == ImageBlockKeys.type ||
     type == csesVideoBlockType;
 
-/// Keep Backspace from merging the first callout paragraph across its container edge.
+/// 在借用的 [editorState] 中保护高亮及单元格首段、容器后置正文的行首退格。
+/// 只处理可编辑状态的折叠行首选区；避免跨单元格合并，容器内其他正文交给普通退格。
 bool isProtectedCalloutBoundary(EditorState editorState) {
   if (editorState.isDisposed || !editorState.editable) return false;
   final selection = editorState.selection;
@@ -220,8 +222,9 @@ bool isProtectedCalloutBoundary(EditorState editorState) {
   }
   final node = editorState.getNodeAtPath(selection.start.path);
   return node?.delta != null &&
-      ((node?.parent?.type == csesCalloutBlockType && node?.previous == null) ||
-          node?.previous?.type == csesCalloutBlockType);
+      ((isCollabContainerType(node?.parent?.type ?? '') &&
+              node?.previous == null) ||
+          isCollabContainerType(node?.previous?.type ?? ''));
 }
 
 /// Keep Backspace from jumping over opaque blocks and moving later text before them.

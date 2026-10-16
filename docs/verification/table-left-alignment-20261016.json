@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-16",
+  "scope": "窄表和默认新建2×2左对齐",
+  "change": "在表格横向滚动容器外明确Alignment.topLeft，使窄表与正文左边缘对齐；无需写入共享属性或修改列宽",
+  "regression_before": {
+    "surface_width": 390,
+    "content_left": 20,
+    "table_left_edit": 75,
+    "table_left_preview": 75,
+    "new_layout_tests_failed": 2
+  },
+  "verification": {
+    "target_tests": 50,
+    "target_analyze": "passed",
+    "format": "passed",
+    "diff_check": "passed",
+    "android_build": "passed",
+    "apk_sha256": "0b214f9aedf13de981482cd2efa0d0a6550794c5cac4ddb5924312865ab43393",
+    "android_phone": {
+      "device": "HONOR X70 / MTN-AN00 / Android16",
+      "installed": "adb install -r successful",
+      "new_2x2_edit": "passed; table aligns with paragraph left edge",
+      "new_2x2_preview": "passed; table aligns with paragraph left edge",
+      "cleanup": "undo removed test table; actual SQLite/WAL Yjs readback 108→97 active nodes including root, complete original reachable shared tree exactly matches baseline",
+      "original_active_nodes_including_root": 97,
+      "final_active_nodes_including_root": 97
+    }
+  },
+  "contract": [
+    "编辑/预览默认靠左",
+    "激活边缘控件后行条仍靠正文左边缘，单元格为行条留24逻辑像素",
+    "超宽表保留横向滚动",
+    "默认创建2×2及原行列/合并/列宽逻辑不变"
+  ],
+  "screenshots": [
+    "table-left-edit-20261016.png",
+    "table-left-preview-20261016.png"
+  ]
+}

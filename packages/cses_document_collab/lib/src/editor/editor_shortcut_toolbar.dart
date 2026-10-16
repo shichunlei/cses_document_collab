@@ -14,6 +14,7 @@ import 'dart:math' as math;
 
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_formula_sheet.dart';
+import 'package:cses_document_collab/src/model/collab_table.dart';
 import 'package:cses_document_collab/src/model/collab_formula.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
@@ -1894,6 +1895,7 @@ class _AddBlockSheet extends StatelessWidget {
   /// 返回面板 Widget，不持有或释放编辑器；未支持的入口继续显示占位提示。
   /// 在借用 [context] 中渲染可用块入口；插入按保存的稳定选区定位并等待事务完成。
   /// 在借用[context]中构建块/行内入口；用户选择调用宿主选择器并复用稳定插入位置。
+  /// 表格直接创建2×2网格，插入前重查原始书签，权限/文档失效时不插入。
   @override
   Widget build(BuildContext context) {
     final height = math.min(MediaQuery.sizeOf(context).height * 0.72, 640.0);
@@ -2098,11 +2100,24 @@ class _AddBlockSheet extends StatelessWidget {
                               onTap: () =>
                                   _requestUrlAndClose(context, resource.$1),
                             ),
-                          const _ActionShortcutTile(
+                          _ActionShortcutTile(
+                            key: const ValueKey('editor-shortcut-table'),
                             icon: Icons.table_chart_outlined,
                             label: '表格',
-                            accent: Color(0xFF14B8A6),
-                            tint: Color(0xFFCCFBF1),
+                            accent: const Color(0xFF14B8A6),
+                            tint: const Color(0xFFCCFBF1),
+                            onTap: () async {
+                              if (!canUseHost()) return;
+                              final captured = bookmark.resolve(editorState);
+                              if (captured == null) return;
+                              final selection = await insertCollabTable(
+                                editorState,
+                                captured,
+                              );
+                              if (context.mounted && selection != null) {
+                                Navigator.pop<Selection>(context, selection);
+                              }
+                            },
                           ),
                           _ActionShortcutTile(
                             key: const ValueKey('editor-shortcut-callout'),

@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-16",
+  "scope": "表格更多弹窗移除边缘操作条已有动作",
+  "removed": [
+    "上方插入行",
+    "下方插入行",
+    "删除当前行",
+    "左侧插入列",
+    "右侧插入列",
+    "删除当前列",
+    "列宽滑块",
+    "应用列宽"
+  ],
+  "retained": [
+    "合并终点行/列选择",
+    "合并所选区域",
+    "拆分单元格"
+  ],
+  "layout": "按内容收缩，高度超限时仍滚动；不占固定76%空白高度",
+  "verification": {
+    "target_tests": 50,
+    "target_analyze": "passed",
+    "android_build": "passed",
+    "android_phone": {
+      "device": "HONOR X70 / MTN-AN00 / Android16",
+      "installed": "adb install -r successful",
+      "more_sheet": "实际打开首格更多，UI及系统可访问性树仅含合并范围、合并、拆分；重复行列按钮、列宽文本/滑块及应用按钮已移除",
+      "layout": "面板按内容收缩，未占固定76%高度",
+      "interaction": "本轮只打开/关闭面板，未提交正文、结构或布局编辑"
+    },
+    "format_and_diff_check": "passed",
+    "apk_sha256": "b7c5d4a92f6c3de9f3f1f943f65764690aae6eedf55c5956dcb663ae10f08cba"
+  },
+  "data_contract": "只调整UI入口，边缘操作条及已有共享数据/独立撤销事务不变",
+  "screenshot": "table-more-merge-split-20261016.png"
+}

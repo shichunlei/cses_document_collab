@@ -1,0 +1,123 @@
+{
+  "date": "2026-10-16",
+  "scope": "表格边缘操作条与浮动菜单、列宽拖动",
+  "ui": [
+    "更多→表格直接创建2×2，无创建尺寸弹窗",
+    "操作条默认隐藏，点击表格显示，点击外部或其他正文收起；浮动菜单属于同一点击分组",
+    "顶部选列/左侧选行：蓝色整轴高亮，正文键盘收起",
+    "一级浮动菜单插入/删除；二级上下/左右插入",
+    "拖动顶部列条右缘48～480逻辑像素，松手一次提交，取消不写入",
+    "单元格更多保留合并/拆分与原精确设置"
+  ],
+  "contract": [
+    "复用现有applyCollabTableEdit事务及稳定表ID/内容指纹预检，无原生接口或共享结构变更",
+    "本地预览尺寸/选区不进入共享属性；远端或权限变化使旧菜单与拖动会话永久失效",
+    "控件成对解绑借用节点/权限/选区监听；每个菜单会话通知器在路由退场后释放",
+    "操作条与自然高度/合并格共用网格测量结果；整轴高亮不参与命中，只读隐藏操作条"
+  ],
+  "verification": {
+    "target_tests": 48,
+    "target_analyze": "passed",
+    "android_build": "passed",
+    "android_phone": {
+      "verified": [
+        "进入文档操作条默认隐藏",
+        "点击单元格后顶部/左侧操作条显示，点击表格外段落后收起",
+        "默认直接创建2×2，无尺寸弹窗",
+        "选列蓝色高亮，浮动插入/删除和方向菜单（初版右插列已保存）",
+        "选行蓝色高亮、向下插行2×2→3×2、删除插入行→2×2",
+        "初版临时表格通过撤销清理，活动97节点与基线完整一致",
+        "最终版真机列宽拖动120→184.98467548076923，撤销120、重做184.98467548076923，再撤销恢复120",
+        "最终临时表格QkCsCH已通过实际编辑器删除事务清理；手机SQLite/WAL回读活动节点108→97，与原始97节点完整共享树完全一致"
+      ],
+      "snapshots": {
+        "visibility-created": {
+          "reachable_nodes_including_root": 108,
+          "temporary_table_id": "QkCsCH",
+          "rows": 2,
+          "columns": 2,
+          "widths": [
+            120,
+            120
+          ],
+          "original_nodes_order_preserved": true,
+          "original_node_field_differences_except_temporary_root_reference": []
+        },
+        "visibility-row-added": {
+          "reachable_nodes_including_root": 113,
+          "temporary_table_id": "QkCsCH",
+          "rows": 3,
+          "columns": 2,
+          "widths": [
+            120,
+            120
+          ],
+          "original_nodes_order_preserved": true,
+          "original_node_field_differences_except_temporary_root_reference": []
+        },
+        "visibility-row-deleted": {
+          "reachable_nodes_including_root": 108,
+          "temporary_table_id": "QkCsCH",
+          "rows": 2,
+          "columns": 2,
+          "widths": [
+            120,
+            120
+          ],
+          "original_nodes_order_preserved": true,
+          "original_node_field_differences_except_temporary_root_reference": []
+        },
+        "visibility-width": {
+          "reachable_nodes_including_root": 108,
+          "temporary_table_id": "QkCsCH",
+          "rows": 2,
+          "columns": 2,
+          "widths": [
+            120,
+            120
+          ],
+          "original_nodes_order_preserved": true,
+          "original_node_field_differences_except_temporary_root_reference": []
+        }
+      },
+      "cleanup": {
+        "temporary_table_id": "QkCsCH",
+        "removed": true,
+        "method": "应用因重装丢失原创建历史，通过Flutter调试服务定位实际EditorState，按精确表ID调用现有deleteNode事务；未直接修改手机数据库或原生共享存储",
+        "original_active_nodes_including_root": 97,
+        "final_active_nodes_including_root": 97,
+        "original_tree_exact_match": true,
+        "checked": "活动节点ID、顺序、children、完整props/meta和正文Delta；清理后与baseline/document.json逐对象相等",
+        "archived_tombstones": "删除的测试节点仍可能保留为不可达CRDT归档，不作为活动正文"
+      },
+      "final_state": "最新版已安装、登录目标文档且在线，当前默认隐藏操作条；临时表格全部清理，原始活动共享树恢复。",
+      "width_snapshots": {
+        "resumed-width": [
+          184.98467548076923,
+          120
+        ],
+        "resumed-width-undo": [
+          120,
+          120
+        ],
+        "resumed-width-redo": [
+          184.98467548076923,
+          120
+        ]
+      }
+    },
+    "apk_sha256": "ca41992c95960c4a3adfcbf6994e7b4b6f66381494350ed4c0acf28f77e59794",
+    "android_phone_resume": "passed on 2026-10-16; previous install/uninstall interruption resolved"
+  },
+  "limits": [
+    "尚无行列剪切复制粘贴、多格拖选、行高拖动",
+    "真实桌面双端和服务端持久化ACK未验收"
+  ],
+  "screenshots": [
+    "table-edge-hidden-20261016.png",
+    "table-edge-active-20261016.png",
+    "table-edge-row-menu-20261016.png",
+    "table-edge-width-20261016.png",
+    "table-edge-cleaned-20261016.png"
+  ]
+}

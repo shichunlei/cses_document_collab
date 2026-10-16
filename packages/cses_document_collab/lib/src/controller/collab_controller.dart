@@ -314,7 +314,7 @@ class CollabController extends ChangeNotifier {
 
   /// 持久化编辑器 [nextBlocks] 的规范化快照；仅本地事务产生上行 update。
   /// 离线/握手期间不发消息，下一轮状态向量会补齐。失败由唯一日志及展示边界处理。
-  /// 显式编号设置与后续派生序号共用原生事务；非法设置不改权威文档并恢复 UI。
+  /// 显式编号设置与后续派生序号共用原生事务；非法设置或表格结构/布局不改权威文档并恢复 UI。
   void _applyEditorBlocks(List<CollabEditorBlock> nextBlocks) {
     if (!_initialized || _disposed || _busy) return;
     if (!canEdit) {
@@ -338,6 +338,7 @@ class CollabController extends ChangeNotifier {
       if (message.contains('UNSUPPORTED_BLOCK_TYPE') ||
           message.contains('READ_ONLY_DOCUMENT') ||
           message.contains('INVALID_IMAGE_PROPERTIES') ||
+          message.contains('INVALID_TABLE') ||
           message.contains('INVALID_ORDERED_PROPERTIES') ||
           message.contains('INVALID_BLOCK_CONVERSION') ||
           message.contains('BLOCK_ID_CONFLICT')) {

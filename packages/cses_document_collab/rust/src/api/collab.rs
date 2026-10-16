@@ -151,7 +151,7 @@ pub struct CollabBlock {
     /// 桌面 props.backColor / borderColor；CSS 原值，独立于行内高亮。
     pub block_background_color: Option<String>,
     pub block_border_color: Option<String>,
-    /// 高亮容器的父 ID；根级为 None，正文始终保留自己的 Y.Text。
+    /// 已适配高亮或表格结构的父 ID；根级为 None，正文保留独立 Y.Text。
     pub parent_id: Option<String>,
     /// 对应桌面 callout.props.prefix / color，不与行内格式混用。
     pub callout_prefix: Option<String>,
@@ -1211,7 +1211,7 @@ fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(
             let position = ancestors
                 .iter()
                 .position(|id| *id == parent)
-                .ok_or("INVALID_BLOCK_PARENT: 父块必须是前序高亮容器")?;
+                .ok_or("INVALID_BLOCK_PARENT: 父块必须是前序已适配容器")?;
             ancestors.truncate(position + 1);
         } else {
             ancestors.clear();
@@ -1231,7 +1231,17 @@ fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(
                 "INVALID_DIVIDER: 分割线不能存储正文".into()
             });
         }
-        if block.block_type == "callout" {
+        if matches!(
+            block.block_type.as_str(),
+            "table" | "table-row" | "table-cell"
+        ) && !allow_placeholders
+        {
+            return Err("UNSUPPORTED_BLOCK_TYPE: 表格仅用于正式文档".into());
+        }
+        if matches!(
+            block.block_type.as_str(),
+            "callout" | "table" | "table-row" | "table-cell"
+        ) {
             if !block.text.is_empty() || !block.segments.is_empty() || ancestors.len() >= 256 {
                 return Err("INVALID_CALLOUT: 高亮容器不能直接存储正文或超出嵌套限制".into());
             }
@@ -1346,6 +1356,9 @@ fn is_supported_block_type(block_type: &str) -> bool {
             | "quote"
             | "code"
             | "callout"
+            | "table"
+            | "table-row"
+            | "table-cell"
             | "divider"
             | "formula"
             | "meeting"

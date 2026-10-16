@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-15",
+  "scope": "普通矩形表格第一阶段：已有表格展示与单元格正文编辑",
+  "desktop_contract": {
+    "package": "@ccc/blockcraft",
+    "version": "0.11.14",
+    "structure": [
+      "table",
+      "table-row",
+      "table-cell",
+      "正文块"
+    ],
+    "source": "/System/Volumes/Data/workspace/cses-client/node_modules/@ccc/blockcraft/fesm2022/ccc-blockcraft.mjs"
+  },
+  "fixture": "packages/cses_document_collab/rust/tests/fixtures/blockcraft-table.update",
+  "implemented": [
+    "稳定父子身份与四层共享结构",
+    "横向滚动、列宽/行高只读显示、单元格背景与垂直对齐",
+    "正文及已有富文本输入、单元格内添加正文、撤销与重做",
+    "表格结构原子保护及首段行首退格保护",
+    "远端结构或单元格正文变化清除路径历史与选区；布局变化原位更新",
+    "单元格有序列表派生编号同步",
+    "合成双端修改收敛、FRB/SQLite重开保真"
+  ],
+  "limits": [
+    "最多100行、50列且总单元格不超过500",
+    "显示尺寸48～480逻辑像素，原始值不回写",
+    "合并/隐藏/不完整/超限表格整体只读占位",
+    "未开放新建/删除表格、行列增删、合并拆分、列宽调整和专用多格选区",
+    "Markdown表格仍按文本行导入",
+    "表格发生远端结构或正文变更时清除整个本地撤销/重做栈与选区"
+  ],
+  "verification": {
+    "rust": {
+      "format_check": "passed",
+      "cargo_check": "passed",
+      "cargo_test": {
+        "passed": 78,
+        "failed": 0
+      }
+    },
+    "flutter_package": {
+      "full_suite_passed": 809,
+      "failed": 0,
+      "final_table_widget_tests": 5,
+      "final_real_native_integration_tests": 1,
+      "lib_test_analyze": "passed"
+    },
+    "flutter_host": {
+      "full_suite_passed": 56,
+      "failed": 0,
+      "lib_test_analyze": "passed"
+    },
+    "bridge_generator": "2.13.0，更新父身份字段文档；桥接字段和签名不变",
+    "native_build": {
+      "host": "passed",
+      "ios_xcframework_three_targets": "passed",
+      "android_debug_apk": "passed"
+    },
+    "generator_syntax_check": "passed",
+    "diff_check": "passed"
+  },
+  "not_verified": [
+    "真实Android/iOS设备表格交互",
+    "真实桌面双端联调",
+    "服务器持久化ACK",
+    "iOS完整App构建"
+  ]
+}

@@ -149,7 +149,7 @@ class CollabBlock {
   final String? blockBackgroundColor;
   final String? blockBorderColor;
 
-  /// 高亮容器的父 ID；根级为 None，正文始终保留自己的 Y.Text。
+  /// 已适配高亮或表格结构的父 ID；根级为 None，正文保留独立 Y.Text。
   final String? parentId;
 
   /// 对应桌面 callout.props.prefix / color，不与行内格式混用。

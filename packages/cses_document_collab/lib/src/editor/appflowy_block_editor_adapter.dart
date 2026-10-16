@@ -13,6 +13,7 @@ import 'package:cses_document_collab/src/model/collab_meeting.dart';
 import 'package:cses_document_collab/src/model/collab_ordered.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/model/collab_link_view.dart';
+import 'package:cses_document_collab/src/model/collab_table.dart';
 import 'package:cses_document_collab/src/model/collab_task_card.dart';
 import 'package:cses_document_collab/src/model/collab_user_mention.dart';
 import 'package:cses_document_collab/src/model/text_delta.dart' as collab;
@@ -562,6 +563,7 @@ final class AppFlowyBlockEditorAdapter {
   /// 块身份、类型、顺序一致时原位更新文字、媒体、分割线、公式及会议/任务引用属性，保留组件、选区与输入连接；
   /// URL、尺寸和题注复用节点映射，移除的可选投影显式清空。结构不同才重建节点。
   /// 不记录本地撤销或发送 WS；销毁后不执行，事务异常向调用边界传播。
+  /// 表格路径或单元格正文改变会清除本地路径历史及选区，避免过期撤销误写其他单元格；布局属性更新保留历史。
   /// 正式编号及原始设置更新内存投影，不进入历史；成功转换后清除 replacesId。
   Future<void> replaceFromRemote(List<CollabEditorBlock> nextBlocks) async {
     if (_disposed) {
@@ -591,7 +593,7 @@ final class AppFlowyBlockEditorAdapter {
                   targetBlocks[index].blockType &&
               currentBlocks[index].parentId == targetBlocks[index].parentId &&
               (currentNodes[index].type == csesUnsupportedBlockType ||
-                  currentNodes[index].type == csesCalloutBlockType ||
+                  isCollabContainerType(currentNodes[index].type) ||
                   currentNodes[index].type == collabDividerType ||
                   currentNodes[index].type == collabFormulaType ||
                   currentNodes[index].type == collabMeetingType ||
@@ -606,7 +608,8 @@ final class AppFlowyBlockEditorAdapter {
         final node = currentNodes[index];
         final target = targetBlocks[index];
         if (node.type == csesUnsupportedBlockType) continue;
-        if (_isUrlBackedBlock(target.blockType) ||
+        if (collabTableTypes.contains(target.blockType) ||
+            _isUrlBackedBlock(target.blockType) ||
             target.blockType == collabDividerType ||
             target.blockType == collabFormulaType ||
             target.blockType == collabMeetingType ||
@@ -703,22 +706,87 @@ final class AppFlowyBlockEditorAdapter {
       _lastPublishedBlocks = targetBlocks;
       return;
     }
+    final invalidateTableHistory = _tableContentChanged(
+      currentBlocks,
+      targetBlocks,
+    );
+    if (invalidateTableHistory) {
+      editorState.undoManager.undoStack.clear();
+      editorState.undoManager.redoStack.clear();
+      // 路径历史不能越过远端换行/删行/合并或正文覆盖后继续作用于其他单元格。
+      transaction.afterSelection = null;
+      editorState.selection = null;
+    }
     _applyingRemote = true;
     final wasEditable = editorState.editable;
     try {
       // AppFlowy also gates remote transactions on editable. Authoritative
       // replay must still render while the page is in preview/read-only mode.
       editorState.editable = true;
-      await editorState.apply(
+      // 当前AppFlowy在返回Future前同步完成树更新；不能把本地发布抑制延长到
+      // Future的微任务结束，否则刚插入表格后的立即撤销会只改UI而漏掉原生写入。
+      final completion = editorState.apply(
         transaction,
         isRemote: true,
         options: const ApplyOptions(recordUndo: false, inMemoryUpdate: true),
       );
       _lastPublishedBlocks = targetBlocks;
-    } finally {
       editorState.editable = wasEditable;
       _applyingRemote = false;
+      await completion;
+    } finally {
+      // 同步阶段已恢复权限后，不得在Future结束时覆盖宿主刚撤销的新权限。
+      if (_applyingRemote) {
+        editorState.editable = wasEditable;
+        _applyingRemote = false;
+      }
     }
+  }
+
+  /// 比较 [before] 与 [after] 的表格路径及正文；布局属性变化不使历史失效。
+  /// 远端结构或单元格正文变化会清除本地路径历史，避免撤销写入另一个单元格或覆盖新正文。
+  static bool _tableContentChanged(
+    List<CollabEditorBlock> before,
+    List<CollabEditorBlock> after,
+  ) {
+    if (![
+      ...before,
+      ...after,
+    ].any((b) => collabTableTypes.contains(b.blockType))) {
+      return false;
+    }
+    if (before.length != after.length) return true;
+    final byId = {for (final block in before) block.id: block};
+    for (var i = 0; i < before.length; i++) {
+      final old = before[i];
+      final next = after[i];
+      if (old.id != next.id ||
+          old.parentId != next.parentId ||
+          old.blockType != next.blockType) {
+        return true;
+      }
+      var parent = old;
+      var inTable = collabTableTypes.contains(parent.blockType);
+      for (
+        var depth = 0;
+        !inTable && parent.parentId != null && depth < 256;
+        depth++
+      ) {
+        final ancestor = byId[parent.parentId];
+        if (ancestor == null) break;
+        parent = ancestor;
+        inTable = collabTableTypes.contains(parent.blockType);
+      }
+      if (inTable &&
+          (old.text != next.text ||
+              (!_segmentsEqual(old.segments, next.segments) &&
+                  _deltaFromBlock(
+                    old,
+                  ).diff(_deltaFromBlock(next)).isNotEmpty))) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /// 在本地 [value] 的 before 阶段按稳定 ID 重定位编号历史，after 阶段发布快照；
@@ -807,8 +875,8 @@ final class AppFlowyBlockEditorAdapter {
     onLocalBlocksChanged(_lastPublishedBlocks);
   }
 
-  /// Follow paths through structural operations so range deletion/conversion cannot
-  /// remove a placeholder or its parent. Reject the whole action before history/input.
+  /// 在 [transaction] 写入前跟踪路径，阻止未知占位及其父容器被删除或改写。
+  /// 表格结构由原生完整网格预检；含占位的表格结构操作仍整体拒绝，列宽字段可独立修改。
   void _protectUnsupportedBlocks(Transaction transaction) {
     final paths = _flattenNodes(editorState.document.root.children)
         .where((node) => node.type == csesUnsupportedBlockType)
@@ -983,22 +1051,24 @@ final class AppFlowyBlockEditorAdapter {
     return node;
   }
 
+  /// 深度优先遍历借用的 [nodes] 及已适配容器子树，保留文档顺序。
   static Iterable<Node> _flattenNodes(Iterable<Node> nodes) sync* {
     for (final node in nodes) {
       yield node;
-      if (node.type == csesCalloutBlockType) {
+      if (isCollabContainerType(node.type)) {
         yield* _flattenNodes(node.children);
       }
     }
   }
 
+  /// 按 [blocks] 的前序父身份构建编辑树；各正文保留独立节点与稳定身份。
   static List<Node> _nodesFromBlocks(List<CollabEditorBlock> blocks) {
     final nodes = {for (final block in blocks) block.id: _nodeFromBlock(block)};
     final roots = <Node>[];
     for (final block in blocks) {
       final node = nodes[block.id]!;
       final parent = nodes[block.parentId];
-      if (parent != null && parent.type == csesCalloutBlockType) {
+      if (parent != null && isCollabContainerType(parent.type)) {
         parent.insert(node);
       } else {
         roots.add(node);
@@ -1009,8 +1079,21 @@ final class AppFlowyBlockEditorAdapter {
 
   /// 将权威 [block] 转为 AppFlowy 节点，图片保存强类型专属数据的 Map 投影。
   /// 题注留在资源属性而非 AppFlowy children；实际父子关系由 Rust 的共享类型持有。
-  /// 分割线、公式与会议引用保存白名单原始属性和独立历史字段，任务卡片保存只读引用props；均不生成Delta或URL。
+  /// 表格布局及任务卡片属性只读投影；其他无正文块保留各自白名单属性，均不生成Delta。
   static Node _nodeFromBlock(CollabEditorBlock block) {
+    if (collabTableTypes.contains(block.blockType)) {
+      return Node(
+        type: block.blockType,
+        id: block.id,
+        attributes: {
+          collabBlockIdAttribute: block.id,
+          collabTableLayoutAttribute:
+              block.resource?.toJson() ?? const {'properties': '{}'},
+          csesBlockBackgroundColorAttribute: block.blockBackgroundColor,
+          csesBlockBorderColorAttribute: block.blockBorderColor,
+        },
+      );
+    }
     if (block.blockType == csesUnsupportedBlockType) {
       return Node(
         type: csesUnsupportedBlockType,
@@ -1184,6 +1267,7 @@ final class AppFlowyBlockEditorAdapter {
   /// 仅指定字段产生补丁，其他原始属性保持只读投影，不重放到权威文档。
   /// 恢复为有序列表的历史节点保留其编号投影，Rust 仅在新身份替换时用它初始化原始设置；
   /// 正常新转入有序列表的节点由类型命令移除旧投影，走默认续号。非有序目标清理内存编号数据。
+  /// 表格按容器父身份遍历，布局属性只读投影；每个单元格正文仍独立持有Delta。
   List<CollabEditorBlock> _readBlocks(
     EditorState state,
     List<CollabEditorBlock> previous, {
@@ -1243,7 +1327,7 @@ final class AppFlowyBlockEditorAdapter {
       }
       return CollabEditorBlock(
         id: blockId,
-        parentId: node.parent?.type == csesCalloutBlockType
+        parentId: isCollabContainerType(node.parent?.type ?? '')
             ? _nodeBlockId(node.parent!)
             : null,
         calloutPrefix: node.type == csesCalloutBlockType
@@ -1252,7 +1336,9 @@ final class AppFlowyBlockEditorAdapter {
         blockTextColor: node.type == csesCalloutBlockType
             ? node.attributes[csesBlockTextColorAttribute] as String?
             : null,
-        resource: node.type == collabTaskCardType
+        resource: collabTableTypes.contains(node.type)
+            ? readCollabTable(node.attributes, before?.resource)
+            : node.type == collabTaskCardType
             ? CollabTaskCard.read(node.attributes)
             : node.type == collabMeetingType
             ? CollabMeeting.readAttributes(
@@ -1350,9 +1436,10 @@ final class AppFlowyBlockEditorAdapter {
     return value is String && value.isNotEmpty ? value : node.id;
   }
 
-  /// 将借用[node]映射为投影类型，分割线、公式、会议和任务卡片保持无正文的独立类型。
+  /// 将借用[node]映射为投影类型；表格结构及无正文块保留独立类型。
   static String _nodeBlockType(Node node) {
-    if (isCollabResourceType(node.type) ||
+    if (collabTableTypes.contains(node.type) ||
+        isCollabResourceType(node.type) ||
         node.type == collabDividerType ||
         node.type == collabFormulaType ||
         node.type == collabMeetingType ||
@@ -1469,7 +1556,7 @@ final class AppFlowyBlockEditorAdapter {
 
   /// 读取借用[node]的正文或资源地址，容器、分割线、公式、会议和任务卡片不提供文字。
   static String _readNodePlainText(Node node) {
-    if (node.type == csesCalloutBlockType ||
+    if (isCollabContainerType(node.type) ||
         node.type == collabDividerType ||
         node.type == collabFormulaType ||
         node.type == collabMeetingType ||

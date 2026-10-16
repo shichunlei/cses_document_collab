@@ -234,7 +234,7 @@ flutter test --no-pub
 
 正式头部已接入文档业务名称、图标和封面接口及对应权限；正文 `/doc/document/edit` 的 dirty-block 快照、评论和完整正文业务权限仍未接入。
 Awareness 展示用户和在线数，尚未对齐桌面光标/选区契约；不能用 ready 或 SyncStatus 声称业务落库成功。
-表格和复杂嵌套布局暂时显示不可编辑占位，其他已识别块仍可编辑；未适配的行内对象、锁与修订继续整篇只读，后续按对应语义适配。
+普通及合并表格已支持新建、行列增删、矩形范围合并/拆分、列宽设置、横向滚动和正文编辑/撤销/协同；不完整或超限表格与其他未适配复杂布局仍保留为占位，具体范围见[适配表](docs/block-adaptation.md)。其他已识别块仍可编辑；未适配的行内对象、锁与修订继续整篇只读，后续按对应语义适配。
 
 当前同步顶层块的类型、顺序、文本/URL、Todo 勾选、对齐和视觉缩进，以及 bold、italic、underline、
 strikethrough、inline-code、textColor、backgroundColor、superscript、subscript 行内属性。当前缩进保持扁平块
@@ -242,8 +242,8 @@ Schema，仅表现为列表/Todo 的视觉层级，不会生成 AppFlowy 子节�
 bridge 的 text 字段传递；正式图片写入 props.src、视频写入 props.url；图片使用 block 类型，children 为题注 ID 数组，
 视频沿用 void 与空 Y.Array；离线 Demo 的
 链接/图片/视频使用私有 Y.Text 载荷。正式链接形式采用带 `a:link` 的段落，通过href片段投影同步，不新增独立link flavour。
-语义嵌套列表、table、Awareness 光标与选区暂时不会同步；
-提及、文件、表格等入口仍显示“后续阶段”提示，不会插入 Rust Schema 无法保存的节点。
+语义嵌套列表、Awareness 光标与选区暂时不会同步；表格已支持新建及行列/合并/列宽操作，拖拽式多格选区和表格复制粘贴仍待接入；
+其他未适配入口仍显示“后续阶段”提示，不会插入 Rust Schema 无法保存的节点。
 
 ### 列表键盘交互、正式有序编号与块转换
 

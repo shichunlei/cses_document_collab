@@ -29,12 +29,22 @@ extension NodeExtensions on Node {
     }
   }
 
+  /// 返回已挂载节点的全局范围；无独立渲染框的结构节点使用可见后代的联合范围。
+  ///
+  /// 不含已卸载或隐藏后代的零范围；没有已布局后代时返回 [Rect.zero]。
+  /// 这使网格等跳过中间结构组件的布局仍可递归定位正文选区。
   Rect get rect {
     if (renderBox != null) {
       final boxOffset = renderBox!.localToGlobal(Offset.zero);
       return boxOffset & renderBox!.size;
     }
-    return Rect.zero;
+    Rect? bounds;
+    for (final child in children) {
+      final childRect = child.rect;
+      if (childRect.isEmpty) continue;
+      bounds = bounds?.expandToInclude(childRect) ?? childRect;
+    }
+    return bounds ?? Rect.zero;
   }
 
   Node? nextNodeWhere(bool Function(Node element) test) {

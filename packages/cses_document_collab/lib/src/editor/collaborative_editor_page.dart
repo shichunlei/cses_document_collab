@@ -32,6 +32,7 @@ import 'package:flutter/material.dart';
 
 import 'collab_inline_entity_mention.dart';
 import 'collab_task_card_block.dart';
+import 'collab_table_block.dart';
 import 'document_feedback_footer.dart';
 import 'document_header.dart';
 import 'markdown_import.dart';
@@ -363,7 +364,7 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
   }
 }
 
-/// 正式协同块的渲染器工厂；分割线、公式、会议/任务卡片保持无正文结构，未知块使用保护占位。
+/// 正式协同块的渲染器工厂；表格保留行和单元格子树，无正文块及未知占位沿用独立组件。
 final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders =
     {
       ...standardBlockComponentBuilderMap,
@@ -397,6 +398,8 @@ final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders =
       collabTaskCardType: CollabTaskCardBlockComponentBuilder(),
       csesCodeBlockType: CollabCodeBlockComponentBuilder(),
       csesCalloutBlockType: CollabCalloutBlockComponentBuilder(),
+      for (final type in ['table', 'table-row', 'table-cell'])
+        type: CollabTableBlockComponentBuilder(),
       csesUnsupportedBlockType: CollabUnsupportedBlockComponentBuilder(),
       for (final kind in collabResourceTypes) kind: CollabResourceBlockComponentBuilder(),
     }.map((type, builder) {

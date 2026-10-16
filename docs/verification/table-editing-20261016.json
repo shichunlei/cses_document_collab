@@ -1,0 +1,98 @@
+{
+  "date": "2026-10-16",
+  "scope": "表格第二阶段：新建、行列增删、合并拆分、列宽设置",
+  "desktop_contract": {
+    "package": "@ccc/blockcraft",
+    "version": "0.11.14",
+    "structure": [
+      "table",
+      "table-row",
+      "table-cell",
+      "正文块"
+    ],
+    "merged_cell_props": [
+      "rowspan",
+      "colspan",
+      "display"
+    ],
+    "merge": "保留逻辑格，非空正文按行序移到左上格，被覆盖格display=none",
+    "split": "清除跨度/隐藏，正文留在原左上格，空格补段落"
+  },
+  "ui": {
+    "create": "更多→表格直接创建2×2，无行列选择弹窗；按原正文稳定书签插入",
+    "edit": "单元格右上角更多→上下插行、左右插列、删除当前行列、选择矩形终点合并、拆分、列宽滑块→应用",
+    "layout": "横向滚动、跨行跨列自然高度布局，长正文扩展行高"
+  },
+  "data_integrity": [
+    "完整网格/层级/宽度数/跨度覆盖及字段白名单在原生写事务前校验",
+    "显式字段补丁不回放其他布局属性，所有动作进入独立撤销/重做事务",
+    "增删行列调整穿越边界的合并跨度，删除主格所在行列时保留存活合并区域的主格身份和正文",
+    "删除的表格子树保留为原共享节点，内部meta标记csesMobileTableDeleted用于隔离新ID冲突；恢复移除标记，保留未知props/meta与删除期间到达的最新正文",
+    "稳定表ID和内容指纹拒绝过期面板；权限一旦撤销本次面板失效，监听成对解绑",
+    "同步投影抑制只覆盖同步树更新阶段，不吞掉随后立即撤销，也不在Future完成时恢复旧权限",
+    "远端结构/正文变化清除路径历史及选区；等价Delta和纯布局投影保留历史，避免规范化回放清除新建表格历史"
+  ],
+  "fixtures": [
+    "packages/cses_document_collab/rust/tests/fixtures/blockcraft-table.update",
+    "packages/cses_document_collab/rust/tests/fixtures/blockcraft-table-merged.update"
+  ],
+  "verification": {
+    "flutter_package_full": {
+      "passed": 817,
+      "failed": 0
+    },
+    "flutter_table_native_toolbar_target": {
+      "passed": 40,
+      "failed": 0
+    },
+    "flutter_host_full": {
+      "passed": 56,
+      "failed": 0
+    },
+    "rust_full": {
+      "passed": 81,
+      "failed": 0
+    },
+    "static_analysis": {
+      "package_lib_test": "passed",
+      "host_lib_test": "passed"
+    },
+    "rust_format_check": "passed",
+    "cargo_check": "passed",
+    "native_builds": {
+      "host_debug": "passed",
+      "android_debug_apk": "passed",
+      "ios_xcframework_aarch64_device_aarch64_sim_x86_64_sim": "passed"
+    },
+    "bridge": "复用FRB 2.13.0现有CollabResource/CollabBlock；未新增或修改桥接字段、签名或ABI",
+    "fixture_generator_syntax": "passed",
+    "diff_check": "passed",
+    "android_phone": "passed; see table-phone-20261016.json",
+    "direct_2x2_creation": {
+      "toolbar_and_table_tests_passed": 40,
+      "target_analyze": "passed",
+      "format_and_diff_check": "passed",
+      "android_phone": "本次默认值/弹窗变更未重新安装复测；table-phone-20261016.json为此前旧创建交互的历史验收"
+    }
+  },
+  "limits": [
+    "最多100行、50列且总格数≤500，最后一行/列不能删除",
+    "列宽通过滑块保存48～480逻辑像素，旧尺寸只显示回落；行高随正文自动增大",
+    "暂无拖拽多格选区、拖拽列边界、表格复制粘贴或Markdown表格导入",
+    "含未知占位的表格结构操作整体拒绝，列宽可独立修改；不完整/交叠/悬空隐藏/超限网格整表占位保留"
+  ],
+  "not_verified": [
+    "真实iOS设备表格交互",
+    "真实桌面双向联调",
+    "两端同时修改行列结构的冲突场景",
+    "服务端持久化ACK",
+    "iOS完整App构建"
+  ],
+  "adaptation_totals": {
+    "adapted": 13,
+    "partial": 10,
+    "structural": 1,
+    "not_adapted": 17,
+    "total": 41
+  }
+}

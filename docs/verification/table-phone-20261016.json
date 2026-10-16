@@ -1,0 +1,1543 @@
+{
+  "date": "2026-10-16",
+  "scope": "Android 真机表格创建、行列增删、合并拆分及列宽验收",
+  "device": {
+    "model": "HONOR X70 / MTN-AN00",
+    "os": "Android 16",
+    "physical_screen": "1200×2640"
+  },
+  "build": {
+    "target": "lib/main.dart",
+    "install": "adb install -r 成功，保留应用数据",
+    "artifact_sha256": "621542876520c24a1886029349fdf618aae002859dc4108fc2229ab806807598"
+  },
+  "document_id": "6ad06c992a6b14f42c256937",
+  "checks": [
+    {
+      "name": "新建",
+      "result": "3×3 默认创建与1×1步进设置创建通过；1×1整块撤销→重做→撤销，活动块59→63→59→63→59（含根）"
+    },
+    {
+      "name": "增删行列",
+      "result": "下方插行3×3→4×3、删除插入行→3×3；右侧插列→3×4、删除插入列→3×3；原格身份及正文保留"
+    },
+    {
+      "name": "合并拆分",
+      "result": "左上2×2合并，主格rowspan/colspan=2，覆盖格display=none；TABLE_A/TABLE_B按行序移入主格；拆分清除跨度/隐藏，正文留在左上格；拆分撤销重做通过"
+    },
+    {
+      "name": "列宽",
+      "result": "滑块120→236.4255并应用；重装及重新登录后保持；236.4255→98.5532并应用，撤销/重做/撤销恢复236.4255；界面与共享colWidths一致"
+    },
+    {
+      "name": "最后行列保护",
+      "result": "1×1表格删除当前行、删除当前列和合并/拆分按钮禁用"
+    },
+    {
+      "name": "重新进入后正文输入",
+      "result": "发现行节点未渲染导致选区递归中断；Node.rect对无渲染框结构节点返回已布局后代联合范围，修复版安装后第二格点击定位和TABLE_B输入通过"
+    },
+    {
+      "name": "原文保护",
+      "result": "所有采集阶段原35个非根节点ID、顺序、完整活动共享字段（含props/meta/正文Delta）一致；根节点仅增加测试表格引用，其余字段不变"
+    }
+  ],
+  "automated_regression": {
+    "table_tests": 13,
+    "appflowy_node_tests": 8,
+    "affected_packages_analyze": "passed",
+    "android_rebuild": "passed",
+    "diff_check": "passed"
+  },
+  "snapshot_audit": {
+    "split": {
+      "reachable_blocks_including_root": 58,
+      "original_nodes_unchanged_except_expected_root_insert": true,
+      "tables": [
+        {
+          "id": "58eT0e",
+          "rows": 3,
+          "columns": 3,
+          "widths": [
+            120,
+            120,
+            120
+          ],
+          "spans": [
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            }
+          ],
+          "text_paragraphs": [
+            [
+              "TABLE_A"
+            ]
+          ]
+        }
+      ]
+    },
+    "second-created": {
+      "reachable_blocks_including_root": 63,
+      "original_nodes_unchanged_except_expected_root_insert": true,
+      "tables": [
+        {
+          "id": "w0ffi_",
+          "rows": 1,
+          "columns": 1,
+          "widths": [
+            120
+          ],
+          "spans": [
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            }
+          ],
+          "text_paragraphs": [
+            [
+              "TABLE_A"
+            ],
+            [
+              "TABLE_B"
+            ]
+          ]
+        },
+        {
+          "id": "58eT0e",
+          "rows": 3,
+          "columns": 3,
+          "widths": [
+            236.4255319148936,
+            120,
+            120
+          ],
+          "spans": [
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            }
+          ],
+          "text_paragraphs": [
+            [
+              "TABLE_A"
+            ],
+            [
+              "TABLE_B"
+            ]
+          ]
+        }
+      ]
+    },
+    "resized": {
+      "reachable_blocks_including_root": 58,
+      "original_nodes_unchanged_except_expected_root_insert": true,
+      "tables": [
+        {
+          "id": "58eT0e",
+          "rows": 3,
+          "columns": 3,
+          "widths": [
+            236.4255319148936,
+            120,
+            120
+          ],
+          "spans": [
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            }
+          ],
+          "text_paragraphs": [
+            [
+              "TABLE_A"
+            ]
+          ]
+        }
+      ]
+    },
+    "row-deleted": {
+      "reachable_blocks_including_root": 58,
+      "original_nodes_unchanged_except_expected_root_insert": true,
+      "tables": [
+        {
+          "id": "58eT0e",
+          "rows": 3,
+          "columns": 3,
+          "widths": [
+            120,
+            120,
+            120
+          ],
+          "spans": [
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            }
+          ],
+          "text_paragraphs": [
+            [
+              "TABLE_A"
+            ]
+          ]
+        }
+      ]
+    },
+    "create-redo": {
+      "reachable_blocks_including_root": 63,
+      "original_nodes_unchanged_except_expected_root_insert": true,
+      "tables": [
+        {
+          "id": "w0ffi_",
+          "rows": 1,
+          "columns": 1,
+          "widths": [
+            120
+          ],
+          "spans": [
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            }
+          ],
+          "text_paragraphs": [
+            [
+              "TABLE_A"
+            ],
+            [
+              "TABLE_B"
+            ]
+          ]
+        },
+        {
+          "id": "58eT0e",
+          "rows": 3,
+          "columns": 3,
+          "widths": [
+            236.4255319148936,
+            120,
+            120
+          ],
+          "spans": [
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            }
+          ],
+          "text_paragraphs": [
+            [
+              "TABLE_A"
+            ],
+            [
+              "TABLE_B"
+            ]
+          ]
+        }
+      ]
+    },
+    "baseline": {
+      "reachable_blocks_including_root": 36,
+      "original_nodes_unchanged_except_expected_root_insert": true,
+      "tables": []
+    },
+    "create-undo": {
+      "reachable_blocks_including_root": 59,
+      "original_nodes_unchanged_except_expected_root_insert": true,
+      "tables": [
+        {
+          "id": "58eT0e",
+          "rows": 3,
+          "columns": 3,
+          "widths": [
+            236.4255319148936,
+            120,
+            120
+          ],
+          "spans": [
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            }
+          ],
+          "text_paragraphs": [
+            [
+              "TABLE_A"
+            ],
+            [
+              "TABLE_B"
+            ]
+          ]
+        }
+      ]
+    },
+    "created": {
+      "reachable_blocks_including_root": 58,
+      "original_nodes_unchanged_except_expected_root_insert": true,
+      "tables": [
+        {
+          "id": "58eT0e",
+          "rows": 3,
+          "columns": 3,
+          "widths": [
+            120,
+            120,
+            120
+          ],
+          "spans": [
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            }
+          ],
+          "text_paragraphs": []
+        }
+      ]
+    },
+    "split-texts": {
+      "reachable_blocks_including_root": 59,
+      "original_nodes_unchanged_except_expected_root_insert": true,
+      "tables": [
+        {
+          "id": "58eT0e",
+          "rows": 3,
+          "columns": 3,
+          "widths": [
+            236.4255319148936,
+            120,
+            120
+          ],
+          "spans": [
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            }
+          ],
+          "text_paragraphs": [
+            [
+              "TABLE_A"
+            ],
+            [
+              "TABLE_B"
+            ]
+          ]
+        }
+      ]
+    },
+    "row-added": {
+      "reachable_blocks_including_root": 65,
+      "original_nodes_unchanged_except_expected_root_insert": true,
+      "tables": [
+        {
+          "id": "58eT0e",
+          "rows": 4,
+          "columns": 3,
+          "widths": [
+            120,
+            120,
+            120
+          ],
+          "spans": [
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            }
+          ],
+          "text_paragraphs": [
+            [
+              "TABLE_A"
+            ]
+          ]
+        }
+      ]
+    },
+    "undo-split": {
+      "reachable_blocks_including_root": 58,
+      "original_nodes_unchanged_except_expected_root_insert": true,
+      "tables": [
+        {
+          "id": "58eT0e",
+          "rows": 3,
+          "columns": 3,
+          "widths": [
+            236.4255319148936,
+            120,
+            120
+          ],
+          "spans": [
+            {
+              "rowspan": 2,
+              "colspan": 2,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": "none"
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": "none"
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": "none"
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            }
+          ],
+          "text_paragraphs": [
+            [
+              "TABLE_A"
+            ],
+            [
+              "TABLE_B"
+            ]
+          ]
+        }
+      ]
+    },
+    "width99": {
+      "reachable_blocks_including_root": 59,
+      "original_nodes_unchanged_except_expected_root_insert": true,
+      "tables": [
+        {
+          "id": "58eT0e",
+          "rows": 3,
+          "columns": 3,
+          "widths": [
+            98.5531914893617,
+            120,
+            120
+          ],
+          "spans": [
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            }
+          ],
+          "text_paragraphs": [
+            [
+              "TABLE_A"
+            ],
+            [
+              "TABLE_B"
+            ]
+          ]
+        }
+      ]
+    },
+    "redo-split": {
+      "reachable_blocks_including_root": 59,
+      "original_nodes_unchanged_except_expected_root_insert": true,
+      "tables": [
+        {
+          "id": "58eT0e",
+          "rows": 3,
+          "columns": 3,
+          "widths": [
+            236.4255319148936,
+            120,
+            120
+          ],
+          "spans": [
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            }
+          ],
+          "text_paragraphs": [
+            [
+              "TABLE_A"
+            ],
+            [
+              "TABLE_B"
+            ]
+          ]
+        }
+      ]
+    },
+    "before": {
+      "reachable_blocks_including_root": 36,
+      "original_nodes_unchanged_except_expected_root_insert": true,
+      "tables": []
+    },
+    "column-deleted": {
+      "reachable_blocks_including_root": 58,
+      "original_nodes_unchanged_except_expected_root_insert": true,
+      "tables": [
+        {
+          "id": "58eT0e",
+          "rows": 3,
+          "columns": 3,
+          "widths": [
+            120,
+            120,
+            120
+          ],
+          "spans": [
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            }
+          ],
+          "text_paragraphs": [
+            [
+              "TABLE_A"
+            ]
+          ]
+        }
+      ]
+    },
+    "final": {
+      "reachable_blocks_including_root": 59,
+      "original_nodes_unchanged_except_expected_root_insert": true,
+      "tables": [
+        {
+          "id": "58eT0e",
+          "rows": 3,
+          "columns": 3,
+          "widths": [
+            236.4255319148936,
+            120,
+            120
+          ],
+          "spans": [
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            }
+          ],
+          "text_paragraphs": [
+            [
+              "TABLE_A"
+            ],
+            [
+              "TABLE_B"
+            ]
+          ]
+        }
+      ]
+    },
+    "width-redo": {
+      "reachable_blocks_including_root": 59,
+      "original_nodes_unchanged_except_expected_root_insert": true,
+      "tables": [
+        {
+          "id": "58eT0e",
+          "rows": 3,
+          "columns": 3,
+          "widths": [
+            98.5531914893617,
+            120,
+            120
+          ],
+          "spans": [
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            }
+          ],
+          "text_paragraphs": [
+            [
+              "TABLE_A"
+            ],
+            [
+              "TABLE_B"
+            ]
+          ]
+        }
+      ]
+    },
+    "merged-texts": {
+      "reachable_blocks_including_root": 58,
+      "original_nodes_unchanged_except_expected_root_insert": true,
+      "tables": [
+        {
+          "id": "58eT0e",
+          "rows": 3,
+          "columns": 3,
+          "widths": [
+            236.4255319148936,
+            120,
+            120
+          ],
+          "spans": [
+            {
+              "rowspan": 2,
+              "colspan": 2,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": "none"
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": "none"
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": "none"
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            }
+          ],
+          "text_paragraphs": [
+            [
+              "TABLE_A"
+            ],
+            [
+              "TABLE_B"
+            ]
+          ]
+        }
+      ]
+    },
+    "column-added": {
+      "reachable_blocks_including_root": 64,
+      "original_nodes_unchanged_except_expected_root_insert": true,
+      "tables": [
+        {
+          "id": "58eT0e",
+          "rows": 3,
+          "columns": 4,
+          "widths": [
+            120,
+            120,
+            120,
+            120
+          ],
+          "spans": [
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            }
+          ],
+          "text_paragraphs": [
+            [
+              "TABLE_A"
+            ]
+          ]
+        }
+      ]
+    },
+    "two-texts": {
+      "reachable_blocks_including_root": 58,
+      "original_nodes_unchanged_except_expected_root_insert": true,
+      "tables": [
+        {
+          "id": "58eT0e",
+          "rows": 3,
+          "columns": 3,
+          "widths": [
+            236.4255319148936,
+            120,
+            120
+          ],
+          "spans": [
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            }
+          ],
+          "text_paragraphs": [
+            [
+              "TABLE_A"
+            ],
+            [
+              "TABLE_B"
+            ]
+          ]
+        }
+      ]
+    },
+    "merged": {
+      "reachable_blocks_including_root": 58,
+      "original_nodes_unchanged_except_expected_root_insert": true,
+      "tables": [
+        {
+          "id": "58eT0e",
+          "rows": 3,
+          "columns": 3,
+          "widths": [
+            120,
+            120,
+            120
+          ],
+          "spans": [
+            {
+              "rowspan": 2,
+              "colspan": 2,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": "none"
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": "none"
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": "none"
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            }
+          ],
+          "text_paragraphs": [
+            [
+              "TABLE_A"
+            ]
+          ]
+        }
+      ]
+    },
+    "width-undo": {
+      "reachable_blocks_including_root": 59,
+      "original_nodes_unchanged_except_expected_root_insert": true,
+      "tables": [
+        {
+          "id": "58eT0e",
+          "rows": 3,
+          "columns": 3,
+          "widths": [
+            236.4255319148936,
+            120,
+            120
+          ],
+          "spans": [
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            },
+            {
+              "rowspan": null,
+              "colspan": null,
+              "display": null
+            }
+          ],
+          "text_paragraphs": [
+            [
+              "TABLE_A"
+            ],
+            [
+              "TABLE_B"
+            ]
+          ]
+        }
+      ]
+    }
+  },
+  "screenshots": [
+    "table-phone-merged-20261016.png",
+    "table-phone-last-row-column-20261016.png"
+  ],
+  "limits": [
+    "本轮仅实际操作下方插行/右侧插列及对应删除，上方/左侧入口由已有自动测试覆盖",
+    "未验证真实桌面双端、两端同时修改行列结构、服务端持久化ACK及iOS真机",
+    "SQLite/WAL复制回读验证本地共享数据，不作为服务端持久化证明"
+  ],
+  "final_state": "新版已安装并登录目标文档，在线；保留一张3×3验收表格（第一格含TABLE_A/TABLE_B，第一列宽236.4255），临时1×1表格已撤销，原有35个非根节点完整保持"
+}

@@ -262,3 +262,36 @@ fixture('blockcraft-task-card', (_, m) => {
   m.set('task-bad-children', block('task-bad-children', 'task', 'block', ['task-child'], {taskId: 'bad'}));
   m.set('task-child', block('task-child', 'paragraph', 'editable', [{insert: '保留'}]));
 });
+
+// 普通2×3表格，嵌套正文与未知扩展用于移动端保真/协同回归。
+fixture('blockcraft-table', (_, m) => {
+  m.get('fixture-doc').get('children').push(['table-1']);
+  m.set('table-1', block('table-1', 'table', 'block', ['row-0', 'row-1'], {
+    colWidths: [120, 160, 200], customTable: { keep: true },
+  }));
+  for (let r = 0; r < 2; r++) {
+    m.set(`row-${r}`, block(`row-${r}`, 'table-row', 'block', [0, 1, 2].map(c => `cell-${r}-${c}`), { height: 60 + r * 20 }));
+    for (let c = 0; c < 3; c++) {
+      m.set(`cell-${r}-${c}`, block(`cell-${r}-${c}`, 'table-cell', 'block', [`body-${r}-${c}`], {
+        verticalAlign: r ? 'middle' : 'top', backColor: c ? null : '#DFEAFC', customCell: 'preserve',
+      }));
+      m.set(`body-${r}-${c}`, block(`body-${r}-${c}`, 'paragraph', 'editable', [{ insert: `单元格${r},${c}😀`, attributes: { 'a:bold': true, 'a:link': 'https://example.test/table' } }]));
+    }
+  }
+});
+
+// 桌面合并契约：保留完整逻辑格，隐藏被覆盖格，正文移入左上格。
+fixture('blockcraft-table-merged', (_, m) => {
+  m.get('fixture-doc').get('children').push(['merged-table']);
+  m.set('merged-table', block('merged-table', 'table', 'block', ['merged-r0', 'merged-r1'], { colWidths: [120, 160], customTable: 'keep' }));
+  for (let r = 0; r < 2; r++) {
+    m.set(`merged-r${r}`, block(`merged-r${r}`, 'table-row', 'block', [0, 1].map(c => `merged-c${r}${c}`), { height: 60 }));
+    for (let c = 0; c < 2; c++) {
+      const master = r === 0 && c === 0;
+      m.set(`merged-c${r}${c}`, block(`merged-c${r}${c}`, 'table-cell', 'block', master ? ['merged-a', 'merged-b', 'merged-c', 'merged-d'] : [], {
+        verticalAlign: 'top', rowspan: master ? 2 : null, colspan: master ? 2 : null, display: master ? null : 'none', customCell: 'keep',
+      }));
+    }
+  }
+  for (const suffix of ['a', 'b', 'c', 'd']) m.set(`merged-${suffix}`, block(`merged-${suffix}`, 'paragraph', 'editable', [{ insert: `合并正文${suffix}😀`, attributes: { 'a:bold': true } }]));
+});
