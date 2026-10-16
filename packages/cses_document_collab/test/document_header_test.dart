@@ -764,14 +764,16 @@ void main() {
       expect(controller.value!.banner!['x'], 8);
       await tester.tap(find.byKey(const ValueKey('document-banner-position')));
       await tester.pumpAndSettle();
-      final slider = tester.widget<Slider>(
-        find.byKey(const ValueKey('document-banner-position-slider')),
+      final preview = find.byKey(
+        const ValueKey('document-banner-position-drag'),
       );
-      slider.onChanged!(60);
-      await tester.pump();
+      final rect = tester.getRect(preview);
+      expect(find.byType(Slider), findsNothing);
+      await tester.drag(preview, Offset(0, -rect.height * .6));
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('document-header-submit')));
       await tester.pumpAndSettle();
-      expect(controller.value!.banner!['y'], 60);
+      expect(controller.value!.banner!['y'] as num, inInclusiveRange(40, 60));
       expect(controller.value!.banner!['x'], 8);
       await tester.tap(find.byKey(const ValueKey('document-banner-edit')));
       await tester.pumpAndSettle();
@@ -784,6 +786,81 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
+  for (final mode in ['cancel', 'save', 'bounds', 'revoke']) {
+    testWidgets(
+      'cover direct vertical drag supports $mode without early writes',
+      (tester) async {
+        service.banner = {
+          'url': 'https://example.test/cover.png',
+          'y': 50,
+          'x': 8,
+          'custom': 'keep',
+        };
+        await mount(tester, size: const Size(320, 844), textScale: 1.5);
+        final before = Map<String, dynamic>.from(controller.value!.banner!);
+        await tester.tap(
+          find.byKey(const ValueKey('document-banner-position')),
+        );
+        await tester.pumpAndSettle();
+        final preview = find.byKey(
+          const ValueKey('document-banner-position-drag'),
+        );
+        final rect = tester.getRect(preview);
+        expect(find.byType(Slider), findsNothing);
+        final imageFinder = find.descendant(
+          of: preview,
+          matching: find.byType(CachedNetworkImage),
+        );
+        double alignment() =>
+            tester.widget<CachedNetworkImage>(imageFinder).alignment.y;
+        expect(alignment(), 0);
+        await tester.drag(preview, Offset(rect.width * .3, 0));
+        await tester.pumpAndSettle();
+        expect(alignment(), 0, reason: '横向手势不改变纵向位置');
+        await tester.drag(preview, Offset(0, -rect.height * .35));
+        await tester.pumpAndSettle();
+        expect(alignment(), greaterThan(0), reason: '向上拖动，图片向上移动');
+        expect(service.patches, isEmpty);
+        expect(controller.value!.banner, before);
+        if (mode == 'bounds') {
+          await tester.drag(preview, Offset(0, -rect.height * 3));
+          await tester.pumpAndSettle();
+          expect(alignment(), 1);
+          await tester.drag(preview, Offset(0, rect.height * 3));
+          await tester.pumpAndSettle();
+          expect(alignment(), -1);
+        } else {
+          final previous = alignment();
+          await tester.drag(preview, Offset(0, rect.height * .2));
+          await tester.pumpAndSettle();
+          expect(alignment(), lessThan(previous), reason: '向下拖动，图片向下移动');
+        }
+        final target = ((alignment() + 1) * 50).round();
+        if (mode == 'revoke') {
+          service.editable = false;
+          await controller.refresh();
+          await tester.pumpAndSettle();
+        }
+        await tester.tap(
+          mode == 'cancel'
+              ? find.text('取消')
+              : find.byKey(const ValueKey('document-header-submit')),
+        );
+        await tester.pumpAndSettle();
+        expect(preview, findsNothing, reason: '拖动没有下拉关闭弹窗，仍可保存或取消');
+        if (mode == 'cancel' || mode == 'revoke') {
+          expect(service.patches, isEmpty);
+          expect(controller.value!.banner, before);
+        } else {
+          expect(service.patches, hasLength(1));
+          expect(controller.value!.banner, {...before, 'y': target});
+        }
+        expect(adapter.blocks.single.text, '原始正文');
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+
   testWidgets('body caret is restored before a slow business save completes', (
     tester,
   ) async {

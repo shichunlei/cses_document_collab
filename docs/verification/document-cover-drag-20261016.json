@@ -1,0 +1,58 @@
+{
+  "date": "2026-10-16",
+  "base_commit": "8d25d33292cf844bbdea59b1262485f6c7a8c0f7",
+  "scope": "封面位置弹窗改为直接垂直拖动图片，保留保存/取消。",
+  "implementation": [
+    "固定2.15预览窗口，GestureDetector在图片内接收垂直移动，方向与画面移动一致；按预览高度归一化到原有banner.y，范围0～100。",
+    "拖动只更新面板位置副本；保存输出一次保留url/x/未知字段的位置补丁，取消不写；保留宿主保存与撤权门禁。",
+    "横向手势不调整y，图片区域纵向手势不移动外层滚动视图或下拉关闭面板；缓存图片保留同源身份。"
+  ],
+  "upstream": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.21",
+    "desktop_declared": "0.11.21",
+    "desktop_locked": "0.11.21",
+    "desktop_installed": "0.11.17",
+    "scope": "本轮重新查询及核对版本，沿用已读技能/迁移和头部图片契约；仅改变本地交互，不改共享Schema或业务banner字段。"
+  },
+  "validation": {
+    "widget_tests": 25,
+    "command": "flutter test --no-pub test/document_header_test.dart",
+    "cwd": "packages/cses_document_collab",
+    "result": "passed",
+    "log": "/tmp/cover-drag-tests.log",
+    "coverage": [
+      "上下真实Widget拖动、方向及0～100边界",
+      "横向不改位置、拖动不提前保存",
+      "取消无补丁、保存单次补丁及未知字段保留",
+      "弹窗打开后撤权拒写",
+      "320宽和1.5倍字号、保存取消可达、正文保留",
+      "与外层滚动/弹窗下拉的手势竞争",
+      "现有缓存图片/头部编辑/上传/焦点回归"
+    ],
+    "analysis": {
+      "targets": 2,
+      "result": "passed",
+      "log": "/tmp/cover-drag-analyze.log"
+    },
+    "format": "修改的两个手写Dart文件已格式化",
+    "diff_check": "passed",
+    "isolated_commit": {
+      "result": "passed",
+      "widget_tests": 25,
+      "analysis_targets": 2,
+      "tests_log": "/tmp/cover-drag-commit-tests.log",
+      "analysis_log": "/tmp/cover-drag-commit-analyze.log",
+      "dependency_resolution": "offline passed",
+      "scope": "暂存区导出完整仓库，排除其他工作区改动及头部两处无关createState签名修改。"
+    }
+  },
+  "limitations": [
+    "本轮未复测Android/iOS真机或真实业务保存回读。",
+    "图片通过内存缓存替身提供；本次只支持垂直位置，不增加缩放/旋转。"
+  ],
+  "source_sha256": {
+    "packages/cses_document_collab/lib/src/editor/document_header.dart": "f82af1baa081a8c161df3d59ce9f3d7f74e69e562fcb0a220a12bbf527dab614",
+    "packages/cses_document_collab/test/document_header_test.dart": "751ac748860c5a052e238f3fef5ff3c52431d044a585772b0a0b3ef88254509b"
+  }
+}

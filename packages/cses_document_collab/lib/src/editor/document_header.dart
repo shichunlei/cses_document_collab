@@ -608,13 +608,23 @@ class _BannerPositionSheet extends StatefulWidget {
   State<_BannerPositionSheet> createState() => _BannerPositionSheetState();
 }
 
-/// 将y限制在0～100并预览，确认时输出保留原字段的位置命令。
+/// 将垂直拖动映射到0～100的裁切位置，拖动仅更新本地预览，确认后输出位置命令。
 class _BannerPositionSheetState extends State<_BannerPositionSheet> {
+  /// 本面板持有的纵向位置副本；向上拖动增大y，向下减小，范围0～100。
   late double _y =
       (widget.banner['y'] is num ? (widget.banner['y'] as num).toDouble() : 0.0)
           .clamp(0.0, 100.0);
 
-  /// 在 [context] 中构建裁切预览与滑条；确认输出业务命令，取消返回null，均不发请求。
+  /// 按[details]的垂直移动更新本地位置，以[height]逻辑像素的预览高度归一化。
+  /// 拖动与图片移动方向一致，边界限幅；尺寸不可用时忽略，不写业务字段。
+  void _drag(DragUpdateDetails details, double height) {
+    if (height <= 0 || !height.isFinite) return;
+    final y = (_y - details.delta.dy / height * 100).clamp(0.0, 100.0);
+    if (y != _y) setState(() => _y = y);
+  }
+
+  /// 在 [context] 中构建可上下拖动的裁切预览；确认输出业务命令，取消返回null。
+  /// 仅预览区域消费纵向手势，避免移动外层滚动视图或下拉关闭弹窗。
   @override
   Widget build(BuildContext context) => Column(
     mainAxisSize: MainAxisSize.min,
@@ -623,15 +633,22 @@ class _BannerPositionSheetState extends State<_BannerPositionSheet> {
       const SizedBox(height: 16),
       AspectRatio(
         aspectRatio: 2.15,
-        child: _bannerImage({...widget.banner, 'y': _y}),
+        child: LayoutBuilder(
+          builder: (context, constraints) => GestureDetector(
+            key: const ValueKey('document-banner-position-drag'),
+            behavior: HitTestBehavior.opaque,
+            onVerticalDragUpdate: (details) =>
+                _drag(details, constraints.maxHeight),
+            child: ClipRect(child: _bannerImage({...widget.banner, 'y': _y})),
+          ),
+        ),
       ),
-      Slider(
-        key: const ValueKey('document-banner-position-slider'),
-        value: _y,
-        min: 0,
-        max: 100,
-        divisions: 100,
-        onChanged: (value) => setState(() => _y = value),
+      const Padding(
+        padding: EdgeInsets.symmetric(vertical: 12),
+        child: Text(
+          '上下拖动图片调整位置',
+          style: TextStyle(fontSize: 12, color: Color(0xFF64748B)),
+        ),
       ),
       Row(
         mainAxisAlignment: MainAxisAlignment.end,
