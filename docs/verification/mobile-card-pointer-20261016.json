@@ -1,0 +1,85 @@
+{
+  "date": "2026-10-16",
+  "device": {
+    "model": "MTN-AN00",
+    "platform": "Android",
+    "version": "16"
+  },
+  "base_commit": "e31685142d92ff8789a891adb5f55df7dabbff36",
+  "fix": {
+    "boundary": "Nodes without a text Delta do not create an idle text caret handle. Active text drags retain recognizers while passing non-text nodes; non-text range/caret anchors use a zero-width one-logical-pixel-high block-edge rectangle, expanded only by the platform handle style. Text endpoint geometry is unchanged."
+  },
+  "baseline": {
+    "real_mobile_service": true,
+    "confirmed_oversized_handle_failures": [
+      "meeting",
+      "task",
+      "attachment",
+      "audio",
+      "bookmark",
+      "embed"
+    ],
+    "fixture_setup_failures": [
+      "juejin-embed and figma-embed originally used disallowed fixture hosts; corrected before final verification"
+    ],
+    "normal_text_caret_and_range_drag_passed": true
+  },
+  "android_integration": {
+    "status": "passed",
+    "test_widgets": 12,
+    "suite_hooks_counted_separately": 2,
+    "card_types": [
+      "meeting",
+      "task",
+      "attachment",
+      "audio",
+      "bookmark",
+      "embed",
+      "juejin-embed",
+      "figma-embed",
+      "image",
+      "video"
+    ],
+    "actions": "Real header/body touch creates an inline collapsed selection; no MobileCollapsedHandle appears over idle cards; meeting/task open callbacks and deletion, resource settings/cancel/deletion, image edit and video play/pause remain reachable.",
+    "text_regressions": [
+      "caret creation",
+      "dragging the actual cursor handle",
+      "long press word selection",
+      "dragging the actual right range handle",
+      "caret drag across an intervening card",
+      "range selection drag across an intervening card"
+    ],
+    "gesture_target": "Inner GestureDetector of DragHandle; the outer DragHandle Stack may cover the selection rectangle and is not a valid handle hit target.",
+    "no_wait_for_auto_dismiss": true,
+    "runner": "flutter drive --driver packages/cses_document_collab/test_driver/integration_test.dart --target packages/cses_document_collab/integration_test/mobile_card_pointer_test.dart -d ANDROID_DEVICE_ID --no-pub --keep-app-running"
+  },
+  "other_validation": {
+    "appflowy_selection_gesture_components": 115,
+    "collab_cards_resources_modal_focus": 52,
+    "changed_editor_file_analyze": "passed",
+    "integration_and_driver_analyze": "passed",
+    "host_lib_test_analyze": "passed",
+    "android_normal_demo_build": "passed",
+    "git_diff_check": "passed"
+  },
+  "isolation_and_limits": {
+    "online_document_accessed": false,
+    "business_and_network_services": "Local callback, WebView and player substitutes; image uses a data URI. No collaboration engine or authenticated business data is opened.",
+    "keyboard_service": "Disabled in device selection tests to keep the viewport stable; this does not validate the physical input method.",
+    "ios": "Not run on an iOS device/simulator.",
+    "unadapted_blocks": "Generic Delta boundary applies, but every future/custom block visual is not individually exercised."
+  },
+  "deployment_side_effect": {
+    "observed": "Initial flutter drive runs omitted --keep-app-running. The tool uninstalled the same-package app at completion, clearing local application data.",
+    "user_informed": true,
+    "requires_login_again": true,
+    "future_prevention": "Documented --keep-app-running and adb install -r for normal Demo restoration.",
+    "normal_demo_apk_verified_not_test_entry": true,
+    "normal_demo_install": "passed: adb install -r returned Success"
+  },
+  "source_sha256": {
+    "packages/appflowy_editor/lib/src/editor/editor_component/service/selection/mobile_selection_service.dart": "bdd47ba7e873bf945750a304160931d8b67a78af32e8729363d4336490b61884",
+    "packages/cses_document_collab/integration_test/mobile_card_pointer_test.dart": "876cd10a7c2a39ae10553615111c7df5a8defe3679f6aaa35e6a1e46c5ff810c",
+    "packages/cses_document_collab/test_driver/integration_test.dart": "52f06a1912b44bfb796340b29ed19a9c35bc877847168d6dea613979bb0a035d"
+  }
+}

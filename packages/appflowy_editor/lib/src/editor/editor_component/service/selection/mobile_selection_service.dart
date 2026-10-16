@@ -183,6 +183,8 @@ class _MobileSelectionServiceWidgetState
     );
   }
 
+  /// 无正文块不生成新的文字光标手柄；从正文拖动经过块时保留小范围边缘锚点，
+  /// 避免移除正在识别的手势。外部写入的折叠选区同样不能以整卡矩形生成手柄。
   Widget _buildCollapsedHandle() {
     return ValueListenableBuilder(
       valueListenable: selectionNotifierAfterLayout,
@@ -212,13 +214,20 @@ class _MobileSelectionServiceWidgetState
         selection = selection.normalized;
 
         final node = editorState.getNodeAtPath(selection.start.path);
-        final selectable = node?.selectable;
+        if (node == null ||
+            (node.delta == null &&
+                dragMode != MobileSelectionDragMode.cursor)) {
+          isCollapsedHandleVisible = false;
+          collapsedHandleTimer?.cancel();
+          return const SizedBox.shrink();
+        }
+        final selectable = node.selectable;
         var rect = selectable?.getCursorRectInPosition(
           selection.start,
           shiftWithBaseOffset: true,
         );
 
-        if (node == null || rect == null) {
+        if (rect == null) {
           isCollapsedHandleVisible = false;
           return const SizedBox.shrink();
         }
@@ -230,7 +239,7 @@ class _MobileSelectionServiceWidgetState
         final editorStyle = editorState.editorStyle;
         return MobileCollapsedHandle(
           layerLink: node.layerLink,
-          rect: rect,
+          rect: _handleRectForNode(node, rect),
           handleColor: editorStyle.dragHandleColor,
           handleWidth: editorStyle.mobileDragHandleWidth,
           handleBallWidth: editorStyle.mobileDragHandleBallSize.width,
@@ -257,6 +266,8 @@ class _MobileSelectionServiceWidgetState
     return _buildHandle(HandleType.right);
   }
 
+  /// 为[handleType]构建范围端点手柄；只支持left/right，否则抛ArgumentError。
+  /// 正文端点保持原有几何，非正文端点使用块边缘锚点，保留跨块拖动的手势识别器及共享选区。
   Widget _buildHandle(HandleType handleType) {
     if (![HandleType.left, HandleType.right].contains(handleType)) {
       throw ArgumentError('showLeftHandle and showRightHandle cannot be same.');
@@ -277,7 +288,8 @@ class _MobileSelectionServiceWidgetState
           return const SizedBox.shrink();
         }
 
-        final isCollapsedWhenDraggingHandle = selection.isCollapsed &&
+        final isCollapsedWhenDraggingHandle =
+            selection.isCollapsed &&
             [
               MobileSelectionDragMode.leftSelectionHandle,
               MobileSelectionDragMode.rightSelectionHandle,
@@ -313,7 +325,11 @@ class _MobileSelectionServiceWidgetState
         final editorStyle = editorState.editorStyle;
         return MobileSelectionHandle(
           layerLink: node.layerLink,
-          rect: handleType == HandleType.left ? rects.first : rects.last,
+          rect: _handleRectForNode(
+            node,
+            handleType == HandleType.left ? rects.first : rects.last,
+            atStart: handleType == HandleType.left,
+          ),
           handleType: handleType,
           handleColor: isCollapsedWhenDraggingHandle
               ? Colors.transparent
@@ -326,6 +342,19 @@ class _MobileSelectionServiceWidgetState
       },
     );
   }
+
+  /// 将借用[node]的选区矩形[rect]转成手柄几何；正文原样返回。
+  /// 无正文块只保留零宽、一逻辑像素高的边缘锚点，触摸热区仍由平台手柄按样式扩展。
+  /// [atStart]为true锚定左上边缘，默认false锚定右下边缘；不改变选区或内容。
+  Rect _handleRectForNode(Node node, Rect rect, {bool atStart = false}) =>
+      node.delta != null
+      ? rect
+      : Rect.fromLTWH(
+          atStart ? rect.left : rect.right,
+          atStart ? rect.top : rect.bottom,
+          0,
+          1,
+        );
 
   // The collapsed handle will be dismissed when no user interaction is detected.
   void _clearCollapsedHandleOnAndroid() {

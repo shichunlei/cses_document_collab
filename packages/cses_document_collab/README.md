@@ -340,3 +340,20 @@ final page = CollaborativeEditorPage(collab: controller);
 网页、掘金和Figma资源可在嵌入、卡片、链接之间互转：分别使用桌面 `embed`（兼容旧品牌flavour）、`bookmark` 和 `paragraph` 的 `a:link`。嵌入使用WebView，卡片使用metalink；整段单一HTTP(S)链接点击可打开操作面板切回，混排正文不整块转换。每次转换独立撤销/重做，并检查稳定身份、过期URL和权限；未知原生props/meta通过既有替换身份链保留。
 
 FRB片段新增可空href字段，已按2.13.0重新生成；升级时须完整重建原生库和宿主，不能只热重载Dart。Android构建与目标回归见适配表；真实网站、桌面双端及iOS真机仍需验收。
+
+## 手机端卡片触摸回归
+
+无正文节点不应由整卡矩形生成文字光标手柄。AppFlowy手机选择服务按是否有正文Delta统一处理：普通卡片单击不生成折叠光标手柄；正文光标或范围手柄拖动经过卡片时，沿用手势识别器并将非正文端点收窄为块边缘锚点，避免中断跨块拖选或遮挡卡片按钮。正文端点的光标矩形及拖动逻辑保持原样。
+
+设备用例位于 `integration_test/mobile_card_pointer_test.dart`，从Demo宿主根目录运行：
+
+```bash
+flutter drive \
+  --driver packages/cses_document_collab/test_driver/integration_test.dart \
+  --target packages/cses_document_collab/integration_test/mobile_card_pointer_test.dart \
+  -d ANDROID_DEVICE_ID --no-pub --keep-app-running
+```
+
+用例强制检查Android平台和真实MobileSelectionServiceWidget。覆盖会议、任务、网页、网页嵌入、掘金、Figma、附件、音频、图片、视频的真实点击及控件命中；正文光标拖动、长按选词、左右范围手柄及跨卡片拖动另有回归。业务回调、WebView/播放器使用本地替身，图片使用data URI，不登录、不读取在线文档或发出资源请求；键盘服务关闭以固定触摸坐标，测试目标是选择/手柄/按钮命中，不替代真实业务、播放器或输入法验收。直接以macOS的mobile样式运行不能替代此设备测试。
+
+命令必须保留`--keep-app-running`，避免flutter drive默认在结束后卸载同包名应用并清理本地数据。完成后重新构建普通Demo APK并以`adb install -r`覆盖恢复，避免设备停留在测试入口。2026-10-16首次回归遗漏该参数，已发生本地应用数据清理，需要重新登录；测试未访问在线文档，修复不涉及正文数据格式。
