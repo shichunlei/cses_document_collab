@@ -23,6 +23,22 @@ void main() {
           ),
         );
   });
+  test('document mention cannot convert to a card or create history', () async {
+    final adapter = _adapter('doc');
+    addTearDown(adapter.dispose);
+    final original = adapter.blocks;
+    final target = CollabEntityMentionTarget.capture(
+      adapter.editorState.document.first!,
+      3,
+    )!;
+    expect(
+      await convertCollabEntityMentionToCard(adapter.editorState, target),
+      isFalse,
+    );
+    expect(adapter.blocks, original);
+    expect(adapter.editorState.undoManager.undoStack.isEmpty, isTrue);
+  });
+
   for (final kind in ['meeting', 'task', 'doc']) {
     test(
       '$kind delete undo after reorder restores full atom; plain input stays plain',
@@ -269,7 +285,10 @@ void main() {
           find.byKey(const ValueKey('collab-inline-entity-body-3')),
         );
         await tester.pumpAndSettle();
-        expect(find.text('切换为卡片视图'), findsOneWidget);
+        expect(
+          find.text('切换为卡片视图'),
+          kind == 'doc' ? findsNothing : findsOneWidget,
+        );
         await tester.tap(find.byKey(const ValueKey('entity-mention-delete')));
         await tester.pumpAndSettle();
         expect(adapter.blocks.first.text, '前😀后');
@@ -289,6 +308,14 @@ void main() {
               .onPressed,
           isNull,
         );
+        final switchView = find.byKey(
+          const ValueKey('entity-mention-switch-view'),
+        );
+        if (kind == 'doc') {
+          expect(switchView, findsNothing);
+        } else {
+          expect(tester.widget<ListTile>(switchView).enabled, isFalse);
+        }
         expect(tester.takeException(), isNull);
       },
     );

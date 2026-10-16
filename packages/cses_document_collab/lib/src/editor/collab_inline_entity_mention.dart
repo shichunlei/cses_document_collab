@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 /// 正文会议/任务/文档单字符对象，显示类型图标及名称；不附加@，不加载人员头像。
-/// 点击打开操作面板，打开详情才通知宿主；可切换卡片或删除引用，不修改实体业务数据。
+/// 点击打开操作面板，打开详情才通知宿主；会议/任务可转卡片，三类均可删除引用，不修改实体业务数据。
 /// ```dart
 /// import 'package:flutter/material.dart';
 /// import 'package:appflowy_editor/appflowy_editor.dart';
@@ -42,21 +42,17 @@ class CollabInlineEntityMention extends StatefulWidget {
   /// 必填正文格式；未指定颜色时使用蓝色。
   final TextStyle style;
 
-  /// 创建局部文档卡片展示状态，不持有业务资源。
+  /// 创建操作面板生命周期状态，不持有业务资源。
   @override
   State<CollabInlineEntityMention> createState() => _EntityMentionState();
 }
 
-/// 文档卡片视图仅在当前组件生命周期内保留；会议/任务转换为正式共享块。
+/// 管理提及操作面板；仅会议/任务允许转换为正式共享卡片块。
 class _EntityMentionState extends State<CollabInlineEntityMention> {
-  /// 文档的手机局部布局目标，不写Y.Text；正文/身份变化后自动失效。
-  CollabEntityMentionTarget? _documentCardTarget;
-
-  /// 在借用[context]中显示链接或文档卡片，点击只打开操作面板。
+  /// 在借用[context]中显示行内实体名称，点击只打开操作面板。
   @override
   Widget build(BuildContext context) {
     final state = context.read<EditorState>();
-    final documentCard = _documentCardTarget?.resolve(state) != null;
     final node = widget.node;
     final offset = widget.offset;
     final entityType = widget.entityType;
@@ -83,19 +79,10 @@ class _EntityMentionState extends State<CollabInlineEntityMention> {
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: maxWidth),
             child: Container(
-              key: documentCard
-                  ? ValueKey('document-mention-card-$id-$offset')
-                  : null,
-              width: documentCard ? maxWidth : null,
-              padding: documentCard
-                  ? const EdgeInsets.all(12)
-                  : const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
               decoration: BoxDecoration(
                 color: const Color(0xFFEFF6FF),
-                borderRadius: BorderRadius.circular(documentCard ? 8 : 4),
-                border: documentCard
-                    ? Border.all(color: const Color(0xFFDBEAFE))
-                    : null,
+                borderRadius: BorderRadius.circular(4),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -106,23 +93,18 @@ class _EntityMentionState extends State<CollabInlineEntityMention> {
                       'task' => Icons.task_alt,
                       _ => Icons.description_outlined,
                     },
-                    size: documentCard ? 28 : style.fontSize ?? 16,
+                    size: style.fontSize ?? 16,
                     color: const Color(0xFF2563EB),
                   ),
-                  SizedBox(width: documentCard ? 10 : 3),
+                  const SizedBox(width: 3),
                   Flexible(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (documentCard)
-                          const Text(
-                            '文档',
-                            style: TextStyle(fontSize: 12, color: Colors.grey),
-                          ),
                         Text(
                           title,
-                          maxLines: documentCard ? 2 : 1,
+                          maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: style.copyWith(
                             color: style.color ?? const Color(0xFF2563EB),
@@ -142,7 +124,7 @@ class _EntityMentionState extends State<CollabInlineEntityMention> {
   }
 
   /// 为借用[state]中的原子展示详情/视图/删除操作，退场后复核目标与会话。
-  /// 只有打开详情调用onMentionTap；文档布局不写共享数据，也不调用宿主。
+  /// 只有打开详情调用onMentionTap；文档不提供视图切换，会议/任务转换及删除不调用宿主。
   Future<void> _showActions(EditorState state) async {
     final target = CollabEntityMentionTarget.capture(
       widget.node,
@@ -150,7 +132,6 @@ class _EntityMentionState extends State<CollabInlineEntityMention> {
     );
     if (target == null) return;
     await runCollabMentionInteraction(context, state, (services) async {
-      final documentCard = _documentCardTarget?.resolve(state) != null;
       final kind = switch (target.entityType) {
         'meeting' => '会议',
         'task' => '任务',
@@ -191,16 +172,20 @@ class _EntityMentionState extends State<CollabInlineEntityMention> {
                     listenable: state.editableNotifier,
                     builder: (context, _) => Column(
                       children: [
-                        ListTile(
-                          key: const ValueKey('entity-mention-switch-view'),
-                          leading: const Icon(Icons.view_agenda_outlined),
-                          title: Text(documentCard ? '切换为链接视图' : '切换为卡片视图'),
-                          subtitle: Text(documentCard ? '当前：卡片视图' : '当前：链接视图'),
-                          enabled: state.editable,
-                          onTap: () => Navigator.of(
-                            sheetContext,
-                          ).pop(_EntityAction.switchView),
-                        ),
+                        if (const {
+                          'meeting',
+                          'task',
+                        }.contains(target.entityType))
+                          ListTile(
+                            key: const ValueKey('entity-mention-switch-view'),
+                            leading: const Icon(Icons.view_agenda_outlined),
+                            title: const Text('切换为卡片视图'),
+                            subtitle: const Text('当前：链接视图'),
+                            enabled: state.editable,
+                            onTap: () => Navigator.of(
+                              sheetContext,
+                            ).pop(_EntityAction.switchView),
+                          ),
                         TextButton.icon(
                           key: const ValueKey('entity-mention-delete'),
                           onPressed: state.editable
@@ -242,9 +227,8 @@ class _EntityMentionState extends State<CollabInlineEntityMention> {
           if (event != null) await services.onMentionTap?.call(event);
         case _EntityAction.switchView:
           if (!state.editable) return;
-          if (target.entityType == 'doc') {
-            setState(() => _documentCardTarget = documentCard ? null : target);
-          } else if (!await convertCollabEntityMentionToCard(state, target) &&
+          if (!const {'meeting', 'task'}.contains(target.entityType)) return;
+          if (!await convertCollabEntityMentionToCard(state, target) &&
               mounted) {
             ScaffoldMessenger.maybeOf(
               context,
@@ -266,7 +250,7 @@ enum _EntityAction {
   /// 只通知宿主打开详情。
   detail,
 
-  /// 手机文档局部布局，或正式会议/任务块转换。
+  /// 仅转换为正式会议/任务块。
   switchView,
 
   /// 仅删除正文中的引用。

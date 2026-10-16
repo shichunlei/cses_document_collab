@@ -11,7 +11,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// 真实正文面板、共享转换与手机局部文档布局的交互回归。
+/// 真实正文面板、会议/任务共享转换及文档仅保留行内形式的交互回归。
 void main() {
   setUpAll(() async {
     await _loadPreviewFonts();
@@ -87,14 +87,8 @@ void main() {
     );
   }
   testWidgets(
-    'document local card/link toggle preserves all shared data and only details invokes callback',
+    'document has no card switch and preserves shared data when opening details',
     (tester) async {
-      await tester.binding.setSurfaceSize(const Size(320, 568));
-      tester.platformDispatcher.textScaleFactorTestValue = 1.5;
-      addTearDown(() async {
-        tester.platformDispatcher.clearTextScaleFactorTestValue();
-        await tester.binding.setSurfaceSize(null);
-      });
       final received = <CollabMentionTap>[];
       final adapter = await _mount(
         tester,
@@ -103,40 +97,26 @@ void main() {
         size: const Size(320, 568),
       );
       final original = adapter.blocks.single;
-      await tester.tap(_chip);
-      await tester.pumpAndSettle();
-      await tester.tap(
-        find.byKey(const ValueKey('entity-mention-switch-view')),
-      );
-      await tester.pumpAndSettle();
-      expect(
-        find.byKey(const ValueKey('document-mention-card-body-3')),
-        findsOneWidget,
-      );
-      await _capture(tester, 'document-card');
-      expect(adapter.blocks.single, original);
-      expect(received, isEmpty);
-      await tester.tap(_chip);
-      await tester.pumpAndSettle();
-      expect(find.text('切换为链接视图'), findsOneWidget);
-      await tester.tap(
-        find.byKey(const ValueKey('entity-mention-open-detail')),
-      );
-      await tester.pumpAndSettle();
-      expect(received.single.type, CollabMentionType.doc);
-      expect(received.single.attributes, _raw('doc'));
-      await tester.tap(_chip);
-      await tester.pumpAndSettle();
-      await tester.tap(
-        find.byKey(const ValueKey('entity-mention-switch-view')),
-      );
-      await tester.pumpAndSettle();
-      expect(
-        find.byKey(const ValueKey('document-mention-card-body-3')),
-        findsNothing,
-      );
-      expect(adapter.blocks.single, original);
-      expect(received, hasLength(1));
+      final historyEmpty = adapter.editorState.undoManager.undoStack.isEmpty;
+      for (var i = 0; i < 2; i++) {
+        await tester.tap(_chip);
+        await tester.pumpAndSettle();
+        expect(
+          find.byKey(const ValueKey('entity-mention-switch-view')),
+          findsNothing,
+        );
+        expect(find.text('切换为卡片视图'), findsNothing);
+        expect(find.text('切换为链接视图'), findsNothing);
+        await tester.tap(
+          find.byKey(const ValueKey('entity-mention-open-detail')),
+        );
+        await tester.pumpAndSettle();
+        expect(adapter.blocks.single, original);
+        expect(adapter.editorState.undoManager.undoStack.isEmpty, historyEmpty);
+      }
+      expect(received, hasLength(2));
+      expect(received.first.type, CollabMentionType.doc);
+      expect(received.first.attributes, _raw('doc'));
       expect(tester.takeException(), isNull);
     },
   );
