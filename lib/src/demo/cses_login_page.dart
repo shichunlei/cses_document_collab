@@ -1,14 +1,28 @@
 import 'package:cses_mobile_collab_demo/src/demo/cses_account_login.dart';
 import 'package:flutter/material.dart';
 
-/// 用户名密码登录入口；Common 上下文就绪后通知页面切换，不存储登录凭证。
+/// PRE 测试环境登录入口，用户名和密码初始预填为 `111`，可在提交前修改。
+/// Common 上下文就绪后通知页面切换，不持久化输入，登录成功时清空密码。
+///
+/// ```dart
+/// import 'package:cses_mobile_collab_demo/src/demo/cses_login_page.dart';
+/// import 'package:flutter/material.dart';
+///
+/// Widget loginPage(VoidCallback openDocument) =>
+///     CsesLoginPage(onLoggedIn: openDocument);
+/// ```
 class CsesLoginPage extends StatefulWidget {
-  /// [onLoggedIn] 通知登录成功，[login] 可注入测试登录服务。
+  /// [key] 控制组件身份与状态复用；[onLoggedIn] 在登录完成后通知宿主。
+  /// [login] 是借用的登录服务，默认使用 Common 账号登录，不由页面释放。
   const CsesLoginPage({super.key, required this.onLoggedIn, this.login = const CsesAccountLogin()});
 
+  /// 必填登录完成回调；由宿主决定后续页面，失败或页面销毁后不调用。
   final VoidCallback onLoggedIn;
+
+  /// 借用的登录服务，默认使用 Common 账号登录；页面不持有其生命周期。
   final CsesAccountLogin login;
 
+  /// 创建持有输入控制器与登录请求状态的表单状态。
   @override
   createState() => _CsesLoginPageState();
 }
@@ -16,8 +30,12 @@ class CsesLoginPage extends StatefulWidget {
 /// 管理表单与请求生命周期；等待期间禁止重复提交，离开后忽略迟到响应。
 class _CsesLoginPageState extends State<CsesLoginPage> {
   final _form = GlobalKey<FormState>();
-  final _userName = TextEditingController();
-  final _password = TextEditingController();
+
+  /// 页面持有的用户名输入，初始为测试值，销毁页面时释放。
+  final _userName = TextEditingController()..text = "111";
+
+  /// 页面持有的密码输入，初始为测试值，登录成功时清空、销毁时释放。
+  final _password = TextEditingController()..text = "111";
   bool _busy = false;
   bool _obscure = true;
   String? _error;
@@ -46,6 +64,7 @@ class _CsesLoginPageState extends State<CsesLoginPage> {
     }
   }
 
+  /// 释放页面创建的用户名和密码控制器，迟到的登录结果由 mounted 检查忽略。
   @override
   void dispose() {
     _userName.dispose();
