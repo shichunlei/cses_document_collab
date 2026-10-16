@@ -1,0 +1,79 @@
+{
+  "date": "2026-10-16",
+  "base_commit": "8e404ed95f675fd9b380f20aa730bce83c8473cd",
+  "scope": "音视频共用进度条样式与拖动行为，不改变共享字段。",
+  "implementation": [
+    "抽取包内CollabMediaTimeline，由音频和视频直接复用；细轨道、圆滑块、左右当前/总时长和格式统一。",
+    "视频继续叠放画面底部，音频保持浅色卡片和直接播放按钮；深浅背景仅改变文字/轨道对比度。",
+    "拖动仅预览、松手跳转一次；零时长禁用、失败提示、控制器/请求身份隔离沿用视频实现。",
+    "音频仅初始化/错误变化重建卡片，进度和播放图标局部监听；资源拥有者等待跳转结束再释放。"
+  ],
+  "upstream": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.21",
+    "desktop_declared": "0.11.21",
+    "desktop_locked": "0.11.21",
+    "desktop_installed": "0.11.17",
+    "verified": "本轮重新查询latest并核对三处版本；读取0.11.21随包技能/迁移及音频实现，对照0.11.17已安装迁移和音频实现；不宣称上游全量兼容。"
+  },
+  "validation": {
+    "widget_tests": {
+      "count": 51,
+      "result": "passed",
+      "cwd": "packages/cses_document_collab",
+      "command": "flutter test --no-pub test/collab_resource_block_test.dart test/collab_video_update_test.dart test/collab_block_actions_test.dart",
+      "log": "/tmp/shared-media-tests.log",
+      "coverage": [
+        "音频拖动只预览、松手单次跳转",
+        "音频预览模式真实Widget拖动",
+        "旧音频跳转阻塞时换源，完成后再释放资源",
+        "共用视频回归：进度更新、零时长、跳转失败、迟到结果、窄屏/双倍字号和画面边界",
+        "卡片更多菜单/播放入口/权限变化回归"
+      ]
+    },
+    "analysis": {
+      "targets": 5,
+      "result": "passed",
+      "log": "/tmp/shared-media-analyze-final.log"
+    },
+    "android": {
+      "result": "passed",
+      "cases": 12,
+      "device": "HONOR X70 (MTN-AN00), Android 16",
+      "command": "flutter drive --driver packages/cses_document_collab/test_driver/integration_test.dart --target packages/cses_document_collab/integration_test/mobile_card_pointer_test.dart -d A92G6R5704004108 --no-pub --keep-app-running",
+      "log": "/tmp/shared-media-android.log",
+      "coverage": "卡片点击后音频/视频进度条真实拖动一次seek、卡片按钮、正文光标/手柄、跨卡片拖选",
+      "data_policy": "本地合成文档，无在线业务写入；保留应用运行，不卸载或清数据。"
+    },
+    "diff_check": "passed",
+    "format": "仅格式化修改文件，恢复非关联区域排版。",
+    "normal_demo_restore": {
+      "build": "flutter build apk --debug --no-pub -t lib/main.dart passed",
+      "entry": "APK contains CsesCollabDemoApp and excludes mobile_card_pointer_test.dart",
+      "restore": "adb install -r returned Success; no uninstall or data clearing",
+      "build_log": "/tmp/shared-media-demo-build.log",
+      "restore_log": "/tmp/shared-media-demo-restore.log"
+    },
+    "isolated_commit": {
+      "result": "passed",
+      "scope": "从暂存区导出完整仓库，不包含其他工作区段落/划词菜单、宿主和原生改动。",
+      "dependency_resolution": "offline passed",
+      "widget_tests": 51,
+      "analysis_targets": 6,
+      "tests_log": "/tmp/shared-media-commit-tests.log",
+      "analysis_log": "/tmp/shared-media-commit-analyze.log",
+      "note": "提交前恢复视频对公共进度条的引用和显式createState返回类型，复验最终源码。"
+    }
+  },
+  "limitations": [
+    "播放器、WebView和业务为本地替身，未验证真实视频/音频解码、网络播放或在线协同。",
+    "iOS未复验。"
+  ],
+  "source_sha256": {
+    "packages/cses_document_collab/lib/src/editor/collab_media_timeline.dart": "7bb1ed34f9326f8a9e3a4ab98cbc05e57f4cb1888c06b3ef16eaba3804044c3c",
+    "packages/cses_document_collab/lib/src/editor/collab_embed_block.dart": "31bec64607867ad6d6c97e39fef39379f93d8758c0d996c309710757d6de0dec",
+    "packages/cses_document_collab/lib/src/editor/collab_resource_block.dart": "7af57c7b4b766d4e8f48b372b77558c4d72f8539350444214a58999b27e3d56a",
+    "packages/cses_document_collab/test/collab_resource_block_test.dart": "9a65869432b6c05d1953b2f970a1c19cccb7c9fc001e4b768bade60e1e673083",
+    "packages/cses_document_collab/integration_test/mobile_card_pointer_test.dart": "4154555e632f441b87ebf9b4feb3e711042e0ec9a8bdbda08778ce791d760eb2"
+  }
+}

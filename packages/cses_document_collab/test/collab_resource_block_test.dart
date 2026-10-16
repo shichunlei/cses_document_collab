@@ -491,14 +491,44 @@ void main() {
           expect(find.widgetWithText(ListTile, '暂停音频'), findsNothing);
           await tester.tapAt(const Offset(5, 5));
           await tester.pumpAndSettle();
-          tester.widget<Slider>(find.byType(Slider)).onChanged!(30000);
+          final progress = find.byKey(const ValueKey('collab-audio-progress'));
+          final slider = tester.widget<Slider>(progress);
+          slider.onChanged!(30000);
           await tester.pump();
-          expect(platform.positions.last, const Duration(seconds: 30));
+          expect(platform.positions, isEmpty, reason: '拖动只预览，松手才跳转');
+          expect(find.text('00:30'), findsOneWidget);
+          expect(find.text('01:00'), findsOneWidget);
+          slider.onChangeEnd!(30000);
+          await tester.pumpAndSettle();
+          expect(platform.positions, [const Duration(seconds: 30)]);
+          adapter.editorState.editable = false;
+          await tester.pumpAndSettle();
+          final track = tester.getRect(progress);
+          await tester.dragFrom(
+            Offset(track.left + track.width * .25, track.center.dy),
+            Offset(track.width * .5, 0),
+          );
+          await tester.pumpAndSettle();
+          expect(platform.positions, hasLength(2));
+          expect(platform.positions.last.inSeconds, inInclusiveRange(30, 60));
+          expect(
+            tester.widget<Slider>(progress).activeColor,
+            const Color(0xFF818CF8),
+          );
+          platform.seekGate = Completer<void>();
+          final pendingSlider = tester.widget<Slider>(progress);
+          pendingSlider.onChanged!(40000);
+          pendingSlider.onChangeEnd!(40000);
+          await tester.pump();
         }
         await adapter.replaceFromRemote([
           _block('audio', 'https://example.test/b.mp3', props: {'name': '新语音'}),
         ]);
         await tester.pump(const Duration(milliseconds: 100));
+        if (!pending) {
+          expect(platform.disposed, isEmpty, reason: '旧跳转完成前不能释放播放器');
+          platform.seekGate!.complete();
+        }
         await tester.runAsync(() => Future<void>.delayed(Duration.zero));
         await tester.pump();
         expect(platform.sources, [
@@ -533,6 +563,9 @@ class _AudioPlatform extends VideoPlayerPlatform {
   final disposed = <int>[];
   final played = <int>[];
   final positions = <Duration>[];
+
+  /// 可选跳转阻塞器，验证换源关闭等待旧操作。
+  Completer<void>? seekGate;
   final streams = <int, StreamController<VideoEvent>>{};
   @override
   Future<void> init() async {}
@@ -575,9 +608,11 @@ class _AudioPlatform extends VideoPlayerPlatform {
     played.add(playerId);
   }
 
+  /// 为[playerId]记录目标[position]，可由测试延迟完成以验证资源关闭顺序。
   @override
   Future<void> seekTo(int playerId, Duration position) async {
     positions.add(position);
+    await seekGate?.future;
   }
 
   @override

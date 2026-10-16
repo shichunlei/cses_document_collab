@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
+import 'package:cses_document_collab/src/editor/collab_media_timeline.dart';
+import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/editor/collab_unsupported_block.dart';
@@ -614,13 +616,30 @@ class _AudioPlayer extends StatefulWidget {
 
   /// Card renderer borrowing the progress widget and direct playback controls.
   final Widget Function(BuildContext, Widget) builder;
+
+  /// 创建拥有单个播放器资源的状态。
   @override
   State<_AudioPlayer> createState() => _AudioPlayerState();
 }
 
+/// 持有并释放音频播放器，局部进度借用控制器；换源通过Widget键重建。
 class _AudioPlayerState extends State<_AudioPlayer> {
+  /// 此State独占的播放器，释放前等待仍在执行的跳转。
   late final VideoPlayerController _controller;
+
+  /// 初始化或播放操作的本地错误，不写入文档。
   String? _error;
+
+  /// 尚未结束的跳转；控制器关闭前必须等待。
+  Future<void>? _pendingSeek;
+
+  /// 仅初始化/错误状态变化触发卡片重建，播放计时由局部监听处理。
+  bool _initialized = false;
+
+  /// 最近一次播放器错误状态，用于避免计时触发整卡重建。
+  bool _hasError = false;
+
+  /// 创建并初始化拥有的控制器，注册状态监听。
   @override
   void initState() {
     super.initState();
@@ -629,10 +648,19 @@ class _AudioPlayerState extends State<_AudioPlayer> {
     unawaited(_load());
   }
 
+  /// 仅初始化和错误状态变化更新卡片，时间与播放图标由局部监听更新。
   void _refresh() {
-    if (mounted) setState(() {});
+    final value = _controller.value;
+    if (mounted &&
+        (_initialized != value.isInitialized || _hasError != value.hasError)) {
+      setState(() {
+        _initialized = value.isInitialized;
+        _hasError = value.hasError;
+      });
+    }
   }
 
+  /// 初始化播放器；失败仅在当前状态仍有效时显示错误。
   Future<void> _load() async {
     try {
       await _controller.initialize();
@@ -651,10 +679,47 @@ class _AudioPlayerState extends State<_AudioPlayer> {
     }
   }
 
+  /// 跳转到[target]，由共用进度条处理失败提示；关闭资源须等待此Future。
+  Future<void> _seek(Duration target) async {
+    if (!mounted) return;
+    final operation = _controller.seekTo(target);
+    _pendingSeek = operation;
+    try {
+      await operation;
+    } finally {
+      if (identical(_pendingSeek, operation)) _pendingSeek = null;
+    }
+  }
+
+  /// 等待当前跳转完成后释放拥有的控制器；失败记录诊断且继续尝试释放。
+  Future<void> _close() async {
+    try {
+      await _pendingSeek;
+    } catch (error, stackTrace) {
+      CollabDiagnostics.report(
+        '音频关闭前跳转失败',
+        error: error,
+        stackTrace: stackTrace,
+        tag: 'DocCollab',
+      );
+    }
+    try {
+      await _controller.dispose();
+    } catch (error, stackTrace) {
+      CollabDiagnostics.report(
+        '音频资源释放失败',
+        error: error,
+        stackTrace: stackTrace,
+        tag: 'DocCollab',
+      );
+    }
+  }
+
+  /// 解除监听并关闭拥有的播放器；异步跳转完成前保留底层资源。
   @override
   void dispose() {
     _controller.removeListener(_refresh);
-    unawaited(_controller.dispose().catchError((Object _) {}));
+    unawaited(_close());
     super.dispose();
   }
 
@@ -684,42 +749,30 @@ class _AudioPlayerState extends State<_AudioPlayer> {
         ),
       );
     }
-    final duration = value.duration.inMilliseconds.toDouble();
     final progress = Row(
       children: [
         ExcludeFocus(
-          child: IconButton(
-            key: const ValueKey('resource-audio-play'),
-            tooltip: value.isPlaying ? '暂停音频' : '播放音频',
-            icon: Icon(
-              value.isPlaying
-                  ? Icons.pause_circle_filled
-                  : Icons.play_circle_fill,
-              color: const Color(0xFF5B5BD6),
+          child: ValueListenableBuilder<VideoPlayerValue>(
+            valueListenable: _controller,
+            builder: (context, value, _) => IconButton(
+              key: const ValueKey('resource-audio-play'),
+              tooltip: value.isPlaying ? '暂停音频' : '播放音频',
+              icon: Icon(
+                value.isPlaying
+                    ? Icons.pause_circle_filled
+                    : Icons.play_circle_fill,
+                color: const Color(0xFF5B5BD6),
+              ),
+              onPressed: () =>
+                  _act(value.isPlaying ? _controller.pause : _controller.play),
             ),
-            onPressed: () =>
-                _act(value.isPlaying ? _controller.pause : _controller.play),
           ),
         ),
         Expanded(
-          child: Slider(
-            value: value.position.inMilliseconds.toDouble().clamp(
-              0,
-              duration > 0 ? duration : 1,
-            ),
-            max: duration > 0 ? duration : 1,
-            onChanged: duration > 0
-                ? (v) => _act(
-                    () => _controller.seekTo(Duration(milliseconds: v.round())),
-                  )
-                : null,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 12),
-          child: Text(
-            '${_time(value.position)} / ${_time(value.duration)}',
-            style: const TextStyle(fontSize: 11, color: Color(0xFF64748B)),
+          child: CollabMediaTimeline(
+            controller: _controller,
+            mediaKind: 'audio',
+            onSeek: _seek,
           ),
         ),
       ],
@@ -727,9 +780,6 @@ class _AudioPlayerState extends State<_AudioPlayer> {
     return widget.builder(context, progress);
   }
 }
-
-String _time(Duration value) =>
-    '${value.inMinutes}:${(value.inSeconds % 60).toString().padLeft(2, '0')}';
 
 class _ResourceSettings extends StatefulWidget {
   const _ResourceSettings({

@@ -4,6 +4,7 @@ import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/editor/collab_image_content.dart';
+import 'package:cses_document_collab/src/editor/collab_media_timeline.dart';
 import 'package:cses_document_collab/src/editor/collab_unsupported_block.dart';
 import 'package:cses_document_collab/src/model/collab_image.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
@@ -103,6 +104,9 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
   VideoPlayerController? _videoController;
   Object? _videoError;
 
+  /// 按控制器记录仍在执行的跳转；资源释放前等待对应Future，避免关闭后访问播放器。
+  final _videoSeeks = <VideoPlayerController, Future<void>>{};
+
   /// 已开始加载的源字符串；Node 为可变对象，不能从 oldWidget 恢复旧 URL。
   String? _videoSource;
 
@@ -173,13 +177,31 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
   }
 
   /// 释放本视图拥有的 [controller]，null 表示没有资源；调用方先解除当前引用，
-  /// 每个控制器只交接一次。Future 在释放或记录失败后完成，不使用媒体 URL 作为日志。
+  /// 每个控制器只交接一次，先等待其跳转完成。Future在释放或记录失败后完成。
   Future<void> _disposeVideo(VideoPlayerController? controller) async {
     if (controller == null) return;
+    final pending = _videoSeeks[controller];
+    if (pending != null) {
+      try {
+        await pending;
+      } catch (error, stackTrace) {
+        CollabDiagnostics.report(
+          '视频关闭前跳转失败',
+          error: error,
+          stackTrace: stackTrace,
+          tag: 'DocCollab',
+        );
+      }
+    }
     try {
       await controller.dispose();
     } catch (error, stackTrace) {
-      CollabDiagnostics.report('文档视频资源释放失败', error: error, stackTrace: stackTrace, tag: 'DocCollab');
+      CollabDiagnostics.report(
+        '文档视频资源释放失败',
+        error: error,
+        stackTrace: stackTrace,
+        tag: 'DocCollab',
+      );
     }
   }
 
@@ -311,7 +333,8 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
     );
   }
 
-  /// Builds video pixels and direct play/pause in borrowed [context], including preview.
+  /// 使用借用的[context]展示视频、直接播放按钮和画面内底部进度条，编辑/预览均可播放。
+  /// 高频播放位置仅更新进度区域；视频控制器仍由此State创建与释放。
   Widget _buildVideoCard(BuildContext context) {
     final controller = _videoController;
     if (controller?.value.isInitialized != true) {
@@ -333,15 +356,37 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
               VideoPlayer(controller),
               Center(
                 child: ExcludeFocus(
-                  child: IconButton.filled(
-                    key: const ValueKey('collab-video-block-play'),
-                    tooltip: controller.value.isPlaying ? '暂停' : '播放',
-                    onPressed: _toggleVideo,
-                    icon: Icon(
-                      controller.value.isPlaying
-                          ? Icons.pause
-                          : Icons.play_arrow,
+                  child: ValueListenableBuilder<VideoPlayerValue>(
+                    valueListenable: controller,
+                    builder: (context, value, _) => IconButton.filled(
+                      key: const ValueKey('collab-video-block-play'),
+                      tooltip: value.isPlaying ? '暂停' : '播放',
+                      onPressed: _toggleVideo,
+                      icon: Icon(
+                        value.isPlaying ? Icons.pause : Icons.play_arrow,
+                      ),
                     ),
+                  ),
+                ),
+              ),
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: DecoratedBox(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.transparent, Colors.black87],
+                    ),
+                  ),
+                  child: CollabMediaTimeline(
+                    mediaKind: 'video',
+                    overlay: true,
+                    key: ObjectKey(controller),
+                    controller: controller,
+                    onSeek: (target) => _seekVideo(controller, target),
                   ),
                 ),
               ),
@@ -350,6 +395,24 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
         ),
       ),
     );
+  }
+
+  /// 对借用[controller]跳转到[target]；仅当前播放器可开始新任务。
+  /// 返回的Future与资源释放共享，完成前不得销毁该控制器；错误交给进度视图提示。
+  Future<void> _seekVideo(
+    VideoPlayerController controller,
+    Duration target,
+  ) async {
+    if (!mounted || !identical(controller, _videoController)) return;
+    final operation = controller.seekTo(target);
+    _videoSeeks[controller] = operation;
+    try {
+      await operation;
+    } finally {
+      if (identical(_videoSeeks[controller], operation)) {
+        _videoSeeks.remove(controller);
+      }
+    }
   }
 
   /// Toggles the current owned player directly; replaced/disposed controllers

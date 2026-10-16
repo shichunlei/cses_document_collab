@@ -1,0 +1,77 @@
+{
+  "date": "2026-10-16",
+  "base_commit": "8e404ed95f675fd9b380f20aa730bce83c8473cd",
+  "scope": "视频组件增加本地播放进度条，不修改共享字段或文档内容。",
+  "implementation": [
+    "视频画面内底部叠放当前/总时长和进度条，渐变底色提升可读性，不增加视频画面外高度；直接播放/暂停按钮保留，编辑和只读预览均可拖动跳转。",
+    "拖动期间仅本地预览，松手提交一次seek；未知时长禁用；进度与播放按钮局部监听播放器。",
+    "跳转失败提示并恢复实际位置；换源或退出先等待旧跳转完成再释放控制器，迟到结果不回写新组件。"
+  ],
+  "upstream": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.21",
+    "desktop_at_task_start": {
+      "declared": "0.11.17",
+      "yarn_locked": "0.11.17",
+      "installed": "0.11.17"
+    },
+    "scope": "任务开始时重新查询并核对版本，沿用本日两版随包技能、迁移与视频实现核对；不扩大协议兼容验收。"
+  },
+  "validation": {
+    "widget_tests": {
+      "count": 36,
+      "command": "flutter test --no-pub test/collab_video_update_test.dart test/collab_block_actions_test.dart",
+      "cwd": "packages/cses_document_collab",
+      "result": "passed",
+      "log": "/tmp/video-progress-tests.log",
+      "coverage": [
+        "编辑/预览拖动与随播放更新",
+        "未知时长禁用、失败恢复",
+        "换源等待旧跳转与迟到结果隔离",
+        "280宽度和双倍字号"
+      ]
+    },
+    "analysis": {
+      "command": "flutter analyze --no-pub lib/src/editor/collab_embed_block.dart test/collab_video_update_test.dart integration_test/mobile_card_pointer_test.dart",
+      "cwd": "packages/cses_document_collab",
+      "result": "No issues found",
+      "log": "/tmp/video-progress-analyze-final.log"
+    },
+    "android": {
+      "device": "HONOR X70 (MTN-AN00), Android 16",
+      "cases": 12,
+      "result": "passed",
+      "command": "flutter drive --driver packages/cses_document_collab/test_driver/integration_test.dart --target packages/cses_document_collab/integration_test/mobile_card_pointer_test.dart -d A92G6R5704004108 --no-pub --keep-app-running",
+      "log": "/tmp/video-progress-android.log",
+      "coverage": "视频实际触摸拖动一次seek、播放暂停、卡片按钮、跨卡拖选和正文光标/手柄",
+      "data_policy": "本地合成文档和播放器/业务/WebView替身，无在线文档写入，保留应用运行，不卸载或清数据"
+    },
+    "normal_demo_restore": {
+      "build": "flutter build apk --debug --no-pub -t lib/main.dart passed",
+      "entry_check": "APK kernel contains CsesCollabDemoApp, excludes mobile_card_pointer_test.dart",
+      "install": "adb install -r passed (Success); no uninstall or data clearing",
+      "build_log": "/tmp/video-progress-demo-build.log",
+      "restore_log": "/tmp/video-progress-demo-restore.log"
+    },
+    "format": "三个修改的手写Dart文件已格式化，恢复无关区域排版以控制范围。",
+    "diff_check": "passed"
+  },
+  "limitations": [
+    "真机播放器使用本地平台替身，未验证真实视频解码、网络缓冲或服务器联调。",
+    "iOS未验证。"
+  ],
+  "source_sha256": {
+    "packages/cses_document_collab/lib/src/editor/collab_embed_block.dart": "a553885a47838f83027eedf06817827e0ab3d9ae4be63e7f8f89cd89c8e23454",
+    "packages/cses_document_collab/test/collab_video_update_test.dart": "4f0bf8627f5a35ec1339a1e5645af651a338d036adbf8921740f669e89491dae",
+    "packages/cses_document_collab/integration_test/mobile_card_pointer_test.dart": "ecbb034d0097043c8ff16886960291456a3f5bf20278a31a3880ea0953b6a19f"
+  },
+  "overlay_followup": {
+    "request": "进度条在视频画面内底部",
+    "widget_tests": 36,
+    "result": "passed",
+    "tests_log": "/tmp/video-overlay-tests.log",
+    "analysis_log": "/tmp/video-overlay-analyze.log",
+    "coverage": "增加视频比例、进度条处于画面下半部、时间标签未超出画面边界断言；保留真实拖动、窄屏和双倍字号回归。",
+    "device_status": "前述Android手势和Demo恢复记录属于叠放布局调整前；本次布局调整未重新安装真机。"
+  }
+}

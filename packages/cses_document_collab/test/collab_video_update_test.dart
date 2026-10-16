@@ -123,6 +123,147 @@ void main() {
       },
     );
   }
+  for (final mode in ['edit', 'preview', 'zero', 'error', 'stale', 'narrow']) {
+    testWidgets('video timeline supports $mode safely', (tester) async {
+      final platform = _MemoryVideoPlatform(
+        pending: false,
+        duration: mode == 'zero' ? Duration.zero : const Duration(seconds: 90),
+      );
+      final original = VideoPlayerPlatform.instance;
+      VideoPlayerPlatform.instance = platform;
+      final changes = <List<CollabEditorBlock>>[];
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: [_video('progress')],
+        onLocalBlocksChanged: changes.add,
+      );
+      adapter.editorState.editable = mode != 'preview';
+      if (mode == 'narrow') {
+        await tester.binding.setSurfaceSize(const Size(280, 640));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+      }
+      addTearDown(() async {
+        if (platform.seekGate != null && !platform.seekGate!.isCompleted) {
+          platform.seekGate!.complete();
+        }
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+        adapter.dispose();
+        await platform.close();
+        VideoPlayerPlatform.instance = original;
+      });
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: MediaQuery(
+              data: MediaQueryData(
+                textScaler: TextScaler.linear(mode == 'narrow' ? 2 : 1),
+              ),
+              child: SizedBox(
+                width: 320,
+                child: AppFlowyEditor(
+                  editorState: adapter.editorState,
+                  editable: adapter.editorState.editable,
+                  disableKeyboardService: true,
+                  editorStyle: const EditorStyle.mobile(
+                    padding: EdgeInsets.all(16),
+                  ),
+                  blockComponentBuilders: {
+                    ...standardBlockComponentBuilderMap,
+                    csesVideoBlockType: CollabEmbedBlockComponentBuilder(
+                      kind: CollabEmbedKind.video,
+                    ),
+                  },
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final progress = find.byKey(const ValueKey('collab-video-progress'));
+      expect(progress, findsOneWidget);
+      final picture = tester.getRect(find.byType(VideoPlayer));
+      final track = tester.getRect(progress);
+      final elapsed = tester.getRect(
+        find.byKey(const ValueKey('collab-video-position')),
+      );
+      expect(track.top, greaterThan(picture.center.dy));
+      expect(elapsed.bottom, lessThanOrEqualTo(picture.bottom));
+      expect(picture.width / picture.height, closeTo(1, 0.01));
+      var slider = tester.widget<Slider>(progress);
+      if (mode == 'zero') {
+        expect(slider.onChanged, isNull);
+        expect(slider.value, 0);
+        expect(find.text('00:00'), findsNWidgets(2));
+      } else {
+        var controller = tester
+            .widget<VideoPlayer>(find.byType(VideoPlayer))
+            .controller;
+        controller.value = controller.value.copyWith(
+          position: const Duration(seconds: 20),
+        );
+        await tester.pump();
+        expect(
+          tester
+              .widget<Text>(find.byKey(const ValueKey('collab-video-position')))
+              .data,
+          '00:20',
+        );
+        expect(
+          tester
+              .widget<Text>(find.byKey(const ValueKey('collab-video-duration')))
+              .data,
+          '01:30',
+        );
+        expect(tester.widget<Slider>(progress).value, 20000);
+        if (mode == 'stale') {
+          platform.seekGate = Completer<void>();
+          slider = tester.widget<Slider>(progress);
+          slider.onChanged!(60000);
+          slider.onChangeEnd!(60000);
+          await tester.pump();
+          expect(platform.seeks.single, (0, const Duration(seconds: 60)));
+          await adapter.replaceFromRemote([_video('replacement')]);
+          await tester.pumpAndSettle();
+          expect(platform.disposed, isEmpty, reason: '关闭必须等待仍在使用控制器的跳转');
+          expect(progress, findsNothing);
+          platform.seekGate!.complete();
+          await tester.runAsync(
+            () => Future<void>.delayed(const Duration(milliseconds: 20)),
+          );
+          await tester.pumpAndSettle();
+          controller = tester
+              .widget<VideoPlayer>(find.byType(VideoPlayer))
+              .controller;
+          expect(controller.dataSource, contains('replacement'));
+          expect(tester.widget<Slider>(progress).value, 0);
+          expect(platform.disposed, [0]);
+        } else {
+          platform.failSeek = mode == 'error';
+          final rect = tester.getRect(progress);
+          await tester.dragFrom(
+            Offset(rect.left + rect.width * 0.25, rect.center.dy),
+            Offset(rect.width * 0.5, 0),
+          );
+          await tester.pumpAndSettle();
+          expect(platform.seeks, hasLength(1), reason: '拖动仅在松手时跳转一次');
+          expect(platform.seeks.single.$2.inSeconds, inInclusiveRange(45, 90));
+          if (mode == 'error') {
+            expect(find.text('视频跳转失败，请重试'), findsOneWidget);
+            expect(tester.widget<Slider>(progress).value, 20000);
+          } else {
+            expect(
+              tester.widget<Slider>(progress).value,
+              platform.seeks.single.$2.inMilliseconds,
+            );
+          }
+          expect(tester.widget<Slider>(progress).onChanged, isNotNull);
+        }
+      }
+      expect(changes, isEmpty);
+      expect(tester.takeException(), isNull);
+    });
+  }
 }
 
 /// 为 [source] 创建相同身份的视频块；仅返回投影，不创建网络资源。
@@ -135,7 +276,25 @@ CollabEditorBlock _video(String source) => CollabEditorBlock(
 /// 通过官方平台端口记录创建/释放，不使用真实解码器；测试持有流并负责 close。
 class _MemoryVideoPlatform extends VideoPlayerPlatform {
   /// [pending] 为 true 时不发送初始化完成事件，用于验证加载期间换源和退出。
-  _MemoryVideoPlatform({required this.pending});
+  _MemoryVideoPlatform({
+    required this.pending,
+    this.duration = const Duration(seconds: 1),
+  });
+
+  /// 夹具媒体时长；零模拟未知/不可跳转的时长。
+  final Duration duration;
+
+  /// 当前每个播放器的位置；模拟原生进度查询和跳转结果。
+  final positions = <int, Duration>{};
+
+  /// 实际原生跳转请求，记录控制器身份与毫秒位置。
+  final seeks = <(int, Duration)>[];
+
+  /// true模拟原生跳转失败，位置保持不变。
+  bool failSeek = false;
+
+  /// 由测试持有并完成的跳转阻塞，验证换源/关闭等待。
+  Completer<void>? seekGate;
 
   /// 是否保持播放器初始化等待；不影响平台资源创建和释放完成。
   final bool pending;
@@ -159,7 +318,7 @@ class _MemoryVideoPlatform extends VideoPlayerPlatform {
       events.add(
         VideoEvent(
           eventType: VideoEventType.initialized,
-          duration: const Duration(seconds: 1),
+          duration: duration,
           size: const Size(100, 100),
         ),
       );
@@ -186,9 +345,19 @@ class _MemoryVideoPlatform extends VideoPlayerPlatform {
   @override
   Future<void> setPlaybackSpeed(int playerId, double speed) async {}
 
-  /// Returns a stable zero position for borrowed [playerId].
+  /// 返回借用[playerId]最近一次成功跳转的位置，默认从零开始。
   @override
-  Future<Duration> getPosition(int playerId) async => Duration.zero;
+  Future<Duration> getPosition(int playerId) async =>
+      positions[playerId] ?? Duration.zero;
+
+  /// 记录[playerId]到[position]的跳转；可阻塞或失败，由测试控制完成时机。
+  @override
+  Future<void> seekTo(int playerId, Duration position) async {
+    seeks.add((playerId, position));
+    if (seekGate != null) await seekGate!.future;
+    if (failSeek) throw StateError('fixture seek failure');
+    positions[playerId] = position;
+  }
 
   /// 接收 [playerId] 的 [looping] 设置；内存平台不执行播放，立即完成。
   @override

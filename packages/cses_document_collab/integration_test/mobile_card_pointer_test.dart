@@ -54,7 +54,8 @@ void main() {
       final oldWeb = WebViewPlatform.instance;
       final oldPlayer = VideoPlayerPlatform.instance;
       WebViewPlatform.instance = FakeLinkWebPlatform();
-      VideoPlayerPlatform.instance = _LocalPlayer();
+      final player = _LocalPlayer();
+      VideoPlayerPlatform.instance = player;
       final adapter = AppFlowyBlockEditorAdapter(
         initialBlocks: [
           _card(kind),
@@ -96,6 +97,22 @@ void main() {
             ),
           );
         } else {
+          if (kind == 'audio') {
+            final progress = find.byKey(
+              const ValueKey('collab-audio-progress'),
+            );
+            final track = tester.getRect(progress);
+            await tester.dragFrom(
+              Offset(track.left + track.width * .25, track.center.dy),
+              Offset(track.width * .5, 0),
+            );
+            await tester.pumpAndSettle();
+            expect(player.seeks, hasLength(1));
+            expect(
+              player.seeks.single.inMilliseconds,
+              inInclusiveRange(5000, 10000),
+            );
+          }
           await tester.tap(
             find.byKey(
               ValueKey(
@@ -184,6 +201,19 @@ void main() {
           expect(player.played, contains(0));
           await tester.tap(
             find.byKey(const ValueKey('collab-video-block-play')),
+          );
+          await tester.pumpAndSettle();
+          final progress = find.byKey(const ValueKey('collab-video-progress'));
+          final track = tester.getRect(progress);
+          await tester.dragFrom(
+            Offset(track.left + track.width * 0.25, track.center.dy),
+            Offset(track.width * 0.5, 0),
+          );
+          await tester.pumpAndSettle();
+          expect(player.seeks, hasLength(1));
+          expect(
+            player.seeks.single.inMilliseconds,
+            inInclusiveRange(5000, 10000),
           );
         } else {
           await tester.tap(find.byKey(const ValueKey('block-more-media')));
@@ -425,6 +455,9 @@ Future<ExtractionResult<LinkMetadata>> _metadata(String url) =>
 class _LocalPlayer extends VideoPlayerPlatform {
   /// 本地播放调用记录，不访问真实播放器。
   final played = <int>[];
+
+  /// 本地进度跳转记录，真实手势应能命中进度条。
+  final seeks = <Duration>[];
   final _streams = <int, StreamController<VideoEvent>>{};
   int _next = 0;
 
@@ -482,7 +515,9 @@ class _LocalPlayer extends VideoPlayerPlatform {
 
   /// 接受[playerId]的进度[position]设置。
   @override
-  Future<void> seekTo(int playerId, Duration position) async {}
+  Future<void> seekTo(int playerId, Duration position) async {
+    seeks.add(position);
+  }
 
   /// 为[options]返回纯布局替身，不创建纹理或原生视图。
   @override
