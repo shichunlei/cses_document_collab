@@ -737,6 +737,7 @@ impl SseDecode for crate::api::collab::CollabTextSegment {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut var_text = <String>::sse_decode(deserializer);
+        let mut var_href = <Option<String>>::sse_decode(deserializer);
         let mut var_bold = <bool>::sse_decode(deserializer);
         let mut var_italic = <bool>::sse_decode(deserializer);
         let mut var_underline = <bool>::sse_decode(deserializer);
@@ -753,6 +754,7 @@ impl SseDecode for crate::api::collab::CollabTextSegment {
         let mut var_mentionAttributes = <Option<String>>::sse_decode(deserializer);
         return crate::api::collab::CollabTextSegment {
             text: var_text,
+            href: var_href,
             bold: var_bold,
             italic: var_italic,
             underline: var_underline,
@@ -1191,6 +1193,7 @@ impl flutter_rust_bridge::IntoDart for crate::api::collab::CollabTextSegment {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
             self.text.into_into_dart().into_dart(),
+            self.href.into_into_dart().into_dart(),
             self.bold.into_into_dart().into_dart(),
             self.italic.into_into_dart().into_dart(),
             self.underline.into_into_dart().into_dart(),
@@ -1368,6 +1371,7 @@ impl SseEncode for crate::api::collab::CollabTextSegment {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <String>::sse_encode(self.text, serializer);
+        <Option<String>>::sse_encode(self.href, serializer);
         <bool>::sse_encode(self.bold, serializer);
         <bool>::sse_encode(self.italic, serializer);
         <bool>::sse_encode(self.underline, serializer);

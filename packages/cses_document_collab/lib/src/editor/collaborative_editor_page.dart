@@ -27,6 +27,7 @@ import 'package:cses_document_collab/src/model/collab_task_card.dart';
 import 'package:cses_document_collab/src/model/collab_user_mention.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/foundation.dart';
+import 'package:cses_document_collab/src/editor/collab_link_actions.dart';
 import 'package:flutter/material.dart';
 
 import 'collab_inline_entity_mention.dart';
@@ -420,7 +421,7 @@ EdgeInsets _listBlockPadding(Node node) {
 }
 
 /// 在借用 [context]/[node] 中装饰 UTF-16 [index] 开始的 [text]。
-/// [before] 是内置格式，[after] 为调用方装饰；行内公式、用户和三类业务实体提及使用单字符 WidgetSpan，保留文字颜色。
+/// [before] 是内置格式，[after] 为调用方装饰；行内公式、用户和三类业务实体提及使用单字符 WidgetSpan，保留文字颜色；整段链接点击提供打开和三视图切换，混排正文维持原链接行为。
 InlineSpan _collabTextSpanDecorator(
   BuildContext context,
   Node node,
@@ -429,18 +430,33 @@ InlineSpan _collabTextSpanDecorator(
   TextSpan before,
   TextSpan after,
 ) {
-  var decorated = mobileTextSpanDecoratorForAttribute(context, node, index, text, before, after);
+  var decorated = decorateCollabLinkSpan(
+    context,
+    node,
+    mobileTextSpanDecoratorForAttribute(
+      context,
+      node,
+      index,
+      text,
+      before,
+      after,
+    ),
+  );
   // Container color is inherited only when the text has no explicit foreground.
   if (text.attributes?[AppFlowyRichTextKeys.textColor] == null) {
     Node? ancestor = node.parent;
     while (ancestor != null) {
       if (ancestor.type == csesCalloutBlockType) {
-        final color = parseCollabBlockColor(ancestor.attributes[csesBlockTextColorAttribute] as String?);
+        final color = parseCollabBlockColor(
+          ancestor.attributes[csesBlockTextColorAttribute] as String?,
+        );
         if (color != null) {
           decorated = TextSpan(
             text: decorated.text,
             children: decorated.children,
-            style: (decorated.style ?? const TextStyle()).copyWith(color: color),
+            style: (decorated.style ?? const TextStyle()).copyWith(
+              color: color,
+            ),
             recognizer: decorated.recognizer,
             mouseCursor: decorated.mouseCursor,
           );
@@ -462,32 +478,50 @@ InlineSpan _collabTextSpanDecorator(
           WidgetSpan(
             alignment: PlaceholderAlignment.middle,
             child:
-                mention is String && const {'meeting', 'task', 'doc'}.contains(attributes?[collabMentionTypeAttribute])
+                mention is String &&
+                    const {
+                      'meeting',
+                      'task',
+                      'doc',
+                    }.contains(attributes?[collabMentionTypeAttribute])
                 ? CollabInlineEntityMention(
                     node: node,
                     offset: offset,
                     name: mention,
-                    entityType: attributes![collabMentionTypeAttribute] as String,
-                    style: decorated.style ?? before.style ?? const TextStyle(fontSize: 16),
+                    entityType:
+                        attributes![collabMentionTypeAttribute] as String,
+                    style:
+                        decorated.style ??
+                        before.style ??
+                        const TextStyle(fontSize: 16),
                   )
                 : mention is String
                 ? CollabInlineMention(
                     node: node,
                     offset: offset,
                     name: mention,
-                    userId: attributes?[collabMentionIdAttribute] as String? ?? '',
-                    style: decorated.style ?? before.style ?? const TextStyle(fontSize: 16),
+                    userId:
+                        attributes?[collabMentionIdAttribute] as String? ?? '',
+                    style:
+                        decorated.style ??
+                        before.style ??
+                        const TextStyle(fontSize: 16),
                   )
                 : CollabInlineFormula(
                     node: node,
                     offset: offset,
                     latex: latex as String,
-                    style: decorated.style ?? before.style ?? const TextStyle(fontSize: 16),
+                    style:
+                        decorated.style ??
+                        before.style ??
+                        const TextStyle(fontSize: 16),
                   ),
           ),
         );
       } else {
-        spans.add(TextSpan(text: String.fromCharCode(rune), style: decorated.style));
+        spans.add(
+          TextSpan(text: String.fromCharCode(rune), style: decorated.style),
+        );
       }
       offset += rune > 0xffff ? 2 : 1;
     }
@@ -502,7 +536,10 @@ InlineSpan _collabTextSpanDecorator(
     text: decorated.text,
     children: decorated.children,
     style: (decorated.style ?? const TextStyle()).copyWith(
-      fontFeatures: [if (superscript) const FontFeature.superscripts(), if (subscript) const FontFeature.subscripts()],
+      fontFeatures: [
+        if (superscript) const FontFeature.superscripts(),
+        if (subscript) const FontFeature.subscripts(),
+      ],
     ),
     recognizer: decorated.recognizer,
     mouseCursor: decorated.mouseCursor,

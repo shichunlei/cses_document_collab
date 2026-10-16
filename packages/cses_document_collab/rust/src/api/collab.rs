@@ -33,6 +33,8 @@ static ENGINE: Lazy<Mutex<Option<CollabEngine>>> = Lazy::new(|| Mutex::new(None)
 pub struct CollabTextSegment {
     /// 正文或单个对象替换字符；长度采用 UTF-16，与 Yjs/Flutter 光标一致。
     pub text: String,
+    /// Optional original link target; formal documents map it to a:link, None means unlinked.
+    pub href: Option<String>,
     /// 是否加粗。
     pub bold: bool,
     /// 是否斜体。
@@ -832,6 +834,7 @@ fn text_segments_for_schema<T: ReadTxn>(
             };
             let attributes = chunk.attributes.as_deref();
             Some(CollabTextSegment {
+                href: attribute_string(attributes, schema_attribute("href", formal)),
                 inline_latex,
                 inline_mention: mention.as_ref().map(|m| m.0.clone()),
                 mention_id: mention.as_ref().map(|m| m.1.clone()),
@@ -1072,7 +1075,8 @@ fn attribute_string(attributes: Option<&Attrs>, key: &str) -> Option<String> {
 
 impl CollabTextSegment {
     fn is_styled(&self) -> bool {
-        self.bold
+        self.href.is_some()
+            || self.bold
             || self.italic
             || self.underline
             || self.strikethrough
@@ -1087,6 +1091,9 @@ impl CollabTextSegment {
 
     fn attributes(&self) -> Attrs {
         let mut attributes = Attrs::new();
+        if let Some(href) = &self.href {
+            attributes.insert("href".into(), Any::String(href.clone().into()));
+        }
         for (key, enabled) in [
             ("bold", self.bold),
             ("italic", self.italic),
@@ -1123,7 +1130,7 @@ fn apply_text_segments(
     apply_text_segments_for_schema(text_ref, transaction, block, false);
 }
 
-/// 受支持格式只清除自己的键；正式模式不删除链接、字体、提及或其他未知属性。
+/// 受支持格式（含链接）只清除自己的键；字体、提及或其他未知属性保持原样。
 fn apply_text_segments_for_schema(
     text_ref: &yrs::TextRef,
     transaction: &mut yrs::TransactionMut<'_>,
@@ -1138,6 +1145,7 @@ fn apply_text_segments_for_schema(
         // Every supported rich-text attribute is explicitly cleared before
         // replaying canonical segments, preventing removed remote highlights
         // from surviving on a peer that previously formatted the same range.
+        ("href".into(), Any::Null),
         ("bold".into(), Any::Null),
         ("italic".into(), Any::Null),
         ("underline".into(), Any::Null),
@@ -1174,6 +1182,7 @@ fn schema_attribute(key: &str, formal: bool) -> &str {
         return key;
     }
     match key {
+        "href" => "a:link",
         "bold" => "a:bold",
         "italic" => "a:italic",
         "underline" => "a:underline",
@@ -1619,6 +1628,7 @@ mod tests {
 
     fn styled_segment(text: &str, bold: bool, strikethrough: bool) -> CollabTextSegment {
         CollabTextSegment {
+            href: None,
             inline_latex: None,
             inline_mention: None,
             mention_id: None,

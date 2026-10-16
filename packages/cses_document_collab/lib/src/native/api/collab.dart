@@ -397,6 +397,9 @@ class CollabTextSegment {
   /// 正文或单个对象替换字符；长度采用 UTF-16，与 Yjs/Flutter 光标一致。
   final String text;
 
+  /// Optional original link target; formal documents map it to a:link, None means unlinked.
+  final String? href;
+
   /// 是否加粗。
   final bool bold;
 
@@ -446,6 +449,7 @@ class CollabTextSegment {
 
   const CollabTextSegment({
     required this.text,
+    this.href,
     required this.bold,
     required this.italic,
     required this.underline,
@@ -465,6 +469,7 @@ class CollabTextSegment {
   @override
   int get hashCode =>
       text.hashCode ^
+      href.hashCode ^
       bold.hashCode ^
       italic.hashCode ^
       underline.hashCode ^
@@ -486,6 +491,7 @@ class CollabTextSegment {
       other is CollabTextSegment &&
           runtimeType == other.runtimeType &&
           text == other.text &&
+          href == other.href &&
           bold == other.bold &&
           italic == other.italic &&
           underline == other.underline &&

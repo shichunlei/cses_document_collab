@@ -12,6 +12,7 @@ import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
 import 'package:cses_document_collab/src/model/collab_meeting.dart';
 import 'package:cses_document_collab/src/model/collab_ordered.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
+import 'package:cses_document_collab/src/model/collab_link_view.dart';
 import 'package:cses_document_collab/src/model/collab_task_card.dart';
 import 'package:cses_document_collab/src/model/collab_user_mention.dart';
 import 'package:cses_document_collab/src/model/text_delta.dart' as collab;
@@ -217,6 +218,7 @@ void registerCsesRichTextAttributes() {
 /// const formula = CollabEditorTextSegment(text: '\uFFFC', inlineLatex: 'x^2');
 /// ```
 final class CollabEditorTextSegment {
+  /// [href] 是原始链接地址，null 为普通正文，正式文档映射到 a:link。
   /// [text] 为正文或公式单字符位置，[inlineLatex] 非 null 时只允许 U+FFFC。
   /// [inlineMention] 为用户/实体显示名，[mentionId] 为稳定ID，两者成对且与公式互斥。
   /// [mentionType] 为meeting/task/doc时展示对应实体，null兼容已有用户；[mentionAttributes] 为四类提及原生属性JSON，
@@ -226,6 +228,7 @@ final class CollabEditorTextSegment {
   /// [superscript]、[subscript] 默认 false，分别控制上下标；原文及属性不自动规范化。
   const CollabEditorTextSegment({
     required this.text,
+    this.href,
     this.bold = false,
     this.italic = false,
     this.underline = false,
@@ -244,6 +247,9 @@ final class CollabEditorTextSegment {
 
   /// 正文文本；行内公式必须为单个 U+FFFC。
   final String text;
+
+  /// 可选原始链接地址；独立保留格式，不推导或改写展示文字。
+  final String? href;
 
   /// 是否加粗，默认 false。
   final bool bold;
@@ -291,8 +297,9 @@ final class CollabEditorTextSegment {
   /// 四类提及原始属性JSON快照；历史/手工用户投影可为null，正式投影最大65536字节。
   final String? mentionAttributes;
 
-  /// 是否需要保留显式分段；公式/用户/会议/任务/文档即使没有文字格式也必须保留对象信息。
+  /// 是否保留显式分段；链接及公式/提及即使没有其他格式也保留地址或对象信息。
   bool get isStyled =>
+      href != null ||
       bold ||
       italic ||
       underline ||
@@ -305,8 +312,9 @@ final class CollabEditorTextSegment {
       inlineLatex != null ||
       inlineMention != null;
 
-  /// AppFlowy 内存属性；inlineLatex 使用私有键，不作为桌面文字格式保存。
+  /// AppFlowy 内存属性；href映射内置链接键，inlineLatex使用私有对象键。
   Attributes get attributes => {
+    if (href != null) AppFlowyRichTextKeys.href: href,
     if (bold) AppFlowyRichTextKeys.bold: true,
     if (italic) AppFlowyRichTextKeys.italic: true,
     if (underline) AppFlowyRichTextKeys.underline: true,
@@ -325,10 +333,11 @@ final class CollabEditorTextSegment {
       collabMentionAttributesAttribute: mentionAttributes,
   };
 
-  /// 基于全部原文、格式与公式/用户/会议/任务/文档身份及实体属性快照计算哈希。
+  /// 基于原文、链接、格式与公式/提及身份及实体属性快照计算哈希。
   @override
   int get hashCode => Object.hash(
     text,
+    href,
     bold,
     italic,
     underline,
@@ -350,6 +359,7 @@ final class CollabEditorTextSegment {
   bool operator ==(Object other) {
     return other is CollabEditorTextSegment &&
         other.text == text &&
+        other.href == href &&
         other.bold == bold &&
         other.italic == italic &&
         other.underline == underline &&
@@ -712,7 +722,7 @@ final class AppFlowyBlockEditorAdapter {
   }
 
   /// 在本地 [value] 的 before 阶段按稳定 ID 重定位编号历史，after 阶段发布快照；
-  /// 类型转换生成新身份并记录来源供Rust保留扩展数据；提及卡片转换历史在写入前整组预检。
+  /// 类型转换生成新身份并记录来源供Rust保留扩展数据；提及卡片及链接视图转换历史在写入前整组预检，并按身份链重定位。
   /// 远端回放及销毁后不发布；Undo/Redo 的历史身份经文档内映射恢复为当前可替换来源。
   /// 仅明确修改编号设置属性的 UpdateOperation 生成编号写入意图；普通文字/结构快照
   /// 即使携带旧设置也不会覆盖原生 start/continuePrevious。分割线和公式同样只发布明确的单字段补丁。
@@ -722,6 +732,13 @@ final class AppFlowyBlockEditorAdapter {
       return;
     }
     if (value.$1 == TransactionTime.before) {
+      resolveCollabLinkViewCommand(editorState, value.$2, (id) {
+        final seen = <String>{};
+        while (_replacementIds.containsKey(id) && seen.add(id)) {
+          id = _replacementIds[id]!;
+        }
+        return id;
+      });
       resolveCollabMentionCardCommand(editorState, value.$2);
       resolveCollabInlineFormulaCommands(editorState, value.$2);
       _resolveNumberingTargets(value.$2);
@@ -1371,7 +1388,7 @@ final class AppFlowyBlockEditorAdapter {
     return delta;
   }
 
-  /// 从借用 [node] 读取文字与单字符公式/用户/会议/任务/文档投影，拆开相同属性合并的多个原子。
+  /// 从借用 [node] 读取文字、href链接和单字符公式/提及投影，拆开同属性合并的原子。
   /// 普通字符不继承公式身份；未知 AppFlowy 属性由其他适配边界处理。
   static List<CollabEditorTextSegment> _readNodeSegments(Node node) {
     final delta = node.delta;
@@ -1403,6 +1420,7 @@ final class AppFlowyBlockEditorAdapter {
           final attributes = operation.attributes ?? const <String, Object>{};
           return CollabEditorTextSegment(
             text: operation.text,
+            href: attributes[AppFlowyRichTextKeys.href] as String?,
             inlineLatex:
                 operation.attributes?[collabInlineLatexAttribute] as String?,
             inlineMention: attributes[collabInlineMentionAttribute] as String?,

@@ -1665,7 +1665,7 @@ fn css_color(value: Any) -> Any {
 }
 
 /// 在文本差量应用后比较每个格式区间，只写实际改变的受支持属性。
-/// 不对整块无条件 clear/replay，从而保留链接等未知格式，并减少对并发格式更新的覆盖。
+/// 不对整块无条件 clear/replay，链接按独立区间差量处理，保留其他未知格式。
 fn apply_formats(text: &TextRef, txn: &mut yrs::TransactionMut<'_>, desired: &CollabBlock) {
     let actual: Vec<_> = text
         .diff(txn, |_| ())
@@ -1707,6 +1707,7 @@ fn apply_formats(text: &TextRef, txn: &mut yrs::TransactionMut<'_>, desired: &Co
             .collect()
     };
     let keys = [
+        "a:link",
         "a:bold",
         "a:italic",
         "a:underline",

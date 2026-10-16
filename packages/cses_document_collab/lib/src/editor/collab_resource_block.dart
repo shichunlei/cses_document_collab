@@ -9,6 +9,8 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:cses_document_collab/src/editor/collab_link_preview.dart';
+import 'package:cses_document_collab/src/editor/collab_link_actions.dart';
+import 'package:cses_document_collab/src/editor/collab_embedded_page.dart';
 
 String collabResourceLabel(String kind) => switch (kind) {
   'attachment' => '附件',
@@ -133,7 +135,7 @@ class _ResourceBlockState extends State<_ResourceBlock> with SelectableMixin {
   }
 
   /// Returns a selectable resource surface using inherited [context].
-  /// Link cards open through their preview and expose editing/deletion only in
+  /// Link resources offer desktop-compatible views and expose editing/deletion only in
   /// editable mode; audio and attachments retain separate opening controls.
   /// Metadata stays local, while explicit edits use the borrowed editor.
   @override
@@ -198,7 +200,7 @@ class _ResourceBlockState extends State<_ResourceBlock> with SelectableMixin {
                     ],
                   ),
                 ),
-                if (!isCard)
+                if (!isCard || kind != 'bookmark')
                   ExcludeFocus(
                     child: IconButton(
                       key: ValueKey('resource-open-$_id'),
@@ -208,6 +210,15 @@ class _ResourceBlockState extends State<_ResourceBlock> with SelectableMixin {
                     ),
                   ),
                 if (_editor.editable) ...[
+                  if (isCard)
+                    ExcludeFocus(
+                      child: IconButton(
+                        key: ValueKey('resource-view-$_id'),
+                        tooltip: '切换视图',
+                        icon: const Icon(Icons.view_agenda_outlined, size: 18),
+                        onPressed: () => showCollabLinkActions(context, node),
+                      ),
+                    ),
                   ExcludeFocus(
                     child: IconButton(
                       key: ValueKey('resource-edit-$_id'),
@@ -242,24 +253,37 @@ class _ResourceBlockState extends State<_ResourceBlock> with SelectableMixin {
           if (isCard)
             LayoutBuilder(
               builder: (context, constraints) {
-                final width = props.number('wr');
+                final width = kind == 'bookmark' ? null : props.number('wr');
                 final cardWidth = width != null && width > 0
                     ? constraints.maxWidth * (width.clamp(1, 100) / 100)
-                    : (props.number('width') ?? constraints.maxWidth).clamp(
-                        1.0,
-                        constraints.maxWidth,
-                      );
+                    : ((kind == 'bookmark' ? null : props.number('width')) ??
+                              constraints.maxWidth)
+                          .clamp(1.0, constraints.maxWidth);
+                final ratio = props.number('ar');
+                final frameHeight =
+                    (ratio != null && ratio > 0
+                            ? cardWidth / ratio
+                            : props.number('height') ?? cardWidth / (16 / 9))
+                        .clamp(180.0, 720.0);
                 return Align(
                   alignment: Alignment.centerLeft,
                   child: SizedBox(
                     width: cardWidth,
-                    child: CollabLinkPreview(
-                      key: ValueKey('$kind:$_url'),
-                      url: _url,
-                      props: props,
-                      loadPreview: widget.loadPreview,
-                      onOpen: () => _open(context, _url),
-                    ),
+                    child: kind != 'bookmark'
+                        ? SizedBox(
+                            height: frameHeight,
+                            child: CollabEmbeddedPage(
+                              key: ValueKey('$kind:$_url'),
+                              url: _url,
+                            ),
+                          )
+                        : CollabLinkPreview(
+                            key: ValueKey('$kind:$_url'),
+                            url: _url,
+                            props: props,
+                            loadPreview: widget.loadPreview,
+                            onOpen: () => _open(context, _url),
+                          ),
                   ),
                 );
               },
@@ -463,8 +487,7 @@ class _ResourceSettingsState extends State<_ResourceSettings> {
   bool _saving = false;
 
   /// Creates owned text controllers from the borrowed settings snapshot.
-  /// Card width is editable as a percentage; stored height/aspect fields remain
-  /// untouched because native link previews determine their own content height.
+  /// Embed width/aspect ratio can be edited; bookmarks use natural content height.
   @override
   void initState() {
     super.initState();
@@ -482,6 +505,9 @@ class _ResourceSettingsState extends State<_ResourceSettings> {
         'wr': TextEditingController(
           text: (widget.props.number('wr') ?? 100).toString(),
         ),
+        'ar': TextEditingController(
+          text: (widget.props.number('ar') ?? 16 / 9).toStringAsFixed(3),
+        ),
       },
     };
   }
@@ -494,7 +520,7 @@ class _ResourceSettingsState extends State<_ResourceSettings> {
     super.dispose();
   }
 
-  /// Validates the current URL and width, then applies changed fields by block ID.
+  /// Validates URL, width and aspect ratio, then applies changed fields by block ID.
   /// Completes after property transactions and closes the dialog on success;
   /// conflicting remote edits or failures keep the dialog open with feedback.
   /// Does not mutate a disposed/read-only editor or overwrite unrelated fields.
@@ -517,12 +543,17 @@ class _ResourceSettingsState extends State<_ResourceSettings> {
         if (text != widget.url) changes['url'] = text;
         continue;
       }
-      if (entry.key == 'wr') {
-        final initial = (widget.props.number('wr') ?? 100).toString();
+      if (entry.key == 'wr' || entry.key == 'ar') {
+        final initial = entry.key == 'wr'
+            ? (widget.props.number('wr') ?? 100).toString()
+            : (widget.props.number('ar') ?? 16 / 9).toStringAsFixed(3);
         if (text == initial) continue;
         final number = double.tryParse(text);
-        if (number == null || !number.isFinite || number < 1 || number > 100) {
-          setState(() => _error = '宽度应为 1–100');
+        if (number == null ||
+            !number.isFinite ||
+            number <= 0 ||
+            (entry.key == 'wr' && (number < 1 || number > 100))) {
+          setState(() => _error = '宽度应为 1–100，宽高比应为正数');
           return;
         }
         changes[entry.key] = number;

@@ -737,24 +737,25 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   CollabTextSegment dco_decode_collab_text_segment(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 15)
-      throw Exception('unexpected arr length: expect 15 but see ${arr.length}');
+    if (arr.length != 16)
+      throw Exception('unexpected arr length: expect 16 but see ${arr.length}');
     return CollabTextSegment(
       text: dco_decode_String(arr[0]),
-      bold: dco_decode_bool(arr[1]),
-      italic: dco_decode_bool(arr[2]),
-      underline: dco_decode_bool(arr[3]),
-      strikethrough: dco_decode_bool(arr[4]),
-      code: dco_decode_bool(arr[5]),
-      textColor: dco_decode_opt_String(arr[6]),
-      backgroundColor: dco_decode_opt_String(arr[7]),
-      superscript: dco_decode_bool(arr[8]),
-      subscript: dco_decode_bool(arr[9]),
-      inlineLatex: dco_decode_opt_String(arr[10]),
-      inlineMention: dco_decode_opt_String(arr[11]),
-      mentionId: dco_decode_opt_String(arr[12]),
-      mentionType: dco_decode_opt_String(arr[13]),
-      mentionAttributes: dco_decode_opt_String(arr[14]),
+      href: dco_decode_opt_String(arr[1]),
+      bold: dco_decode_bool(arr[2]),
+      italic: dco_decode_bool(arr[3]),
+      underline: dco_decode_bool(arr[4]),
+      strikethrough: dco_decode_bool(arr[5]),
+      code: dco_decode_bool(arr[6]),
+      textColor: dco_decode_opt_String(arr[7]),
+      backgroundColor: dco_decode_opt_String(arr[8]),
+      superscript: dco_decode_bool(arr[9]),
+      subscript: dco_decode_bool(arr[10]),
+      inlineLatex: dco_decode_opt_String(arr[11]),
+      inlineMention: dco_decode_opt_String(arr[12]),
+      mentionId: dco_decode_opt_String(arr[13]),
+      mentionType: dco_decode_opt_String(arr[14]),
+      mentionAttributes: dco_decode_opt_String(arr[15]),
     );
   }
 
@@ -1076,6 +1077,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_text = sse_decode_String(deserializer);
+    var var_href = sse_decode_opt_String(deserializer);
     var var_bold = sse_decode_bool(deserializer);
     var var_italic = sse_decode_bool(deserializer);
     var var_underline = sse_decode_bool(deserializer);
@@ -1092,6 +1094,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_mentionAttributes = sse_decode_opt_String(deserializer);
     return CollabTextSegment(
       text: var_text,
+      href: var_href,
       bold: var_bold,
       italic: var_italic,
       underline: var_underline,
@@ -1462,6 +1465,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_String(self.text, serializer);
+    sse_encode_opt_String(self.href, serializer);
     sse_encode_bool(self.bold, serializer);
     sse_encode_bool(self.italic, serializer);
     sse_encode_bool(self.underline, serializer);
