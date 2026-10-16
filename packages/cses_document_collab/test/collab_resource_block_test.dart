@@ -188,7 +188,19 @@ void main() {
         final width = tester.getSize(preview).width;
         expect(
           width,
-          closeTo(tester.getSize(find.byType(LayoutBuilder).last).width, 1),
+          closeTo(
+            tester
+                .getSize(
+                  find
+                      .ancestor(
+                        of: preview,
+                        matching: find.byType(LayoutBuilder),
+                      )
+                      .first,
+                )
+                .width,
+            1,
+          ),
         );
         pending.complete(await _metadata(first));
         await tester.pumpAndSettle();

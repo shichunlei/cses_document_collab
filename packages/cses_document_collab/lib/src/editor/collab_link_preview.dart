@@ -20,7 +20,9 @@ Future<ExtractionResult<LinkMetadata>> _extractPreview(String url) =>
       ),
     );
 
-/// Displays native link metadata without executing page or oEmbed HTML.
+/// Displays native MetaLink metadata with text left and a thumbnail right.
+/// The thumbnail scales to the available width; absent or failed images leave
+/// the full width for text. No page or oEmbed HTML is executed.
 /// Owns the extraction future, keeps results local, and ignores outdated results
 /// after URL replacement or disposal. Failed loads retain saved fields and offer
 /// retry; opening the URL is delegated to the host.
@@ -140,56 +142,72 @@ class _CollabLinkPreviewState extends State<CollabLinkPreview> {
                 onTap: widget.onOpen,
                 child: Padding(
                   padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (image != null)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(6),
-                            child: Image.network(
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      final thumbnailSize = (constraints.maxWidth * 0.28).clamp(
+                        0.0,
+                        112.0,
+                      );
+                      return Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  title?.isNotEmpty == true ? title! : host,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                if (description.isNotEmpty) ...[
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    description,
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontSize: 13,
+                                      color: Color(0xFF64748B),
+                                    ),
+                                  ),
+                                ],
+                                const SizedBox(height: 6),
+                                Text(
+                                  widget.url,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    color: Color(0xFF87909E),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          if (image != null)
+                            Image.network(
                               image,
-                              width: double.infinity,
-                              height: 140,
+                              width: thumbnailSize,
+                              height: thumbnailSize,
                               fit: BoxFit.cover,
+                              frameBuilder: (_, child, _, _) => Padding(
+                                padding: const EdgeInsets.only(left: 12),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(6),
+                                  child: child,
+                                ),
+                              ),
                               errorBuilder: (_, _, _) =>
                                   const SizedBox.shrink(),
                             ),
-                          ),
-                        ),
-                      Text(
-                        title?.isNotEmpty == true ? title! : host,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      if (description.isNotEmpty) ...[
-                        const SizedBox(height: 6),
-                        Text(
-                          description,
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 13,
-                            color: Color(0xFF64748B),
-                          ),
-                        ),
-                      ],
-                      const SizedBox(height: 6),
-                      Text(
-                        widget.url,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 11,
-                          color: Color(0xFF87909E),
-                        ),
-                      ),
-                    ],
+                        ],
+                      );
+                    },
                   ),
                 ),
               ),

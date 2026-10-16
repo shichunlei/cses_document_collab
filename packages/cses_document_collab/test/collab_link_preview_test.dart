@@ -21,14 +21,22 @@ Future<ExtractionResult<LinkMetadata>> _metadata({String image = ''}) =>
 
 /// Returns a native preview harness with borrowed [load] and saved [props].
 /// [url] defaults to the fixture URL, [width] is in logical pixels (default 400),
-/// and optional [onOpen] receives taps; null makes navigation a no-op.
+/// [textScale] defaults to 1 and scales text for accessibility checks.
+/// Optional [onOpen] receives taps; null makes navigation a no-op.
 Widget _app({
   required CollabLinkPreviewLoader load,
   CollabResource props = const CollabResource(),
   VoidCallback? onOpen,
   String url = _url,
   double width = 400,
+  double textScale = 1,
 }) => MaterialApp(
+  builder: (context, child) => MediaQuery(
+    data: MediaQuery.of(
+      context,
+    ).copyWith(textScaler: TextScaler.linear(textScale)),
+    child: child!,
+  ),
   home: Scaffold(
     body: Center(
       child: SizedBox(
@@ -126,6 +134,42 @@ void main() {
     expect(opens, 1);
   });
 
+  for (final width in [180.0, 400.0]) {
+    testWidgets('thumbnail sits right of text at width $width', (tester) async {
+      final cover = await tester.runAsync(() => createTestImage());
+      final cache = PaintingBinding.instance.imageCache;
+      cache.putIfAbsent(
+        const NetworkImage('https://example.test/cover.png'),
+        () => OneFrameImageStreamCompleter(
+          Future.value(ImageInfo(image: cover!)),
+        ),
+      );
+      await tester.pumpWidget(
+        _app(
+          load: (_) => _metadata(image: '/cover.png'),
+          width: width,
+          textScale: 2,
+        ),
+      );
+      await tester.pumpAndSettle();
+      final thumbnail = tester.getRect(find.byType(RawImage));
+      final title = tester.getRect(find.text('网页标题'));
+      final description = tester.getRect(find.text('网页摘要'));
+      final url = tester.getRect(find.text(_url));
+      expect(thumbnail.width, greaterThan(0));
+      expect(thumbnail.width, lessThanOrEqualTo(112));
+      expect(title.right, lessThan(thumbnail.left));
+      expect(description.right, lessThan(thumbnail.left));
+      expect(url.right, lessThan(thumbnail.left));
+      expect(title.top, lessThan(thumbnail.bottom));
+      expect(url.bottom, greaterThan(thumbnail.top));
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+      cache.clear();
+      cache.clearLiveImages();
+    });
+  }
+
   testWidgets('image failures and narrow cards keep text readable', (
     tester,
   ) async {
@@ -138,6 +182,10 @@ void main() {
     expect((image.image as NetworkImage).url, 'https://example.test/cover.png');
     expect(image.errorBuilder, isNotNull);
     expect(find.text('网页标题'), findsOneWidget);
+    expect(
+      tester.renderObject<RenderBox>(find.text('网页标题')).constraints.maxWidth,
+      180 - 24,
+    );
     expect(tester.takeException(), isNull);
   });
 
