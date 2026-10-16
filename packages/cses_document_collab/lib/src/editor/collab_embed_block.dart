@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
@@ -210,7 +211,7 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
     }
   }
 
-  /// 使用 [context] 渲染资源内容及统一选区外壳，不创建主连接或改变正文。
+  /// 使用 [context] 渲染资源内容、更多插入入口及选区外壳，不创建主连接。
   @override
   Widget build(BuildContext context) {
     final editorState = context.read<EditorState>();
@@ -226,7 +227,26 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
     Widget selectableChild = Padding(
       key: _contentKey,
       padding: padding,
-      child: child,
+      child: Stack(
+        children: [
+          child,
+          Positioned(
+            top: 4,
+            right: widget.kind == CollabEmbedKind.video ? 60 : 4,
+            child: Material(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(6),
+              child: CollabBlockMoreButton(
+                key: ValueKey(
+                  'block-more-${node.attributes['cses_collab_block_id'] ?? node.id}',
+                ),
+                editor: editorState,
+                node: node,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
     selectableChild = BlockSelectionContainer(
       node: node,

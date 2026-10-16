@@ -352,8 +352,11 @@ void main() {
       expect(calls, 1);
       expect(
         tester
-            .widget<TextButton>(
-              find.byKey(const ValueKey('meeting-delete-meeting')),
+            .widget<IconButton>(
+              find.descendant(
+                of: find.byKey(const ValueKey('block-more-meeting')),
+                matching: find.byType(IconButton),
+              ),
             )
             .onPressed,
         isNull,
@@ -423,12 +426,10 @@ void main() {
           MaterialApp(home: CollaborativeEditorPage(collab: controller)),
         );
         await tester.pumpAndSettle();
-        final card = find.byKey(const ValueKey('collab-meeting-meeting'));
         final delete = find.byKey(const ValueKey('meeting-delete-meeting'));
-        final cardRect = tester.getRect(card);
-        final deleteRect = tester.getRect(delete);
-        expect(deleteRect.left, lessThan(cardRect.center.dx));
-        expect(deleteRect.bottom, greaterThan(cardRect.center.dy));
+        expect(delete, findsNothing);
+        await tester.tap(find.byKey(const ValueKey('block-more-meeting')));
+        await tester.pumpAndSettle();
         await tester.tap(delete);
         await tester.pumpAndSettle();
         expect(calls, 0);
@@ -449,7 +450,7 @@ void main() {
         expect(
           find.byKey(
             ValueKey(
-              'meeting-delete-${adapter.blocks.firstWhere((b) => b.blockType == 'meeting').id}',
+              'block-more-${adapter.blocks.firstWhere((b) => b.blockType == 'meeting').id}',
             ),
           ),
           findsOneWidget,
@@ -474,19 +475,19 @@ void main() {
       });
       await _mountCard(tester, adapter);
       final delete = find.byKey(const ValueKey('meeting-delete-meeting'));
-      final staleAction = tester.widget<TextButton>(delete).onPressed!;
+      await tester.tap(find.byKey(const ValueKey('block-more-meeting')));
+      await tester.pumpAndSettle();
       adapter.editorState.editable = false;
+      await tester.tap(delete);
       await tester.pumpAndSettle();
       expect(delete, findsNothing);
-      staleAction();
-      await tester.pumpAndSettle();
       expect(adapter.blocks.first.blockType, 'meeting');
       adapter.editorState.editable = true;
       await tester.pumpAndSettle();
-      final oldAction = tester.widget<TextButton>(delete).onPressed!;
-      await adapter.replaceFromRemote([_meeting('远端已变'), _tail]);
+      await tester.tap(find.byKey(const ValueKey('block-more-meeting')));
       await tester.pumpAndSettle();
-      oldAction();
+      await adapter.replaceFromRemote([_meeting('远端已变'), _tail]);
+      await tester.tap(delete);
       await tester.pumpAndSettle();
       expect(adapter.blocks.first.resource!.string('title'), '远端已变');
       expect(tester.takeException(), isNull);
@@ -504,6 +505,8 @@ void main() {
       find.byKey(const ValueKey('meeting-open-meeting')),
     );
     expect(button.onPressed, isNull);
+    await tester.tap(find.byKey(const ValueKey('block-more-meeting')));
+    await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('meeting-delete-meeting')));
     await tester.pumpAndSettle();
     expect(adapter.blocks.map((b) => b.id), ['tail']);

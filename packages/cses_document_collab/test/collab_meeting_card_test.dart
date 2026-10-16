@@ -74,10 +74,11 @@ void main() {
           'title': '共享周会',
           'number': '123456',
         });
-        final remove = tester.getRect(_delete);
+        expect(_delete, findsNothing);
+        final remove = tester.getRect(_more);
         final open = tester.getRect(_open);
-        expect(remove.right, lessThanOrEqualTo(open.left));
-        expect(remove.center.dy, closeTo(open.center.dy, 4));
+        expect(remove.overlaps(open), isFalse);
+        expect(remove.bottom, lessThan(open.top));
         await _capture(tester, state.value);
         expect(tester.takeException(), isNull);
       },
@@ -116,6 +117,8 @@ void main() {
         startOffset: 0,
         endOffset: 1,
       );
+      await tester.pumpAndSettle();
+      await tester.tap(_more);
       await tester.pumpAndSettle();
       await tester.tap(_delete);
       await tester.pumpAndSettle();
@@ -305,7 +308,14 @@ void main() {
           ),
         );
         expect(tester.widget<FilledButton>(_open).onPressed, isNull);
-        expect(tester.widget<TextButton>(_delete).onPressed, isNotNull);
+        expect(
+          tester
+              .widget<IconButton>(
+                find.descendant(of: _more, matching: find.byType(IconButton)),
+              )
+              .onPressed,
+          isNotNull,
+        );
         expect(find.text(missing ? '● 会议不存在' : '● 已删除'), findsOneWidget);
       },
     );
@@ -445,7 +455,8 @@ void main() {
           },
         ),
       );
-      expect(tester.getRect(_delete).overlaps(tester.getRect(_open)), isFalse);
+      expect(_delete, findsNothing);
+      expect(tester.getRect(_more).overlaps(tester.getRect(_open)), isFalse);
       await _capture(tester, 'narrow');
       harness.adapter.editorState.editable = false;
       await tester.pumpAndSettle();
@@ -462,8 +473,11 @@ void main() {
 /// 当前合成会议的主按钮。
 final _open = find.byKey(const ValueKey('meeting-open-meeting'));
 
-/// 当前合成会议的独立删除按钮。
+/// 当前已展开更多菜单中的删除项。
 final _delete = find.byKey(const ValueKey('meeting-delete-meeting'));
+
+/// 当前会议卡片右上的更多入口。
+final _more = find.byKey(const ValueKey('block-more-meeting'));
 
 /// 当前合成会议的着色背景。
 final _surface = find.byKey(const ValueKey('meeting-card-surface-meeting'));

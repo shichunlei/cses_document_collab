@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
@@ -33,9 +34,11 @@ class _CalloutBlockState extends State<_CalloutBlock> with SelectableMixin {
   final _bodyKey = GlobalKey();
   late final _editor = context.read<EditorState>();
 
+  /// Renders child blocks with insertion, colors and safe container deletion in [context].
   @override
   Widget build(BuildContext context) {
     final node = widget.node;
+    final host = collabBlockActionContext(context);
     final prefix = node.attributes[csesCalloutPrefixAttribute] as String? ?? '';
     final color = parseCollabBlockColor(
       node.attributes[csesBlockTextColorAttribute] as String?,
@@ -119,22 +122,44 @@ class _CalloutBlockState extends State<_CalloutBlock> with SelectableMixin {
                 ],
               ),
             ),
-            if (_editor.editable)
-              ExcludeFocus(
-                child: SizedBox.square(
-                  dimension: 28,
-                  child: IconButton(
-                    key: const ValueKey('collab-callout-settings'),
-                    tooltip: '设置高亮块颜色',
-                    padding: EdgeInsets.zero,
-                    iconSize: 17,
-                    color: const Color(0xFF8A8F98),
-                    onPressed: () =>
-                        showCollabCalloutSettings(context, _editor, node),
-                    icon: const Icon(Icons.tune),
-                  ),
-                ),
+            CollabBlockMoreButton(
+              key: ValueKey(
+                'block-more-${node.attributes['cses_collab_block_id'] ?? node.id}',
               ),
+              editor: _editor,
+              node: node,
+              protectSubtree: true,
+              actions: [
+                (
+                  label: '颜色设置',
+                  key: const ValueKey('collab-callout-settings'),
+                  run: () async {
+                    final current = findCollabActionNode(
+                      _editor,
+                      node.attributes['cses_collab_block_id'] as String? ??
+                          node.id,
+                    );
+                    if (host.mounted && current != null) {
+                      await showCollabCalloutSettings(host, _editor, current);
+                    }
+                  },
+                ),
+                if (!_containsUnsupportedCalloutContent(node))
+                  (
+                    label: '删除高亮块',
+                    key: ValueKey(
+                      'callout-delete-${node.attributes['cses_collab_block_id'] ?? node.id}',
+                    ),
+                    run: () async {
+                      await _deleteCallout(
+                        _editor,
+                        node.attributes['cses_collab_block_id'] as String? ??
+                            node.id,
+                      );
+                    },
+                  ),
+              ],
+            ),
           ],
         ),
       ),
@@ -185,6 +210,48 @@ class _CalloutBlockState extends State<_CalloutBlock> with SelectableMixin {
   @override
   Offset localToGlobal(Offset offset, {bool shiftWithBaseOffset = false}) =>
       (context.findRenderObject() as RenderBox).localToGlobal(offset);
+}
+
+/// Reports whether borrowed [node] contains an opaque unsupported descendant.
+/// These subtrees cannot be reconstructed by local history and must not be deleted.
+bool _containsUnsupportedCalloutContent(Node node) =>
+    node.type == csesUnsupportedBlockType ||
+    node.children.any(_containsUnsupportedCalloutContent);
+
+/// Deletes the current callout with stable [id] and its children from borrowed [editor].
+/// Root/callout parents are supported; the last sibling is replaced by a fresh empty
+/// paragraph. Readonly, disposed, deleted and opaque targets are ignored. Records
+/// one undo step without restoring keyboard focus; apply failures propagate to the
+/// menu boundary. The editor retains ownership of the document and undo snapshots.
+Future<void> _deleteCallout(EditorState editor, String id) async {
+  if (editor.isDisposed || !editor.editable) return;
+  final node = findCollabActionNode(editor, id);
+  if (node == null ||
+      node.type != csesCalloutBlockType ||
+      !const {'page', 'callout'}.contains(node.parent?.type) ||
+      _containsUnsupportedCalloutContent(node)) {
+    return;
+  }
+  final path = node.path;
+  final lastSibling = node.parent!.children.length == 1;
+  if (editor.undoManager.undoStack.isNonEmpty) {
+    editor.undoManager.undoStack.last.seal();
+  }
+  final transaction = editor.transaction
+    ..add(DeleteOperation(path, [node]), transform: false)
+    ..afterSelection = null;
+  if (lastSibling) {
+    final paragraph = paragraphNode();
+    paragraph.updateAttributes({
+      AppFlowyBlockEditorAdapter.collabBlockIdAttribute: paragraph.id,
+    });
+    transaction.add(InsertOperation(path, [paragraph]), transform: false);
+  }
+  await editor.apply(
+    transaction,
+    withUpdateSelection: false,
+    skipHistoryDebounce: true,
+  );
 }
 
 Node? _findCallout(EditorState editor, String id) {

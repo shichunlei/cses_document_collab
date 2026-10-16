@@ -186,6 +186,8 @@ void main() {
         startOffset: 1,
         endOffset: 3,
       );
+      expect(find.byTooltip('更多操作'), findsNothing);
+      expect(find.byKey(const ValueKey('block-more-line')), findsNothing);
       await tester.tap(find.byKey(const ValueKey('collab-divider-line')));
       await tester.pumpAndSettle();
       expect(state.selection, isNull);

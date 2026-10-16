@@ -5,6 +5,27 @@ import 'package:cses_document_collab/src/native/frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+/// Returns comparable hierarchy/text/formatting/appearance from borrowed [blocks].
+/// Native block wrappers contain list fields whose identity is irrelevant here.
+List<Object?> _calloutProjection(List<native.CollabBlock> blocks) => [
+  for (final block in blocks)
+    [
+      block.id,
+      block.parentId,
+      block.blockType,
+      block.text,
+      block.segments,
+      block.checked,
+      block.alignment,
+      block.indent,
+      block.calloutPrefix,
+      block.blockTextColor,
+      block.blockBackgroundColor,
+      block.blockBorderColor,
+    ],
+];
+
+/// Verifies callout hierarchy, appearance and subtree deletion through real FRB/SQLite.
 void main() {
   final library = File(
     Platform.isMacOS
@@ -85,6 +106,61 @@ void main() {
           reopened.blocks.firstWhere((b) => b.id == 'callout-body').text,
           '这是高亮块儿😀',
         );
+      } finally {
+        native.closeDocument();
+        await directory.delete(recursive: true);
+      }
+    },
+    skip: !library.existsSync(),
+  );
+
+  test(
+    'callout subtree deletion and restoration persist through real FRB/SQLite',
+    () async {
+      final directory = await Directory.systemTemp.createTemp(
+        'callout-delete-frb-',
+      );
+      final path = '${directory.path}/updates.sqlite';
+      try {
+        native.openCsesDocument(
+          documentId: 'fixture-doc',
+          cacheDocumentId: 'callout-delete',
+          databasePath: path,
+        );
+        native.applyDocumentUpdate(
+          bytes: await File(
+            'rust/tests/fixtures/blockcraft-callout.update',
+          ).readAsBytes(),
+        );
+        final before = native.currentBlocks();
+        final callout = before.firstWhere(
+          (block) => block.blockType == 'callout',
+        );
+        final subtree = {callout.id};
+        for (final block in before) {
+          if (subtree.contains(block.parentId)) subtree.add(block.id);
+        }
+        final remaining = before
+            .where((block) => !subtree.contains(block.id))
+            .toList();
+        final deleted = native.applyBlockSnapshot(blocks: remaining);
+        expect(deleted.v1Update, isNotEmpty);
+        expect(
+          deleted.blocks.any((block) => subtree.contains(block.id)),
+          isFalse,
+        );
+        final restored = native.applyBlockSnapshot(blocks: before);
+        expect(restored.v1Update, isNotEmpty);
+        expect(_calloutProjection(restored.blocks), _calloutProjection(before));
+        native.applyBlockSnapshot(blocks: remaining);
+        native.applyBlockSnapshot(blocks: before);
+        native.closeDocument();
+        final reopened = native.openCsesDocument(
+          documentId: 'fixture-doc',
+          cacheDocumentId: 'callout-delete',
+          databasePath: path,
+        );
+        expect(_calloutProjection(reopened.blocks), _calloutProjection(before));
       } finally {
         native.closeDocument();
         await directory.delete(recursive: true);

@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
@@ -244,6 +245,7 @@ class _CodeBlockState extends State<_CodeBlock>
     super.dispose();
   }
 
+  /// Builds the selectable code and header including sibling insertion in [context].
   @override
   Widget build(BuildContext context) {
     final metadata = _metadata;
@@ -336,6 +338,13 @@ class _CodeBlockState extends State<_CodeBlock>
                             ],
                           ],
                         ),
+                      ),
+                      CollabBlockMoreButton(
+                        key: ValueKey(
+                          'block-more-${_blockId ?? widget.node.id}',
+                        ),
+                        editor: _editor,
+                        node: widget.node,
                       ),
                       const SizedBox(width: 4),
                       Semantics(

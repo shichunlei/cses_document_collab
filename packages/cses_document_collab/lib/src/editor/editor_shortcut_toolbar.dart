@@ -1750,11 +1750,14 @@ Node? _findMediaTarget(EditorState state, String id) {
 /// [context] 与 [editorState] 均为借用对象；弹窗必须等待退场动画后完成。
 /// [action] 的结果在正文选区恢复后返回，取消为null；异常仍恢复焦点后透传，销毁的编辑器不执行action。
 /// [canRestore] 可在异步结束时拒绝恢复已失效会话的焦点；null沿用页面与编辑器存活检查。
+/// [selectionAfterAction] 在操作完成后解析目标选区，供新插入正文恢复光标与键盘；
+/// 未提供或返回null时恢复原稳定选区，回调不得修改编辑器。
 Future<T?> runEditorHeaderAction<T>(
   BuildContext context,
   EditorState editorState,
   Future<T?> Function() action, {
   bool Function()? canRestore,
+  Selection? Function()? selectionAfterAction,
 }) async {
   if (editorState.isDisposed) return null;
   final session = _EditorModalSession(editorState);
@@ -1763,7 +1766,7 @@ Future<T?> runEditorHeaderAction<T>(
   } finally {
     await session.finish(
       context.mounted && (canRestore?.call() ?? true) ? context : null,
-      null,
+      editorState.isDisposed ? null : selectionAfterAction?.call(),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/editor/collab_task_card_view.dart';
 import 'package:cses_document_collab/src/model/collab_host_services.dart';
 import 'package:cses_document_collab/src/model/collab_task_card_data.dart';
@@ -67,7 +68,7 @@ class _TaskCardState extends State<_TaskCard> with SelectableMixin {
   /// 请求代次，销毁和重试后拒绝旧响应。
   int _generation = 0;
 
-  /// 在借用[context]中显示宿主详情与共享标题，只有详情图标和更多菜单响应业务操作。
+  /// 在借用[context]中显示宿主详情与共享标题，更多菜单支持插入正文和删除引用。
   @override
   Widget build(BuildContext context) {
     final editor = context.read<EditorState>();
@@ -135,6 +136,27 @@ class _TaskCardState extends State<_TaskCard> with SelectableMixin {
                           services,
                           expected: values.properties,
                           delete: true,
+                        )
+                      : null,
+                  moreActions: editor.editable
+                      ? CollabBlockMoreButton(
+                          key: ValueKey('task-card-more-$id'),
+                          editor: editor,
+                          node: widget.node,
+                          enabled: !_busy,
+                          actions: [
+                            (
+                              label: '删除卡片',
+                              key: ValueKey('task-card-delete-$id'),
+                              run: () => _act(
+                                editor,
+                                id,
+                                services,
+                                expected: values.properties,
+                                delete: true,
+                              ),
+                            ),
+                          ],
                         )
                       : null,
                   onRetry: _retryDetails,

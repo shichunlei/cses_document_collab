@@ -14,6 +14,7 @@ class CollabTaskCardView extends StatelessWidget {
   /// [data]可选本地详情，null只展示引用；[loading]/[failed]/[missing]控制反馈，不推断业务状态。
   /// [busy]表示宿主导航或删除尚未结束，默认false；[onOpen]仅右上详情图标调用。
   /// [onDelete]存在时显示更多菜单，删除只影响文档引用；[onRetry]用于失败后手动重试。
+  /// [moreActions]可替换默认删除菜单，null保留默认行为，控件由编辑器提供。
   const CollabTaskCardView({
     super.key,
     required this.blockId,
@@ -26,6 +27,7 @@ class CollabTaskCardView extends StatelessWidget {
     this.onOpen,
     this.onDelete,
     this.onRetry,
+    this.moreActions,
   });
 
   /// 必填稳定块身份，不用任务ID代替，允许同一任务多次引用。
@@ -54,6 +56,9 @@ class CollabTaskCardView extends StatelessWidget {
 
   /// 可选删除事件；null隐藏更多菜单，由编辑器持有权限和事务。
   final Future<void> Function()? onDelete;
+
+  /// 可选更多操作控件；null保留仅含删除的独立视图菜单，不拥有资源。
+  final Widget? moreActions;
 
   /// 可选失败重试，由调用方管理请求代次。
   final VoidCallback? onRetry;
@@ -130,7 +135,9 @@ class CollabTaskCardView extends StatelessWidget {
                             await onOpen!();
                           },
                   ),
-                  if (onDelete != null)
+                  if (moreActions != null)
+                    moreActions!
+                  else if (onDelete != null)
                     PopupMenuButton<Future<void> Function()>(
                       key: ValueKey('task-card-more-$blockId'),
                       tooltip: '任务卡片操作',

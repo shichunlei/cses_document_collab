@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_formula_sheet.dart';
 import 'package:cses_document_collab/src/editor/collab_formula_visual.dart';
@@ -48,7 +49,7 @@ class _FormulaBlockState extends State<_FormulaBlock> with SelectableMixin {
   /// 内部视觉边界，随本 Widget 释放，不绑定编辑输入。
   final _bodyKey = GlobalKey();
 
-  /// 在借用 [context] 内构建只读/可编辑视图，预览时不提供设置入口。
+  /// 在借用 [context] 内构建公式与更多插入入口，预览时隐藏修改操作。
   @override
   Widget build(BuildContext context) {
     final editor = context.read<EditorState>();
@@ -86,7 +87,23 @@ class _FormulaBlockState extends State<_FormulaBlock> with SelectableMixin {
       blockColor: editor.editorStyle.selectionColor,
       supportTypes: const [BlockSelectionType.block],
       selectionAboveBlock: true,
-      child: KeyedSubtree(key: _bodyKey, child: child),
+      child: KeyedSubtree(
+        key: _bodyKey,
+        child: Stack(
+          children: [
+            child,
+            Positioned(
+              top: 0,
+              right: 0,
+              child: CollabBlockMoreButton(
+                key: ValueKey('block-more-$id'),
+                editor: editor,
+                node: node,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

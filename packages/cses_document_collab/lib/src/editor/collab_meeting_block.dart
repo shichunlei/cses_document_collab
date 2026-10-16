@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/model/collab_meeting_card_data.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/model/collab_host_services.dart';
@@ -112,17 +113,24 @@ class _MeetingBlockState extends State<_MeetingBlock> with SelectableMixin {
                       services.onMeetingCardTap == null
                   ? null
                   : () => _openMeeting(editor, id, meetingId, services, data),
-              onDelete: editor.editable
-                  ? (_busy
-                        ? null
-                        : () => _deleteReference(
-                            editor,
-                            id,
-                            values.properties,
-                            services,
-                          ))
-                  : null,
-              showDelete: editor.editable,
+              moreActions: CollabBlockMoreButton(
+                key: ValueKey('block-more-$id'),
+                editor: editor,
+                node: node,
+                enabled: !_busy,
+                actions: [
+                  (
+                    label: '删除卡片',
+                    key: ValueKey('meeting-delete-$id'),
+                    run: () => _deleteReference(
+                      editor,
+                      id,
+                      values.properties,
+                      services,
+                    ),
+                  ),
+                ],
+              ),
               onRetry: snapshot.hasError && !_busy ? _retryDetails : null,
             ),
           );
@@ -367,12 +375,12 @@ class _MeetingBlockState extends State<_MeetingBlock> with SelectableMixin {
       (context.findRenderObject() as RenderBox).localToGlobal(offset);
 }
 
-/// 会议卡片的本地展示；背景与标题没有点击回调，两个操作分置底部两侧。
+/// 会议卡片的本地展示；背景与标题不派发事件，详情在底部，编辑操作统一在更多菜单。
 class _MeetingCardView extends StatelessWidget {
   /// [key]控制身份与状态复用，[blockId]为稳定块身份，[title]/[number]为有效展示字段，[data]为可空业务快照。
   /// [loading]/[failed]/[unavailable]分别表示加载、失败、会议不存在；[busy]屏蔽重复操作。
-  /// [onOpen]仅绑定加入/查看按钮；[showDelete]由权限决定，[onDelete]为空时禁用删除；
-  /// [onRetry]为空不显示重试，回调及其业务资源均由调用方持有。
+  /// [onOpen]仅绑定加入/查看按钮；删除与插入正文统一交由[moreActions]。
+  /// [onRetry]为空不显示重试，[moreActions]提供更多操作，回调及其资源由调用方持有。
   const _MeetingCardView({
     super.key,
     required this.blockId,
@@ -384,8 +392,7 @@ class _MeetingCardView extends StatelessWidget {
     required this.unavailable,
     required this.busy,
     required this.onOpen,
-    required this.showDelete,
-    required this.onDelete,
+    required this.moreActions,
     required this.onRetry,
   });
 
@@ -416,11 +423,8 @@ class _MeetingCardView extends StatelessWidget {
   /// 主按钮回调，null禁用按钮。
   final VoidCallback? onOpen;
 
-  /// 编辑权限决定是否显示删除入口。
-  final bool showDelete;
-
-  /// 独立删除回调，null禁用按钮。
-  final VoidCallback? onDelete;
+  /// 编辑器提供的更多操作控件，负责权限、插入正文和删除引用。
+  final Widget moreActions;
 
   /// 失败重试回调，null不显示。
   final VoidCallback? onRetry;
@@ -499,6 +503,7 @@ class _MeetingCardView extends StatelessWidget {
                           ),
                         ),
                       ),
+                      moreActions,
                     ],
                   ),
                   const SizedBox(height: 6),
@@ -546,23 +551,11 @@ class _MeetingCardView extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   OverflowBar(
-                    alignment: showDelete
-                        ? MainAxisAlignment.spaceBetween
-                        : MainAxisAlignment.end,
+                    alignment: MainAxisAlignment.end,
                     overflowAlignment: OverflowBarAlignment.end,
                     spacing: 8,
                     overflowSpacing: 8,
                     children: [
-                      if (showDelete)
-                        TextButton.icon(
-                          key: ValueKey('meeting-delete-$blockId'),
-                          onPressed: onDelete,
-                          style: TextButton.styleFrom(
-                            foregroundColor: const Color(0xFF86909C),
-                          ),
-                          icon: const Icon(Icons.delete_outline, size: 18),
-                          label: const Text('删除卡片'),
-                        ),
                       FilledButton(
                         key: ValueKey('meeting-open-$blockId'),
                         onPressed: onOpen,

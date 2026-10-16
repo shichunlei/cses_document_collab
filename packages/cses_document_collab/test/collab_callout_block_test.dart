@@ -6,6 +6,8 @@ import 'package:cses_document_collab/src/editor/collab_block_delete.dart';
 import 'package:cses_document_collab/src/editor/collaborative_editor_page.dart';
 import 'package:cses_document_collab/src/editor/collab_list_editing.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
+import 'package:cses_document_collab/src/model/collab_host_services.dart';
+import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -46,6 +48,204 @@ void main() {
           ),
         );
   });
+
+  for (final shape in ['withTail', 'only', 'empty', 'nested']) {
+    testWidgets('callout more deletes $shape subtree as one undo step', (
+      tester,
+    ) async {
+      final blocks = [
+        if (shape == 'nested')
+          const CollabEditorBlock(id: 'outer', blockType: 'callout', text: ''),
+        CollabEditorBlock(
+          id: 'callout',
+          parentId: shape == 'nested' ? 'outer' : null,
+          blockType: 'callout',
+          text: '',
+          calloutPrefix: '💡',
+          blockBackgroundColor: '#F6E5F0',
+          blockBorderColor: '#FFE6CD',
+        ),
+        if (shape != 'empty') ...[
+          const CollabEditorBlock(
+            id: 'body',
+            parentId: 'callout',
+            blockType: 'paragraph',
+            text: '第一段',
+            segments: [CollabEditorTextSegment(text: '第一段', bold: true)],
+          ),
+          const CollabEditorBlock(
+            id: 'second',
+            parentId: 'callout',
+            blockType: 'paragraph',
+            text: '第二段',
+          ),
+        ],
+        if (shape == 'withTail') _fixtureTail,
+      ];
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: blocks,
+        onLocalBlocksChanged: (_) {},
+      );
+      addTearDown(adapter.dispose);
+      await _pump(tester, adapter);
+      final state = adapter.editorState;
+      final snapshot = state.document.root.toJson();
+      await _openCalloutMenu(tester);
+      expect(find.text('颜色设置'), findsOneWidget);
+      expect(find.text('在下方插入'), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('callout-delete-callout')));
+      await tester.pumpAndSettle();
+      expect(
+        adapter.blocks.any((b) => b.id == 'callout' || b.parentId == 'callout'),
+        isFalse,
+      );
+      expect(state.undoManager.undoStack.isNonEmpty, isTrue);
+      expect(tester.testTextInput.isVisible, isFalse);
+      if (shape == 'withTail') {
+        expect(adapter.blocks, [_fixtureTail]);
+      } else {
+        expect(adapter.blocks.last.blockType, 'paragraph');
+        expect(adapter.blocks.last.text, isEmpty);
+        expect(adapter.blocks.last.id, isNot('callout'));
+        expect(
+          adapter.blocks.last.parentId,
+          shape == 'nested' ? 'outer' : null,
+        );
+      }
+      state.undoManager.undo();
+      await tester.pumpAndSettle();
+      expect(state.document.root.toJson(), snapshot);
+      expect(adapter.blocks.length, blocks.length);
+      state.undoManager.redo();
+      await tester.pumpAndSettle();
+      expect(
+        adapter.blocks.any((b) => b.id == 'callout' || b.parentId == 'callout'),
+        isFalse,
+      );
+      state.undoManager.undo();
+      await tester.pumpAndSettle();
+      expect(state.document.root.toJson(), snapshot);
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+  }
+
+  for (final mutation in [
+    'readonly',
+    'revokeRestore',
+    'child',
+    'delete',
+    'reorder',
+    'session',
+  ]) {
+    testWidgets('open callout delete menu handles $mutation safely', (
+      tester,
+    ) async {
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: _fixture,
+        onLocalBlocksChanged: (_) {},
+      );
+      addTearDown(adapter.dispose);
+      await _pump(tester, adapter);
+      await _openCalloutMenu(tester);
+      if (mutation == 'readonly' || mutation == 'revokeRestore') {
+        adapter.editorState.editable = false;
+        if (mutation == 'revokeRestore') adapter.editorState.editable = true;
+      } else if (mutation == 'session') {
+        final owner = Object();
+        CollabRuntime.acquire(
+          owner,
+          CollabHostServices(onError: (_, _, _, _) {}),
+        );
+        addTearDown(() => CollabRuntime.release(owner));
+      } else if (mutation == 'reorder') {
+        await adapter.replaceFromRemote([_fixtureTail, ..._fixture.take(3)]);
+      } else if (mutation == 'delete') {
+        await adapter.replaceFromRemote([_fixtureTail]);
+      } else {
+        await adapter.replaceFromRemote([
+          _fixture.first,
+          const CollabEditorBlock(
+            id: 'body',
+            parentId: 'callout',
+            blockType: 'paragraph',
+            text: '远端新正文',
+          ),
+          ..._fixture.skip(2),
+        ]);
+      }
+      await tester.tap(find.byKey(const ValueKey('callout-delete-callout')));
+      await tester.pumpAndSettle();
+      if (mutation == 'reorder' || mutation == 'delete') {
+        expect(adapter.blocks, [_fixtureTail]);
+      } else {
+        expect(adapter.blocks.any((b) => b.id == 'callout'), isTrue);
+        if (mutation == 'child') expect(adapter.blocks[1].text, '远端新正文');
+      }
+      expect(
+        adapter.editorState.undoManager.undoStack.isEmpty,
+        mutation != 'reorder',
+      );
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+  }
+
+  testWidgets('opaque child hides callout deletion and preserves content', (
+    tester,
+  ) async {
+    final adapter = AppFlowyBlockEditorAdapter(
+      initialBlocks: [
+        _fixture.first,
+        const CollabEditorBlock(
+          id: 'unknown',
+          parentId: 'callout',
+          blockType: csesUnsupportedBlockType,
+          text: 'graph TD;A-->B',
+        ),
+        _fixtureTail,
+      ],
+      onLocalBlocksChanged: (_) {},
+    );
+    addTearDown(adapter.dispose);
+    await _pump(tester, adapter);
+    final snapshot = adapter.editorState.document.root.toJson();
+    await _openCalloutMenu(tester);
+    expect(find.byKey(const ValueKey('callout-delete-callout')), findsNothing);
+    expect(find.text('颜色设置'), findsOneWidget);
+    expect(find.text('在下方插入'), findsOneWidget);
+    expect(adapter.editorState.document.root.toJson(), snapshot);
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
+
+  testWidgets(
+    'undo deletion leaves the preceding color change independently undoable',
+    (tester) async {
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: _fixture.take(3).toList(),
+        onLocalBlocksChanged: (_) {},
+      );
+      addTearDown(adapter.dispose);
+      await _pump(tester, adapter);
+      final state = adapter.editorState;
+      await updateCollabCalloutAppearance(
+        state,
+        'callout',
+        csesCalloutPrefixAttribute,
+        '💡',
+      );
+      await tester.pumpAndSettle();
+      await _openCalloutMenu(tester);
+      await tester.tap(find.byKey(const ValueKey('callout-delete-callout')));
+      await tester.pumpAndSettle();
+      state.undoManager.undo();
+      await tester.pumpAndSettle();
+      expect(adapter.blocks.first.calloutPrefix, '💡');
+      state.undoManager.undo();
+      await tester.pumpAndSettle();
+      expect(adapter.blocks.first.calloutPrefix, '🤪');
+      expect(adapter.blocks[1].text, _fixture[1].text);
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+  );
 
   testWidgets(
     'desktop callout renders nested paragraphs and appearance in edit and preview',
@@ -132,6 +332,13 @@ void main() {
         find.byKey(const ValueKey('callout-emoji-settings-panel')),
         findsNothing,
       );
+      expect(
+        find.byKey(const ValueKey('collab-callout-settings')),
+        findsNothing,
+      );
+      await tester.tap(find.byKey(const ValueKey('block-more-callout')));
+      await tester.pumpAndSettle();
+      expect(find.text('在下方插入'), findsOneWidget);
       await tester.tap(find.byKey(const ValueKey('collab-callout-settings')));
       await tester.pumpAndSettle();
       expect(
@@ -363,6 +570,12 @@ void main() {
       await tester.pumpWidget(const SizedBox.shrink());
     },
   );
+}
+
+/// Opens the stable callout's more menu with borrowed [tester].
+Future<void> _openCalloutMenu(WidgetTester tester) async {
+  await tester.tap(find.byKey(const ValueKey('block-more-callout')));
+  await tester.pumpAndSettle();
 }
 
 const _fixtureTail = CollabEditorBlock(

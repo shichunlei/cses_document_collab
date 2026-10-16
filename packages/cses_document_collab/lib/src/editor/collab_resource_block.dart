@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
@@ -118,30 +119,56 @@ class _ResourceBlockState extends State<_ResourceBlock> with SelectableMixin {
           as String? ??
       widget.node.id;
 
-  Future<void> _delete() async {
-    if (!_editor.editable || _editor.isDisposed || widget.node.parent == null) {
+  /// Deletes borrowed [source], defaulting to this widget's node, as an editor transaction.
+  /// Detached, disposed or readonly targets are ignored; the last root/callout child is replaced
+  /// with an empty paragraph. Deletion is one independent undo step; the editor
+  /// owns the node and history.
+  Future<void> _delete([Node? source]) async {
+    if (!_editor.editable ||
+        _editor.isDisposed ||
+        (source ?? widget.node).parent == null) {
       return;
     }
-    final node = widget.node;
+    final node = source ?? widget.node;
+    if (!identical(
+      findCollabActionNode(
+        _editor,
+        node.attributes['cses_collab_block_id'] as String? ?? node.id,
+      ),
+      node,
+    )) {
+      return;
+    }
+    if (_editor.undoManager.undoStack.isNonEmpty) {
+      _editor.undoManager.undoStack.last.seal();
+    }
+    final path = node.path;
+    final parent = node.parent!;
     final transaction = _editor.transaction..deleteNode(node);
-    if (_editor.document.root.children.length == 1 &&
-        node.parent == _editor.document.root) {
-      transaction.insertNode([0], paragraphNode());
-      transaction.afterSelection = Selection.single(path: [0], startOffset: 0);
+    if (parent.children.length == 1 &&
+        const {'page', 'callout'}.contains(parent.type)) {
+      final paragraph = paragraphNode();
+      paragraph.updateAttributes({
+        AppFlowyBlockEditorAdapter.collabBlockIdAttribute: paragraph.id,
+      });
+      transaction.add(InsertOperation(path, [paragraph]), transform: false);
+      transaction.afterSelection = Selection.single(path: path, startOffset: 0);
     } else {
       transaction.afterSelection = null;
     }
-    await _editor.apply(transaction);
+    await _editor.apply(transaction, skipHistoryDebounce: true);
   }
 
   /// Returns a selectable resource surface using inherited [context].
   /// Link resources offer desktop-compatible views and expose editing/deletion only in
   /// editable mode; audio and attachments retain separate opening controls.
   /// Metadata stays local, while explicit edits use the borrowed editor.
+  /// Renders resource content and insertion/editing controls in borrowed [context].
   @override
   Widget build(BuildContext context) {
     final node = widget.node;
     final kind = node.type;
+    final host = collabBlockActionContext(context);
     final props = CollabResource.fromAttributes(node.attributes);
     final label = collabResourceLabel(kind);
     final title = props.string('name');
@@ -200,7 +227,7 @@ class _ResourceBlockState extends State<_ResourceBlock> with SelectableMixin {
                     ],
                   ),
                 ),
-                if (!isCard || kind != 'bookmark')
+                if (!isCard)
                   ExcludeFocus(
                     child: IconButton(
                       key: ValueKey('resource-open-$_id'),
@@ -209,16 +236,47 @@ class _ResourceBlockState extends State<_ResourceBlock> with SelectableMixin {
                       onPressed: () => _open(context, _url),
                     ),
                   ),
-                if (_editor.editable) ...[
-                  if (isCard)
-                    ExcludeFocus(
-                      child: IconButton(
-                        key: ValueKey('resource-view-$_id'),
-                        tooltip: '切换视图',
-                        icon: const Icon(Icons.view_agenda_outlined, size: 18),
-                        onPressed: () => showCollabLinkActions(context, node),
+                if (!isCard)
+                  CollabBlockMoreButton(
+                    key: ValueKey('block-more-$_id'),
+                    editor: _editor,
+                    node: node,
+                  ),
+                if (isCard)
+                  ExcludeFocus(
+                    child: IconButton(
+                      key: ValueKey('resource-more-$_id'),
+                      tooltip: '更多操作',
+                      icon: const Icon(Icons.more_horiz, size: 18),
+                      onPressed: () => showCollabLinkActions(
+                        context,
+                        node,
+                        onEdit: (source) async {
+                          final route = DialogRoute<void>(
+                            context: host,
+                            builder: (_) => _ResourceSettings(
+                              editor: _editor,
+                              id:
+                                  source.attributes['cses_collab_block_id']
+                                      as String? ??
+                                  source.id,
+                              kind: source.type,
+                              url:
+                                  source.attributes[csesEmbedUrlAttribute]
+                                      as String,
+                              props: CollabResource.fromAttributes(
+                                source.attributes,
+                              ),
+                            ),
+                          );
+                          await Navigator.of(host).push(route);
+                          await route.completed;
+                        },
+                        onDelete: (source) => _delete(source),
                       ),
                     ),
+                  ),
+                if (_editor.editable && !isCard) ...[
                   ExcludeFocus(
                     child: IconButton(
                       key: ValueKey('resource-edit-$_id'),

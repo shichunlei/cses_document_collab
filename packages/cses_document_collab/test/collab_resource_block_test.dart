@@ -118,6 +118,8 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('网页标题'), findsOneWidget);
       expect(find.text('已保存的网页摘要'), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('resource-more-resource')));
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('resource-delete-resource')));
       await tester.pumpAndSettle();
       expect(adapter.blocks.single.blockType, 'paragraph');
@@ -172,6 +174,8 @@ void main() {
           find.byKey(const ValueKey('resource-open-resource')),
           findsNothing,
         );
+        await tester.tap(find.byKey(const ValueKey('resource-more-resource')));
+        await tester.pumpAndSettle();
         await tester.tap(find.byKey(const ValueKey('resource-edit-resource')));
         await tester.pumpAndSettle();
         expect(
