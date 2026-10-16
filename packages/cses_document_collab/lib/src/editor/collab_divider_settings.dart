@@ -9,11 +9,7 @@ import 'package:flutter/material.dart';
 /// 打开稳定 [id] 对应分割线的设置面板；借用 [context] 和 [editor]。
 /// 正文输入在完整面板生命周期内隔离，退场动画完成后恢复原稳定选区。
 /// 只读/删除/销毁时不打开；属性事务逐项保存，异常可见且保留诊断。
-Future<void> showCollabDividerSettings(
-  BuildContext context,
-  EditorState editor,
-  String id,
-) async {
+Future<void> showCollabDividerSettings(BuildContext context, EditorState editor, String id) async {
   if (!editor.editable || findCollabDivider(editor, id) == null) {
     return;
   }
@@ -33,16 +29,9 @@ Future<void> showCollabDividerSettings(
       await route?.completed;
     });
   } catch (error, stack) {
-    CollabDiagnostics.report(
-      '分割线设置失败',
-      error: error,
-      stackTrace: stack,
-      tag: 'DocCollab',
-    );
+    CollabDiagnostics.report('分割线设置失败', error: error, stackTrace: stack, tag: 'DocCollab');
     if (context.mounted) {
-      ScaffoldMessenger.maybeOf(
-        context,
-      )?.showSnackBar(const SnackBar(content: Text('修改分割线失败，请重试')));
+      ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(content: Text('修改分割线失败，请重试')));
     }
   }
 }
@@ -86,9 +75,7 @@ class _DividerSettingsState extends State<_DividerSettings> {
   /// 解析当前稳定目标，删除或销毁返回 null，不缓存可能过期的 Node。
   CollabDivider? get _divider {
     final node = findCollabDivider(widget.editor, widget.id);
-    return node == null
-        ? null
-        : CollabDivider(CollabDivider.readAttributes(node.attributes).values);
+    return node == null ? null : CollabDivider(CollabDivider.readAttributes(node.attributes).values);
   }
 
   /// 绑定目标、祖先和编辑权限变化；远端更新、删除及权限撤销均可刷新面板。
@@ -142,27 +129,15 @@ class _DividerSettingsState extends State<_DividerSettings> {
       _error = null;
     });
     try {
-      if (_divider == null ||
-          !widget.editor.editable ||
-          widget.editor.isDisposed) {
+      if (_divider == null || !widget.editor.editable || widget.editor.isDisposed) {
         if (mounted) {
           setState(() => _error = '分割线已删除或当前不可编辑');
         }
         return;
       }
-      await changeCollabDividerProperty(
-        widget.editor,
-        widget.id,
-        property,
-        value,
-      );
+      await changeCollabDividerProperty(widget.editor, widget.id, property, value);
     } catch (error, stack) {
-      CollabDiagnostics.report(
-        '修改分割线失败',
-        error: error,
-        stackTrace: stack,
-        tag: 'DocCollab',
-      );
+      CollabDiagnostics.report('修改分割线失败', error: error, stackTrace: stack, tag: 'DocCollab');
       if (mounted) {
         setState(() => _error = '修改失败，请重试');
       }
@@ -199,12 +174,7 @@ class _DividerSettingsState extends State<_DividerSettings> {
         Navigator.pop(context);
       }
     } catch (error, stack) {
-      CollabDiagnostics.report(
-        '删除分割线失败',
-        error: error,
-        stackTrace: stack,
-        tag: 'DocCollab',
-      );
+      CollabDiagnostics.report('删除分割线失败', error: error, stackTrace: stack, tag: 'DocCollab');
       if (mounted) {
         setState(() => _error = '删除失败，请重试');
       }
@@ -273,19 +243,9 @@ class _DividerSettingsState extends State<_DividerSettings> {
                   Row(
                     children: [
                       const Expanded(
-                        child: Text(
-                          '分割线',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                        child: Text('分割线', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                       ),
-                      IconButton(
-                        tooltip: '关闭',
-                        onPressed: () => Navigator.pop(context),
-                        icon: const Icon(Icons.close),
-                      ),
+                      IconButton(tooltip: '关闭', onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close)),
                     ],
                   ),
                   SizedBox(
@@ -303,18 +263,9 @@ class _DividerSettingsState extends State<_DividerSettings> {
                   SegmentedButton<int>(
                     showSelectedIcon: false,
                     segments: const [
-                      ButtonSegment(
-                        value: 0,
-                        label: _DividerStyleTabLabel('线型'),
-                      ),
-                      ButtonSegment(
-                        value: 1,
-                        label: _DividerStyleTabLabel('贴纸胶带'),
-                      ),
-                      ButtonSegment(
-                        value: 2,
-                        label: _DividerStyleTabLabel('花边'),
-                      ),
+                      ButtonSegment(value: 0, label: _DividerStyleTabLabel('线型')),
+                      ButtonSegment(value: 1, label: _DividerStyleTabLabel('贴纸胶带')),
+                      ButtonSegment(value: 2, label: _DividerStyleTabLabel('花边')),
                     ],
                     selected: {_tab},
                     onSelectionChanged: _selectStyleTab,
@@ -327,12 +278,7 @@ class _DividerSettingsState extends State<_DividerSettings> {
               child: SingleChildScrollView(
                 key: const ValueKey('divider-settings-content'),
                 controller: _contentScrollController,
-                padding: EdgeInsets.fromLTRB(
-                  20,
-                  0,
-                  20,
-                  20 + MediaQuery.viewInsetsOf(context).bottom,
-                ),
+                padding: EdgeInsets.fromLTRB(20, 0, 20, 20 + MediaQuery.viewInsetsOf(context).bottom),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -340,13 +286,12 @@ class _DividerSettingsState extends State<_DividerSettings> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: styles.length,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            mainAxisExtent: 56,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 8,
-                          ),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisExtent: 56,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 8,
+                      ),
                       itemBuilder: (context, index) {
                         final entry = styles[index];
                         return Semantics(
@@ -355,9 +300,7 @@ class _DividerSettingsState extends State<_DividerSettings> {
                           button: true,
                           child: InkWell(
                             key: ValueKey('divider-style-${entry.key}'),
-                            onTap: enabled
-                                ? () async => await _change('style', entry.key)
-                                : null,
+                            onTap: enabled ? () async => await _change('style', entry.key) : null,
                             borderRadius: BorderRadius.circular(8),
                             child: Container(
                               padding: const EdgeInsets.all(12),
@@ -370,10 +313,7 @@ class _DividerSettingsState extends State<_DividerSettings> {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: CollabDividerVisual(
-                                divider: CollabDivider({
-                                  'style': entry.key,
-                                  'lineColor': current.lineColor,
-                                }),
+                                divider: CollabDivider({'style': entry.key, 'lineColor': current.lineColor}),
                                 preview: true,
                               ),
                             ),
@@ -419,29 +359,17 @@ class _DividerSettingsState extends State<_DividerSettings> {
                       'thick': '粗',
                     }, enabled),
                     const SizedBox(height: 12),
-                    Text(
-                      '透明度 ${((_opacityDraft ?? current.opacity) * 100).round()}%',
-                    ),
+                    Text('透明度 ${((_opacityDraft ?? current.opacity) * 100).round()}%'),
                     Slider(
                       key: const ValueKey('divider-opacity'),
                       value: _opacityDraft ?? current.opacity,
                       min: .1,
                       max: 1,
                       divisions: 90,
-                      onChanged: enabled
-                          ? (value) => setState(() => _opacityDraft = value)
-                          : null,
-                      onChangeEnd: enabled
-                          ? (value) async => await _change('opacity', value)
-                          : null,
+                      onChanged: enabled ? (value) => setState(() => _opacityDraft = value) : null,
+                      onChangeEnd: enabled ? (value) async => await _change('opacity', value) : null,
                     ),
-                    if (_error != null)
-                      Text(
-                        _error!,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.error,
-                        ),
-                      ),
+                    if (_error != null) Text(_error!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
                     TextButton.icon(
                       key: const ValueKey('divider-delete'),
                       onPressed: enabled ? _delete : null,
@@ -493,21 +421,14 @@ class _DividerSettingsState extends State<_DividerSettings> {
               height: 36,
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
-                border: Border.all(
-                  color: selected
-                      ? Theme.of(context).colorScheme.primary
-                      : Colors.transparent,
-                ),
+                border: Border.all(color: selected ? Theme.of(context).colorScheme.primary : Colors.transparent),
                 borderRadius: BorderRadius.circular(8),
               ),
               alignment: clear ? Alignment.center : null,
               child: clear
                   ? const Icon(Icons.clear, size: 20)
                   : DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: color,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
+                      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(5)),
                     ),
             ),
           ),
@@ -517,28 +438,21 @@ class _DividerSettingsState extends State<_DividerSettings> {
   }
 
   /// [property] 控件按 [selected] 展示，[options] 提供键/标签；[enabled] 控制写入。
-  Widget _options(
-    String property,
-    String selected,
-    Map<String, String> options,
-    bool enabled,
-  ) => SegmentedButton<String>(
-    segments: [
-      for (final e in options.entries)
-        ButtonSegment(
-          value: e.key,
-          label: Text(e.value, key: ValueKey('divider-$property-${e.key}')),
-        ),
-    ],
-    selected: {selected},
-    onSelectionChanged: enabled
-        ? (values) async => await _change(property, values.single)
-        : null,
-  );
+  Widget _options(String property, String selected, Map<String, String> options, bool enabled) =>
+      SegmentedButton<String>(
+        segments: [
+          for (final e in options.entries)
+            ButtonSegment(
+              value: e.key,
+              label: Text(e.value, key: ValueKey('divider-$property-${e.key}')),
+            ),
+        ],
+        selected: {selected},
+        onSelectionChanged: enabled ? (values) async => await _change(property, values.single) : null,
+      );
 
   /// [context] 的可用屏幕高度，面板最多占 80% 且不超过 720 逻辑像素。
-  double mathHeight(BuildContext context) =>
-      (MediaQuery.sizeOf(context).height * .8).clamp(0, 720);
+  double mathHeight(BuildContext context) => (MediaQuery.sizeOf(context).height * .8).clamp(0, 720);
 }
 
 /// 分割线样式页的完整单行标签；窄屏或大字号超出可用宽度时仅缩小显示，不截断。
@@ -553,8 +467,6 @@ class _DividerStyleTabLabel extends StatelessWidget {
   /// 借用 [context] 的文字样式和缩放设置，返回按可用空间缩小的单行标签。
   /// 不修改系统文字缩放或标签语义；该 Widget 无需释放资源。
   @override
-  Widget build(BuildContext context) => FittedBox(
-    fit: BoxFit.scaleDown,
-    child: Text(label, maxLines: 1, softWrap: false),
-  );
+  Widget build(BuildContext context) =>
+      FittedBox(fit: BoxFit.scaleDown, child: Text(label, maxLines: 1, softWrap: false));
 }

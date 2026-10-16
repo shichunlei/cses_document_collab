@@ -14,10 +14,7 @@ import 'package:flutter/foundation.dart';
 /// ```
 class DocumentFeedbackController extends ChangeNotifier {
   /// [documentId]是固定文档ID，[services]为借用的宿主端口，不跨文档/账号复用。
-  DocumentFeedbackController({
-    required this.documentId,
-    required this.services,
-  });
+  DocumentFeedbackController({required this.documentId, required this.services});
 
   /// 固定文档ID，所有宿主回调都使用此身份。
   final String documentId;
@@ -26,9 +23,7 @@ class DocumentFeedbackController extends ChangeNotifier {
   final CollabHostServices services;
 
   /// 最近宿主确认的快照，未加载时为空；不参与正文投影。
-  CollabDocumentFeedback _value = CollabDocumentFeedback(
-    likes: CollabDocumentLikes(),
-  );
+  CollabDocumentFeedback _value = CollabDocumentFeedback(likes: CollabDocumentLikes());
 
   /// 只有首次成功读取后才允许以加载数据发起业务写入。
   bool _loaded = false;
@@ -46,8 +41,7 @@ class DocumentFeedbackController extends ChangeNotifier {
   bool get busy => _busy;
 
   /// 初始状态是否可用；加载失败时禁止基于未知状态发送点赞/评论。
-  bool get ready =>
-      !_disposed && (services.loadDocumentFeedback == null || _loaded);
+  bool get ready => !_disposed && (services.loadDocumentFeedback == null || _loaded);
 
   /// 最近失败提示，成功或开始新操作时清空；供文末区显示重试。
   String? get error => _error;
@@ -75,12 +69,7 @@ class DocumentFeedbackController extends ChangeNotifier {
     if (!ready || callback == null) return Future.value();
     return _run(() async {
       final likes = await callback(documentId, _value.likes);
-      return likes == null
-          ? null
-          : CollabDocumentFeedback(
-              likes: likes,
-              commentCount: _value.commentCount,
-            );
+      return likes == null ? null : CollabDocumentFeedback(likes: likes, commentCount: _value.commentCount);
     });
   }
 
@@ -90,9 +79,7 @@ class DocumentFeedbackController extends ChangeNotifier {
     if (!ready || callback == null) return Future.value();
     return _run(() async {
       final count = await callback(documentId, _value.commentCount);
-      return count == null
-          ? null
-          : CollabDocumentFeedback(likes: _value.likes, commentCount: count);
+      return count == null ? null : CollabDocumentFeedback(likes: _value.likes, commentCount: count);
     });
   }
 

@@ -39,13 +39,8 @@ BuildContext collabBlockActionContext(BuildContext context) {
 /// parents. Root/callout children are supported, including whole containers.
 /// Selection stays suspended; the caller restores input after its menu dismisses.
 /// Errors propagate through the apply future; neither borrowed argument is owned.
-Future<Node?> insertCollabParagraphBelow(
-  EditorState editor,
-  Node source,
-) async {
-  if (editor.isDisposed ||
-      !editor.editable ||
-      !const {'page', 'callout'}.contains(source.parent?.type)) {
+Future<Node?> insertCollabParagraphBelow(EditorState editor, Node source) async {
+  if (editor.isDisposed || !editor.editable || !const {'page', 'callout'}.contains(source.parent?.type)) {
     return null;
   }
   final id = source.attributes['cses_collab_block_id'] as String? ?? source.id;
@@ -109,16 +104,12 @@ class CollabBlockMoreButton extends StatelessWidget {
   Widget build(BuildContext context) => ListenableBuilder(
     listenable: editor.editableNotifier,
     builder: (context, _) =>
-        editor.isDisposed ||
-            !editor.editable ||
-            !const {'page', 'callout'}.contains(node.parent?.type)
+        editor.isDisposed || !editor.editable || !const {'page', 'callout'}.contains(node.parent?.type)
         ? const SizedBox.shrink()
         : ExcludeFocus(
             child: IconButton(
               tooltip: '更多操作',
-              style: const ButtonStyle(
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
+              style: const ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
               constraints: const BoxConstraints.tightFor(width: 32, height: 32),
               padding: EdgeInsets.zero,
               icon: const Icon(Icons.more_horiz, size: 18),
@@ -136,9 +127,7 @@ class CollabBlockMoreButton extends StatelessWidget {
     final services = CollabRuntime.services;
     final id = node.attributes['cses_collab_block_id'] as String? ?? node.id;
     final type = node.type;
-    final snapshot = jsonEncode(
-      protectSubtree ? node.toJson() : node.attributes,
-    );
+    final snapshot = jsonEncode(protectSubtree ? node.toJson() : node.attributes);
     String? insertedId;
     int? choice;
     var permissionRevoked = false;
@@ -192,13 +181,8 @@ class CollabBlockMoreButton extends StatelessWidget {
           final source = findCollabActionNode(editor, id);
           if (source == null ||
               source.type != type ||
-              jsonEncode(
-                    protectSubtree ? source.toJson() : source.attributes,
-                  ) !=
-                  snapshot) {
-            ScaffoldMessenger.maybeOf(
-              host,
-            )?.showSnackBar(const SnackBar(content: Text('内容已更新，请重新选择')));
+              jsonEncode(protectSubtree ? source.toJson() : source.attributes) != snapshot) {
+            ScaffoldMessenger.maybeOf(host)?.showSnackBar(const SnackBar(content: Text('内容已更新，请重新选择')));
             return;
           }
           if (choice! >= 0) {
@@ -208,32 +192,22 @@ class CollabBlockMoreButton extends StatelessWidget {
           final paragraph = await insertCollabParagraphBelow(editor, source);
           insertedId = paragraph == null
               ? null
-              : paragraph.attributes['cses_collab_block_id'] as String? ??
-                    paragraph.id;
+              : paragraph.attributes['cses_collab_block_id'] as String? ?? paragraph.id;
         },
         canRestore: () =>
             !permissionRevoked &&
             (choice == null || choice == -1) &&
             identical(CollabRuntime.services, services) &&
-            (insertedId == null ||
-                findCollabActionNode(editor, insertedId!) != null),
+            (insertedId == null || findCollabActionNode(editor, insertedId!) != null),
         selectionAfterAction: () {
-          final target = insertedId == null
-              ? null
-              : findCollabActionNode(editor, insertedId!);
-          return target == null
-              ? null
-              : Selection.single(path: target.path, startOffset: 0);
+          final target = insertedId == null ? null : findCollabActionNode(editor, insertedId!);
+          return target == null ? null : Selection.single(path: target.path, startOffset: 0);
         },
       );
     } catch (error, stack) {
       services.report('块操作失败', error, stack, 'DocCollab');
-      if (host.mounted &&
-          !editor.isDisposed &&
-          identical(CollabRuntime.services, services)) {
-        ScaffoldMessenger.maybeOf(
-          host,
-        )?.showSnackBar(const SnackBar(content: Text('操作失败，请重试')));
+      if (host.mounted && !editor.isDisposed && identical(CollabRuntime.services, services)) {
+        ScaffoldMessenger.maybeOf(host)?.showSnackBar(const SnackBar(content: Text('操作失败，请重试')));
       }
     } finally {
       editor.editableNotifier.removeListener(trackPermission);

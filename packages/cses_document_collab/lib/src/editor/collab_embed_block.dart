@@ -1,12 +1,12 @@
-import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
-import 'package:cses_document_collab/src/model/collab_image.dart';
+import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/editor/collab_image_content.dart';
 import 'package:cses_document_collab/src/editor/collab_unsupported_block.dart';
+import 'package:cses_document_collab/src/model/collab_image.dart';
+import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -37,10 +37,7 @@ enum CollabEmbedKind {
 class CollabEmbedBlockComponentBuilder extends BlockComponentBuilder {
   /// [kind] 决定资源展示类型。
   /// [configuration] 提供现有选区外壳的布局；不创建 WS 或持有编辑器所有权。
-  CollabEmbedBlockComponentBuilder({
-    required this.kind,
-    super.configuration = const BlockComponentConfiguration(),
-  });
+  CollabEmbedBlockComponentBuilder({required this.kind, super.configuration = const BlockComponentConfiguration()});
 
   /// 当前资源类型，正式图片采用专属布局投影。
   final CollabEmbedKind kind;
@@ -53,16 +50,11 @@ class CollabEmbedBlockComponentBuilder extends BlockComponentBuilder {
       final url = node.attributes[csesEmbedUrlAttribute];
       final uri = url is String ? Uri.tryParse(url) : null;
       if (uri == null || !_isSupportedNetworkUri(uri)) {
-        return CollabUnsupportedBlockComponentBuilder().build(
-          blockComponentContext,
-        );
+        return CollabUnsupportedBlockComponentBuilder().build(blockComponentContext);
       }
     }
-    if (kind == CollabEmbedKind.image &&
-        node.attributes[collabImageAttribute] == null) {
-      return ImageBlockComponentBuilder(
-        configuration: configuration,
-      ).build(blockComponentContext);
+    if (kind == CollabEmbedKind.image && node.attributes[collabImageAttribute] == null) {
+      return ImageBlockComponentBuilder(configuration: configuration).build(blockComponentContext);
     }
     return _CollabEmbedBlockWidget(
       key: node.key,
@@ -70,10 +62,8 @@ class CollabEmbedBlockComponentBuilder extends BlockComponentBuilder {
       kind: kind,
       configuration: configuration,
       showActions: showActions(node),
-      actionBuilder: (context, state) =>
-          actionBuilder(blockComponentContext, state),
-      actionTrailingBuilder: (context, state) =>
-          actionTrailingBuilder(blockComponentContext, state),
+      actionBuilder: (context, state) => actionBuilder(blockComponentContext, state),
+      actionTrailingBuilder: (context, state) => actionTrailingBuilder(blockComponentContext, state),
     );
   }
 
@@ -84,9 +74,7 @@ class CollabEmbedBlockComponentBuilder extends BlockComponentBuilder {
     return node.children.isEmpty &&
         node.delta == null &&
         url is String &&
-        (kind == CollabEmbedKind.image ||
-            kind == CollabEmbedKind.video ||
-            url.isNotEmpty);
+        (kind == CollabEmbedKind.image || kind == CollabEmbedKind.video || url.isNotEmpty);
   };
 }
 
@@ -104,8 +92,7 @@ class _CollabEmbedBlockWidget extends BlockComponentStatefulWidget {
   final CollabEmbedKind kind;
 
   @override
-  State<_CollabEmbedBlockWidget> createState() =>
-      _CollabEmbedBlockWidgetState();
+  State<_CollabEmbedBlockWidget> createState() => _CollabEmbedBlockWidgetState();
 }
 
 /// 借用编辑器节点展示资源；独占视频控制器，源变化或退出时释放，
@@ -125,8 +112,7 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
   @override
   Node get node => widget.node;
 
-  String get _url =>
-      widget.node.attributes[csesEmbedUrlAttribute] as String? ?? '';
+  String get _url => widget.node.attributes[csesEmbedUrlAttribute] as String? ?? '';
 
   RenderBox? get _renderBox => context.findRenderObject() as RenderBox?;
 
@@ -159,15 +145,11 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
     final source = _url;
     _videoSource = source;
     final uri = Uri.tryParse(source);
-    final controller = uri != null && _isSupportedNetworkUri(uri)
-        ? VideoPlayerController.networkUrl(uri)
-        : null;
+    final controller = uri != null && _isSupportedNetworkUri(uri) ? VideoPlayerController.networkUrl(uri) : null;
     _videoController = controller;
     _videoError = null;
     await _disposeVideo(previousController);
-    if (!mounted ||
-        !identical(_videoController, controller) ||
-        _videoSource != source) {
+    if (!mounted || !identical(_videoController, controller) || _videoSource != source) {
       return;
     }
 
@@ -183,12 +165,7 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
     } catch (error, stackTrace) {
       if (!mounted || !identical(_videoController, controller)) return;
       _videoError = error;
-      CollabDiagnostics.report(
-        '文档视频加载失败',
-        error: error,
-        stackTrace: stackTrace,
-        tag: 'DocCollab',
-      );
+      CollabDiagnostics.report('文档视频加载失败', error: error, stackTrace: stackTrace, tag: 'DocCollab');
     }
     if (mounted && identical(_videoController, controller)) {
       setState(() {});
@@ -202,12 +179,7 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
     try {
       await controller.dispose();
     } catch (error, stackTrace) {
-      CollabDiagnostics.report(
-        '文档视频资源释放失败',
-        error: error,
-        stackTrace: stackTrace,
-        tag: 'DocCollab',
-      );
+      CollabDiagnostics.report('文档视频资源释放失败', error: error, stackTrace: stackTrace, tag: 'DocCollab');
     }
   }
 
@@ -218,10 +190,7 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
     final child = switch (widget.kind) {
       CollabEmbedKind.link => _buildLinkCard(context),
       CollabEmbedKind.video => _buildVideoCard(context),
-      CollabEmbedKind.image => CollabImageContent(
-        node: node,
-        editorState: editorState,
-      ),
+      CollabEmbedKind.image => CollabImageContent(node: node, editorState: editorState),
     };
 
     Widget selectableChild = Padding(
@@ -237,9 +206,7 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
               color: Colors.white,
               borderRadius: BorderRadius.circular(6),
               child: CollabBlockMoreButton(
-                key: ValueKey(
-                  'block-more-${node.attributes['cses_collab_block_id'] ?? node.id}',
-                ),
+                key: ValueKey('block-more-${node.attributes['cses_collab_block_id'] ?? node.id}'),
                 editor: editorState,
                 node: node,
               ),
@@ -256,11 +223,7 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
       blockColor: editorState.editorStyle.selectionColor,
       cursorColor: editorState.editorStyle.cursorColor,
       selectionColor: editorState.editorStyle.selectionColor,
-      supportTypes: const [
-        BlockSelectionType.block,
-        BlockSelectionType.cursor,
-        BlockSelectionType.selection,
-      ],
+      supportTypes: const [BlockSelectionType.block, BlockSelectionType.cursor, BlockSelectionType.selection],
       child: selectableChild,
     );
 
@@ -290,10 +253,7 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
           child: Row(
             children: [
               const DecoratedBox(
-                decoration: BoxDecoration(
-                  color: Color(0xFFDBEAFE),
-                  shape: BoxShape.circle,
-                ),
+                decoration: BoxDecoration(color: Color(0xFFDBEAFE), shape: BoxShape.circle),
                 child: Padding(
                   padding: EdgeInsets.all(10),
                   child: Icon(Icons.link, color: Color(0xFF2563EB)),
@@ -315,10 +275,7 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
                       _url,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Color(0xFF64748B),
-                      ),
+                      style: const TextStyle(fontSize: 12, color: Color(0xFF64748B)),
                     ),
                   ],
                 ),
@@ -336,16 +293,10 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
     final controller = _videoController;
     final initialized = controller?.value.isInitialized == true;
     if (!initialized) {
-      return _VideoPlaceholder(
-        url: _url,
-        hasError: _videoError != null,
-        onOpen: () => _openExternally(context),
-      );
+      return _VideoPlaceholder(url: _url, hasError: _videoError != null, onOpen: () => _openExternally(context));
     }
 
-    final aspectRatio = controller!.value.aspectRatio > 0
-        ? controller.value.aspectRatio
-        : 16 / 9;
+    final aspectRatio = controller!.value.aspectRatio > 0 ? controller.value.aspectRatio : 16 / 9;
     return ClipRRect(
       borderRadius: BorderRadius.circular(14),
       child: ColoredBox(
@@ -370,9 +321,7 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
                       setState(() {});
                     }
                   },
-                  icon: Icon(
-                    controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-                  ),
+                  icon: Icon(controller.value.isPlaying ? Icons.pause : Icons.play_arrow),
                 ),
               ),
               Positioned(
@@ -394,13 +343,9 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
   Future<void> _openExternally(BuildContext context) async {
     final uri = Uri.tryParse(_url);
     final opened =
-        uri != null &&
-        _isSupportedNetworkUri(uri) &&
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
+        uri != null && _isSupportedNetworkUri(uri) && await launchUrl(uri, mode: LaunchMode.externalApplication);
     if (!opened && context.mounted) {
-      ScaffoldMessenger.maybeOf(
-        context,
-      )?.showSnackBar(const SnackBar(content: Text('无法打开该链接')));
+      ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(content: Text('无法打开该链接')));
     }
   }
 
@@ -420,37 +365,25 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
   CursorStyle get cursorStyle => CursorStyle.cover;
 
   @override
-  Rect getBlockRect({bool shiftWithBaseOffset = false}) =>
-      getRectsInSelection(Selection.invalid()).first;
+  Rect getBlockRect({bool shiftWithBaseOffset = false}) => getRectsInSelection(Selection.invalid()).first;
 
   @override
-  Rect? getCursorRectInPosition(
-    Position position, {
-    bool shiftWithBaseOffset = false,
-  }) {
+  Rect? getCursorRectInPosition(Position position, {bool shiftWithBaseOffset = false}) {
     if (_renderBox == null) {
       return null;
     }
-    return getRectsInSelection(
-      Selection.collapsed(position),
-      shiftWithBaseOffset: shiftWithBaseOffset,
-    ).firstOrNull;
+    return getRectsInSelection(Selection.collapsed(position), shiftWithBaseOffset: shiftWithBaseOffset).firstOrNull;
   }
 
   @override
-  List<Rect> getRectsInSelection(
-    Selection selection, {
-    bool shiftWithBaseOffset = false,
-  }) {
+  List<Rect> getRectsInSelection(Selection selection, {bool shiftWithBaseOffset = false}) {
     if (_renderBox == null) {
       return const [];
     }
     final parentBox = context.findRenderObject();
     final contentBox = _contentKey.currentContext?.findRenderObject();
     if (parentBox is RenderBox && contentBox is RenderBox) {
-      final offset = shiftWithBaseOffset
-          ? contentBox.localToGlobal(Offset.zero, ancestor: parentBox)
-          : Offset.zero;
+      final offset = shiftWithBaseOffset ? contentBox.localToGlobal(Offset.zero, ancestor: parentBox) : Offset.zero;
       return [offset & contentBox.size];
     }
     return [Offset.zero & _renderBox!.size];
@@ -461,8 +394,7 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
       Selection.single(path: node.path, startOffset: 0, endOffset: 1);
 
   @override
-  Offset localToGlobal(Offset offset, {bool shiftWithBaseOffset = false}) =>
-      _renderBox!.localToGlobal(offset);
+  Offset localToGlobal(Offset offset, {bool shiftWithBaseOffset = false}) => _renderBox!.localToGlobal(offset);
 
   @override
   TextDirection textDirection() => TextDirection.ltr;
@@ -479,11 +411,7 @@ class _CollabEmbedBlockWidgetState extends State<_CollabEmbedBlockWidget>
 }
 
 class _VideoPlaceholder extends StatelessWidget {
-  const _VideoPlaceholder({
-    required this.url,
-    required this.hasError,
-    required this.onOpen,
-  });
+  const _VideoPlaceholder({required this.url, required this.hasError, required this.onOpen});
 
   final String url;
   final bool hasError;
@@ -494,23 +422,13 @@ class _VideoPlaceholder extends StatelessWidget {
     return AspectRatio(
       aspectRatio: 16 / 9,
       child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: const Color(0xFF111827),
-          borderRadius: BorderRadius.circular(14),
-        ),
+        decoration: BoxDecoration(color: const Color(0xFF111827), borderRadius: BorderRadius.circular(14)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              hasError ? Icons.broken_image_outlined : Icons.movie_outlined,
-              color: Colors.white,
-              size: 42,
-            ),
+            Icon(hasError ? Icons.broken_image_outlined : Icons.movie_outlined, color: Colors.white, size: 42),
             const SizedBox(height: 10),
-            Text(
-              hasError ? '视频加载失败' : '正在加载视频…',
-              style: const TextStyle(color: Colors.white),
-            ),
+            Text(hasError ? '视频加载失败' : '正在加载视频…', style: const TextStyle(color: Colors.white)),
             if (hasError) ...[
               const SizedBox(height: 6),
               Padding(
@@ -519,10 +437,7 @@ class _VideoPlaceholder extends StatelessWidget {
                   url,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Color(0xFF94A3B8),
-                    fontSize: 11,
-                  ),
+                  style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 11),
                 ),
               ),
               TextButton.icon(
@@ -538,5 +453,4 @@ class _VideoPlaceholder extends StatelessWidget {
   }
 }
 
-bool _isSupportedNetworkUri(Uri uri) =>
-    (uri.scheme == 'http' || uri.scheme == 'https') && uri.host.isNotEmpty;
+bool _isSupportedNetworkUri(Uri uri) => (uri.scheme == 'http' || uri.scheme == 'https') && uri.host.isNotEmpty;

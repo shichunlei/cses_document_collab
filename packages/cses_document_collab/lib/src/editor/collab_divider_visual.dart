@@ -16,11 +16,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 class CollabDividerVisual extends StatelessWidget {
   /// [divider] 为借用的只读属性，[key] 控制身份与状态复用。
   /// [preview] 默认 false；true 使用缩略图大小并展示全长、完全不透明的样式。
-  const CollabDividerVisual({
-    super.key,
-    required this.divider,
-    this.preview = false,
-  });
+  const CollabDividerVisual({super.key, required this.divider, this.preview = false});
 
   /// 必需的样式解析，不持有编辑器或共享文档。
   final CollabDivider divider;
@@ -46,34 +42,25 @@ class CollabDividerVisual extends StatelessWidget {
         : edge
         ? (preview ? 20.0 : [16.0, 23.0, 32.0][level - 1])
         : 24.0;
-    final color =
-        parseCollabBlockColor(divider.lineColor) ??
-        Theme.of(context).dividerColor;
+    final color = parseCollabBlockColor(divider.lineColor) ?? Theme.of(context).dividerColor;
     return SizedBox(
       height: height,
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final width =
-              constraints.maxWidth * (preview ? 1 : divider.widthRatio);
+          final width = constraints.maxWidth * (preview ? 1 : divider.widthRatio);
           if (width <= 0) {
             return const SizedBox.shrink();
           }
-          final inkHeight = edge
-              ? (preview ? 18.0 : [14.0, 21.0, 30.0][level - 1])
-              : [4.0, 6.0, 9.0][level - 1];
+          final inkHeight = edge ? (preview ? 18.0 : [14.0, 21.0, 30.0][level - 1]) : [4.0, 6.0, 9.0][level - 1];
           final maskKey = edge ? style.substring(5) : style;
           final svg = dividerSvgMasks[maskKey];
           final repeated = style == 'edge-vine' || !edge;
-          final shape = svg == null
-              ? const SizedBox.shrink()
-              : _svgPattern(svg, width, inkHeight, repeated, color);
+          final shape = svg == null ? const SizedBox.shrink() : _svgPattern(svg, width, inkHeight, repeated, color);
           return Center(
             child: Opacity(
               opacity: preview ? 1 : divider.opacity,
               child: Transform.rotate(
-                angle: tape && !preview && level < 3
-                    ? (level == 1 ? .6 : .8) * math.pi / 180
-                    : 0,
+                angle: tape && !preview && level < 3 ? (level == 1 ? .6 : .8) * math.pi / 180 : 0,
                 child: SizedBox(
                   width: width,
                   height: height,
@@ -81,14 +68,7 @@ class CollabDividerVisual extends StatelessWidget {
                     alignment: Alignment.center,
                     children: [
                       Positioned.fill(
-                        child: CustomPaint(
-                          painter: _DividerPainter(
-                            style,
-                            color,
-                            level,
-                            edge ? inkHeight : 0,
-                          ),
-                        ),
+                        child: CustomPaint(painter: _DividerPainter(style, color, level, edge ? inkHeight : 0)),
                       ),
                       if (svg != null) shape,
                     ],
@@ -104,16 +84,8 @@ class CollabDividerVisual extends StatelessWidget {
 
   /// 将桌面 [svg] 遮罩按 [width]/[height] 逻辑像素展示并以 [color] 着色。
   /// [repeated] 决定横向平铺或单饰居中，窄列单饰整体缩小而不裁切。
-  Widget _svgPattern(
-    String svg,
-    double width,
-    double height,
-    bool repeated,
-    Color color,
-  ) {
-    final viewBox = RegExp(
-      r'viewBox=["\x27]0 0 ([\d.]+) ([\d.]+)',
-    ).firstMatch(svg)!;
+  Widget _svgPattern(String svg, double width, double height, bool repeated, Color color) {
+    final viewBox = RegExp(r'viewBox=["\x27]0 0 ([\d.]+) ([\d.]+)').firstMatch(svg)!;
     final aspect = double.parse(viewBox[1]!) / double.parse(viewBox[2]!);
     if (!repeated) {
       return SvgPicture.string(
@@ -195,46 +167,27 @@ class _DividerPainter extends CustomPainter {
         color.withValues(alpha: color.a * .36),
       ]);
       canvas.drawRect(Rect.fromLTWH(0, y - .5, end, 1), paint);
-      paint.shader = ui.Gradient.linear(
-        Offset(width - end, 0),
-        Offset(width, 0),
-        [color.withValues(alpha: color.a * .36), color.withValues(alpha: 0)],
-      );
+      paint.shader = ui.Gradient.linear(Offset(width - end, 0), Offset(width, 0), [
+        color.withValues(alpha: color.a * .36),
+        color.withValues(alpha: 0),
+      ]);
       canvas.drawRect(Rect.fromLTWH(width - end, y - .5, end, 1), paint);
     } else if (style == 'solid' || style == 'fade') {
       if (style == 'fade') {
         paint.shader = ui.Gradient.linear(
           Offset.zero,
           Offset(width, 0),
-          [
-            color.withValues(alpha: 0),
-            color,
-            color,
-            color.withValues(alpha: 0),
-          ],
+          [color.withValues(alpha: 0), color, color, color.withValues(alpha: 0)],
           [0, .18, .82, 1],
         );
       }
-      canvas.drawRect(
-        Rect.fromLTWH(0, y - level / 2, width, level.toDouble()),
-        paint,
-      );
+      canvas.drawRect(Rect.fromLTWH(0, y - level / 2, width, level.toDouble()), paint);
     } else if (style == 'dashed') {
       for (var x = 0.0; x < width; x += 16) {
-        canvas.drawRect(
-          Rect.fromLTWH(
-            x,
-            y - level / 2,
-            math.min(8, width - x),
-            level.toDouble(),
-          ),
-          paint,
-        );
+        canvas.drawRect(Rect.fromLTWH(x, y - level / 2, math.min(8, width - x), level.toDouble()), paint);
       }
     } else if (style == 'dotted' || style == 'triple-dot') {
-      final radius = style == 'triple-dot'
-          ? (level == 3 ? 2.3 : 1.8)
-          : [1.5, 2.0, 3.0][level - 1];
+      final radius = style == 'triple-dot' ? (level == 3 ? 2.3 : 1.8) : [1.5, 2.0, 3.0][level - 1];
       if (style == 'triple-dot') {
         for (final x in [-11.0, 0.0, 11.0]) {
           canvas.drawCircle(Offset(width / 2 + x, y), radius, paint);
@@ -249,22 +202,11 @@ class _DividerPainter extends CustomPainter {
       final total = [3.0, 5.0, 8.0][level - 1];
       final stroke = total / 3;
       canvas.drawRect(Rect.fromLTWH(0, y - total / 2, width, stroke), paint);
-      canvas.drawRect(
-        Rect.fromLTWH(0, y + total / 2 - stroke, width, stroke),
-        paint,
-      );
+      canvas.drawRect(Rect.fromLTWH(0, y + total / 2 - stroke, width, stroke), paint);
     } else if (style == 'diamond') {
       paint.strokeWidth = 1;
-      canvas.drawLine(
-        Offset.zero.translate(0, y),
-        Offset(math.max(0, width / 2 - 11), y),
-        paint,
-      );
-      canvas.drawLine(
-        Offset(math.min(width, width / 2 + 11), y),
-        Offset(width, y),
-        paint,
-      );
+      canvas.drawLine(Offset.zero.translate(0, y), Offset(math.max(0, width / 2 - 11), y), paint);
+      canvas.drawLine(Offset(math.min(width, width / 2 + 11), y), Offset(width, y), paint);
       final radius = (level == 3 ? 7 : 5) / math.sqrt2;
       final path = Path()
         ..moveTo(width / 2, y - radius)
@@ -317,12 +259,9 @@ class _DividerPainter extends CustomPainter {
       final pixels = layer['pixels'] == true;
       final positions = <double>[
         for (var i = 0; i < raw.length; i++)
-          (raw[i]['position'] as num?)?.toDouble() ??
-              i / (raw.length - 1) * (pixels ? extent : 100),
+          (raw[i]['position'] as num?)?.toDouble() ?? i / (raw.length - 1) * (pixels ? extent : 100),
       ];
-      final span = layer['repeat'] == true
-          ? positions.last
-          : (pixels ? extent : 100.0);
+      final span = layer['repeat'] == true ? positions.last : (pixels ? extent : 100.0);
       if (span <= 0) {
         continue;
       }

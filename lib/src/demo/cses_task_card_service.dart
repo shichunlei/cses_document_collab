@@ -2,11 +2,7 @@ import 'package:cses_common/network/http/client/http_manager.dart';
 import 'package:cses_common/runtime/context/context.dart';
 import 'package:cses_common/runtime/session/user.dart';
 import 'package:cses_document_collab/cses_document_collab.dart'
-    show
-        CollabTaskCardData,
-        CollabTaskCardTag,
-        CollabTaskCardPath,
-        CollabMentionUser;
+    show CollabTaskCardData, CollabTaskCardTag, CollabTaskCardPath, CollabMentionUser;
 
 /// 通过Common读取任务卡片详情，绑定创建时账号/企业/会话，不拥有共享HTTP客户端。
 /// ```dart
@@ -18,10 +14,7 @@ import 'package:cses_document_collab/cses_document_collab.dart'
 /// ```
 final class CsesTaskCardService {
   /// 登录后冻结当前身份，不发请求，不创建或关闭共享客户端。
-  CsesTaskCardService()
-    : _userId = User().userId,
-      _companyId = User().companyId,
-      _cookie = ctx.cookieId;
+  CsesTaskCardService() : _userId = User().userId, _companyId = User().companyId, _cookie = ctx.cookieId;
 
   /// 创建时账号，只用于隔离请求。
   final String? _userId;
@@ -57,9 +50,7 @@ final class CsesTaskCardService {
     );
     _checkSession();
     final body = response.data;
-    if (body is! Map ||
-        body['isSuccess'] != true ||
-        !body.containsKey('item')) {
+    if (body is! Map || body['isSuccess'] != true || !body.containsKey('item')) {
       throw const FormatException('任务详情请求失败');
     }
     final raw = body['item'];
@@ -102,10 +93,7 @@ final class CsesTaskCardService {
   CollabTaskCardTag? _tag(Object? value) {
     if (value == null) return null;
     if (value is! Map) throw const FormatException('任务标签格式错误');
-    return CollabTaskCardTag(
-      name: _text(value['name']) ?? '',
-      color: _text(value['color']),
-    );
+    return CollabTaskCardTag(name: _text(value['name']) ?? '', color: _text(value['color']));
   }
 
   /// 将负责人[value]的user快照转换为宿主头像参数，缺身份时抛FormatException。
@@ -114,11 +102,7 @@ final class CsesTaskCardService {
     if (user is! Map) throw const FormatException('任务负责人格式错误');
     final id = _text(user['userId']) ?? _text(user['id']);
     if (id == null || id.isEmpty) throw const FormatException('任务负责人身份缺失');
-    return CollabMentionUser(
-      id: id,
-      name: _text(user['name']) ?? '',
-      avatarUrl: _text(user['avatarUrl']),
-    );
+    return CollabMentionUser(id: id, name: _text(user['name']) ?? '', avatarUrl: _text(user['avatarUrl']));
   }
 
   /// 将路径[value]作为[type]节点展示；非法对象或名称抛FormatException。

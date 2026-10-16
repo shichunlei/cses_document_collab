@@ -1,8 +1,7 @@
 import 'package:cses_common/network/http/client/http_manager.dart';
 import 'package:cses_common/runtime/context/context.dart';
 import 'package:cses_common/runtime/session/user.dart';
-import 'package:cses_document_collab/cses_document_collab.dart'
-    show CollabMeetingCardData, CollabMeetingCardState;
+import 'package:cses_document_collab/cses_document_collab.dart' show CollabMeetingCardData, CollabMeetingCardState;
 
 /// 通过Common的同源会议详情接口提供卡片展示数据；不写协同文档，也不持有HTTP连接。
 /// 实例绑定创建时的账号/企业/会话，切换后拒绝旧响应；宿主负责文档及认证生命周期。
@@ -15,10 +14,7 @@ import 'package:cses_document_collab/cses_document_collab.dart'
 /// ```
 final class CsesMeetingCardService {
   /// Common登录完成后捕获当前身份，不发请求；不创建或关闭共享客户端。
-  CsesMeetingCardService()
-    : _userId = User().userId,
-      _companyId = User().companyId,
-      _cookie = ctx.cookieId;
+  CsesMeetingCardService() : _userId = User().userId, _companyId = User().companyId, _cookie = ctx.cookieId;
 
   /// 创建时账号，后续请求前后必须一致。
   final String? _userId;
@@ -48,10 +44,7 @@ final class CsesMeetingCardService {
   Future<CollabMeetingCardData?> load(String meetingId) async {
     _checkSession();
     if (meetingId.trim().isEmpty) throw const FormatException('会议身份不可为空');
-    final response = await HttpManager.getInstance().post(
-      '/meeting/getDetail',
-      params: {'meetingId': meetingId},
-    );
+    final response = await HttpManager.getInstance().post('/meeting/getDetail', params: {'meetingId': meetingId});
     _checkSession();
     final responseData = response.data;
     if (responseData is! Map || responseData['isSuccess'] != true) {
@@ -68,8 +61,7 @@ final class CsesMeetingCardService {
     }
     final state = _string(raw['meetingState']);
     final startTime = raw['startTime'];
-    if (startTime != null &&
-        (startTime is! int || startTime < 0 || startTime > 8640000000000000)) {
+    if (startTime != null && (startTime is! int || startTime < 0 || startTime > 8640000000000000)) {
       throw const FormatException('会议开始时间格式错误');
     }
     final members = raw['members'];
@@ -85,9 +77,7 @@ final class CsesMeetingCardService {
       state: CollabMeetingCardState.fromValue(state),
       title: _string(raw['title']),
       number: _string(raw['number']),
-      startTime: startTime is int && startTime > 0
-          ? DateTime.fromMillisecondsSinceEpoch(startTime, isUtc: true)
-          : null,
+      startTime: startTime is int && startTime > 0 ? DateTime.fromMillisecondsSinceEpoch(startTime, isUtc: true) : null,
       moderatorName: _string(raw['moderatorName']),
       memberCount: members is List ? members.length : count as int?,
     );

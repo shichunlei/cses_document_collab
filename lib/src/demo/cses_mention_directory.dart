@@ -1,8 +1,7 @@
 import 'package:cses_common/network/http/client/http_manager.dart';
 import 'package:cses_common/runtime/context/context.dart';
 import 'package:cses_common/runtime/session/user.dart';
-import 'package:cses_document_collab/cses_document_collab.dart'
-    show CollabMentionDirectory, CollabMentionUser;
+import 'package:cses_document_collab/cses_document_collab.dart' show CollabMentionDirectory, CollabMentionUser;
 import 'package:flutter/foundation.dart';
 
 /// 使用桌面同源企业组织树提供人员搜索/资料；借用Common认证与HTTP。
@@ -17,10 +16,7 @@ import 'package:flutter/foundation.dart';
 /// ```
 final class CsesMentionDirectory implements CollabMentionDirectory {
   /// 登录后创建并捕获身份；不发请求，账号切换后旧实例拒绝查询。
-  CsesMentionDirectory()
-    : _userId = User().userId,
-      _companyId = User().companyId,
-      _cookie = ctx.cookieId;
+  CsesMentionDirectory() : _userId = User().userId, _companyId = User().companyId, _cookie = ctx.cookieId;
 
   /// 创建时的登录用户，账号切换使实例失效。
   final String? _userId;
@@ -125,15 +121,9 @@ List<CollabMentionUser> _flattenMentionUsers(List roots) {
 }
 
 /// 对后台输入 [request] 的列表/关键词进行大小写无关过滤，不修改缓存。
-List<CollabMentionUser> _searchMentionUsers(
-  (List<CollabMentionUser>, String) request,
-) {
+List<CollabMentionUser> _searchMentionUsers((List<CollabMentionUser>, String) request) {
   final keyword = request.$2.trim().toLowerCase();
   return request.$1
-      .where(
-        (u) => '${u.name} ${u.department ?? ''} ${u.position ?? ''}'
-            .toLowerCase()
-            .contains(keyword),
-      )
+      .where((u) => '${u.name} ${u.department ?? ''} ${u.position ?? ''}'.toLowerCase().contains(keyword))
       .toList();
 }

@@ -22,21 +22,14 @@ class CollabDividerBlockComponentBuilder extends BlockComponentBuilder {
 
   /// 使用借用 [context] 的节点与配置创建组件，不写入共享属性。
   @override
-  BlockComponentWidget build(BlockComponentContext context) => _DividerBlock(
-    key: context.node.key,
-    node: context.node,
-    configuration: configuration,
-  );
+  BlockComponentWidget build(BlockComponentContext context) =>
+      _DividerBlock(key: context.node.key, node: context.node, configuration: configuration);
 }
 
 /// 借用 AppFlowy 节点展示分割线，无定时器、连接或输入控制器。
 class _DividerBlock extends BlockComponentStatefulWidget {
   /// [key] 控制身份与状态复用，[node] 与 [configuration] 均由编辑器持有。
-  const _DividerBlock({
-    super.key,
-    required super.node,
-    required super.configuration,
-  });
+  const _DividerBlock({super.key, required super.node, required super.configuration});
 
   /// 创建整块选区代理，编辑器仍由调用方持有。
   @override
@@ -48,7 +41,7 @@ class _DividerBlockState extends State<_DividerBlock> with SelectableMixin {
   /// 内部视觉边界，随本 Widget 释放，不绑定编辑输入。
   final _bodyKey = GlobalKey();
 
-  /// 在借用 [context] 内构建只读/可编辑视图，预览时不提供设置入口。
+  /// 在借用 [context] 内构建分割线，点击打开样式设置，预览时隐藏修改操作。
   @override
   Widget build(BuildContext context) {
     final editor = context.read<EditorState>();
@@ -58,9 +51,7 @@ class _DividerBlockState extends State<_DividerBlock> with SelectableMixin {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: CollabDividerVisual(
         key: ValueKey('collab-divider-visual-$id'),
-        divider: CollabDivider(
-          CollabDivider.readAttributes(node.attributes).values,
-        ),
+        divider: CollabDivider(CollabDivider.readAttributes(node.attributes).values),
       ),
     );
     final child = Semantics(
@@ -123,17 +114,11 @@ class _DividerBlockState extends State<_DividerBlock> with SelectableMixin {
 
   /// [position] 命中整块，[shiftWithBaseOffset] 保持组件内坐标约定。
   @override
-  Rect? getCursorRectInPosition(
-    Position position, {
-    bool shiftWithBaseOffset = false,
-  }) => getBlockRect();
+  Rect? getCursorRectInPosition(Position position, {bool shiftWithBaseOffset = false}) => getBlockRect();
 
   /// [selection] 对应完整矩形，[shiftWithBaseOffset] 保持组件内坐标约定。
   @override
-  List<Rect> getRectsInSelection(
-    Selection selection, {
-    bool shiftWithBaseOffset = false,
-  }) => [getBlockRect()];
+  List<Rect> getRectsInSelection(Selection selection, {bool shiftWithBaseOffset = false}) => [getBlockRect()];
 
   /// [start]/[end] 的拖动范围总是映射为无正文块的完整选区。
   @override

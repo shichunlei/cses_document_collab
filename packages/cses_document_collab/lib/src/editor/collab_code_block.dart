@@ -1,12 +1,12 @@
-import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
+import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
+import 'package:cses_document_collab/src/editor/collab_code_menu.dart';
 import 'package:cses_document_collab/src/model/collab_code.dart';
 import 'package:cses_document_collab/src/model/collab_code_languages.dart';
-import 'package:cses_document_collab/src/editor/collab_code_menu.dart';
+import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -21,30 +21,23 @@ class CollabCodeBlockComponentBuilder extends BlockComponentBuilder {
 
   @override
   BlockComponentWidget build(BlockComponentContext blockComponentContext) =>
-      _CodeBlock(
-        node: blockComponentContext.node,
-        key: blockComponentContext.node.key,
-        configuration: configuration,
-      );
+      _CodeBlock(node: blockComponentContext.node, key: blockComponentContext.node.key, configuration: configuration);
 }
 
 class _CodeBlock extends BlockComponentStatefulWidget {
-  const _CodeBlock({
-    super.key,
-    required super.node,
-    required super.configuration,
-  });
+  const _CodeBlock({super.key, required super.node, required super.configuration});
 
+  /// 创建管理代码块选区、编辑委托与复制提示生命周期的状态。
   @override
-  State<_CodeBlock> createState() => _CodeBlockState();
+  createState() => _CodeBlockState();
 }
 
-class _CodeBlockState extends State<_CodeBlock>
-    with SelectableMixin, DefaultSelectableMixin {
+class _CodeBlockState extends State<_CodeBlock> with SelectableMixin, DefaultSelectableMixin {
   @override
   final forwardKey = GlobalKey(debugLabel: 'code-rich-text');
   @override
   final blockComponentKey = GlobalKey(debugLabel: 'code-block');
+
   @override
   GlobalKey get containerKey => widget.node.key;
 
@@ -74,21 +67,14 @@ class _CodeBlockState extends State<_CodeBlock>
     return CollabCode.fromAttributes(widget.node.attributes);
   }
 
-  String? get _blockId =>
-      widget.node.attributes[AppFlowyBlockEditorAdapter.collabBlockIdAttribute]
-          as String?;
+  String? get _blockId => widget.node.attributes[AppFlowyBlockEditorAdapter.collabBlockIdAttribute] as String?;
 
   Future<void> _rename(BuildContext anchor) async {
     final id = _blockId;
     if (!_editor.editable || id == null) return;
     final name = await showCodeNameEditor(anchor, _metadata.name);
     if (name == null || !mounted) return;
-    await changeCollabCodeProperty(
-      _editor,
-      id,
-      'blockName',
-      name.isEmpty ? null : name,
-    );
+    await changeCollabCodeProperty(_editor, id, 'blockName', name.isEmpty ? null : name);
   }
 
   Future<void> _chooseLanguage(BuildContext anchor) async {
@@ -101,19 +87,12 @@ class _CodeBlockState extends State<_CodeBlock>
 
   Future<void> _toggleCollapse(BuildContext _) async {
     if (!_editor.editable) {
-      setState(
-        () => _previewCollapsed = !(_previewCollapsed ?? _metadata.collapsed),
-      );
+      setState(() => _previewCollapsed = !(_previewCollapsed ?? _metadata.collapsed));
       return;
     }
     final id = _blockId;
     if (id != null) {
-      await changeCollabCodeProperty(
-        _editor,
-        id,
-        'collapse',
-        _metadata.collapsed ? null : true,
-      );
+      await changeCollabCodeProperty(_editor, id, 'collapse', _metadata.collapsed ? null : true);
     }
   }
 
@@ -122,10 +101,7 @@ class _CodeBlockState extends State<_CodeBlock>
     if (!(_previewCollapsed ?? _metadata.collapsed)) return;
     final selection = _editor.selection;
     final path = widget.node.path;
-    if (selection == null ||
-        path.isEmpty ||
-        selection.start.path.isEmpty ||
-        selection.end.path.isEmpty) {
+    if (selection == null || path.isEmpty || selection.start.path.isEmpty || selection.end.path.isEmpty) {
       return;
     }
     if (path.inSelection(selection)) {
@@ -153,16 +129,9 @@ class _CodeBlockState extends State<_CodeBlock>
                 try {
                   await onTap(anchor);
                 } catch (error, stackTrace) {
-                  CollabDiagnostics.report(
-                    '修改代码块失败',
-                    error: error,
-                    stackTrace: stackTrace,
-                    tag: 'DocCollab',
-                  );
+                  CollabDiagnostics.report('修改代码块失败', error: error, stackTrace: stackTrace, tag: 'DocCollab');
                   if (mounted) {
-                    ScaffoldMessenger.maybeOf(
-                      context,
-                    )?.showSnackBar(const SnackBar(content: Text('修改失败，请重试')));
+                    ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(content: Text('修改失败，请重试')));
                   }
                 }
               },
@@ -179,9 +148,7 @@ class _CodeBlockState extends State<_CodeBlock>
       return _highlightedSpan!;
     }
     final alias = collabCodeLanguages[language];
-    final grammar = alias == null
-        ? _languages.lookup(language.toLowerCase())
-        : _languages.resolve(alias);
+    final grammar = alias == null ? _languages.lookup(language.toLowerCase()) : _languages.resolve(alias);
     final tokens = grammar == null || source.length > 100000
         ? null
         : const Highlighter().highlight(source, language: grammar).tokens;
@@ -215,9 +182,7 @@ class _CodeBlockState extends State<_CodeBlock>
 
   Future<void> _copy() async {
     try {
-      await Clipboard.setData(
-        ClipboardData(text: widget.node.delta?.toPlainText() ?? ''),
-      );
+      await Clipboard.setData(ClipboardData(text: widget.node.delta?.toPlainText() ?? ''));
       if (!mounted) return;
       _copiedTimer?.cancel();
       setState(() => _copied = true);
@@ -225,16 +190,9 @@ class _CodeBlockState extends State<_CodeBlock>
         if (mounted) setState(() => _copied = false);
       });
     } catch (error, stackTrace) {
-      CollabDiagnostics.report(
-        '复制代码失败',
-        error: error,
-        stackTrace: stackTrace,
-        tag: 'DocCollab',
-      );
+      CollabDiagnostics.report('复制代码失败', error: error, stackTrace: stackTrace, tag: 'DocCollab');
       if (mounted) {
-        ScaffoldMessenger.maybeOf(
-          context,
-        )?.showSnackBar(const SnackBar(content: Text('复制失败，请重试')));
+        ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(content: Text('复制失败，请重试')));
       }
     }
   }
@@ -252,9 +210,7 @@ class _CodeBlockState extends State<_CodeBlock>
     if (_editor.editable) _previewCollapsed = null;
     final collapsed = _previewCollapsed ?? metadata.collapsed;
     if (collapsed) {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => _clearHiddenSelection(),
-      );
+      WidgetsBinding.instance.addPostFrameCallback((_) => _clearHiddenSelection());
     }
     final style = _editor.editorStyle;
     final child = Padding(
@@ -277,11 +233,7 @@ class _CodeBlockState extends State<_CodeBlock>
                 child: Container(
                   key: const ValueKey('collab-code-header'),
                   decoration: BoxDecoration(
-                    border: collapsed
-                        ? null
-                        : const Border(
-                            bottom: BorderSide(color: Color(0xFFE1E4E8)),
-                          ),
+                    border: collapsed ? null : const Border(bottom: BorderSide(color: Color(0xFFE1E4E8))),
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: Row(
@@ -301,9 +253,7 @@ class _CodeBlockState extends State<_CodeBlock>
                           key: 'collab-code-name',
                           onTap: _editor.editable ? _rename : null,
                           child: Text(
-                            metadata.name.trim().isEmpty
-                                ? '代码块'
-                                : metadata.name.trim(),
+                            metadata.name.trim().isEmpty ? '代码块' : metadata.name.trim(),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: _headerStyle,
@@ -320,9 +270,7 @@ class _CodeBlockState extends State<_CodeBlock>
                             ConstrainedBox(
                               constraints: const BoxConstraints(maxWidth: 64),
                               child: Text(
-                                metadata.language == 'PlainText'
-                                    ? '纯文本'
-                                    : metadata.language,
+                                metadata.language == 'PlainText' ? '纯文本' : metadata.language,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: _headerStyle,
@@ -330,19 +278,13 @@ class _CodeBlockState extends State<_CodeBlock>
                             ),
                             if (_editor.editable) ...[
                               const SizedBox(width: 2),
-                              Icon(
-                                Icons.expand_more,
-                                size: 13,
-                                color: _headerStyle.color,
-                              ),
+                              Icon(Icons.expand_more, size: 13, color: _headerStyle.color),
                             ],
                           ],
                         ),
                       ),
                       CollabBlockMoreButton(
-                        key: ValueKey(
-                          'block-more-${_blockId ?? widget.node.id}',
-                        ),
+                        key: ValueKey('block-more-${_blockId ?? widget.node.id}'),
                         editor: _editor,
                         node: widget.node,
                       ),
@@ -355,23 +297,13 @@ class _CodeBlockState extends State<_CodeBlock>
                           onTap: _copy,
                           borderRadius: BorderRadius.circular(4),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 9,
-                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(
-                                  _copied ? Icons.check : Icons.copy_outlined,
-                                  size: 13,
-                                  color: _headerStyle.color,
-                                ),
+                                Icon(_copied ? Icons.check : Icons.copy_outlined, size: 13, color: _headerStyle.color),
                                 const SizedBox(width: 4),
-                                Text(
-                                  _copied ? '已复制' : '复制',
-                                  style: _headerStyle,
-                                ),
+                                Text(_copied ? '已复制' : '复制', style: _headerStyle),
                               ],
                             ),
                           ),
@@ -386,10 +318,7 @@ class _CodeBlockState extends State<_CodeBlock>
               offstage: collapsed,
               child: Container(
                 constraints: const BoxConstraints(minHeight: 60),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 16,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                 child: AppFlowyRichText(
                   key: forwardKey,
                   node: widget.node,
@@ -399,9 +328,8 @@ class _CodeBlockState extends State<_CodeBlock>
                   textDirection: TextDirection.ltr,
                   placeholderText: '输入代码',
                   textSpanDecorator: _highlight,
-                  placeholderTextSpanDecorator: (span) => span.updateTextStyle(
-                    _codeStyle.copyWith(color: const Color(0xFF9CA3AF)),
-                  ),
+                  placeholderTextSpanDecorator: (span) =>
+                      span.updateTextStyle(_codeStyle.copyWith(color: const Color(0xFF9CA3AF))),
                   cursorColor: style.cursorColor,
                   selectionColor: style.selectionColor,
                   cursorWidth: style.cursorWidth,

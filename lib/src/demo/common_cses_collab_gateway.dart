@@ -34,10 +34,10 @@ final class CommonCsesCollabGateway implements CsesCollabGateway {
   ///
   /// 此流必须由单一会话订阅一次；多次订阅会重复发送平台 subscribe。
   @override
-  Stream<bool> get connectionStates =>
-      WebSocketInitEntry.watch(
-        scope: WebSocketInitScope.cses,
-      ).map((event) => event.current.isConnected).distinct().map((connected) {
+  Stream<bool> get connectionStates => WebSocketInitEntry.watch(scope: WebSocketInitScope.cses)
+      .map((event) => event.current.isConnected)
+      .distinct()
+      .map((connected) {
         if (connected) {
           for (final pageId in _routes.keys.toList(growable: false)) {
             send(pageId, 'subscribe', const {});
@@ -56,11 +56,7 @@ final class CommonCsesCollabGateway implements CsesCollabGateway {
     required String instanceId,
     required Map<String, void Function(Map<String, dynamic>)> callbacks,
   }) async {
-    final route = SocketSubscription(
-      channel: 'Document',
-      topic: documentId,
-      instance: instanceId,
-    );
+    final route = SocketSubscription(channel: 'Document', topic: documentId, instance: instanceId);
     csesWebSocketClient.registerListeners(
       pageId: pageId,
       subscription: route,

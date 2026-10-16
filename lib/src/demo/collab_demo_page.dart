@@ -74,11 +74,7 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
             title: const Text('CSES 协同 Demo'),
             actions: [
               if (widget.onLogout != null)
-                IconButton(
-                  onPressed: _collab.busy ? null : _logout,
-                  tooltip: '退出登录',
-                  icon: const Icon(Icons.logout),
-                ),
+                IconButton(onPressed: _collab.busy ? null : _logout, tooltip: '退出登录', icon: const Icon(Icons.logout)),
               Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child: _StatusChip(status: _collab.status),
@@ -92,15 +88,8 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  CsesConnectionPanel(
-                    collab: _collab,
-                    onReset: _confirmReset,
-                    onReconnect: _host.reconnect,
-                  ),
-                  if (_collab.error != null) ...[
-                    const SizedBox(height: 12),
-                    _ErrorBanner(message: _collab.error!),
-                  ],
+                  CsesConnectionPanel(collab: _collab, onReset: _confirmReset, onReconnect: _host.reconnect),
+                  if (_collab.error != null) ...[const SizedBox(height: 12), _ErrorBanner(message: _collab.error!)],
                   const SizedBox(height: 16),
                   Card(
                     clipBehavior: Clip.antiAlias,
@@ -113,8 +102,7 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
                         children: [
                           Text(
                             'AppFlowy 协同正文',
-                            style: Theme.of(context).textTheme.titleMedium
-                                ?.copyWith(fontWeight: FontWeight.w700),
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
                           ),
                           const SizedBox(height: 4),
                           Text(
@@ -126,19 +114,12 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
                           const Divider(height: 28),
                           FilledButton.icon(
                             key: const ValueKey('open-collaborative-editor'),
-                            onPressed: _collab.initialized && !_collab.busy
-                                ? _openCollaborativeEditor
-                                : null,
+                            onPressed: _collab.initialized && !_collab.busy ? _openCollaborativeEditor : null,
                             icon: const Icon(Icons.edit_document),
-                            label: Text(
-                              _collab.initialized ? '进入协同编辑' : '正在加载文档',
-                            ),
+                            label: Text(_collab.initialized ? '进入协同编辑' : '正在加载文档'),
                           ),
                           if (!_collab.initialized)
-                            const Padding(
-                              padding: EdgeInsets.only(top: 12),
-                              child: Text('正在从 Rust/Yrs 加载本地文档……'),
-                            ),
+                            const Padding(padding: EdgeInsets.only(top: 12), child: Text('正在从 Rust/Yrs 加载本地文档……')),
                         ],
                       ),
                     ),
@@ -163,10 +144,7 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
     FocusManager.instance.primaryFocus?.unfocus();
     return Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (context) => CollaborativeEditorPage(
-          collab: _collab,
-          pickMarkdown: pickMarkdownFile,
-        ),
+        builder: (context) => CollaborativeEditorPage(collab: _collab, pickMarkdown: pickMarkdownFile),
       ),
     );
   }
@@ -179,14 +157,8 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
         title: const Text('清除本机 Demo 缓存？'),
         content: const Text('只删除这个客户端的 SQLite Update 日志，不会清理服务器内存中的文档。'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('取消'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('清除'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('取消')),
+          FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('清除')),
         ],
       ),
     );
@@ -238,12 +210,7 @@ class _ErrorBanner extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
       child: Padding(
         padding: const EdgeInsets.all(12),
-        child: Text(
-          message,
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onErrorContainer,
-          ),
-        ),
+        child: Text(message, style: TextStyle(color: Theme.of(context).colorScheme.onErrorContainer)),
       ),
     );
   }

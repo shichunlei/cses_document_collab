@@ -7,11 +7,7 @@ import 'package:cses_common/runtime/session/user.dart';
 import 'package:cses_common/storage/oss/factory/oss_client_factory.dart';
 import 'package:cses_common/storage/oss/models/request_option.dart';
 import 'package:cses_document_collab/cses_document_collab.dart'
-    show
-        EditorLocalFile,
-        EditorMediaSource,
-        EditorMediaUploadService,
-        validateEditorMediaFile;
+    show EditorLocalFile, EditorMediaSource, EditorMediaUploadService, validateEditorMediaFile;
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:mime/mime.dart';
@@ -49,18 +45,8 @@ class CsesEditorMediaUploadService implements EditorMediaUploadService {
         'audio' => FileType.audio,
         _ => FileType.any,
       },
-      allowedExtensions:
-          kind == 'image' ||
-              kind == 'document_banner' ||
-              kind == 'document_icon'
-          ? [
-              'png',
-              'jpg',
-              'jpeg',
-              'gif',
-              'webp',
-              if (kind == 'document_icon') 'svg',
-            ]
+      allowedExtensions: kind == 'image' || kind == 'document_banner' || kind == 'document_icon'
+          ? ['png', 'jpg', 'jpeg', 'gif', 'webp', if (kind == 'document_icon') 'svg']
           : null,
     );
     if (picked == null) return null;
@@ -96,9 +82,7 @@ class CsesEditorMediaUploadService implements EditorMediaUploadService {
     }
     void checkSession() {
       if (cancelToken.isCancelled) throw cancelToken.cancelError!;
-      if (User().userId != userId ||
-          ctx.cookieId != cookie ||
-          User().companyId != company) {
+      if (User().userId != userId || ctx.cookieId != cookie || User().companyId != company) {
         throw const FormatException('登录状态已变化，请重新选择文件');
       }
     }
@@ -113,9 +97,7 @@ class CsesEditorMediaUploadService implements EditorMediaUploadService {
       _ => 'attachment',
     };
     final id = StringUtil.newId();
-    final suffix = file.name.contains('.')
-        ? '.${file.name.split('.').last.toLowerCase()}'
-        : '';
+    final suffix = file.name.contains('.') ? '.${file.name.split('.').last.toLowerCase()}' : '';
     final key = '$userId/$id$suffix';
     final client = await OssClientFactory.initForBucket(bucket);
     checkSession();
@@ -151,9 +133,6 @@ class CsesEditorMediaUploadService implements EditorMediaUploadService {
     if (!registered.isSuccess) throw const FormatException('文件保存失败，请重试');
     checkSession();
     // Match Common's bucket CDN contract; never persist a short-lived signed URL.
-    return EditorMediaSource(
-      Uri.https('$bucket.jinqidongli.com', '/$key').toString(),
-      file: file,
-    );
+    return EditorMediaSource(Uri.https('$bucket.jinqidongli.com', '/$key').toString(), file: file);
   }
 }

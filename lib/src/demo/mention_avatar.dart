@@ -9,11 +9,7 @@ import 'package:flutter/material.dart';
 /// ```
 String? demoMentionAvatarUrl(String userId) => userId.isEmpty
     ? null
-    : Uri(
-        scheme: 'https',
-        host: 'face.jinqidongli.com',
-        pathSegments: [userId, '$userId.jpg'],
-      ).toString();
+    : Uri(scheme: 'https', host: 'face.jinqidongli.com', pathSegments: [userId, '$userId.jpg']).toString();
 
 /// 人员圆形头像，默认按用户ID加载公共资源；加载中或失败显示姓名首字。
 /// 图片监听和缓存由Flutter管理，本组件不拥有连接，不把头像写入正文。
@@ -26,13 +22,8 @@ String? demoMentionAvatarUrl(String userId) => userId.isEmpty
 class DemoMentionAvatar extends StatelessWidget {
   /// [key] 控制身份与状态复用，[userId] 为必填稳定用户ID，[name] 提供失败时的姓名首字。
   /// [size] 为正逻辑像素直径，默认36；[avatarUrl] 为宿主可选覆盖URL，null按ID拼接。
-  const DemoMentionAvatar({
-    super.key,
-    required this.userId,
-    required this.name,
-    this.size = 36,
-    this.avatarUrl,
-  }) : assert(size > 0);
+  const DemoMentionAvatar({super.key, required this.userId, required this.name, this.size = 36, this.avatarUrl})
+    : assert(size > 0);
 
   /// 必填稳定用户ID，不修剪，不附加认证；空值仅展示回退。
   final String userId;
@@ -57,10 +48,7 @@ class DemoMentionAvatar extends StatelessWidget {
             ? Icon(Icons.person, size: size * .65)
             : Text(
                 name.characters.first,
-                style: TextStyle(
-                  fontSize: size * .5,
-                  color: const Color(0xFF3730A3),
-                ),
+                style: TextStyle(fontSize: size * .5, color: const Color(0xFF3730A3)),
               ),
       ),
     );
@@ -76,8 +64,7 @@ class DemoMentionAvatar extends StatelessWidget {
                   width: size,
                   height: size,
                   fit: BoxFit.cover,
-                  loadingBuilder: (_, child, progress) =>
-                      progress == null ? child : fallback,
+                  loadingBuilder: (_, child, progress) => progress == null ? child : fallback,
                   errorBuilder: (_, _, _) => fallback,
                 ),
         ),
@@ -99,9 +86,4 @@ Widget buildDemoMentionAvatar(
   required String name,
   required double size,
   String? avatarUrl,
-}) => DemoMentionAvatar(
-  userId: userId,
-  name: name,
-  size: size,
-  avatarUrl: avatarUrl,
-);
+}) => DemoMentionAvatar(userId: userId, name: name, size: size, avatarUrl: avatarUrl);

@@ -1,6 +1,6 @@
-import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
+import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,19 +12,12 @@ class CollabCalloutBlockComponentBuilder extends BlockComponentBuilder {
       (node) => node.delta == null;
 
   @override
-  BlockComponentWidget build(BlockComponentContext context) => _CalloutBlock(
-    key: context.node.key,
-    node: context.node,
-    configuration: configuration,
-  );
+  BlockComponentWidget build(BlockComponentContext context) =>
+      _CalloutBlock(key: context.node.key, node: context.node, configuration: configuration);
 }
 
 class _CalloutBlock extends BlockComponentStatefulWidget {
-  const _CalloutBlock({
-    super.key,
-    required super.node,
-    required super.configuration,
-  });
+  const _CalloutBlock({super.key, required super.node, required super.configuration});
 
   @override
   State<_CalloutBlock> createState() => _CalloutBlockState();
@@ -40,25 +33,18 @@ class _CalloutBlockState extends State<_CalloutBlock> with SelectableMixin {
     final node = widget.node;
     final host = collabBlockActionContext(context);
     final prefix = node.attributes[csesCalloutPrefixAttribute] as String? ?? '';
-    final color = parseCollabBlockColor(
-      node.attributes[csesBlockTextColorAttribute] as String?,
-    );
+    final color = parseCollabBlockColor(node.attributes[csesBlockTextColorAttribute] as String?);
     final child = Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Container(
         key: _bodyKey,
         decoration: BoxDecoration(
           color:
-              parseCollabBlockColor(
-                node.attributes[csesBlockBackgroundColorAttribute] as String?,
-              ) ??
+              parseCollabBlockColor(node.attributes[csesBlockBackgroundColorAttribute] as String?) ??
               Colors.transparent,
           border: Border.all(
             color:
-                parseCollabBlockColor(
-                  node.attributes[csesBlockBorderColorAttribute] as String?,
-                ) ??
-                Colors.transparent,
+                parseCollabBlockColor(node.attributes[csesBlockBorderColorAttribute] as String?) ?? Colors.transparent,
           ),
           borderRadius: BorderRadius.circular(4),
         ),
@@ -70,29 +56,15 @@ class _CalloutBlockState extends State<_CalloutBlock> with SelectableMixin {
               ExcludeFocus(
                 child: InkWell(
                   key: const ValueKey('collab-callout-prefix'),
-                  onTap: _editor.editable
-                      ? () =>
-                            showCollabCalloutEmojiPicker(context, _editor, node)
-                      : null,
+                  onTap: _editor.editable ? () => showCollabCalloutEmojiPicker(context, _editor, node) : null,
                   borderRadius: BorderRadius.circular(4),
                   child: Tooltip(
                     message: _editor.editable ? '更换表情' : prefix,
                     child: Padding(
-                      padding: const EdgeInsets.only(
-                        right: 12,
-                        top: 2,
-                        bottom: 2,
-                      ),
+                      padding: const EdgeInsets.only(right: 12, top: 2, bottom: 2),
                       child: prefix.isEmpty
                           ? const Icon(Icons.add_reaction_outlined, size: 20)
-                          : Text(
-                              prefix,
-                              style: TextStyle(
-                                fontSize: 18,
-                                height: 1.5,
-                                color: color,
-                              ),
-                            ),
+                          : Text(prefix, style: TextStyle(fontSize: 18, height: 1.5, color: color)),
                     ),
                   ),
                 ),
@@ -102,8 +74,7 @@ class _CalloutBlockState extends State<_CalloutBlock> with SelectableMixin {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  for (final child in node.children)
-                    _editor.renderer.build(context, child),
+                  for (final child in node.children) _editor.renderer.build(context, child),
                   if (node.children.isEmpty && _editor.editable)
                     TextButton(
                       key: const ValueKey('collab-callout-add-body'),
@@ -111,10 +82,7 @@ class _CalloutBlockState extends State<_CalloutBlock> with SelectableMixin {
                         if (!_editor.editable || _editor.isDisposed) return;
                         final transaction = _editor.transaction
                           ..insertNode(node.path + [0], paragraphNode())
-                          ..afterSelection = Selection.single(
-                            path: node.path + [0],
-                            startOffset: 0,
-                          );
+                          ..afterSelection = Selection.single(path: node.path + [0], startOffset: 0);
                         await _editor.apply(transaction);
                       },
                       child: const Text('添加正文'),
@@ -123,9 +91,7 @@ class _CalloutBlockState extends State<_CalloutBlock> with SelectableMixin {
               ),
             ),
             CollabBlockMoreButton(
-              key: ValueKey(
-                'block-more-${node.attributes['cses_collab_block_id'] ?? node.id}',
-              ),
+              key: ValueKey('block-more-${node.attributes['cses_collab_block_id'] ?? node.id}'),
               editor: _editor,
               node: node,
               protectSubtree: true,
@@ -136,8 +102,7 @@ class _CalloutBlockState extends State<_CalloutBlock> with SelectableMixin {
                   run: () async {
                     final current = findCollabActionNode(
                       _editor,
-                      node.attributes['cses_collab_block_id'] as String? ??
-                          node.id,
+                      node.attributes['cses_collab_block_id'] as String? ?? node.id,
                     );
                     if (host.mounted && current != null) {
                       await showCollabCalloutSettings(host, _editor, current);
@@ -147,15 +112,9 @@ class _CalloutBlockState extends State<_CalloutBlock> with SelectableMixin {
                 if (!_containsUnsupportedCalloutContent(node))
                   (
                     label: '删除高亮块',
-                    key: ValueKey(
-                      'callout-delete-${node.attributes['cses_collab_block_id'] ?? node.id}',
-                    ),
+                    key: ValueKey('callout-delete-${node.attributes['cses_collab_block_id'] ?? node.id}'),
                     run: () async {
-                      await _deleteCallout(
-                        _editor,
-                        node.attributes['cses_collab_block_id'] as String? ??
-                            node.id,
-                      );
+                      await _deleteCallout(_editor, node.attributes['cses_collab_block_id'] as String? ?? node.id);
                     },
                   ),
               ],
@@ -178,14 +137,19 @@ class _CalloutBlockState extends State<_CalloutBlock> with SelectableMixin {
 
   @override
   Position start() => Position(path: widget.node.path);
+
   @override
   Position end() => Position(path: widget.node.path, offset: 1);
+
   @override
   Position getPositionInOffset(Offset offset) => end();
+
   @override
   bool get shouldCursorBlink => false;
+
   @override
   CursorStyle get cursorStyle => CursorStyle.cover;
+
   @override
   Rect getBlockRect({bool shiftWithBaseOffset = false}) {
     final outer = context.findRenderObject();
@@ -195,18 +159,15 @@ class _CalloutBlockState extends State<_CalloutBlock> with SelectableMixin {
   }
 
   @override
-  Rect? getCursorRectInPosition(
-    Position position, {
-    bool shiftWithBaseOffset = false,
-  }) => getBlockRect();
+  Rect? getCursorRectInPosition(Position position, {bool shiftWithBaseOffset = false}) => getBlockRect();
+
   @override
-  List<Rect> getRectsInSelection(
-    Selection selection, {
-    bool shiftWithBaseOffset = false,
-  }) => [getBlockRect()];
+  List<Rect> getRectsInSelection(Selection selection, {bool shiftWithBaseOffset = false}) => [getBlockRect()];
+
   @override
   Selection getSelectionInRange(Offset start, Offset end) =>
       Selection.single(path: widget.node.path, startOffset: 0, endOffset: 1);
+
   @override
   Offset localToGlobal(Offset offset, {bool shiftWithBaseOffset = false}) =>
       (context.findRenderObject() as RenderBox).localToGlobal(offset);
@@ -215,8 +176,7 @@ class _CalloutBlockState extends State<_CalloutBlock> with SelectableMixin {
 /// Reports whether borrowed [node] contains an opaque unsupported descendant.
 /// These subtrees cannot be reconstructed by local history and must not be deleted.
 bool _containsUnsupportedCalloutContent(Node node) =>
-    node.type == csesUnsupportedBlockType ||
-    node.children.any(_containsUnsupportedCalloutContent);
+    node.type == csesUnsupportedBlockType || node.children.any(_containsUnsupportedCalloutContent);
 
 /// Deletes the current callout with stable [id] and its children from borrowed [editor].
 /// Root/callout parents are supported; the last sibling is replaced by a fresh empty
@@ -242,24 +202,16 @@ Future<void> _deleteCallout(EditorState editor, String id) async {
     ..afterSelection = null;
   if (lastSibling) {
     final paragraph = paragraphNode();
-    paragraph.updateAttributes({
-      AppFlowyBlockEditorAdapter.collabBlockIdAttribute: paragraph.id,
-    });
+    paragraph.updateAttributes({AppFlowyBlockEditorAdapter.collabBlockIdAttribute: paragraph.id});
     transaction.add(InsertOperation(path, [paragraph]), transform: false);
   }
-  await editor.apply(
-    transaction,
-    withUpdateSelection: false,
-    skipHistoryDebounce: true,
-  );
+  await editor.apply(transaction, withUpdateSelection: false, skipHistoryDebounce: true);
 }
 
 Node? _findCallout(EditorState editor, String id) {
   Node? visit(Node node) {
     if (node.type == csesCalloutBlockType &&
-        (node.attributes[AppFlowyBlockEditorAdapter.collabBlockIdAttribute] ??
-                node.id) ==
-            id) {
+        (node.attributes[AppFlowyBlockEditorAdapter.collabBlockIdAttribute] ?? node.id) == id) {
       return node;
     }
     for (final child in node.children) {
@@ -273,12 +225,7 @@ Node? _findCallout(EditorState editor, String id) {
 }
 
 /// One field per transaction so undo never restores stale body text or other colors.
-Future<void> updateCollabCalloutAppearance(
-  EditorState editor,
-  String id,
-  String attribute,
-  String? value,
-) async {
+Future<void> updateCollabCalloutAppearance(EditorState editor, String id, String attribute, String? value) async {
   if (editor.isDisposed ||
       !editor.editable ||
       !const {
@@ -302,24 +249,14 @@ Future<void> updateCollabCalloutAppearance(
         {attribute: node.attributes[attribute], csesCalloutTargetAttribute: id},
       ),
     );
-  await editor.apply(
-    transaction,
-    withUpdateSelection: false,
-    skipHistoryDebounce: true,
-  );
+  await editor.apply(transaction, withUpdateSelection: false, skipHistoryDebounce: true);
 }
 
-Future<void> showCollabCalloutSettings(
-  BuildContext context,
-  EditorState editor,
-  Node node,
-) => _showCalloutSettings(context, editor, node, _CalloutSettingsKind.colors);
+Future<void> showCollabCalloutSettings(BuildContext context, EditorState editor, Node node) =>
+    _showCalloutSettings(context, editor, node, _CalloutSettingsKind.colors);
 
-Future<void> showCollabCalloutEmojiPicker(
-  BuildContext context,
-  EditorState editor,
-  Node node,
-) => _showCalloutSettings(context, editor, node, _CalloutSettingsKind.emoji);
+Future<void> showCollabCalloutEmojiPicker(BuildContext context, EditorState editor, Node node) =>
+    _showCalloutSettings(context, editor, node, _CalloutSettingsKind.emoji);
 
 enum _CalloutSettingsKind { emoji, colors }
 
@@ -330,10 +267,7 @@ Future<void> _showCalloutSettings(
   _CalloutSettingsKind kind,
 ) async {
   if (!editor.editable || editor.isDisposed) return;
-  final id =
-      node.attributes[AppFlowyBlockEditorAdapter.collabBlockIdAttribute]
-          as String? ??
-      node.id;
+  final id = node.attributes[AppFlowyBlockEditorAdapter.collabBlockIdAttribute] as String? ?? node.id;
   await showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
@@ -344,51 +278,30 @@ Future<void> _showCalloutSettings(
 }
 
 class _CalloutSettings extends StatefulWidget {
-  const _CalloutSettings({
-    required this.editor,
-    required this.id,
-    required this.kind,
-  });
+  const _CalloutSettings({required this.editor, required this.id, required this.kind});
+
   final EditorState editor;
   final String id;
   final _CalloutSettingsKind kind;
+
   @override
   State<_CalloutSettings> createState() => _CalloutSettingsState();
 }
 
 class _CalloutSettingsState extends State<_CalloutSettings> {
   TextEditingController? _prefix;
-  Node? get _node =>
-      widget.editor.isDisposed ? null : _findCallout(widget.editor, widget.id);
+
+  Node? get _node => widget.editor.isDisposed ? null : _findCallout(widget.editor, widget.id);
 
   @override
   void initState() {
     super.initState();
     if (widget.kind == _CalloutSettingsKind.emoji) {
-      _prefix = TextEditingController(
-        text: _node?.attributes[csesCalloutPrefixAttribute] as String? ?? '',
-      );
+      _prefix = TextEditingController(text: _node?.attributes[csesCalloutPrefixAttribute] as String? ?? '');
     }
   }
 
-  static const _emoji = [
-    '📢',
-    '💡',
-    '🤪',
-    '😀',
-    '📝',
-    '✅',
-    '⚠️',
-    '❗',
-    '⭐',
-    '🎯',
-    '🔥',
-    '❤️',
-    '🚀',
-    '📌',
-    '💬',
-    '🎉',
-  ];
+  static const _emoji = ['📢', '💡', '🤪', '😀', '📝', '✅', '⚠️', '❗', '⭐', '🎯', '🔥', '❤️', '🚀', '📌', '💬', '🎉'];
   static const _colors = [
     ('orange', '橙色', '#FFE6CD'),
     ('pink', '粉色', '#F6E5F0'),
@@ -404,15 +317,9 @@ class _CalloutSettingsState extends State<_CalloutSettings> {
     if (widget.editor.isDisposed || !widget.editor.editable || _node == null) {
       return;
     }
-    await updateCollabCalloutAppearance(
-      widget.editor,
-      widget.id,
-      attribute,
-      value,
-    );
+    await updateCollabCalloutAppearance(widget.editor, widget.id, attribute, value);
     if (!mounted) return;
-    if (widget.kind == _CalloutSettingsKind.emoji &&
-        attribute == csesCalloutPrefixAttribute) {
+    if (widget.kind == _CalloutSettingsKind.emoji && attribute == csesCalloutPrefixAttribute) {
       if (ModalRoute.of(context)?.isCurrent == true) Navigator.pop(context);
     } else {
       setState(() {});
@@ -426,16 +333,11 @@ class _CalloutSettingsState extends State<_CalloutSettings> {
   }
 
   Widget _colorRow(String label, String attribute, String key) {
-    final current = parseCollabBlockColor(
-      _node?.attributes[attribute] as String?,
-    );
+    final current = parseCollabBlockColor(_node?.attributes[attribute] as String?);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-        ),
+        Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
         const SizedBox(height: 8),
         Wrap(
           spacing: 4,
@@ -461,11 +363,7 @@ class _CalloutSettingsState extends State<_CalloutSettings> {
                     border: Border.all(color: const Color(0x22000000)),
                   ),
                   child: current == parseCollabBlockColor(option.$3)
-                      ? const Icon(
-                          Icons.check,
-                          size: 17,
-                          color: Color(0xFF333333),
-                        )
+                      ? const Icon(Icons.check, size: 17, color: Color(0xFF333333))
                       : null,
                 ),
               ),
@@ -477,20 +375,12 @@ class _CalloutSettingsState extends State<_CalloutSettings> {
 
   @override
   Widget build(BuildContext context) {
-    final enabled =
-        !widget.editor.isDisposed && widget.editor.editable && _node != null;
+    final enabled = !widget.editor.isDisposed && widget.editor.editable && _node != null;
     return SafeArea(
       child: Padding(
-        padding: EdgeInsets.fromLTRB(
-          20,
-          8,
-          20,
-          20 + MediaQuery.viewInsetsOf(context).bottom,
-        ),
+        padding: EdgeInsets.fromLTRB(20, 8, 20, 20 + MediaQuery.viewInsetsOf(context).bottom),
         child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.sizeOf(context).height * .8,
-          ),
+          constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * .8),
           child: SingleChildScrollView(
             key: ValueKey(
               widget.kind == _CalloutSettingsKind.emoji
@@ -504,20 +394,11 @@ class _CalloutSettingsState extends State<_CalloutSettings> {
                   children: [
                     Expanded(
                       child: Text(
-                        widget.kind == _CalloutSettingsKind.emoji
-                            ? '设置表情'
-                            : '设置颜色',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        widget.kind == _CalloutSettingsKind.emoji ? '设置表情' : '设置颜色',
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                       ),
                     ),
-                    IconButton(
-                      tooltip: '完成',
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.close),
-                    ),
+                    IconButton(tooltip: '完成', onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close)),
                   ],
                 ),
                 if (!enabled) const Text('当前高亮块不可编辑'),
@@ -545,10 +426,7 @@ class _CalloutSettingsState extends State<_CalloutSettings> {
                                     minimumSize: const Size(42, 42),
                                     padding: const EdgeInsets.all(4),
                                   ),
-                                  child: Text(
-                                    emoji,
-                                    style: const TextStyle(fontSize: 24),
-                                  ),
+                                  child: Text(emoji, style: const TextStyle(fontSize: 24)),
                                 ),
                               TextButton(
                                 key: const ValueKey('callout-emoji-clear'),
@@ -567,37 +445,22 @@ class _CalloutSettingsState extends State<_CalloutSettings> {
                                   key: const ValueKey('callout-custom-prefix'),
                                   controller: _prefix,
                                   maxLength: 32,
-                                  decoration: const InputDecoration(
-                                    hintText: '输入或粘贴其他表情',
-                                    counterText: '',
-                                  ),
-                                  onSubmitted: (value) =>
-                                      _set(csesCalloutPrefixAttribute, value),
+                                  decoration: const InputDecoration(hintText: '输入或粘贴其他表情', counterText: ''),
+                                  onSubmitted: (value) => _set(csesCalloutPrefixAttribute, value),
                                 ),
                               ),
                               TextButton(
                                 key: const ValueKey('callout-prefix-apply'),
-                                onPressed: () => _set(
-                                  csesCalloutPrefixAttribute,
-                                  _prefix!.text,
-                                ),
+                                onPressed: () => _set(csesCalloutPrefixAttribute, _prefix!.text),
                                 child: const Text('应用'),
                               ),
                             ],
                           ),
                         ] else ...[
                           const SizedBox(height: 8),
-                          _colorRow(
-                            '背景色',
-                            csesBlockBackgroundColorAttribute,
-                            'background',
-                          ),
+                          _colorRow('背景色', csesBlockBackgroundColorAttribute, 'background'),
                           const SizedBox(height: 16),
-                          _colorRow(
-                            '边框色',
-                            csesBlockBorderColorAttribute,
-                            'border',
-                          ),
+                          _colorRow('边框色', csesBlockBorderColorAttribute, 'border'),
                         ],
                       ],
                     ),
@@ -613,10 +476,7 @@ class _CalloutSettingsState extends State<_CalloutSettings> {
 }
 
 /// Inserts a desktop-compatible container after the current root block.
-Future<Selection?> insertCollabCallout(
-  EditorState editor,
-  Selection? selection,
-) async {
+Future<Selection?> insertCollabCallout(EditorState editor, Selection? selection) async {
   if (!editor.editable || editor.isDisposed) return null;
   final roots = editor.document.root.children;
   final index = selection == null || selection.start.path.isEmpty

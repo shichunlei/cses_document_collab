@@ -18,10 +18,7 @@ import 'package:cses_document_collab/cses_document_collab.dart'
 /// ```
 class CsesDocumentMetadataService implements DocumentMetadataService {
   /// 在Common登录完成后创建，捕获当前账号/企业/会话；不发请求，宿主切换账号前须等待文档关闭。
-  CsesDocumentMetadataService()
-    : _userId = User().userId,
-      _companyId = User().companyId,
-      _cookie = ctx.cookieId;
+  CsesDocumentMetadataService() : _userId = User().userId, _companyId = User().companyId, _cookie = ctx.cookieId;
 
   /// 创建时的用户ID；null或空值不能发业务请求。
   final String? _userId;
@@ -46,10 +43,7 @@ class CsesDocumentMetadataService implements DocumentMetadataService {
 
   /// [path] 是业务路由，[params] 是仅含本次字段的请求参数，均经Common公共封装发送。
   /// Future仅在收到标准成功Map且会话仍一致时完成；业务拒绝/格式错误抛FormatException，网络异常透传。
-  Future<Map<String, dynamic>> _post(
-    String path,
-    Map<String, dynamic> params,
-  ) async {
+  Future<Map<String, dynamic>> _post(String path, Map<String, dynamic> params) async {
     _checkSession();
     final response = await HttpManager.getInstance().post(path, params: params);
     _checkSession();
@@ -82,16 +76,12 @@ class CsesDocumentMetadataService implements DocumentMetadataService {
       icon: _object(detail['icon']),
       banner: _object(detail['banner']),
       canChangeAppearance: role is num && role >= 1000,
-      canRename:
-          owner is Map &&
-          owner['id'] == _userId &&
-          (abilities is! Map || abilities['rename'] != false),
+      canRename: owner is Map && owner['id'] == _userId && (abilities is! Map || abilities['rename'] != false),
     );
   }
 
   /// 将业务 [value] Map复制为字符串键Map；null保持未设置，非Map或非法键抛类型错误。
-  Map<String, dynamic>? _object(Object? value) =>
-      value == null ? null : Map<String, dynamic>.from(value as Map);
+  Map<String, dynamic>? _object(Object? value) => value == null ? null : Map<String, dynamic>.from(value as Map);
 
   /// 向固定 [documentId] 写入单字段 [patch]；null图标/封面使用移除路由，其他字段使用modify。
   /// Future仅在业务ACK成功且身份未变化时完成；失败透传给控制器，不做本地乐观更新。

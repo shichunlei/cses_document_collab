@@ -13,10 +13,7 @@ import 'package:flutter/foundation.dart';
 /// final markdown = await pickMarkdownFile();
 /// ```
 Future<String?> pickMarkdownFile() async {
-  final file = await FilePicker.pickFile(
-    type: FileType.custom,
-    allowedExtensions: ['md', 'markdown'],
-  );
+  final file = await FilePicker.pickFile(type: FileType.custom, allowedExtensions: ['md', 'markdown']);
   if (file == null) return null;
   if (!RegExp(r'\.(md|markdown)$', caseSensitive: false).hasMatch(file.name)) {
     throw const FormatException('请选择 .md 或 .markdown 文件');

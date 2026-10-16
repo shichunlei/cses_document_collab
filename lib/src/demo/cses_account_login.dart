@@ -40,11 +40,7 @@ class CsesAccountLogin {
   /// 应用启动时须先初始化 Common 偏好存储，再开放登录入口。
   /// Future 成功返回时 User/ctx 已完整解析并通过文档连接校验；解析或校验失败会
   /// 清理本次注入的身份，防止页面重试沿用半完成的会话。
-  Future<void> login(
-    String userName,
-    String password, {
-    bool Function()? isActive,
-  }) async {
+  Future<void> login(String userName, String password, {bool Function()? isActive}) async {
     if (userName.trim().isEmpty || password.isEmpty) {
       throw const CsesLoginFailure('请输入用户名和密码');
     }
@@ -64,9 +60,7 @@ class CsesAccountLogin {
       throw const CsesLoginFailure('登录服务返回了无法识别的数据');
     }
     if (value['isSuccess'] != true) {
-      throw CsesLoginFailure(
-        '${value['message'] ?? value['error'] ?? '用户名或密码错误'}',
-      );
+      throw CsesLoginFailure('${value['message'] ?? value['error'] ?? '用户名或密码错误'}');
     }
     try {
       // resolveContext 同时选择企业并解析 ctx；不再另行推导、覆盖身份或 WS 地址。

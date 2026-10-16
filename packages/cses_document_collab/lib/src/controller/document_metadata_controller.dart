@@ -56,12 +56,10 @@ class DocumentMetadataController extends ChangeNotifier {
   Future<bool>? _writing;
 
   /// 综合宿主、业务、存活及提交状态的改名门禁；不发送请求。
-  bool get canRename =>
-      !_disposed && !saving && canEdit() && value?.canRename == true;
+  bool get canRename => !_disposed && !saving && canEdit() && value?.canRename == true;
 
   /// 综合宿主、业务、存活及提交状态的外观门禁；不发送请求。
-  bool get canChangeAppearance =>
-      !_disposed && !saving && canEdit() && value?.canChangeAppearance == true;
+  bool get canChangeAppearance => !_disposed && !saving && canEdit() && value?.canChangeAppearance == true;
 
   /// 多次刷新共享进行中的读取；保存期间不发读取，迟到响应不能覆盖新保存结果。
   Future<void> refresh() {
@@ -98,8 +96,7 @@ class DocumentMetadataController extends ChangeNotifier {
     if (patch.name != null ? !canRename : !canChangeAppearance) {
       return Future.value(false);
     }
-    if (patch.name != null &&
-        (patch.name!.trim().isEmpty || patch.name!.length > 100)) {
+    if (patch.name != null && (patch.name!.trim().isEmpty || patch.name!.length > 100)) {
       error = '标题需为 1～100 个字符';
       notifyListeners();
       return Future.value(false);

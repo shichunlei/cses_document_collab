@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:cses_common/observability/api/log.dart';
-import 'package:cses_document_collab/cses_document_collab.dart'
-    show CollabMentionUser, CollabMentionDirectory;
+import 'package:cses_document_collab/cses_document_collab.dart' show CollabMentionUser, CollabMentionDirectory;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart' show SchedulerPhase;
@@ -36,11 +35,7 @@ Future<CollabMentionUser?> showDemoMentionPicker(
     useSafeArea: true,
     builder: (context) {
       route = ModalRoute.of(context);
-      return _MentionPicker(
-        canEdit: canEdit,
-        directory: directory,
-        keyword: keyword,
-      );
+      return _MentionPicker(canEdit: canEdit, directory: directory, keyword: keyword);
     },
   );
   await route?.completed;
@@ -50,11 +45,7 @@ Future<CollabMentionUser?> showDemoMentionPicker(
 /// 拥有搜索输入和请求状态的底部面板，借用权限信号/目录，不释放它们。
 class _MentionPicker extends StatefulWidget {
   /// [canEdit] 提供权限，[directory] 为查询端口，[keyword] 为初始搜索词。
-  const _MentionPicker({
-    required this.canEdit,
-    required this.directory,
-    required this.keyword,
-  });
+  const _MentionPicker({required this.canEdit, required this.directory, required this.keyword});
 
   /// 借用的权限信号，面板移除监听但不释放。
   final ValueListenable<bool> canEdit;
@@ -110,8 +101,7 @@ class _MentionPickerState extends State<_MentionPicker> {
       _users = const [];
       unawaited(_search(generation));
     }
-    if (WidgetsBinding.instance.schedulerPhase ==
-        SchedulerPhase.persistentCallbacks) {
+    if (WidgetsBinding.instance.schedulerPhase == SchedulerPhase.persistentCallbacks) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) setState(() {});
       });
@@ -185,13 +175,7 @@ class _MentionPickerState extends State<_MentionPicker> {
               child: Row(
                 children: [
                   const Expanded(
-                    child: Text(
-                      '@用户',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    child: Text('@用户', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   ),
                   IconButton(
                     key: const ValueKey('mention-close'),
@@ -209,10 +193,7 @@ class _MentionPickerState extends State<_MentionPicker> {
                 controller: _input,
                 enabled: enabled,
                 onChanged: _changed,
-                decoration: const InputDecoration(
-                  labelText: '搜索人员',
-                  prefixIcon: Icon(Icons.search),
-                ),
+                decoration: const InputDecoration(labelText: '搜索人员', prefixIcon: Icon(Icons.search)),
               ),
             ),
             Expanded(
@@ -249,15 +230,9 @@ class _MentionPickerState extends State<_MentionPicker> {
                         final user = _users[index];
                         return ListTile(
                           key: ValueKey('mention-user-${user.id}'),
-                          leading: DemoMentionAvatar(
-                            userId: user.id,
-                            name: user.name,
-                            avatarUrl: user.avatarUrl,
-                          ),
+                          leading: DemoMentionAvatar(userId: user.id, name: user.name, avatarUrl: user.avatarUrl),
                           title: Text(user.name),
-                          subtitle: user.department == null
-                              ? null
-                              : Text(user.department!),
+                          subtitle: user.department == null ? null : Text(user.department!),
                           onTap: () {
                             if (widget.canEdit.value) {
                               Navigator.pop(context, user);

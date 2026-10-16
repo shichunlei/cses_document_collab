@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:cses_document_collab/src/model/collab_resource.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 /// Resolves original HTTP(S) [url] to the desktop embed provider's frame URL.
@@ -11,12 +11,8 @@ import 'package:webview_flutter/webview_flutter.dart';
 /// pass through. Other sites, including Juejin, keep the original URL.
 Uri collabFrameUrl(String url) {
   final uri = Uri.parse(url);
-  if (const {'figma.com', 'www.figma.com'}.contains(uri.host) &&
-      uri.path != '/embed') {
-    return Uri.https('www.figma.com', '/embed', {
-      'embed_host': 'share',
-      'url': url,
-    });
+  if (const {'figma.com', 'www.figma.com'}.contains(uri.host) && uri.path != '/embed') {
+    return Uri.https('www.figma.com', '/embed', {'embed_host': 'share', 'url': url});
   }
   return uri;
 }
@@ -106,9 +102,7 @@ class _EmbeddedPageState extends State<CollabEmbeddedPage> {
             }
           },
           onNavigationRequest: (request) =>
-              isCollabResourceUrl('embed', request.url)
-              ? NavigationDecision.navigate
-              : NavigationDecision.prevent,
+              isCollabResourceUrl('embed', request.url) ? NavigationDecision.navigate : NavigationDecision.prevent,
         ),
       );
       if (!current()) return;
@@ -158,16 +152,10 @@ class _EmbeddedPageState extends State<CollabEmbeddedPage> {
             child: WebViewWidget(
               key: ValueKey(_controller),
               controller: _controller!,
-              gestureRecognizers: {
-                Factory<EagerGestureRecognizer>(() => EagerGestureRecognizer()),
-              },
+              gestureRecognizers: {Factory<EagerGestureRecognizer>(() => EagerGestureRecognizer())},
             ),
           ),
-        if (_progress < 100)
-          LinearProgressIndicator(
-            value: _progress == 0 ? null : _progress / 100,
-            minHeight: 2,
-          ),
+        if (_progress < 100) LinearProgressIndicator(value: _progress == 0 ? null : _progress / 100, minHeight: 2),
       ],
     );
   }

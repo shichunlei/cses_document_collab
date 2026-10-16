@@ -4,11 +4,8 @@ import 'package:flutter/material.dart';
 /// 用户名密码登录入口；Common 上下文就绪后通知页面切换，不存储登录凭证。
 class CsesLoginPage extends StatefulWidget {
   /// [onLoggedIn] 通知登录成功，[login] 可注入测试登录服务。
-  const CsesLoginPage({
-    super.key,
-    required this.onLoggedIn,
-    this.login = const CsesAccountLogin(),
-  });
+  const CsesLoginPage({super.key, required this.onLoggedIn, this.login = const CsesAccountLogin()});
+
   final VoidCallback onLoggedIn;
   final CsesAccountLogin login;
 
@@ -34,11 +31,7 @@ class _CsesLoginPageState extends State<CsesLoginPage> {
       _error = null;
     });
     try {
-      await widget.login.login(
-        _userName.text,
-        _password.text,
-        isActive: () => mounted,
-      );
+      await widget.login.login(_userName.text, _password.text, isActive: () => mounted);
       if (!mounted) return;
       _password.clear();
       widget.onLoggedIn();
@@ -76,17 +69,9 @@ class _CsesLoginPageState extends State<CsesLoginPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Icon(
-                        Icons.edit_document,
-                        size: 48,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
+                      Icon(Icons.edit_document, size: 48, color: Theme.of(context).colorScheme.primary),
                       const SizedBox(height: 20),
-                      Text(
-                        '登录账号',
-                        style: Theme.of(context).textTheme.headlineSmall,
-                        textAlign: TextAlign.center,
-                      ),
+                      Text('登录账号', style: Theme.of(context).textTheme.headlineSmall, textAlign: TextAlign.center),
                       const SizedBox(height: 8),
                       const Text('登录后自动连接测试文档', textAlign: TextAlign.center),
                       const SizedBox(height: 32),
@@ -102,10 +87,7 @@ class _CsesLoginPageState extends State<CsesLoginPage> {
                           prefixIcon: Icon(Icons.person_outline),
                           border: OutlineInputBorder(),
                         ),
-                        validator: (value) =>
-                            value == null || value.trim().isEmpty
-                            ? '请输入用户名'
-                            : null,
+                        validator: (value) => value == null || value.trim().isEmpty ? '请输入用户名' : null,
                       ),
                       const SizedBox(height: 16),
                       TextFormField(
@@ -124,27 +106,16 @@ class _CsesLoginPageState extends State<CsesLoginPage> {
                           border: const OutlineInputBorder(),
                           suffixIcon: IconButton(
                             tooltip: _obscure ? '显示密码' : '隐藏密码',
-                            onPressed: () =>
-                                setState(() => _obscure = !_obscure),
-                            icon: Icon(
-                              _obscure
-                                  ? Icons.visibility_outlined
-                                  : Icons.visibility_off_outlined,
-                            ),
+                            onPressed: () => setState(() => _obscure = !_obscure),
+                            icon: Icon(_obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined),
                           ),
                         ),
-                        validator: (value) =>
-                            value == null || value.isEmpty ? '请输入密码' : null,
+                        validator: (value) => value == null || value.isEmpty ? '请输入密码' : null,
                       ),
                       if (_error != null)
                         Padding(
                           padding: const EdgeInsets.only(top: 16),
-                          child: Text(
-                            _error!,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.error,
-                            ),
-                          ),
+                          child: Text(_error!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
                         ),
                       const SizedBox(height: 24),
                       FilledButton(
@@ -153,22 +124,12 @@ class _CsesLoginPageState extends State<CsesLoginPage> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           child: _busy
-                              ? const SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                  ),
-                                )
+                              ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
                               : const Text('登录'),
                         ),
                       ),
                       const SizedBox(height: 24),
-                      Text(
-                        'PRE 测试环境',
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
+                      Text('PRE 测试环境', textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall),
                     ],
                   ),
                 ),

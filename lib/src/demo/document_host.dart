@@ -68,18 +68,13 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
         onDocumentLike: (documentId, likes) {
           final user = User();
           final userId = localDraft ? 'demo-user' : (user.userId ?? '');
-          final name = localDraft
-              ? '演示用户'
-              : (user.name.isNotEmpty ? user.name : user.userName);
-          showToast(
-            text: likes.isLiked ? '取消点赞：$documentId' : '点赞文档：$documentId',
-          );
+          final name = localDraft ? '演示用户' : (user.name.isNotEmpty ? user.name : user.userName);
+          showToast(text: likes.isLiked ? '取消点赞：$documentId' : '点赞文档：$documentId');
           return CollabDocumentLikes(
             isLiked: !likes.isLiked,
             members: [
               ...likes.members.where((member) => member.userId != userId),
-              if (!likes.isLiked)
-                CollabDocumentLikeMember(userId: userId, name: name),
+              if (!likes.isLiked) CollabDocumentLikeMember(userId: userId, name: name),
             ],
           );
         },
@@ -88,20 +83,14 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
           return commentCount;
         },
         createId: () => ObjectId().toString(),
-        onError: (message, error, stack, tag) =>
-            Log.e(message, error: error, stackTrace: stack, tag: tag),
+        onError: (message, error, stack, tag) => Log.e(message, error: error, stackTrace: stack, tag: tag),
         mediaUpload: const CsesEditorMediaUploadService(),
         documentMetadata: localDraft ? null : CsesDocumentMetadataService(),
         mentionAvatarBuilder: buildDemoMentionAvatar,
         pickMentionUser: mentionDirectory == null
             ? null
             : (context, {required keyword, required canEdit}) =>
-                  showDemoMentionPicker(
-                    context,
-                    directory: mentionDirectory,
-                    keyword: keyword,
-                    canEdit: canEdit,
-                  ),
+                  showDemoMentionPicker(context, directory: mentionDirectory, keyword: keyword, canEdit: canEdit),
         pickMeetingReference: showDemoMeetingReferencePicker,
         loadMeetingCard: localDraft ? null : CsesMeetingCardService().load,
         loadTaskCard: localDraft ? null : CsesTaskCardService().load,
@@ -115,10 +104,7 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
         },
       );
       if (localDraft) {
-        _controller = CollabController.localDraft(
-          databasePath: path,
-          services: services,
-        );
+        _controller = CollabController.localDraft(databasePath: path, services: services);
       } else {
         // 身份和服务端地址只在这里从 Common 读取并注入不可变文档配置。
         // 包自行计算缓存分区；cookie 与物理连接仍由 Common 持有，不进入文档配置。
@@ -148,12 +134,7 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
       // Package initialization reports through the injected telemetry callback.
       // Only failures before a controller exists belong to this host boundary.
       if (_controller == null) {
-        Log.e(
-          'Demo 文档初始化失败',
-          error: error,
-          stackTrace: stackTrace,
-          tag: 'DocCollabDemo',
-        );
+        Log.e('Demo 文档初始化失败', error: error, stackTrace: stackTrace, tag: 'DocCollabDemo');
       }
       _error = '文档加载失败，请检查本地库或登录配置';
     } finally {
@@ -175,12 +156,7 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
         await _controller?.header?.refresh();
       }
     } catch (error, stackTrace) {
-      Log.e(
-        'Demo 重新连接失败',
-        error: error,
-        stackTrace: stackTrace,
-        tag: 'DocCollabDemo',
-      );
+      Log.e('Demo 重新连接失败', error: error, stackTrace: stackTrace, tag: 'DocCollabDemo');
       _error = '连接恢复失败，请重试';
       _changed();
     }
@@ -208,12 +184,7 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
         await _controller?.header?.refresh();
       }
     } catch (error, stackTrace) {
-      Log.e(
-        'Demo 前台恢复失败',
-        error: error,
-        stackTrace: stackTrace,
-        tag: 'DocCollabDemo',
-      );
+      Log.e('Demo 前台恢复失败', error: error, stackTrace: stackTrace, tag: 'DocCollabDemo');
     }
   }
 

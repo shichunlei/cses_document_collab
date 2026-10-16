@@ -1,4 +1,3 @@
-import 'document_feedback_controller.dart';
 import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
@@ -15,6 +14,7 @@ import 'package:cses_document_collab/src/sync/cses_collab_gateway.dart';
 import 'package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart';
 import 'package:flutter/foundation.dart';
 
+import 'document_feedback_controller.dart';
 import 'document_metadata_controller.dart';
 
 /// 本地加载、主连接握手及协同会话映射出的展示状态；online 不表示数据库落库。
@@ -40,18 +40,10 @@ class CollabController extends ChangeNotifier {
     required String databasePath,
     String documentId = 'demo-room',
     CollabHostServices services = const CollabHostServices(),
-  }) : this._(
-         CollabDocumentConfig.localDraft(
-           databasePath: databasePath,
-           documentId: documentId,
-         ),
-         null,
-         services,
-       );
+  }) : this._(CollabDocumentConfig.localDraft(databasePath: databasePath, documentId: documentId), null, services);
 
   /// Store [config], [gateway] and [services]; native ownership begins on initialize.
-  CollabController._(this.config, this._gateway, this._services)
-    : _editable = config.editable {
+  CollabController._(this.config, this._gateway, this._services) : _editable = config.editable {
     header = config.isFormal && _services.documentMetadata != null
         ? DocumentMetadataController(
             documentId: config.documentId,
@@ -61,13 +53,8 @@ class CollabController extends ChangeNotifier {
           )
         : null;
     header?.addListener(_notify);
-    feedback = DocumentFeedbackController(
-      documentId: config.documentId,
-      services: _services,
-    );
-    _editorAdapter = AppFlowyBlockEditorAdapter(
-      onLocalBlocksChanged: _applyEditorBlocks,
-    );
+    feedback = DocumentFeedbackController(documentId: config.documentId, services: _services);
+    _editorAdapter = AppFlowyBlockEditorAdapter(onLocalBlocksChanged: _applyEditorBlocks);
   }
 
   /// Immutable host identity and storage contract; contains no login credentials.
@@ -123,12 +110,7 @@ class CollabController extends ChangeNotifier {
 
   /// 当前可提交本地编辑；未加载、切换中、模型只读或发生协同错误时返回 false。
   bool get canEdit =>
-      !_disposed &&
-      initialized &&
-      !busy &&
-      _editable &&
-      _readOnlyReason == null &&
-      _status != ConnectionStatus.error;
+      !_disposed && initialized && !busy && _editable && _readOnlyReason == null && _status != ConnectionStatus.error;
 
   /// 当前文档打开时恢复的 SQLite update 数量。
   int get persistedUpdateCount => _persistedUpdateCount;
@@ -170,10 +152,7 @@ class CollabController extends ChangeNotifier {
       CollabRuntime.acquire(this, _services);
       await CollabRuntime.initialize();
       if (_disposed) return;
-      await _openLocal(
-        config.cacheDocumentId,
-        formalDocumentId: config.isFormal ? config.documentId : null,
-      );
+      await _openLocal(config.cacheDocumentId, formalDocumentId: config.isFormal ? config.documentId : null);
       if (_disposed) return;
       _initialized = true;
       _status = ConnectionStatus.offline;
@@ -190,12 +169,7 @@ class CollabController extends ChangeNotifier {
         try {
           await _releaseSession();
         } catch (cleanupError, cleanupStack) {
-          _services.report(
-            '初始化失败后的监听清理失败',
-            cleanupError,
-            cleanupStack,
-            'DocCollab',
-          );
+          _services.report('初始化失败后的监听清理失败', cleanupError, cleanupStack, 'DocCollab');
         } finally {
           if (CollabRuntime.nativeReady) rust.closeDocument();
           CollabRuntime.release(this);
@@ -247,10 +221,7 @@ class CollabController extends ChangeNotifier {
   /// 同时清除旧文档的身份映射与本地撤销历史，禁止历史操作跨缓存或账号恢复。
   Future<void> _openLocal(String cacheId, {String? formalDocumentId}) async {
     final result = formalDocumentId == null
-        ? rust.openDocument(
-            documentId: cacheId,
-            databasePath: config.databasePath,
-          )
+        ? rust.openDocument(documentId: cacheId, databasePath: config.databasePath)
         : rust.openCsesDocument(
             documentId: formalDocumentId,
             cacheDocumentId: cacheId,
@@ -279,16 +250,12 @@ class CollabController extends ChangeNotifier {
         _applyRemoteUpdate(update);
         // 完整向量握手后再修复结构派生编号，避免把不完整远端增量误当成完整列表。
         // 只读/预览不写入；同一编号已正确时不产生事务或持久化记录。
-        if (canEdit &&
-            editorState.editable &&
-            _lastBlocks.any((block) => block.ordered?.needsRepair == true)) {
+        if (canEdit && editorState.editable && _lastBlocks.any((block) => block.ordered?.needsRepair == true)) {
           final repaired = rust.applyBlockSnapshot(blocks: _lastBlocks);
           _lastBlocks = List.unmodifiable(repaired.blocks);
           unawaited(_queueProjection());
         }
-        return _editable
-            ? rust.encodeDocumentDiff(stateVector: vector)
-            : Uint8List.fromList([0, 0]);
+        return _editable ? rust.encodeDocumentDiff(stateVector: vector) : Uint8List.fromList([0, 0]);
       },
       onUpdate: _applyRemoteUpdate,
       awarenessFactory: (present) => rust.encodeLocalAwareness(
@@ -405,10 +372,7 @@ class CollabController extends ChangeNotifier {
       await _projection;
       if (_disposed) return;
       rust.resetLocalDocument();
-      await _openLocal(
-        config.cacheDocumentId,
-        formalDocumentId: config.isFormal ? config.documentId : null,
-      );
+      await _openLocal(config.cacheDocumentId, formalDocumentId: config.isFormal ? config.documentId : null);
       if (_disposed) return;
       _lastProtocolEvent = 'local-cache-reset';
       _status = ConnectionStatus.offline;
@@ -445,9 +409,7 @@ class CollabController extends ChangeNotifier {
 
   /// 将 Rust [blocks] 映射为编辑器快照，保留块身份、链接地址与格式；公式/用户/业务实体按单字符及身份字段传递，业务实体携带原始属性以恢复历史。
   /// 不持有原生资源，不在边界写入共享内容。
-  static List<CollabEditorBlock> _toEditorBlocks(
-    List<rust.CollabBlock> blocks,
-  ) {
+  static List<CollabEditorBlock> _toEditorBlocks(List<rust.CollabBlock> blocks) {
     return blocks
         .map(
           (block) => CollabEditorBlock(
@@ -489,9 +451,7 @@ class CollabController extends ChangeNotifier {
             image: _toEditorImage(block.image),
             ordered: _toEditorOrdered(block.ordered),
             code: _toEditorCode(block.code),
-            resource: block.resource == null
-                ? null
-                : CollabResource(properties: block.resource!.properties),
+            resource: block.resource == null ? null : CollabResource(properties: block.resource!.properties),
             replacesId: block.replacesId,
           ),
         )
@@ -581,11 +541,7 @@ class CollabController extends ChangeNotifier {
           width: image.width,
           height: image.height,
           rotation: image.rotation,
-          captions: List.unmodifiable(
-            image.captions.map(
-              (c) => CollabImageCaption(id: c.id, text: c.text),
-            ),
-          ),
+          captions: List.unmodifiable(image.captions.map((c) => CollabImageCaption(id: c.id, text: c.text))),
         );
 
   /// 将展示图片 [image] 转为桥接参数；尺寸原值和题注身份完整传递，null 不创建题注。
@@ -597,15 +553,12 @@ class CollabController extends ChangeNotifier {
           width: image.width,
           height: image.height,
           rotation: image.rotation,
-          captions: image.captions
-              .map((c) => rust.CollabImageCaption(id: c.id, text: c.text))
-              .toList(growable: false),
+          captions: image.captions.map((c) => rust.CollabImageCaption(id: c.id, text: c.text)).toList(growable: false),
         );
 
   /// 将 Rust [value] 的结构编号及原始设置转为不可变展示投影；null 表示普通块或独立草稿。
   /// 原始设置供菜单及撤销保存，远端投影不携带编号写入意图，也不持有编辑器资源。
-  static CollabOrdered? _toEditorOrdered(rust.CollabOrdered? value) =>
-      value == null
+  static CollabOrdered? _toEditorOrdered(rust.CollabOrdered? value) => value == null
       ? null
       : CollabOrdered(
           order: value.order,
@@ -618,8 +571,7 @@ class CollabController extends ChangeNotifier {
 
   /// 将展示 [value] 和一次性编号设置意图传回桥接；null 表示普通块。
   /// Rust 只消费 numberingEdit，普通投影不会覆盖 start/continuePrevious，ms 始终保留。
-  static rust.CollabOrdered? _toRustOrdered(CollabOrdered? value) =>
-      value == null
+  static rust.CollabOrdered? _toRustOrdered(CollabOrdered? value) => value == null
       ? null
       : rust.CollabOrdered(
           order: value.order,
@@ -632,10 +584,7 @@ class CollabController extends ChangeNotifier {
         );
 
   /// 比较 [left]/[right] 的全部投影字段，图片尺寸和题注变化也必须触发 UI 投影。
-  static bool _rustBlocksEqual(
-    List<rust.CollabBlock> left,
-    List<rust.CollabBlock> right,
-  ) {
+  static bool _rustBlocksEqual(List<rust.CollabBlock> left, List<rust.CollabBlock> right) {
     if (left.length != right.length) {
       return false;
     }
@@ -654,8 +603,7 @@ class CollabController extends ChangeNotifier {
           leftBlock.alignment != rightBlock.alignment ||
           leftBlock.indent != rightBlock.indent ||
           leftBlock.replacesId != rightBlock.replacesId ||
-          _toEditorOrdered(leftBlock.ordered) !=
-              _toEditorOrdered(rightBlock.ordered) ||
+          _toEditorOrdered(leftBlock.ordered) != _toEditorOrdered(rightBlock.ordered) ||
           _toEditorCode(leftBlock.code) != _toEditorCode(rightBlock.code) ||
           leftBlock.resource?.properties != rightBlock.resource?.properties ||
           _toEditorImage(leftBlock.image) != _toEditorImage(rightBlock.image) ||
@@ -666,10 +614,7 @@ class CollabController extends ChangeNotifier {
     return true;
   }
 
-  static bool _rustSegmentsEqual(
-    List<rust.CollabTextSegment> left,
-    List<rust.CollabTextSegment> right,
-  ) {
+  static bool _rustSegmentsEqual(List<rust.CollabTextSegment> left, List<rust.CollabTextSegment> right) {
     if (left.length != right.length) {
       return false;
     }
@@ -692,10 +637,7 @@ class CollabController extends ChangeNotifier {
     return true;
   }
 
-  static bool _editorBlocksEqual(
-    List<CollabEditorBlock> left,
-    List<CollabEditorBlock> right,
-  ) {
+  static bool _editorBlocksEqual(List<CollabEditorBlock> left, List<CollabEditorBlock> right) {
     if (left.length != right.length) {
       return false;
     }
@@ -731,22 +673,14 @@ class CollabController extends ChangeNotifier {
   /// 等待业务头部/文末互动读写、会话释放及已排队投影，再关闭所属全局Rust引擎；宿主端口不释放。
   Future<void> _shutdown() async {
     try {
-      await _initializationTask?.then<void>(
-        (_) {},
-        onError: (Object _, StackTrace _) {},
-      );
+      await _initializationTask?.then<void>((_) {}, onError: (Object _, StackTrace _) {});
       await header?.close();
       await feedback.close();
       await _accessTransition;
       await _releaseSession();
       await _projection;
     } catch (error, stackTrace) {
-      CollabDiagnostics.report(
-        'Demo 协同资源释放失败',
-        error: error,
-        stackTrace: stackTrace,
-        tag: 'DocCollab',
-      );
+      CollabDiagnostics.report('Demo 协同资源释放失败', error: error, stackTrace: stackTrace, tag: 'DocCollab');
     } finally {
       if (CollabRuntime.owns(this) && CollabRuntime.nativeReady) {
         rust.closeDocument();

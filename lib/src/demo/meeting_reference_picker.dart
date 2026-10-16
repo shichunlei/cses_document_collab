@@ -54,25 +54,15 @@ class _MeetingReferenceInputState extends State<_MeetingReferenceInput> {
   /// 仅返回引用快照；业务创建必须由宿主自己的服务和页面执行。
   void _confirm() {
     if (!widget.canEdit.value || !_form.currentState!.validate()) return;
-    Navigator.pop(
-      context,
-      CollabMeetingReference(
-        meetingId: _id.text,
-        title: _title.text,
-        number: _number.text,
-      ),
-    );
+    Navigator.pop(context, CollabMeetingReference(meetingId: _id.text, title: _title.text, number: _number.text));
   }
 
   /// 校验会议身份[value]的非空和UTF-8大小，不调用包内部实现。
   String? _validateId(String? value) =>
-      value == null || value.trim().isEmpty || utf8.encode(value).length > 512
-      ? '请填写有效会议 ID（最多512字节）'
-      : null;
+      value == null || value.trim().isEmpty || utf8.encode(value).length > 512 ? '请填写有效会议 ID（最多512字节）' : null;
 
   /// 校验展示字段[value]长度，[limit]以UTF-16单元计算。
-  String? _validateText(String? value, int limit) =>
-      (value?.length ?? 0) > limit ? '最多$limit字' : null;
+  String? _validateText(String? value, int limit) => (value?.length ?? 0) > limit ? '最多$limit字' : null;
 
   /// 释放宿主创建的输入控制器；权限信号仍由调用方持有。
   @override
@@ -89,9 +79,7 @@ class _MeetingReferenceInputState extends State<_MeetingReferenceInput> {
     child: Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
       child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.sizeOf(context).height * .8,
-        ),
+        constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * .8),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -99,10 +87,7 @@ class _MeetingReferenceInputState extends State<_MeetingReferenceInput> {
               children: [
                 const SizedBox(width: 16),
                 const Expanded(
-                  child: Text(
-                    '会议引用',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
+                  child: Text('会议引用', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ),
                 IconButton(
                   key: const ValueKey('meeting-close'),
@@ -148,10 +133,7 @@ class _MeetingReferenceInputState extends State<_MeetingReferenceInput> {
                         ),
                         if (!enabled) const Text('当前不可编辑，请关闭后重试'),
                         const SizedBox(height: 16),
-                        FilledButton(
-                          onPressed: enabled ? _confirm : null,
-                          child: const Text('添加引用'),
-                        ),
+                        FilledButton(onPressed: enabled ? _confirm : null, child: const Text('添加引用')),
                       ],
                     ),
                   ),
