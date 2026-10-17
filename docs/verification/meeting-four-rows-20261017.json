@@ -1,0 +1,88 @@
+{
+  "date": "2026-10-17",
+  "scope": "Meeting card layout: four fixed rows and equal-geometry skeleton loading.",
+  "rows": [
+    "Single-line title with ellipsis",
+    "Single-line status and metadata; status priority, remaining metadata ellipsized",
+    "Single-line meeting number; empty number reserves an em dash",
+    "Dedicated primary action row; retry shares this row on failure"
+  ],
+  "implementation": {
+    "geometry": "Same four SizedBox slots in loading, success, empty and failed states. Heights depend only on TextScaler. Primary button reserves minimum width and a minimum 44px touch target.",
+    "skeleton": "Static gray rounded bars, disabled action placeholder and loading semantics; no timers or network ownership.",
+    "preserved": [
+      "White body and state-colored left stripe",
+      "Unified header and readonly permissions",
+      "Host join/view, retry and delete behavior",
+      "Shared schema, attributes and all other card types"
+    ],
+    "business_lifecycle_prefix_unchanged": true,
+    "original_source_sha256": "d25a3dc6efdf2a1c01fcfc575de081c3a6c0e185a2933226994dbc98c35e22c0"
+  },
+  "validation": {
+    "red_baseline": "Four new loading geometry cases fail before implementation.",
+    "target_tests": {
+      "command": "flutter test --no-pub test/collab_meeting_card_test.dart test/collab_meeting_test.dart test/collab_card_frame_test.dart",
+      "passed": 38,
+      "new_cases": 6,
+      "result": "00:12 +38: All tests passed!"
+    },
+    "geometry_cases": {
+      "widths": [
+        320,
+        390
+      ],
+      "text_scales": [
+        1,
+        2.2
+      ],
+      "assertions": [
+        "Single-line title with actual overflow",
+        "Four row rectangles unchanged",
+        "Card size unchanged",
+        "Primary button rectangle unchanged",
+        "Following paragraph top unchanged",
+        "Failure and empty metadata reserve all rows",
+        "No shared write or undo entry from detail loading"
+      ]
+    },
+    "visual_QA": {
+      "font": "Local PingFang Regular and bundled MaterialIcons through optional test settings",
+      "screenshots": "/var/folders/sx/qjydrwp90_99lm16z_rld7n00000gn/T/codex-meeting-four-rows-2g8_y1i3/previews",
+      "inspected": [
+        "Loading",
+        "390px/1x loaded",
+        "320px/2.2x loaded"
+      ],
+      "result": "Readable status/action, correct truncation and equal loading/result geometry."
+    },
+    "package_analysis": {
+      "errors": 0,
+      "warnings": 0,
+      "existing_info": [
+        "test/collab_controller_native_test.dart:186 close_sinks"
+      ],
+      "exit_status": 1,
+      "result": "1 issue found. (ran in 17.2s)"
+    },
+    "format": "Only two changed handwritten files formatted; untouched business prefix retained to avoid unrelated reflow.",
+    "diff_check": "passed"
+  },
+  "upstream_version": {
+    "latest": "unverified",
+    "reason": "Desktop repository rechecked before work and remains absent. Configured registry/latest, declaration/lock/install and packaged skills/MIGRATIONS unavailable. Historical versions are not a fresh latest claim."
+  },
+  "status_counts": {
+    "adapted": 13,
+    "partial": 12,
+    "structural": 1,
+    "unadapted": 15,
+    "total": 41
+  },
+  "limits": [
+    "No device/iOS/real desktop online reacceptance.",
+    "No schema/native/generated/dependency changes.",
+    "Targeted UI/business tests and package analysis run; no new full package/host suite for this layout-only change.",
+    "Independent host pubspec.yaml changes preserved."
+  ]
+}

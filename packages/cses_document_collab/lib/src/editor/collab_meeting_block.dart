@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/editor/collab_card_frame.dart';
@@ -320,7 +322,8 @@ class _MeetingBlockState extends State<_MeetingBlock> with SelectableMixin {
       (context.findRenderObject() as RenderBox).localToGlobal(offset);
 }
 
-/// 会议卡片的本地展示；背景与标题不派发事件，详情在底部，编辑操作统一在更多菜单。
+/// 会议卡片的四行本地展示；加载与结果共用按文字缩放计算的行槽，避免详情返回时改变文档高度。
+/// 标题和元信息不派发事件，主按钮独占末行，编辑操作统一在更多菜单。
 class _MeetingCardView extends StatelessWidget {
   /// [key]控制身份与状态复用，[blockId]为稳定块身份，[title]/[number]为有效展示字段，[data]为可空业务快照。
   /// [loading]/[failed]/[unavailable]分别表示加载、失败、会议不存在；[busy]屏蔽重复操作。
@@ -352,13 +355,13 @@ class _MeetingCardView extends StatelessWidget {
   /// 当前标题，空名展示未命名会议。
   final String title;
 
-  /// 当前编号，仅本地展示。
+  /// 当前编号，仅本地展示；空值仍保留第三行并显示破折号。
   final String number;
 
   /// 宿主业务快照，未提供或加载中为空。
   final CollabMeetingCardData? data;
 
-  /// 正在读取当前业务详情。
+  /// 正在读取当前业务详情；四行显示等高骨架，主按钮禁用。
   final bool loading;
 
   /// 当前业务请求失败，主按钮不可用。
@@ -376,10 +379,11 @@ class _MeetingCardView extends StatelessWidget {
   /// 编辑器提供的更多操作控件，负责权限、插入正文和删除引用。
   final Widget moreActions;
 
-  /// 失败重试回调，null不显示。
+  /// 失败重试回调，null不显示；与禁用的主按钮共用末行，不增加内容行。
   final VoidCallback? onRetry;
 
-  /// 在借用[context]内绘制统一标题栏与白底内容；仅左侧纵条按状态着色，标签和主操作语义保持。
+  /// 在借用[context]内绘制统一标题栏、左侧状态条和四行内容。
+  /// 行高只依赖当前文字缩放，加载、错误、缺失和完整详情使用相同行槽；宽度不足时单行省略。
   @override
   Widget build(BuildContext context) {
     final state = data?.state ?? CollabMeetingCardState.unknown;
@@ -389,17 +393,26 @@ class _MeetingCardView extends StatelessWidget {
       CollabMeetingCardState.paused => const Color(0xFFFF7D00),
       _ => const Color(0xFF86909C),
     };
-    final label = loading
-        ? '加载中'
-        : failed
+    final label = failed
         ? '状态加载失败'
         : unavailable
         ? '会议不存在'
         : state.label;
-    final action = state == CollabMeetingCardState.completed || state == CollabMeetingCardState.canceled
+    final action =
+        state == CollabMeetingCardState.completed ||
+            state == CollabMeetingCardState.canceled
         ? '查看会议'
         : '加入会议';
     final time = data?.startTime?.toLocal();
+    final scaler = MediaQuery.textScalerOf(context);
+    final titleHeight = math.max(22.0, scaler.scale(14) * 1.4).ceilToDouble();
+    final metaHeight = math
+        .max(24.0, scaler.scale(12) * 1.4 + 4)
+        .ceilToDouble();
+    final numberHeight = math.max(20.0, scaler.scale(12) * 1.4).ceilToDouble();
+    final actionHeight = math
+        .max(44.0, scaler.scale(14) * 1.4 + 16)
+        .ceilToDouble();
     return ExcludeFocus(
       child: CollabCardFrame(
         surfaceKey: ValueKey('meeting-card-surface-$blockId'),
@@ -419,79 +432,90 @@ class _MeetingCardView extends StatelessWidget {
                 top: 0,
                 bottom: 0,
                 width: 3,
-                child: ColoredBox(key: ValueKey('meeting-card-accent-$blockId'), color: color),
+                child: ColoredBox(
+                  key: ValueKey('meeting-card-accent-$blockId'),
+                  color: color,
+                ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(12, 12, 12, 6),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            title.isEmpty ? '未命名会议' : title,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF1F2329)),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    Padding(
-                      padding: EdgeInsets.zero,
-                      child: Wrap(
-                        spacing: 8,
-                        runSpacing: 6,
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: color.withValues(alpha: .1),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Text(
-                              '● $label',
-                              style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.w500),
-                            ),
-                          ),
-                          if (time != null)
-                            _meta(
-                              '${_twoDigits(time.month)}-${_twoDigits(time.day)} ${_twoDigits(time.hour)}:${_twoDigits(time.minute)}',
-                            ),
-                          if (data?.moderatorName?.isNotEmpty == true) _meta(data!.moderatorName!),
-                          if (data?.memberCount != null) _meta('${data!.memberCount}人'),
-                          if (number.isNotEmpty) _meta('会议编号：$number'),
-                          if (onRetry != null) TextButton(onPressed: onRetry, child: const Text('重试')),
-                        ],
+                padding: const EdgeInsets.all(12),
+                child: Semantics(
+                  key: loading
+                      ? ValueKey('meeting-card-skeleton-$blockId')
+                      : null,
+                  label: loading ? '会议详情加载中' : null,
+                  excludeSemantics: loading,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _row(
+                        'title',
+                        titleHeight,
+                        loading
+                            ? _MeetingSkeletonBar(
+                                height: scaler.scale(14) * .75,
+                                widthFactor: .72,
+                              )
+                            : Text(
+                                title.trim().isEmpty ? '未命名会议' : title,
+                                maxLines: 1,
+                                softWrap: false,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  height: 1.4,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFF1F2329),
+                                ),
+                              ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    OverflowBar(
-                      alignment: MainAxisAlignment.end,
-                      overflowAlignment: OverflowBarAlignment.end,
-                      spacing: 8,
-                      overflowSpacing: 8,
-                      children: [
-                        FilledButton(
-                          key: ValueKey('meeting-open-$blockId'),
-                          onPressed: onOpen,
-                          style: FilledButton.styleFrom(
-                            backgroundColor: const Color(0xFF4A7AFE),
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                          ),
-                          child: busy
-                              ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
-                              : Text(action),
-                        ),
-                      ],
-                    ),
-                  ],
+                      const SizedBox(height: 6),
+                      _row(
+                        'meta',
+                        metaHeight,
+                        loading
+                            ? Row(
+                                children: [
+                                  SizedBox(
+                                    width: 64,
+                                    child: _MeetingSkeletonBar(
+                                      height: scaler.scale(12),
+                                      radius: 10,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: _MeetingSkeletonBar(
+                                      height: scaler.scale(12) * .75,
+                                      widthFactor: .6,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : _statusRow(color, label, time),
+                      ),
+                      const SizedBox(height: 6),
+                      _row(
+                        'number',
+                        numberHeight,
+                        loading
+                            ? _MeetingSkeletonBar(
+                                height: scaler.scale(12) * .75,
+                                widthFactor: .45,
+                              )
+                            : _meta(
+                                '会议编号：${number.trim().isEmpty ? '—' : number}',
+                              ),
+                      ),
+                      const SizedBox(height: 10),
+                      _row(
+                        'action',
+                        actionHeight,
+                        _actions(context, action, actionHeight),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -501,9 +525,171 @@ class _MeetingCardView extends StatelessWidget {
     );
   }
 
-  /// 为本地元信息[value]提供小号中性色文本，允许窄屏按Wrap换行。
-  Widget _meta(String value) => Text(value, style: const TextStyle(fontSize: 12, color: Color(0xFF8A8F99)));
+  /// 在当前块中用[name]标记固定行槽；[height]为逻辑像素，[child]借用且垂直居中。
+  Widget _row(String name, double height, Widget child) => SizedBox(
+    key: ValueKey('meeting-$name-row-$blockId'),
+    height: height,
+    child: Align(alignment: Alignment.centerLeft, child: child),
+  );
+
+  /// 将状态[color]/[label]与可空本地[time]及主持人、人数限制为同一行。
+  /// 优先保留状态宽度，其余元信息按展示顺序单行省略，完整内容仍保留在文本语义中。
+  Widget _statusRow(Color color, String label, DateTime? time) {
+    final information = [
+      if (time != null)
+        '${_twoDigits(time.month)}-${_twoDigits(time.day)} ${_twoDigits(time.hour)}:${_twoDigits(time.minute)}',
+      if (data?.moderatorName?.isNotEmpty == true) data!.moderatorName!,
+      if (data?.memberCount != null) '${data!.memberCount}人',
+    ];
+    return LayoutBuilder(
+      builder: (context, constraints) => Row(
+        children: [
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: constraints.maxWidth * (information.isEmpty ? 1 : .6),
+            ),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: .1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                '● $label',
+                maxLines: 1,
+                softWrap: false,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 12,
+                  height: 1.4,
+                  color: color,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
+          if (information.isNotEmpty) ...[
+            const SizedBox(width: 8),
+            Expanded(child: _meta(information.join(' · '))),
+          ],
+        ],
+      ),
+    );
+  }
+
+  /// 在借用[context]中于[height]逻辑像素行内显示原主操作[action]；重试共用此行。
+  /// 加载时按钮呈骨架且禁用，主题字体及最小宽度使加载前后的按钮尺寸保持一致。
+  /// 回调仍由调用方持有，busy只替换按钮内容，不改变行高或触发额外详情请求。
+  Widget _actions(BuildContext context, String action, double height) => Row(
+    mainAxisAlignment: MainAxisAlignment.end,
+    children: [
+      if (onRetry != null) ...[
+        Flexible(
+          child: SizedBox(
+            height: height,
+            child: TextButton(
+              onPressed: onRetry,
+              child: const Text(
+                '重试',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+      ],
+      Flexible(
+        flex: 2,
+        child: SizedBox(
+          height: height,
+          child: FilledButton(
+            key: ValueKey('meeting-open-$blockId'),
+            onPressed: loading ? null : onOpen,
+            style: FilledButton.styleFrom(
+              backgroundColor: const Color(0xFF4A7AFE),
+              foregroundColor: Colors.white,
+              disabledBackgroundColor: loading ? const Color(0xFFEDEFF2) : null,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              minimumSize: Size(
+                math.max(
+                  112.0,
+                  MediaQuery.textScalerOf(context).scale(14) * 4 + 32,
+                ),
+                44,
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              textStyle: Theme.of(context).textTheme.labelLarge?.copyWith(
+                fontSize: 14,
+                height: 1.4,
+                fontWeight: FontWeight.w500,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6),
+              ),
+            ),
+            child: loading
+                ? const SizedBox(width: 70, height: 18)
+                : busy
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : Text(
+                    action,
+                    maxLines: 1,
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+          ),
+        ),
+      ),
+    ],
+  );
+
+  /// 为本地元信息[value]提供单行中性色文本，宽度由行槽及剩余空间约束。
+  Widget _meta(String value) => Text(
+    value,
+    maxLines: 1,
+    softWrap: false,
+    overflow: TextOverflow.ellipsis,
+    style: const TextStyle(fontSize: 12, height: 1.4, color: Color(0xFF8A8F99)),
+  );
 
   /// 将月份、日或时分[value]补齐两位，不依赖宿主本地化包。
   String _twoDigits(int value) => value.toString().padLeft(2, '0');
+}
+
+/// 无动画的会议骨架条，只提供本地绘制，不创建定时器、请求或共享状态。
+class _MeetingSkeletonBar extends StatelessWidget {
+  /// [height]为逻辑像素高度；[widthFactor]为父行宽度比例，默认1；[radius]为圆角半径，默认4。
+  const _MeetingSkeletonBar({
+    required this.height,
+    this.widthFactor = 1,
+    this.radius = 4,
+  });
+
+  /// 随当前文字缩放计算的骨架高度。
+  final double height;
+
+  /// 父行宽度的比例，取值大于0且不超过1。
+  final double widthFactor;
+
+  /// 固定圆角的逻辑像素半径。
+  final double radius;
+
+  /// 在借用[context]中绘制浅灰占位；真实语义由会议内容区统一提供。
+  @override
+  Widget build(BuildContext context) => FractionallySizedBox(
+    widthFactor: widthFactor,
+    alignment: Alignment.centerLeft,
+    child: Container(
+      height: height,
+      decoration: BoxDecoration(
+        color: const Color(0xFFEDEFF2),
+        borderRadius: BorderRadius.circular(radius),
+      ),
+    ),
+  );
 }

@@ -66,9 +66,9 @@ void main() {
         expect(find.text('● $label'), findsOneWidget);
         expect(find.text(action), findsOneWidget);
         expect(find.text('威震天的快速会议'), findsOneWidget);
-        expect(find.text('10-10 15:35'), findsOneWidget);
-        expect(find.text('威震天'), findsOneWidget);
-        expect(find.text('8人'), findsOneWidget);
+        expect(find.textContaining('10-10 15:35'), findsOneWidget);
+        expect(find.textContaining(' · 威震天 · '), findsOneWidget);
+        expect(find.textContaining('8人'), findsOneWidget);
         expect(
           tester
               .widget<ColoredBox>(
@@ -89,6 +89,134 @@ void main() {
         expect(remove.overlaps(open), isFalse);
         expect(remove.bottom, lessThan(open.top));
         await _capture(tester, state.value);
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+
+  for (final width in [320.0, 390.0]) {
+    for (final scale in [1.0, 2.2]) {
+      testWidgets('four rows keep geometry across loading at $width/$scale', (
+        tester,
+      ) async {
+        final pending = Completer<CollabMeetingCardData?>();
+        final harness = await _mount(
+          tester,
+          width: width,
+          scale: scale,
+          height: 620,
+          settle: false,
+          services: CollabHostServices(
+            loadMeetingCard: (_) => pending.future,
+            onMeetingCardTap: (_, _, _) {},
+          ),
+        );
+        expect(
+          find.byKey(const ValueKey('meeting-card-skeleton-meeting')),
+          findsOneWidget,
+        );
+        expect(tester.widget<FilledButton>(_open).onPressed, isNull);
+        final size = tester.getSize(_surface);
+        final actionRect = tester.getRect(_open);
+        final tail = harness.adapter.editorState.document.root.children.last;
+        final tailTop = tester.getTopLeft(find.byKey(tail.key)).dy;
+        final rows = [
+          for (final name in ['title', 'meta', 'number', 'action'])
+            tester.getRect(find.byKey(ValueKey('meeting-$name-row-meeting'))),
+        ];
+        await _capture(tester, 'loading-${width.toInt()}-$scale');
+        const title = '很长的会议标题必须保持单行并显示省略号不能撑高会议卡片';
+        pending.complete(
+          CollabMeetingCardData(
+            meetingId: 'm1',
+            state: CollabMeetingCardState.inProgress,
+            title: title,
+            number: '123456789012345678901234567890',
+            startTime: DateTime(2026, 10, 17, 15, 35),
+            moderatorName: '很长的主持人名称必须保持在状态时间同一行',
+            memberCount: 99999,
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(
+          find.byKey(const ValueKey('meeting-card-skeleton-meeting')),
+          findsNothing,
+        );
+        final titleWidget = tester.widget<Text>(find.text(title));
+        expect(titleWidget.maxLines, 1);
+        expect(titleWidget.overflow, TextOverflow.ellipsis);
+        final paragraph = tester.renderObject<RenderParagraph>(
+          find.text(title),
+        );
+        expect(paragraph.didExceedMaxLines, isTrue);
+        expect(tester.getSize(_surface), size);
+        expect(tester.getRect(_open), actionRect);
+        expect(tester.getTopLeft(find.byKey(tail.key)).dy, tailTop);
+        final names = ['title', 'meta', 'number', 'action'];
+        for (var i = 0; i < names.length; i++) {
+          expect(
+            tester.getRect(
+              find.byKey(ValueKey('meeting-${names[i]}-row-meeting')),
+            ),
+            rows[i],
+          );
+        }
+        expect(
+          tester
+              .getRect(find.text('会议编号：123456789012345678901234567890'))
+              .center
+              .dy,
+          greaterThan(
+            tester.getRect(find.textContaining('10-17 15:35')).bottom,
+          ),
+        );
+        expect(tester.widget<FilledButton>(_open).onPressed, isNotNull);
+        expect(
+          harness.adapter.editorState.undoManager.undoStack.isEmpty,
+          isTrue,
+        );
+        await _capture(tester, 'four-rows-${width.toInt()}-$scale');
+        expect(tester.takeException(), isNull);
+      });
+    }
+  }
+
+  for (final fails in [false, true]) {
+    testWidgets(
+      'empty metadata and failed load keep all four row slots, failure=$fails',
+      (tester) async {
+        final pending = Completer<CollabMeetingCardData?>();
+        await _mount(
+          tester,
+          settle: false,
+          services: CollabHostServices(
+            loadMeetingCard: (_) => pending.future,
+            onMeetingCardTap: (_, _, _) {},
+            onError: (_, _, _, _) {},
+          ),
+        );
+        final initialSize = tester.getSize(_surface);
+        if (fails) {
+          pending.completeError(StateError('expected load failure'));
+        } else {
+          pending.complete(
+            const CollabMeetingCardData(meetingId: 'm1', title: '', number: ''),
+          );
+        }
+        await tester.pumpAndSettle();
+        expect(tester.getSize(_surface), initialSize);
+        for (final name in ['title', 'meta', 'number', 'action']) {
+          expect(
+            find.byKey(ValueKey('meeting-$name-row-meeting')),
+            findsOneWidget,
+          );
+        }
+        expect(find.text(fails ? '● 状态加载失败' : '● 状态未知'), findsOneWidget);
+        expect(find.text(fails ? '会议编号：123456' : '会议编号：—'), findsOneWidget);
+        if (fails) {
+          expect(find.text('重试'), findsOneWidget);
+          expect(tester.widget<FilledButton>(_open).onPressed, isNull);
+        }
         expect(tester.takeException(), isNull);
       },
     );
@@ -519,17 +647,19 @@ class _Harness {
 }
 
 /// 在[tester]挂载真实编辑器，注入[services]；[width]/[scale]控制窄屏与文字缩放。
-/// [settle]默认等待请求及布局完成，挂起请求时可为false；[onChanged]统计正文提交，不拥有回调资源。
+/// [height]为测试视口逻辑像素高度，默认350；[settle]默认等待请求及布局完成，挂起请求时可为false；
+/// [onChanged]统计正文提交，不拥有回调资源。
 /// 测试退出时解除挂载、释放编辑器/会话并还原屏幕约束。
 Future<_Harness> _mount(
   WidgetTester tester, {
   required CollabHostServices services,
   double width = 390,
   double scale = 1,
+  double height = 350,
   bool settle = true,
   void Function(List<CollabEditorBlock>)? onChanged,
 }) async {
-  await tester.binding.setSurfaceSize(Size(width, 350));
+  await tester.binding.setSurfaceSize(Size(width, height));
   final owner = Object();
   CollabRuntime.acquire(owner, services);
   final adapter = AppFlowyBlockEditorAdapter(
