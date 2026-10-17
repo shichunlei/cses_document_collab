@@ -1,8 +1,9 @@
 import 'package:cses_document_collab/src/model/document_cover_catalog.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// 将桌面静态清单显示为分组图库；缩略图失败仍可选择CSES原图，不执行业务保存。
-/// 父组件提供滚动区域，本视图只按宽度排两列/四列，不拥有业务控制器。
+/// 父组件提供滚动区域，本视图只按宽度排三列/四列，不拥有业务控制器。
 ///
 /// ```dart
 /// import 'package:flutter/material.dart';
@@ -38,10 +39,10 @@ class DocumentCoverGallery extends StatelessWidget {
             primary: false,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            crossAxisCount: constraints.maxWidth >= 520 ? 4 : 2,
+            crossAxisCount: constraints.maxWidth >= 520 ? 4 : 3,
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
-            childAspectRatio: 1.6,
+            childAspectRatio: 1.53,
             children: [for (final image in group.items) _tile(image)],
           ),
           const SizedBox(height: 22),
@@ -70,32 +71,23 @@ class DocumentCoverGallery extends StatelessWidget {
               fit: BoxFit.cover,
               errorBuilder: (_, _, _) => const Center(child: Icon(Icons.image_outlined, color: Color(0xFF7C8799))),
             ),
-            const DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Colors.transparent, Color(0xCC000000)],
-                  stops: [.4, 1],
-                ),
-              ),
-            ),
-            Positioned(
-              left: 8,
-              bottom: 8,
-              right: 8,
-              child: Text(
-                image.label,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 12, color: Colors.white),
-              ),
-            ),
             if (image.url == selectedUrl)
               const DecoratedBox(
                 decoration: BoxDecoration(
-                  border: Border.fromBorderSide(BorderSide(color: Color(0xFF5B5BD6), width: 2)),
+                  border: Border.fromBorderSide(BorderSide(color: Color(0xFF6558D9), width: 2)),
                   borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+              ),
+            if (image.url == selectedUrl)
+              Positioned(
+                right: 4,
+                bottom: 4,
+                child: Container(
+                  width: 19,
+                  height: 19,
+                  alignment: Alignment.center,
+                  decoration: const BoxDecoration(color: Color(0xFF6558D9), shape: BoxShape.circle),
+                  child: const Icon(LucideIcons.check, size: 13, color: Colors.white),
                 ),
               ),
           ],

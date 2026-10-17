@@ -1,8 +1,9 @@
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:cses_document_collab/src/editor/collab_cached_image.dart';
 import 'package:cses_document_collab/src/editor/collab_emoji_picker.dart';
-
 import 'package:cses_document_collab/src/controller/document_metadata_controller.dart';
 import 'package:cses_document_collab/src/model/document_metadata.dart';
 import 'editor_media_source_sheet.dart';
@@ -114,7 +115,6 @@ class _DocumentHeaderState extends State<DocumentHeader> {
             patch = await _sheet<DocumentMetadataPatch>(
               context,
               _IconSheet(icon: current.icon, canEdit: allowed),
-              wrapContent: false,
             );
           } else {
             patch = await _sheet<DocumentMetadataPatch>(
@@ -157,82 +157,87 @@ class _DocumentHeaderState extends State<DocumentHeader> {
   /// 封面铺满可用屏宽，图标三分之二叠在图内、三分之一露在正文区域。
   /// [banner] 为业务封面Map，[icon] 为null时不增加下沿占位；操作按图片中心定位。
   /// 返回受父宽度约束的视图，不修改业务数据；网络图片失败显示占位。
-  Widget _cover(Map<String, dynamic> banner, Map<String, dynamic>? icon) =>
-      LayoutBuilder(
-        builder: (context, constraints) {
-          final height = constraints.maxWidth / 2.15;
-          return SizedBox(
-            height: height + (icon == null ? 0 : 16),
-            child: Stack(
-              children: [
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: height,
-                  child: Stack(
-                    key: const ValueKey('document-banner-image'),
-                    fit: StackFit.expand,
-                    children: [
-                      _bannerImage(banner),
-                      if (_showAppearanceActions)
-                        Center(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Material(
-                              key: const ValueKey('document-banner-actions'),
-                              color: const Color(0x99000000),
-                              borderRadius: BorderRadius.circular(8),
-                              child: Wrap(
-                                alignment: WrapAlignment.center,
-                                children: [
-                                  for (final action in [
-                                    ('banner', 'document-banner-edit', '更换封面'),
-                                    (
-                                      'removeBanner',
-                                      'document-banner-remove',
-                                      '移除封面',
+  /// 移除封面使用共用危险操作红色，其他封面操作保持白色。
+  Widget _cover(
+    Map<String, dynamic> banner,
+    Map<String, dynamic>? icon,
+  ) => LayoutBuilder(
+    builder: (context, constraints) {
+      final height = constraints.maxWidth / 2.15;
+      return SizedBox(
+        height: height + (icon == null ? 0 : 16),
+        child: Stack(
+          children: [
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              height: height,
+              child: Stack(
+                key: const ValueKey('document-banner-image'),
+                fit: StackFit.expand,
+                children: [
+                  _bannerImage(banner),
+                  if (_showAppearanceActions)
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Material(
+                          key: const ValueKey('document-banner-actions'),
+                          color: const Color(0x99000000),
+                          borderRadius: BorderRadius.circular(8),
+                          child: Wrap(
+                            alignment: WrapAlignment.center,
+                            children: [
+                              for (final action in [
+                                ('banner', 'document-banner-edit', '更换封面'),
+                                (
+                                  'removeBanner',
+                                  'document-banner-remove',
+                                  '移除封面',
+                                ),
+                                (
+                                  'position',
+                                  'document-banner-position',
+                                  '调整位置',
+                                ),
+                              ])
+                                TextButton(
+                                  key: ValueKey(action.$2),
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: action.$1 == 'removeBanner'
+                                        ? CollabModalColors.of(context).danger
+                                        : Colors.white,
+                                    minimumSize: const Size(0, 44),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 8,
                                     ),
-                                    (
-                                      'position',
-                                      'document-banner-position',
-                                      '调整位置',
-                                    ),
-                                  ])
-                                    TextButton(
-                                      key: ValueKey(action.$2),
-                                      style: TextButton.styleFrom(
-                                        foregroundColor: Colors.white,
-                                        minimumSize: const Size(0, 44),
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 10,
-                                          vertical: 8,
-                                        ),
-                                      ),
-                                      onPressed: _appearance
-                                          ? () => _edit(action.$1)
-                                          : null,
-                                      child: Text(action.$3),
-                                    ),
-                                ],
-                              ),
-                            ),
+                                  ),
+                                  onPressed: _appearance
+                                      ? () => _edit(action.$1)
+                                      : null,
+                                  child: Text(action.$3),
+                                ),
+                            ],
                           ),
                         ),
-                    ],
-                  ),
-                ),
-                if (icon != null)
-                  Positioned(
-                    left: DocumentHeader.contentInset,
-                    top: height - 32,
-                    child: _icon(icon),
-                  ),
-              ],
+                      ),
+                    ),
+                ],
+              ),
             ),
-          );
-        },
+            if (icon != null)
+              Positioned(
+                left: DocumentHeader.contentInset,
+                top: height - 32,
+                child: _icon(icon),
+              ),
+          ],
+        ),
       );
+    },
+  );
 
   /// 在 [context] 中监听借用的控制器，仅重建头部；加载/保存失败以状态展示，保存中保留操作布局。
   @override
@@ -356,37 +361,10 @@ class _DocumentHeaderState extends State<DocumentHeader> {
   );
 }
 
-/// 使用 [context] 展示借用的 [child] 底部面板；[wrapContent] 默认true，为false时由child管理滚动/键盘。
-/// Future等待弹窗完整退场再返回其结果，取消为null；调用方随后归还正文焦点，Navigator异常透传。
-Future<T?> _sheet<T>(
-  BuildContext context,
-  Widget child, {
-  bool wrapContent = true,
-}) async {
-  ModalRoute<T>? route;
-  final result = await showModalBottomSheet<T>(
-    context: context,
-    isScrollControlled: true,
-    useSafeArea: true,
-    requestFocus: true,
-    builder: (context) {
-      route = ModalRoute.of<T>(context);
-      if (!wrapContent) return child;
-      return AnimatedPadding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.viewInsetsOf(context).bottom,
-        ),
-        duration: const Duration(milliseconds: 120),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: child,
-        ),
-      );
-    },
-  );
-  await route?.completed;
-  return result;
-}
+/// 展示借用 [context] 的 [child]，完整退场后返回结果，取消为 null。
+/// 各面板外壳自行提供滚动及键盘避让，调用方负责正文焦点和业务保存。
+Future<T?> _sheet<T>(BuildContext context, Widget child) =>
+    showCollabBottomSheet<T>(context: context, builder: (_) => child);
 
 /// 根据业务 [banner] 的url及0～100百分比y展示裁切图片；异常y钳制到合法范围。
 /// HTTP(S)位图及SVG共用图片文件缓存；非法地址或加载失败显示占位，不写业务数据。
@@ -482,43 +460,37 @@ class _TitleSheetState extends State<_TitleSheet> {
     Navigator.pop(context, DocumentMetadataPatch.rename(_text.text.trim()));
   }
 
-  /// 在 [context] 中构建最长100字符的标题表单；确认输出命令，取消返回null。
+  /// 在 [context] 中构建最长100字符的独立标题表单，固定取消与保存区。
   @override
   Widget build(BuildContext context) => Form(
     key: _form,
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text('修改标题', style: Theme.of(context).textTheme.titleLarge),
-        const SizedBox(height: 16),
-        TextFormField(
+    child: CollabBottomSheet(
+      title: const Text('修改标题'),
+      icon: LucideIcons.type,
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('取消'),
+        ),
+        FilledButton(
+          key: const ValueKey('document-header-submit'),
+          onPressed: _submit,
+          child: const Text('保存'),
+        ),
+      ],
+      child: CollabModalField(
+        label: '文档标题',
+        child: TextFormField(
           key: const ValueKey('document-title-input'),
           controller: _text,
           autofocus: true,
           maxLength: 100,
-          decoration: const InputDecoration(labelText: '文档标题'),
+          decoration: const InputDecoration(),
           validator: (value) =>
               value == null || value.trim().isEmpty ? '请输入内容' : null,
           onFieldSubmitted: (_) => _submit(),
         ),
-        const SizedBox(height: 16),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          spacing: 10,
-          children: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('取消'),
-            ),
-            FilledButton(
-              key: const ValueKey('document-header-submit'),
-              onPressed: _submit,
-              child: const Text('保存'),
-            ),
-          ],
-        ),
-      ],
+      ),
     ),
   );
 }
@@ -544,7 +516,8 @@ class _IconSheet extends StatelessWidget {
     );
   }
 
-  /// 用 [context] 构建三Tab面板，输出emoji/image命令或null移除；文件和链接状态由来源面板持有。
+  /// 用 [context] 构建三Tab面板；移除操作固定在底部左侧，输出emoji/image命令或null移除。
+  /// 文件和链接状态由来源面板持有，红色移除入口仍重新检查权限。
   @override
   Widget build(BuildContext context) => EditorMediaSourcePanel(
     kind: 'document_icon',
@@ -560,9 +533,11 @@ class _IconSheet extends StatelessWidget {
       );
     },
     firstTabLabel: '表情符号',
-    tabAction: TextButton.icon(
+    leadingAction: TextButton.icon(
       key: const ValueKey('document-icon-remove'),
-      style: TextButton.styleFrom(foregroundColor: Colors.red),
+      style: TextButton.styleFrom(
+        foregroundColor: CollabModalColors.of(context).danger,
+      ),
       onPressed: () {
         if (canEdit()) {
           Navigator.pop(context, const DocumentMetadataPatch.icon(null));
@@ -609,51 +584,68 @@ class _BannerPositionSheetState extends State<_BannerPositionSheet> {
     if (y != _y) setState(() => _y = y);
   }
 
-  /// 在 [context] 中构建可上下拖动的裁切预览；确认输出业务命令，取消返回null。
-  /// 仅预览区域消费纵向手势，避免移动外层滚动视图或下拉关闭弹窗。
+  /// 在借用 [context] 中展示真实封面，以图片内上下拖动调整0～100位置副本。
+  /// 图片下方用双向箭头和文字提示手势，不展示滑动条或位置数值。
+  /// 确认输出保留未知字段的位置命令，取消不提交；输入不发业务请求。
   @override
-  Widget build(BuildContext context) => Column(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Text('调整封面位置', style: Theme.of(context).textTheme.titleLarge),
-      const SizedBox(height: 16),
-      AspectRatio(
-        aspectRatio: 2.15,
-        child: LayoutBuilder(
-          builder: (context, constraints) => GestureDetector(
-            key: const ValueKey('document-banner-position-drag'),
-            behavior: HitTestBehavior.opaque,
-            onVerticalDragUpdate: (details) =>
-                _drag(details, constraints.maxHeight),
-            child: ClipRect(child: _bannerImage({...widget.banner, 'y': _y})),
-          ),
-        ),
+  Widget build(BuildContext context) => CollabBottomSheet(
+    title: const Text('调整封面位置'),
+    icon: LucideIcons.moveVertical,
+    actions: [
+      TextButton(
+        onPressed: () => Navigator.pop(context),
+        child: const Text('取消'),
       ),
-      const Padding(
-        padding: EdgeInsets.symmetric(vertical: 12),
-        child: Text(
-          '上下拖动图片调整位置',
-          style: TextStyle(fontSize: 12, color: Color(0xFF64748B)),
+      FilledButton(
+        key: const ValueKey('document-header-submit'),
+        onPressed: () => Navigator.pop(
+          context,
+          DocumentMetadataPatch.banner({...widget.banner, 'y': _y.round()}),
         ),
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        spacing: 10,
-        children: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('取消'),
-          ),
-          FilledButton(
-            key: const ValueKey('document-header-submit'),
-            onPressed: () => Navigator.pop(
-              context,
-              DocumentMetadataPatch.banner({...widget.banner, 'y': _y.round()}),
-            ),
-            child: const Text('保存'),
-          ),
-        ],
+        child: const Text('保存'),
       ),
     ],
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: AspectRatio(
+            aspectRatio: 2.15,
+            child: LayoutBuilder(
+              builder: (context, constraints) => GestureDetector(
+                key: const ValueKey('document-banner-position-drag'),
+                behavior: HitTestBehavior.opaque,
+                onVerticalDragUpdate: (details) =>
+                    _drag(details, constraints.maxHeight),
+                child: _bannerImage({...widget.banner, 'y': _y}),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(
+              LucideIcons.moveVertical,
+              size: 16,
+              color: CollabModalColors.of(context).muted,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                '按住图片上下拖动，调整封面位置',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: CollabModalColors.of(context).muted,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
   );
 }

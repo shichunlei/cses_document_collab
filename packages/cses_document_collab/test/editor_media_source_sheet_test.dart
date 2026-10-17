@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/model/editor_media_upload.dart';
@@ -146,8 +147,8 @@ void main() {
         onResult: (value) => result = value,
       );
       expect(find.text('公共图库'), findsOneWidget);
-      expect(find.text('上传'), findsOneWidget);
-      expect(find.text('链接'), findsOneWidget);
+      expect(find.text('上传图片'), findsOneWidget);
+      expect(find.text('图片链接'), findsOneWidget);
       expect(find.text('太空'), findsOneWidget);
       expect(find.text('油画'), findsOneWidget);
       expect(find.text('创意'), findsOneWidget);
@@ -233,7 +234,14 @@ void main() {
         await tester.pumpAndSettle();
         final input = find.byKey(const ValueKey('editor-url-block-input'));
         expect(
-          tester.getRect(input).top,
+          tester
+              .getRect(
+                find.ancestor(
+                  of: input,
+                  matching: find.byType(CollabModalField),
+                ),
+              )
+              .top,
           closeTo(tester.getRect(header).bottom, .1),
         );
         const url = 'https://example.test/cover.png';

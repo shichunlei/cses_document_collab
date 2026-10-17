@@ -1,11 +1,10 @@
-import 'dart:math' as math;
-
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/model/editor_media_upload.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-
 import 'document_cover_gallery.dart';
 
 /// 在借用的 [context] 中展示媒体来源面板；[blockType] 为正文资源或document_banner/document_icon。
@@ -21,17 +20,10 @@ Future<EditorMediaSource?> showEditorMediaSourceSheet(
   bool Function()? canEdit,
   EditorMediaUploadService? service,
 }) async {
-  ModalRoute<EditorMediaSource>? route;
-  final result = await showModalBottomSheet<EditorMediaSource>(
+  final result = await showCollabBottomSheet<EditorMediaSource>(
     context: context,
-    isScrollControlled: true,
-    useSafeArea: true,
-    backgroundColor: Colors.white,
-    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
-    clipBehavior: Clip.antiAlias,
     requestFocus: true,
     builder: (context) {
-      route = ModalRoute.of<EditorMediaSource>(context);
       return EditorMediaSourcePanel(
         kind: blockType,
         initialValue: initialValue,
@@ -41,9 +33,7 @@ Future<EditorMediaSource?> showEditorMediaSourceSheet(
       );
     },
   );
-  // Navigator.pop completes before the reverse transition. Keep the editor
-  // suspended until the sheet and its text input have actually been removed.
-  await route?.completed;
+
   return result;
 }
 
@@ -56,7 +46,7 @@ Future<EditorMediaSource?> showEditorMediaSourceSheet(
 /// import 'package:cses_document_collab/src/editor/editor_media_source_sheet.dart';
 /// import 'package:cses_document_collab/src/model/editor_media_upload.dart';
 /// Future<EditorMediaSource?> chooseImage(BuildContext context) =>
-///   showModalBottomSheet<EditorMediaSource>(context: context, isScrollControlled: true,
+///   showCollabBottomSheet<EditorMediaSource>(context: context,
 ///     builder: (_) => const EditorMediaSourcePanel(kind: 'image', initialValue: ''));
 /// // 正文编辑场景由调用方隔离输入并等待弹窗退场后恢复焦点。
 /// ```
@@ -64,7 +54,7 @@ class EditorMediaSourcePanel extends StatefulWidget {
   /// [key] 标识状态，[kind] 指定资源类型，[initialValue] 为初始URL，可为空。
   /// [allowRemove] 默认false；[service] 借自宿主，null使用运行时端口，未配置时禁用上传。
   /// [firstTab] 与 [firstTabLabel] 必须同时提供或同时为null，否则触发断言；封面默认使用图库。
-  /// [tabAction] 为可选顶部操作，提交中禁用；[onSelected] 为媒体确认回调，null由Navigator返回资源。
+  /// [leadingAction] 为可选底部左侧操作，选择/上传期间屏蔽点击；[onSelected] 为媒体确认回调，null由Navigator返回资源。
   /// [canEdit] 可选，确认前返回false时留面板提示只读；构造不选择文件或发网络请求。
   const EditorMediaSourcePanel({
     super.key,
@@ -74,7 +64,7 @@ class EditorMediaSourcePanel extends StatefulWidget {
     this.service,
     this.firstTab,
     this.firstTabLabel,
-    this.tabAction,
+    this.leadingAction,
     this.onSelected,
     this.canEdit,
   }) : assert((firstTab == null) == (firstTabLabel == null));
@@ -100,8 +90,9 @@ class EditorMediaSourcePanel extends StatefulWidget {
   /// 附加首Tab标题，必须与 [firstTab] 同时设置；默认null。
   final String? firstTabLabel;
 
-  /// 可选顶部操作，默认null；上传/选择文件期间屏蔽点击，封面可自动提供移除操作。
-  final Widget? tabAction;
+  /// 可选底部左侧操作，默认null；选择/上传期间屏蔽点击，回调及资源由调用方持有。
+  /// 非null时优先于 [allowRemove] 提供的默认封面移除按钮，不随内容滚动。
+  final Widget? leadingAction;
 
   /// 媒体确认时同步返回的借用回调；默认null，由Navigator弹出结果，回调负责后续保存。
   final ValueChanged<EditorMediaSource>? onSelected;
@@ -162,18 +153,9 @@ class _MediaSourceSheetState extends State<EditorMediaSourcePanel> {
     _ => '链接',
   };
 
-  /// 当前资源的装饰图标，无业务含义。
-  IconData get _icon => switch (widget.kind) {
-    'image' || 'document_banner' || 'document_icon' => Icons.image_outlined,
-    'video' => Icons.videocam_outlined,
-    'audio' => Icons.audiotrack_outlined,
-    'attachment' => Icons.attach_file,
-    _ => Icons.link,
-  };
-
-  /// 链接输入的格式示例，不作为实际资源或默认保存值。
+  /// 根据资源类型提供链接输入提示，不作为默认值或实际保存地址。
   String get _hint => switch (widget.kind) {
-    'image' || 'document_banner' || 'document_icon' => 'https://example.com/image.png',
+    'image' || 'document_banner' || 'document_icon' => '粘贴 https:// 开头的图片地址',
     'video' => 'https://example.com/video.mp4',
     'audio' => 'https://example.com/audio.mp3',
     _ => 'https://example.com/resource',
@@ -283,325 +265,219 @@ class _MediaSourceSheetState extends State<EditorMediaSourcePanel> {
     super.dispose();
   }
 
-  /// 在 [context] 中按屏幕/键盘约束构建来源页；封面固定上方控件，仅下方内容滚动。
+  /// 在借用 [context] 中展示来源分类与真实上传/图库内容，固定头尾并统一键盘避让。
+  /// 文件选择和上传保持可取消，销毁时仍由本状态取消令牌并忽略迟到结果。
   @override
   Widget build(BuildContext context) {
-    const accent = Color(0xFF5B5BD6);
+    final c = CollabModalColors.of(context);
     final upload = _service != null && editorMediaSupportsUpload(widget.kind);
-    final tabAction =
-        widget.tabAction ??
-        (_banner && widget.allowRemove
-            ? TextButton.icon(
-                key: const ValueKey('editor-cover-url-remove'),
-                style: TextButton.styleFrom(foregroundColor: Colors.red),
-                onPressed: () {
-                  if (!_busy && _checkEditable()) {
-                    _complete(const EditorMediaSource(''));
-                  }
-                },
-                icon: const Icon(Icons.remove_circle_outline, size: 16),
-                label: const Text('移除封面'),
-              )
-            : null);
-    final headerChildren = <Widget>[
-      Center(
-        child: Container(
-          width: 36,
-          height: 4,
-          margin: const EdgeInsets.only(bottom: 18),
-          decoration: BoxDecoration(color: const Color(0xFFE1E3E9), borderRadius: BorderRadius.circular(2)),
-        ),
-      ),
-      Row(
-        children: [
-          Container(
-            width: 42,
-            height: 42,
-            decoration: BoxDecoration(color: const Color(0xFFEEEEFF), borderRadius: BorderRadius.circular(12)),
-            child: Icon(_icon, color: accent, size: 22),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.kind == 'document_icon' && widget.firstTab != null ? '修改图标' : _label,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Color(0xFF202636)),
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  _banner
-                      ? '选择图库图片、上传图片或使用链接'
-                      : widget.firstTab != null
-                      ? '选择表情或图片作为文档图标'
-                      : upload
-                      ? '通过链接或本地文件添加$_label'
-                      : '通过链接添加$_label',
-                  style: const TextStyle(fontSize: 12, color: Color(0xFF7C8799)),
-                ),
-              ],
-            ),
-          ),
-          IconButton(
-            key: const ValueKey('editor-media-source-close'),
-            tooltip: '关闭',
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.close, size: 20),
-          ),
-        ],
-      ),
-      const SizedBox(height: 20),
-      if (upload || _hasFirstTab) ...[
-        Row(
+    final title = widget.kind == 'document_icon'
+        ? '修改图标'
+        : _banner
+        ? '修改封面'
+        : '添加$_label';
+    return CollabBottomSheet(
+      title: Text(title),
+      subtitle: _banner
+          ? '为文档挑选一张合适的封面'
+          : widget.kind == 'document_icon'
+          ? '一个小图标，让文档更容易找到'
+          : '选择$_label来源，丰富文档内容',
+      icon: _banner
+          ? LucideIcons.panelsTopLeft
+          : widget.kind == 'document_icon'
+          ? LucideIcons.smile
+          : switch (widget.kind) {
+              'image' => LucideIcons.image,
+              'video' => LucideIcons.video,
+              'audio' => LucideIcons.audioLines,
+              _ => LucideIcons.paperclip,
+            },
+      closeKey: const ValueKey('editor-media-source-close'),
+      scrollController: _banner ? _bannerScroll : null,
+      expand: _hasFirstTab,
+      scrollKey: ValueKey('editor-${widget.kind}-source-sheet'),
+      header: Padding(
+        key: _banner ? const ValueKey('document-cover-source-header') : null,
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            if (_hasFirstTab)
-              _tab(
-                'first',
-                _banner ? '公共图库' : widget.firstTabLabel!,
-                _banner ? Icons.photo_library_outlined : Icons.emoji_emotions_outlined,
+            if (upload || _hasFirstTab)
+              CollabModalSegments<String>(
+                values: {
+                  if (_hasFirstTab) 'first': _banner ? '公共图库' : widget.firstTabLabel!,
+                  if (_hasFirstTab) 'upload': '上传图片',
+                  'link': _hasFirstTab ? '图片链接' : '$_label链接',
+                  if (!_hasFirstTab) 'upload': '本地上传',
+                },
+                selected: _source,
+                itemKeys: {
+                  'first': ValueKey(_banner ? 'document-cover-library-tab' : 'document-icon-emoji-tab'),
+                  'upload': const ValueKey('editor-media-upload-tab'),
+                  'link': const ValueKey('editor-media-link-tab'),
+                },
+                onSelected: _busy
+                    ? null
+                    : (source) {
+                        FocusScope.of(context).unfocus();
+                        if (_banner && _bannerScroll.hasClients) {
+                          _bannerScroll.jumpTo(0);
+                        }
+                        setState(() {
+                          _source = source;
+                          _error = null;
+                        });
+                      },
               ),
-            if (_hasFirstTab) ...[
-              _tab('upload', '上传', Icons.file_upload_outlined),
-              _tab('link', '链接', Icons.link),
-            ] else ...[
-              _tab('link', '链接', Icons.link),
-              _tab('upload', '本地上传', Icons.file_upload_outlined),
-            ],
           ],
         ),
-        const Divider(height: 1, color: Color(0xFFE9EBF1)),
-        const SizedBox(height: 20),
-      ],
-      if (tabAction != null) ...[
-        Align(
-          alignment: Alignment.centerRight,
-          child: _busy ? IgnorePointer(child: Opacity(opacity: .4, child: tabAction)) : tabAction,
-        ),
-        const SizedBox(height: 8),
-      ],
-    ];
-    final contentChildren = <Widget>[
-      if (_source == 'first')
-        widget.firstTab ??
-            DocumentCoverGallery(
-              selectedUrl: widget.initialValue,
-              onSelected: (image) {
-                if (!_busy && _checkEditable()) {
-                  _complete(EditorMediaSource(image.url));
-                }
-              },
+      ),
+      leadingAction: widget.leadingAction != null
+          ? IgnorePointer(
+              ignoring: _busy,
+              child: Opacity(opacity: _busy ? .4 : 1, child: widget.leadingAction!),
             )
-      else if (!_local) ...[
-        TextField(
-          key: const ValueKey('editor-url-block-input'),
-          controller: _url,
-          focusNode: _urlFocus,
-          keyboardType: TextInputType.url,
-          textInputAction: TextInputAction.done,
-          autocorrect: false,
-          enableSuggestions: false,
-          decoration: InputDecoration(
-            hintText: _hint,
-            labelText: '$_label链接',
-            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          : widget.allowRemove
+          ? TextButton(
+              key: const ValueKey('editor-cover-url-remove'),
+              style: TextButton.styleFrom(foregroundColor: c.danger),
+              onPressed: _busy
+                  ? null
+                  : () {
+                      if (_checkEditable()) {
+                        _complete(const EditorMediaSource(''));
+                      }
+                    },
+              child: const Text('移除封面'),
+            )
+          : null,
+      actions: [
+        TextButton(onPressed: () => Navigator.pop(context), child: const Text('取消')),
+        if (_source == 'first') FilledButton(onPressed: () => Navigator.pop(context), child: const Text('完成')),
+        if (_source != 'first')
+          FilledButton(
+            key: const ValueKey('editor-url-block-submit'),
+            onPressed: _busy || (_local ? _file == null : _url.text.trim().isEmpty) ? null : _submit,
+            child: Text(
+              _uploading
+                  ? '上传中…'
+                  : _local
+                  ? (widget.kind == 'document_icon' || _banner ? '上传并保存' : '上传并插入')
+                  : (widget.kind == 'document_icon' || _banner ? '保存' : '插入$_label'),
+            ),
           ),
-          onChanged: (_) => setState(() => _error = null),
-          onSubmitted: (_) => _submit(),
-        ),
-        const SizedBox(height: 10),
-        Text('支持可直接访问的$_label链接', style: const TextStyle(fontSize: 12, color: Color(0xFF7C8799))),
-      ] else ...[
-        Material(
-          color: const Color(0xFFF8F9FC),
-          borderRadius: BorderRadius.circular(12),
-          child: InkWell(
-            key: const ValueKey('editor-media-pick-file'),
-            onTap: _busy || !upload ? null : _pick,
-            borderRadius: BorderRadius.circular(12),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-              decoration: BoxDecoration(
-                border: Border.all(color: const Color(0xFFE0E4EE)),
-                borderRadius: BorderRadius.circular(12),
+      ],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (_source == 'first')
+            widget.firstTab ??
+                DocumentCoverGallery(
+                  selectedUrl: widget.initialValue,
+                  onSelected: (image) {
+                    if (!_busy && _checkEditable()) {
+                      _complete(EditorMediaSource(image.url));
+                    }
+                  },
+                )
+          else if (!_local) ...[
+            CollabModalField(
+              label: '$_label链接',
+              child: TextField(
+                key: const ValueKey('editor-url-block-input'),
+                controller: _url,
+                focusNode: _urlFocus,
+                keyboardType: TextInputType.url,
+                textInputAction: TextInputAction.done,
+                autocorrect: false,
+                enableSuggestions: false,
+                decoration: InputDecoration(hintText: _hint),
+                onChanged: (_) => setState(() => _error = null),
+                onSubmitted: (_) => _submit(),
               ),
-              child: Column(
+            ),
+            Text(
+              widget.kind == 'image' ? '支持 JPG、PNG、GIF、WebP 等常见图片格式' : '支持可直接访问的$_label链接',
+              style: TextStyle(fontSize: 11, color: c.muted),
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 14),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(color: c.soft, borderRadius: BorderRadius.circular(10)),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(_file == null ? Icons.cloud_upload_outlined : _icon, size: 32, color: accent),
-                  const SizedBox(height: 12),
-                  Text(
-                    _picking ? '正在选择文件…' : (_file?.name ?? '点击选择$_label文件'),
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    _file == null
-                        ? (upload
-                              ? _fileHint
-                              : _banner
-                              ? '当前环境暂不支持图片上传，请使用图库或链接'
-                              : '当前环境暂不支持图片上传，请使用表情或链接')
-                        : '${(_file!.size / 1024 / 1024).toStringAsFixed(2)} MB · 点击重新选择',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 12, color: Color(0xFF7C8799)),
+                  Icon(LucideIcons.info, size: 16, color: c.accent),
+                  const SizedBox(width: 9),
+                  Expanded(
+                    child: Text('使用网络$_label时，请确保链接可被文档成员访问。', style: TextStyle(fontSize: 12, color: c.accent)),
                   ),
                 ],
               ),
             ),
-          ),
-        ),
-        if (_uploading) ...[
-          const SizedBox(height: 16),
-          LinearProgressIndicator(value: _progress, color: accent, borderRadius: BorderRadius.circular(3)),
-          const SizedBox(height: 8),
-          Text(
-            _progress >= 1 ? '正在保存文件…' : '正在上传 ${(_progress * 100).round()}%',
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 12, color: Color(0xFF7C8799)),
-          ),
-        ],
-      ],
-      if (_error != null)
-        Padding(
-          padding: const EdgeInsets.only(top: 12),
-          child: Text(
-            _error!,
-            key: const ValueKey('editor-media-source-error'),
-            style: const TextStyle(fontSize: 12, color: Color(0xFFC33C45)),
-          ),
-        ),
-      if (_source != 'first') ...[
-        const SizedBox(height: 24),
-        OverflowBar(
-          alignment: MainAxisAlignment.end,
-          overflowAlignment: OverflowBarAlignment.end,
-          spacing: 10,
-          children: [
-            if (widget.allowRemove && !_banner)
-              TextButton(
-                key: const ValueKey('editor-cover-url-remove'),
-                onPressed: _busy ? null : () => Navigator.pop(context, const EditorMediaSource('')),
-                child: const Text('移除封面'),
-              ),
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text('取消')),
-            FilledButton(
-              key: const ValueKey('editor-url-block-submit'),
-              style: FilledButton.styleFrom(
-                backgroundColor: accent,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 13),
-              ),
-              onPressed: _busy || (_local ? _file == null : _url.text.trim().isEmpty) ? null : _submit,
-              child: Text(
-                _uploading
-                    ? '上传中…'
-                    : _local
-                    ? widget.kind == 'document_icon' || _banner
-                          ? '上传并保存'
-                          : '上传并插入'
-                    : '确定',
-              ),
-            ),
-          ],
-        ),
-      ],
-    ];
-    final content = SingleChildScrollView(
-      key: ValueKey('editor-${widget.kind}-source-sheet'),
-      controller: _banner ? _bannerScroll : null,
-      padding: EdgeInsets.fromLTRB(20, _banner ? 0 : 12, 20, 20),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [if (!_banner) ...headerChildren, ...contentChildren],
-      ),
-    );
-    return AnimatedPadding(
-      duration: const Duration(milliseconds: 160),
-      padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
-      child: SafeArea(
-        top: false,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxHeight: math.max(0, MediaQuery.sizeOf(context).height * .9 - MediaQuery.viewInsetsOf(context).bottom),
-          ),
-          child: _banner
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Padding(
-                      key: const ValueKey('document-cover-source-header'),
-                      padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: headerChildren,
+          ] else ...[
+            Material(
+              color: c.field,
+              borderRadius: BorderRadius.circular(12),
+              child: InkWell(
+                key: const ValueKey('editor-media-pick-file'),
+                onTap: _busy || !upload ? null : _pick,
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: c.line),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    children: [
+                      Icon(_file == null ? LucideIcons.cloudUpload : LucideIcons.fileImage, size: 28, color: c.accent),
+                      const SizedBox(height: 8),
+                      Text(
+                        _picking ? '正在选择文件…' : (_file?.name ?? '点击选择$_label文件'),
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    Expanded(child: content),
-                  ],
-                )
-              : content,
-        ),
-      ),
-    );
-  }
-
-  /// 将内部来源 [source] 展示为 [label] 和装饰 [icon]；点击失焦输入并清错误。
-  /// 封面内容回到顶部，链接和文件状态保留；上传/选择期间禁止切换，无网络副作用。
-  Widget _tab(String source, String label, IconData icon) => Expanded(
-    child: Semantics(
-      button: true,
-      selected: _source == source,
-      enabled: !_busy,
-      child: InkWell(
-        key: ValueKey(switch (source) {
-          'first' => _banner ? 'document-cover-library-tab' : 'document-icon-emoji-tab',
-          'upload' => 'editor-media-upload-tab',
-          _ => 'editor-media-link-tab',
-        }),
-        onTap: _busy
-            ? null
-            : () {
-                FocusScope.of(context).unfocus();
-                if (_banner && _bannerScroll.hasClients) {
-                  _bannerScroll.jumpTo(0);
-                }
-                setState(() {
-                  _source = source;
-                  _error = null;
-                });
-              },
-        child: Container(
-          padding: const EdgeInsets.only(bottom: 12),
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(color: _source == source ? const Color(0xFF5B5BD6) : Colors.transparent, width: 2),
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (!_hasFirstTab)
-                Icon(icon, size: 17, color: _source == source ? const Color(0xFF5B5BD6) : const Color(0xFF7C8799)),
-              if (!_hasFirstTab) const SizedBox(width: 7),
-              Flexible(
-                child: Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: _source == source ? FontWeight.w600 : FontWeight.normal,
-                    color: _source == source ? const Color(0xFF5B5BD6) : const Color(0xFF7C8799),
+                      const SizedBox(height: 8),
+                      Text(
+                        _file == null
+                            ? (upload ? _fileHint : (_banner ? '当前环境暂不支持图片上传，请使用图库或链接' : '当前环境暂不支持图片上传，请使用表情或链接'))
+                            : '${(_file!.size / 1024 / 1024).toStringAsFixed(2)} MB · 点击重新选择',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 11, color: c.muted),
+                      ),
+                    ],
                   ),
                 ),
               ),
+            ),
+            if (_uploading) ...[
+              const SizedBox(height: 16),
+              LinearProgressIndicator(value: _progress, color: c.accent, borderRadius: BorderRadius.circular(3)),
+              const SizedBox(height: 8),
+              Text(
+                _progress >= 1 ? '正在保存文件…' : '正在上传 ${(_progress * 100).round()}%',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 11, color: c.muted),
+              ),
             ],
-          ),
-        ),
+          ],
+          if (_error != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Text(
+                _error!,
+                key: const ValueKey('editor-media-source-error'),
+                style: TextStyle(fontSize: 12, color: c.danger),
+              ),
+            ),
+        ],
       ),
-    ),
-  );
+    );
+  }
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
+
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
@@ -473,8 +474,8 @@ void main() {
       await tester.tap(find.byKey(const ValueKey('document-icon-edit')));
       await tester.pumpAndSettle();
       expect(find.text('表情符号'), findsOneWidget);
-      expect(find.text('上传'), findsOneWidget);
-      expect(find.text('链接'), findsOneWidget);
+      expect(find.text('上传图片'), findsOneWidget);
+      expect(find.text('图片链接'), findsOneWidget);
       expect(find.byKey(const ValueKey('document-icon-image')), findsNothing);
       expect(find.byKey(const ValueKey('document-emoji-input')), findsNothing);
       expect(
@@ -483,6 +484,15 @@ void main() {
       );
       expect(find.byType(TextFormField), findsNothing);
       expect(find.text('🚀'), findsOneWidget);
+      final remove = find.byKey(const ValueKey('document-icon-remove'));
+      final cancel = find.widgetWithText(TextButton, '取消');
+      final done = find.widgetWithText(FilledButton, '完成');
+      final sheet = tester.getRect(find.byType(BottomSheet));
+      final removeRect = tester.getRect(remove);
+      expect(removeRect.left, closeTo(sheet.left + 20, .1));
+      expect(removeRect.right, lessThan(tester.getRect(cancel).left));
+      expect(removeRect.top, greaterThan(sheet.center.dy));
+      expect(tester.getRect(done).right, closeTo(sheet.right - 20, .1));
       await tester.tap(find.byKey(const ValueKey('editor-media-link-tab')));
       await tester.pumpAndSettle();
       final link = find.byKey(const ValueKey('editor-url-block-input'));
@@ -721,8 +731,8 @@ void main() {
       await tester.tap(find.byKey(const ValueKey('document-banner-edit')));
       await tester.pumpAndSettle();
       expect(find.text('公共图库'), findsOneWidget);
-      expect(find.text('上传'), findsOneWidget);
-      expect(find.text('链接'), findsOneWidget);
+      expect(find.text('上传图片'), findsOneWidget);
+      expect(find.text('图片链接'), findsOneWidget);
       final image = documentCoverGroups.last.items[1];
       final tile = find.byKey(ValueKey('document-cover-${image.id}'));
       await tester.ensureVisible(tile);
@@ -773,6 +783,7 @@ void main() {
       );
       final rect = tester.getRect(preview);
       expect(find.byType(Slider), findsNothing);
+      expect(find.text('按住图片上下拖动，调整封面位置'), findsOneWidget);
       await tester.drag(preview, Offset(0, -rect.height * .6));
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('document-header-submit')));
