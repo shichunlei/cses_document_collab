@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_video_block.dart';
+import 'package:cses_document_collab/src/editor/collab_callout_block.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:video_player/video_player.dart';
@@ -71,6 +72,10 @@ void main() {
           find.byKey(const ValueKey('block-insert-below-video')),
           findsNothing,
         );
+        expect(
+          find.byKey(const ValueKey('collab-video-menu-delete')),
+          findsNothing,
+        );
         expect(find.text('在外部应用打开'), findsOneWidget);
         expect(find.widgetWithText(ListTile, '播放视频'), findsNothing);
         expect(find.widgetWithText(ListTile, '暂停视频'), findsNothing);
@@ -120,6 +125,128 @@ void main() {
         expect(tester.takeException(), isNull);
       },
     );
+  }
+  for (final pending in [false, true]) {
+    for (final nested in [false, true]) {
+      testWidgets(
+        'video deletion is undoable and releases its player (pending=$pending, nested=$nested)',
+        (tester) async {
+          final platform = _MemoryVideoPlatform(pending: pending);
+          final previous = VideoPlayerPlatform.instance;
+          VideoPlayerPlatform.instance = platform;
+          final changes = <List<CollabEditorBlock>>[];
+          final adapter = AppFlowyBlockEditorAdapter(
+            initialBlocks: [
+              if (nested)
+                const CollabEditorBlock(
+                  id: 'outer',
+                  blockType: 'callout',
+                  text: '',
+                ),
+              CollabEditorBlock(
+                id: 'video',
+                parentId: nested ? 'outer' : null,
+                blockType: csesVideoBlockType,
+                text: 'https://example.test/delete.mp4',
+              ),
+            ],
+            onLocalBlocksChanged: changes.add,
+          );
+          addTearDown(() async {
+            await tester.pumpWidget(const SizedBox.shrink());
+            await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+            adapter.dispose();
+            await platform.close();
+            VideoPlayerPlatform.instance = previous;
+          });
+          await tester.pumpWidget(_videoApp(adapter));
+          await tester.pumpAndSettle();
+          final before = adapter.blocks;
+          await tester.tap(find.byKey(const ValueKey('block-more-video')));
+          await tester.pumpAndSettle();
+          final deletion = find.byKey(
+            const ValueKey('collab-video-menu-delete'),
+          );
+          expect(tester.widget<ListTile>(deletion).enabled, isTrue);
+          expect(find.text('删除视频'), findsOneWidget);
+          expect(find.text('在外部应用打开'), findsOneWidget);
+          await tester.tap(deletion);
+          await tester.pumpAndSettle();
+          await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+          expect(
+            adapter.blocks.where(
+              (block) => block.blockType == csesVideoBlockType,
+            ),
+            isEmpty,
+          );
+          final paragraph = adapter.blocks.singleWhere(
+            (block) => block.blockType == 'paragraph',
+          );
+          expect(paragraph.text, isEmpty);
+          expect(paragraph.parentId, nested ? 'outer' : null);
+          expect(changes, hasLength(1));
+          expect(platform.disposed, [0]);
+          expect(adapter.editorState.undoManager.undoStack.isNonEmpty, isTrue);
+          final after = adapter.blocks;
+          adapter.editorState.undoManager.undo();
+          await tester.pumpAndSettle();
+          expect(adapter.blocks, before);
+          expect(adapter.editorState.undoManager.undoStack.isEmpty, isTrue);
+          adapter.editorState.undoManager.redo();
+          await tester.pumpAndSettle();
+          await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+          expect(adapter.blocks, after);
+          expect(platform.disposed, [0, 1]);
+          expect(tester.takeException(), isNull);
+        },
+      );
+    }
+  }
+  for (final change in ['permission', 'source', 'deleted']) {
+    testWidgets('open video delete menu rejects stale target after $change', (
+      tester,
+    ) async {
+      final platform = _MemoryVideoPlatform(pending: false);
+      final previous = VideoPlayerPlatform.instance;
+      VideoPlayerPlatform.instance = platform;
+      final changes = <List<CollabEditorBlock>>[];
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: [_video('before')],
+        onLocalBlocksChanged: changes.add,
+      );
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+        adapter.dispose();
+        await platform.close();
+        VideoPlayerPlatform.instance = previous;
+      });
+      await tester.pumpWidget(_videoApp(adapter));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('block-more-video')));
+      await tester.pumpAndSettle();
+      if (change == 'permission') {
+        adapter.editorState.editable = false;
+        adapter.editorState.editable = true;
+      } else if (change == 'source') {
+        await adapter.replaceFromRemote([_video('remote')]);
+      } else {
+        await adapter.replaceFromRemote([
+          const CollabEditorBlock(
+            id: 'remote',
+            blockType: 'paragraph',
+            text: '远端正文',
+          ),
+        ]);
+      }
+      await tester.pumpAndSettle();
+      final expected = adapter.blocks;
+      await tester.tap(find.byKey(const ValueKey('collab-video-menu-delete')));
+      await tester.pumpAndSettle();
+      expect(adapter.blocks, expected);
+      expect(changes, isEmpty);
+      expect(tester.takeException(), isNull);
+    });
   }
   for (final mode in ['edit', 'preview', 'zero', 'error', 'stale', 'narrow']) {
     testWidgets('video timeline supports $mode safely', (tester) async {
@@ -261,6 +388,21 @@ void main() {
     });
   }
 }
+
+/// 用真实视频/高亮构建器展示借用的 [adapter]；播放器由各卡片拥有，测试负责卸载页面。
+Widget _videoApp(AppFlowyBlockEditorAdapter adapter) => MaterialApp(
+  home: Scaffold(
+    body: AppFlowyEditor(
+      editorState: adapter.editorState,
+      disableKeyboardService: true,
+      blockComponentBuilders: {
+        ...standardBlockComponentBuilderMap,
+        'callout': CollabCalloutBlockComponentBuilder(),
+        csesVideoBlockType: CollabVideoBlockComponentBuilder(),
+      },
+    ),
+  ),
+);
 
 /// 为 [source] 创建相同身份的视频块；仅返回投影，不创建网络资源。
 CollabEditorBlock _video(String source) => CollabEditorBlock(

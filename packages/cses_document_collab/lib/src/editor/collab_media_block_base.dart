@@ -62,11 +62,13 @@ abstract class CollabMediaBlockState<T extends CollabMediaBlock> extends State<T
   /// 返回借用[context]中原有的叠放操作层，默认null；图片继续使用内容组件自己的菜单。
   Widget? buildMediaActions(BuildContext context) => null;
 
-  /// 在借用[context]中创建原位置的更多菜单；[readOnlyActions]默认空，
-  /// 视频可提供原外部打开项。菜单复用原权限、稳定身份及事务失效保护。
+  /// 在借用[context]中创建原位置的更多菜单；[readOnlyActions]默认空，供预览可用操作。
+  /// [actions]默认空，仅编辑状态显示；回调由业务持有，在完整退场且身份/权限有效时执行。
+  /// 菜单复用稳定身份及事务失效保护，不接管回调中的编辑器或播放器资源。
   Widget buildMediaMore(
     BuildContext context, {
     List<({String label, Key? key, Future<void> Function() run})> readOnlyActions = const [],
+    List<({String label, Key? key, Future<void> Function() run})> actions = const [],
   }) => Positioned(
     top: 4,
     right: 4,
@@ -78,6 +80,7 @@ abstract class CollabMediaBlockState<T extends CollabMediaBlock> extends State<T
         editor: context.read<EditorState>(),
         node: node,
         readOnlyActions: readOnlyActions,
+        actions: actions,
       ),
     ),
   );

@@ -1,13 +1,15 @@
 import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
-import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart' show csesEmbedUrlAttribute;
+import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart'
+    show AppFlowyBlockEditorAdapter, csesEmbedUrlAttribute, csesVideoBlockType;
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/editor/collab_media_block_base.dart';
 import 'package:cses_document_collab/src/editor/collab_media_timeline.dart';
 import 'package:cses_document_collab/src/editor/collab_unsupported_block.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
 /// 视频块独立构建器，保留原网络校验、播放器、菜单和布局配置。
@@ -260,18 +262,49 @@ class _VideoBlockState extends CollabMediaBlockState<_VideoBlock> {
   @override
   Widget buildMedia(BuildContext context) => _buildVideoCard(context);
 
-  /// 在借用[context]中保留原右上更多与只读外部打开项，直接播放仍位于视频画面内。
+  /// 在借用[context]中创建视频更多菜单；外部打开在预览中可用，删除仅编辑状态显示。
+  /// 删除在面板完整退场并通过菜单身份/权限校验后执行，直接播放仍位于视频画面内。
   @override
-  Widget? buildMediaActions(BuildContext context) => buildMediaMore(
-    context,
-    readOnlyActions: [
-      (
-        label: '在外部应用打开',
-        key: const ValueKey('collab-video-open'),
-        run: () => openExternally(collabBlockActionContext(context)),
-      ),
-    ],
-  );
+  Widget? buildMediaActions(BuildContext context) {
+    final editor = context.read<EditorState>();
+    final id = node.attributes[AppFlowyBlockEditorAdapter.collabBlockIdAttribute] as String? ?? node.id;
+    return buildMediaMore(
+      context,
+      readOnlyActions: [
+        (
+          label: '在外部应用打开',
+          key: const ValueKey('collab-video-open'),
+          run: () => openExternally(collabBlockActionContext(context)),
+        ),
+      ],
+      actions: [
+        (label: '删除视频', key: const ValueKey('collab-video-menu-delete'), run: () => _deleteVideoBlock(editor, id)),
+      ],
+    );
+  }
+}
+
+/// 删除借用[editor]中稳定[blockId]对应的视频引用，不删除上传文件或业务资源。
+/// 仅处理根/高亮容器中的当前视频；关闭、只读、已删或类型变化时不执行。
+/// 末个子块补稳定身份空段落，与删除组成独立撤销事务；不主动恢复正文输入。
+/// Future在事务完成后结束，异常交由更多菜单报告，播放器仍由视频组件销毁时释放。
+Future<void> _deleteVideoBlock(EditorState editor, String blockId) async {
+  if (editor.isDisposed || !editor.editable) return;
+  final source = findCollabActionNode(editor, blockId);
+  if (source == null || source.type != csesVideoBlockType || !const {'page', 'callout'}.contains(source.parent?.type)) {
+    return;
+  }
+  if (editor.undoManager.undoStack.isNonEmpty) {
+    editor.undoManager.undoStack.last.seal();
+  }
+  final transaction = editor.transaction..deleteNode(source);
+  if (source.parent!.children.length == 1) {
+    final paragraph = paragraphNode();
+    paragraph.updateAttributes({AppFlowyBlockEditorAdapter.collabBlockIdAttribute: paragraph.id});
+    transaction.add(InsertOperation(source.path, [paragraph]), transform: false);
+  }
+  transaction.afterSelection = null;
+  await editor.apply(transaction, withUpdateSelection: false, skipHistoryDebounce: true);
 }
 
 /// Displays loading/failure status without a second operation button.
