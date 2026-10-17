@@ -9,6 +9,7 @@ import 'package:cses_document_collab/src/editor/collab_media_timeline.dart';
 import 'package:cses_document_collab/src/editor/collab_unsupported_block.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
@@ -180,7 +181,7 @@ class _VideoBlockState extends CollabMediaBlockState<_VideoBlock> {
                       key: const ValueKey('collab-video-block-play'),
                       tooltip: value.isPlaying ? '暂停' : '播放',
                       onPressed: _toggleVideo,
-                      icon: Icon(value.isPlaying ? Icons.pause : Icons.play_arrow),
+                      icon: Icon(value.isPlaying ? LucideIcons.pause : LucideIcons.play),
                     ),
                   ),
                 ),
@@ -328,7 +329,7 @@ class _VideoPlaceholder extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(hasError ? Icons.broken_image_outlined : Icons.movie_outlined, color: Colors.white, size: 42),
+            Icon(hasError ? LucideIcons.imageOff : LucideIcons.film, color: Colors.white, size: 42),
             const SizedBox(height: 10),
             Text(hasError ? '视频加载失败' : '正在加载视频…', style: const TextStyle(color: Colors.white)),
             if (hasError) ...[

@@ -131,7 +131,7 @@ class _CollabColorPickerState extends State<CollabColorPicker> {
           key: ValueKey('${widget.keyPrefix}-back'),
           tooltip: '返回',
           onPressed: _saving ? null : widget.onBack,
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(LucideIcons.arrowLeft),
         ),
       _chip(
         widget.resetKey ?? ValueKey('${widget.keyPrefix}-default'),
@@ -248,7 +248,7 @@ class _CollabColorPickerState extends State<CollabColorPicker> {
             ),
           ),
           icon: value == null
-              ? const Icon(Icons.format_color_reset, size: 22)
+              ? const Icon(LucideIcons.dropletOff, size: 22)
               : DecoratedBox(
                   decoration: BoxDecoration(
                     color: widget.textColors ? colors.surface : color,
@@ -267,7 +267,7 @@ class _CollabColorPickerState extends State<CollabColorPicker> {
                               ),
                             )
                           : color == null
-                          ? const Icon(Icons.palette_outlined, size: 18)
+                          ? const Icon(LucideIcons.palette, size: 18)
                           : null,
                     ),
                   ),

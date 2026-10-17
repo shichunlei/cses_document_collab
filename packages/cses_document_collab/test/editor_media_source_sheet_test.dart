@@ -10,6 +10,7 @@ import 'package:cses_document_collab/src/model/document_cover_catalog.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 const _image = EditorLocalFile(
   path: '/tmp/photo.png',
@@ -165,7 +166,7 @@ void main() {
       // Flutter's test HTTP client rejects thumbnail requests. A failed preview
       // must still allow choosing the stable original URL.
       expect(
-        find.descendant(of: tile, matching: find.byIcon(Icons.image_outlined)),
+        find.descendant(of: tile, matching: find.byIcon(LucideIcons.image)),
         findsOneWidget,
       );
       await tester.tap(tile);

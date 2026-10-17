@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/controller/document_feedback_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// 编辑器内部文末互动区，借用控制器保存点赞/评论状态，业务行为归宿主所有。
 /// 底部留20个逻辑像素，系统安全区和正文最小视口高度由外层页面负责。
@@ -103,7 +104,7 @@ class _DocumentFeedbackFooterState extends State<DocumentFeedbackFooter> {
                 side: BorderSide(color: likeColor),
                 fixedSize: const Size(64, 64),
               ),
-              icon: Icon(likes.isLiked ? Icons.thumb_up : Icons.thumb_up_outlined, size: 28),
+              icon: const Icon(LucideIcons.thumbsUp, size: 28),
             ),
           ),
           const SizedBox(height: 20),

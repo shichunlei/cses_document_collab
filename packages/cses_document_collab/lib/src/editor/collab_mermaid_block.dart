@@ -136,10 +136,7 @@ class _MermaidBlockState extends State<_MermaidBlock> with SelectableMixin {
         final view = collabMermaidView(node);
         return CollabCardFrame(
           header: CollabCardHeader(
-            leading: const Icon(
-              Icons.account_tree_outlined,
-              color: Color(0xFF5755E7),
-            ),
+            leading: const Icon(LucideIcons.network, color: Color(0xFF5755E7)),
             title: const Text('代码绘图'),
             readOnly: !editor.editable,
             actions: [
@@ -155,7 +152,7 @@ class _MermaidBlockState extends State<_MermaidBlock> with SelectableMixin {
                         onPressed: () async {
                           await _switchView(anchorContext, editor, id, view);
                         },
-                        icon: const Icon(Icons.swap_horiz, size: 18),
+                        icon: const Icon(LucideIcons.arrowLeftRight, size: 18),
                       ),
                     ),
                   ),

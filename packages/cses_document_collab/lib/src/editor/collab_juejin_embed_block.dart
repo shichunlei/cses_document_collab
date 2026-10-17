@@ -1,5 +1,6 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import 'collab_resource_block_base.dart';
 import 'collab_web_block_base.dart';
@@ -40,7 +41,7 @@ class _JuejinEmbedBlockState extends CollabEmbeddedWebBlockState<_JuejinEmbedBlo
   @override
   String get resourceLabel => '掘金';
 
-  /// 保留掘金原有标题栏图标。
+  /// 使用Lucide报刊标识文章内容，不引入掘金品牌Logo。
   @override
-  IconData get webIcon => Icons.article_outlined;
+  IconData get webIcon => LucideIcons.newspaper;
 }

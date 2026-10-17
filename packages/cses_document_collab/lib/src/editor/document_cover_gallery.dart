@@ -69,7 +69,7 @@ class DocumentCoverGallery extends StatelessWidget {
             Image.network(
               image.previewUrl,
               fit: BoxFit.cover,
-              errorBuilder: (_, _, _) => const Center(child: Icon(Icons.image_outlined, color: Color(0xFF7C8799))),
+              errorBuilder: (_, _, _) => const Center(child: Icon(LucideIcons.image, color: Color(0xFF7C8799))),
             ),
             if (image.url == selectedUrl)
               const DecoratedBox(

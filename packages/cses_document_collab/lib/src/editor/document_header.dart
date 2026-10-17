@@ -288,7 +288,7 @@ class _DocumentHeaderState extends State<DocumentHeader> {
                     TextButton.icon(
                       key: const ValueKey('document-banner-edit'),
                       onPressed: _appearance ? () => _edit('banner') : null,
-                      icon: const Icon(Icons.image_outlined, size: 18),
+                      icon: const Icon(LucideIcons.image, size: 18),
                       label: const Text('添加封面'),
                     ),
                   if (banner == null && data.icon != null) _icon(data.icon!),
@@ -296,7 +296,7 @@ class _DocumentHeaderState extends State<DocumentHeader> {
                     TextButton.icon(
                       key: const ValueKey('document-icon-edit'),
                       onPressed: _appearance ? () => _edit('icon') : null,
-                      icon: const Icon(Icons.add_reaction_outlined, size: 18),
+                      icon: const Icon(LucideIcons.smilePlus, size: 18),
                       label: const Text('添加图标'),
                     ),
                   Padding(
@@ -335,7 +335,7 @@ class _DocumentHeaderState extends State<DocumentHeader> {
                                           : null,
                                       behavior: HitTestBehavior.translucent,
                                       child: const Icon(
-                                        Icons.edit_outlined,
+                                        LucideIcons.pencil,
                                         size: 18,
                                         color: Colors.grey,
                                       ),
@@ -378,7 +378,7 @@ Widget _bannerImage(Map<String, dynamic> banner) {
       uri.host.isEmpty) {
     return const ColoredBox(
       color: Color(0xFFF1F5F9),
-      child: Center(child: Icon(Icons.broken_image_outlined)),
+      child: Center(child: Icon(LucideIcons.imageOff)),
     );
   }
   return CollabCachedImage(
@@ -389,7 +389,7 @@ Widget _bannerImage(Map<String, dynamic> banner) {
     loading: const ColoredBox(color: Color(0xFFF1F5F9)),
     failure: const ColoredBox(
       color: Color(0xFFF1F5F9),
-      child: Center(child: Icon(Icons.broken_image_outlined)),
+      child: Center(child: Icon(LucideIcons.imageOff)),
     ),
   );
 }
@@ -422,11 +422,11 @@ Widget _documentIcon(Map<String, dynamic> icon) {
       loading: const SizedBox.square(dimension: 48),
       failure: const SizedBox.square(
         dimension: 48,
-        child: Icon(Icons.description_outlined, size: 44),
+        child: Icon(LucideIcons.fileText, size: 44),
       ),
     );
   }
-  return FittedBox(child: const Icon(Icons.description_outlined, size: 44));
+  return FittedBox(child: const Icon(LucideIcons.fileText, size: 44));
 }
 
 /// 拥有标题输入与表单校验的底部面板，输出业务命令，不直接保存或编辑正文。
@@ -543,7 +543,7 @@ class _IconSheet extends StatelessWidget {
           Navigator.pop(context, const DocumentMetadataPatch.icon(null));
         }
       },
-      icon: const Icon(Icons.remove_circle_outline, size: 16),
+      icon: const Icon(LucideIcons.circleMinus, size: 16),
       label: const Text('移除'),
     ),
     firstTab: CollabEmojiPicker(

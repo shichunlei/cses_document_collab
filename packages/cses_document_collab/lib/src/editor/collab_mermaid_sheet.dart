@@ -320,7 +320,7 @@ class _MermaidSheetState extends State<_MermaidSheet> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(replace ? '模板' : '类型'),
-            const Icon(Icons.expand_more, size: 18),
+            const Icon(LucideIcons.chevronDown, size: 18),
           ],
         ),
       ),

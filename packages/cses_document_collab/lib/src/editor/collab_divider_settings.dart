@@ -265,7 +265,7 @@ class _DividerSettingsState extends State<_DividerSettings> {
         key: const ValueKey('divider-delete'),
         style: TextButton.styleFrom(foregroundColor: CollabModalColors.of(context).danger),
         onPressed: enabled ? _delete : null,
-        icon: const Icon(Icons.delete_outline),
+        icon: const Icon(LucideIcons.trash2),
         label: const Text('删除分割线'),
       ),
       actions: [TextButton(onPressed: _saving ? null : () => Navigator.pop(context), child: const Text('完成'))],

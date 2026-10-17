@@ -132,7 +132,7 @@ class CollabBlockMoreButton extends StatelessWidget {
               ),
               constraints: const BoxConstraints.tightFor(width: 32, height: 32),
               padding: EdgeInsets.zero,
-              icon: const Icon(Icons.more_horiz, size: 18),
+              icon: const Icon(LucideIcons.ellipsis, size: 18),
               onPressed: enabled ? () => _show(context) : null,
             ),
           ),

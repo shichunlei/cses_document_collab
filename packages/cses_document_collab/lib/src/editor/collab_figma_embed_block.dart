@@ -1,5 +1,6 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import 'collab_resource_block_base.dart';
 import 'collab_web_block_base.dart';
@@ -40,7 +41,7 @@ class _FigmaEmbedBlockState extends CollabEmbeddedWebBlockState<_FigmaEmbedBlock
   @override
   String get resourceLabel => 'Figma';
 
-  /// 保留Figma原有标题栏图标。
+  /// 使用Lucide钢笔标识设计内容，不引入Figma品牌Logo。
   @override
-  IconData get webIcon => Icons.design_services_outlined;
+  IconData get webIcon => LucideIcons.penTool;
 }

@@ -4,6 +4,7 @@ import 'package:cses_document_collab/src/model/collab_task_card_data.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// 桌面同款任务引用外观，借用数据与事件，不发请求或写正文。
 /// ```dart
@@ -87,7 +88,7 @@ class CollabTaskCardView extends StatelessWidget {
           surfaceKey: ValueKey('task-card-surface-$blockId'),
           margin: const EdgeInsets.symmetric(vertical: 8),
           header: CollabCardHeader(
-            leading: const Icon(Icons.ballot_rounded, color: Color(0xFF5755E7)),
+            leading: const Icon(LucideIcons.listTodo, color: Color(0xFF5755E7)),
             title: const Text('任务'),
             readOnly: readOnly,
             more:
@@ -98,7 +99,7 @@ class CollabTaskCardView extends StatelessWidget {
                         key: ValueKey('task-card-more-$blockId'),
                         tooltip: '更多操作',
                         enabled: !busy,
-                        icon: const Icon(Icons.more_horiz, size: 18, color: Color(0xFF9CA3AF)),
+                        icon: const Icon(LucideIcons.ellipsis, size: 18, color: Color(0xFF9CA3AF)),
                         onSelected: (action) async {
                           await action();
                         },
@@ -137,7 +138,7 @@ class CollabTaskCardView extends StatelessWidget {
                       style: const ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
                       padding: EdgeInsets.zero,
                       alignment: Alignment.centerRight,
-                      icon: const Icon(Icons.open_in_full, size: 16, color: Color(0xFF9CA3AF)),
+                      icon: const Icon(LucideIcons.maximize2, size: 16, color: Color(0xFF9CA3AF)),
                       onPressed: busy || onOpen == null
                           ? null
                           : () async {
@@ -181,10 +182,10 @@ class CollabTaskCardView extends StatelessWidget {
                     crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
                       if (detail?.startTime != null)
-                        _TaskTime(icon: Icons.calendar_today_outlined, time: detail!.startTime!),
+                        _TaskTime(icon: LucideIcons.calendarDays, time: detail!.startTime!),
                       if (detail?.startTime != null && detail?.endTime != null)
                         const Text('-', style: TextStyle(color: Color(0xFF86909C), fontSize: 12)),
-                      if (detail?.endTime != null) _TaskTime(icon: Icons.event_outlined, time: detail!.endTime!),
+                      if (detail?.endTime != null) _TaskTime(icon: LucideIcons.calendarCheck, time: detail!.endTime!),
                     ],
                   ),
                 ],
@@ -195,10 +196,10 @@ class CollabTaskCardView extends StatelessWidget {
                   children: [
                     Expanded(child: _TaskPath(nodes: detail?.path ?? const [])),
                     if (detail?.fileCount != null)
-                      _TaskCount(icon: Icons.attach_file, label: '附件', count: detail!.fileCount!),
+                      _TaskCount(icon: LucideIcons.paperclip, label: '附件', count: detail!.fileCount!),
                     if (detail?.subTaskCount != null) ...[
                       const SizedBox(width: 8),
-                      _TaskCount(icon: Icons.account_tree_outlined, label: '子任务', count: detail!.subTaskCount!),
+                      _TaskCount(icon: LucideIcons.network, label: '子任务', count: detail!.subTaskCount!),
                     ],
                   ],
                 ),
@@ -430,9 +431,9 @@ class _TaskPath extends StatelessWidget {
             alignment: PlaceholderAlignment.middle,
             child: Icon(
               switch (nodes[i].type) {
-                'space' => Icons.inventory_2,
-                'workItem' => Icons.work_outline,
-                _ => Icons.folder,
+                'space' => LucideIcons.archive,
+                'workItem' => LucideIcons.briefcaseBusiness,
+                _ => LucideIcons.folder,
               },
               size: 12,
               color: const Color(0xFF9CA3AF),

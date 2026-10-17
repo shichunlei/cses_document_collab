@@ -1,6 +1,7 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import 'collab_link_preview.dart';
 import 'collab_resource_block_base.dart';
@@ -49,9 +50,9 @@ class _BookmarkBlockState extends CollabWebBlockState<_BookmarkBlock> {
   @override
   String get resourceLabel => '网页卡片';
 
-  /// 保留网页卡片原有标题栏图标。
+  /// 使用Lucide书签标识网页卡片，保持原标题栏布局。
   @override
-  IconData get webIcon => Icons.bookmark_border;
+  IconData get webIcon => LucideIcons.bookmark;
 
   /// 在借用 [context] 下以当前构建快照 [props] 创建原卡片，保留换链键、加载器和打开行为。
   @override

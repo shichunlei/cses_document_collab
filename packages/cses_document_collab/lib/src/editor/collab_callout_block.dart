@@ -68,7 +68,7 @@ class _CalloutBlockState extends State<_CalloutBlock> with SelectableMixin {
                     child: Padding(
                       padding: const EdgeInsets.only(right: 12, top: 2, bottom: 2),
                       child: prefix.isEmpty
-                          ? const Icon(Icons.add_reaction_outlined, size: 20)
+                          ? const Icon(LucideIcons.smilePlus, size: 20)
                           : Text(prefix, style: TextStyle(fontSize: 18, height: 1.5, color: color)),
                     ),
                   ),
@@ -384,7 +384,7 @@ class _CalloutSettingsState extends State<_CalloutSettings> {
               key: const ValueKey('callout-emoji-clear'),
               style: TextButton.styleFrom(foregroundColor: CollabModalColors.of(context).danger),
               onPressed: enabled && !_savingEmoji ? _clearEmoji : null,
-              icon: const Icon(Icons.remove_circle_outline, size: 16),
+              icon: const Icon(LucideIcons.circleMinus, size: 16),
               label: const Text('移除'),
             )
           : null,

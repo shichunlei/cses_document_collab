@@ -9,6 +9,7 @@ import 'package:cses_document_collab/src/model/collab_meeting.dart';
 import 'package:cses_document_collab/src/model/collab_meeting_card_data.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 
 /// 为正式 meeting 注册可选中的无正文组件；显示引用快照，按宿主详情显示状态，加入/查看按钮通知宿主，底部删除仅移除文档引用。
@@ -411,7 +412,7 @@ class _MeetingCardView extends StatelessWidget {
       child: CollabCardFrame(
         surfaceKey: ValueKey('meeting-card-surface-$blockId'),
         header: CollabCardHeader(
-          leading: const Icon(Icons.groups_outlined, color: Color(0xFF4A7AFE)),
+          leading: const Icon(LucideIcons.users, color: Color(0xFF4A7AFE)),
           title: const Text('会议'),
           readOnly: readOnly,
           more: moreActions,

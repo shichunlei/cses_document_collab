@@ -3,6 +3,7 @@ import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.da
     show csesEmbedUrlAttribute;
 import 'package:cses_document_collab/src/editor/collab_media_block_base.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// 此文件仅保留原独立链接；图片与视频已迁到各自的独立构建器。
 enum CollabEmbedKind {
@@ -102,7 +103,7 @@ class _LinkBlockState extends CollabMediaBlockState<_LinkBlock> {
                 ),
                 child: Padding(
                   padding: EdgeInsets.all(10),
-                  child: Icon(Icons.link, color: Color(0xFF2563EB)),
+                  child: Icon(LucideIcons.link, color: Color(0xFF2563EB)),
                 ),
               ),
               const SizedBox(width: 12),
@@ -130,7 +131,7 @@ class _LinkBlockState extends CollabMediaBlockState<_LinkBlock> {
                 ),
               ),
               const SizedBox(width: 8),
-              const Icon(Icons.open_in_new, size: 20),
+              const Icon(LucideIcons.externalLink, size: 20),
             ],
           ),
         ),

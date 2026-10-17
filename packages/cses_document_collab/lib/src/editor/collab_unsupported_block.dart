@@ -1,5 +1,6 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// An opaque block with no text input, toolbar or child rendering.
 class CollabUnsupportedBlockComponentBuilder extends BlockComponentBuilder {
@@ -23,6 +24,7 @@ class _UnsupportedBlock extends BlockComponentStatelessWidget {
     required super.configuration,
   });
 
+  /// 在借用 [context] 中显示Lucide未知文件图标和原始类型说明，不提供编辑动作。
   @override
   Widget build(BuildContext context) => ExcludeFocus(
     child: Semantics(
@@ -46,7 +48,7 @@ class _UnsupportedBlock extends BlockComponentStatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Icon(
-                Icons.insert_drive_file_outlined,
+                LucideIcons.fileQuestionMark,
                 size: 20,
                 color: Color(0xFF969BAB),
               ),

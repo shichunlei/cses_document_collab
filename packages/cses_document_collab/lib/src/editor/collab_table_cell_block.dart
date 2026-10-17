@@ -1,5 +1,6 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 import 'collab_table_children.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
@@ -83,7 +84,7 @@ class _TableCellBlock extends BlockComponentStatelessWidget {
                     tooltip: '单元格操作',
                     padding: EdgeInsets.zero,
                     iconSize: 16,
-                    icon: const Icon(Icons.more_horiz),
+                    icon: const Icon(LucideIcons.ellipsis),
                     onPressed: () async {
                       final table = node.parent?.parent;
                       if (table == null ||

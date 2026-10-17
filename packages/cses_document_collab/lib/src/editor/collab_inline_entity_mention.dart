@@ -91,9 +91,9 @@ class _EntityMentionState extends State<CollabInlineEntityMention> {
                 children: [
                   Icon(
                     switch (entityType) {
-                      'meeting' => Icons.groups_outlined,
-                      'task' => Icons.task_alt,
-                      _ => Icons.description_outlined,
+                      'meeting' => LucideIcons.users,
+                      'task' => LucideIcons.squareCheck,
+                      _ => LucideIcons.fileText,
                     },
                     size: style.fontSize ?? 16,
                     color: const Color(0xFF2563EB),

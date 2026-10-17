@@ -3,6 +3,7 @@ import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.da
     show csesEmbedUrlAttribute;
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'collab_card_frame.dart';
 import 'collab_embedded_page.dart';
 import 'collab_link_actions.dart';
@@ -72,7 +73,7 @@ abstract class CollabWebBlockState<T extends CollabResourceBlock>
       child: IconButton(
         key: ValueKey('resource-more-$blockId'),
         tooltip: '更多操作',
-        icon: const Icon(Icons.more_horiz, size: 18),
+        icon: const Icon(LucideIcons.ellipsis, size: 18),
         onPressed: () => showCollabLinkActions(
           context,
           node,

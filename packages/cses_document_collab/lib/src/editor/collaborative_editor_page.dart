@@ -290,13 +290,13 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
                     key: const ValueKey('editor-undo'),
                     tooltip: '撤销',
                     onPressed: _importing ? null : collab.editorState.undoManager.undo,
-                    icon: const Icon(Icons.undo),
+                    icon: const Icon(LucideIcons.undo2),
                   ),
                   IconButton(
                     key: const ValueKey('editor-redo'),
                     tooltip: '重做',
                     onPressed: _importing ? null : collab.editorState.undoManager.redo,
-                    icon: const Icon(Icons.redo),
+                    icon: const Icon(LucideIcons.redo2),
                   ),
                 ],
                 if (!_previewOnly && widget.pickMarkdown != null)
@@ -306,14 +306,14 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
                     onPressed: !_importing && collab.initialized ? _importMarkdown : null,
                     icon: _importing
                         ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
-                        : const Icon(Icons.file_open_outlined),
+                        : const Icon(LucideIcons.fileInput),
                   ),
                 Tooltip(
                   message: _previewOnly ? '进入编辑' : '进入预览',
                   child: TextButton.icon(
                     key: const ValueKey('editor-mode-toggle'),
                     onPressed: collab.canEdit && !_importing ? _toggleMode : null,
-                    icon: Icon(_previewOnly ? Icons.edit_outlined : Icons.visibility_outlined, size: 20),
+                    icon: Icon(_previewOnly ? LucideIcons.pencil : LucideIcons.eye, size: 20),
                     label: Text(_previewOnly ? '编辑' : '预览'),
                   ),
                 ),
@@ -629,6 +629,7 @@ class _EditorConnectionBar extends StatelessWidget {
   final String documentId;
   final String protocolEvent;
 
+  /// 在借用 [context] 中用状态颜色、Lucide圆形和原协议事件回显连接状态。
   @override
   Widget build(BuildContext context) {
     final (label, color) = switch (status) {
@@ -648,7 +649,7 @@ class _EditorConnectionBar extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.circle, size: 9, color: color),
+          Icon(LucideIcons.circle, size: 9, color: color),
           const SizedBox(width: 7),
           Text(label, style: Theme.of(context).textTheme.labelMedium),
           const SizedBox(width: 12),

@@ -1,5 +1,6 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'collab_resource_block_base.dart';
 import 'collab_web_block_base.dart';
 
@@ -48,7 +49,7 @@ class _WebEmbedBlockState extends CollabEmbeddedWebBlockState<_WebEmbedBlock> {
   @override
   String get resourceLabel => '网页嵌入';
 
-  /// 保留网页嵌入原有标题栏图标。
+  /// 使用Lucide地球标识网页嵌入，保持原标题栏布局。
   @override
-  IconData get webIcon => Icons.language;
+  IconData get webIcon => LucideIcons.globe;
 }

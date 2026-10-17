@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 const _source =
     "import 'package:flutter/widgets.dart';\n\nvoid main() {\n  print('代码😀');\n}\n";
@@ -481,7 +482,7 @@ void main() {
         'unknown <code> 😀',
       );
       expect(find.byKey(const ValueKey('collab-code-copy')), findsNothing);
-      expect(find.byIcon(Icons.more_horiz), findsNothing);
+      expect(find.byIcon(LucideIcons.ellipsis), findsNothing);
       expect(
         tester
             .widget<InkWell>(

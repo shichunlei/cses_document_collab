@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// 任务卡片真实布局、宿主加载/头像注入、按钮导航及生命周期回归。
 void main() {
@@ -109,7 +110,7 @@ void main() {
         expect((box.decoration as BoxDecoration).color, Colors.white);
         final detailIcon = find.descendant(
           of: _open,
-          matching: find.byIcon(Icons.open_in_full),
+          matching: find.byIcon(LucideIcons.maximize2),
         );
         final contentRight = tester
             .getRect(find.byKey(const ValueKey('task-card-progress-card')))

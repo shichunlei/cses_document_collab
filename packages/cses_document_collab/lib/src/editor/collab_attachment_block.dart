@@ -4,6 +4,7 @@ import 'package:cses_document_collab/src/editor/collab_resource_block_base.dart'
 import 'package:cses_document_collab/src/editor/collab_unsupported_block.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// 附件块独立入口，保留文件图标、名称、大小和原有只读打开能力。
 /// ```dart
@@ -196,16 +197,16 @@ class _AttachmentInfo extends StatelessWidget {
           _ => '文件',
         };
   final (icon, color) = switch (kind) {
-    'pdf' => (Icons.picture_as_pdf_outlined, const Color(0xFFDC5B54)),
-    'document' => (Icons.description_outlined, const Color(0xFF3976D3)),
-    'spreadsheet' => (Icons.table_chart_outlined, const Color(0xFF269468)),
-    'presentation' => (Icons.slideshow_outlined, const Color(0xFFD78636)),
-    'archive' => (Icons.folder_zip_outlined, const Color(0xFF8B65C4)),
-    'image' => (Icons.image_outlined, const Color(0xFF4B88B5)),
-    'audio' => (Icons.audio_file_outlined, const Color(0xFF8B65C4)),
-    'video' => (Icons.video_file_outlined, const Color(0xFF3976D3)),
-    'text' => (Icons.article_outlined, const Color(0xFF64748B)),
-    _ => (Icons.insert_drive_file_outlined, const Color(0xFF64748B)),
+    'pdf' => (LucideIcons.fileText, const Color(0xFFDC5B54)),
+    'document' => (LucideIcons.fileText, const Color(0xFF3976D3)),
+    'spreadsheet' => (LucideIcons.fileSpreadsheet, const Color(0xFF269468)),
+    'presentation' => (LucideIcons.presentation, const Color(0xFFD78636)),
+    'archive' => (LucideIcons.fileArchive, const Color(0xFF8B65C4)),
+    'image' => (LucideIcons.fileImage, const Color(0xFF4B88B5)),
+    'audio' => (LucideIcons.fileAudio, const Color(0xFF8B65C4)),
+    'video' => (LucideIcons.fileVideo, const Color(0xFF3976D3)),
+    'text' => (LucideIcons.fileText, const Color(0xFF64748B)),
+    _ => (LucideIcons.file, const Color(0xFF64748B)),
   };
   return (icon, color, label);
 }

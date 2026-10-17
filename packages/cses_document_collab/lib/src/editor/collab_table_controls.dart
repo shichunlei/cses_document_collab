@@ -374,7 +374,9 @@ class _CollabTableControlsState extends State<CollabTableControls> {
                   button: true,
                   selected: selected,
                   child: Icon(
-                    column ? Icons.more_horiz : Icons.more_vert,
+                    column
+                        ? LucideIcons.ellipsis
+                        : LucideIcons.ellipsisVertical,
                     size: 18,
                     color: selected ? Colors.white : const Color(0xFFB6BBC4),
                   ),
@@ -403,7 +405,7 @@ class _CollabTableControlsState extends State<CollabTableControls> {
                     child: RotatedBox(
                       quarterTurns: 1,
                       child: Icon(
-                        Icons.drag_handle,
+                        LucideIcons.gripHorizontal,
                         size: 16,
                         color: selected
                             ? Colors.white

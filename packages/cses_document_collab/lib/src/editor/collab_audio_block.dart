@@ -9,6 +9,7 @@ import 'package:cses_document_collab/src/editor/collab_unsupported_block.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:video_player/video_player.dart';
 
 /// 音频块的独立构建器，只接受无正文的audio资源；不拥有编辑器或播放器。
@@ -62,7 +63,7 @@ class _AudioBlockState extends CollabResourceBlockState<_AudioBlock> {
       surfaceKey: bodyKey,
       margin: const EdgeInsets.symmetric(vertical: 6),
       header: CollabCardHeader(
-        leading: const Icon(Icons.audiotrack_outlined),
+        leading: const Icon(LucideIcons.music2),
         title: Text(resource.string('name').isNotEmpty ? resource.string('name') : resourceLabel),
         readOnly: !editor.editable,
         more: buildResourceMore(openLabel: '在浏览器打开'),
@@ -208,7 +209,7 @@ class _AudioPlayerState extends State<_AudioPlayer> {
               key: const ValueKey('resource-audio-play'),
               tooltip: value.isPlaying ? '暂停音频' : '播放音频',
               icon: Icon(
-                value.isPlaying ? Icons.pause_circle_filled : Icons.play_circle_fill,
+                value.isPlaying ? LucideIcons.circlePause : LucideIcons.circlePlay,
                 color: const Color(0xFF5B5BD6),
               ),
               onPressed: () => _act(value.isPlaying ? _controller.pause : _controller.play),

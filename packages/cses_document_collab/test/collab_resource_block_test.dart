@@ -12,6 +12,7 @@ import 'package:cses_document_collab/src/editor/collab_figma_embed_block.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:video_player_platform_interface/video_player_platform_interface.dart';
 import 'package:metalink/metalink.dart';
 import 'package:cses_document_collab/src/editor/collab_link_preview.dart';
@@ -74,35 +75,35 @@ void main() {
       mime: '',
       bytes: 2048,
       metadata: 'PDF · 2.0 KB',
-      icon: Icons.picture_as_pdf_outlined,
+      icon: LucideIcons.fileText,
     ),
     (
       name: '项目预算.xlsx',
       mime: '',
       bytes: 1073741824,
       metadata: 'XLSX · 1.0 GB',
-      icon: Icons.table_chart_outlined,
+      icon: LucideIcons.fileSpreadsheet,
     ),
     (
       name: '下载文件',
       mime: 'application/pdf',
       bytes: 0,
       metadata: 'PDF · 0 B',
-      icon: Icons.picture_as_pdf_outlined,
+      icon: LucideIcons.fileText,
     ),
     (
       name: 'archive.7z',
       mime: '',
       bytes: 12,
       metadata: '7Z · 12 B',
-      icon: Icons.folder_zip_outlined,
+      icon: LucideIcons.fileArchive,
     ),
     (
       name: '未知文件',
       mime: '',
       bytes: -1,
       metadata: '文件 · 大小未知',
-      icon: Icons.insert_drive_file_outlined,
+      icon: LucideIcons.file,
     ),
   ]) {
     testWidgets('attachment identity shows ${sample.metadata}', (tester) async {

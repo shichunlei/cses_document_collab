@@ -14,6 +14,7 @@ import 'package:cses_document_collab/src/model/document_cover_catalog.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file/memory.dart';
@@ -303,7 +304,7 @@ void main() {
       service.banner = {'url': 'https://example.test/missing.svg'};
       await controller.refresh();
       await _settleImages(tester);
-      expect(find.byIcon(Icons.broken_image_outlined), findsOneWidget);
+      expect(find.byIcon(LucideIcons.imageOff), findsOneWidget);
       expect(service.patches, isEmpty);
       expect(adapter.blocks.single.text, '原始正文');
       expect(tester.takeException(), isNull);
@@ -335,7 +336,7 @@ void main() {
       expect(
         find.descendant(
           of: svgFinder,
-          matching: find.byIcon(Icons.description_outlined),
+          matching: find.byIcon(LucideIcons.fileText),
         ),
         findsNothing,
       );
@@ -403,10 +404,7 @@ void main() {
       await tester.pumpAndSettle();
       await _settleImages(tester);
       expect(
-        find.descendant(
-          of: area,
-          matching: find.byIcon(Icons.description_outlined),
-        ),
+        find.descendant(of: area, matching: find.byIcon(LucideIcons.fileText)),
         findsOneWidget,
       );
       expect(controller.value!.icon, service.icon);
@@ -922,7 +920,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(controller.value!.name, '等待保存');
     expect(find.byKey(const ValueKey('document-title-saving')), findsNothing);
-    expect(find.byIcon(Icons.edit_outlined), findsOneWidget);
+    expect(find.byIcon(LucideIcons.pencil), findsOneWidget);
     expect(tester.getSize(header), headerSize);
     expect(tester.getRect(action), actionBounds);
     expect(tester.getTopLeft(body).dy, bodyTop);
@@ -981,7 +979,7 @@ void main() {
       expect(controller.saving, isFalse);
       expect(controller.value!.name, service.name);
       expect(find.byKey(const ValueKey('document-title-saving')), findsNothing);
-      expect(find.byIcon(Icons.edit_outlined), findsOneWidget);
+      expect(find.byIcon(LucideIcons.pencil), findsOneWidget);
       expect(find.text('头部保存失败，请重试'), findsWidgets);
       service.pending = null;
       await tester.tap(find.byKey(const ValueKey('document-title-edit')));

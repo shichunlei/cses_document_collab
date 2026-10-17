@@ -7,6 +7,7 @@ import 'package:cses_document_collab/src/model/collab_code.dart';
 import 'package:cses_document_collab/src/model/collab_code_languages.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:val_highlight/languages/all.dart';
@@ -317,7 +318,9 @@ class _CodeBlockState extends State<_CodeBlock>
               onTap: _toggleCollapse,
               padding: const EdgeInsets.all(14),
               child: Icon(
-                isCollapsed ? Icons.chevron_right : Icons.expand_more,
+                isCollapsed
+                    ? LucideIcons.chevronRight
+                    : LucideIcons.chevronDown,
                 size: 16,
                 color: _headerStyle.color,
               ),
@@ -352,7 +355,7 @@ class _CodeBlockState extends State<_CodeBlock>
                     ),
                     if (_editor.editable)
                       Icon(
-                        Icons.expand_more,
+                        LucideIcons.chevronDown,
                         size: 13,
                         color: _headerStyle.color,
                       ),

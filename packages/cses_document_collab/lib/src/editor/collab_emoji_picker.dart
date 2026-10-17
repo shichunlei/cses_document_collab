@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// 共用的常用表情目录；条目为原生 Unicode 和可搜索的中英文名称。
 /// 分类只影响选择界面，不写入正文；目录外的组合表情可通过粘贴使用。
@@ -209,7 +210,7 @@ class _CollabEmojiPickerState extends State<CollabEmojiPicker> {
           enabled: enabled,
           decoration: const InputDecoration(
             hintText: '搜索或粘贴表情',
-            prefixIcon: Icon(Icons.search),
+            prefixIcon: Icon(LucideIcons.search),
           ),
           onChanged: (_) => setState(() {}),
           onSubmitted: (value) async => _select(value.trim()),
