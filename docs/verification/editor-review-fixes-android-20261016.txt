@@ -1,0 +1,70 @@
+00:00 +0: (setUpAll)
+00:00 +1: text depth left heading_3 uses published 32px layout steps
+00:03 +2: text depth left paragraph uses published 32px layout steps
+00:05 +3: text depth left quote uses published 32px layout steps
+00:07 +4: final heading sizes left follow published defaults
+00:09 +5: final heading sizes left preserve mixed run overrides
+00:11 +6: legacy font sizes left follow published parsing
+00:13 +7: empty heading sizes left match placeholders and defaults
+00:14 +8: text depth center heading_3 uses published 32px layout steps
+00:16 +9: text depth center paragraph uses published 32px layout steps
+00:18 +10: text depth center quote uses published 32px layout steps
+00:20 +11: final heading sizes center follow published defaults
+00:22 +12: final heading sizes center preserve mixed run overrides
+00:24 +13: legacy font sizes center follow published parsing
+00:26 +14: empty heading sizes center match placeholders and defaults
+00:27 +15: text depth right heading_3 uses published 32px layout steps
+00:29 +16: text depth right paragraph uses published 32px layout steps
+00:31 +17: text depth right quote uses published 32px layout steps
+00:33 +18: final heading sizes right follow published defaults
+00:35 +19: final heading sizes right preserve mixed run overrides
+00:37 +20: legacy font sizes right follow published parsing
+00:38 +21: empty heading sizes right match placeholders and defaults
+00:40 +22: text depth justify heading_3 uses published 32px layout steps
+00:42 +23: text depth justify paragraph uses published 32px layout steps
+00:44 +24: text depth justify quote uses published 32px layout steps
+00:46 +25: final heading sizes justify follow published defaults
+00:47 +26: final heading sizes justify preserve mixed run overrides
+00:49 +27: legacy font sizes justify follow published parsing
+00:51 +28: empty heading sizes justify match placeholders and defaults
+00:53 +29: text depth distributed heading_3 uses published 32px layout steps
+00:55 +30: text depth distributed paragraph uses published 32px layout steps
+00:57 +31: text depth distributed quote uses published 32px layout steps
+00:58 +32: final heading sizes distributed follow published defaults
+01:00 +33: final heading sizes distributed preserve mixed run overrides
+01:02 +34: legacy font sizes distributed follow published parsing
+01:04 +35: empty heading sizes distributed match placeholders and defaults
+01:06 +36: multiline paste replaces a range in one undo and preserves surrounding styles (variant: TargetPlatform.android)
+01:08 +37: cut waits for clipboard and rejects remote edits during that wait (variant: TargetPlatform.android)
+01:09 +38: link tracks original block after remote reorder (variant: TargetPlatform.android)
+01:12 +39: formula conversion rejects remote changes while preview is open (variant: TargetPlatform.android)
+01:15 +40: range rejects cross-cell selection, code and whole-block selection
+01:15 +41: keyboard-hidden range exposes native menu and copy (variant: TargetPlatform.android)
+01:16 +42: readonly range keeps copy and select all only (variant: TargetPlatform.iOS)
+01:16 +43: select all completes and later menu actions remain available (variant: TargetPlatform.android)
+01:18 +44: link keeps text and styles, supports undo, edit and remove (variant: TargetPlatform.android)
+01:24 +45: link rejects text while dialog is open (variant: TargetPlatform.android)
+01:27 +46: link rejects delete while dialog is open (variant: TargetPlatform.android)
+01:29 +47: link rejects readonly while dialog is open (variant: TargetPlatform.android)
+01:32 +48: link rejects format while dialog is open (variant: TargetPlatform.android)
+01:35 +49: formula prefills selected text and atom undo restores styled UTF16 text (variant: TargetPlatform.android)
+01:38 +50: cancel formula leaves original text and selection (variant: TargetPlatform.android)
+01:40 +51: format panel reuses bold, colors, heading and alignment controls without keyboard (variant: TargetPlatform.android)
+01:49 +52: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+02:08 +53: format panel continues after zero-depth list outdent (variant: TargetPlatform.android)
+02:12 +54: format panel validates remote type after a local conversion (variant: TargetPlatform.android)
+02:15 +55: format panel validates remote delete after a local conversion (variant: TargetPlatform.android)
+02:19 +56: format panel validates remote readonly after a local conversion (variant: TargetPlatform.android)
+02:22 +57: format panel validates remote text after a local conversion (variant: TargetPlatform.android)
+02:26 +58: format panel validates remote reorder after a local conversion (variant: TargetPlatform.android)
+02:30 +59: format action checks live range after remote reorder (variant: TargetPlatform.android)
+02:34 +60: format action checks live range after remote text (variant: TargetPlatform.android)
+02:36 +61: cross paragraph menu allows formats but hides link and formula (variant: TargetPlatform.android)
+02:37 +62: stable snapshot follows reorder, rejects insertion inside range and object conversion
+02:37 +63: Android actual long press menu, link and inline formula
+02:45 +64: Android active IME follows remote defaults replace=false
+02:47 +65: Android active IME follows remote defaults replace=true
+02:48 +66: (tearDownAll)
+02:48 +67: All tests passed!
+All tests passed.
+Leaving the application running.

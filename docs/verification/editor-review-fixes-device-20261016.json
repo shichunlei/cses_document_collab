@@ -1,0 +1,136 @@
+{
+  "date": "2026-10-16",
+  "scope": "最新普通Demo覆盖安装及三项格式修复、划词菜单的Android真机自动化验收；使用隔离测试正文，保留现有应用数据。",
+  "production_commit": "d5b713f",
+  "versions": {
+    "registry_latest": "0.11.21",
+    "desktop_declared": "0.11.21",
+    "desktop_locked": "0.11.21",
+    "desktop_installed": "0.11.17",
+    "queried_before_validation": true,
+    "combination_changed": false,
+    "desktop_dependencies_changed": false,
+    "references": [
+      "ai-skills/blockcraft.md",
+      "ai-skills/blockcraft-test.md",
+      "ai-skills/MIGRATIONS.md",
+      "fesm2022/ccc-blockcraft.mjs: TypingFormatState.get/sync",
+      "fesm2022/ccc-blockcraft-framework-block-std-typography.mjs: readInlineFontSize"
+    ],
+    "upstream_typography_sha256": "a8c1e7f85c57533839778a171f5e638ab048930e5c3a8a154359d5ce394c4b85"
+  },
+  "device": {
+    "serial": "A92G6R5704004108",
+    "model": "MTN-AN00 (HONOR X70)",
+    "android": "16",
+    "api": 36,
+    "physical_device": true,
+    "resolution": "1200x2640",
+    "density_dpi": 520,
+    "system_font_scale": 1.0,
+    "package": "com.cses.cses_mobile_collab_demo"
+  },
+  "validation": {
+    "driver_command": "flutter drive --driver packages/cses_document_collab/test_driver/integration_test.dart --target packages/cses_document_collab/integration_test/editor_review_fixes_test.dart -d A92G6R5704004108 --no-pub --keep-app-running",
+    "exit_code": 0,
+    "functional_cases_passed": 65,
+    "failed": 0,
+    "runner_total_with_setup_teardown": 67,
+    "test_duration": "2m48s",
+    "breakdown": {
+      "published_typography_and_depth": 35,
+      "selection_menu_suite": 27,
+      "actual_long_press_link_formula_gesture": 1,
+      "active_ime_remote_defaults_clear_and_replace": 2
+    },
+    "three_fixes": [
+      "35项完整页面回归包含5种对齐的旧字号解析；按0.11.21发布函数生成期望，直接核对RenderParagraph最终字号，并覆盖编辑/预览/再编辑、H1-H9、混排、换行、空标题及depth。使用设备实际视口并断言MobileSelectionServiceWidget。",
+      "格式面板切换标题后继续加粗和对齐，连续切换标题/引用/三类列表/正文及零级列表退回正文后继续格式化均通过。远端类型/正文/删除/只读变化拒绝旧操作，远端重排仍定位原块。",
+      "实际页面保持原光标和活动TextInput连接，注入远端默认格式清除及替换投影，随后通过测试输入连接写入中文；旧字样/颜色/字体/字号/字距不残留，新斜体/倍率生效，撤销回空段且旧格式不回流。"
+    ],
+    "selection_menu": "27项对照场景包含纯逻辑与回调驱动场景；另1项独立真实长按松手、复制、格式、溢出菜单、文字链接、选中文字转行内公式及撤销的触摸流程通过。",
+    "ui_boundaries": "划词既有测试沿用390x844逻辑画布，运行Android真实移动选择服务；完整页面字号和新增远端IME场景使用设备实际视口。只读菜单有iOS外观变体在Android运行，不计iOS设备验收。输入与触摸由Flutter测试注入，不代表人工系统输入法兼容测试。",
+    "static_analysis": "所属包 flutter analyze --no-pub integration_test/editor_review_fixes_test.dart: No issues found",
+    "normal_apk_build": {
+      "command": "flutter build apk --debug --no-pub",
+      "result": "passed",
+      "duration": "46.9s",
+      "native_targets": [
+        "armv7-linux-androideabi",
+        "aarch64-linux-android",
+        "x86_64-linux-android",
+        "i686-linux-android"
+      ]
+    },
+    "production_sources_changed": false,
+    "full_regression": "本次仅增加设备验收入口及文档，未重复全包；已提交代码的全包1130项、宿主56项及Rust86项结果见selection-format-review-fixes-0.11.21-20261016.json。"
+  },
+  "data_retention": {
+    "backup_taken_with_app_stopped": true,
+    "backup_location": "私有临时目录，未纳入仓库；不在记录中保存账号或正文内容。",
+    "baseline_files_backed_up": 13,
+    "user_data_files_verified": 8,
+    "verified_content": "协同SQLite主库/WAL/SHM、图片缓存数据库/日志和三个偏好文件逐一核对长度及SHA-256。",
+    "excluded_runtime_artifacts": "Flutter调试内核/快照、资源时间戳及profileInstalled安装标记；这些不是用户数据。",
+    "after_tests_all_user_files_identical": true,
+    "after_install_all_user_files_identical": true,
+    "after_normal_launch_all_user_files_identical": true,
+    "user_data_manifest_sha256": "cc0ec1f9cfec86ebcc7c838cbaef9609e0635ffaf89fb98dfeede1a9c258a746",
+    "uninstall_performed": false,
+    "clear_data_performed": false,
+    "first_install_time_before": "2026-10-16 15:56:46",
+    "first_install_time_after": "2026-10-16 15:56:46"
+  },
+  "final_install": {
+    "install_result": "Success",
+    "install_mode": "adb install -r",
+    "normal_apk": "/System/Volumes/Data/workspace/mobile-collab-demo/build/app/outputs/flutter-apk/app-debug.apk",
+    "normal_apk_bytes": 278281958,
+    "normal_apk_sha256": "70342f7e4046fd376a3396f802424532bbc450c2cfff5d6823edfe382740413e",
+    "installed_apk_matches_host": true,
+    "user_data_files_checked": 8,
+    "user_data_files_changed": 0,
+    "first_install_time": "2026-10-16 15:56:46",
+    "last_update_time": "2026-10-16 22:12:58",
+    "user_data_check_before_normal_launch": true,
+    "user_data_files_changed_after_normal_launch": 0,
+    "normal_launch_screen": "login",
+    "normal_launch_explanation": "Demo应用的_loggedIn是默认false的内存字段，冷启动显示登录页；本次未登录或访问在线文档。",
+    "user_data_manifest_sha256": "cc0ec1f9cfec86ebcc7c838cbaef9609e0635ffaf89fb98dfeede1a9c258a746"
+  },
+  "final_app_state": {
+    "activity": "com.cses.cses_mobile_collab_demo/.MainActivity",
+    "resumed": true,
+    "ordinary_demo_restored": true,
+    "screen": "登录页",
+    "explanation": "lib/src/demo/app.dart 的_loggedIn是默认false的内存字段，冷启动回到登录页；未做账号自动登录或登录持久化改造。",
+    "online_document_accessed": false
+  },
+  "evidence": {
+    "device_log": "docs/verification/editor-review-fixes-android-20261016.txt",
+    "screenshots": [
+      {
+        "path": "docs/verification/screenshots/editor-review-selection-menu-android-20261016.png",
+        "description": "隔离划词测试页的真实长按浮栏；测试画布没有正式页面头部SafeArea，不用于验收页面顶部布局。"
+      },
+      {
+        "path": "docs/verification/screenshots/editor-review-remote-defaults-android-20261016.png",
+        "description": "实际编辑页面注入远端新默认值后，通过活动输入连接写入的斜体中文。"
+      }
+    ]
+  },
+  "limitations": [
+    "未验证iOS设备、人工系统/搜狗IME或真实外接键盘。",
+    "远端变化通过权威投影注入，未做在线桌面双端、WebSocket并发、断线重连或服务端持久化ACK验收。",
+    "桌面实际安装仍为0.11.17，声明/锁定0.11.21的安装升级未完成；不代表完整版本认证。",
+    "既有完整字体/段间距、通用列表8级Tab与跨类型/跨父范围等待办保持。"
+  ],
+  "adaptation_counts": {
+    "adapted": 13,
+    "partial": 10,
+    "structural": 1,
+    "unsupported": 17,
+    "total": 41
+  },
+  "diff_check": "git diff --check and git diff --cached --check passed"
+}
