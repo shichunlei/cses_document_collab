@@ -1,0 +1,42 @@
+// Run the shipped offline page in a real browser, with no document or account.
+import fs from 'node:fs';
+import {createRequire} from 'node:module';
+import path from 'node:path';
+const [desktopRoot, outputDirectory] = process.argv.slice(2);
+if (!desktopRoot || !outputDirectory) throw Error('Usage: node tool/verify_mermaid_preview.mjs <desktop-root> <output-directory>');
+const require = createRequire(path.resolve(desktopRoot, 'package.json'));
+const {chromium} = require('playwright');
+const browser = await chromium.launch({headless:true,channel:'chrome'});
+const page = await browser.newPage({viewport:{width:390,height:600}});
+const requests=[]; const errors=[];
+page.on('request',r=>{if(/^https?:/.test(r.url())) requests.push(r.url());});
+page.on('pageerror',e=>errors.push(e.message));
+await page.goto(new URL('../assets/mermaid/index.html', import.meta.url).href);
+await page.waitForFunction(()=>typeof window.renderDiagram==='function');
+const sources=['flowchart TD\nA[开始]-->B[完成]','sequenceDiagram\nAlice->>Bob: 你好','classDiagram\nAnimal <|-- Duck','stateDiagram-v2\n[*] --> Active','pie\n"A": 40\n"B": 60','gantt\ndateFormat YYYY-MM-DD\nsection 项目\n开发 :2026-10-16, 3d','mindmap\n  root((中心))\n    分支'];
+let i=0;const results=[];
+for(const source of sources){await page.evaluate(async({source,generation})=>window.renderDiagram(source,generation),{source,generation:++i});const count=await page.locator('#graph svg').count();const error=await page.locator('#error').textContent();results.push({type:source.split('\n')[0],svg:count,error});if(count!==1||error)throw Error(JSON.stringify(results.at(-1)));}
+await page.evaluate(()=>window.renderDiagram('this is invalid Mermaid',100));
+if(await page.locator('#graph svg').count()!==1||!(await page.locator('#error').textContent()))throw Error('Invalid syntax did not preserve prior valid SVG');
+await page.evaluate(()=>window.renderDiagram('flowchart LR\nA[开始]-->B[完成]',101));
+fs.mkdirSync(outputDirectory, {recursive:true});
+await page.screenshot({path:path.join(outputDirectory, 'mermaid-preview-20261016.png')});
+const preserved = await page.locator('#graph').innerHTML();
+await page.evaluate(async () => {
+  const original = mermaid.render;
+  let release;
+  mermaid.render = async (...args) => {await new Promise(resolve => release=resolve);return original(...args);};
+  const pending = window.renderDiagram('flowchart TD\nOLD-->STALE', 200);
+  window.invalidateDiagram(201, false); release(); await pending;
+  mermaid.render = original;
+});
+if (await page.locator('#graph').innerHTML() !== preserved) throw Error('Stale SVG replaced latest graph');
+await page.evaluate(()=>window.renderDiagram('flowchart LR\nA["<img src=https://evil.test/image>"]-->B\nclick A "https://evil.test/link"',202));
+if(await page.locator('#graph img, #graph a[href]').count())throw Error('Diagram created active remote content: '+await page.locator('#graph img, #graph a[href]').evaluateAll(nodes=>nodes.map(n=>n.outerHTML)));
+await page.evaluate(()=>window.renderDiagram('',203));
+if(await page.locator('#graph svg').count()!==0)throw Error('Empty source did not clear graph');
+const result={results,invalidPreserves:true,emptyClears:true,staleSuppressed:true,activeLinksRemoved:true,requests,errors};
+if(requests.length || errors.length) throw Error(JSON.stringify(result));
+fs.writeFileSync(path.join(outputDirectory,'mermaid-browser-20261016.json'),JSON.stringify(result,null,2)+'\n');
+console.log(JSON.stringify(result));
+await browser.close();

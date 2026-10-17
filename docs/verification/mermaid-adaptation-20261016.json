@@ -1,0 +1,124 @@
+{
+  "date": "2026-10-16",
+  "scope": "Mermaid第一阶段移动适配；不修改桌面依赖或FRB签名，不操作在线文档。",
+  "versions": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "registry_latest": "0.11.21",
+    "desktop_declared": "0.11.21",
+    "desktop_locked": "0.11.21",
+    "desktop_installed": "0.11.17",
+    "queried_before_implementation": true,
+    "published_tarball_sha256": "4816cdd15eff7a8e8e8f9ba83feacb8552f3711677738ce2d91c96ab4abbe208",
+    "read": [
+      "0.11.17/0.11.21: ai-skills/blockcraft.md, blockcraft-block.md, MIGRATIONS.md",
+      "0.11.17/0.11.21: MermaidBlockSchema/MermaidTextareaBlockSchema, MermaidBlockComponent, MermaidVisualSession, snapshot preview"
+    ],
+    "difference": "两版均为mermaid容器和唯一mermaid-textarea/Y.Text源码；保留mode/spellcheck，按快照只展示图形及旧任务失效规则接入。最新版其余能力不计全量兼容。",
+    "runtime": {
+      "package": "mermaid",
+      "version": "11.13.0",
+      "source": "dist/mermaid.min.js",
+      "sha256": "3e2002bf333907fae7c1d6860bbc78f5da417bc70b64f3d2268581ba0ba8b96a",
+      "license": "MIT"
+    }
+  },
+  "capabilities": [
+    "根/高亮内插入；空正文替换、非空后插入、独立父子身份",
+    "源码草稿及离线实时预览；取消无写入；稳定身份/完整Delta冲突保护及重新加载",
+    "整块删除/下方插入/独立撤销重做；最后兄弟补空段落",
+    "原生Y.Text增量、Yrs双副本并发、真实FRB与SQLite重开",
+    "严格模式、禁外连CSP、无活跃链接/图片；无CDN；渲染/加载代次保护及定时器释放",
+    "异常对象/结构/超限源码整棵占位，其他正文仍可编辑"
+  ],
+  "validation": {
+    "dart_format": "所有新增及修改的手写文件执行；保留既有文件无关区域原格式。",
+    "package_analyze": {
+      "command": "flutter analyze --no-pub",
+      "result": "No issues found"
+    },
+    "host_analyze": {
+      "command": "flutter analyze --no-pub lib",
+      "result": "No issues found"
+    },
+    "package_tests": {
+      "command": "flutter test --no-pub",
+      "passed": 1147,
+      "failed": 0,
+      "new_tests": 17,
+      "includes": "13项模型/Widget、3项平台生命周期及1项真实FRB/SQLite"
+    },
+    "host_tests": {
+      "command": "flutter test --no-pub",
+      "passed": 56,
+      "failed": 0
+    },
+    "rust": {
+      "commands": [
+        "cargo fmt --check",
+        "cargo check",
+        "cargo test",
+        "cargo build"
+      ],
+      "passed": 90,
+      "new_tests": 4,
+      "failed": 0
+    },
+    "browser": {
+      "command": "node tool/verify_mermaid_preview.mjs /path/to/cses-client /path/to/verification",
+      "result": "passed",
+      "evidence": "mermaid-browser-20261016.json",
+      "screenshot": "mermaid-preview-20261016.png"
+    },
+    "android": {
+      "command": "flutter drive --driver packages/cses_document_collab/test_driver/integration_test.dart --target packages/cses_document_collab/integration_test/mermaid_test.dart -d A92G6R5704004108 --no-pub --keep-app-running",
+      "result": "passed",
+      "device": "HONOR X70 / MTN-AN00 / Android16",
+      "functional_cases": 14,
+      "runner_total_including_hooks": 16,
+      "duration": "21s",
+      "log": "mermaid-android-20261016.txt",
+      "scope": "13个模型/真实页面场景；1个真实Android WebView场景内验证七种图表、语法失败保留有效图和空源码清图。页面用本地适配器，不代表Android在线FRB协同联调。"
+    },
+    "ios_native": {
+      "command": "packages/cses_document_collab/tool/build_rust_ios.sh debug",
+      "result": "passed",
+      "targets": [
+        "aarch64-apple-ios",
+        "aarch64-apple-ios-sim",
+        "x86_64-apple-ios"
+      ],
+      "scope": "仅三架构原生库/XCFramework重建；未运行iOS应用或设备验收"
+    },
+    "fixture": {
+      "command": "node tool/generate_mermaid_fixture.mjs /path/to/published-0.11.21 /path/to/cses-client",
+      "source": "实际发布Schema和纯文本工厂；Yjs13正式共享类型编码",
+      "sha256": "7e272baaace61412015c9c89ef58d6047a737212815b130d93bed6bdd1e50b54"
+    },
+    "diff_check": "git diff --check passed",
+    "normal_apk": {
+      "command": "flutter build apk --debug --no-pub",
+      "result": "passed",
+      "duration": "72.5s",
+      "sha256": "9462338ef65c0470e66353f54e600b98cb1b253e35a60dc4147450b76fdfca8c",
+      "installed": true,
+      "target": "lib/main.dart"
+    }
+  },
+  "data_preservation": {
+    "user_data_files_checked": 8,
+    "changed_after_device_tests": [],
+    "baseline_manifest_sha256": "f8669f10590013ec2f94b34ecc357cf84c80b62b04a08ce5875ad92e15aa2645",
+    "excluded": "安装产生的profileInstalled、app_flutter代码快照和资源时间戳，不属于用户数据。",
+    "normal_demo_restore": "passed: rebuilt ordinary lib/main.dart APK, adb install -r, launched MainActivity; no uninstall/data clear",
+    "changed_after_install": [],
+    "changed_after_normal_launch": []
+  },
+  "limitations": [
+    "部分支持，41块当前统计13已适配/12部分/1结构/15未适配",
+    "可视化节点/标签编辑、全屏缩放、SVG导出、共享显示模式、Markdown导入未接入",
+    "删除撤销只恢复投影内容/身份，不保证未投影属性、旧mode和审计数据恢复",
+    "现有AppFlowy不对历史完整OT；远端源码/格式或含绘图文档结构变化清空整个编辑器路径历史及选区，避免陈旧偏移覆盖远端内容；普通非结构正文/属性保留历史",
+    "其他Mermaid语法、外部图片/活跃链接、超大文档内多绘图性能未验收",
+    "在线桌面双向/重连/持久化ACK、iOS设备与人工真实输入法未验收"
+  ]
+}

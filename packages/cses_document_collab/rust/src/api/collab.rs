@@ -1,7 +1,7 @@
 use once_cell::sync::Lazy;
 use parking_lot::Mutex;
 use rusqlite::{params, Connection};
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::fs;
 use std::path::Path;
 use yrs::sync::{Awareness, AwarenessUpdate, Message, SyncMessage};
@@ -1255,7 +1255,15 @@ fn schema_attribute(key: &str, formal: bool) -> &str {
 }
 
 /// 在事务之前验证投影身份、父子顺序和块专属约束，失败不会修改共享状态。
+/// Mermaid 使用唯一的纯文本源码子块，容器及源码仅用于正式文档。
 fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(), String> {
+    let by_id: HashMap<_, _> = blocks.iter().map(|b| (b.id.as_str(), b)).collect();
+    let mut by_parent = HashMap::<&str, Vec<&CollabBlock>>::new();
+    for block in blocks {
+        if let Some(parent) = block.parent_id.as_deref() {
+            by_parent.entry(parent).or_default().push(block);
+        }
+    }
     let mut ids = HashSet::new();
     let mut ancestors = Vec::<&str>::new();
     for block in blocks {
@@ -1299,14 +1307,14 @@ fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(
         }
         if matches!(
             block.block_type.as_str(),
-            "table" | "table-row" | "table-cell"
+            "table" | "table-row" | "table-cell" | "mermaid" | "mermaid-textarea"
         ) && !allow_placeholders
         {
-            return Err("UNSUPPORTED_BLOCK_TYPE: 表格仅用于正式文档".into());
+            return Err("UNSUPPORTED_BLOCK_TYPE: 表格和代码绘图仅用于正式文档".into());
         }
         if matches!(
             block.block_type.as_str(),
-            "callout" | "table" | "table-row" | "table-cell"
+            "callout" | "table" | "table-row" | "table-cell" | "mermaid"
         ) {
             if !block.text.is_empty() || !block.segments.is_empty() || ancestors.len() >= 256 {
                 return Err("INVALID_CALLOUT: 高亮容器不能直接存储正文或超出嵌套限制".into());
@@ -1317,6 +1325,29 @@ fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(
         }
         if block.callout_prefix.as_ref().is_some_and(|v| v.len() > 256) {
             return Err("INVALID_CALLOUT: 表情过长".into());
+        }
+        if block.block_type == "mermaid" {
+            let children = by_parent
+                .get(block.id.as_str())
+                .map_or(&[][..], Vec::as_slice);
+            if children.len() != 1 || children[0].block_type != "mermaid-textarea" {
+                return Err("INVALID_MERMAID: 绘图必须包含一个源码子块".into());
+            }
+        }
+        if block.block_type == "mermaid-textarea" {
+            if !block
+                .parent_id
+                .as_ref()
+                .and_then(|id| by_id.get(id.as_str()))
+                .is_some_and(|b| b.block_type == "mermaid")
+                || block.text.encode_utf16().count() > 100_000
+                || block
+                    .segments
+                    .iter()
+                    .any(|s| s.inline_latex.is_some() || s.inline_mention.is_some())
+            {
+                return Err("INVALID_MERMAID: 源码父块、长度或内容无效".into());
+            }
         }
         if !is_supported_block_type(&block.block_type)
             && !(allow_placeholders && block.block_type == blockcraft::UNSUPPORTED_BLOCK_TYPE)
@@ -1422,6 +1453,8 @@ fn is_supported_block_type(block_type: &str) -> bool {
             | "quote"
             | "code"
             | "callout"
+            | "mermaid"
+            | "mermaid-textarea"
             | "table"
             | "table-row"
             | "table-cell"

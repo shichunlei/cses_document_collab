@@ -1,0 +1,189 @@
+{
+  "date": "2026-10-17",
+  "scope": "Android真机与真实桌面三种Mermaid视图逐项双向在线联调",
+  "status": "passed_all_six_directional_cases",
+  "document_id": "6ad06c992a6b14f42c256937",
+  "diagram_id": "Rr5KIHuRKFqDUpvdbM",
+  "source_id": "ljZSdTrW8VRmmcj1oV",
+  "baseline_mode": "text",
+  "baseline_source_sha256": "92d8df6e6fbe0dbf188df0960c93845c2cb9386af499bd6648eb01b1de605d9e",
+  "versions": {
+    "registry_latest": "0.11.21",
+    "desktop_declared": "0.11.21",
+    "desktop_locked": "0.11.21",
+    "desktop_installed": "0.11.17",
+    "queried_before_testing": true,
+    "read": "两版随包技能、迁移及mode=text/graph/default菜单、共享属性实现"
+  },
+  "method": "用户已明确指定ADB操作手机；真实桌面由用户观察和操作，证据与手机截图/SQLite原始CRDT回读区分记录",
+  "cases": [
+    {
+      "direction": "mobile_to_desktop",
+      "mode": "graph",
+      "result": "passed_user_confirmed",
+      "screenshot": "mermaid-view-sync-mobile-graph-20261017.png",
+      "sqlite": {
+        "phase": "mobile-graph",
+        "mode": "graph",
+        "sourceId": "ljZSdTrW8VRmmcj1oV",
+        "sourceUnchanged": true,
+        "sourceHash": "325fa10a170e9108ec914de803a65ce0e06e49f1483865888d6fec0b2ca0caad",
+        "unchangedExceptModeAndAudit": true,
+        "changes": [
+          {
+            "id": "Rr5KIHuRKFqDUpvdbM",
+            "flavour": "mermaid",
+            "fields": [
+              "props"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "direction": "desktop_to_mobile",
+      "mode": "default",
+      "result": "passed_mobile_UI_and_SQLite",
+      "screenshot": "mermaid-view-sync-desktop-both-confirmed-20261017.png",
+      "sqlite": {
+        "phase": "desktop-both-confirmed",
+        "mode": "default",
+        "sourceId": "ljZSdTrW8VRmmcj1oV",
+        "sourceUnchanged": true,
+        "sourceHash": "325fa10a170e9108ec914de803a65ce0e06e49f1483865888d6fec0b2ca0caad",
+        "unchangedExceptModeAndAudit": true,
+        "changes": [
+          {
+            "id": "Rr5KIHuRKFqDUpvdbM",
+            "flavour": "mermaid",
+            "fields": [
+              "meta",
+              "props"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "direction": "mobile_to_desktop",
+      "mode": "text",
+      "result": "passed_user_confirmed",
+      "screenshot": "mermaid-view-sync-mobile-text-20261017.png",
+      "sqlite": {
+        "phase": "mobile-text",
+        "mode": "text",
+        "sourceId": "ljZSdTrW8VRmmcj1oV",
+        "sourceUnchanged": true,
+        "sourceHash": "325fa10a170e9108ec914de803a65ce0e06e49f1483865888d6fec0b2ca0caad",
+        "unchangedExceptModeAndAudit": true,
+        "changes": [
+          {
+            "id": "Rr5KIHuRKFqDUpvdbM",
+            "flavour": "mermaid",
+            "fields": [
+              "meta"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "direction": "desktop_to_mobile",
+      "mode": "graph",
+      "result": "passed_mobile_UI_and_SQLite",
+      "screenshot": "mermaid-view-sync-desktop-graph-20261017.png",
+      "sqlite": {
+        "phase": "desktop-graph",
+        "mode": "graph",
+        "sourceId": "ljZSdTrW8VRmmcj1oV",
+        "sourceUnchanged": true,
+        "sourceHash": "325fa10a170e9108ec914de803a65ce0e06e49f1483865888d6fec0b2ca0caad",
+        "unchangedExceptModeAndAudit": true,
+        "changes": [
+          {
+            "id": "Rr5KIHuRKFqDUpvdbM",
+            "flavour": "mermaid",
+            "fields": [
+              "meta",
+              "props"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "direction": "mobile_to_desktop",
+      "mode": "default",
+      "result": "passed_user_confirmed",
+      "screenshot": "mermaid-view-sync-mobile-both-20261017.png",
+      "sqlite": {
+        "phase": "mobile-both",
+        "mode": "default",
+        "sourceId": "ljZSdTrW8VRmmcj1oV",
+        "sourceUnchanged": true,
+        "sourceHash": "325fa10a170e9108ec914de803a65ce0e06e49f1483865888d6fec0b2ca0caad",
+        "unchangedExceptModeAndAudit": true,
+        "changes": [
+          {
+            "id": "Rr5KIHuRKFqDUpvdbM",
+            "flavour": "mermaid",
+            "fields": [
+              "meta",
+              "props"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "direction": "desktop_to_mobile",
+      "mode": "text",
+      "result": "passed_mobile_UI_and_SQLite",
+      "screenshot": "mermaid-view-sync-desktop-text-restored-20261017.png",
+      "sqlite": {
+        "phase": "final-pending",
+        "mode": "text",
+        "sourceId": "ljZSdTrW8VRmmcj1oV",
+        "sourceUnchanged": true,
+        "sourceHash": "325fa10a170e9108ec914de803a65ce0e06e49f1483865888d6fec0b2ca0caad",
+        "unchangedExceptModeAndAudit": true,
+        "changes": [
+          {
+            "id": "Rr5KIHuRKFqDUpvdbM",
+            "flavour": "mermaid",
+            "fields": [
+              "meta"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "production_code_changed": false,
+  "server_persistence_ack": "not_verified",
+  "cleanup": "原时序图已恢复mode=text，没有新增测试块或修改源码；保留正常登录与在线状态",
+  "observations": [
+    "桌面确认收到手机graph后，手机本地更新记录依次收到远端text→graph→default→text；截屏时最终状态text。待桌面保持default再核对实际组合布局。",
+    "桌面稳定选择default后，手机源码/图形同时可见，原生mode=default；随后手机text到桌面、桌面graph回手机均通过。最初不一致为桌面连续切换后的最终状态text，不判定为缺陷。"
+  ],
+  "views_segment_sha256": "cbd9d5d82853dc50bf58c4e2f7d1006ae8b3762c5c9cfedbe7e17eb459bf8f78",
+  "final_validation": {
+    "mode": "text",
+    "original_mode_restored": true,
+    "phone_online": true,
+    "source_displayed": true,
+    "graph_hidden": true,
+    "source_full_delta_and_attributes_unchanged": true,
+    "all_blocks_except_mode_and_audit_unchanged": true,
+    "final_difference": "原绘图meta.mt修改时间；原mode已恢复，其他属性/源码/父子结构/块身份保持",
+    "cases_passed": 6,
+    "cases_failed": 0,
+    "source_or_block_edits_performed": false
+  },
+  "limitations": [
+    "本轮覆盖指定文档现有时序图的三种mode切换；不代表所有块和语法的在线验收",
+    "不验证真实断网/离线重连、两端同一时刻并发切换、iOS或服务端逐更新持久化ACK",
+    "桌面UI证据来自用户逐项确认；手机画面和SQLite原始CRDT数据由工具核对"
+  ],
+  "git_diff_check": "passed"
+}

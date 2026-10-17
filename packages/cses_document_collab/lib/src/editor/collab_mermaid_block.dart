@@ -1,0 +1,271 @@
+import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
+import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/src/editor/collab_mermaid_sheet.dart';
+import 'package:cses_document_collab/src/editor/collab_mermaid_visual.dart';
+import 'package:cses_document_collab/src/model/collab_mermaid.dart';
+import 'package:cses_document_collab/src/model/collab_mermaid_options.dart';
+import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
+import 'package:cses_document_collab/src/native/collab_runtime.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+/// 为正式 mermaid 注册可选中的容器组件；点击打开独立源码子块的编辑面板。
+/// ```dart
+/// import 'package:cses_document_collab/src/editor/collab_mermaid_block.dart';
+/// final builder = CollabMermaidBlockComponentBuilder();
+/// // 在 AppFlowyEditor 的 blockComponentBuilders 中以 'mermaid' 注册。
+/// ```
+class CollabMermaidBlockComponentBuilder extends BlockComponentBuilder {
+  /// 创建无资源所有权的代码绘图组件工厂，编辑器由页面持有。
+  CollabMermaidBlockComponentBuilder();
+
+  /// 校验容器无正文且只有一个正式源码子块。
+  @override
+  BlockComponentValidate get validate =>
+      (node) => node.delta == null && collabMermaidSource(node) != null;
+
+  /// 使用借用 [context] 的节点与配置创建组件，不写入共享属性。
+  @override
+  BlockComponentWidget build(BlockComponentContext context) => _MermaidBlock(
+    key: context.node.key,
+    node: context.node,
+    configuration: configuration,
+  );
+}
+
+/// 借用容器节点展示子源码；预览子组件拥有平台视图。
+class _MermaidBlock extends BlockComponentStatefulWidget {
+  /// [key] 控制身份与状态复用，[node] 与 [configuration] 均由编辑器持有。
+  const _MermaidBlock({
+    super.key,
+    required super.node,
+    required super.configuration,
+  });
+
+  /// 创建整块选区代理，编辑器仍由调用方持有。
+  @override
+  State<_MermaidBlock> createState() => _MermaidBlockState();
+}
+
+/// 为无正文块提供完整矩形选区与远端选中展示。
+class _MermaidBlockState extends State<_MermaidBlock> with SelectableMixin {
+  /// 内部视觉边界，随本 Widget 释放，不绑定编辑输入。
+  final _bodyKey = GlobalKey();
+
+  /// 按稳定 [id] 将借用 [editor] 的共享视图切换为 [view]。
+  /// 菜单退场后重新核对权限和目标，关闭输入并等待独立事务，失败提示且不上抛未处理异步错误。
+  Future<void> _switchView(
+    EditorState editor,
+    String id,
+    CollabMermaidView view,
+  ) async {
+    try {
+      await runEditorHeaderAction<void>(context, editor, () async {
+        await changeCollabMermaidView(editor, id, view);
+      });
+    } catch (error, stack) {
+      CollabDiagnostics.report(
+        '切换绘图视图失败',
+        error: error,
+        stackTrace: stack,
+        tag: 'DocCollab',
+      );
+      if (mounted) {
+        ScaffoldMessenger.maybeOf(
+          context,
+        )?.showSnackBar(const SnackBar(content: Text('切换视图失败，请重试')));
+      }
+    }
+  }
+
+  /// 在借用 [context] 内按共享 mode 展示源码、图形或两者，监听远端属性和源码更新。
+  @override
+  Widget build(BuildContext context) {
+    final editor = context.read<EditorState>();
+    final node = widget.node;
+    final id = node.attributes['cses_collab_block_id'] as String? ?? node.id;
+    final source = collabMermaidSource(node)!;
+    final child = ListenableBuilder(
+      listenable: Listenable.merge([node, source, editor.editableNotifier]),
+      builder: (context, _) {
+        final view = collabMermaidView(node);
+        return Semantics(
+          label: '代码绘图',
+          button: editor.editable,
+          readOnly: !editor.editable,
+          child: ExcludeFocus(
+            child: GestureDetector(
+              key: ValueKey('collab-mermaid-$id'),
+              behavior: HitTestBehavior.opaque,
+              onTap: editor.editable
+                  ? () async {
+                      await showCollabMermaidEditor(context, editor, id);
+                    }
+                  : null,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (editor.editable)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 40),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: TextButton.icon(
+                                key: ValueKey('mermaid-edit-$id'),
+                                onPressed: () => showCollabMermaidEditor(
+                                  context,
+                                  editor,
+                                  id,
+                                ),
+                                icon: const Icon(Icons.code, size: 18),
+                                label: const Text('编辑源码'),
+                              ),
+                            ),
+                          ),
+                          PopupMenuButton<CollabMermaidView>(
+                            key: ValueKey('mermaid-view-$id'),
+                            tooltip: '切换视图：${view.label}',
+                            initialValue: view,
+                            onSelected: (value) async {
+                              await _switchView(editor, id, value);
+                            },
+                            icon: const Icon(Icons.swap_horiz),
+                            itemBuilder: (_) => [
+                              for (final mode in CollabMermaidView.values)
+                                PopupMenuItem(
+                                  value: mode,
+                                  child: Text(mode.label),
+                                ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  if (view != CollabMermaidView.graph)
+                    Container(
+                      key: ValueKey('mermaid-source-view-$id'),
+                      constraints: const BoxConstraints(maxHeight: 240),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.surfaceContainerLow,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: SingleChildScrollView(
+                        child: Text(
+                          source.delta!.toPlainText(),
+                          style: const TextStyle(
+                            fontFamily: 'monospace',
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                  if (view != CollabMermaidView.text)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: CollabMermaidVisual(
+                        key: ValueKey('collab-mermaid-visual-$id'),
+                        source: source.delta!.toPlainText(),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+    return BlockSelectionContainer(
+      node: node,
+      delegate: this,
+      listenable: editor.selectionNotifier,
+      remoteSelection: editor.remoteSelections,
+      blockColor: editor.editorStyle.selectionColor,
+      supportTypes: const [BlockSelectionType.block],
+      selectionAboveBlock: true,
+      child: KeyedSubtree(
+        key: _bodyKey,
+        child: Stack(
+          children: [
+            child,
+            Positioned(
+              top: 0,
+              right: 0,
+              child: CollabBlockMoreButton(
+                key: ValueKey('block-more-$id'),
+                editor: editor,
+                node: node,
+                protectSubtree: true,
+                actions: [
+                  (
+                    label: '删除代码绘图',
+                    key: ValueKey('mermaid-delete-$id'),
+                    run: () => deleteCollabMermaid(editor, id),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 返回当前节点的整块起点。
+  @override
+  Position start() => Position(path: widget.node.path);
+
+  /// 返回当前节点的整块终点（虚拟偏移 1）。
+  @override
+  Position end() => Position(path: widget.node.path, offset: 1);
+
+  /// [offset] 无文本对应关系，任意命中选择整块终点。
+  @override
+  Position getPositionInOffset(Offset offset) => end();
+
+  /// 无正文光标不闪烁。
+  @override
+  bool get shouldCursorBlink => false;
+
+  /// 整块选择覆盖视觉区域。
+  @override
+  CursorStyle get cursorStyle => CursorStyle.cover;
+
+  /// 返回块在组件内的矩形；[shiftWithBaseOffset] 沿用组件局部原点。
+  @override
+  Rect getBlockRect({bool shiftWithBaseOffset = false}) {
+    final outer = context.findRenderObject();
+    final inner = _bodyKey.currentContext?.findRenderObject();
+    if (outer is! RenderBox || inner is! RenderBox) return Rect.zero;
+    return inner.localToGlobal(Offset.zero, ancestor: outer) & inner.size;
+  }
+
+  /// [position] 命中整块，[shiftWithBaseOffset] 保持组件内坐标约定。
+  @override
+  Rect? getCursorRectInPosition(
+    Position position, {
+    bool shiftWithBaseOffset = false,
+  }) => getBlockRect();
+
+  /// [selection] 对应完整矩形，[shiftWithBaseOffset] 保持组件内坐标约定。
+  @override
+  List<Rect> getRectsInSelection(
+    Selection selection, {
+    bool shiftWithBaseOffset = false,
+  }) => [getBlockRect()];
+
+  /// [start]/[end] 的拖动范围总是映射为无正文块的完整选区。
+  @override
+  Selection getSelectionInRange(Offset start, Offset end) =>
+      Selection.single(path: widget.node.path, startOffset: 0, endOffset: 1);
+
+  /// 将 [offset] 转为全局坐标，[shiftWithBaseOffset] 不改变组件原点约定。
+  @override
+  Offset localToGlobal(Offset offset, {bool shiftWithBaseOffset = false}) =>
+      (context.findRenderObject() as RenderBox).localToGlobal(offset);
+}

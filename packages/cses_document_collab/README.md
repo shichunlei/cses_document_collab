@@ -411,6 +411,16 @@ flutter drive --driver packages/cses_document_collab/test_driver/integration_tes
 
 设备用例保留真机实际视口并检查移动选区服务；使用临时测试正文，不登录或访问正式文档。运行后按上文约定重新构建普通 Demo，并以 `adb install -r` 覆盖恢复，保留既有应用数据。代码块不附加段落专用历史标记；弹窗退出恢复选区时只临时抑制划词浮栏，归还原选区附加信息，后续用户划词仍可显示菜单。
 
+### 三项格式修复与划词真机验证
+
+`integration_test/editor_review_fixes_test.dart` 在Android设备运行发布字号对照与划词回归，另通过真实页面输入连接验证远端清除/替换默认格式后的实际输入和撤销。包含本地类型转换后继续格式化、远端变化保护，以及长按菜单、文字链接、选中文字转行内公式。使用隔离测试正文，不初始化账号或原生协同数据库；IME及触摸事件由测试注入，不替代人工输入法验收。
+
+```bash
+flutter drive --driver packages/cses_document_collab/test_driver/integration_test.dart --target packages/cses_document_collab/integration_test/editor_review_fixes_test.dart -d ANDROID_DEVICE_ID --no-pub --keep-app-running
+```
+
+安装前可在应用停止后保留私有数据备份与文件校验值；验证后重新构建普通Demo，以`adb install -r`覆盖安装，禁止卸载或清数据。核对已有偏好与协同SQLite文件未丢失或改变，再启动正常入口；Flutter调试内核、资源时间戳与安装标记不属于用户数据。执行结果与设备范围见[真机验证记录](../../docs/verification/editor-review-fixes-device-20261016.json)。
+
 ### BlockCraft 0.11.20 段落默认格式与下一段
 
 正文段落/标题、三类列表和引用支持 `textDefaults` 与 `nextParagraphStyle`。空段落 Aa 格式、整段格式和删空后的共同格式与正文同事务保存；字体/字号/字距随输入往返，链接和业务身份不会成为段落默认值。布局面板可选择下一段按默认规则、延续样式或回正文；段中保留样式，段尾标题/引用默认回正文并清理字符及布局覆盖。Undo/Redo 同时恢复本地输入格式，空段落重开后继续使用共享默认格式。
@@ -430,3 +440,15 @@ node packages/cses_document_collab/tool/generate_paragraph_oracle.mjs /path/to/e
 ### 附件卡片布局
 
 附件使用浅底边框卡片，左侧显示按文件类型配色的图标，右侧突出文件名（最多两行）和类型/大小。文件名缺失时使用链接中的文件名，仍为空时显示“未命名附件”；大小按B、KB、MB、GB、TB显示，0字节显示0 B，缺失或无效大小显示“大小未知”。窄屏和大字号下允许元信息换行，空间极窄时图标与信息上下排列。打开、修改、删除和下方插入仍统一在更多菜单中，不改共享属性。
+
+## Mermaid代码绘图
+
+正式文档支持`mermaid`容器与唯一`mermaid-textarea`源码子块；更多插入面板提供“代码绘图”，点击“编辑源码”打开草稿与实时预览。支持根/高亮内插入、更多菜单下方插入与删除、独立撤销/重做、草稿冲突重载及只读/删除保护；取消不写入。源码最多100000 UTF-16单元，写入正式Y.Text，真实FRB与SQLite恢复沿用既有接口，未增加桥接字段。
+
+离线绘图资源位于`assets/mermaid`，MIT许可证随包保留。运行时固定Mermaid11.13.0，版本/哈希见`runtime.json`；更新使用`node tool/sync_mermaid_runtime.mjs /path/to/cses-client`，版本变化须先审查。运行时不使用CDN或外部绘图服务，禁止图表链接、脚本和外部图片；语法错误保留源码及上一张有效图。源码变化去抖，旧渲染及销毁后的回调失效。测试样本可使用`tool/generate_mermaid_fixture.mjs`从0.11.21发布Schema重生成，浏览器验证使用`tool/verify_mermaid_preview.mjs`。
+
+源码面板提供五类“类型”和“模板”：时序、流程、类图、思维导图、时间线，采用桌面发布源码；类型在草稿开头插入语法前缀，模板替换草稿全文。正文与面板均支持仅文本/仅预览/文本与预览，组合视图在手机上下排列；正文源码只读显示，点击编辑源码打开完整编辑面板。新建面板默认组合视图；取消不写入，保存将源码与主动选择的mode作为一个可撤销事务提交。正文切换视图是独立可撤销事务。
+
+共享mode沿用`props.mode=text/graph/default`，由现有CollabResource单字段补丁承载，没有新增FRB签名。缺失/null/未知mode仅在展示时回落为组合视图，普通源码编辑不归一化；旧调用未指定插入视图时仍默认graph。远端mode变化也会使打开的草稿冲突并清除过期历史；重新加载同时更新源码和模式。2026-10-17已完成真实桌面与Android现有时序图三种mode的双向在线联调，共6项通过；最终恢复原text模式，完整源码Delta/属性及树结构保持，仅绘图修改时间更新，见根仓库`docs/verification/mermaid-view-sync-20261017.json`。不代表真实断网、同时并发、iOS或服务端持久化ACK通过。
+
+本阶段仍部分支持：不提供可视化节点/标签编辑、全屏缩放、SVG导出或Markdown导入。远端源码/格式/mode或含绘图文档的结构变化清空编辑器路径历史与选区；普通非结构正文属性更新保持历史。删除撤销恢复投影内容/身份和有效mode，不保证未投影属性、未知/非法模式或审计数据恢复。异常结构保持整棵占位。完整验证见根仓库`docs/verification/mermaid-options-20261017.json`及`docs/block-adaptation.md`。

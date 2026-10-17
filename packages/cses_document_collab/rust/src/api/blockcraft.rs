@@ -555,6 +555,33 @@ fn validate_tables(desired: &[CollabBlock]) -> Result<(), String> {
     Ok(())
 }
 
+/// Mermaid 只接受一个纯文本源码子块；异常或对象内容整棵保留为占位。
+fn supported_mermaid<T: ReadTxn>(block: &MapRef, blocks: &MapRef, txn: &T) -> bool {
+    let ids = children(block, txn);
+    if ids.len() != 1 {
+        return false;
+    }
+    let Some(source) = map(blocks, txn, &ids[0]) else {
+        return false;
+    };
+    if map(&source, txn, "props").is_none() {
+        return false;
+    }
+    if out_string(source.get(txn, "flavour")).as_deref() != Some("mermaid-textarea")
+        || out_string(source.get(txn, "nodeType")).as_deref() != Some("editable")
+    {
+        return false;
+    }
+    let Some(Out::YText(text)) = source.get(txn, "children") else {
+        return false;
+    };
+    text.get_string(txn).encode_utf16().count() <= 100_000
+        && text
+            .diff(txn, |_| ())
+            .iter()
+            .all(|chunk| matches!(&chunk.insert, Out::Any(Any::String(_))))
+}
+
 /// 将正式 flavour/props 转为手机可编辑类型；不支持的类型返回 None，不降级写回 paragraph。
 fn mobile_type<T: ReadTxn>(block: &MapRef, props: &MapRef, txn: &T) -> Option<String> {
     let flavour = out_string(block.get(txn, "flavour"))?;
@@ -568,9 +595,8 @@ fn mobile_type<T: ReadTxn>(block: &MapRef, props: &MapRef, txn: &T) -> Option<St
         "todo" => "todo_list".to_owned(),
         "blockquote" => "quote".to_owned(),
         "table" | "table-row" | "table-cell" => flavour,
-        "code" | "image" | "video" | "callout" | "divider" | "formula" | "meeting" | "task" => {
-            flavour
-        }
+        "code" | "image" | "video" | "callout" | "mermaid" | "mermaid-textarea" | "divider"
+        | "formula" | "meeting" | "task" => flavour,
         s if is_resource_block_type(s) => flavour,
         _ => return None,
     })
@@ -628,10 +654,11 @@ fn is_divider_style(style: &str) -> bool {
     )
 }
 
-/// 已适配块的属性白名单；表格布局通过显式补丁写入，会议/任务/分割线/公式不使用资源 URL。
+/// 已适配块的属性白名单；表格布局通过显式补丁写入，会议/任务/分割线/公式/绘图不使用资源 URL。
 fn resource_keys(kind: &str) -> &'static [&'static str] {
     match kind {
         "formula" => &["latex"],
+        "mermaid" => &["mode"],
         "meeting" => &["meetingId", "title", "number"],
         "task" => &["taskId", "title"],
         "table" => &["colWidths"],
@@ -717,7 +744,7 @@ fn parse_resource_edit(
         if !resource_keys(kind).contains(&key.as_str())
             && (initial
                 || key != "url"
-                || matches!(kind, "divider" | "formula" | "meeting" | "task"))
+                || matches!(kind, "divider" | "formula" | "meeting" | "task" | "mermaid"))
         {
             return Err(fail());
         }
@@ -768,6 +795,15 @@ fn parse_resource_edit(
                     _ => false,
                 };
                 if !valid {
+                    return Err(fail());
+                }
+                result.insert(key.clone(), value);
+                continue;
+            }
+            if kind == "mermaid" {
+                if !matches!(v, Any::Null)
+                    && !matches!(v, Any::String(mode) if matches!(mode.as_ref(), "text" | "graph" | "default"))
+                {
                     return Err(fail());
                 }
                 result.insert(key.clone(), value);
@@ -982,6 +1018,21 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
             result.blocks.push(placeholder(id, parent_id));
             continue;
         }
+        if kind == "mermaid" && !supported_mermaid(&block, &blocks, &txn) {
+            result.blocks.push(placeholder(id, parent_id));
+            continue;
+        }
+        if kind == "mermaid-textarea"
+            && !parent_id
+                .as_ref()
+                .and_then(|id| map(&blocks, &txn, id))
+                .is_some_and(|parent| {
+                    out_string(parent.get(&txn, "flavour")).as_deref() == Some("mermaid")
+                })
+        {
+            result.blocks.push(placeholder(id, parent_id));
+            continue;
+        }
         if kind == "table" && !supported_table(&block, &blocks, &txn) {
             result.blocks.push(placeholder(id, parent_id));
             continue;
@@ -992,7 +1043,9 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
         let is_media = matches!(kind.as_str(), "image" | "video");
         match block.get(&txn, "children") {
             Some(Out::YArray(_))
-                if (kind == "callout" || is_table_container(&kind)) && node_type == "block" =>
+                if (matches!(kind.as_str(), "callout" | "mermaid")
+                    || is_table_container(&kind))
+                    && node_type == "block" =>
             {
                 let ids = children(&block, &txn);
                 ordered.extend(ordered_projection(&blocks, &txn, &ids));
@@ -1026,6 +1079,7 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                     && !is_media
                     && !is_resource_block_type(&kind)
                     && kind != "callout"
+                    && kind != "mermaid"
                     && kind != "divider"
                     && kind != "formula"
                     && kind != "meeting"
@@ -1033,7 +1087,7 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
             {
                 if value.diff(&txn, |_| ()).iter().any(|c| {
                     !matches!(&c.insert, Out::Any(Any::String(_)))
-                        && (kind == "code"
+                        && (matches!(kind.as_str(), "code" | "mermaid-textarea")
                             || inline_embed(&c.insert, c.attributes.as_deref()).is_none())
                 }) {
                     // 整段作为不透明块保留，避免普通文字投影丢失对象或其业务属性。
@@ -1119,7 +1173,10 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
             }),
             resource: (is_resource_block_type(&kind)
                 || is_table_container(&kind)
-                || matches!(kind.as_str(), "divider" | "formula" | "meeting" | "task"))
+                || matches!(
+                    kind.as_str(),
+                    "divider" | "formula" | "meeting" | "task" | "mermaid"
+                ))
             .then(|| CollabResource {
                 properties: resource_properties(&kind, &props, &txn),
                 property_edits: None,
@@ -1167,6 +1224,8 @@ fn formal_type(kind: &str) -> Option<(&str, bool)> {
         "quote" => ("blockquote", false),
         "code" => ("code", false),
         "callout" => ("callout", false),
+        "mermaid" => ("mermaid", false),
+        "mermaid-textarea" => ("mermaid-textarea", false),
         "table" => ("table", false),
         "table-row" => ("table-row", false),
         "table-cell" => ("table-cell", false),
@@ -1321,7 +1380,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
             if !is_resource_block_type(&block.block_type)
                 && !matches!(
                     block.block_type.as_str(),
-                    "divider" | "formula" | "meeting" | "task"
+                    "divider" | "formula" | "meeting" | "task" | "mermaid"
                 )
             {
                 return Err("INVALID_RESOURCE: 资源属性与块类型不符".into());
@@ -1378,7 +1437,8 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
             return Err("INVALID_BLOCK_CONVERSION: flavour 转换需要新块身份和 replacesId".into());
         }
         if old.is_some_and(|b| {
-            (b.block_type == "callout" || is_table_container(&b.block_type))
+            (matches!(b.block_type.as_str(), "callout" | "mermaid")
+                || is_table_container(&b.block_type))
                 && b.block_type != block.block_type
         }) {
             return Err("UNSUPPORTED_BLOCK_TYPE: 高亮容器不能直接转换为正文块".into());
@@ -1486,7 +1546,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
             .get(next.replaces_id.as_deref().unwrap_or(&next.id))
             .copied();
         if old == Some(next)
-            && next.block_type != "callout"
+            && !matches!(next.block_type.as_str(), "callout" | "mermaid")
             && !is_table_container(&next.block_type)
         {
             continue;
@@ -1544,7 +1604,9 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
                 meta.remove(&mut txn, "csesMobileTableDeleted");
             }
             // 未投影期间到达的远端正文仍是权威内容，撤销删除不能以旧UI快照覆盖它。
-            if !is_table_container(&next.block_type) && next.block_type != "callout" {
+            if !is_table_container(&next.block_type)
+                && !matches!(next.block_type.as_str(), "callout" | "mermaid")
+            {
                 continue;
             }
         }
@@ -1559,6 +1621,9 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
             props.insert(&mut txn, "depth", next.indent as i64);
             if flavour == "todo" {
                 props.insert(&mut txn, "created", now);
+            }
+            if flavour == "mermaid" {
+                props.insert(&mut txn, "mode", "graph");
             }
             if flavour == "code" {
                 // 新代码块可携带导入语言；既有代码语言仍仅通过显式属性补丁修改。
@@ -1583,7 +1648,8 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
             block.try_update(
                 &mut txn,
                 "nodeType",
-                if matches!(flavour, "image" | "callout") || is_table_container(flavour) {
+                if matches!(flavour, "image" | "callout" | "mermaid") || is_table_container(flavour)
+                {
                     "block"
                 } else if media {
                     "void"
@@ -1669,7 +1735,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
         {
             props.try_update(&mut txn, "checked", i64::from(next.checked));
         }
-        if is_table_container(flavour) {
+        if is_table_container(flavour) || flavour == "mermaid" {
             if let Some(edits) = resource_edits.get(&next.id) {
                 for (key, value) in edits {
                     if let Some(value) = value {
@@ -1680,7 +1746,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
                 }
             }
         }
-        if flavour == "callout" || is_table_container(flavour) {
+        if matches!(flavour, "callout" | "mermaid") || is_table_container(flavour) {
             let array = match block.get(&txn, "children") {
                 Some(Out::YArray(v)) => v,
                 _ => block.insert(
@@ -5553,5 +5619,280 @@ mod tests {
             out_string(props.get(&txn, "style")).as_deref(),
             Some("double")
         );
+    }
+    /// 发布版 Mermaid 的容器和源码共享类型保持独立，普通编辑不覆盖模式或扩展属性。
+    #[test]
+    fn mermaid_source_roundtrips_without_replacing_container_or_extensions() {
+        let mut e = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-mermaid.update"
+        ));
+        let before = e.blocks();
+        assert_eq!(
+            before.iter().filter(|b| b.block_type == "mermaid").count(),
+            2
+        );
+        assert_eq!(
+            before
+                .iter()
+                .find(|b| b.id == "mermaid-source-1")
+                .unwrap()
+                .parent_id
+                .as_deref(),
+            Some("mermaid-1")
+        );
+        assert_eq!(
+            before
+                .iter()
+                .find(|b| b.id == "nested-mermaid")
+                .unwrap()
+                .parent_id
+                .as_deref(),
+            Some("box")
+        );
+        let mut desired = before.clone();
+        desired
+            .iter_mut()
+            .find(|b| b.id == "mermaid-source-1")
+            .unwrap()
+            .text = "flowchart TD\nA[中文😀]-->C".into();
+        let update = e.apply_block_snapshot(desired.clone()).unwrap();
+        assert!(!update.v1_update.is_empty());
+        assert_eq!(e.blocks(), desired);
+        let blocks = e.doc.get_or_insert_map(ROOT_NAME);
+        let txn = e.doc.transact();
+        let outer = map(&blocks, &txn, "mermaid-1").unwrap();
+        let props = map(&outer, &txn, "props").unwrap();
+        assert_eq!(
+            out_string(props.get(&txn, "mode")).as_deref(),
+            Some("default")
+        );
+        assert!(props.get(&txn, "customDiagram").is_some());
+        assert_eq!(children(&outer, &txn), vec!["mermaid-source-1"]);
+        let source = map(&blocks, &txn, "mermaid-source-1").unwrap();
+        assert!(matches!(source.get(&txn, "children"), Some(Out::YText(_))));
+        assert!(map(&source, &txn, "props")
+            .unwrap()
+            .get(&txn, "customSource")
+            .is_some());
+        assert!(map(&outer, &txn, "meta")
+            .unwrap()
+            .get(&txn, "customAudit")
+            .is_some());
+    }
+
+    /// 同一源码的独立文本增量与其他正文修改在两个真实 Yrs 副本收敛。
+    #[test]
+    fn mermaid_concurrent_source_edits_converge() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-mermaid.update");
+        let mut phone = engine(fixture);
+        let mut desktop = engine(fixture);
+        let mut a = phone.blocks();
+        a.iter_mut()
+            .find(|b| b.id == "mermaid-source-1")
+            .unwrap()
+            .text
+            .push_str("\nB-->C");
+        let local = phone.apply_block_snapshot(a).unwrap().v1_update;
+        let mut b = desktop.blocks();
+        b.iter_mut()
+            .find(|b| b.id == "mermaid-source-1")
+            .unwrap()
+            .text
+            .insert_str(0, "%% remote\n");
+        b.iter_mut()
+            .find(|b| b.id == "tail")
+            .unwrap()
+            .text
+            .push_str("远端正文");
+        let remote = desktop.apply_block_snapshot(b).unwrap().v1_update;
+        phone.apply_cses_update(remote).unwrap();
+        desktop.apply_cses_update(local).unwrap();
+        assert_eq!(phone.blocks(), desktop.blocks());
+        let merged = phone
+            .blocks()
+            .into_iter()
+            .find(|b| b.id == "mermaid-source-1")
+            .unwrap()
+            .text;
+        assert!(merged.starts_with("%% remote\n"));
+        assert!(merged.ends_with("B-->C"));
+    }
+
+    /// 创建写入桌面容器与唯一源码；删除后原快照可以恢复投影内容及身份。
+    #[test]
+    fn mermaid_creation_deletion_and_snapshot_restore_keep_formal_structure() {
+        let mut e = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-mermaid.update"
+        ));
+        let original = e.blocks();
+        let mut desired = original.clone();
+        let mut outer = original
+            .iter()
+            .find(|b| b.id == "mermaid-1")
+            .unwrap()
+            .clone();
+        outer.id = "new-mermaid".into();
+        let mut source = original
+            .iter()
+            .find(|b| b.id == "mermaid-source-1")
+            .unwrap()
+            .clone();
+        source.id = "new-source".into();
+        source.parent_id = Some(outer.id.clone());
+        source.text = String::new();
+        desired.extend([outer, source]);
+        e.apply_block_snapshot(desired.clone()).unwrap();
+        {
+            let blocks = e.doc.get_or_insert_map(ROOT_NAME);
+            let txn = e.doc.transact();
+            let outer = map(&blocks, &txn, "new-mermaid").unwrap();
+            assert_eq!(
+                out_string(outer.get(&txn, "nodeType")).as_deref(),
+                Some("block")
+            );
+            assert_eq!(
+                out_string(map(&outer, &txn, "props").unwrap().get(&txn, "mode")).as_deref(),
+                Some("default")
+            );
+            assert_eq!(children(&outer, &txn), vec!["new-source"]);
+        }
+        e.apply_block_snapshot(original.clone()).unwrap();
+        assert_eq!(e.blocks(), original);
+        e.apply_block_snapshot(desired.clone()).unwrap();
+        assert_eq!(e.blocks(), desired);
+    }
+
+    /// 共享 mode 仅允许三种桌面值；显式补丁不影响源码、未知属性或其他块，拒绝非法值时原子回滚。
+    #[test]
+    fn mermaid_modes_project_patch_validate_and_preserve_unknown_fields() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-mermaid.update");
+        let mut e = engine(fixture);
+        for mode in ["text", "graph", "default"] {
+            let mut desired = e.blocks();
+            let outer = desired.iter_mut().find(|b| b.id == "mermaid-1").unwrap();
+            outer.resource = Some(CollabResource {
+                properties: format!(r#"{{"mode":"{mode}"}}"#),
+                property_edits: Some(format!(r#"{{"mode":{{"value":"{mode}"}}}}"#)),
+            });
+            e.apply_block_snapshot(desired).unwrap();
+            let current = e.blocks();
+            let outer = current.iter().find(|b| b.id == "mermaid-1").unwrap();
+            assert_eq!(
+                outer.resource.as_ref().unwrap().properties,
+                format!(r#"{{"mode":"{mode}"}}"#)
+            );
+            let blocks = e.doc.get_or_insert_map(ROOT_NAME);
+            let txn = e.doc.transact();
+            let native = map(&blocks, &txn, "mermaid-1").unwrap();
+            assert!(map(&native, &txn, "props")
+                .unwrap()
+                .get(&txn, "customDiagram")
+                .is_some());
+        }
+        for invalid in [
+            r#"{"mode":{"value":"invalid"}}"#,
+            r#"{"url":{"value":"https://example.test"}}"#,
+            r#"{"mode":{"value":1}}"#,
+        ] {
+            let original = e.blocks();
+            let mut desired = original.clone();
+            desired
+                .iter_mut()
+                .find(|b| b.id == "mermaid-1")
+                .unwrap()
+                .resource
+                .as_mut()
+                .unwrap()
+                .property_edits = Some(invalid.into());
+            desired
+                .iter_mut()
+                .find(|b| b.id == "mermaid-source-1")
+                .unwrap()
+                .text = "must not commit".into();
+            assert!(e.apply_block_snapshot(desired).is_err());
+            assert_eq!(e.blocks(), original);
+        }
+        // Ordinary source edits do not normalize a future desktop mode.
+        {
+            let blocks = e.doc.get_or_insert_map(ROOT_NAME);
+            let mut txn = e.doc.transact_mut();
+            let outer = map(&blocks, &txn, "mermaid-1").unwrap();
+            map(&outer, &txn, "props")
+                .unwrap()
+                .insert(&mut txn, "mode", "future");
+        }
+        let mut desired = e.blocks();
+        desired
+            .iter_mut()
+            .find(|b| b.id == "mermaid-source-1")
+            .unwrap()
+            .text = "flowchart LR\nA-->C".into();
+        e.apply_block_snapshot(desired).unwrap();
+        assert_eq!(
+            e.blocks()
+                .iter()
+                .find(|b| b.id == "mermaid-1")
+                .unwrap()
+                .resource
+                .as_ref()
+                .unwrap()
+                .properties,
+            r#"{"mode":"future"}"#
+        );
+    }
+
+    /// 非法父子结构、超长源码以及嵌入对象在任何共享写入之前拒绝。
+    #[test]
+    fn mermaid_invalid_mutations_are_atomic_and_malformed_remote_trees_stay_opaque() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-mermaid.update");
+        for variant in 0..4 {
+            let mut e = engine(fixture);
+            let original = e.blocks();
+            let mut desired = original.clone();
+            let index = desired
+                .iter()
+                .position(|b| b.id == "mermaid-source-1")
+                .unwrap();
+            match variant {
+                0 => {
+                    desired.remove(index);
+                }
+                1 => desired[index].parent_id = None,
+                2 => desired[index].text = "😀".repeat(50_001),
+                _ => desired[index].block_type = "paragraph".into(),
+            }
+            assert!(e.apply_block_snapshot(desired).is_err());
+            assert_eq!(e.blocks(), original);
+        }
+        let e = engine(fixture);
+        let blocks = e.doc.get_or_insert_map(ROOT_NAME);
+        {
+            let mut txn = e.doc.transact_mut();
+            let source = map(&blocks, &txn, "mermaid-source-1").unwrap();
+            let Some(Out::YText(text)) = source.get(&txn, "children") else {
+                panic!("source text")
+            };
+            text.insert_embed(
+                &mut txn,
+                0,
+                Any::Map(std::sync::Arc::new(HashMap::from([(
+                    "latex".into(),
+                    Any::String("x".into()),
+                )]))),
+            );
+        }
+        let projected = e.blocks();
+        assert_eq!(
+            projected
+                .iter()
+                .find(|b| b.id == "mermaid-1")
+                .unwrap()
+                .block_type,
+            UNSUPPORTED_BLOCK_TYPE
+        );
+        assert!(!projected.iter().any(|b| b.id == "mermaid-source-1"));
+        assert!(projected
+            .iter()
+            .any(|b| b.id == "tail" && b.block_type == "paragraph"));
     }
 }

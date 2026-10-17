@@ -1,0 +1,45 @@
+{
+  "results": [
+    {
+      "type": "flowchart TD",
+      "svg": 1,
+      "error": ""
+    },
+    {
+      "type": "sequenceDiagram",
+      "svg": 1,
+      "error": ""
+    },
+    {
+      "type": "classDiagram",
+      "svg": 1,
+      "error": ""
+    },
+    {
+      "type": "stateDiagram-v2",
+      "svg": 1,
+      "error": ""
+    },
+    {
+      "type": "pie",
+      "svg": 1,
+      "error": ""
+    },
+    {
+      "type": "gantt",
+      "svg": 1,
+      "error": ""
+    },
+    {
+      "type": "mindmap",
+      "svg": 1,
+      "error": ""
+    }
+  ],
+  "invalidPreserves": true,
+  "emptyClears": true,
+  "staleSuppressed": true,
+  "activeLinksRemoved": true,
+  "requests": [],
+  "errors": []
+}

@@ -1,0 +1,72 @@
+{
+  "date": "2026-10-17",
+  "scope": "按用户要求准备手机与真实桌面Mermaid双向在线同步联调。",
+  "status": "completed_scoped_live_validation",
+  "document_id": "6ad06c992a6b14f42c256937",
+  "document_id_source": "lib/src/demo/cses_account_login.dart: csesDemoDocumentId（当前Demo固定文档；旧验收记录中的6ac76e5375083c8c9f19cbd3不用于本轮）",
+  "versions": {
+    "registry_latest": "0.11.21",
+    "desktop_declared": "0.11.21",
+    "desktop_locked": "0.11.21",
+    "desktop_installed": "0.11.17",
+    "queried_before_testing": true,
+    "reference": "沿用并复读两版随包技能、迁移和Mermaid正式容器/源码结构"
+  },
+  "observed": {
+    "android_connected": true,
+    "device": "HONOR X70 / Android16",
+    "phone_ui": "在线，测试图已删除，原有Alice/John时序图完整可见，保留末尾空编辑段落",
+    "desktop_process": "真实桌面由用户操作并确认收图、D1/D2、删除/撤销及最终删除；手机使用用户明确指定的ADB操作及UI核对",
+    "desktop_ui_automation": "本会话未提供原生应用控制；CSES CLI暂无公开document写入命令",
+    "phone_operation": "用户明确指定使用ADB操作手机；未更改账号凭证或清理缓存"
+  },
+  "pending_cases": [
+    "真实断网/离线修改后的重连补传",
+    "服务端逐更新持久化ACK",
+    "双端同时修改源码及结构、撤权/关闭竞态的在线验收",
+    "iOS应用级验收"
+  ],
+  "results": {
+    "live_bidirectional_sync": "passed_for_this_test_document_and_flowchart",
+    "server_persistence_ack": "not_verified",
+    "mobile_login": "passed",
+    "mobile_source_save_and_render": "passed",
+    "mobile_to_desktop": "passed_user_confirmed_PHONE-M1_received",
+    "desktop_to_mobile": "passed_UI_source_and_actual_graph_DESKTOP-D1_and_D2",
+    "remote_change_while_sheet_open": "passed_save_disabled_conflict_banner",
+    "reload_remote_source": "passed_D2_loaded_draft_discarded_save_reenabled",
+    "dirty_draft_conflict": "passed_retained_PHONE-DRAFT_locally_and_disabled_save",
+    "online_retry_and_reenter": "passed_D2_retained",
+    "network_disconnect_recovery": "not_tested",
+    "mobile_delete": "passed_locally_awaiting_desktop",
+    "mobile_delete_to_desktop": "passed_user_confirmed_disappearance",
+    "mobile_undo_to_desktop": "passed_user_confirmed_restore_D2",
+    "desktop_delete_to_mobile": "passed_test_marker_removed_original_sequence_remains",
+    "cleanup": "test_mermaid_container_and_source_removed_one_empty_trailing_editing_paragraph_retained"
+  },
+  "production_code_changed": false,
+  "note": "本轮仅测试指定文档与唯一标记流程图。双向源码/图形、草稿冲突、删除/撤销已通过；线上重试按钮与重进不等同真实断网测试。测试图及源块已清理，留下1个空编辑段落。未重新安装或重启App，未更改账号凭证或清缓存；无生产代码改动。",
+  "test_source": "flowchart LR; A[\"MERMAID-SYNC-1017\"] --> B[\"PHONE-M1\"]",
+  "evidence": {
+    "mobile_m1_screenshot": "mermaid-live-mobile-m1-20261017.png",
+    "mobile_source": "通过真机UI文本核对54个字符与预览标记，保存后正文显示相同测试图并在线",
+    "desktop_receipt": "用户确认收到PHONE-M1并修改D1/D2；确认手机删除在桌面消失、撤销在桌面恢复，再从桌面删除测试图",
+    "remote_conflict_screenshot": "mermaid-live-desktop-return-20261017.png",
+    "reload_d1_screenshot": "mermaid-live-reloaded-d1-20261017.png",
+    "dirty_conflict_screenshot": "mermaid-live-dirty-conflict-20261017.png",
+    "reload_d2_screenshot": "mermaid-live-reloaded-d2-20261017.png",
+    "reenter_d2_screenshot": "mermaid-live-reenter-d2-20261017.png",
+    "mobile_delete_screenshot": "mermaid-live-mobile-delete-20261017.png",
+    "undo_screenshot": "mermaid-live-undo-20261017.png",
+    "cleanup_screenshot": "mermaid-live-cleanup-20261017.png",
+    "local_sqlite_readonly_comparison": {
+      "baseline": "首次在线同步后、本轮插入前sequence1233",
+      "final": "桌面反向删除后sequence结束",
+      "existing_blocks_removed": 0,
+      "existing_source_text_changed": false,
+      "test_container_and_source_present": false,
+      "additional_empty_paragraphs": 1,
+      "other_changes": "root修改时间meta.mt；原有时序图mode从graph变为text及meta.mt变化。本轮不覆盖桌面显示偏好与修改时间。"
+    }
+  }
+}

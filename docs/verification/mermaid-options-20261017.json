@@ -1,0 +1,102 @@
+{
+  "date": "2026-10-17",
+  "scope": "按桌面参考补齐手机Mermaid五类类型/模板、三种共享视图；不升级桌面依赖。",
+  "versions": {
+    "latest": "0.11.21",
+    "desktop_declared": "0.11.21",
+    "desktop_yarn_locked": "0.11.21",
+    "desktop_installed": "0.11.17",
+    "queried_before_adaptation": true,
+    "read": "两版随包L0/L1块技能、MIGRATIONS、Mermaid类型/模板/视图菜单、源码和Schema实现",
+    "catalog_and_view_segment_sha256": "0f378d555362928a0a41376e9e10cd14359c960efd77c47cb43a0bd5963f26cb",
+    "two_versions_segment_equal": true
+  },
+  "features": {
+    "types_and_templates": [
+      "时序图",
+      "流程图",
+      "类图",
+      "思维导图",
+      "时间线图"
+    ],
+    "type_action": "原样前插prefix，与桌面一致",
+    "template_action": "替换本地草稿全文，保存才写入；取消不写入",
+    "views": {
+      "text": "仅文本",
+      "graph": "仅预览",
+      "default": "文本与预览"
+    },
+    "layout": "手机组合视图上下排列，正文源码区域最多240布局像素并滚动，完整编辑在源码面板",
+    "persistence": "原有props.mode经CollabResource显式补丁，源码Y.Text，面板源码+mode原子保存；正文视图切换独立历史项",
+    "unknown_mode": "普通源码编辑保留缺失/null/未知值，展示回落不回写；主动选模式才写有效值",
+    "conflict": "远端源码/格式/身份/mode变化拒绝陈旧草稿；重新加载同时刷新源码/mode；远端mode变化清除旧历史",
+    "frb_signature_changed": false
+  },
+  "validation": {
+    "target_static_analysis": "passed, No issues found, 9 handwritten files",
+    "package_tests": 1152,
+    "host_tests": 56,
+    "rust_tests": 91,
+    "rust_fmt_check": "passed",
+    "rust_check": "passed",
+    "real_frb_sqlite": "passed, mode patch/history and reopen",
+    "ios_native": "aarch64 device, aarch64 simulator, x86_64 simulator rebuilt debug; app not tested",
+    "android": {
+      "device": "HONOR X70 / MTN-AN00 / Android16",
+      "serial": "A92G6R5704004108",
+      "result": "passed",
+      "functional_cases": 19,
+      "runner_including_hooks": 21,
+      "duration_seconds": 47,
+      "engine": "七类既有语法 + 五个桌面完整模板实际WebView绘图，错误保留有效图/空文本清图",
+      "log": "mermaid-options-android-20261017.txt"
+    },
+    "logs": [
+      "mermaid-options-package-20261017.txt",
+      "mermaid-options-host-20261017.txt",
+      "mermaid-options-build-20261017.txt"
+    ],
+    "host_log_format": "仅保留测试进度和结果，省略Common配置及测试凭证输出"
+  },
+  "lint_progress": "受影响协同包启用cancel_subscriptions、close_sinks、use_build_context_synchronously；未借本任务批量治理其他历史规则。",
+  "limitations": [
+    "新增mode的真实桌面在线联调尚未执行，之前源码双向记录不代替mode验收",
+    "iOS应用级、真实断网补传及服务端持久化ACK未验收",
+    "正文内直接源码输入、可视化拖拽/标签、全屏缩放、SVG导出、Markdown导入未实现",
+    "删除撤销仅恢复已投影内容/有效模式，不保证未知模式/扩展属性/审计数据"
+  ],
+  "stats": {
+    "total": 41,
+    "full": 13,
+    "partial": 12,
+    "in_progress": 1,
+    "unsupported": 15
+  },
+  "normal_demo_install": {
+    "result": "passed",
+    "build": "flutter build apk --debug --no-pub",
+    "install": "adb install -r, no uninstall or data clear",
+    "launch": "MainActivity COLD Status ok; logged in and online",
+    "apk_sha256": "55bb68cd1d44e4986d1842bf92e607dfa34a262da0f3c20a352f3cefed5248fe",
+    "installed_hash_matches": true,
+    "data_preservation": {
+      "scope": "existing SQLite files before and after ordinary APK install, before launch",
+      "files": 3,
+      "changed": []
+    },
+    "manual_ui": "真实文档原mode=text和时序源码正确显示；选择时间线模板并切换组合视图可绘图；取消后重开仍为原时序源码及text模式，没有保存测试草稿"
+  },
+  "git_diff_check": "passed",
+  "screenshots": {
+    "templates": "mermaid-options-template-menu-20261017.png",
+    "views": "mermaid-options-view-menu-20261017.png",
+    "combined": "mermaid-options-combined-20261017.png"
+  },
+  "status": "completed",
+  "follow_up_live_view_sync": {
+    "date": "2026-10-17",
+    "report": "mermaid-view-sync-20261017.json",
+    "result": "三种mode两个方向共6项通过；原text视图恢复，源码/结构保持",
+    "note": "补充在线验收，不改变本记录原实施阶段尚未在线联调的时间范围说明"
+  }
+}

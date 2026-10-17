@@ -7,6 +7,7 @@ import 'package:cses_document_collab/src/editor/collab_block_delete.dart';
 import 'package:cses_document_collab/src/editor/collab_callout_block.dart';
 import 'package:cses_document_collab/src/editor/collab_color_picker.dart';
 import 'package:cses_document_collab/src/editor/collab_formula_sheet.dart';
+import 'package:cses_document_collab/src/editor/collab_mermaid_sheet.dart';
 import 'package:cses_document_collab/src/editor/collab_host_meeting_ui.dart';
 import 'package:cses_document_collab/src/editor/collab_host_mention_ui.dart';
 import 'package:cses_document_collab/src/editor/collab_list_editing.dart';
@@ -18,6 +19,7 @@ import 'package:cses_document_collab/src/model/collab_block_colors.dart';
 import 'package:cses_document_collab/src/model/collab_color_palette.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
 import 'package:cses_document_collab/src/model/collab_formula.dart';
+import 'package:cses_document_collab/src/model/collab_mermaid.dart';
 import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
 import 'package:cses_document_collab/src/model/collab_meeting.dart';
 import 'package:cses_document_collab/src/model/collab_paragraph_style.dart';
@@ -1569,7 +1571,8 @@ class _AddBlockSheet extends StatelessWidget {
   /// 返回面板 Widget，不持有或释放编辑器；未支持的入口继续显示占位提示。
   /// 在借用 [context] 中渲染可用块入口；插入按保存的稳定选区定位并等待事务完成。
   /// 在借用[context]中构建块/行内入口；用户选择调用宿主选择器并复用稳定插入位置。
-  /// 表格直接创建2×2网格，插入前重查原始书签，权限/文档失效时不插入。
+  /// 表格直接创建2×2网格；绘图先收集源码草稿再创建容器和子块。
+  /// 插入前重查原始书签，权限/文档失效时不插入。
   @override
   Widget build(BuildContext context) {
     final height = math.min(MediaQuery.sizeOf(context).height * 0.72, 640.0);
@@ -1820,6 +1823,36 @@ class _AddBlockSheet extends StatelessWidget {
                                 }
                               } catch (error, stack) {
                                 CollabDiagnostics.report('插入公式失败', error: error, stackTrace: stack, tag: 'DocCollab');
+                                if (context.mounted) {
+                                  _showToolbarMessage(context, '插入失败，请重试');
+                                }
+                              }
+                            },
+                          ),
+                          _ActionShortcutTile(
+                            key: const ValueKey('editor-shortcut-mermaid'),
+                            icon: Icons.account_tree_outlined,
+                            label: '代码绘图',
+                            onTap: () async {
+                              try {
+                                final draft = await showCollabMermaidInput(context, editorState);
+                                if (!context.mounted || draft == null) return;
+                                final selection = bookmark.resolve(editorState);
+                                if (selection == null) {
+                                  _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
+                                  return;
+                                }
+                                final landing = await insertCollabMermaid(
+                                  editorState,
+                                  selection,
+                                  draft.source,
+                                  view: draft.view,
+                                );
+                                if (context.mounted && landing != null) {
+                                  Navigator.pop<Selection>(context, landing);
+                                }
+                              } catch (error, stack) {
+                                CollabDiagnostics.report('插入代码绘图失败', error: error, stackTrace: stack, tag: 'DocCollab');
                                 if (context.mounted) {
                                   _showToolbarMessage(context, '插入失败，请重试');
                                 }

@@ -8,6 +8,7 @@ import 'package:cses_document_collab/src/model/collab_code.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
 import 'package:cses_document_collab/src/model/collab_entity_mention.dart';
 import 'package:cses_document_collab/src/model/collab_formula.dart';
+import 'package:cses_document_collab/src/model/collab_mermaid.dart';
 import 'package:cses_document_collab/src/model/collab_image.dart';
 import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
 import 'package:cses_document_collab/src/model/collab_link_view.dart';
@@ -425,7 +426,7 @@ final class CollabEditorBlock {
   /// Desktop code header metadata, projected without writing shared props.
   final CollabCode? code;
 
-  /// 已适配 void 块的属性载体；分割线仅保存样式字段，资源块保存元数据。
+  /// 已适配特殊块的属性载体；分割线保存样式，Mermaid 保存共享视图，资源块保存元数据。
   final CollabResource? resource;
 
   /// 段落族字段只读投影；显式 propertyEdits 表达本次字段修改。
@@ -556,7 +557,7 @@ final class AppFlowyBlockEditorAdapter {
   /// 块身份、类型、顺序一致时原位更新文字、媒体、分割线、公式及会议/任务引用属性，保留组件、选区与输入连接；
   /// URL、尺寸和题注复用节点映射，移除的可选投影显式清空。结构不同才重建节点。
   /// 不记录本地撤销或发送 WS；销毁后不执行，事务异常向调用边界传播。
-  /// 表格路径或单元格正文改变会清除本地路径历史及选区，避免过期撤销误写其他单元格；布局属性更新保留历史。
+  /// 表格路径/单元格正文或绘图源码/结构改变会清除本地路径历史及选区，避免过期撤销覆盖远端内容；布局属性更新保留历史。
   /// 正式编号及原始设置更新内存投影，不进入历史；成功转换后清除 replacesId。
   Future<void> replaceFromRemote(List<CollabEditorBlock> nextBlocks) async {
     if (_disposed) {
@@ -603,6 +604,7 @@ final class AppFlowyBlockEditorAdapter {
         if (node.type == csesUnsupportedBlockType) continue;
         if (collabTableTypes.contains(target.blockType) ||
             _isUrlBackedBlock(target.blockType) ||
+            target.blockType == collabMermaidType ||
             target.blockType == collabDividerType ||
             target.blockType == collabFormulaType ||
             target.blockType == collabMeetingType ||
@@ -620,7 +622,7 @@ final class AppFlowyBlockEditorAdapter {
           continue;
         }
         final currentSegments = _readNodeSegments(node);
-        if (node.type == csesCalloutBlockType) {
+        if (isCollabContainerType(node.type)) {
           // Container content is represented by its child nodes.
         } else if (!_segmentsEqual(currentSegments, target.segments)) {
           final currentDelta = node.delta ?? Delta();
@@ -711,7 +713,8 @@ final class AppFlowyBlockEditorAdapter {
       currentBlocks,
       targetBlocks,
     );
-    if (invalidateTableHistory) {
+    if (invalidateTableHistory ||
+        _mermaidContentChanged(currentBlocks, targetBlocks)) {
       editorState.undoManager.undoStack.clear();
       editorState.undoManager.redoStack.clear();
       // 路径历史不能越过远端换行/删行/合并或正文覆盖后继续作用于其他单元格。
@@ -742,6 +745,39 @@ final class AppFlowyBlockEditorAdapter {
         _applyingRemote = false;
       }
     }
+  }
+
+  /// 比较 [before] 与 [after] 的绘图源码和结构，远端变更后使路径历史失效。
+  /// 现有编辑器不对历史执行文本OT；不能让旧偏移覆盖远端源码或另一个块。
+  /// 远端共享视图变化及绘图存在时的结构变更清空整个编辑器历史，普通正文内容与属性更新保持历史。
+  static bool _mermaidContentChanged(
+    List<CollabEditorBlock> before,
+    List<CollabEditorBlock> after,
+  ) {
+    if (![...before, ...after].any((b) => b.blockType == collabMermaidType)) {
+      return false;
+    }
+    if (before.length != after.length) return true;
+    for (var index = 0; index < before.length; index++) {
+      final old = before[index];
+      final next = after[index];
+      if (old.id != next.id ||
+          old.parentId != next.parentId ||
+          old.blockType != next.blockType) {
+        return true;
+      }
+      if (old.blockType == collabMermaidType &&
+          (old.resource ?? const CollabResource()).field('mode') !=
+              (next.resource ?? const CollabResource()).field('mode')) {
+        return true;
+      }
+      if (old.blockType == collabMermaidSourceType &&
+          (old.text != next.text ||
+              !_segmentsEqual(old.segments, next.segments))) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /// 比较 [before] 与 [after] 的表格路径及正文；布局属性变化不使历史失效。
@@ -780,7 +816,7 @@ final class AppFlowyBlockEditorAdapter {
   /// 类型转换生成新身份并记录来源供Rust保留扩展数据；提及卡片及链接视图转换历史在写入前整组预检，并按身份链重定位。
   /// 远端回放及销毁后不发布；Undo/Redo 的历史身份经文档内映射恢复为当前可替换来源。
   /// 仅明确修改编号设置属性的 UpdateOperation 生成编号写入意图；普通文字/结构快照
-  /// 即使携带旧设置也不会覆盖原生 start/continuePrevious。分割线和公式同样只发布明确的单字段补丁。
+  /// 即使携带旧设置也不会覆盖原生 start/continuePrevious。分割线、公式和绘图mode同样只发布明确的单字段补丁。
   /// 撤销和重做复用相同路径。
   void _handleTransaction(EditorTransactionValue value) {
     if (_disposed || _applyingRemote) {
@@ -819,6 +855,11 @@ final class AppFlowyBlockEditorAdapter {
             paragraphEdits.putIfAbsent(node, () => {}).add(key);
           }
         }
+      }
+      if (node != null &&
+          node.type == collabMermaidType &&
+          operation.attributes.containsKey(collabMermaidModeAttribute)) {
+        resourceEdits.putIfAbsent(node, () => {}).add('mode');
       }
       if (node != null &&
           node.type == collabFormulaType &&
@@ -1113,7 +1154,7 @@ final class AppFlowyBlockEditorAdapter {
 
   /// 将权威 [block] 转为 AppFlowy 节点，图片保存强类型专属数据的 Map 投影。
   /// 题注留在资源属性而非 AppFlowy children；实际父子关系由 Rust 的共享类型持有。
-  /// 表格布局及任务卡片属性只读投影；其他无正文块保留各自白名单属性，均不生成Delta。
+  /// Mermaid 保留容器及独立源码 Delta；表格布局及任务卡片属性只读投影；其他无正文块保留各自白名单属性，均不生成Delta。
   /// 段落格式及其历史目标标记仅用于段落族；代码块沿用自身属性和正文历史。
   static Node _nodeFromBlock(CollabEditorBlock block) {
     if (collabTableTypes.contains(block.blockType)) {
@@ -1180,6 +1221,28 @@ final class AppFlowyBlockEditorAdapter {
           ...CollabDivider.nodeAttributes(
             block.resource ?? const CollabResource(),
           ),
+        },
+      );
+    }
+    if (block.blockType == collabMermaidType) {
+      return Node(
+        type: collabMermaidType,
+        id: block.id,
+        attributes: {
+          collabBlockIdAttribute: block.id,
+          ...collabMermaidNodeAttributes(
+            block.resource ?? const CollabResource(),
+          ),
+        },
+      );
+    }
+    if (block.blockType == collabMermaidSourceType) {
+      return Node(
+        type: collabMermaidSourceType,
+        id: block.id,
+        attributes: {
+          collabBlockIdAttribute: block.id,
+          blockComponentDelta: _deltaFromBlock(block).toJson(),
         },
       );
     }
@@ -1303,7 +1366,7 @@ final class AppFlowyBlockEditorAdapter {
   /// 转换生成新的协同身份，历史身份链保证 Undo/Redo 仍替换当前块，保留 Rust 原生扩展属性。
   /// [numberingNodes] 默认空集合，只有当前本地事务明确修改编号设置的节点才生成写入意图。
   /// [paragraphEdits] 指定当前事务修改的段落字段，默认不写入共享设置。
-  /// [codeEdits] 和 [resourceEdits] 默认空，分别指定代码头部及资源/分割线/公式的显式字段修改；
+  /// [codeEdits] 和 [resourceEdits] 默认空，分别指定代码头部及资源/分割线/公式/绘图视图的显式字段修改；
   /// 仅指定字段产生补丁，其他原始属性保持只读投影，不重放到权威文档。
   /// 恢复为有序列表的历史节点保留其编号投影，Rust 仅在新身份替换时用它初始化原始设置；
   /// 正常新转入有序列表的节点由类型命令移除旧投影，走默认续号。非有序目标清理内存编号数据。
@@ -1385,7 +1448,12 @@ final class AppFlowyBlockEditorAdapter {
         blockTextColor: node.type == csesCalloutBlockType
             ? node.attributes[csesBlockTextColorAttribute] as String?
             : null,
-        resource: collabTableTypes.contains(node.type)
+        resource: node.type == collabMermaidType
+            ? readCollabMermaidProperties(
+                node.attributes,
+                edited: resourceEdits[node]?.contains('mode') == true,
+              )
+            : collabTableTypes.contains(node.type)
             ? readCollabTable(node.attributes, before?.resource)
             : node.type == collabTaskCardType
             ? CollabTaskCard.read(node.attributes)
@@ -1453,30 +1521,43 @@ final class AppFlowyBlockEditorAdapter {
     if (value is! Map) return null;
     final ordered = CollabOrdered.fromJson(Map<String, dynamic>.from(value));
     return ordered.withNumbering(
-      node.attributes[csesOrderedNumberingAttribute] as String? ?? ordered.numbering,
+      node.attributes[csesOrderedNumberingAttribute] as String? ??
+          ordered.numbering,
       edited: edited,
     );
   }
 
-  static CollabCode? _readCode(Node node, {Set<String> editedProperties = const {}}) {
+  static CollabCode? _readCode(
+    Node node, {
+    Set<String> editedProperties = const {},
+  }) {
     final value = node.attributes[collabCodeAttribute];
     return node.type == csesCodeBlockType &&
-            (value is Map || collabCodePropertyAttributes.values.any(node.attributes.containsKey))
-        ? CollabCode.fromAttributes(node.attributes, editedProperties: editedProperties)
+            (value is Map ||
+                collabCodePropertyAttributes.values.any(
+                  node.attributes.containsKey,
+                ))
+        ? CollabCode.fromAttributes(
+            node.attributes,
+            editedProperties: editedProperties,
+          )
         : null;
   }
 
   /// 将手机 [type] 归到正式 flavour；标题级别变化仍是同一 paragraph，不替换身份。
-  static String _formalFlavour(String type) => type.startsWith('heading_') ? 'paragraph' : type;
+  static String _formalFlavour(String type) =>
+      type.startsWith('heading_') ? 'paragraph' : type;
 
   static String _nodeBlockId(Node node) {
     final value = node.attributes[collabBlockIdAttribute];
     return value is String && value.isNotEmpty ? value : node.id;
   }
 
-  /// 将借用[node]映射为投影类型；表格结构及无正文块保留独立类型。
+  /// 将借用[node]映射为投影类型；绘图、表格结构及无正文块保留独立类型。
   static String _nodeBlockType(Node node) {
-    if (collabTableTypes.contains(node.type) ||
+    if (node.type == collabMermaidType ||
+        node.type == collabMermaidSourceType ||
+        collabTableTypes.contains(node.type) ||
         isCollabResourceType(node.type) ||
         node.type == collabDividerType ||
         node.type == collabFormulaType ||

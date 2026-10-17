@@ -9,6 +9,7 @@ import 'package:cses_document_collab/src/editor/collab_code_block.dart';
 import 'package:cses_document_collab/src/editor/collab_divider_block.dart';
 import 'package:cses_document_collab/src/editor/collab_embed_block.dart';
 import 'package:cses_document_collab/src/editor/collab_formula_block.dart';
+import 'package:cses_document_collab/src/editor/collab_mermaid_block.dart';
 import 'package:cses_document_collab/src/editor/collab_inline_formula.dart';
 import 'package:cses_document_collab/src/editor/collab_inline_mention.dart';
 import 'package:cses_document_collab/src/editor/collab_paragraph_editing.dart';
@@ -332,6 +333,7 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
   /// 宿主启用文末互动时，正文至少占满当前编辑视口，footer随后滚动且不属于可编辑块树。
   /// 移动端挂载独立于键盘显示的划词菜单，和正文借用同一页面滚动控制器。
   /// 普通文本段的Tab/Shift+Tab先写平面depth，不交给标准命令建立嵌套块。
+  /// 绘图容器注册独立源码面板及离线预览，源码子节点不直接承担正文输入。
   Widget _buildEditor() {
     return CollabMobileSelectionMenu(
       key: ObjectKey(collab.editorState),
@@ -450,6 +452,7 @@ final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders =
       ),
       collabDividerType: CollabDividerBlockComponentBuilder(),
       collabFormulaType: CollabFormulaBlockComponentBuilder(),
+      'mermaid': CollabMermaidBlockComponentBuilder(),
       collabMeetingType: CollabMeetingBlockComponentBuilder(),
       collabTaskCardType: CollabTaskCardBlockComponentBuilder(),
       csesCodeBlockType: CollabCodeBlockComponentBuilder(),

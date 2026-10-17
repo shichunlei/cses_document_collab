@@ -1,0 +1,5 @@
+Mermaid 11.13.0 (MIT), https://github.com/mermaid-js/mermaid
+Source: cses-client/node_modules/mermaid/dist/mermaid.min.js
+The unmodified upstream browser bundle and license are vendored for offline use.
+The application wrapper index.html is maintained locally.
+Update with: node tool/sync_mermaid_runtime.mjs /path/to/cses-client

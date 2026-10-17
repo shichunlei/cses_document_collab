@@ -1,0 +1,79 @@
+{
+  "date": "2026-10-17",
+  "scope": "按用户要求在Android真机重新运行当前代码绘图测试；不修改生产代码。",
+  "versions": {
+    "registry_latest": "0.11.21",
+    "desktop_declared": "0.11.21",
+    "desktop_locked": "0.11.21",
+    "desktop_installed": "0.11.17",
+    "registry_queried_before_run": true,
+    "read": "两版随包技能/迁移及Mermaid Schema；两版Schema片段SHA-256一致",
+    "schema_sha256": "20c6f0abc110e9240265ca846e58df71be714fbfba924aaf840f6748ce2c5d35",
+    "mermaid_runtime": "11.13.0"
+  },
+  "device": {
+    "serial": "A92G6R5704004108",
+    "name": "HONOR X70",
+    "model": "MTN-AN00",
+    "android": "16",
+    "resolution": "1200x2640",
+    "density_dpi": 520,
+    "webview": "com.google.android.webview 138.0.7204.179"
+  },
+  "validation": {
+    "command": "flutter drive --driver packages/cses_document_collab/test_driver/integration_test.dart --target packages/cses_document_collab/integration_test/mermaid_test.dart -d A92G6R5704004108 --no-pub --keep-app-running",
+    "result": "passed",
+    "functional_cases": 14,
+    "runner_total_including_hooks": 16,
+    "failed": 0,
+    "test_duration": "21s",
+    "test_apk_build_duration": "58.8s",
+    "install_duration": "6.7s",
+    "evidence": "mermaid-android-20261017.txt",
+    "screenshot": "mermaid-device-20261017.png",
+    "static_analysis": "所属协同包 flutter analyze --no-pub integration_test/mermaid_test.dart: No issues found",
+    "cases": [
+      "源码独立身份、保存/取消、撤销重做",
+      "远端源码变更/重排使过期历史失效，不覆盖其他内容",
+      "根/高亮内空正文及非空正文插入、删除和历史",
+      "远端投影/移除不产生本地重复发布",
+      "删除末块补空段落，UTF-16超长输入拒绝",
+      "实际页面编辑、草稿冲突重载及撤权保护",
+      "320逻辑像素+键盘+大字号面板可操作",
+      "稳定书签跨远端重排插入",
+      "真实Android WebView七类图表：流程/时序/类/状态/饼图/甘特/思维导图",
+      "错误语法保留有效图，空源码清图"
+    ],
+    "screenshot_scope": "ADB截取真实手机屏幕，显示隔离引擎用例中的Animal/Duck类图，不是正式在线文档截图。",
+    "normal_apk": {
+      "build_command": "flutter build apk --debug --no-pub",
+      "result": "passed",
+      "build_duration": "34.1s",
+      "sha256": "9462338ef65c0470e66353f54e600b98cb1b253e35a60dc4147450b76fdfca8c",
+      "installed_hash_matches": true,
+      "launch": "MainActivity, COLD start, Status: ok"
+    }
+  },
+  "data_preservation": {
+    "user_data_files_checked": 8,
+    "changed_after_tests": [
+      "shared_prefs/WebViewChromiumPrefs.xml"
+    ],
+    "baseline_manifest_sha256": "f8669f10590013ec2f94b34ecc357cf84c80b62b04a08ce5875ad92e15aa2645",
+    "excluded": "测试/安装产生的profileInstalled及app_flutter代码快照和资源时间戳",
+    "normal_demo_restore": "passed: rebuilt ordinary lib/main.dart APK, installed with adb install -r and launched MainActivity; no uninstall or data clear",
+    "business_files_checked": 6,
+    "business_files_changed": [],
+    "changed_after_normal_launch": [
+      "shared_prefs/WebViewChromiumPrefs.xml"
+    ],
+    "runtime_preference_change": "WebViewChromiumPrefs.xml发生哈希变化；该组件自有文件仅含lastVersionCodeUsed、CachedFlagsEnabled、CachedFlagsDisabled。本轮未回写或还原组件运行偏好。"
+  },
+  "limitations": [
+    "本轮使用隔离测试正文与本地编辑适配器，不登录、不读写在线文档",
+    "不代表在线桌面双向、持久化ACK、iOS或人工输入法验收",
+    "功能范围仍为部分支持；可视化拖拽/全屏/导出等既有缺口不变"
+  ],
+  "production_code_changed": false,
+  "git_diff_check": "passed"
+}

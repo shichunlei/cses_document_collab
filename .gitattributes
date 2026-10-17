@@ -1,0 +1,2 @@
+# 保持上游 Mermaid 发布产物的原始字节，使用 runtime.json 校验，不展示压缩代码文本差异。
+packages/cses_document_collab/assets/mermaid/mermaid.min.js binary

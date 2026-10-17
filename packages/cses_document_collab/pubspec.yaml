@@ -41,6 +41,9 @@ dev_dependencies:
   video_player_platform_interface: ^6.9.0
 
 flutter:
+  assets:
+    - assets/mermaid/index.html
+    - assets/mermaid/mermaid.min.js
   plugin:
     platforms:
       android:

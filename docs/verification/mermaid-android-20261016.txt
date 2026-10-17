@@ -1,0 +1,651 @@
+Running Gradle task 'assembleDebug'...
+Resolving dependencies...
+Downloading packages...
+  args 2.4.2 (2.7.0 available)
+  collection 1.18.0 (1.19.1 available)
+  convert 3.1.1 (3.1.2 available)
+  crypto 3.0.3 (3.0.7 available)
+  ed25519_edwards 0.3.1 (0.3.2 available)
+  github 9.17.0 (9.26.0 available)
+  http 1.1.0 (1.6.0 available)
+  http_parser 4.0.2 (4.1.2 available)
+  logging 1.2.0 (1.3.0 available)
+  path 1.8.0 (1.9.1 available)
+  petitparser 5.4.0 (7.1.0 available)
+  source_span 1.10.0 (1.10.2 available)
+  toml 0.14.0 (0.18.0 available)
+  version 3.0.0 (3.0.2 available)
+  yaml 3.1.2 (3.1.4 available)
+Got dependencies!
+15 packages have newer versions incompatible with dependency constraints.
+Try `dart pub outdated` for more information.
+Compiling bin/build_tool_runner.dart to kernel file bin/build_tool_runner.dill.
+INFO: Precompiled binaries are disabled
+INFO: Building cses_collab_core for aarch64-linux-android
+INFO: Building cses_collab_core for i686-linux-android
+INFO: Building cses_collab_core for x86_64-linux-android
+Running Gradle task 'assembleDebug'...                             48.9s
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+Installing build/app/outputs/flutter-apk/app-debug.apk...           6.7s
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+VMServiceFlutterDriver: Connecting to Flutter application at http://127.0.0.1:65388/yOOPHtI2TkU=/
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+VMServiceFlutterDriver: Isolate found with number: 2501510473159591
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+VMServiceFlutterDriver: Isolate 2501510473159591 is runnable.
+VMServiceFlutterDriver: Isolate is paused at start.
+VMServiceFlutterDriver: Attempting to resume isolate
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+I/flutter ( 9509): 00:00 +0: (setUpAll)
+VMServiceFlutterDriver: Connected to Flutter application.
+I/flutter ( 9509): 00:00 +1: source history, stable identity and stale draft rejection
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+I/AwareBitmapCacher( 9509): init lrucache size: 3145728 pid=9509
+V/Resource( 9509): printErrorResource, maybe not an error because module has entative action to load resource.
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+I/flutter ( 9509): 00:00 +2: remote source update invalidates stale history instead of replaying old offsets
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+I/flutter ( 9509): 00:00 +3: source history after remote reorder never writes another block
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+I/flutter ( 9509): 00:00 +4: insert/delete/history nested=false empty=true
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+I/flutter ( 9509): 00:00 +5: insert/delete/history nested=false empty=false
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+I/flutter ( 9509): 00:00 +6: insert/delete/history nested=true empty=true
+I/flutter ( 9509): 00:00 +7: insert/delete/history nested=true empty=false
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+I/flutter ( 9509): 00:00 +8: remote source/reorder/removal retains tree without local publications
+I/flutter ( 9509): 00:00 +9: last deletion supplements paragraph; UTF16 limit rejects writes
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+I/flutter ( 9509): 00:00 +10: page edit/cancel/save and undo
+W/ViewTreeObserver( 9509): onPreDraw return false io.flutter.embedding.android.FlutterActivityAndFragmentDelegate$2@8706608
+I/HwForceDarkManager( 9509): setAllowedHwForceDark:false package:com.cses.cses_mobile_collab_demo mCurrProcessState:0 mIsPackageNameChange:false hwForceDarkState:0 isViewAllowedForceDark:true isLastHonorForceDark:false
+W/libc    ( 9509): Access denied finding property "ro.debuggable"
+W/RenderThread( 9509): type=1400 audit(0.0:164786): avc:  denied  { read } for  name="u:object_r:userdebug_or_eng_prop:s0" dev="tmpfs" ino=657 scontext=u:r:untrusted_app:s0:c31,c257,c512,c768 tcontext=u:object_r:userdebug_or_eng_prop:s0 tclass=file permissive=0
+I/HwViewRootImpl( 9509): removeInvalidNode jank list is null
+I/FixedFlowFrameManager( 9509): new FixedFlowFrameManager
+E/FixedFlowFrameManager( 9509): initAndCheck: configType is 0, skip FixedFlowFrame
+I/VRI[MainActivity]( 9509): send MSG_WINDOW_FOCUS_CHANGED msg
+I/InputEventReceiver( 9509): consumeEvents focus, 1
+I/ile_collab_demo( 9509): AssetManager2(0xb40000772aec7878) locale list changing from [] to [zh-Hans-CN]
+I/WebViewFactory( 9509): Loading com.google.android.webview version 138.0.7204.179 (code 720417931)
+W/ile_collab_demo( 9509): Failed to find entry 'classes.dex': Entry not found
+D/nativeloader( 9509): InitLlndkLibrariesProduct: libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libRS.so:libandroid_net.so:libapexsupport.so:libavf.so:libbinder_ndk.so:libc.so:libcgrouprc.so:libclang_rt.asan-aarch64-android.so:libclang_rt.asan-arm-android.so:libclang_rt.hwasan-aarch64-android.so:libcom.android.tethering.connectivity_native.so:libdl.so:libft2.so:liblog.so:libm.so:libmediandk.so:libnativewindow.so:libneuralnetworks.so:libselinux.so:libsync.so:libvendorsupport.so:libvndksupport.so:libvulkan.so
+D/nativeloader( 9509): Configuring product-clns-10 for unbundled product apk /product/app/TrichromeLibrary/TrichromeLibrary.apk. target_sdk_version=35, uses_libraries=ALL, library_path=/product/app/WebViewGoogle/lib/arm64:/product/app/WebViewGoogle/WebViewGoogle.apk!/lib/arm64-v8a:/product/app/TrichromeLibrary/TrichromeLibrary.apk!/lib/arm64-v8a:/product/lib64:/system/product/lib64, permitted_path=/data:/mnt/expand:/product/lib64:/system/product/lib64
+D/nativeloader( 9509): Extending system_exposed_libraries: libautotune.honor.so:libteec.honor.so:libautotune.honor.so:libmediaalgoclient.honor.so:libIsfClient.honor.so:libteec_system.honor.so
+D/nativeloader( 9509): InitVndkspLibrariesProduct: VNDK is deprecated with product
+D/ApplicationLoaders( 9509): Returning zygote-cached class loader: /system_ext/framework/androidx.window.extensions.jar
+D/nativeloader( 9509): Configuring product-clns-11 for unbundled product apk /product/app/WebViewGoogle/WebViewGoogle.apk. target_sdk_version=35, uses_libraries=, library_path=/product/app/WebViewGoogle/lib/arm64:/product/app/WebViewGoogle/WebViewGoogle.apk!/lib/arm64-v8a:/product/app/TrichromeLibrary/TrichromeLibrary.apk!/lib/arm64-v8a:/product/lib64:/system/product/lib64, permitted_path=/data:/mnt/expand:/product/lib64:/system/product/lib64
+I/cr_WVCFactoryProvider( 9509): version=138.0.7204.179 (720417931) minSdkVersion=29 isBundle=false multiprocess=true packageId=3
+D/nativeloader( 9509): Load /product/app/WebViewGoogle/WebViewGoogle.apk!/lib/arm64-v8a/libmonochrome.so using class loader ns product-clns-11 (caller=/product/app/WebViewGoogle/WebViewGoogle.apk): ok
+D/nativeloader( 9509): Load /system/lib64/libwebviewchromium_plat_support.so using class loader ns product-clns-11 (caller=/product/app/WebViewGoogle/WebViewGoogle.apk): ok
+E/chromium( 9509): [1016/235353.723420:ERROR:android_webview/browser/variations/variations_seed_loader.cc:39] Seed missing signature.
+I/cr_LibraryLoader( 9509): Successfully loaded native library
+I/cr_CachingUmaRecorder( 9509): Flushed 8 samples from 8 histograms, 0 samples were dropped.
+I/cr_CombinedPProvider( 9509): #registerProvider() provider:WV.d9@d30f4f3 isPolicyCacheEnabled:false policyProvidersSize:0
+I/cr_PolicyProvider( 9509): #setManagerAndSource() 0
+W/cr_PlatformSer-Internal( 9509): GMS is installed but not enabled
+I/ile_collab_demo( 9509): AssetManager2(0xb40000772aec9498) locale list changing from [] to [zh-Hans-CN]
+I/ile_collab_demo( 9509): AssetManager2(0xb40000772aecba18) locale list changing from [] to [zh-Hans-CN]
+I/cr_CombinedPProvider( 9509): #linkNativeInternal() 1
+I/cr_AppResProvider( 9509): #getApplicationRestrictionsFromUserManager() Bundle[EMPTY_PARCEL]
+I/cr_PolicyProvider( 9509): #notifySettingsAvailable() 0
+I/cr_CombinedPProvider( 9509): #onSettingsAvailable() 0
+I/cr_CombinedPProvider( 9509): #flushPolicies()
+W/chromium( 9509): [WARNING:android_webview/browser/network_service/net_helpers.cc:143] HTTP Cache size is: 64878029
+I/ile_collab_demo( 9509): AssetManager2(0xb40000772aec7b98) locale list changing from [] to [zh-Hans-CN]
+I/ile_collab_demo( 9509): AssetManager2(0xb40000772aec8e58) locale list changing from [] to [zh-Hans-CN]
+I/CameraManagerGlobal( 9509): Connecting to camera service
+I/ile_collab_demo( 9509): AssetManager2(0xb40000772aecb6f8) locale list changing from [] to [zh-Hans-CN]
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): init
+W/HWUI    ( 9509): Image decoding logging dropped!
+W/HWUI    ( 9509): Image decoding logging dropped!
+I/HwCameraUtil( 9509): hide aux camera for app: com.cses.cses_mobile_collab_demo
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+W/ile_collab_demo( 9509): Missing inline cache for void com.android.internal.util.XmlUtils.writeValueXml(java.lang.Object, java.lang.String, com.android.modules.utils.TypedXmlSerializer, com.android.internal.util.XmlUtils$WriteMapCallback)
+I/PlatformViewsChannel( 9509): Using legacy platform view rendering strategy.
+I/PlatformViewsController( 9509): Hosting view in view hierarchy for platform view: 0
+I/PlatformViewsController( 9509): PlatformView is using SurfaceProducer backend
+W/libc    ( 9509): Access denied finding property "ro.debuggable"
+I/BufferQueueConsumer( 9509): [](id:252500000002,api:0,p:-1,c:9509) connect: controlledByApp=true
+W/ile_collab_demo( 9509): type=1400 audit(0.0:164793): avc:  denied  { read } for  name="u:object_r:userdebug_or_eng_prop:s0" dev="tmpfs" ino=657 scontext=u:r:untrusted_app:s0:c31,c257,c512,c768 tcontext=u:object_r:userdebug_or_eng_prop:s0 tclass=file permissive=0
+D/libEGL  ( 9509): [eglCreateWindowSurface] start window is 0xb40000774af5bc60
+I/BufferQueueProducer( 9509): [ImageReader-1x1f22m7-9509-0](id:252500000002,api:0,p:-1,c:9509) connect: api=1 producerControlledByApp=true
+W/cr_WebSettings( 9509): getForceDark() is a no-op in an app with targetSdkVersion>=T
+V/ImeFocusController( 9509): onWindowFocus: com.android.internal.policy.DecorView{80623ce V.E...... R.....ID 0,0-1200,2640}[MainActivity] softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION
+V/InputMethodManager( 9509): Restarting due to mRestartOnNextWindowFocus as true
+W/InputMethodManager( 9509): startInputReason = 1
+D/FullScreenUtils( 9509): isNeedToHideStatusBar: splitscreenstate=0
+D/FlutterJNI( 9509): Sending viewport metrics to the engine.
+D/FullScreenUtils( 9509): isNeedToHideStatusBar: splitscreenstate=0
+W/libc    ( 9509): Access denied finding property "ro.debuggable"
+I/BufferQueueConsumer( 9509): [](id:252500000003,api:0,p:-1,c:9509) connect: controlledByApp=true
+D/libEGL  ( 9509): [eglCreateWindowSurface] start window is 0xb40000774af5a3d0
+I/BufferQueueProducer( 9509): [ImageReader-1138x910f22m7-9509-1](id:252500000003,api:0,p:-1,c:9509) connect: api=1 producerControlledByApp=true
+W/ile_collab_demo( 9509): type=1400 audit(0.0:164795): avc:  denied  { read } for  name="u:object_r:userdebug_or_eng_prop:s0" dev="tmpfs" ino=657 scontext=u:r:untrusted_app:s0:c31,c257,c512,c768 tcontext=u:object_r:userdebug_or_eng_prop:s0 tclass=file permissive=0
+W/libc    ( 9509): Unable to set property "debug.vulkan.api.version" to "4206592": connection failed: Permission denied
+I/vulkan  ( 9509): Failed set vulkan version, error =  Permission denied
+I/AdrenoVK-0( 9509): QUALCOMM build          : 0fd63a2c96, I5538b87673
+I/AdrenoVK-0( 9509): Build Date              : 05/07/25
+I/AdrenoVK-0( 9509): Shader Compiler Version : E031.47.18.30
+I/AdrenoVK-0( 9509): Local Branch            :
+I/AdrenoVK-0( 9509): Remote Branch           : refs/tags/AU_LINUX_ANDROID_LA.VENDOR.14.3.0.11.00.00.973.839
+I/AdrenoVK-0( 9509): Remote Branch           : NONE
+I/AdrenoVK-0( 9509): Reconstruct Branch      : NOTHING
+I/AdrenoVK-0( 9509): Build Config            : S L 16.1.2 AArch64
+I/AdrenoVK-0( 9509): Driver Path             : /vendor/lib64/hw/vulkan.adreno.so
+I/AdrenoVK-0( 9509): Driver Version          : 0800.40
+I/AdrenoVK-0( 9509): PFP                     : 0x01100079
+I/AdrenoVK-0( 9509): ME                      : 0x00000000
+I/AdrenoVK-0( 9509): Application Name    :
+I/AdrenoVK-0( 9509): Application Version : 0x00000001
+I/AdrenoVK-0( 9509): Engine Name         :
+I/AdrenoVK-0( 9509): Engine Version      : 0x00000001
+I/AdrenoVK-0( 9509): Api Version         : 0x00403000
+D/libEGL  ( 9509): [eglDestroySurface] start surface is 0xb4000077aaed2ea0
+D/ProfileInstaller( 9509): Installing profile for com.cses.cses_mobile_collab_demo
+I/ile_collab_demo( 9509): AssetManager2(0xb40000772aedec58) locale list changing from [] to [zh-Hans-CN]
+I/ile_collab_demo( 9509): AssetManager2(0xb40000772aeddfd8) locale list changing from [] to [zh-Hans-CN]
+I/ile_collab_demo( 9509): AssetManager2(0xb40000772aee3758) locale list changing from [] to [zh-Hans-CN]
+W/WebViewControl( 9509): WebViewControl
+W/cr_media( 9509): BLUETOOTH_CONNECT permission is missing.
+W/cr_media( 9509): getBluetoothAdapter() requires BLUETOOTH permission
+W/cr_media( 9509): registerBluetoothIntentsIfNeeded: Requires BLUETOOTH permission
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+I/PlatformViewsChannel( 9509): Using legacy platform view rendering strategy.
+I/PlatformViewsController( 9509): Hosting view in view hierarchy for platform view: 1
+I/PlatformViewsController( 9509): PlatformView is using SurfaceProducer backend
+W/libc    ( 9509): Access denied finding property "ro.debuggable"
+I/BufferQueueConsumer( 9509): [](id:252500000004,api:0,p:-1,c:9509) connect: controlledByApp=true
+D/libEGL  ( 9509): [eglCreateWindowSurface] start window is 0xb40000774af89d40
+I/BufferQueueProducer( 9509): [ImageReader-1x1f22m7-9509-2](id:252500000004,api:0,p:-1,c:9509) connect: api=1 producerControlledByApp=true
+W/cr_WebSettings( 9509): getForceDark() is a no-op in an app with targetSdkVersion>=T
+I/ImeTracker( 9509): com.cses.cses_mobile_collab_demo:14aa792b: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+I/InputMethodManager( 9509): handleMessage: MSG_SET_ACTIVE true, was false
+V/InputMethodManager( 9509): Starting input: Bind result=InputBindResult{result=SUCCESS_WAITING_IME_SESSION method=null id=com.sohu.inputmethod.sogou.honor/.SogouIME sequence=2138 result=1 isInputMethodSuppressingSpellChecker=false}
+I/InputMethodManager( 9509): handleMessage: MSG_BIND 2138,com.sohu.inputmethod.sogou.honor/.SogouIME
+W/InputMethodManager( 9509): startInputReason = 6
+V/InputMethodManager( 9509): Starting input: finished by someone else. view=DecorView{80623ce},focus=false,windowFocus=true,window=android.view.ViewRootImpl$W@651c59a,displayId=0,temporaryDetach=false,hasImeFocus=true servedView=DecorView{80623ce},focus=false,windowFocus=true,window=android.view.ViewRootImpl$W@651c59a,displayId=0,temporaryDetach=false,hasImeFocus=true mServedConnecting=false
+I/SurfaceControl( 9509): nativeRelease 0xb4000075eae9e430 count: 1 name: Surface(name=f9c7047 StatusBar)/@0x394236a - animation-leash of insets_animation#13902
+I/SurfaceControl( 9509): nativeRelease 0xb4000075eaea0050 count: 1 name: Surface(name=81afc96 NavigationBar0)/@0x1490c36 - animation-leash of insets_animation#13903
+E/RtgSchedManager( 9509): endActivityTransaction: margin state not match
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+D/FullScreenUtils( 9509): isNeedToHideStatusBar: splitscreenstate=0
+D/FlutterJNI( 9509): Sending viewport metrics to the engine.
+I/HwViewRootImpl( 9509): removeInvalidNode jank list is null
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+D/FullScreenUtils( 9509): isNeedToHideStatusBar: splitscreenstate=0
+D/FlutterJNI( 9509): Sending viewport metrics to the engine.
+W/libc    ( 9509): Access denied finding property "ro.debuggable"
+I/BufferQueueConsumer( 9509): [](id:252500000005,api:0,p:-1,c:9509) connect: controlledByApp=true
+D/libEGL  ( 9509): [eglCreateWindowSurface] start window is 0xb40000774afa36a0
+I/BufferQueueProducer( 9509): [ImageReader-1164x910f22m7-9509-3](id:252500000005,api:0,p:-1,c:9509) connect: api=1 producerControlledByApp=true
+W/WebViewControl( 9509): enter isForbidload
+W/WebViewControl( 9509): not MinorsEnabled, return
+W/VideoCapabilities( 9509): Unsupported mime image/vnd.android.heic
+W/ile_collab_demo( 9509): Missing inline cache for void android.media.MediaCodecInfo$AudioCapabilities.limitSampleRates(android.util.Range[])
+W/ile_collab_demo( 9509): Missing inline cache for void android.media.MediaCodecInfo$AudioCapabilities.getDefaultFormat(android.media.MediaFormat)
+W/VideoCapabilities( 9509): Unsupported mime image/vnd.android.heic
+W/ile_collab_demo( 9509): Missing inline cache for void android.media.MediaCodecInfo$EncoderCapabilities.getDefaultFormat(android.media.MediaFormat)
+W/ile_collab_demo( 9509): Missing inline cache for void android.media.MediaCodecInfo$EncoderCapabilities.getDefaultFormat(android.media.MediaFormat)
+W/VideoCapabilities( 9509): Unsupported mime image/vnd.android.heic
+D/libEGL  ( 9509): [eglDestroySurface] start surface is 0xb4000077aaed2c60
+I/BufferQueueProducer( 9509): [ImageReader-1x1f22m7-9509-0](id:252500000002,api:1,p:9509,c:9509) disconnect: api 1
+I/BufferQueueConsumer( 9509): [ImageReader-1x1f22m7-9509-0](id:252500000002,api:0,p:-1,c:9509) disconnect
+W/ile_collab_demo( 9509): Binder 0xb40000771aeb51a0 destroyed after setInheritRt before being parceled.
+W/WebViewControl( 9509): enter isForbidload
+W/WebViewControl( 9509): not MinorsEnabled, return
+D/libEGL  ( 9509): [eglDestroySurface] start surface is 0xb4000077aaec77d0
+I/BufferQueueProducer( 9509): [ImageReader-1x1f22m7-9509-2](id:252500000004,api:1,p:9509,c:9509) disconnect: api 1
+I/BufferQueueConsumer( 9509): [ImageReader-1x1f22m7-9509-2](id:252500000004,api:0,p:-1,c:9509) disconnect
+W/ile_collab_demo( 9509): Binder 0xb40000771aede720 destroyed after setInheritRt before being parceled.
+W/WindowOnBackDispatcher( 9509): sendCancelIfRunning: isInProgress=false callback=io.flutter.embedding.android.FlutterActivity$1@fc0b1de
+D/libEGL  ( 9509): [eglDestroySurface] start surface is 0xb4000077aaed6c80
+I/BufferQueueProducer( 9509): [ImageReader-1164x910f22m7-9509-3](id:252500000005,api:1,p:9509,c:9509) disconnect: api 1
+I/BufferQueueConsumer( 9509): [ImageReader-1164x910f22m7-9509-3](id:252500000005,api:0,p:-1,c:9509) disconnect
+W/ile_collab_demo( 9509): Binder 0xb40000771aede8e0 destroyed after setInheritRt before being parceled.
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+I/PlatformViewsChannel( 9509): Using legacy platform view rendering strategy.
+I/PlatformViewsController( 9509): Hosting view in view hierarchy for platform view: 2
+I/PlatformViewsController( 9509): PlatformView is using SurfaceProducer backend
+W/libc    ( 9509): Access denied finding property "ro.debuggable"
+I/BufferQueueConsumer( 9509): [](id:252500000006,api:0,p:-1,c:9509) connect: controlledByApp=true
+W/ile_collab_demo( 9509): type=1400 audit(0.0:164799): avc:  denied  { read } for  name="u:object_r:userdebug_or_eng_prop:s0" dev="tmpfs" ino=657 scontext=u:r:untrusted_app:s0:c31,c257,c512,c768 tcontext=u:object_r:userdebug_or_eng_prop:s0 tclass=file permissive=0
+D/libEGL  ( 9509): [eglCreateWindowSurface] start window is 0xb40000774af5bc60
+I/BufferQueueProducer( 9509): [ImageReader-1x1f22m7-9509-4](id:252500000006,api:0,p:-1,c:9509) connect: api=1 producerControlledByApp=true
+W/cr_WebSettings( 9509): getForceDark() is a no-op in an app with targetSdkVersion>=T
+D/FullScreenUtils( 9509): isNeedToHideStatusBar: splitscreenstate=0
+D/FlutterJNI( 9509): Sending viewport metrics to the engine.
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+D/FullScreenUtils( 9509): isNeedToHideStatusBar: splitscreenstate=0
+D/FlutterJNI( 9509): Sending viewport metrics to the engine.
+W/libc    ( 9509): Access denied finding property "ro.debuggable"
+I/BufferQueueConsumer( 9509): [](id:252500000007,api:0,p:-1,c:9509) connect: controlledByApp=true
+I/BufferQueueProducer( 9509): [ImageReader-1164x910f22m7-9509-5](id:252500000007,api:0,p:-1,c:9509) connect: api=1 producerControlledByApp=true
+W/WebViewControl( 9509): enter isForbidload
+W/WebViewControl( 9509): not MinorsEnabled, return
+D/libEGL  ( 9509): [eglDestroySurface] start surface is 0xb4000077aaed64a0
+I/BufferQueueProducer( 9509): [ImageReader-1x1f22m7-9509-4](id:252500000006,api:1,p:9509,c:9509) disconnect: api 1
+I/BufferQueueConsumer( 9509): [ImageReader-1x1f22m7-9509-4](id:252500000006,api:0,p:-1,c:9509) disconnect
+W/ile_collab_demo( 9509): Binder 0xb40000771aedde60 destroyed after setInheritRt before being parceled.
+W/WindowOnBackDispatcher( 9509): sendCancelIfRunning: isInProgress=false callback=io.flutter.embedding.android.FlutterActivity$1@fc0b1de
+D/libEGL  ( 9509): [eglDestroySurface] start surface is 0xb4000077aaee2b30
+I/BufferQueueProducer( 9509): [ImageReader-1164x910f22m7-9509-5](id:252500000007,api:1,p:9509,c:9509) disconnect: api 1
+I/BufferQueueConsumer( 9509): [ImageReader-1164x910f22m7-9509-5](id:252500000007,api:0,p:-1,c:9509) disconnect
+W/ile_collab_demo( 9509): Binder 0xb40000771aee3260 destroyed after setInheritRt before being parceled.
+I/[Smart Gc]( 9509): heap expand: 67108864
+I/HWUI    ( 9509): RenderProxy::DestroyContext!
+I/HWUI    ( 9509): RenderProxy::DestroyContext!
+I/HWUI    ( 9509): RenderProxy::DestroyContext!
+I/HWUI    ( 9509): RenderProxy::DestroyContext!
+I/HWUI    ( 9509): RenderProxy::DestroyContext!
+W/FinalizerDaemon( 9509): type=1400 audit(0.0:164801): avc:  denied  { getopt } for  path="/dev/socket/usap_pool_primary" scontext=u:r:untrusted_app:s0:c31,c257,c512,c768 tcontext=u:r:zygote:s0 tclass=unix_stream_socket permissive=0
+D/libEGL  ( 9509): [eglDestroySurface] start surface is 0xb4000077aaed2f30
+I/BufferQueueProducer( 9509): [ImageReader-1138x910f22m7-9509-1](id:252500000003,api:1,p:9509,c:9509) disconnect: api 1
+I/BufferQueueConsumer( 9509): [ImageReader-1138x910f22m7-9509-1](id:252500000003,api:0,p:-1,c:9509) disconnect
+W/ile_collab_demo( 9509): Binder 0xb40000771aed1de0 destroyed after setInheritRt before being parceled.
+I/flutter ( 9509): 00:05 +11: remote conflict reload and permission revoke invalidate draft
+W/HWUI    ( 9509): Image decoding logging dropped!
+W/HWUI    ( 9509): Image decoding logging dropped!
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+I/PlatformViewsChannel( 9509): Using legacy platform view rendering strategy.
+I/PlatformViewsController( 9509): Hosting view in view hierarchy for platform view: 3
+I/PlatformViewsController( 9509): PlatformView is using SurfaceProducer backend
+W/ile_collab_demo( 9509): type=1400 audit(0.0:164802): avc:  denied  { read } for  name="u:object_r:userdebug_or_eng_prop:s0" dev="tmpfs" ino=657 scontext=u:r:untrusted_app:s0:c31,c257,c512,c768 tcontext=u:object_r:userdebug_or_eng_prop:s0 tclass=file permissive=0
+W/libc    ( 9509): Access denied finding property "ro.debuggable"
+I/BufferQueueConsumer( 9509): [](id:252500000008,api:0,p:-1,c:9509) connect: controlledByApp=true
+D/libEGL  ( 9509): [eglCreateWindowSurface] start window is 0xb40000774af1cd50
+I/BufferQueueProducer( 9509): [ImageReader-1x1f22m7-9509-6](id:252500000008,api:0,p:-1,c:9509) connect: api=1 producerControlledByApp=true
+W/cr_WebSettings( 9509): getForceDark() is a no-op in an app with targetSdkVersion>=T
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): enter isForbidload
+W/WebViewControl( 9509): not MinorsEnabled, return
+D/FullScreenUtils( 9509): isNeedToHideStatusBar: splitscreenstate=0
+D/FlutterJNI( 9509): Sending viewport metrics to the engine.
+W/libc    ( 9509): Access denied finding property "ro.debuggable"
+W/ile_collab_demo( 9509): type=1400 audit(0.0:164803): avc:  denied  { read } for  name="u:object_r:userdebug_or_eng_prop:s0" dev="tmpfs" ino=657 scontext=u:r:untrusted_app:s0:c31,c257,c512,c768 tcontext=u:object_r:userdebug_or_eng_prop:s0 tclass=file permissive=0
+I/BufferQueueConsumer( 9509): [](id:252500000009,api:0,p:-1,c:9509) connect: controlledByApp=true
+D/libEGL  ( 9509): [eglCreateWindowSurface] start window is 0xb40000774af518a0
+I/BufferQueueProducer( 9509): [ImageReader-1138x910f22m7-9509-7](id:252500000009,api:0,p:-1,c:9509) connect: api=1 producerControlledByApp=true
+D/FullScreenUtils( 9509): isNeedToHideStatusBar: splitscreenstate=0
+D/FlutterJNI( 9509): Sending viewport metrics to the engine.
+I/ile_collab_demo( 9509): AssetManager2(0xb40000772aee3a78) locale list changing from [] to [zh-Hans-CN]
+I/ile_collab_demo( 9509): AssetManager2(0xb40000772aee0b98) locale list changing from [] to [zh-Hans-CN]
+I/ile_collab_demo( 9509): AssetManager2(0xb40000772aedff18) locale list changing from [] to [zh-Hans-CN]
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+D/libEGL  ( 9509): [eglDestroySurface] start surface is 0xb4000077aaec7740
+I/BufferQueueProducer( 9509): [ImageReader-1x1f22m7-9509-6](id:252500000008,api:1,p:9509,c:9509) disconnect: api 1
+I/BufferQueueConsumer( 9509): [ImageReader-1x1f22m7-9509-6](id:252500000008,api:0,p:-1,c:9509) disconnect
+W/ile_collab_demo( 9509): Binder 0xb40000771aecfae0 destroyed after setInheritRt before being parceled.
+I/PlatformViewsChannel( 9509): Using legacy platform view rendering strategy.
+I/PlatformViewsController( 9509): Hosting view in view hierarchy for platform view: 4
+I/PlatformViewsController( 9509): PlatformView is using SurfaceProducer backend
+W/libc    ( 9509): Access denied finding property "ro.debuggable"
+I/BufferQueueConsumer( 9509): [](id:25250000000a,api:0,p:-1,c:9509) connect: controlledByApp=true
+W/ile_collab_demo( 9509): type=1400 audit(0.0:164804): avc:  denied  { read } for  name="u:object_r:userdebug_or_eng_prop:s0" dev="tmpfs" ino=657 scontext=u:r:untrusted_app:s0:c31,c257,c512,c768 tcontext=u:object_r:userdebug_or_eng_prop:s0 tclass=file permissive=0
+D/libEGL  ( 9509): [eglCreateWindowSurface] start window is 0xb40000774afa2e70
+I/BufferQueueProducer( 9509): [ImageReader-1x1f22m7-9509-8](id:25250000000a,api:0,p:-1,c:9509) connect: api=1 producerControlledByApp=true
+W/cr_WebSettings( 9509): getForceDark() is a no-op in an app with targetSdkVersion>=T
+D/FullScreenUtils( 9509): isNeedToHideStatusBar: splitscreenstate=0
+D/FlutterJNI( 9509): Sending viewport metrics to the engine.
+D/FullScreenUtils( 9509): isNeedToHideStatusBar: splitscreenstate=0
+D/FlutterJNI( 9509): Sending viewport metrics to the engine.
+W/ile_collab_demo( 9509): type=1400 audit(0.0:164805): avc:  denied  { read } for  name="u:object_r:userdebug_or_eng_prop:s0" dev="tmpfs" ino=657 scontext=u:r:untrusted_app:s0:c31,c257,c512,c768 tcontext=u:object_r:userdebug_or_eng_prop:s0 tclass=file permissive=0
+W/libc    ( 9509): Access denied finding property "ro.debuggable"
+I/BufferQueueConsumer( 9509): [](id:25250000000b,api:0,p:-1,c:9509) connect: controlledByApp=true
+D/libEGL  ( 9509): [eglCreateWindowSurface] start window is 0xb40000774af88ce0
+I/BufferQueueProducer( 9509): [ImageReader-1164x910f22m7-9509-9](id:25250000000b,api:0,p:-1,c:9509) connect: api=1 producerControlledByApp=true
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): enter isForbidload
+W/WebViewControl( 9509): not MinorsEnabled, return
+D/libEGL  ( 9509): [eglDestroySurface] start surface is 0xb4000077aaed2ab0
+I/BufferQueueProducer( 9509): [ImageReader-1x1f22m7-9509-8](id:25250000000a,api:1,p:9509,c:9509) disconnect: api 1
+I/BufferQueueConsumer( 9509): [ImageReader-1x1f22m7-9509-8](id:25250000000a,api:0,p:-1,c:9509) disconnect
+W/ile_collab_demo( 9509): Binder 0xb40000771aed7fe0 destroyed after setInheritRt before being parceled.
+D/libEGL  ( 9509): [eglDestroySurface] start surface is 0xb4000077aaecebb0
+I/BufferQueueProducer( 9509): [ImageReader-1164x910f22m7-9509-9](id:25250000000b,api:1,p:9509,c:9509) disconnect: api 1
+I/BufferQueueConsumer( 9509): [ImageReader-1164x910f22m7-9509-9](id:25250000000b,api:0,p:-1,c:9509) disconnect
+W/ile_collab_demo( 9509): Binder 0xb40000771aed55e0 destroyed after setInheritRt before being parceled.
+D/libEGL  ( 9509): [eglDestroySurface] start surface is 0xb4000077aaec25b0
+I/BufferQueueProducer( 9509): [ImageReader-1138x910f22m7-9509-7](id:252500000009,api:1,p:9509,c:9509) disconnect: api 1
+I/BufferQueueConsumer( 9509): [ImageReader-1138x910f22m7-9509-7](id:252500000009,api:0,p:-1,c:9509) disconnect
+W/ile_collab_demo( 9509): Binder 0xb40000771aedbee0 destroyed after setInheritRt before being parceled.
+I/flutter ( 9509): 00:08 +12: keyboard/large text at 320px keeps confirmation visible
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+I/PlatformViewsChannel( 9509): Using legacy platform view rendering strategy.
+I/PlatformViewsController( 9509): Hosting view in view hierarchy for platform view: 5
+I/PlatformViewsController( 9509): PlatformView is using SurfaceProducer backend
+W/libc    ( 9509): Access denied finding property "ro.debuggable"
+I/BufferQueueConsumer( 9509): [](id:25250000000c,api:0,p:-1,c:9509) connect: controlledByApp=true
+D/libEGL  ( 9509): [eglCreateWindowSurface] start window is 0xb40000774af0f870
+W/ile_collab_demo( 9509): type=1400 audit(0.0:164806): avc:  denied  { read } for  name="u:object_r:userdebug_or_eng_prop:s0" dev="tmpfs" ino=657 scontext=u:r:untrusted_app:s0:c31,c257,c512,c768 tcontext=u:object_r:userdebug_or_eng_prop:s0 tclass=file permissive=0
+I/BufferQueueProducer( 9509): [ImageReader-1x1f22m7-9509-10](id:25250000000c,api:0,p:-1,c:9509) connect: api=1 producerControlledByApp=true
+W/cr_WebSettings( 9509): getForceDark() is a no-op in an app with targetSdkVersion>=T
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): enter isForbidload
+W/WebViewControl( 9509): not MinorsEnabled, return
+D/FullScreenUtils( 9509): isNeedToHideStatusBar: splitscreenstate=0
+D/FlutterJNI( 9509): Sending viewport metrics to the engine.
+W/libc    ( 9509): Access denied finding property "ro.debuggable"
+W/ile_collab_demo( 9509): type=1400 audit(0.0:164807): avc:  denied  { read } for  name="u:object_r:userdebug_or_eng_prop:s0" dev="tmpfs" ino=657 scontext=u:r:untrusted_app:s0:c31,c257,c512,c768 tcontext=u:object_r:userdebug_or_eng_prop:s0 tclass=file permissive=0
+I/BufferQueueConsumer( 9509): [](id:25250000000d,api:0,p:-1,c:9509) connect: controlledByApp=true
+D/libEGL  ( 9509): [eglCreateWindowSurface] start window is 0xb40000774af8a570
+I/BufferQueueProducer( 9509): [ImageReader-1138x910f22m7-9509-11](id:25250000000d,api:0,p:-1,c:9509) connect: api=1 producerControlledByApp=true
+D/FullScreenUtils( 9509): isNeedToHideStatusBar: splitscreenstate=0
+D/FlutterJNI( 9509): Sending viewport metrics to the engine.
+D/FullScreenUtils( 9509): isNeedToHideStatusBar: splitscreenstate=0
+D/FlutterJNI( 9509): Sending viewport metrics to the engine.
+D/libEGL  ( 9509): [eglDestroySurface] start surface is 0xb4000077aaecc8d0
+I/BufferQueueProducer( 9509): [ImageReader-1x1f22m7-9509-10](id:25250000000c,api:1,p:9509,c:9509) disconnect: api 1
+I/BufferQueueConsumer( 9509): [ImageReader-1x1f22m7-9509-10](id:25250000000c,api:0,p:-1,c:9509) disconnect
+W/ile_collab_demo( 9509): Binder 0xb40000771aed78e0 destroyed after setInheritRt before being parceled.
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+I/PlatformViewsChannel( 9509): Using legacy platform view rendering strategy.
+I/PlatformViewsController( 9509): Hosting view in view hierarchy for platform view: 6
+I/PlatformViewsController( 9509): PlatformView is using SurfaceProducer backend
+W/libc    ( 9509): Access denied finding property "ro.debuggable"
+W/ile_collab_demo( 9509): type=1400 audit(0.0:164808): avc:  denied  { read } for  name="u:object_r:userdebug_or_eng_prop:s0" dev="tmpfs" ino=657 scontext=u:r:untrusted_app:s0:c31,c257,c512,c768 tcontext=u:object_r:userdebug_or_eng_prop:s0 tclass=file permissive=0
+I/BufferQueueConsumer( 9509): [](id:25250000000e,api:0,p:-1,c:9509) connect: controlledByApp=true
+D/libEGL  ( 9509): [eglCreateWindowSurface] start window is 0xb40000774af366b0
+I/BufferQueueProducer( 9509): [ImageReader-1x1f22m7-9509-12](id:25250000000e,api:0,p:-1,c:9509) connect: api=1 producerControlledByApp=true
+W/cr_WebSettings( 9509): getForceDark() is a no-op in an app with targetSdkVersion>=T
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+D/FullScreenUtils( 9509): isNeedToHideStatusBar: splitscreenstate=0
+D/FlutterJNI( 9509): Sending viewport metrics to the engine.
+W/WebViewControl( 9509): enter isForbidload
+W/WebViewControl( 9509): not MinorsEnabled, return
+D/FullScreenUtils( 9509): isNeedToHideStatusBar: splitscreenstate=0
+D/FlutterJNI( 9509): Sending viewport metrics to the engine.
+W/libc    ( 9509): Access denied finding property "ro.debuggable"
+I/BufferQueueConsumer( 9509): [](id:25250000000f,api:0,p:-1,c:9509) connect: controlledByApp=true
+D/libEGL  ( 9509): [eglCreateWindowSurface] start window is 0xb40000774af2d350
+I/BufferQueueProducer( 9509): [ImageReader-936x910f22m7-9509-13](id:25250000000f,api:0,p:-1,c:9509) connect: api=1 producerControlledByApp=true
+W/ile_collab_demo( 9509): type=1400 audit(0.0:164809): avc:  denied  { read } for  name="u:object_r:userdebug_or_eng_prop:s0" dev="tmpfs" ino=657 scontext=u:r:untrusted_app:s0:c31,c257,c512,c768 tcontext=u:object_r:userdebug_or_eng_prop:s0 tclass=file permissive=0
+D/libEGL  ( 9509): [eglDestroySurface] start surface is 0xb4000077aaedc200
+I/BufferQueueProducer( 9509): [ImageReader-1x1f22m7-9509-12](id:25250000000e,api:1,p:9509,c:9509) disconnect: api 1
+I/BufferQueueConsumer( 9509): [ImageReader-1x1f22m7-9509-12](id:25250000000e,api:0,p:-1,c:9509) disconnect
+W/ile_collab_demo( 9509): Binder 0xb40000771aee4e60 destroyed after setInheritRt before being parceled.
+D/libEGL  ( 9509): [eglDestroySurface] start surface is 0xb4000077aaee81d0
+I/BufferQueueProducer( 9509): [ImageReader-936x910f22m7-9509-13](id:25250000000f,api:1,p:9509,c:9509) disconnect: api 1
+I/BufferQueueConsumer( 9509): [ImageReader-936x910f22m7-9509-13](id:25250000000f,api:0,p:-1,c:9509) disconnect
+W/ile_collab_demo( 9509): Binder 0xb40000771aee5c60 destroyed after setInheritRt before being parceled.
+D/libEGL  ( 9509): [eglDestroySurface] start surface is 0xb4000077aaed5f90
+I/BufferQueueProducer( 9509): [ImageReader-1138x910f22m7-9509-11](id:25250000000d,api:1,p:9509,c:9509) disconnect: api 1
+I/BufferQueueConsumer( 9509): [ImageReader-1138x910f22m7-9509-11](id:25250000000d,api:0,p:-1,c:9509) disconnect
+W/ile_collab_demo( 9509): Binder 0xb40000771aedd220 destroyed after setInheritRt before being parceled.
+I/flutter ( 9509): 00:11 +13: insertion bookmark survives remote reorder
+E/chromium( 9509): [ERROR:android_webview/browser/aw_browser_terminator.cc:165] Renderer process (14866) crash detected (code -1).
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+I/PlatformViewsChannel( 9509): Using legacy platform view rendering strategy.
+I/PlatformViewsController( 9509): Hosting view in view hierarchy for platform view: 7
+I/PlatformViewsController( 9509): PlatformView is using SurfaceProducer backend
+W/libc    ( 9509): Access denied finding property "ro.debuggable"
+I/BufferQueueConsumer( 9509): [](id:252500000010,api:0,p:-1,c:9509) connect: controlledByApp=true
+W/ile_collab_demo( 9509): type=1400 audit(0.0:164810): avc:  denied  { read } for  name="u:object_r:userdebug_or_eng_prop:s0" dev="tmpfs" ino=657 scontext=u:r:untrusted_app:s0:c31,c257,c512,c768 tcontext=u:object_r:userdebug_or_eng_prop:s0 tclass=file permissive=0
+D/libEGL  ( 9509): [eglCreateWindowSurface] start window is 0xb40000774afe87f0
+I/BufferQueueProducer( 9509): [ImageReader-1x1f22m7-9509-14](id:252500000010,api:0,p:-1,c:9509) connect: api=1 producerControlledByApp=true
+W/cr_WebSettings( 9509): getForceDark() is a no-op in an app with targetSdkVersion>=T
+D/FullScreenUtils( 9509): isNeedToHideStatusBar: splitscreenstate=0
+D/FlutterJNI( 9509): Sending viewport metrics to the engine.
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+D/FullScreenUtils( 9509): isNeedToHideStatusBar: splitscreenstate=0
+D/FlutterJNI( 9509): Sending viewport metrics to the engine.
+W/libc    ( 9509): Access denied finding property "ro.debuggable"
+I/BufferQueueConsumer( 9509): [](id:252500000011,api:0,p:-1,c:9509) connect: controlledByApp=true
+D/libEGL  ( 9509): [eglCreateWindowSurface] start window is 0xb40000774afe4ea0
+I/BufferQueueProducer( 9509): [ImageReader-1164x910f22m7-9509-15](id:252500000011,api:0,p:-1,c:9509) connect: api=1 producerControlledByApp=true
+W/WebViewControl( 9509): enter isForbidload
+W/WebViewControl( 9509): not MinorsEnabled, return
+D/libEGL  ( 9509): [eglDestroySurface] start surface is 0xb4000077aaecbfd0
+I/BufferQueueProducer( 9509): [ImageReader-1x1f22m7-9509-14](id:252500000010,api:1,p:9509,c:9509) disconnect: api 1
+I/BufferQueueConsumer( 9509): [ImageReader-1x1f22m7-9509-14](id:252500000010,api:0,p:-1,c:9509) disconnect
+W/ile_collab_demo( 9509): Binder 0xb40000771aedaf20 destroyed after setInheritRt before being parceled.
+D/libEGL  ( 9509): [eglDestroySurface] start surface is 0xb4000077aaef5af0
+I/BufferQueueProducer( 9509): [ImageReader-1164x910f22m7-9509-15](id:252500000011,api:1,p:9509,c:9509) disconnect: api 1
+I/BufferQueueConsumer( 9509): [ImageReader-1164x910f22m7-9509-15](id:252500000011,api:0,p:-1,c:9509) disconnect
+W/ile_collab_demo( 9509): Binder 0xb40000771aef4fa0 destroyed after setInheritRt before being parceled.
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+I/PlatformViewsChannel( 9509): Using legacy platform view rendering strategy.
+I/PlatformViewsController( 9509): Hosting view in view hierarchy for platform view: 8
+I/PlatformViewsController( 9509): PlatformView is using SurfaceProducer backend
+W/libc    ( 9509): Access denied finding property "ro.debuggable"
+I/BufferQueueConsumer( 9509): [](id:252500000012,api:0,p:-1,c:9509) connect: controlledByApp=true
+D/libEGL  ( 9509): [eglCreateWindowSurface] start window is 0xb40000774afac1d0
+I/BufferQueueProducer( 9509): [ImageReader-1x1f22m7-9509-16](id:252500000012,api:0,p:-1,c:9509) connect: api=1 producerControlledByApp=true
+W/cr_WebSettings( 9509): getForceDark() is a no-op in an app with targetSdkVersion>=T
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): enter isForbidload
+W/WebViewControl( 9509): not MinorsEnabled, return
+D/FullScreenUtils( 9509): isNeedToHideStatusBar: splitscreenstate=0
+D/FlutterJNI( 9509): Sending viewport metrics to the engine.
+W/libc    ( 9509): Access denied finding property "ro.debuggable"
+I/BufferQueueConsumer( 9509): [](id:252500000013,api:0,p:-1,c:9509) connect: controlledByApp=true
+W/ile_collab_demo( 9509): type=1400 audit(0.0:164819): avc:  denied  { read } for  name="u:object_r:userdebug_or_eng_prop:s0" dev="tmpfs" ino=657 scontext=u:r:untrusted_app:s0:c31,c257,c512,c768 tcontext=u:object_r:userdebug_or_eng_prop:s0 tclass=file permissive=0
+D/libEGL  ( 9509): [eglCreateWindowSurface] start window is 0xb40000774afe6730
+I/BufferQueueProducer( 9509): [ImageReader-1138x910f22m7-9509-17](id:252500000013,api:0,p:-1,c:9509) connect: api=1 producerControlledByApp=true
+D/FullScreenUtils( 9509): isNeedToHideStatusBar: splitscreenstate=0
+D/FlutterJNI( 9509): Sending viewport metrics to the engine.
+D/libEGL  ( 9509): [eglDestroySurface] start surface is 0xb4000077aaef8130
+I/BufferQueueProducer( 9509): [ImageReader-1x1f22m7-9509-16](id:252500000012,api:1,p:9509,c:9509) disconnect: api 1
+I/BufferQueueConsumer( 9509): [ImageReader-1x1f22m7-9509-16](id:252500000012,api:0,p:-1,c:9509) disconnect
+W/ile_collab_demo( 9509): Binder 0xb40000771aef2920 destroyed after setInheritRt before being parceled.
+D/libEGL  ( 9509): [eglDestroySurface] start surface is 0xb4000077aaef39c0
+I/BufferQueueProducer( 9509): [ImageReader-1138x910f22m7-9509-17](id:252500000013,api:1,p:9509,c:9509) disconnect: api 1
+I/BufferQueueConsumer( 9509): [ImageReader-1138x910f22m7-9509-17](id:252500000013,api:0,p:-1,c:9509) disconnect
+W/ile_collab_demo( 9509): Binder 0xb40000771aee4e60 destroyed after setInheritRt before being parceled.
+I/flutter ( 9509): 00:15 +14: Android bundled WebView renders seven diagram types, invalid and empty source
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+I/PlatformViewsChannel( 9509): Using legacy platform view rendering strategy.
+I/PlatformViewsController( 9509): Hosting view in view hierarchy for platform view: 9
+I/PlatformViewsController( 9509): PlatformView is using SurfaceProducer backend
+W/libc    ( 9509): Access denied finding property "ro.debuggable"
+I/BufferQueueConsumer( 9509): [](id:252500000014,api:0,p:-1,c:9509) connect: controlledByApp=true
+W/ile_collab_demo( 9509): type=1400 audit(0.0:164820): avc:  denied  { read } for  name="u:object_r:userdebug_or_eng_prop:s0" dev="tmpfs" ino=657 scontext=u:r:untrusted_app:s0:c31,c257,c512,c768 tcontext=u:object_r:userdebug_or_eng_prop:s0 tclass=file permissive=0
+D/libEGL  ( 9509): [eglCreateWindowSurface] start window is 0xb40000774af01b60
+I/BufferQueueProducer( 9509): [ImageReader-1x1f22m7-9509-18](id:252500000014,api:0,p:-1,c:9509) connect: api=1 producerControlledByApp=true
+W/cr_WebSettings( 9509): getForceDark() is a no-op in an app with targetSdkVersion>=T
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): WebViewControl
+W/WebViewControl( 9509): enter isForbidload
+W/WebViewControl( 9509): not MinorsEnabled, return
+D/FullScreenUtils( 9509): isNeedToHideStatusBar: splitscreenstate=0
+D/FlutterJNI( 9509): Sending viewport metrics to the engine.
+W/libc    ( 9509): Access denied finding property "ro.debuggable"
+I/BufferQueueConsumer( 9509): [](id:252500000015,api:0,p:-1,c:9509) connect: controlledByApp=true
+D/libEGL  ( 9509): [eglCreateWindowSurface] start window is 0xb40000774af0f870
+I/BufferQueueProducer( 9509): [ImageReader-1200x910f22m7-9509-19](id:252500000015,api:0,p:-1,c:9509) connect: api=1 producerControlledByApp=true
+D/FullScreenUtils( 9509): isNeedToHideStatusBar: splitscreenstate=0
+D/FlutterJNI( 9509): Sending viewport metrics to the engine.
+D/libEGL  ( 9509): [eglDestroySurface] start surface is 0xb4000077aaef07b0
+I/BufferQueueProducer( 9509): [ImageReader-1x1f22m7-9509-18](id:252500000014,api:1,p:9509,c:9509) disconnect: api 1
+I/BufferQueueConsumer( 9509): [ImageReader-1x1f22m7-9509-18](id:252500000014,api:0,p:-1,c:9509) disconnect
+W/ile_collab_demo( 9509): Binder 0xb40000771aef70e0 destroyed after setInheritRt before being parceled.
+D/FullScreenUtils( 9509): isNeedToHideStatusBar: splitscreenstate=0
+D/FlutterJNI( 9509): Sending viewport metrics to the engine.
+D/FullScreenUtils( 9509): isNeedToHideStatusBar: splitscreenstate=0
+D/FlutterJNI( 9509): Sending viewport metrics to the engine.
+D/libEGL  ( 9509): [eglDestroySurface] start surface is 0xb4000077aaee4fc0
+I/BufferQueueProducer( 9509): [ImageReader-1200x910f22m7-9509-19](id:252500000015,api:1,p:9509,c:9509) disconnect: api 1
+I/BufferQueueConsumer( 9509): [ImageReader-1200x910f22m7-9509-19](id:252500000015,api:0,p:-1,c:9509) disconnect
+W/ile_collab_demo( 9509): Binder 0xb40000771aef41a0 destroyed after setInheritRt before being parceled.
+I/flutter ( 9509): 00:21 +15: (tearDownAll)
+I/flutter ( 9509): 00:21 +16: All tests passed!
+All tests passed.
+Leaving the application running.

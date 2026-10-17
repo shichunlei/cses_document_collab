@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src data:; font-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>代码绘图</title>
+  <style>
+    body { margin: 0; padding: 12px; background: white; color: #475569; font: 14px sans-serif; }
+    #graph { min-height: 80px; text-align: center; }
+    #graph svg { max-width: 100%; height: auto; }
+    #error { white-space: pre-wrap; color: #b91c1c; }
+  </style>
+  <script src="mermaid.min.js"></script>
+</head>
+<body>
+  <div id="graph" aria-label="Mermaid 图形"></div>
+  <p id="error" role="status"></p>
+  <script>
+    // Source remains data passed through JSON; diagrams cannot enable links,
+    // HTML labels, external requests or native editor commands.
+    mermaid.initialize({startOnLoad: false, securityLevel: 'strict',
+      suppressErrorRendering: true, maxTextSize: 100000, htmlLabels: false,
+      flowchart: {htmlLabels: false}, theme: 'default'});
+    let latest = 0;
+    window.invalidateDiagram = function (generation, empty) {
+      latest = generation;
+      if (empty) {
+        document.getElementById('graph').replaceChildren();
+        document.getElementById('error').textContent = '输入 Mermaid 源码以生成图形';
+      }
+    };
+    window.renderDiagram = async function (source, generation) {
+      latest = generation;
+      const graph = document.getElementById('graph');
+      const error = document.getElementById('error');
+      const report = (failed) => {
+        if (window.DiagramStatus) DiagramStatus.postMessage(JSON.stringify({generation, failed}));
+      };
+      if (!source.trim()) {
+        graph.replaceChildren();
+        error.textContent = '输入 Mermaid 源码以生成图形';
+        report(false);
+        return;
+      }
+      try {
+        const result = await mermaid.render('diagram-' + generation, source);
+        if (generation !== latest) return;
+        // Filter in inert template content before mounting the result.
+        const template = document.createElement('template');
+        template.innerHTML = result.svg;
+        template.content.querySelectorAll('img, image, script, iframe, object, embed').forEach(node => node.remove());
+        template.content.querySelectorAll('*').forEach(node => {
+          for (const attribute of [...node.attributes]) {
+            if (/^on/i.test(attribute.name) || /^(?:xlink:)?href$/i.test(attribute.name)) {
+              node.removeAttributeNode(attribute);
+            }
+          }
+        });
+        // No bindFunctions: diagram-defined click handlers never become active.
+        graph.replaceChildren(template.content);
+        error.textContent = '';
+        report(false);
+      } catch (_) {
+        if (generation !== latest) return;
+        error.textContent = '暂时无法绘制，请检查 Mermaid 语法。源码会保留。';
+        report(true);
+      }
+    };
+  </script>
+</body>
+</html>
