@@ -309,6 +309,7 @@ class CollabController extends ChangeNotifier {
           message.contains('INVALID_ORDERED_PROPERTIES') ||
           message.contains('INVALID_BLOCK_CONVERSION') ||
           message.contains('BLOCK_ID_CONFLICT')) {
+        _services.report('正文块操作被原生校验拒绝', error, stackTrace, 'DocCollab');
         _error = '该操作不适用于当前文档，已恢复原内容';
         _notify();
       } else {
