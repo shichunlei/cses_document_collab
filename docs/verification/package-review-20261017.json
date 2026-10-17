@@ -203,5 +203,19 @@
     "Existing test suite does not include the eight diagnostic cases above; passing it does not negate the reproduced bugs.",
     "Temporary databases/fixture documents only; no user document, login or existing cache touched.",
     "Other workspace changes preserved."
-  ]
+  ],
+  "follow_up": {
+    "date": "2026-10-17",
+    "fixed": [
+      "R1",
+      "R2",
+      "R3",
+      "R4"
+    ],
+    "open": [
+      "R5"
+    ],
+    "verification": "package-review-p1-fixes-20261017.json",
+    "note": "Original review observations/results above are preserved as historical evidence. R1 uses safe history invalidation rather than ordinary text OT."
+  }
 }

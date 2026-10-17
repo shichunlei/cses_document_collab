@@ -547,6 +547,7 @@ final class AppFlowyBlockEditorAdapter {
   /// URL、尺寸和题注复用节点映射，移除的可选投影显式清空。结构不同才重建节点。
   /// 不记录本地撤销或发送 WS；销毁后不执行，事务异常向调用边界传播。
   /// 表格路径/单元格正文或绘图源码/结构改变会清除本地路径历史及选区，避免过期撤销覆盖远端内容；布局属性更新保留历史。
+  /// 普通正文、格式或结构变化会移除未受稳定身份/指纹保护的历史项，不自动转换旧文字撤销。
   /// 正式编号及原始设置更新内存投影，不进入历史；成功转换后清除 replacesId。
   Future<void> replaceFromRemote(List<CollabEditorBlock> nextBlocks) async {
     if (_disposed) {
@@ -679,6 +680,11 @@ final class AppFlowyBlockEditorAdapter {
       // 路径历史不能越过远端换行/删行/合并或正文覆盖后继续作用于其他单元格。
       transaction.afterSelection = null;
       editorState.selection = null;
+    } else {
+      final structureChanged = _historyStructureChanged(currentBlocks, targetBlocks);
+      if (structureChanged || _historyContentChanged(currentBlocks, targetBlocks)) {
+        _discardUnsafeHistory(structureChanged: structureChanged);
+      }
     }
     _applyingRemote = true;
     final wasEditable = editorState.editable;
@@ -706,9 +712,100 @@ final class AppFlowyBlockEditorAdapter {
     }
   }
 
+  /// 比较 [before] 和 [after] 的块顺序、身份、类型及父结构，判断路径字段历史是否过期。
+  static bool _historyStructureChanged(
+    List<CollabEditorBlock> before,
+    List<CollabEditorBlock> after,
+  ) {
+    if (before.length != after.length) return true;
+    for (var i = 0; i < before.length; i++) {
+      final old = before[i];
+      final next = after[i];
+      if (old.id != next.id ||
+          old.parentId != next.parentId ||
+          old.blockType != next.blockType) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /// 比较同结构的 [before] 和 [after] 的完整正文，忽略等价分段。
+  /// 调用方先排除结构变化；普通正文、代码和行内格式的旧全文历史不能跨越内容变化。
+  static bool _historyContentChanged(
+    List<CollabEditorBlock> before,
+    List<CollabEditorBlock> after,
+  ) {
+    for (var i = 0; i < before.length; i++) {
+      final old = before[i];
+      final next = after[i];
+      if (old.text != next.text ||
+          (!_segmentsEqual(old.segments, next.segments) &&
+              _deltaFromBlock(old).diff(_deltaFromBlock(next)).isNotEmpty)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /// 移除借用编辑器中不能安全重放的撤销及重做项，保留稳定身份和指纹保护命令。
+  /// 尚未实现普通文字历史的协同转换，因此宁可丢弃旧操作，也不覆盖远端或邻居正文。
+  /// [structureChanged]为false时允许原路径上的独立字段补丁，true时要求稳定身份保护。
+  /// 逐栈恢复保留项的原顺序；不执行事务、恢复旧选区或发布协同更新。
+  void _discardUnsafeHistory({required bool structureChanged}) {
+    for (final stack in [
+      editorState.undoManager.undoStack,
+      editorState.undoManager.redoStack,
+    ]) {
+      final retained = [
+        for (var item = stack.pop(); item != null; item = stack.pop())
+          if (_stableHistory(
+            item.operations,
+            structureChanged: structureChanged,
+          ))
+            item,
+      ];
+      for (final item in retained.reversed) {
+        stack.push(item);
+      }
+    }
+  }
+
+  /// 判断整项 [operations] 是否具有现有的稳定身份/指纹回放保护。
+  /// 原子公式、卡片及链接转换命令独立封闭历史并在before阶段校验整组；
+  /// [structureChanged]区分仅改正文和路径变化；前者保留独立字段补丁，后者要求稳定目标。
+  /// 混入全文Delta或普通结构操作的非原子命令不保留。
+  static bool _stableHistory(
+    List<Operation> operations, {
+    required bool structureChanged,
+  }) {
+    if (operations.isEmpty) return false;
+    if (operations.whereType<UpdateOperation>().any(
+      (op) =>
+          op.attributes[collabInlineFormulaCommandAttribute] is String ||
+          op.attributes[collabMentionCardCommandAttribute] is String ||
+          op.attributes[collabLinkViewCommand] is String,
+    )) {
+      return true;
+    }
+    return operations.every(
+      (op) =>
+          op is UpdateOperation &&
+          !op.attributes.containsKey(blockComponentDelta) &&
+          (!structureChanged ||
+              [
+                collabParagraphTargetAttribute,
+                collabCodeTargetAttribute,
+                collabResourceTargetAttribute,
+                csesCalloutTargetAttribute,
+                csesOrderedTargetAttribute,
+              ].any((key) => op.attributes[key] is String)),
+    );
+  }
+
   /// 比较 [before] 与 [after] 的绘图源码和结构，远端变更后使路径历史失效。
   /// 现有编辑器不对历史执行文本OT；不能让旧偏移覆盖远端源码或另一个块。
-  /// 远端共享视图变化及绘图存在时的结构变更清空整个编辑器历史，普通正文内容与属性更新保持历史。
+  /// 远端共享视图变化及绘图存在时的结构变更清空整个历史；普通正文另由通用安全策略处理。
   static bool _mermaidContentChanged(List<CollabEditorBlock> before, List<CollabEditorBlock> after) {
     if (![...before, ...after].any((b) => b.blockType == collabMermaidType)) {
       return false;

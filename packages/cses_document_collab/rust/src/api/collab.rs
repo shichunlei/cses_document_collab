@@ -366,6 +366,8 @@ impl CollabEngine {
         Message::Sync(SyncMessage::SyncStep1(state_vector)).encode_v1()
     }
 
+    /// 在隔离文档生成 `blocks` 的更新，落盘成功后才推进权威Doc。
+    /// 校验或SQLite失败不改变当前文档、向量及Awareness；返回成功快照及可上行增量。
     fn apply_block_snapshot(
         &mut self,
         blocks: Vec<CollabBlock>,
@@ -373,9 +375,10 @@ impl CollabEngine {
         validate_blocks(&blocks, self.blockcraft_root_id.is_some())?;
         if let Some(root_id) = &self.blockcraft_root_id {
             let before = self.doc.transact().state_vector();
-            blockcraft::apply(&self.doc, root_id, &blocks)?;
-            let update = self.doc.transact().encode_state_as_update_v1(&before);
-            self.persist_update(&update)?;
+            let staged = self.staged_document()?;
+            blockcraft::apply(&staged, root_id, &blocks)?;
+            let update = staged.transact().encode_state_as_update_v1(&before);
+            self.persist_and_apply_update(&update)?;
             return Ok(BlockChangeResult {
                 blocks: self.blocks(),
                 v1_update: update.clone(),
@@ -403,12 +406,19 @@ impl CollabEngine {
             });
         }
 
+        let staged = self.staged_document()?;
+        let block_order = staged.get_or_insert_array(BLOCK_ORDER_NAME);
+        let block_meta = staged.get_or_insert_map(BLOCK_META_NAME);
+        let block_checked = staged.get_or_insert_map(BLOCK_CHECKED_NAME);
+        let block_align = staged.get_or_insert_map(BLOCK_ALIGN_NAME);
+        let block_indent = staged.get_or_insert_map(BLOCK_INDENT_NAME);
+        let block_colors = staged.get_or_insert_map(BLOCK_COLORS_NAME);
         let text_refs = blocks
             .iter()
-            .map(|block| self.doc.get_or_insert_text(block_text_name(&block.id)))
+            .map(|block| staged.get_or_insert_text(block_text_name(&block.id)))
             .collect::<Vec<_>>();
         let (current_texts, current_segments) = {
-            let transaction = self.doc.transact();
+            let transaction = staged.transact();
             let texts = text_refs
                 .iter()
                 .map(|text_ref| text_ref.get_string(&transaction))
@@ -419,11 +429,11 @@ impl CollabEngine {
                 .collect::<Vec<_>>();
             (texts, segments)
         };
-        let before = self.doc.transact().state_vector();
+        let before = staged.transact().state_vector();
         {
-            let mut transaction = self.doc.transact_mut();
+            let mut transaction = staged.transact_mut();
             reconcile_order(
-                &self.block_order,
+                &block_order,
                 &mut transaction,
                 &current_order,
                 &desired_order,
@@ -432,17 +442,14 @@ impl CollabEngine {
             let desired_ids = desired_order.iter().cloned().collect::<HashSet<_>>();
             for id in current_order {
                 if !desired_ids.contains(&id) {
-                    self.block_meta.remove(&mut transaction, &id);
-                    self.block_checked.remove(&mut transaction, &id);
-                    self.block_align.remove(&mut transaction, &id);
-                    self.block_indent.remove(&mut transaction, &id);
-                    self.block_colors
-                        .remove(&mut transaction, &format!("{id}:background"));
-                    self.block_colors
-                        .remove(&mut transaction, &format!("{id}:border"));
+                    block_meta.remove(&mut transaction, &id);
+                    block_checked.remove(&mut transaction, &id);
+                    block_align.remove(&mut transaction, &id);
+                    block_indent.remove(&mut transaction, &id);
+                    block_colors.remove(&mut transaction, &format!("{id}:background"));
+                    block_colors.remove(&mut transaction, &format!("{id}:border"));
                     for suffix in ["parent", "prefix", "text", "resource", "paragraph"] {
-                        self.block_colors
-                            .remove(&mut transaction, &format!("{id}:{suffix}"));
+                        block_colors.remove(&mut transaction, &format!("{id}:{suffix}"));
                     }
                 }
             }
@@ -453,23 +460,10 @@ impl CollabEngine {
                 .zip(current_texts.iter())
                 .zip(current_segments.iter())
             {
-                self.block_meta.try_update(
-                    &mut transaction,
-                    block.id.clone(),
-                    block.block_type.clone(),
-                );
-                self.block_checked
-                    .try_update(&mut transaction, block.id.clone(), block.checked);
-                self.block_align.try_update(
-                    &mut transaction,
-                    block.id.clone(),
-                    block.alignment.clone(),
-                );
-                self.block_indent.try_update(
-                    &mut transaction,
-                    block.id.clone(),
-                    block.indent as i64,
-                );
+                block_meta.try_update(&mut transaction, block.id.clone(), block.block_type.clone());
+                block_checked.try_update(&mut transaction, block.id.clone(), block.checked);
+                block_align.try_update(&mut transaction, block.id.clone(), block.alignment.clone());
+                block_indent.try_update(&mut transaction, block.id.clone(), block.indent as i64);
                 for (suffix, color) in [
                     ("background", &block.block_background_color),
                     ("border", &block.block_border_color),
@@ -479,15 +473,14 @@ impl CollabEngine {
                 ] {
                     let key = format!("{}:{suffix}", block.id);
                     if let Some(color) = color {
-                        self.block_colors
-                            .try_update(&mut transaction, key, color.clone());
+                        block_colors.try_update(&mut transaction, key, color.clone());
                     } else {
-                        self.block_colors.remove(&mut transaction, &key);
+                        block_colors.remove(&mut transaction, &key);
                     }
                 }
                 if let Some(style) = &block.paragraph_style {
                     let key = format!("{}:paragraph", block.id);
-                    let before = out_string(self.block_colors.get(&transaction, &key))
+                    let before = out_string(block_colors.get(&transaction, &key))
                         .unwrap_or_else(|| "{}".into());
                     let mut values: std::collections::BTreeMap<String, Any> =
                         serde_json::from_str(&before).unwrap_or_default();
@@ -508,7 +501,7 @@ impl CollabEngine {
                                 values.remove(&key);
                             }
                         }
-                        self.block_colors.try_update(
+                        block_colors.try_update(
                             &mut transaction,
                             key,
                             serde_json::to_string(&values).unwrap(),
@@ -517,13 +510,9 @@ impl CollabEngine {
                 }
                 let key = format!("{}:resource", block.id);
                 if let Some(resource) = &block.resource {
-                    self.block_colors.try_update(
-                        &mut transaction,
-                        key,
-                        resource.properties.clone(),
-                    );
+                    block_colors.try_update(&mut transaction, key, resource.properties.clone());
                 } else {
-                    self.block_colors.remove(&mut transaction, &key);
+                    block_colors.remove(&mut transaction, &key);
                 }
                 let delta = compute_text_delta(current_text, &block.text);
                 if delta.delete_length > 0 {
@@ -538,8 +527,8 @@ impl CollabEngine {
             }
         }
 
-        let update = self.doc.transact().encode_state_as_update_v1(&before);
-        self.persist_update(&update)?;
+        let update = staged.transact().encode_state_as_update_v1(&before);
+        self.persist_and_apply_update(&update)?;
         Ok(BlockChangeResult {
             blocks: self.blocks(),
             v1_update: update.clone(),
@@ -589,8 +578,7 @@ impl CollabEngine {
         });
         if let Some(root_id) = root_id {
             blockcraft::validate(&probe, &root_id)?;
-            self.blockcraft_root_id = Some(root_id);
-            return self.apply_remote_update(payload, "collabUpdate");
+            return self.apply_remote_update(payload, "collabUpdate", Some(root_id));
         }
         let compatible = probe.transact().root_refs().all(|(name, _)| {
             matches!(
@@ -610,7 +598,7 @@ impl CollabEngine {
                     .to_owned(),
             );
         }
-        self.apply_remote_update(payload, "collabUpdate")
+        self.apply_remote_update(payload, "collabUpdate", None)
     }
 
     fn handle_wire_message(&mut self, bytes: Vec<u8>) -> Result<WireMessageResult, String> {
@@ -631,10 +619,10 @@ impl CollabEngine {
                 })
             }
             Message::Sync(SyncMessage::SyncStep2(update)) => {
-                self.apply_remote_update(update, "sync-step-2")
+                self.apply_remote_update(update, "sync-step-2", None)
             }
             Message::Sync(SyncMessage::Update(update)) => {
-                self.apply_remote_update(update, "sync-update")
+                self.apply_remote_update(update, "sync-update", None)
             }
             Message::Awareness(_) => Ok(self.ignored_message("awareness")),
             Message::AwarenessQuery => Ok(self.ignored_message("awareness-query")),
@@ -649,20 +637,18 @@ impl CollabEngine {
         }
     }
 
+    /// 将已校验的 `payload` 先落盘再应用，按 `message_kind` 返回投影结果。
+    /// `root_id` 为首次识别的正式根；None保留当前模型，落盘失败不切换模型或推进向量。
     fn apply_remote_update(
         &mut self,
         payload: Vec<u8>,
         message_kind: &str,
+        root_id: Option<String>,
     ) -> Result<WireMessageResult, String> {
         let before = self.blocks();
-        if !payload.is_empty() {
-            let update = Update::decode_v1(&payload)
-                .map_err(|error| format!("invalid Yjs V1 update: {error}"))?;
-            self.doc
-                .transact_mut()
-                .apply_update(update)
-                .map_err(|error| format!("cannot apply remote Yjs update: {error}"))?;
-            self.persist_update(&payload)?;
+        self.persist_and_apply_update(&payload)?;
+        if let Some(root_id) = root_id {
+            self.blockcraft_root_id = Some(root_id);
         }
         let blocks = self.blocks();
         Ok(WireMessageResult {
@@ -741,6 +727,46 @@ impl CollabEngine {
         Ok(true)
     }
 
+    /// 复制当前完整状态及待整合增量以隔离本地编辑；UTF-16、GC及clientID与权威Doc一致。
+    /// 临时副本不发布Awareness或网络消息，只有落盘后的更新才会回到原Doc。
+    fn staged_document(&self) -> Result<Doc, String> {
+        let staged = Doc::with_options(Options {
+            client_id: self.doc.client_id(),
+            guid: self.doc.guid(),
+            offset_kind: OffsetKind::Utf16,
+            skip_gc: true,
+            ..Options::default()
+        });
+        let snapshot = self
+            .doc
+            .transact()
+            .encode_state_as_update_v1(&StateVector::default());
+        staged
+            .transact_mut()
+            .apply_update(
+                Update::decode_v1(&snapshot)
+                    .map_err(|error| format!("cannot decode staged document: {error}"))?,
+            )
+            .map_err(|error| format!("cannot stage document: {error}"))?;
+        Ok(staged)
+    }
+
+    /// 解码已校验的 `payload`，SQLite成功后在同一引擎锁内推进权威Doc。
+    /// 空字节无操作；落盘失败不消费更新。成功落盘但异常整合失败时保留日志供重开恢复。
+    fn persist_and_apply_update(&mut self, payload: &[u8]) -> Result<(), String> {
+        if payload.is_empty() {
+            return Ok(());
+        }
+        let update = Update::decode_v1(payload)
+            .map_err(|error| format!("invalid Yjs V1 update: {error}"))?;
+        self.persist_update(payload)?;
+        self.doc
+            .transact_mut()
+            .apply_update(update)
+            .map_err(|error| format!("cannot apply persisted Yjs update: {error}"))
+    }
+
+    /// 将 `payload` 追加到当前缓存分区；成功返回后SQLite已提交，失败不改变Doc。
     fn persist_update(&self, payload: &[u8]) -> Result<(), String> {
         if payload.is_empty() {
             return Ok(());
@@ -1737,6 +1763,171 @@ mod tests {
             block_background_color: None,
             block_border_color: None,
         }
+    }
+
+    /// 在测试引擎 `engine` 中安装或移除写入失败触发器，不影响其他数据库。
+    fn set_persistence_failure(engine: &CollabEngine, enabled: bool) {
+        engine.connection.execute_batch(if enabled {
+            "CREATE TRIGGER fail_review_write BEFORE INSERT ON document_updates BEGIN SELECT RAISE(FAIL, 'forced cache write failure'); END;"
+        } else {
+            "DROP TRIGGER fail_review_write;"
+        }).unwrap();
+    }
+
+    /// 本地和正式快照落盘失败不推进Doc；存储恢复后成功重试可完整重开。
+    #[test]
+    fn snapshot_persistence_failure_is_atomic_and_retry_reopens() {
+        for formal in [false, true] {
+            let directory = tempdir().unwrap();
+            let path = directory
+                .path()
+                .join("atomic.sqlite")
+                .to_string_lossy()
+                .to_string();
+            let mut engine = CollabEngine::open("atomic".into(), path.clone()).unwrap().0;
+            if formal {
+                engine.blockcraft_root_id = Some("fixture-doc".into());
+                engine
+                    .apply_cses_update(
+                        include_bytes!("../../tests/fixtures/blockcraft-basic.update").to_vec(),
+                    )
+                    .unwrap();
+            } else {
+                engine
+                    .apply_block_snapshot(vec![block("p", "paragraph", "A")])
+                    .unwrap();
+            }
+            let before = engine.blocks();
+            let vector = engine.doc.transact().state_vector();
+            let client = engine.doc.client_id();
+            let mut edited = before.clone();
+            edited[0].text.push('B');
+            if let Some(segment) = edited[0].segments.last_mut() {
+                segment.text.push('B');
+            }
+            set_persistence_failure(&engine, true);
+            assert!(engine
+                .apply_block_snapshot(edited.clone())
+                .unwrap_err()
+                .contains("cannot persist"));
+            assert_eq!(engine.blocks(), before);
+            assert_eq!(engine.doc.transact().state_vector(), vector);
+            set_persistence_failure(&engine, false);
+            edited[0].text.push('C');
+            if let Some(segment) = edited[0].segments.last_mut() {
+                segment.text.push('C');
+            }
+            engine.apply_block_snapshot(edited).unwrap();
+            let saved = engine.blocks();
+            assert_eq!(engine.doc.client_id(), client);
+            drop(engine);
+            let mut reopened = CollabEngine::open("atomic".into(), path).unwrap().0;
+            if formal {
+                reopened.blockcraft_root_id = Some("fixture-doc".into());
+            }
+            assert_eq!(reopened.blocks(), saved);
+        }
+    }
+
+    /// 远端落盘失败不推进向量；依赖增量先到达、重试和重开仍可收敛。
+    #[test]
+    fn remote_persistence_failure_keeps_vector_and_out_of_order_retry() {
+        let directory = tempdir().unwrap();
+        let path = directory
+            .path()
+            .join("target.sqlite")
+            .to_string_lossy()
+            .to_string();
+        let mut source = CollabEngine::open("source".into(), ":memory:".into())
+            .unwrap()
+            .0;
+        let mut target = CollabEngine::open("target".into(), path.clone()).unwrap().0;
+        let a = source
+            .apply_block_snapshot(vec![block("p", "paragraph", "A")])
+            .unwrap();
+        target.apply_cses_update(a.v1_update).unwrap();
+        let vector = target.doc.transact().state_vector();
+        let b = source
+            .apply_block_snapshot(vec![block("p", "paragraph", "AB")])
+            .unwrap();
+        set_persistence_failure(&target, true);
+        assert!(target.apply_cses_update(b.v1_update.clone()).is_err());
+        assert_eq!(target.blocks()[0].text, "A");
+        assert_eq!(target.doc.transact().state_vector(), vector);
+        set_persistence_failure(&target, false);
+        let c = source
+            .apply_block_snapshot(vec![block("p", "paragraph", "ABC")])
+            .unwrap();
+        target.apply_cses_update(c.v1_update).unwrap();
+        target.apply_cses_update(b.v1_update).unwrap();
+        assert_eq!(target.blocks()[0].text, "ABC");
+        drop(target);
+        assert_eq!(
+            CollabEngine::open("target".into(), path)
+                .unwrap()
+                .0
+                .blocks()[0]
+                .text,
+            "ABC"
+        );
+    }
+
+    /// 本地隔离写入保留待整合增量，并维持Awareness使用的clientID。
+    #[test]
+    fn local_staging_preserves_pending_remote_update_and_client_id() {
+        let mut source = CollabEngine::open("source".into(), ":memory:".into())
+            .unwrap()
+            .0;
+        let mut target = CollabEngine::open("target".into(), ":memory:".into())
+            .unwrap()
+            .0;
+        let a = source
+            .apply_block_snapshot(vec![block("p", "paragraph", "A")])
+            .unwrap();
+        target.apply_cses_update(a.v1_update).unwrap();
+        let b = source
+            .apply_block_snapshot(vec![block("p", "paragraph", "AB")])
+            .unwrap();
+        let c = source
+            .apply_block_snapshot(vec![block("p", "paragraph", "ABC")])
+            .unwrap();
+        target.apply_cses_update(c.v1_update).unwrap();
+        let client = target.doc.client_id();
+        target
+            .apply_block_snapshot(vec![
+                block("p", "paragraph", "A"),
+                block("q", "paragraph", "local"),
+            ])
+            .unwrap();
+        target.apply_cses_update(b.v1_update).unwrap();
+        assert_eq!(
+            target
+                .blocks()
+                .iter()
+                .map(|b| b.text.as_str())
+                .collect::<Vec<_>>(),
+            ["ABC", "local"]
+        );
+        assert_eq!(target.doc.client_id(), client);
+    }
+
+    /// 首次正式根同步落盘失败不切换引擎模型；重试后可正常识别和投影。
+    #[test]
+    fn initial_formal_sync_persistence_failure_preserves_model() {
+        let mut target = CollabEngine::open("fixture-doc".into(), ":memory:".into())
+            .unwrap()
+            .0;
+        let vector = target.doc.transact().state_vector();
+        let payload = include_bytes!("../../tests/fixtures/blockcraft-basic.update").to_vec();
+        set_persistence_failure(&target, true);
+        assert!(target.apply_cses_update(payload.clone()).is_err());
+        assert!(target.blockcraft_root_id.is_none());
+        assert_eq!(target.doc.transact().state_vector(), vector);
+        assert!(target.blocks().is_empty());
+        set_persistence_failure(&target, false);
+        target.apply_cses_update(payload).unwrap();
+        assert_eq!(target.blockcraft_root_id.as_deref(), Some("fixture-doc"));
+        assert_eq!(target.blocks().len(), 3);
     }
 
     /// 离线草稿的段落默认格式可重开；非法初始化在创建共享文字之前拒绝。

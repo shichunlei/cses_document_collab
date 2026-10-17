@@ -1,0 +1,112 @@
+{
+  "date": "2026-10-17",
+  "base_revision": "c9593399",
+  "scope": [
+    "R1 remote history safety",
+    "R2 paragraph snapshot equality",
+    "R3 inline metadata snapshot equality",
+    "R4 SQLite/live Doc consistency"
+  ],
+  "excluded": [
+    "R5/P2 permission transition recovery remains open"
+  ],
+  "implementation": {
+    "R1": "Remote text/format/tree changes prune unsafe undo/redo entries. Stable-ID field commands and fingerprint-checked inline/formula/card/link commands retain their existing guards and history order. Equivalent snapshots do not clear history. Existing table/Mermaid full invalidation remains. Ordinary text OT history transformation is not implemented. When structure is unchanged, path-based field-only edits (including existing list indentation) are also retained; structural changes require stable targets.",
+    "R2": "Block comparison includes paragraphStyle and full resource value/mutation intent. Local write deduplication and remote projection share the corrected comparison.",
+    "R3": "Segment comparison uses the generated immutable CollabTextSegment value equality, covering typography/href/formula/mention identity and attributes as well as text and style flags. No generated file or signature is changed.",
+    "R4": "Local edits are prepared on an isolated UTF-16/skip-GC Doc carrying the same clientID, guid and complete state including pending remote updates. The encoded update is persisted before application to the live Doc. Remote updates are decoded/validated then persisted before live application. Initial formal-root detection is committed only after persistence succeeds. The live Doc and Awareness objects remain owned by the engine and are not replaced."
+  },
+  "tests": {
+    "red_baseline": {
+      "Dart": "New snapshot/history tests: 9 fail, 1 pass on the pre-fix implementation.",
+      "Rust": "2 storage-failure tests fail before native fix."
+    },
+    "new_Dart_files": [
+      "packages/cses_document_collab/test/collab_controller_snapshot_test.dart",
+      "packages/cses_document_collab/test/collab_remote_history_test.dart"
+    ],
+    "new_Dart_cases": 10,
+    "Dart_scenarios": [
+      "Real formal controller: paragraph setting, typography, href and unchanged-length inline formula edits persist to native state, produce nonempty V1 delta, reopen from SQLite and project on a second controller without echo.",
+      "Ordinary text, remote reordering and inline format updates invalidate unsafe undo.",
+      "Old redo is invalidated; new local undo remains usable.",
+      "Stable paragraph-field history survives reordering after unsafe text history is removed.",
+      "Equivalent authoritative snapshots retain local undo."
+    ],
+    "new_Rust_cases": 4,
+    "Rust_scenarios": [
+      "SQLite trigger failure for both draft and formal local snapshots: state/vector unchanged; successful retry survives reopen.",
+      "Remote write failure preserves vector; successor arriving before retried predecessor still converges and reopens.",
+      "Local staged writes preserve pending remote updates and clientID.",
+      "Failed initial formal sync keeps the previous model; retry establishes the formal root."
+    ],
+    "target_Dart": {
+      "passed": 110,
+      "result": "00:19 +110: All tests passed!",
+      "scope": "Two new test files plus existing list-indent, entity-mention, inline-formula, resource-adapter and ordered-list regressions."
+    },
+    "Rust_full": {
+      "passed": 95,
+      "failed": 0,
+      "result": "95 passed; 0 failed; finished in 1.25s"
+    },
+    "Rust_check": "passed",
+    "Rust_format_check": "passed",
+    "native_library_build": "cargo build passed; host Darwin debug library rebuilt for real FRB tests.",
+    "target_analysis": "4 changed handwritten Dart files: no issues found.",
+    "package_full": {
+      "passed": 1172,
+      "failed": 0,
+      "result": "03:44 +1172: All tests passed!"
+    },
+    "host_full": {
+      "passed": 56,
+      "failed": 0,
+      "result": "00:35 +56: All tests passed!",
+      "command": "flutter test --no-pub"
+    },
+    "package_analysis": {
+      "errors": 0,
+      "warnings": 0,
+      "existing_infos": [
+        "test/collab_controller_native_test.dart:186:9 close_sinks"
+      ],
+      "exit_status": 1,
+      "result": "1 issue found. (ran in 25.5s)"
+    },
+    "diff_check": "passed",
+    "initial_package_run": {
+      "passed": 1169,
+      "failed": 3,
+      "cause": "Conservative initial filtering discarded path-based list indentation field history after remote text changes. Refined to preserve field-only history when paths remain stable. The original tests were kept unchanged and now pass in the 110-case targeted run."
+    },
+    "format": "dart format executed on the 4 changed handwritten Dart files. Unrelated pre-existing layout in the 2 production files was retained; the new helper declarations use formatter output. cargo fmt/check apply to the affected crate only.",
+    "public_and_native_API": "No signature/schema/export/dependency/generated-file change; FRB regeneration is not needed. Existing native binary was rebuilt and used by the full package regression.",
+    "final_source_scope": [
+      "lib/src/controller/collab_controller.dart",
+      "lib/src/editor/appflowy_block_editor_adapter.dart",
+      "rust/src/api/collab.rs",
+      "test/collab_controller_snapshot_test.dart",
+      "test/collab_remote_history_test.dart"
+    ]
+  },
+  "upstream_version": {
+    "latest": "unverified",
+    "reason": "Expected adjacent desktop repository rechecked before this work and remains absent, so configured registry/latest, declaration/lock/install artifacts and packaged skills/MIGRATIONS could not be read. Historical versions are not a fresh latest conclusion."
+  },
+  "unchanged": [
+    "UI/card layout",
+    "Shared schema, public/native API signatures and generated FRB code",
+    "Dependencies and exports",
+    "Status counts 13 adapted / 12 partial / 1 structural / 15 unadapted = 41"
+  ],
+  "limits": [
+    "Ordinary text undo is conservatively invalidated on remote text/format/tree changes; this does not implement collaborative text-history OT.",
+    "P2/R5 is not fixed.",
+    "No phone restart, physical-device/iOS/real desktop online reacceptance or platform application build in this change.",
+    "Native internal changes require rebuilding the native library when applying the fix to a device; the host test library is rebuilt."
+  ],
+  "unrelated_workspace_changes": {
+    "pubspec.yaml": "Independent removal of five host dependency declarations appeared during this task. Preserved unchanged and excluded from this P1 fix; no fresh dependency resolution was performed for that change."
+  }
+}

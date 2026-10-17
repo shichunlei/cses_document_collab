@@ -602,8 +602,12 @@ class CollabController extends ChangeNotifier {
           numberingEdit: value.numberingEdit,
         );
 
-  /// 比较 [left]/[right] 的全部投影字段，图片尺寸和题注变化也必须触发 UI 投影。
-  static bool _rustBlocksEqual(List<rust.CollabBlock> left, List<rust.CollabBlock> right) {
+  /// 比较 [left] 与 [right] 的全部块投影和字段补丁；相同才可跳过写入或投影。
+  /// 段落样式及显式补丁不能只依赖正文变化触发，否则单独修改设置会被丢弃。
+  static bool _rustBlocksEqual(
+    List<rust.CollabBlock> left,
+    List<rust.CollabBlock> right,
+  ) {
     if (left.length != right.length) {
       return false;
     }
@@ -622,9 +626,11 @@ class CollabController extends ChangeNotifier {
           leftBlock.alignment != rightBlock.alignment ||
           leftBlock.indent != rightBlock.indent ||
           leftBlock.replacesId != rightBlock.replacesId ||
-          _toEditorOrdered(leftBlock.ordered) != _toEditorOrdered(rightBlock.ordered) ||
+          _toEditorOrdered(leftBlock.ordered) !=
+              _toEditorOrdered(rightBlock.ordered) ||
           _toEditorCode(leftBlock.code) != _toEditorCode(rightBlock.code) ||
-          leftBlock.resource?.properties != rightBlock.resource?.properties ||
+          leftBlock.paragraphStyle != rightBlock.paragraphStyle ||
+          leftBlock.resource != rightBlock.resource ||
           _toEditorImage(leftBlock.image) != _toEditorImage(rightBlock.image) ||
           !_rustSegmentsEqual(leftBlock.segments, rightBlock.segments)) {
         return false;
@@ -633,23 +639,17 @@ class CollabController extends ChangeNotifier {
     return true;
   }
 
-  static bool _rustSegmentsEqual(List<rust.CollabTextSegment> left, List<rust.CollabTextSegment> right) {
+  /// 按桥接分段的完整值相等比较 [left] 与 [right]，包含字体、链接和对象身份。
+  /// 长度或任一字段不同返回false，不修改分段或持有原生资源。
+  static bool _rustSegmentsEqual(
+    List<rust.CollabTextSegment> left,
+    List<rust.CollabTextSegment> right,
+  ) {
     if (left.length != right.length) {
       return false;
     }
     for (var index = 0; index < left.length; index += 1) {
-      final leftSegment = left[index];
-      final rightSegment = right[index];
-      if (leftSegment.text != rightSegment.text ||
-          leftSegment.bold != rightSegment.bold ||
-          leftSegment.italic != rightSegment.italic ||
-          leftSegment.underline != rightSegment.underline ||
-          leftSegment.strikethrough != rightSegment.strikethrough ||
-          leftSegment.code != rightSegment.code ||
-          leftSegment.textColor != rightSegment.textColor ||
-          leftSegment.backgroundColor != rightSegment.backgroundColor ||
-          leftSegment.superscript != rightSegment.superscript ||
-          leftSegment.subscript != rightSegment.subscript) {
+      if (left[index] != right[index]) {
         return false;
       }
     }
