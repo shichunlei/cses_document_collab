@@ -1,0 +1,6 @@
+interface:
+  display_name: "协同编辑器弹窗开发"
+  short_description: "统一协同包底部弹窗、居中弹窗与锚点菜单，复用样式并保留编辑会话"
+
+policy:
+  allow_implicit_invocation: true
