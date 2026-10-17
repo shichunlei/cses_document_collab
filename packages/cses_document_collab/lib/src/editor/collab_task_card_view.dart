@@ -98,11 +98,7 @@ class CollabTaskCardView extends StatelessWidget {
                         key: ValueKey('task-card-more-$blockId'),
                         tooltip: '更多操作',
                         enabled: !busy,
-                        icon: const Icon(
-                          Icons.more_horiz,
-                          size: 18,
-                          color: Color(0xFF9CA3AF),
-                        ),
+                        icon: const Icon(Icons.more_horiz, size: 18, color: Color(0xFF9CA3AF)),
                         onSelected: (action) async {
                           await action();
                         },
@@ -110,12 +106,7 @@ class CollabTaskCardView extends StatelessWidget {
                           PopupMenuItem(
                             value: onDelete!,
                             key: ValueKey('task-card-delete-$blockId'),
-                            child: Text(
-                              '删除卡片',
-                              style: TextStyle(
-                                color: CollabModalColors.of(context).danger,
-                              ),
-                            ),
+                            child: Text('删除卡片', style: TextStyle(color: CollabModalColors.of(context).danger)),
                           ),
                         ],
                       )),
@@ -133,39 +124,20 @@ class CollabTaskCardView extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         child: priority != null && priority.name.isNotEmpty
                             ? _TaskTag(tag: priority)
-                            : const Text(
-                                '任务卡片',
-                                style: TextStyle(
-                                  color: Color(0xFF9CA3AF),
-                                  fontSize: 12,
-                                ),
-                              ),
+                            : const Text('任务卡片', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12)),
                       ),
                     ),
                     if (loading)
-                      const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      ),
+                      const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
                     if (!loading && detail != null) _TaskLeaders(data: detail),
                     IconButton(
                       key: ValueKey('task-card-open-$blockId'),
                       tooltip: '打开任务详情',
-                      constraints: const BoxConstraints.tightFor(
-                        width: 44,
-                        height: 44,
-                      ),
-                      style: const ButtonStyle(
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
+                      constraints: const BoxConstraints.tightFor(width: 44, height: 44),
+                      style: const ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
                       padding: EdgeInsets.zero,
                       alignment: Alignment.centerRight,
-                      icon: const Icon(
-                        Icons.open_in_full,
-                        size: 16,
-                        color: Color(0xFF9CA3AF),
-                      ),
+                      icon: const Icon(Icons.open_in_full, size: 16, color: Color(0xFF9CA3AF)),
                       onPressed: busy || onOpen == null
                           ? null
                           : () async {
@@ -192,9 +164,7 @@ class CollabTaskCardView extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if (!loading &&
-                        status != null &&
-                        status.name.isNotEmpty) ...[
+                    if (!loading && status != null && status.name.isNotEmpty) ...[
                       const SizedBox(width: 8),
                       ConstrainedBox(
                         constraints: const BoxConstraints(maxWidth: 112),
@@ -211,23 +181,10 @@ class CollabTaskCardView extends StatelessWidget {
                     crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
                       if (detail?.startTime != null)
-                        _TaskTime(
-                          icon: Icons.calendar_today_outlined,
-                          time: detail!.startTime!,
-                        ),
+                        _TaskTime(icon: Icons.calendar_today_outlined, time: detail!.startTime!),
                       if (detail?.startTime != null && detail?.endTime != null)
-                        const Text(
-                          '-',
-                          style: TextStyle(
-                            color: Color(0xFF86909C),
-                            fontSize: 12,
-                          ),
-                        ),
-                      if (detail?.endTime != null)
-                        _TaskTime(
-                          icon: Icons.event_outlined,
-                          time: detail!.endTime!,
-                        ),
+                        const Text('-', style: TextStyle(color: Color(0xFF86909C), fontSize: 12)),
+                      if (detail?.endTime != null) _TaskTime(icon: Icons.event_outlined, time: detail!.endTime!),
                     ],
                   ),
                 ],
@@ -238,18 +195,10 @@ class CollabTaskCardView extends StatelessWidget {
                   children: [
                     Expanded(child: _TaskPath(nodes: detail?.path ?? const [])),
                     if (detail?.fileCount != null)
-                      _TaskCount(
-                        icon: Icons.attach_file,
-                        label: '附件',
-                        count: detail!.fileCount!,
-                      ),
+                      _TaskCount(icon: Icons.attach_file, label: '附件', count: detail!.fileCount!),
                     if (detail?.subTaskCount != null) ...[
                       const SizedBox(width: 8),
-                      _TaskCount(
-                        icon: Icons.account_tree_outlined,
-                        label: '子任务',
-                        count: detail!.subTaskCount!,
-                      ),
+                      _TaskCount(icon: Icons.account_tree_outlined, label: '子任务', count: detail!.subTaskCount!),
                     ],
                   ],
                 ),
@@ -260,10 +209,7 @@ class CollabTaskCardView extends StatelessWidget {
                       Expanded(
                         child: Text(
                           failed ? '任务加载失败' : '任务不存在或已删除',
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Color(0xFF86909C),
-                          ),
+                          style: const TextStyle(fontSize: 12, color: Color(0xFF86909C)),
                         ),
                       ),
                       if (failed)
@@ -298,10 +244,7 @@ class _TaskTag extends StatelessWidget {
     final (background, foreground) = _tagColors(tag.color);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-      decoration: BoxDecoration(
-        color: background,
-        borderRadius: BorderRadius.circular(4),
-      ),
+      decoration: BoxDecoration(color: background, borderRadius: BorderRadius.circular(4)),
       child: Text(
         tag.name,
         maxLines: 1,
@@ -342,8 +285,7 @@ class _TaskLeaders extends StatelessWidget {
   /// 在借用[context]中构建固定尺寸头像组；未注入宿主头像时隐藏。
   @override
   Widget build(BuildContext context) {
-    if (CollabRuntime.services.mentionAvatarBuilder == null ||
-        data.leaders.isEmpty) {
+    if (CollabRuntime.services.mentionAvatarBuilder == null || data.leaders.isEmpty) {
       return const SizedBox.shrink();
     }
     final visible = data.leaders.take(3).toList();
@@ -372,16 +314,10 @@ class _TaskLeaders extends StatelessWidget {
                   width: 24,
                   height: 24,
                   alignment: Alignment.center,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFF3F4F6),
-                    shape: BoxShape.circle,
-                  ),
+                  decoration: const BoxDecoration(color: Color(0xFFF3F4F6), shape: BoxShape.circle),
                   child: Text(
                     '+${data.leaders.length - 3}',
-                    style: const TextStyle(
-                      fontSize: 10,
-                      color: Color(0xFF86909C),
-                    ),
+                    style: const TextStyle(fontSize: 10, color: Color(0xFF86909C)),
                   ),
                 ),
               ),
@@ -416,10 +352,7 @@ class _TaskTime extends StatelessWidget {
         children: [
           Icon(icon, size: 12, color: const Color(0xFF86909C)),
           const SizedBox(width: 3),
-          Text(
-            date,
-            style: const TextStyle(fontSize: 12, color: Color(0xFF86909C)),
-          ),
+          Text(date, style: const TextStyle(fontSize: 12, color: Color(0xFF86909C))),
         ],
       ),
     );
@@ -441,22 +374,14 @@ class _TaskProgress extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Semantics(
     label: '任务进度',
-    value: progress == null
-        ? '未知'
-        : '${progress!.toStringAsFixed(progress! % 1 == 0 ? 0 : 2)}%',
+    value: progress == null ? '未知' : '${progress!.toStringAsFixed(progress! % 1 == 0 ? 0 : 2)}%',
     child: SizedBox(
       key: ValueKey('task-card-progress-$blockId'),
       height: 8,
       child: LayoutBuilder(
         builder: (context, constraints) => Stack(
           children: [
-            const Positioned(
-              left: 0,
-              right: 0,
-              top: 3,
-              height: 2,
-              child: ColoredBox(color: Color(0xFFE5E6EB)),
-            ),
+            const Positioned(left: 0, right: 0, top: 3, height: 2, child: ColoredBox(color: Color(0xFFE5E6EB))),
             if (progress != null) ...[
               Positioned(
                 left: 0,
@@ -475,10 +400,7 @@ class _TaskProgress extends StatelessWidget {
                 width: 6,
                 height: 6,
                 child: const DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: Color(0xFF5755E7),
-                    shape: BoxShape.circle,
-                  ),
+                  decoration: BoxDecoration(color: Color(0xFF5755E7), shape: BoxShape.circle),
                 ),
               ),
             ],
@@ -529,11 +451,7 @@ class _TaskPath extends StatelessWidget {
 /// 只读附件或子任务计数，不响应点击。
 class _TaskCount extends StatelessWidget {
   /// [icon]为统计图标，[label]为语义名，[count]为已知非负计数。
-  const _TaskCount({
-    required this.icon,
-    required this.label,
-    required this.count,
-  });
+  const _TaskCount({required this.icon, required this.label, required this.count});
 
   /// 图标。
   final IconData icon;
@@ -553,10 +471,7 @@ class _TaskCount extends StatelessWidget {
       children: [
         Icon(icon, size: 12, color: const Color(0xFF9CA3AF)),
         const SizedBox(width: 3),
-        Text(
-          count > 999 ? '999+' : '$count',
-          style: const TextStyle(fontSize: 11, color: Color(0xFF9CA3AF)),
-        ),
+        Text(count > 999 ? '999+' : '$count', style: const TextStyle(fontSize: 11, color: Color(0xFF9CA3AF))),
       ],
     ),
   );

@@ -1,11 +1,11 @@
+import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
+import 'package:cses_document_collab/src/editor/collab_mention_tap_handler.dart';
 import 'package:cses_document_collab/src/editor/collab_task_card_view.dart';
 import 'package:cses_document_collab/src/model/collab_host_services.dart';
-import 'package:cses_document_collab/src/model/collab_task_card_data.dart';
-import 'package:appflowy_editor/appflowy_editor.dart';
-import 'package:cses_document_collab/src/editor/collab_mention_tap_handler.dart';
 import 'package:cses_document_collab/src/model/collab_mention_tap.dart';
 import 'package:cses_document_collab/src/model/collab_task_card.dart';
+import 'package:cses_document_collab/src/model/collab_task_card_data.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -27,21 +27,14 @@ class CollabTaskCardBlockComponentBuilder extends BlockComponentBuilder {
 
   /// 使用借用[context]中的节点与配置创建可选中卡片。
   @override
-  BlockComponentWidget build(BlockComponentContext context) => _TaskCard(
-    key: context.node.key,
-    node: context.node,
-    configuration: configuration,
-  );
+  BlockComponentWidget build(BlockComponentContext context) =>
+      _TaskCard(key: context.node.key, node: context.node, configuration: configuration);
 }
 
 /// 编辑器拥有节点与配置，组件只管理视觉选区和操作防重入。
 class _TaskCard extends BlockComponentStatefulWidget {
   /// [key]控制组件复用；[node]/[configuration]均借用，不释放。
-  const _TaskCard({
-    super.key,
-    required super.node,
-    required super.configuration,
-  });
+  const _TaskCard({super.key, required super.node, required super.configuration});
 
   /// 创建不持有网络资源的局部状态。
   @override
@@ -73,9 +66,7 @@ class _TaskCardState extends State<_TaskCard> with SelectableMixin {
   Widget build(BuildContext context) {
     final editor = context.read<EditorState>();
     final values = CollabTaskCard.read(widget.node.attributes);
-    final id =
-        widget.node.attributes['cses_collab_block_id'] as String? ??
-        widget.node.id;
+    final id = widget.node.attributes['cses_collab_block_id'] as String? ?? widget.node.id;
     final taskId = values.string('taskId');
     return BlockSelectionContainer(
       node: widget.node,
@@ -96,17 +87,9 @@ class _TaskCardState extends State<_TaskCard> with SelectableMixin {
               key: ValueKey((taskId, services)),
               future: future,
               builder: (context, snapshot) {
-                final loading =
-                    future != null &&
-                    snapshot.connectionState != ConnectionState.done;
-                final data = future == null || loading || snapshot.hasError
-                    ? null
-                    : snapshot.data;
-                final missing =
-                    future != null &&
-                    !loading &&
-                    !snapshot.hasError &&
-                    data == null;
+                final loading = future != null && snapshot.connectionState != ConnectionState.done;
+                final data = future == null || loading || snapshot.hasError ? null : snapshot.data;
+                final missing = future != null && !loading && !snapshot.hasError && data == null;
                 return CollabTaskCardView(
                   blockId: id,
                   title: values.string('title'),
@@ -124,20 +107,9 @@ class _TaskCardState extends State<_TaskCard> with SelectableMixin {
                           data?.deleted == true ||
                           services.onMentionTap == null
                       ? null
-                      : () => _act(
-                          editor,
-                          id,
-                          services,
-                          expected: values.properties,
-                        ),
+                      : () => _act(editor, id, services, expected: values.properties),
                   onDelete: editor.editable
-                      ? () => _act(
-                          editor,
-                          id,
-                          services,
-                          expected: values.properties,
-                          delete: true,
-                        )
+                      ? () => _act(editor, id, services, expected: values.properties, delete: true)
                       : null,
                   moreActions: editor.editable
                       ? CollabBlockMoreButton(
@@ -147,15 +119,9 @@ class _TaskCardState extends State<_TaskCard> with SelectableMixin {
                           enabled: !_busy,
                           actions: [
                             (
-                              label: '删除卡片',
+                              label: '删除任务',
                               key: ValueKey('task-card-delete-$id'),
-                              run: () => _act(
-                                editor,
-                                id,
-                                services,
-                                expected: values.properties,
-                                delete: true,
-                              ),
+                              run: () => _act(editor, id, services, expected: values.properties, delete: true),
                             ),
                           ],
                         )
@@ -171,39 +137,25 @@ class _TaskCardState extends State<_TaskCard> with SelectableMixin {
   }
 
   /// 为借用[editor]中稳定块[id]的[taskId]复用请求；[services]变化后重新加载。
-  Future<CollabTaskCardData?>? _detailsFor(
-    EditorState editor,
-    String id,
-    String taskId,
-    CollabHostServices services,
-  ) {
+  Future<CollabTaskCardData?>? _detailsFor(EditorState editor, String id, String taskId, CollabHostServices services) {
     if (_detailTaskId == taskId && identical(_detailServices, services)) {
       return _detailFuture;
     }
     _detailTaskId = taskId;
     _detailServices = services;
     final generation = ++_generation;
-    _detailFuture = services.loadTaskCard == null
-        ? null
-        : _loadDetails(editor, id, taskId, services, generation);
+    _detailFuture = services.loadTaskCard == null ? null : _loadDetails(editor, id, taskId, services, generation);
     return _detailFuture;
   }
 
   /// 检查借用[editor]中块[id]/[taskId]、宿主[services]和请求[generation]是否仍有效。
-  bool _isCurrent(
-    EditorState editor,
-    String id,
-    String taskId,
-    CollabHostServices services,
-    int generation,
-  ) =>
+  bool _isCurrent(EditorState editor, String id, String taskId, CollabHostServices services, int generation) =>
       mounted &&
       !editor.isDisposed &&
       generation == _generation &&
       identical(CollabRuntime.services, services) &&
       editor.getNodeAtPath(widget.node.path) == widget.node &&
-      (widget.node.attributes['cses_collab_block_id'] ?? widget.node.id) ==
-          id &&
+      (widget.node.attributes['cses_collab_block_id'] ?? widget.node.id) == id &&
       CollabTaskCard.read(widget.node.attributes).string('taskId') == taskId;
 
   /// 等待宿主[services]加载[editor]中块[id]的[taskId]详情；[generation]拒绝迟到响应和错误。
@@ -251,10 +203,7 @@ class _TaskCardState extends State<_TaskCard> with SelectableMixin {
     required String expected,
     bool delete = false,
   }) async {
-    if (_busy ||
-        !mounted ||
-        editor.isDisposed ||
-        !identical(capturedServices, CollabRuntime.services)) {
+    if (_busy || !mounted || editor.isDisposed || !identical(capturedServices, CollabRuntime.services)) {
       return;
     }
     setState(() => _busy = true);
@@ -277,11 +226,7 @@ class _TaskCardState extends State<_TaskCard> with SelectableMixin {
           if (editor.undoManager.undoStack.isNonEmpty) {
             editor.undoManager.undoStack.last.seal();
           }
-          await editor.apply(
-            transaction,
-            withUpdateSelection: false,
-            skipHistoryDebounce: true,
-          );
+          await editor.apply(transaction, withUpdateSelection: false, skipHistoryDebounce: true);
         } else {
           await services.onMentionTap?.call(
             CollabMentionTap(
@@ -329,17 +274,11 @@ class _TaskCardState extends State<_TaskCard> with SelectableMixin {
 
   /// [position] 命中整块，[shiftWithBaseOffset] 保持组件内坐标约定。
   @override
-  Rect? getCursorRectInPosition(
-    Position position, {
-    bool shiftWithBaseOffset = false,
-  }) => getBlockRect();
+  Rect? getCursorRectInPosition(Position position, {bool shiftWithBaseOffset = false}) => getBlockRect();
 
   /// [selection] 对应完整矩形，[shiftWithBaseOffset] 保持组件内坐标约定。
   @override
-  List<Rect> getRectsInSelection(
-    Selection selection, {
-    bool shiftWithBaseOffset = false,
-  }) => [getBlockRect()];
+  List<Rect> getRectsInSelection(Selection selection, {bool shiftWithBaseOffset = false}) => [getBlockRect()];
 
   /// [start]/[end] 的拖动范围总是映射为无正文块的完整选区。
   @override

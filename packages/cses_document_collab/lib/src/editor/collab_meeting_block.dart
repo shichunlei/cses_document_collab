@@ -112,7 +112,7 @@ class _MeetingBlockState extends State<_MeetingBlock> with SelectableMixin {
                 enabled: !_busy,
                 actions: [
                   (
-                    label: '删除卡片',
+                    label: '删除会议',
                     key: ValueKey('meeting-delete-$id'),
                     run: () => _deleteReference(editor, id, values.properties, services),
                   ),
@@ -398,21 +398,15 @@ class _MeetingCardView extends StatelessWidget {
         : unavailable
         ? '会议不存在'
         : state.label;
-    final action =
-        state == CollabMeetingCardState.completed ||
-            state == CollabMeetingCardState.canceled
+    final action = state == CollabMeetingCardState.completed || state == CollabMeetingCardState.canceled
         ? '查看会议'
         : '加入会议';
     final time = data?.startTime?.toLocal();
     final scaler = MediaQuery.textScalerOf(context);
     final titleHeight = math.max(22.0, scaler.scale(14) * 1.4).ceilToDouble();
-    final metaHeight = math
-        .max(24.0, scaler.scale(12) * 1.4 + 4)
-        .ceilToDouble();
+    final metaHeight = math.max(24.0, scaler.scale(12) * 1.4 + 4).ceilToDouble();
     final numberHeight = math.max(20.0, scaler.scale(12) * 1.4).ceilToDouble();
-    final actionHeight = math
-        .max(44.0, scaler.scale(14) * 1.4 + 16)
-        .ceilToDouble();
+    final actionHeight = math.max(44.0, scaler.scale(14) * 1.4 + 16).ceilToDouble();
     return ExcludeFocus(
       child: CollabCardFrame(
         surfaceKey: ValueKey('meeting-card-surface-$blockId'),
@@ -432,17 +426,12 @@ class _MeetingCardView extends StatelessWidget {
                 top: 0,
                 bottom: 0,
                 width: 3,
-                child: ColoredBox(
-                  key: ValueKey('meeting-card-accent-$blockId'),
-                  color: color,
-                ),
+                child: ColoredBox(key: ValueKey('meeting-card-accent-$blockId'), color: color),
               ),
               Padding(
                 padding: const EdgeInsets.all(12),
                 child: Semantics(
-                  key: loading
-                      ? ValueKey('meeting-card-skeleton-$blockId')
-                      : null,
+                  key: loading ? ValueKey('meeting-card-skeleton-$blockId') : null,
                   label: loading ? '会议详情加载中' : null,
                   excludeSemantics: loading,
                   child: Column(
@@ -453,10 +442,7 @@ class _MeetingCardView extends StatelessWidget {
                         'title',
                         titleHeight,
                         loading
-                            ? _MeetingSkeletonBar(
-                                height: scaler.scale(14) * .75,
-                                widthFactor: .72,
-                              )
+                            ? _MeetingSkeletonBar(height: scaler.scale(14) * .75, widthFactor: .72)
                             : Text(
                                 title.trim().isEmpty ? '未命名会议' : title,
                                 maxLines: 1,
@@ -477,20 +463,9 @@ class _MeetingCardView extends StatelessWidget {
                         loading
                             ? Row(
                                 children: [
-                                  SizedBox(
-                                    width: 64,
-                                    child: _MeetingSkeletonBar(
-                                      height: scaler.scale(12),
-                                      radius: 10,
-                                    ),
-                                  ),
+                                  SizedBox(width: 64, child: _MeetingSkeletonBar(height: scaler.scale(12), radius: 10)),
                                   const SizedBox(width: 8),
-                                  Expanded(
-                                    child: _MeetingSkeletonBar(
-                                      height: scaler.scale(12) * .75,
-                                      widthFactor: .6,
-                                    ),
-                                  ),
+                                  Expanded(child: _MeetingSkeletonBar(height: scaler.scale(12) * .75, widthFactor: .6)),
                                 ],
                               )
                             : _statusRow(color, label, time),
@@ -500,20 +475,11 @@ class _MeetingCardView extends StatelessWidget {
                         'number',
                         numberHeight,
                         loading
-                            ? _MeetingSkeletonBar(
-                                height: scaler.scale(12) * .75,
-                                widthFactor: .45,
-                              )
-                            : _meta(
-                                '会议编号：${number.trim().isEmpty ? '—' : number}',
-                              ),
+                            ? _MeetingSkeletonBar(height: scaler.scale(12) * .75, widthFactor: .45)
+                            : _meta('会议编号：${number.trim().isEmpty ? '—' : number}'),
                       ),
                       const SizedBox(height: 10),
-                      _row(
-                        'action',
-                        actionHeight,
-                        _actions(context, action, actionHeight),
-                      ),
+                      _row('action', actionHeight, _actions(context, action, actionHeight)),
                     ],
                   ),
                 ),
@@ -545,33 +511,20 @@ class _MeetingCardView extends StatelessWidget {
       builder: (context, constraints) => Row(
         children: [
           ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: constraints.maxWidth * (information.isEmpty ? 1 : .6),
-            ),
+            constraints: BoxConstraints(maxWidth: constraints.maxWidth * (information.isEmpty ? 1 : .6)),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: .1),
-                borderRadius: BorderRadius.circular(10),
-              ),
+              decoration: BoxDecoration(color: color.withValues(alpha: .1), borderRadius: BorderRadius.circular(10)),
               child: Text(
                 '● $label',
                 maxLines: 1,
                 softWrap: false,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 12,
-                  height: 1.4,
-                  color: color,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: TextStyle(fontSize: 12, height: 1.4, color: color, fontWeight: FontWeight.w500),
               ),
             ),
           ),
-          if (information.isNotEmpty) ...[
-            const SizedBox(width: 8),
-            Expanded(child: _meta(information.join(' · '))),
-          ],
+          if (information.isNotEmpty) ...[const SizedBox(width: 8), Expanded(child: _meta(information.join(' · ')))],
         ],
       ),
     );
@@ -589,11 +542,7 @@ class _MeetingCardView extends StatelessWidget {
             height: height,
             child: TextButton(
               onPressed: onRetry,
-              child: const Text(
-                '重试',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
+              child: const Text('重试', maxLines: 1, overflow: TextOverflow.ellipsis),
             ),
           ),
         ),
@@ -611,37 +560,18 @@ class _MeetingCardView extends StatelessWidget {
               foregroundColor: Colors.white,
               disabledBackgroundColor: loading ? const Color(0xFFEDEFF2) : null,
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              minimumSize: Size(
-                math.max(
-                  112.0,
-                  MediaQuery.textScalerOf(context).scale(14) * 4 + 32,
-                ),
-                44,
-              ),
+              minimumSize: Size(math.max(112.0, MediaQuery.textScalerOf(context).scale(14) * 4 + 32), 44),
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              textStyle: Theme.of(context).textTheme.labelLarge?.copyWith(
-                fontSize: 14,
-                height: 1.4,
-                fontWeight: FontWeight.w500,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(6),
-              ),
+              textStyle: Theme.of(
+                context,
+              ).textTheme.labelLarge?.copyWith(fontSize: 14, height: 1.4, fontWeight: FontWeight.w500),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
             ),
             child: loading
                 ? const SizedBox(width: 70, height: 18)
                 : busy
-                ? const SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : Text(
-                    action,
-                    maxLines: 1,
-                    softWrap: false,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
+                : Text(action, maxLines: 1, softWrap: false, overflow: TextOverflow.ellipsis),
           ),
         ),
       ),
@@ -664,11 +594,7 @@ class _MeetingCardView extends StatelessWidget {
 /// 无动画的会议骨架条，只提供本地绘制，不创建定时器、请求或共享状态。
 class _MeetingSkeletonBar extends StatelessWidget {
   /// [height]为逻辑像素高度；[widthFactor]为父行宽度比例，默认1；[radius]为圆角半径，默认4。
-  const _MeetingSkeletonBar({
-    required this.height,
-    this.widthFactor = 1,
-    this.radius = 4,
-  });
+  const _MeetingSkeletonBar({required this.height, this.widthFactor = 1, this.radius = 4});
 
   /// 随当前文字缩放计算的骨架高度。
   final double height;
@@ -686,10 +612,7 @@ class _MeetingSkeletonBar extends StatelessWidget {
     alignment: Alignment.centerLeft,
     child: Container(
       height: height,
-      decoration: BoxDecoration(
-        color: const Color(0xFFEDEFF2),
-        borderRadius: BorderRadius.circular(radius),
-      ),
+      decoration: BoxDecoration(color: const Color(0xFFEDEFF2), borderRadius: BorderRadius.circular(radius)),
     ),
   );
 }
