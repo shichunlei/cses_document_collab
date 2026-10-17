@@ -24,7 +24,10 @@ import 'package:cses_document_collab/src/editor/collab_paragraph_indent.dart';
 import 'package:cses_document_collab/src/editor/collab_paragraph_presentation.dart';
 import 'package:cses_document_collab/src/editor/collab_text_alignment.dart';
 import 'package:cses_document_collab/src/editor/collab_unsupported_block.dart';
-import 'package:cses_document_collab/src/editor/collab_web_block.dart';
+import 'package:cses_document_collab/src/editor/collab_bookmark_block.dart';
+import 'package:cses_document_collab/src/editor/collab_web_embed_block.dart';
+import 'package:cses_document_collab/src/editor/collab_juejin_embed_block.dart';
+import 'package:cses_document_collab/src/editor/collab_figma_embed_block.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
@@ -40,6 +43,8 @@ import 'package:flutter/material.dart';
 
 import 'collab_inline_entity_mention.dart';
 import 'collab_table_block.dart';
+import 'collab_table_row_block.dart';
+import 'collab_table_cell_block.dart';
 import 'collab_task_card_block.dart';
 import 'document_feedback_footer.dart';
 import 'document_header.dart';
@@ -430,11 +435,16 @@ final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders =
       collabTaskCardType: CollabTaskCardBlockComponentBuilder(),
       csesCodeBlockType: CollabCodeBlockComponentBuilder(),
       csesCalloutBlockType: CollabCalloutBlockComponentBuilder(),
-      for (final type in ['table', 'table-row', 'table-cell']) type: CollabTableBlockComponentBuilder(),
+      'table': CollabTableBlockComponentBuilder(),
+      'table-row': CollabTableRowBlockComponentBuilder(),
+      'table-cell': CollabTableCellBlockComponentBuilder(),
       csesUnsupportedBlockType: CollabUnsupportedBlockComponentBuilder(),
       'audio': CollabAudioBlockComponentBuilder(),
       'attachment': CollabAttachmentBlockComponentBuilder(),
-      for (final kind in ['bookmark', 'embed', 'juejin-embed', 'figma-embed']) kind: CollabWebBlockComponentBuilder(),
+      'bookmark': CollabBookmarkBlockComponentBuilder(),
+      'embed': CollabWebEmbedBlockComponentBuilder(),
+      'juejin-embed': CollabJuejinEmbedBlockComponentBuilder(),
+      'figma-embed': CollabFigmaEmbedBlockComponentBuilder(),
     }.map((type, builder) {
       const textTypes = {
         ParagraphBlockKeys.type,

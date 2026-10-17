@@ -1,0 +1,136 @@
+{
+  "date": "2026-10-17",
+  "request": "Split table/table-row/table-cell first, then bookmark/web embed/Juejin/Figma into independent classes and files; preserve business behavior and UI.",
+  "implementation": {
+    "table": {
+      "table": "collab_table_block.dart: CollabTableBlockComponentBuilder",
+      "table-row": "collab_table_row_block.dart: CollabTableRowBlockComponentBuilder",
+      "table-cell": "collab_table_cell_block.dart: CollabTableCellBlockComponentBuilder",
+      "common": "collab_table_children.dart: buildCollabTableChildren"
+    },
+    "web": {
+      "bookmark": "collab_bookmark_block.dart: CollabBookmarkBlockComponentBuilder",
+      "embed": "collab_web_embed_block.dart: CollabWebEmbedBlockComponentBuilder",
+      "juejin-embed": "collab_juejin_embed_block.dart: CollabJuejinEmbedBlockComponentBuilder",
+      "figma-embed": "collab_figma_embed_block.dart: CollabFigmaEmbedBlockComponentBuilder",
+      "common": "collab_web_block_base.dart: common builder validation, title/menu, layout and embedded content states"
+    },
+    "removed": "collab_web_block.dart and its generic CollabWebBlockComponentBuilder/_WebBlock/_WebBlockState dispatchers",
+    "callers": [
+      "lib/src/editor/collaborative_editor_page.dart",
+      "test/collab_table_test.dart",
+      "test/collab_resource_block_test.dart",
+      "test/collab_link_actions_test.dart",
+      "integration_test/mobile_card_pointer_test.dart"
+    ],
+    "preserved": [
+      "Table grid/controls/sheet/model unchanged; original row/cell Column and empty-body insertion transaction reused without additional render wrappers.",
+      "Cell background/borders/alignment/dimension limit, node keys and menu guards/awaited sheet unchanged.",
+      "Web header labels/icons/URL/title/read-only actions, stable keys and menu callbacks unchanged.",
+      "Single resource snapshot per card build is passed to extracted layout and content methods; metadata loader remains bookmark-only.",
+      "Original width/ratio/height calculations and preview/WebView components retained; no network or platform lifecycle logic moved out of its existing owner.",
+      "Selection, deletion/settings/history/collaboration remain in existing resource base."
+    ]
+  },
+  "parity": {
+    "checks": {
+      "table_children_and_add_body_transaction": true,
+      "table_grid_call": true,
+      "cell_UI_and_menu_transaction": true,
+      "cell_dimension_rule": true,
+      "web_header_and_menu": true,
+      "web_width_ratio_height_algorithm": true,
+      "old_generic_web_symbols_absent": true,
+      "bookmark_preview_loader_open_and_key": true,
+      "embedded_page_URL_and_key": true
+    },
+    "normalization": "Whitespace, line comments, optional trailing commas and mechanical substitution of extracted helper parameters/icon property. Validation specializes each web builder to its registered type; mapped valid/invalid-node behavior is unchanged.",
+    "original_sha256": {
+      "collab_table_block.dart": "a77e06fd6a1741f6caf551565f04306131b5b690c6c842f87c7bec4da78e612d",
+      "collab_web_block.dart": "dd6a69f0a49916428ce2976edcd0162a138b852464592ee4273fe923bb2bf667"
+    }
+  },
+  "validation": {
+    "table_stage": {
+      "command": "flutter test --no-pub test/collab_table_test.dart test/table_native_integration_test.dart",
+      "passed": 23,
+      "result": "00:36 +23: All tests passed!",
+      "order": "Passed before web classes were migrated."
+    },
+    "web_target": {
+      "command": "flutter test --no-pub test/collab_resource_block_test.dart test/collab_link_actions_test.dart test/collab_link_view_test.dart test/collab_link_preview_test.dart test/collab_embedded_page_test.dart",
+      "passed": 73,
+      "result": "00:26 +73: All tests passed!"
+    },
+    "target_analysis": "Final flutter analyze --no-pub over all 14 changed handwritten Dart files: no issues found (7.3s).",
+    "package_analysis": {
+      "errors": 0,
+      "warnings": 0,
+      "existing_infos": [
+        "test/collab_controller_native_test.dart:186:9 close_sinks"
+      ],
+      "exit_status": 1,
+      "result": "1 issue found (14.1s): only the unchanged native-test close_sinks info."
+    },
+    "full_package_tests": {
+      "command": "flutter test --no-pub",
+      "status": "passed",
+      "passed": 1162,
+      "failed": 0,
+      "result": "02:35 +1162: All tests passed!"
+    },
+    "host_tests": {
+      "command": "flutter test --no-pub",
+      "passed": 56,
+      "result": "00:35 +56: All tests passed!"
+    },
+    "format": "dart format executed only on touched handwritten files; unrelated legacy reflow in the editor page restored to the saved worktree baseline.",
+    "migration_search": "Global Dart search found zero old generic web builder/import references; production, unit and device-test mappings register the seven independent builders. No package export/schema/native/consumer API changes.",
+    "diff_check": "git diff --check passed"
+  },
+  "upstream_version": {
+    "latest": "unverified",
+    "reason": "Expected adjacent desktop repository rechecked before analysis and remains absent. Its configured registry/latest, dependency declaration/lock/installed artifact and packaged skills/MIGRATIONS/implementation could not be read; historical version values are not a fresh latest conclusion."
+  },
+  "unchanged_status_counts": {
+    "adapted": 13,
+    "partial": 12,
+    "structural": 1,
+    "unadapted": 15,
+    "total": 41
+  },
+  "limits": [
+    "No native/generated/schema/dependency/package-entry changes.",
+    "No phone restart, device integration execution, iOS or real desktop online reacceptance performed.",
+    "Unrelated pre-existing workspace modifications preserved."
+  ],
+  "code_review": {
+    "date": "2026-10-17",
+    "scope": "Only the latest table/row/cell and bookmark/embed/Juejin/Figma class split, shared helpers and migrated registration/test maps, compared with the saved pre-split worktree baseline. Other existing workspace changes were not re-reviewed.",
+    "findings": [],
+    "checked": [
+      "Seven type-to-builder mappings and global old-symbol/import search.",
+      "Table controls/cell geometry/children/empty-body transactions and menu guards against the original source.",
+      "Web labels/icons/header/menu, resource snapshot, metadata loader and original layout calculations.",
+      "Renderer resolves builder by current node type; view conversion uses replacement nodes, preserving the existing content lifecycle.",
+      "Selection/permission ownership and readonly content reuse; menu fingerprint includes type and URL and rejects stale actions before old state callbacks."
+    ],
+    "fresh_validation": {
+      "target_tests": {
+        "passed": 96,
+        "result": "00:25 +96: All tests passed!"
+      },
+      "analysis": {
+        "files": 14,
+        "result": "No issues found! (ran in 13.1s)"
+      },
+      "diff_check": "passed"
+    },
+    "upstream": "Expected adjacent desktop repository checked again and still absent; configured latest/declaration/lock/install/packaged skills/MIGRATIONS remain unverified.",
+    "limits": [
+      "No physical-device/iOS/real-desktop online reacceptance in this review.",
+      "No new full-suite run in review; fresh targeted regression covers the split, and prior full package 1162/host56 results remain recorded above."
+    ],
+    "production_code_modified": false
+  }
+}

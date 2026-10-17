@@ -1,6 +1,8 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_table_block.dart';
+import 'package:cses_document_collab/src/editor/collab_table_row_block.dart';
+import 'package:cses_document_collab/src/editor/collab_table_cell_block.dart';
 import 'package:cses_document_collab/src/editor/collab_block_delete.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/model/collab_table.dart';
@@ -876,8 +878,9 @@ Future<void> _pumpTableEditor(
             ),
             blockComponentBuilders: {
               ...standardBlockComponentBuilderMap,
-              for (final type in collabTableTypes)
-                type: CollabTableBlockComponentBuilder(),
+              'table': CollabTableBlockComponentBuilder(),
+              'table-row': CollabTableRowBlockComponentBuilder(),
+              'table-cell': CollabTableCellBlockComponentBuilder(),
             },
           ),
         ),

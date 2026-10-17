@@ -10,7 +10,10 @@ import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.da
 import 'package:cses_document_collab/src/editor/collab_meeting_block.dart';
 import 'package:cses_document_collab/src/editor/collab_audio_block.dart';
 import 'package:cses_document_collab/src/editor/collab_attachment_block.dart';
-import 'package:cses_document_collab/src/editor/collab_web_block.dart';
+import 'package:cses_document_collab/src/editor/collab_bookmark_block.dart';
+import 'package:cses_document_collab/src/editor/collab_web_embed_block.dart';
+import 'package:cses_document_collab/src/editor/collab_juejin_embed_block.dart';
+import 'package:cses_document_collab/src/editor/collab_figma_embed_block.dart';
 import 'package:cses_document_collab/src/editor/collab_task_card_block.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
@@ -412,13 +415,12 @@ Future<void> _mount(
             'task': CollabTaskCardBlockComponentBuilder(),
             'audio': CollabAudioBlockComponentBuilder(),
             'attachment': CollabAttachmentBlockComponentBuilder(),
-            for (final kind in [
-              'bookmark',
-              'embed',
-              'juejin-embed',
-              'figma-embed',
-            ])
-              kind: CollabWebBlockComponentBuilder(loadPreview: _metadata),
+            'bookmark': CollabBookmarkBlockComponentBuilder(
+              loadPreview: _metadata,
+            ),
+            'embed': CollabWebEmbedBlockComponentBuilder(),
+            'juejin-embed': CollabJuejinEmbedBlockComponentBuilder(),
+            'figma-embed': CollabFigmaEmbedBlockComponentBuilder(),
           },
         ),
       ),
