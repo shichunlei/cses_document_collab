@@ -1,0 +1,207 @@
+{
+  "date": "2026-10-17",
+  "scope": "Whole current cses_document_collab package, including committed and existing worktree state; not restricted to the latest table/web class split.",
+  "coverage": {
+    "handwritten_Dart_library_files": 112,
+    "focus": [
+      "Public exports and host contracts",
+      "Controller lifecycle, permissions, projection, metadata and feedback",
+      "Gateway/session handshake, reconnect, awareness and disposal",
+      "Editor adapter, history, node identity, input/formatting, selection and modal boundaries",
+      "Block renderers, shared resource/media classes, tables, code, formulas, mentions and Mermaid",
+      "Rust BlockCraft/schema projection, snapshot validation, Yrs state and SQLite recovery",
+      "Android/iOS configuration, native build/portability scripts and bundled runtime provenance"
+    ],
+    "generated_and_vendor": "Generated FRB implementation and minified third-party Mermaid are not manually re-reviewed; FRB version/runtime hash and exercised native bridge are checked.",
+    "review_depth": "Risk-focused cross-module review and targeted reproductions; not a claim of exhaustive proof for every line or platform."
+  },
+  "findings": [
+    {
+      "id": "R1",
+      "priority": 1,
+      "title": "Ordinary text history is not transformed or invalidated by remote edits/reorders",
+      "file": "packages/cses_document_collab/lib/src/editor/appflowy_block_editor_adapter.dart",
+      "start": 675,
+      "end": 681,
+      "cause": "History invalidation only covers tables and Mermaid. Ordinary paragraph history keeps old paths and full delta snapshots, while underlying remote apply adjusts only the live selection.",
+      "reproductions": [
+        {
+          "setup": "p:ab -> local insert X -> p:aXb -> remote prepend Z -> p:ZaXb -> undo",
+          "expected": "p:Zab",
+          "actual": "p:ab; remote Z is lost"
+        },
+        {
+          "setup": "p:ab,q:cd -> local insert X into p -> remote reorder q:cd,p:aXb -> undo",
+          "expected": [
+            "q:cd",
+            "p:ab"
+          ],
+          "actual": [
+            "q:ab",
+            "p:aXb"
+          ]
+        }
+      ],
+      "recommendation": "Transform local undo/redo against remote text/tree operations, or invalidate affected history before replay until a safe transformation exists."
+    },
+    {
+      "id": "R2",
+      "priority": 1,
+      "title": "Paragraph property-only edits are dropped by controller snapshot equality",
+      "file": "packages/cses_document_collab/lib/src/controller/collab_controller.dart",
+      "start": 625,
+      "end": 629,
+      "cause": "_rustBlocksEqual omits paragraphStyle. Both local write deduplication and remote projection use this comparison.",
+      "reproductions": [
+        {
+          "setup": "Real editable formal controller plus basic fixture; call setCollabNextParagraphStyle(state, same)",
+          "expected": "Authoritative native paragraphStyle contains nextParagraphStyle:same; nonempty V1 diff",
+          "actual": "UI wrapper changes to same; native paragraphStyle stays null and V1 diff is [0,0]"
+        }
+      ],
+      "recommendation": "Include paragraph property values and applicable explicit mutation intent in controller comparison, and test the real controller rather than only adapter/native direct paths."
+    },
+    {
+      "id": "R3",
+      "priority": 1,
+      "title": "Inline metadata-only edits are dropped by controller segment equality",
+      "file": "packages/cses_document_collab/lib/src/controller/collab_controller.dart",
+      "start": 643,
+      "end": 652,
+      "cause": "_rustSegmentsEqual omits typography, href, inlineLatex, inlineMention, mentionId/type/attributes. Same text/style flags/segment boundaries are considered equal.",
+      "reproductions": [
+        {
+          "setup": "Real formal controller basic first paragraph; format the entire existing segment with t:px:28",
+          "expected": "New typography persists and produces V1 update",
+          "actual": "UI t:px changes; native remains serif-only and V1 diff is [0,0]"
+        },
+        {
+          "setup": "Same controller fixture; change only the existing full-segment href",
+          "expected": "New href persists and produces V1 update",
+          "actual": "UI href changes to review.example; native keeps example.test and V1 diff is [0,0]"
+        }
+      ],
+      "recommendation": "Compare all segment fields or delegate to a complete immutable snapshot equality; cover unchanged-length formula edits and remote metadata projection as well."
+    },
+    {
+      "id": "R4",
+      "priority": 1,
+      "title": "Persistence failure leaves live Yrs state ahead of the recoverable log",
+      "file": "packages/cses_document_collab/rust/src/api/collab.rs",
+      "start": 541,
+      "end": 542,
+      "related_ranges": [
+        [
+          375,
+          378
+        ],
+        [
+          661,
+          665
+        ]
+      ],
+      "cause": "Local and remote paths commit the authoritative Doc before SQLite insert. A failed insert has no rollback or later retry of the missing update, so later successful updates may depend on unpersisted Yrs structs.",
+      "reproductions": [
+        {
+          "setup": "Temporary copy of crate/private engine with isolated SQLite: persist A; inject BEFORE INSERT trigger that fails writes; attempt AB and receive error; remove trigger; successfully apply ABC; reopen database",
+          "expected": "Successful final edit reopens as ABC",
+          "actual": "Failed operation leaves live Doc=AB; reopening after successful ABC restores only A"
+        }
+      ],
+      "recommendation": "Stage mutation and make persistence durable before advancing the live Doc, or explicitly recover/retain the failed update and block later dependent writes until storage consistency is restored."
+    },
+    {
+      "id": "R5",
+      "priority": 2,
+      "title": "A failed permission-session transition poisons future transitions and skips close cleanup",
+      "file": "packages/cses_document_collab/lib/src/controller/collab_controller.dart",
+      "start": 195,
+      "end": 199,
+      "related_ranges": [
+        [
+          698,
+          700
+        ]
+      ],
+      "cause": "_accessTransition chains only success handlers. A register failure keeps it rejected. _shutdown awaits that rejected Future before _releaseSession, so its catch bypasses cleanup of the newly created session listener.",
+      "reproductions": [
+        {
+          "setup": "Initialize real controller with fake borrowed gateway; reject one registration during setEditable(false); retry setEditable(true)",
+          "expected": "Next transition registers a new session after the transient failure",
+          "actual": "Next transition rethrows the previous failure without calling register"
+        },
+        {
+          "setup": "Same registration failure followed by await controller.close()",
+          "expected": "Borrowed gateway event stream has no document-session listeners",
+          "actual": "gateway.events.hasListener remains true after close"
+        }
+      ],
+      "recommendation": "Recover the internal transition queue while reporting each operation failure, dispose partially started sessions, and always run session cleanup even when an earlier awaited task fails."
+    }
+  ],
+  "validation": {
+    "flutter_full_serial": {
+      "status": "passed",
+      "command": "flutter test --no-pub",
+      "passed": 1162,
+      "failed": 0,
+      "result": "03:46 +1162: All tests passed!",
+      "concurrent_flutter_tests": false
+    },
+    "rust_tests": {
+      "command": "cargo test --manifest-path rust/Cargo.toml",
+      "passed": 91,
+      "failed": 0
+    },
+    "rust_check": "passed",
+    "rust_format_check": "passed",
+    "native_build_scripts_syntax": "bash -n passed",
+    "bundled_mermaid_hash": "matches runtime.json; version 11.13.0",
+    "analysis": {
+      "command": "flutter analyze --no-pub",
+      "errors": 0,
+      "warnings": 0,
+      "existing_info_locations": [
+        "test/collab_controller_native_test.dart:186:9 close_sinks"
+      ],
+      "exit_status": 1,
+      "result": "1 issue found. (ran in 26.9s)"
+    },
+    "new_bug_reproductions": {
+      "Dart_expected_behavior_tests_failed": 7,
+      "Rust_expected_behavior_test_failed": 1,
+      "files": [
+        "/tmp/cses_package_review_repro_test.dart",
+        "/tmp/cses_package_review_history_test.dart",
+        "/tmp/cses_package_review_permissions_test.dart"
+      ],
+      "rust": "Temporary crate copy recorded at /tmp/cses-review-native-path. Original production Rust files were not modified.",
+      "interpretation": "These deliberately assert expected correct behavior and fail on the current code, confirming the five findings. They are not included in the existing green regression suite."
+    },
+    "initial_flutter_run": {
+      "passed": 1160,
+      "failed": 2,
+      "reason": "Concurrent diagnostic Flutter test invocations reused unit-test assets, causing missing shaders/ink_sparkle.frag in two UI tests. Full suite is rerun without concurrent Flutter tests; not classified as a source-code finding.",
+      "resolution": "Serialized full rerun passed all 1162 tests; transient shader failures did not recur."
+    },
+    "diff_check": "passed"
+  },
+  "upstream_version": {
+    "latest": "unverified",
+    "reason": "Expected desktop repository /Users/shichunlei/workspace/cses/cses-client rechecked before BlockCraft review and remains absent; configured registry, declaration/lock/install and packaged skills/MIGRATIONS unavailable. Historical versions are not a fresh latest conclusion."
+  },
+  "production_code_modified": false,
+  "status_counts_unchanged": {
+    "adapted": 13,
+    "partial": 12,
+    "structural": 1,
+    "unadapted": 15,
+    "total": 41
+  },
+  "limits": [
+    "No physical-device/IME/iOS/real desktop online reacceptance or Android/iOS build performed.",
+    "Existing test suite does not include the eight diagnostic cases above; passing it does not negate the reproduced bugs.",
+    "Temporary databases/fixture documents only; no user document, login or existing cache touched.",
+    "Other workspace changes preserved."
+  ]
+}
