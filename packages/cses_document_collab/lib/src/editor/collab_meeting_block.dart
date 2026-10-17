@@ -65,6 +65,7 @@ class _MeetingBlockState extends State<_MeetingBlock> with SelectableMixin {
 
   /// 在借用 [context] 内构建非交互卡片背景，只为主按钮和删除按钮绑定事件。
   /// 状态/标题/主持人等只供本地展示；预览隐藏删除，按钮操作不自动弹正文键盘。
+  /// 快捷操作面板使用会议专属标题与Lucide会议图标。
   @override
   Widget build(BuildContext context) {
     final editor = context.read<EditorState>();
@@ -110,6 +111,8 @@ class _MeetingBlockState extends State<_MeetingBlock> with SelectableMixin {
                 key: ValueKey('block-more-$id'),
                 editor: editor,
                 node: node,
+                menuTitle: '会议操作',
+                menuIcon: LucideIcons.users,
                 enabled: !_busy,
                 actions: [
                   (

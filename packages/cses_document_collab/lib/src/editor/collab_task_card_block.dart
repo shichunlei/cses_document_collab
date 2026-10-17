@@ -8,6 +8,7 @@ import 'package:cses_document_collab/src/model/collab_task_card.dart';
 import 'package:cses_document_collab/src/model/collab_task_card_data.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 
 /// 正式task引用的卡片工厂；借用宿主详情展示任务信息，不直接查询业务接口。
@@ -62,6 +63,7 @@ class _TaskCardState extends State<_TaskCard> with SelectableMixin {
   int _generation = 0;
 
   /// 在借用[context]中显示宿主详情与共享标题，更多菜单支持插入正文和删除引用。
+  /// 快捷操作面板使用任务专属标题与Lucide任务图标。
   @override
   Widget build(BuildContext context) {
     final editor = context.read<EditorState>();
@@ -116,6 +118,8 @@ class _TaskCardState extends State<_TaskCard> with SelectableMixin {
                           key: ValueKey('task-card-more-$id'),
                           editor: editor,
                           node: widget.node,
+                          menuTitle: '任务操作',
+                          menuIcon: LucideIcons.listTodo,
                           enabled: !_busy,
                           actions: [
                             (
