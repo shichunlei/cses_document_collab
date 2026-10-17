@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 /// 编辑器卡片的公共外框；只借用内容，不创建控制器或处理文档事务。
 ///
 /// ```dart
+/// import 'package:lucide_icons_flutter/lucide_icons.dart';
 /// import 'package:flutter/material.dart';
 /// import 'package:cses_document_collab/src/editor/collab_card_frame.dart';
 /// const card = CollabCardFrame(
 ///   header: CollabCardHeader(
-///     leading: Icon(Icons.groups_outlined),
+///     leading: Icon(LucideIcons.users),
 ///     title: Text('会议'),
 ///   ),
 ///   child: Padding(padding: EdgeInsets.all(12), child: Text('会议内容')),
@@ -69,10 +70,11 @@ class CollabCardFrame extends StatelessWidget {
 /// 固定操作区的公共标题栏，长标题或网址不会挤压右侧按钮。
 ///
 /// ```dart
+/// import 'package:lucide_icons_flutter/lucide_icons.dart';
 /// import 'package:flutter/material.dart';
 /// import 'package:cses_document_collab/src/editor/collab_card_frame.dart';
 /// const header = CollabCardHeader(
-///   leading: Icon(Icons.language),
+///   leading: Icon(LucideIcons.globe),
 ///   title: Text('网页卡片'),
 ///   subtitle: 'https://example.com',
 ///   readOnly: true,

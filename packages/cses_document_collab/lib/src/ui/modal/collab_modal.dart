@@ -266,9 +266,10 @@ class CollabModalTheme extends StatelessWidget {
 /// 带图标、标题、说明和关闭入口的共用面板头；不拥有资源。
 ///
 /// ```dart
+/// import 'package:lucide_icons_flutter/lucide_icons.dart';
 /// import 'package:flutter/material.dart';
 /// import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
-/// const heading = CollabModalHeader(title: Text('修改标题'), icon: Icons.title);
+/// const heading = CollabModalHeader(title: Text('修改标题'), icon: LucideIcons.type);
 /// ```
 class CollabModalHeader extends StatelessWidget {
   /// [key] 控制身份；[title] 必填；[icon] 为紫色图标槽中的图标。
@@ -371,11 +372,12 @@ class CollabModalHeader extends StatelessWidget {
 /// 固定标题/操作区、中部独立滚动的共用底部弹窗，负责键盘和底部安全区。
 ///
 /// ```dart
+/// import 'package:lucide_icons_flutter/lucide_icons.dart';
 /// import 'package:flutter/material.dart';
 /// import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 /// Future<void> open(BuildContext context) => showCollabBottomSheet<void>(
 ///   context: context, builder: (_) => const CollabBottomSheet(
-///     title: Text('修改标题'), icon: Icons.title, child: TextField()));
+///     title: Text('修改标题'), icon: LucideIcons.type, child: TextField()));
 /// ```
 class CollabBottomSheet extends StatelessWidget {
   /// [key] 控制身份；[title]/[icon] 为标题及装饰；[child] 为内容，不要重复避让键盘。

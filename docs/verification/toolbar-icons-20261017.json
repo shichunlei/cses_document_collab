@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-17",
+  "request": "截图中键盘工具栏及类型、文字样式、对齐展开栏统一使用lucide_icons_flutter图标",
+  "scope": {
+    "source": [
+      "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart",
+      "packages/cses_document_collab/lib/src/editor/stable_mobile_toolbar.dart"
+    ],
+    "test": "packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart",
+    "library": "复用已安装lucide_icons_flutter 4.0.0，不变更依赖",
+    "main_row": {
+      "添加": "circlePlus",
+      "块类型": "type",
+      "文字样式": "caseSensitive",
+      "布局": "textAlignStart",
+      "图片": "image",
+      "人员提及": "atSign",
+      "收起键盘": "keyboardOff"
+    },
+    "block_types": "正文type；H1～H6直接使用heading1～heading6，H7～H9使用heading加级别数字；列表listOrdered/list、待办squareCheck、代码codeXml、引用quote。保持九级渐进披露。",
+    "inline_styles": "bold/italic/underline/strikethrough/codeXml/superscript/subscript；字色baseline、背景paintBucket，保留原当前颜色回显。",
+    "layout": "indentDecrease/indentIncrease；textAlignStart/textAlignCenter/textAlignEnd/textAlignJustify/space；块背景paintBucket、引用边线panelLeft、下一段rotateCcw/cornerDownRight/textAlignStart。",
+    "related_entry": "添加面板的人员提及入口同步atSign。其他未涉及的插入项、卡片及Figma/掘金Logo保持。"
+  },
+  "preserved": "入口key、提示、点击区域、选中/禁用背景、格式事务、权限与远端范围保护、焦点/键盘及撤销行为保持；协同Schema、FRB、Rust及AppFlowy fork未修改。",
+  "validation": {
+    "command": "flutter test --no-pub test/editor_shortcut_toolbar_test.dart test/collab_list_toolbar_focus_test.dart test/mobile_selection_menu_test.dart --reporter expanded",
+    "passed": 78,
+    "failed": 0,
+    "analysis": "flutter analyze --no-pub lib/src/editor/editor_shortcut_toolbar.dart lib/src/editor/stable_mobile_toolbar.dart test/editor_shortcut_toolbar_test.dart：无问题。",
+    "format": "仅对3个修改的手写Dart文件格式化，分别沿用120/80行宽。",
+    "residual_check": "工具栏不再委托textDecorationMobileToolbarItemV2绘制Aa；已检索移除的_subscriptDigit及旧图标来源。",
+    "git_diff_check": "通过"
+  },
+  "blockcraft_version_check": {
+    "latest": "待核对",
+    "desktop_declaration_lock_installed": "本轮无法复核",
+    "reason": "调整前检索本机workspace的package.json/.npmrc仍无桌面仓库及包仓库配置，无法按指定仓库查询latest或读取对应技能/MIGRATIONS/实现；不将历史版本当作本轮最新版。",
+    "record": "docs/block-adaptation.md#blockcraft-版本跟踪"
+  },
+  "block_status_counts": {
+    "adapted": 13,
+    "partial": 12,
+    "structural": 1,
+    "unadapted": 15,
+    "total": 41
+  },
+  "limitations": [
+    "未做新的Android/iOS真机逐像素截图验收；回归包含Widget测试和模拟Android输入连接，不代表真实平台键盘或桌面协同联调。",
+    "不改变已有块支持范围；未修改原生或桥接，未重复原生构建。"
+  ],
+  "preserved_workspace_change": "根pubspec.yaml已有cses_common路径修改保持原样，未纳入本轮修改。"
+}

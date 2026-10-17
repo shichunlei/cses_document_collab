@@ -13,7 +13,7 @@ import 'collab_user_mention.dart';
 /// final services = CollabHostServices(
 ///   mentionAvatarBuilder: (context, {required userId, required name,
 ///     required size, avatarUrl}) => CircleAvatar(
-///       radius: size / 2, child: const Icon(Icons.person)),
+///       radius: size / 2, child: const Text('张')),
 /// );
 /// ```
 typedef CollabMentionAvatarBuilder =
