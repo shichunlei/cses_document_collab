@@ -1,0 +1,344 @@
+{
+  "date": "2026-10-17",
+  "request": "按本对话已确认的三组UI预览，在cses_document_collab中共用封装并还原弹窗样式",
+  "scope": {
+    "bottom_scenarios": [
+      "媒体链接/上传",
+      "封面图库",
+      "文档图标",
+      "文档标题",
+      "封面位置",
+      "添加内容块",
+      "划词格式",
+      "数学/行内公式",
+      "Mermaid",
+      "分割线",
+      "高亮颜色",
+      "高亮表情",
+      "表格合并/拆分",
+      "通用块操作",
+      "链接/资源卡片操作",
+      "会议/任务/文档提及"
+    ],
+    "dialog_scenarios": [
+      "图片编辑",
+      "图片题注",
+      "资源属性",
+      "文字链接",
+      "Markdown导入确认"
+    ],
+    "popover_scenarios": [
+      "代码名称",
+      "代码语言",
+      "列表编号",
+      "表格行列"
+    ],
+    "shared_source": "packages/cses_document_collab/lib/src/ui/modal/collab_modal.dart",
+    "shared_contracts": [
+      "showCollabBottomSheet<T>",
+      "CollabBottomSheet",
+      "showCollabDialog<T>",
+      "CollabDialog",
+      "showCollabPopover<T>",
+      "CollabPopover",
+      "CollabModalTheme",
+      "CollabModalHeader",
+      "CollabModalActions",
+      "CollabModalField",
+      "CollabModalSegments<T>"
+    ],
+    "public_package_exports_changed": false,
+    "schema_frb_rust_changed": false,
+    "block_status_counts": {
+      "adapted": 13,
+      "partial": 12,
+      "in_progress": 1,
+      "unadapted": 15,
+      "total": 41
+    },
+    "dependency": {
+      "lucide_icons_flutter": "^4.0.0",
+      "resolved_package_and_host": "4.0.0"
+    }
+  },
+  "design_tokens": {
+    "light": {
+      "accent": "#6558D9",
+      "soft": "#F0EDFF",
+      "surface": "#FFFFFF",
+      "text": "#242633",
+      "muted": "#757888",
+      "line": "#ECECF2",
+      "field": "#F8F8FB",
+      "danger": "#CC4E62"
+    },
+    "geometry_logical_px": {
+      "sheet_radius": 24,
+      "dialog_radius": 20,
+      "popover_radius": 13,
+      "field_radius": 10,
+      "button_radius": 11,
+      "heading_icon_slot": 38,
+      "heading_icon": 19,
+      "content_horizontal_padding": 20,
+      "field_padding": 12,
+      "button_min_height": 42,
+      "action_gap": 10,
+      "popover_row_min_height": 42
+    },
+    "typography_logical_px": {
+      "sheet_title": 18,
+      "dialog_title": 17,
+      "body": 14,
+      "field_label": 12,
+      "hint": 11
+    },
+    "fonts": "继承宿主字体与缩放；未在产品中嵌入测试代理字体",
+    "theme": "亮/暗配色按宿主亮度切换，外壳不修改宿主主题"
+  },
+  "behavior": {
+    "route_results": "取消null；确认保留原结果类型；共用展示函数等待route.completed后返回",
+    "editor_sessions": "保留现有稳定选区、输入隔离、权限撤销、会话失效及焦点恢复边界",
+    "business_ownership": "服务、控制器、上传取消、监听、校验、协同事务和冲突处理保留在原业务层",
+    "real_content_preserved": [
+      "完整九色及历史自定义颜色",
+      "20张真实封面图库",
+      "完整表情分类/搜索/粘贴",
+      "图片宽高比与多题注",
+      "公式及真实Mermaid预览/类型/模板",
+      "上下标及段落布局/类型",
+      "表格稳定范围与最后行列保护"
+    ],
+    "cover_position": "图片内上下拖动调整0～100位置副本，图片下方显示双向箭头及“按住图片上下拖动，调整封面位置”；不显示滑条或位置数值，仅保存时提交。",
+    "responsive": "固定头尾、中部滚动、单层键盘避让；小可用高度压缩头部；窄屏/大字操作区换行"
+  },
+  "validation": {
+    "package_full": {
+      "command": "flutter test --no-pub --reporter expanded",
+      "passed": 1187,
+      "failed": 0,
+      "phase": "业务迁移完成后的全量回归；最终字体/间距/提示区微调后另跑下述定向复验"
+    },
+    "final_ui_regression": {
+      "command": "flutter test --no-pub test/collab_modal_test.dart test/editor_media_source_sheet_test.dart test/collab_ordered_test.dart test/collab_table_test.dart --reporter expanded",
+      "passed": 60,
+      "failed": 0
+    },
+    "format_panel_regression": {
+      "files": [
+        "test/mobile_selection_menu_test.dart",
+        "test/collab_table_test.dart",
+        "test/collab_ordered_test.dart"
+      ],
+      "passed": 57,
+      "failed": 0
+    },
+    "host_tests": {
+      "command": "flutter test --no-pub --reporter expanded",
+      "passed": 56,
+      "failed": 0
+    },
+    "package_analysis": {
+      "command": "flutter analyze --no-pub",
+      "errors": 0,
+      "warnings": 0,
+      "infos": [
+        {
+          "code": "close_sinks",
+          "path": "test/collab_controller_native_test.dart:186",
+          "status": "既有、未触达"
+        }
+      ],
+      "exit_code": 1
+    },
+    "changed_scope_analysis": {
+      "command": "flutter analyze --no-pub lib/src/editor lib/src/ui/modal test/collab_modal_test.dart",
+      "status": "无问题；最终包级分析亦无新增诊断"
+    },
+    "host_analysis": {
+      "command": "flutter analyze --no-pub lib test",
+      "errors": 0,
+      "warnings": 0,
+      "existing_infos": 8,
+      "code": "depend_on_referenced_packages",
+      "note": "涉及宿主未声明的bot_toast/dio/file_picker/mime/path_provider直接依赖；宿主源码和原有pubspec路径改动未触碰",
+      "exit_code": 1
+    },
+    "format": "仅对本轮修改手写文件运行dart format；按各文件既有行宽减少无关重排",
+    "git_diff_check": "通过",
+    "removed_private_names": "全局检索_CodePopoverLayout/_NumberingMenuLayout/_DividerStyleTabLabel，无残留",
+    "generated_or_native_changes": false,
+    "screenshots": {
+      "viewport_logical_px": [
+        390,
+        844
+      ],
+      "pixel_ratio": 2,
+      "font": "测试代理Arial Unicode；Lucide加载真实包字体",
+      "rendering": "直接捕获Flutter RenderRepaintBoundary，捕获期间启用真实阴影并finally恢复调试标志，未对PNG后期编辑",
+      "files": [
+        {
+          "path": "docs/verification/screenshots/collab-modal-media-source-20261017.png",
+          "scene": "实际媒体来源面板",
+          "sha256": "910e30ce8261c7c6b0c5d480157302ee740b912fbab8ebb74e18f811ee661fd8"
+        },
+        {
+          "path": "docs/verification/screenshots/collab-modal-dialog-20261017.png",
+          "scene": "共用居中弹窗外壳示例",
+          "sha256": "befe8f8e2aa6e0b93cfb30b4f220bcbe317f94ea61af5986146d18a6668c9a61"
+        },
+        {
+          "path": "docs/verification/screenshots/collab-modal-popover-20261017.png",
+          "scene": "共用锚点菜单外壳示例",
+          "sha256": "98dd5a0c3cf8ae53b36ffc0a079cef318226b29dbb5fa71e211983c0aeae5a9e"
+        },
+        {
+          "path": "docs/verification/screenshots/collab-modal-bottom-sheet-dark-20261017.png",
+          "scene": "共用底部弹窗暗色外壳示例",
+          "sha256": "00988caab2f4ea4ce96d0b866a857c8b031f98f8cb5dda4380c1de4d40141d5d"
+        }
+      ]
+    }
+  },
+  "blockcraft_version_check": {
+    "latest": "待核对",
+    "desktop_declaration": "本轮无法复核",
+    "desktop_lock": "本轮无法复核",
+    "desktop_installed": "本轮无法复核",
+    "reason": "检索本机workspace及桌面相关package.json/.npmrc后仍未找到桌面仓库配置，无法按指定仓库查询latest或读取随包技能/MIGRATIONS/桌面实现；未将历史版本作为本轮最新版。",
+    "record": "docs/block-adaptation.md#blockcraft-版本跟踪"
+  },
+  "limitations": [
+    "未执行Android/iOS真机逐像素验收；系统字体、DPR、安全区及真实键盘动画仍须设备复核。",
+    "本轮截图验收覆盖共用外壳及真实媒体来源面板，未逐一截图验收全部业务/远端冲突/上传错误状态。",
+    "未进行真实桌面协同联调，未宣称BlockCraft最新版本兼容完成。",
+    "Rust/FRB和原生平台配置未修改，未重复构建原生库或运行平台构建。"
+  ],
+  "preserved_workspace_change": "根pubspec.yaml的cses_common路径../cses.common为任务开始前已有改动，保持原样。",
+  "followups": [
+    {
+      "date": "2026-10-17",
+      "issue": "展开式图标面板内容较少时，按钮组下方出现额外大空白",
+      "cause": "Column使用展开高度，但正文Flexible默认loose，短内容未占满剩余高度；Column的剩余空间留在操作区之后。",
+      "fix": "仅expand=true时将正文Flexible改为tight，使操作区固定在正常底部留白/系统安全区上方；非展开面板保留按内容收缩。紧凑头部上下留白调整为4/6像素，适应真实横屏键盘约束。",
+      "regression": {
+        "before": "短内容的4种安全区/键盘组合复现失败，长内容4种组合通过。",
+        "after": "8种短/长内容、安全区0/34、键盘0/200组合全部通过，滚动不移动操作区。",
+        "fixture": "测试MediaQuery尺寸同步到逻辑画布，显式模拟底部padding/viewPadding及键盘。",
+        "command": "flutter test --no-pub test/collab_modal_test.dart test/document_header_test.dart test/editor_media_source_sheet_test.dart --reporter expanded",
+        "passed": 63,
+        "failed": 0
+      },
+      "static_analysis": "目标4文件无问题；git diff --check通过。",
+      "scope": "仅Flutter共用外壳布局及回归；未修改业务逻辑、原生或依赖，未做新的真机截图验收。"
+    },
+    {
+      "date": "2026-10-17",
+      "issue": "高亮块设置表情的移除需与完成同一行，位于左下角",
+      "fix": "移除从表情内容区接入CollabBottomSheet.leadingAction，沿用修改图标的红色图标按钮；完成保留右侧。表情提交统一防重入，底部移除保留失败诊断和提示。",
+      "regression": {
+        "command": "flutter test --no-pub test/collab_callout_block_test.dart test/collab_color_emoji_picker_test.dart test/collab_modal_test.dart --reporter expanded",
+        "passed": 46,
+        "failed": 0,
+        "coverage": "真实高亮设置面板左右按钮同行，移除仅修改表情、关闭面板、独立撤销恢复；已有颜色、表情分类/搜索及共用弹窗布局回归。"
+      },
+      "static_analysis": "flutter analyze --no-pub lib/src/editor/collab_callout_block.dart test/collab_callout_block_test.dart：无问题；目标Dart文件format通过。",
+      "blockcraft_check": "重新检索本机workspace中的package.json/.npmrc仍无桌面配置，latest、桌面声明/锁定/安装及随包技能/MIGRATIONS无法复核，保持待核对。",
+      "scope": "高亮表情操作栏布局调整；块能力、41块统计、共享Schema及原生不变；未做新的Android/iOS真机截图验收。"
+    },
+    {
+      "date": "2026-10-17",
+      "issue": "所有删除/移除按钮统一红色，重点补齐链接操作",
+      "fix": "统一使用CollabModalColors.danger；补齐链接操作删除卡片的文字与图标、文字链接移除、分割线删除、通用表情移除、任务卡片默认删除菜单和封面直接移除，并将图标/高亮表情的硬编码红色替换为同一色值。现有共用块删除、提及删除、表格行列删除、公式删除和封面来源移除已使用该色。",
+      "validation": {
+        "command": "flutter test --no-pub test/collab_link_actions_test.dart test/mobile_selection_menu_test.dart test/collab_divider_test.dart test/collab_color_emoji_picker_test.dart test/collab_task_card_test.dart test/document_header_test.dart test/collab_callout_block_test.dart --reporter expanded",
+        "passed": 148,
+        "failed": 0,
+        "static_analysis": "7个修改的生产Dart文件flutter analyze --no-pub通过；dart format及git diff --check通过。"
+      },
+      "blockcraft_check": "重新检索workspace的package.json/.npmrc，桌面项目及其包仓库配置仍缺失，无法按指定仓库查询latest或读取对应技能/MIGRATIONS/实现；桌面声明/锁定/安装保持无法复核。",
+      "scope": "仅Flutter危险操作颜色与相关DartDoc；未修改点击行为、数据/撤销语义、Schema或原生，41块能力与统计保持。未做新的Android/iOS真机截图验收。"
+    },
+    {
+      "date": "2026-10-17",
+      "issue": "弹窗标题栏长链接限制单行省略，链接视图/卡片视图/嵌入视图与上方操作分组",
+      "fix": "CollabModalHeader的subtitle统一maxLines=1、softWrap=false、overflow=ellipsis，适用于共用标题栏的全部消费者；链接操作的视图选项前增加1像素浅色分割线和16像素分隔高度，仅在可显示视图选项时渲染。保留完整URL、菜单回调与原选中态。",
+      "validation": {
+        "command": "flutter test --no-pub test/collab_modal_test.dart test/collab_link_actions_test.dart test/collab_entity_mention_test.dart test/editor_media_source_sheet_test.dart --reporter expanded",
+        "passed": 98,
+        "failed": 0,
+        "static_analysis": "目标2个手写生产Dart文件flutter analyze --no-pub通过；dart format及git diff --check通过。"
+      },
+      "blockcraft_check": "修改前重新检索workspace的package.json/.npmrc仍无桌面项目配置，无法按其包仓库查询latest、核对声明/锁定/安装及随包技能/MIGRATIONS/实现，继续标记待核对。",
+      "scope": "仅Flutter共用标题说明及链接菜单分组；未更改Schema、数据、原生及41块能力/统计；未做新的Android/iOS真机截图验收。"
+    },
+    {
+      "date": "2026-10-17",
+      "issue": "有序列表序号浮层过宽，需更紧凑",
+      "fix": "共用showCollabPopover增加可选width，默认保持265逻辑像素；仅列表编号菜单指定220逻辑像素。沿用原图标、字号、点击区域及选中标记，保留屏幕/安全区/键盘限幅。",
+      "validation": {
+        "command": "flutter test --no-pub test/collab_ordered_test.dart test/collab_modal_test.dart test/collab_table_test.dart --reporter expanded",
+        "passed": 47,
+        "failed": 0,
+        "coverage": "更新既有编号菜单宽度断言为220、内容宽度上限206；原重新/继续编号、边缘/键盘避让、取消与表格公共菜单回归通过。",
+        "static_analysis": "修改的生产/测试及代码菜单、表格消费者共5项目标flutter analyze --no-pub通过；dart format与git diff --check通过。"
+      },
+      "blockcraft_check": "修改前复查workspace的package.json/.npmrc仍无桌面仓库及包仓库配置，无法查询指定仓库latest或核对桌面声明/锁定/安装与随包技能/MIGRATIONS，状态保持待核对。",
+      "scope": "仅Flutter菜单宽度与内部共用入口可选参数，包级导出、块能力和41块统计不变；未做新的Android/iOS真机截图验收。"
+    },
+    {
+      "date": "2026-10-17",
+      "issue": "代码绘图卡片的视图下拉与有序列表编号浮层保持相同样式",
+      "fix": "将卡片视图切换的PopupMenuButton替换为按钮锚定的showCollabPopover，宽度220逻辑像素，复用圆角、主题、标题/关闭入口与紧凑列表；三种视图带左侧图标、当前项勾选及选中语义。保持原入口key、提示、44像素按钮区域与共享mode事务；新增菜单打开期间防重入及退场后有效性核对。",
+      "validation": {
+        "command": "flutter test --no-pub test/collab_mermaid_test.dart test/collab_ordered_test.dart test/collab_modal_test.dart --reporter expanded",
+        "passed": 43,
+        "failed": 0,
+        "static_analysis": "flutter analyze --no-pub lib/src/editor/collab_mermaid_block.dart通过；目标dart format与git diff --check通过；原视图PopupMenuButton/PopupMenuItem无残留。"
+      },
+      "blockcraft_check": "修改前检索workspace的package.json/.npmrc仍未找到桌面项目及其包仓库配置，latest、桌面声明/锁定/安装与随包技能/MIGRATIONS/实现无法复核，保持待核对。",
+      "scope": "仅卡片视图切换菜单展示与异步边界，不修改源码、共享mode定义、Schema、原生及41块能力/统计。源码编辑面板的类型/模板菜单未触碰；未做新的Android/iOS真机截图及真实桌面协同验收。"
+    },
+    {
+      "date": "2026-10-17",
+      "issue": "代码绘图源码面板的类型、模板两个下拉使用与编号菜单相同的样式",
+      "fix": "两个入口改用自身按钮锚定showCollabPopover，统一220逻辑像素宽度、圆角背景、标题/关闭入口和带图标的紧凑ListTile；五项内容在空间不足时独立滚动。保留入口及条目key、提示、前缀插入/完整模板替换及仅保存时写入的规则。菜单打开防重入，退场后重新核对面板、权限和冲突。",
+      "validation": {
+        "command": "flutter test --no-pub test/collab_mermaid_test.dart test/collab_ordered_test.dart test/collab_modal_test.dart --reporter expanded",
+        "passed": 43,
+        "failed": 0,
+        "coverage": "五种模板依次替换、类型前缀插入、原文保存前保持、组合草稿保存/撤销、冲突/权限及共用菜单布局回归。",
+        "static_analysis": "flutter analyze --no-pub lib/src/editor/collab_mermaid_sheet.dart通过；目标dart format和git diff --check通过；原CollabMermaidExample的PopupMenuButton/PopupMenuItem无残留。"
+      },
+      "blockcraft_check": "修改前再次检索workspace的package.json/.npmrc，仍无桌面仓库及包仓库配置，latest、声明/锁定/安装版和随包技能/MIGRATIONS无法复核，继续待核对。",
+      "scope": "仅类型/模板菜单与异步边界，Schema、共享源码及mode定义、原生和41块能力/统计保持；未进行新的Android/iOS真机截图或真实桌面联调验收。"
+    },
+    {
+      "date": "2026-10-17",
+      "issue": "封面位置弹窗去除滑动条，提示用户在图片上上下拖动",
+      "fix": "删除位置滑条、垂直位置标签与百分比，图片下方改为双向箭头和“按住图片上下拖动，调整封面位置”的文字提示；保留原图片手势、位置限幅、保存/取消及未知字段保留。",
+      "validation": {
+        "command": "flutter test --no-pub test/document_header_test.dart --reporter expanded",
+        "passed": 25,
+        "failed": 0,
+        "coverage": "更新原有滑条断言为不存在并核对手势提示；原上下拖动、横向手势忽略、0～100限幅、保存/取消、撤权拒绝写入及封面字段保留回归通过。",
+        "static_analysis": "修改的生产/测试两个Dart文件flutter analyze --no-pub通过；dart format和git diff --check通过。"
+      },
+      "blockcraft_check": "本机workspace中仍未找到桌面package.json/.npmrc配置，无法按指定仓库复核latest、声明/锁定/安装和随包技能/MIGRATIONS，保持待核对；本轮仅文档头部业务封面交互提示，不改正文块协议。",
+      "scope": "仅封面位置面板及既有测试断言、说明记录；共享Schema、原生、41块状态统计不变；未做新的Android/iOS真机截图验收。"
+    },
+    {
+      "date": "2026-10-17",
+      "issue": "在下方插入更换图标",
+      "fix": "块操作和链接操作的在下方插入入口均从LucideIcons.plus替换为LucideIcons.listEnd（文字行与向下折转箭头），保留菜单身份、颜色、字号及插入行为。",
+      "validation": {
+        "command": "flutter test --no-pub test/collab_link_actions_test.dart test/collab_callout_block_test.dart --reporter expanded",
+        "passed": 59,
+        "failed": 0,
+        "static_analysis": "两个修改的Dart文件flutter analyze --no-pub通过；目标dart format和git diff --check通过。"
+      },
+      "blockcraft_check": "修改前复查workspace的package.json/.npmrc仍缺桌面仓库及包仓库配置，latest、桌面声明/锁定/安装及随包技能/MIGRATIONS无法复核，保持待核对。",
+      "scope": "仅插入入口装饰图标及说明；共享Schema、插入事务、原生、包级API和41块统计保持，未进行新真机截图验收。"
+    }
+  ]
+}

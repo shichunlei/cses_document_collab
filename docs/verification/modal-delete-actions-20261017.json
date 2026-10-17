@@ -1,0 +1,78 @@
+{
+  "date": "2026-10-17",
+  "changes": [
+    {
+      "request": "视频更多菜单补齐删除视频",
+      "files": [
+        "lib/src/editor/collab_video_block.dart",
+        "lib/src/editor/collab_media_block_base.dart"
+      ],
+      "behavior": [
+        "新增编辑状态下的删除视频菜单项，预览保留外部打开且隐藏删除。",
+        "菜单完整退场后复核稳定身份、属性、权限及会话，再执行删除；撤权后恢复仍拒绝旧菜单请求。",
+        "根/高亮最后一个视频删除时补稳定身份空段落，删除作为独立历史项，支持撤销/重做。",
+        "仅删除文档引用，不删除上传文件；播放器沿用原初始化失效及等待跳转后释放流程。"
+      ]
+    },
+    {
+      "request": "提及弹窗删除操作与其他块一致",
+      "files": [
+        "lib/src/editor/collab_inline_entity_mention.dart"
+      ],
+      "behavior": [
+        "文档/会议/任务统一使用ListTile整行删除，红色Lucide垃圾桶与红色文字，继承块菜单的行高及间距。",
+        "保留entity-mention-delete标识、只读禁用、稳定对象校验、原文/属性历史和宿主回调边界。"
+      ]
+    }
+  ],
+  "validation": {
+    "tests": {
+      "command": "flutter test --no-pub test/collab_video_update_test.dart test/collab_entity_mention_test.dart test/entity_mention_actions_test.dart test/collab_block_actions_test.dart --reporter expanded",
+      "passed": 69,
+      "failed": 0
+    },
+    "new_video_cases": {
+      "delete_undo_redo_and_disposal": {
+        "initialized_and_pending": true,
+        "root_and_callout": true,
+        "cases": 4
+      },
+      "stale_menu_cases": [
+        "permission revoked then restored",
+        "remote source changed",
+        "remote target deleted"
+      ]
+    },
+    "mention_assertions": [
+      "三类提及均为整行红色ListTile及同款垃圾桶图标",
+      "与详情行左右边界及宽度一致",
+      "删除/撤销保持原数据",
+      "只读时禁用"
+    ],
+    "static_analysis": {
+      "command": "flutter analyze --no-pub lib/src/editor/collab_media_block_base.dart lib/src/editor/collab_video_block.dart lib/src/editor/collab_inline_entity_mention.dart test/collab_video_update_test.dart test/collab_entity_mention_test.dart test/entity_mention_actions_test.dart test/collab_block_actions_test.dart",
+      "status": "通过，无问题"
+    },
+    "format": "仅运行本轮3个生产文件和2个测试文件的dart format，媒体文件使用既有120行宽，其余80。",
+    "diff_check": "通过"
+  },
+  "blockcraft": {
+    "latest": "待核对",
+    "desktop_declaration": "未复核",
+    "desktop_lock": "未复核",
+    "desktop_installed": "未复核",
+    "reason": "本机仍未找到桌面项目及其配置的包仓库，不能按指定仓库查询latest或读取随包技能/MIGRATIONS，未沿用历史版本宣称最新版。"
+  },
+  "block_status_counts": {
+    "adapted": 13,
+    "partial": 12,
+    "in_progress": 1,
+    "unadapted": 15,
+    "total": 41
+  },
+  "scope_limits": [
+    "本轮未重跑全包或宿主全量，69项为当前修复的所属包定向验证。",
+    "播放器测试通过VideoPlayerPlatform内存实现，未执行Android/iOS真机或真实桌面协同验收。",
+    "未修改原生接口、Schema、FRB或依赖；前轮UI改动及原有根pubspec.yaml路径改动保留。"
+  ]
+}
