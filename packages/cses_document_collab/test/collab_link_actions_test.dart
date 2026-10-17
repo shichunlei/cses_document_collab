@@ -1,8 +1,16 @@
+import 'package:cses_document_collab/src/editor/collab_resource_block.dart';
+import 'package:cses_document_collab/src/editor/collab_link_preview.dart';
+import 'package:cses_document_collab/src/editor/collab_embedded_page.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_link_actions.dart';
 import 'package:cses_document_collab/src/editor/collab_callout_block.dart';
-import 'package:cses_document_collab/src/editor/collab_resource_block.dart';
+
+
+
+
+
+
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/model/collab_host_services.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
@@ -62,8 +70,14 @@ Widget _app(AppFlowyBlockEditorAdapter adapter, {bool keyboard = false}) =>
           blockComponentBuilders: {
             ...standardBlockComponentBuilderMap,
             'callout': CollabCalloutBlockComponentBuilder(),
-            for (final type in collabResourceTypes)
-              type: CollabResourceBlockComponentBuilder(loadPreview: _metadata),
+            'audio': CollabResourceBlockComponentBuilder(),
+            'attachment': CollabResourceBlockComponentBuilder(),
+            'bookmark': CollabResourceBlockComponentBuilder(
+              loadPreview: _metadata,
+            ),
+            'embed': CollabResourceBlockComponentBuilder(),
+            'juejin-embed': CollabResourceBlockComponentBuilder(),
+            'figma-embed': CollabResourceBlockComponentBuilder(),
           },
         ),
       ),
@@ -368,6 +382,34 @@ void main() {
   });
 
   for (final kind in ['bookmark', 'embed', 'figma-embed', 'juejin-embed']) {
+    testWidgets('$kind header observes readonly without replacing content', (
+      tester,
+    ) async {
+      final adapter = _adapter(kind);
+      addTearDown(adapter.dispose);
+      await tester.pumpWidget(_app(adapter));
+      await tester.pumpAndSettle();
+      final node = adapter.editorState.document.first!;
+      final content = find.byType(
+        kind == 'bookmark' ? CollabLinkPreview : CollabEmbeddedPage,
+      );
+      final element = tester.element(content);
+      expect(find.byTooltip('更多操作'), findsOneWidget);
+      adapter.editorState.editable = false;
+      await tester.pumpAndSettle();
+      expect(find.byTooltip('更多操作'), findsNothing);
+      expect(tester.element(content), same(element));
+      adapter.editorState.editable = true;
+      await tester.pumpAndSettle();
+      expect(find.byTooltip('更多操作'), findsOneWidget);
+      expect(adapter.editorState.document.first, same(node));
+      expect(adapter.editorState.undoManager.undoStack, isEmpty);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+  }
+
+  for (final kind in ['bookmark', 'embed', 'figma-embed', 'juejin-embed']) {
     testWidgets(
       '$kind has one more button and edits/deletes through the menu',
       (tester) async {
@@ -551,15 +593,13 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byTooltip('切换视图'), findsNothing);
       expect(find.byTooltip('在浏览器打开'), findsNothing);
-      await _open(tester, adapter);
-      expect(find.byKey(const ValueKey('link-copy')), findsOneWidget);
+      expect(find.byTooltip('更多操作'), findsNothing);
+      expect(find.byKey(const ValueKey('link-copy')), findsNothing);
       expect(find.byKey(const ValueKey('link-view-card')), findsNothing);
       expect(
         find.byKey(ValueKey('resource-delete-${adapter.blocks.first.id}')),
         findsNothing,
       );
-      await tester.tap(find.byKey(const ValueKey('link-copy')));
-      await tester.pumpAndSettle();
       await tester.pumpWidget(const SizedBox.shrink());
     });
   }

@@ -1,9 +1,15 @@
+import 'package:cses_document_collab/src/editor/collab_resource_block.dart';
 import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
-import 'package:cses_document_collab/src/editor/collab_resource_block.dart';
+
+
+
+
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -38,10 +44,14 @@ Widget _app(
       disableKeyboardService: true,
       blockComponentBuilders: {
         ...standardBlockComponentBuilderMap,
-        for (final kind in collabResourceTypes)
-          kind: CollabResourceBlockComponentBuilder(
-            loadPreview: loadPreview ?? _metadata,
-          ),
+        'audio': CollabResourceBlockComponentBuilder(),
+        'attachment': CollabResourceBlockComponentBuilder(),
+        'bookmark': CollabResourceBlockComponentBuilder(
+          loadPreview: loadPreview ?? _metadata,
+        ),
+        'embed': CollabResourceBlockComponentBuilder(),
+        'juejin-embed': CollabResourceBlockComponentBuilder(),
+        'figma-embed': CollabResourceBlockComponentBuilder(),
       },
     ),
   ),
@@ -285,7 +295,7 @@ void main() {
       addTearDown(adapter.dispose);
       await tester.pumpWidget(_app(adapter.editorState));
       await tester.pumpAndSettle();
-      expect(find.text('网页标题'), findsOneWidget);
+      expect(find.text('网页标题'), findsNWidgets(2));
       expect(find.text('已保存的网页摘要'), findsOneWidget);
       await tester.tap(find.byKey(const ValueKey('resource-more-resource')));
       await tester.pumpAndSettle();
@@ -503,6 +513,9 @@ void main() {
           expect(platform.positions, [const Duration(seconds: 30)]);
           adapter.editorState.editable = false;
           await tester.pumpAndSettle();
+          expect(find.byTooltip('更多操作'), findsNothing);
+          expect(find.byTooltip('播放音频'), findsOneWidget);
+          expect(platform.disposed, isEmpty);
           final track = tester.getRect(progress);
           await tester.dragFrom(
             Offset(track.left + track.width * .25, track.center.dy),
@@ -573,6 +586,8 @@ class _AudioPlatform extends VideoPlayerPlatform {
   Future<int?> createWithOptions(VideoCreationOptions options) async {
     final id = sources.length;
     sources.add(options.dataSource.uri!);
+    // Ownership transfers to streams; dispose/close await every retained sink.
+    // ignore: close_sinks
     final stream = StreamController<VideoEvent>();
     streams[id] = stream;
     if (!pending) {

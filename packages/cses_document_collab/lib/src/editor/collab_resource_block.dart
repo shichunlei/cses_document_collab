@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
+import 'package:cses_document_collab/src/editor/collab_card_frame.dart';
 import 'package:cses_document_collab/src/editor/collab_media_timeline.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
@@ -162,16 +163,20 @@ class _ResourceBlockState extends State<_ResourceBlock> with SelectableMixin {
   }
 
   /// Builds the card in borrowed [context]; audio owns its player below this state.
-  /// Management commands use one menu; audio playback stays on the player.
+  /// The borrowed [context] observes live permissions; readonly hides card menus.
+  /// Attachment layout stays independent; audio keeps playback in the shared body.
   @override
-  Widget build(BuildContext context) => widget.node.type == 'audio'
-      ? _AudioPlayer(
-          key: ValueKey('audio:$_url'),
-          url: _url,
-          builder: (context, progress) =>
-              _buildCard(context, audioProgress: progress),
-        )
-      : _buildCard(context);
+  Widget build(BuildContext context) => ListenableBuilder(
+    listenable: _editor.editableNotifier,
+    builder: (context, _) => widget.node.type == 'audio'
+        ? _AudioPlayer(
+            key: ValueKey('audio:$_url'),
+            url: _url,
+            builder: (context, progress) =>
+                _buildCard(context, audioProgress: progress),
+          )
+        : _buildCard(context),
+  );
 
   /// Renders the resource in borrowed [context], with optional [audioProgress]
   /// containing the owned audio player controls. Null omits the audio surface.
@@ -199,184 +204,162 @@ class _ResourceBlockState extends State<_ResourceBlock> with SelectableMixin {
       'figma-embed',
       'juejin-embed',
     }.contains(kind);
-    final child = Container(
-      key: _bodyKey,
-      margin: const EdgeInsets.symmetric(vertical: 6),
-      decoration: BoxDecoration(
-        color: kind == 'attachment' ? const Color(0xFFF8FAFC) : Colors.white,
-        border: Border.all(color: const Color(0xFFE5E7EB)),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Padding(
-            padding: kind == 'attachment'
-                ? const EdgeInsets.fromLTRB(14, 14, 8, 14)
-                : const EdgeInsets.fromLTRB(12, 8, 4, 8),
-            child: Row(
-              children: [
-                if (kind == 'attachment')
-                  Expanded(
-                    child: _AttachmentInfo(name: name, props: props),
-                  )
-                else ...[
-                  Icon(_icon(kind), size: 22, color: const Color(0xFF64748B)),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Text(
-                          _subtitle(kind, props, _url),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 11,
-                            color: Color(0xFF87909E),
-                          ),
-                        ),
-                      ],
+    final more = isCard
+        ? ExcludeFocus(
+            child: IconButton(
+              key: ValueKey('resource-more-$_id'),
+              tooltip: '更多操作',
+              icon: const Icon(Icons.more_horiz, size: 18),
+              onPressed: () => showCollabLinkActions(
+                context,
+                node,
+                onEdit: (source) async {
+                  final route = DialogRoute<void>(
+                    context: host,
+                    builder: (_) => _ResourceSettings(
+                      editor: _editor,
+                      id:
+                          source.attributes['cses_collab_block_id']
+                              as String? ??
+                          source.id,
+                      kind: source.type,
+                      url: source.attributes[csesEmbedUrlAttribute] as String,
+                      props: CollabResource.fromAttributes(source.attributes),
                     ),
-                  ),
-                ],
-                if (!isCard)
-                  CollabBlockMoreButton(
-                    key: ValueKey('block-more-$_id'),
-                    editor: _editor,
-                    node: node,
-                    readOnlyActions: [
-                      (
-                        label: kind == 'attachment' ? '下载或打开附件' : '在浏览器打开',
-                        key: ValueKey('resource-open-$_id'),
-                        run: () => _open(host, _url),
-                      ),
-                    ],
-                    actions: [
-                      (
-                        label: '修改$label',
-                        key: ValueKey('resource-edit-$_id'),
-                        run: () async {
-                          final source = findCollabActionNode(_editor, id);
-                          if (source == null) return;
-                          final route = DialogRoute<void>(
-                            context: host,
-                            builder: (_) => _ResourceSettings(
-                              editor: _editor,
-                              id: id,
-                              kind: kind,
-                              url:
-                                  source.attributes[csesEmbedUrlAttribute]
-                                      as String,
-                              props: CollabResource.fromAttributes(
-                                source.attributes,
-                              ),
-                            ),
-                          );
-                          await Navigator.of(host).push(route);
-                          await route.completed;
-                        },
-                      ),
-                      (
-                        label: '删除$label',
-                        key: ValueKey('resource-delete-$_id'),
-                        run: () async {
-                          final source = findCollabActionNode(_editor, id);
-                          if (source != null) await _delete(source);
-                        },
-                      ),
-                    ],
-                  ),
-                if (isCard)
-                  ExcludeFocus(
-                    child: IconButton(
-                      key: ValueKey('resource-more-$_id'),
-                      tooltip: '更多操作',
-                      icon: const Icon(Icons.more_horiz, size: 18),
-                      onPressed: () => showCollabLinkActions(
-                        context,
-                        node,
-                        onEdit: (source) async {
-                          final route = DialogRoute<void>(
-                            context: host,
-                            builder: (_) => _ResourceSettings(
-                              editor: _editor,
-                              id:
-                                  source.attributes['cses_collab_block_id']
-                                      as String? ??
-                                  source.id,
-                              kind: source.type,
-                              url:
-                                  source.attributes[csesEmbedUrlAttribute]
-                                      as String,
-                              props: CollabResource.fromAttributes(
-                                source.attributes,
-                              ),
-                            ),
-                          );
-                          await Navigator.of(host).push(route);
-                          await route.completed;
-                        },
-                        onDelete: (source) => _delete(source),
-                      ),
-                    ),
-                  ),
-              ],
+                  );
+                  await Navigator.of(host).push(route);
+                  await route.completed;
+                },
+                onDelete: (source) => _delete(source),
+              ),
             ),
-          ),
-          ?audioProgress,
-          if (isCard)
-            LayoutBuilder(
-              builder: (context, constraints) {
-                final width = kind == 'bookmark' ? null : props.number('wr');
-                final cardWidth = width != null && width > 0
-                    ? constraints.maxWidth * (width.clamp(1, 100) / 100)
-                    : ((kind == 'bookmark' ? null : props.number('width')) ??
-                              constraints.maxWidth)
-                          .clamp(1.0, constraints.maxWidth);
-                final ratio = props.number('ar');
-                final frameHeight =
-                    (ratio != null && ratio > 0
-                            ? cardWidth / ratio
-                            : props.number('height') ?? cardWidth / (16 / 9))
-                        .clamp(180.0, 720.0);
-                return Align(
-                  alignment: Alignment.centerLeft,
-                  child: SizedBox(
-                    width: cardWidth,
-                    child: kind != 'bookmark'
-                        ? SizedBox(
-                            height: frameHeight,
-                            child: CollabEmbeddedPage(
-                              key: ValueKey('$kind:$_url'),
-                              url: _url,
-                            ),
-                          )
-                        : CollabLinkPreview(
+          )
+        : CollabBlockMoreButton(
+            key: ValueKey('block-more-$_id'),
+            editor: _editor,
+            node: node,
+            readOnlyActions: [
+              (
+                label: kind == 'attachment' ? '下载或打开附件' : '在浏览器打开',
+                key: ValueKey('resource-open-$_id'),
+                run: () => _open(host, _url),
+              ),
+            ],
+            actions: [
+              (
+                label: '修改$label',
+                key: ValueKey('resource-edit-$_id'),
+                run: () async {
+                  final source = findCollabActionNode(_editor, id);
+                  if (source == null) return;
+                  final route = DialogRoute<void>(
+                    context: host,
+                    builder: (_) => _ResourceSettings(
+                      editor: _editor,
+                      id: id,
+                      kind: kind,
+                      url: source.attributes[csesEmbedUrlAttribute] as String,
+                      props: CollabResource.fromAttributes(source.attributes),
+                    ),
+                  );
+                  await Navigator.of(host).push(route);
+                  await route.completed;
+                },
+              ),
+              (
+                label: '删除$label',
+                key: ValueKey('resource-delete-$_id'),
+                run: () async {
+                  final source = findCollabActionNode(_editor, id);
+                  if (source != null) await _delete(source);
+                },
+              ),
+            ],
+          );
+    final body = Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ?audioProgress,
+        if (isCard)
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final width = kind == 'bookmark' ? null : props.number('wr');
+              final cardWidth = width != null && width > 0
+                  ? constraints.maxWidth * (width.clamp(1, 100) / 100)
+                  : ((kind == 'bookmark' ? null : props.number('width')) ??
+                            constraints.maxWidth)
+                        .clamp(1.0, constraints.maxWidth);
+              final ratio = props.number('ar');
+              final frameHeight =
+                  (ratio != null && ratio > 0
+                          ? cardWidth / ratio
+                          : props.number('height') ?? cardWidth / (16 / 9))
+                      .clamp(180.0, 720.0);
+              return Align(
+                alignment: Alignment.centerLeft,
+                child: SizedBox(
+                  width: cardWidth,
+                  child: kind != 'bookmark'
+                      ? SizedBox(
+                          height: frameHeight,
+                          child: CollabEmbeddedPage(
                             key: ValueKey('$kind:$_url'),
                             url: _url,
-                            props: props,
-                            loadPreview: widget.loadPreview,
-                            onOpen: () => _open(context, _url),
                           ),
-                  ),
-                );
-              },
-            ),
-        ],
-      ),
+                        )
+                      : CollabLinkPreview(
+                          key: ValueKey('$kind:$_url'),
+                          url: _url,
+                          props: props,
+                          loadPreview: widget.loadPreview,
+                          onOpen: () => _open(context, _url),
+                        ),
+                ),
+              );
+            },
+          ),
+      ],
     );
+    final child = kind == 'attachment'
+        ? Container(
+            key: _bodyKey,
+            margin: const EdgeInsets.symmetric(vertical: 6),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF8FAFC),
+              border: Border.all(color: const Color(0xFFE5E7EB)),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(14, 14, 8, 14),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _AttachmentInfo(name: name, props: props),
+                  ),
+                  more,
+                ],
+              ),
+            ),
+          )
+        : CollabCardFrame(
+            surfaceKey: _bodyKey,
+            margin: const EdgeInsets.symmetric(vertical: 6),
+            header: CollabCardHeader(
+              leading: Icon(_icon(kind)),
+              title: Text(
+                isCard && props.string('title').trim().isNotEmpty
+                    ? props.string('title').trim()
+                    : name,
+              ),
+              subtitle: isCard ? _url : null,
+              tinted: !isCard,
+              readOnly: !_editor.editable,
+              more: more,
+            ),
+            child: body,
+          );
     return BlockSelectionContainer(
       node: node,
       delegate: this,
@@ -588,21 +571,6 @@ String _attachmentSize(double? bytes) {
     unit++;
   }
   return '${unit == 0 ? value.toStringAsFixed(0) : value.toStringAsFixed(1)} ${units[unit]}';
-}
-
-String _subtitle(String kind, CollabResource props, String url) {
-  final host = Uri.parse(url).host;
-  if (kind != 'attachment') return host;
-  final size = props.number('size');
-  final type = props.string('type');
-  return [
-    if (type.isNotEmpty) type.split('/').last.toUpperCase(),
-    if (size != null && size > 0)
-      size >= 1048576
-          ? '${(size / 1048576).toStringAsFixed(1)} MB'
-          : '${(size / 1024).toStringAsFixed(1)} KB',
-    host,
-  ].join(' · ');
 }
 
 /// Owns one audio controller. Keyed by URL so replacement disposes the old stream.

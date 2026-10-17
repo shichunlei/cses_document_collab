@@ -107,6 +107,24 @@ void main() {
           find.byKey(const ValueKey('task-card-surface-card')),
         );
         expect((box.decoration as BoxDecoration).color, Colors.white);
+        final detailIcon = find.descendant(
+          of: _open,
+          matching: find.byIcon(Icons.open_in_full),
+        );
+        final contentRight = tester
+            .getRect(find.byKey(const ValueKey('task-card-progress-card')))
+            .right;
+        expect(
+          tester.getRect(detailIcon).right,
+          closeTo(contentRight, .01),
+          reason: '放大图标应与内容右边界对齐',
+        );
+        expect(
+          tester.getRect(detailIcon).right,
+          closeTo(tester.getRect(_open).right, .01),
+        );
+        expect(tester.getSize(_open), const Size(44, 44));
+
         expect(
           find.byKey(const ValueKey('task-card-progress-dot-card')),
           findsOneWidget,

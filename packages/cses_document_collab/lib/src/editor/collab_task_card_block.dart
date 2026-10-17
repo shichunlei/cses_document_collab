@@ -115,6 +115,7 @@ class _TaskCardState extends State<_TaskCard> with SelectableMixin {
                   failed: snapshot.hasError,
                   missing: missing,
                   busy: _busy,
+                  readOnly: !editor.editable,
                   onOpen:
                       _busy ||
                           loading ||

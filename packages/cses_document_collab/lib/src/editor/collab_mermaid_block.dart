@@ -1,10 +1,11 @@
-import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
+import 'package:cses_document_collab/src/editor/collab_card_frame.dart';
 import 'package:cses_document_collab/src/editor/collab_mermaid_sheet.dart';
 import 'package:cses_document_collab/src/editor/collab_mermaid_visual.dart';
+import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_mermaid.dart';
 import 'package:cses_document_collab/src/model/collab_mermaid_options.dart';
-import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -44,7 +45,7 @@ class _MermaidBlock extends BlockComponentStatefulWidget {
 
   /// 创建整块选区代理，编辑器仍由调用方持有。
   @override
-  State<_MermaidBlock> createState() => _MermaidBlockState();
+  createState() => _MermaidBlockState();
 }
 
 /// 为无正文块提供完整矩形选区与远端选中展示。
@@ -89,91 +90,112 @@ class _MermaidBlockState extends State<_MermaidBlock> with SelectableMixin {
       listenable: Listenable.merge([node, source, editor.editableNotifier]),
       builder: (context, _) {
         final view = collabMermaidView(node);
-        return Semantics(
-          label: '代码绘图',
-          button: editor.editable,
-          readOnly: !editor.editable,
-          child: ExcludeFocus(
-            child: GestureDetector(
-              key: ValueKey('collab-mermaid-$id'),
-              behavior: HitTestBehavior.opaque,
-              onTap: editor.editable
-                  ? () async {
-                      await showCollabMermaidEditor(context, editor, id);
-                    }
-                  : null,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  if (editor.editable)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 40),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: TextButton.icon(
-                                key: ValueKey('mermaid-edit-$id'),
-                                onPressed: () => showCollabMermaidEditor(
-                                  context,
-                                  editor,
-                                  id,
-                                ),
-                                icon: const Icon(Icons.code, size: 18),
-                                label: const Text('编辑源码'),
-                              ),
-                            ),
-                          ),
-                          PopupMenuButton<CollabMermaidView>(
-                            key: ValueKey('mermaid-view-$id'),
-                            tooltip: '切换视图：${view.label}',
-                            initialValue: view,
-                            onSelected: (value) async {
-                              await _switchView(editor, id, value);
-                            },
-                            icon: const Icon(Icons.swap_horiz),
-                            itemBuilder: (_) => [
-                              for (final mode in CollabMermaidView.values)
-                                PopupMenuItem(
-                                  value: mode,
-                                  child: Text(mode.label),
-                                ),
-                            ],
-                          ),
-                        ],
-                      ),
+        return CollabCardFrame(
+          header: CollabCardHeader(
+            leading: const Icon(
+              Icons.account_tree_outlined,
+              color: Color(0xFF5755E7),
+            ),
+            title: const Text('代码绘图'),
+            readOnly: !editor.editable,
+            actions: [
+              if (editor.editable)
+                ExcludeFocus(
+                  child: SizedBox(
+                    width: 44,
+                    height: 44,
+                    child: PopupMenuButton<CollabMermaidView>(
+                      key: ValueKey('mermaid-view-$id'),
+                      tooltip: '切换视图：${view.label}',
+                      initialValue: view,
+                      onSelected: (value) async {
+                        await _switchView(editor, id, value);
+                      },
+                      icon: const Icon(Icons.swap_horiz, size: 18),
+                      itemBuilder: (_) => [
+                        for (final mode in CollabMermaidView.values)
+                          PopupMenuItem(value: mode, child: Text(mode.label)),
+                      ],
                     ),
-                  if (view != CollabMermaidView.graph)
-                    Container(
-                      key: ValueKey('mermaid-source-view-$id'),
-                      constraints: const BoxConstraints(maxHeight: 240),
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.surfaceContainerLow,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: SingleChildScrollView(
-                        child: Text(
-                          source.delta!.toPlainText(),
-                          style: const TextStyle(
-                            fontFamily: 'monospace',
-                            fontSize: 14,
+                  ),
+                )
+              else
+                Text(
+                  view.label,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: Color(0xFF87909E),
+                  ),
+                ),
+            ],
+            more: CollabBlockMoreButton(
+              key: ValueKey('block-more-$id'),
+              editor: editor,
+              node: node,
+              protectSubtree: true,
+              actions: [
+                (
+                  label: '编辑源码',
+                  key: ValueKey('mermaid-edit-$id'),
+                  run: () async {
+                    await showCollabMermaidEditor(context, editor, id);
+                  },
+                ),
+                (
+                  label: '删除代码绘图',
+                  key: ValueKey('mermaid-delete-$id'),
+                  run: () => deleteCollabMermaid(editor, id),
+                ),
+              ],
+            ),
+          ),
+          child: Semantics(
+            label: '代码绘图',
+            button: editor.editable,
+            readOnly: !editor.editable,
+            child: ExcludeFocus(
+              child: GestureDetector(
+                key: ValueKey('collab-mermaid-$id'),
+                behavior: HitTestBehavior.opaque,
+                onTap: editor.editable
+                    ? () async {
+                        await showCollabMermaidEditor(context, editor, id);
+                      }
+                    : null,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    if (view != CollabMermaidView.graph)
+                      Container(
+                        key: ValueKey('mermaid-source-view-$id'),
+                        constraints: const BoxConstraints(maxHeight: 240),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.surfaceContainerLow,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: SingleChildScrollView(
+                          child: Text(
+                            source.delta!.toPlainText(),
+                            style: const TextStyle(
+                              fontFamily: 'monospace',
+                              fontSize: 14,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  if (view != CollabMermaidView.text)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: CollabMermaidVisual(
-                        key: ValueKey('collab-mermaid-visual-$id'),
-                        source: source.delta!.toPlainText(),
+                    if (view != CollabMermaidView.text)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: CollabMermaidVisual(
+                          key: ValueKey('collab-mermaid-visual-$id'),
+                          source: source.delta!.toPlainText(),
+                        ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -188,31 +210,7 @@ class _MermaidBlockState extends State<_MermaidBlock> with SelectableMixin {
       blockColor: editor.editorStyle.selectionColor,
       supportTypes: const [BlockSelectionType.block],
       selectionAboveBlock: true,
-      child: KeyedSubtree(
-        key: _bodyKey,
-        child: Stack(
-          children: [
-            child,
-            Positioned(
-              top: 0,
-              right: 0,
-              child: CollabBlockMoreButton(
-                key: ValueKey('block-more-$id'),
-                editor: editor,
-                node: node,
-                protectSubtree: true,
-                actions: [
-                  (
-                    label: '删除代码绘图',
-                    key: ValueKey('mermaid-delete-$id'),
-                    run: () => deleteCollabMermaid(editor, id),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+      child: KeyedSubtree(key: _bodyKey, child: child),
     );
   }
 

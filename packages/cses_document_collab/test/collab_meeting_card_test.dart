@@ -54,6 +54,15 @@ void main() {
             changes++;
           },
         );
+        expect(
+          tester
+              .widget<ColoredBox>(
+                find.byKey(const ValueKey('meeting-card-content-meeting')),
+              )
+              .color,
+          Colors.white,
+          reason: '会议内容不按状态绘制渐变底色',
+        );
         expect(find.text('● $label'), findsOneWidget);
         expect(find.text(action), findsOneWidget);
         expect(find.text('威震天的快速会议'), findsOneWidget);

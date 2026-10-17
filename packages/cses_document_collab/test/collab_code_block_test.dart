@@ -84,7 +84,7 @@ void main() {
       await tester.tap(find.byKey(const ValueKey('collab-code-collapse')));
       await tester.pumpAndSettle();
       expect(find.byType(AppFlowyRichText), findsNothing);
-      expect(tester.getSize(find.byKey(node.key)).height, lessThan(54));
+      expect(tester.getSize(find.byKey(node.key)).height, lessThan(64));
       expect(adapter.editorState.selection, isNull);
       expect(node.delta!.toJson(), before);
       expect(
@@ -281,17 +281,107 @@ void main() {
       );
       expect(adapter.editorState.document.first!.delta!.toJson(), before);
       expect(changes, isEmpty);
+      expect(find.byKey(const ValueKey('collab-code-copy')), findsNothing);
+      await tester.tap(find.byKey(const ValueKey('block-more-code')));
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('collab-code-copy')));
       await tester.pumpAndSettle();
       expect(copied, [_source]);
-      expect(find.text('已复制'), findsOneWidget);
+      expect(find.text('代码已复制'), findsOneWidget);
       expect(changes, isEmpty);
       await tester.pump(const Duration(seconds: 2));
-      expect(find.text('复制'), findsOneWidget);
+      expect(find.byKey(const ValueKey('collab-code-copy')), findsNothing);
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox.shrink());
     },
   );
+
+  testWidgets('more delete preserves complete code metadata through undo', (
+    tester,
+  ) async {
+    final adapter = AppFlowyBlockEditorAdapter(
+      initialBlocks: const [
+        CollabEditorBlock(
+          id: 'code',
+          blockType: csesCodeBlockType,
+          text: _source,
+          code: CollabCode(language: 'Dart', name: '删除验收'),
+        ),
+      ],
+      onLocalBlocksChanged: (_) {},
+    );
+    addTearDown(adapter.dispose);
+    await _pumpEditor(tester, adapter);
+    await tester.tap(find.byKey(const ValueKey('block-more-code')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('collab-code-delete')));
+    await tester.pumpAndSettle();
+    expect(adapter.blocks.single.blockType, 'paragraph');
+    adapter.editorState.undoManager.undo();
+    await tester.pumpAndSettle();
+    expect(adapter.blocks.single.id, 'code');
+    expect(adapter.blocks.single.text, _source);
+    expect(adapter.blocks.single.code!.name, '删除验收');
+    expect(adapter.blocks.single.code!.language, 'Dart');
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
+
+  for (final mutation in ['source', 'revokeRestore']) {
+    testWidgets('copy menu rejects stale $mutation', (tester) async {
+      var copies = 0;
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        (call) async {
+          if (call.method == 'Clipboard.setData') copies++;
+          return null;
+        },
+      );
+      addTearDown(
+        () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          SystemChannels.platform,
+          null,
+        ),
+      );
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: const [
+          CollabEditorBlock(
+            id: 'code',
+            blockType: csesCodeBlockType,
+            text: _source,
+          ),
+        ],
+        onLocalBlocksChanged: (_) {},
+      );
+      addTearDown(adapter.dispose);
+      await _pumpEditor(tester, adapter);
+      await tester.tap(find.byKey(const ValueKey('block-more-code')));
+      await tester.pumpAndSettle();
+      if (mutation == 'source') {
+        await adapter.replaceFromRemote(const [
+          CollabEditorBlock(
+            id: 'code',
+            blockType: csesCodeBlockType,
+            text: 'remote',
+          ),
+        ]);
+      } else {
+        adapter.editorState.editable = false;
+        adapter.editorState.editable = true;
+      }
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('collab-code-copy')));
+      await tester.pumpAndSettle();
+      expect(copies, 0);
+      expect(
+        adapter.blocks.single.text,
+        mutation == 'source' ? 'remote' : _source,
+      );
+      expect(adapter.editorState.undoManager.undoStack, isEmpty);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+  }
 
   testWidgets('remote header refresh preserves node, caret, and undo history', (
     tester,
@@ -390,7 +480,8 @@ void main() {
         _bodySpan(tester, 'unknown <code> 😀').toPlainText(),
         'unknown <code> 😀',
       );
-      expect(find.byKey(const ValueKey('collab-code-copy')), findsNWidgets(2));
+      expect(find.byKey(const ValueKey('collab-code-copy')), findsNothing);
+      expect(find.byIcon(Icons.more_horiz), findsNothing);
       expect(
         tester
             .widget<InkWell>(

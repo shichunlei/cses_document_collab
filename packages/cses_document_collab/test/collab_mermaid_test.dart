@@ -154,7 +154,7 @@ void main() {
     'five templates and type prefixes stay drafts until save, view switching retains source',
     (tester) async {
       final adapter = await _mount(tester, blocks: _withMode('default'));
-      await tester.tap(find.byKey(const ValueKey('mermaid-edit-diagram')));
+      await _openSource(tester);
       await tester.pumpAndSettle();
       for (final example in collabMermaidExamples) {
         await tester.tap(find.byKey(const ValueKey('mermaid-template-menu')));
@@ -217,7 +217,7 @@ void main() {
     'template plus view save is one undo item and remote mode conflicts with open draft',
     (tester) async {
       final adapter = await _mount(tester, blocks: _withMode('default'));
-      await tester.tap(find.byKey(const ValueKey('mermaid-edit-diagram')));
+      await _openSource(tester);
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('mermaid-template-menu')));
       await tester.pumpAndSettle();
@@ -235,7 +235,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(adapter.blocks[1].text, 'flowchart LR\nA-->B');
       expect(adapter.blocks.first.resource!.string('mode'), 'default');
-      await tester.tap(find.byKey(const ValueKey('mermaid-edit-diagram')));
+      await _openSource(tester);
       await tester.pumpAndSettle();
       await adapter.replaceFromRemote(_withMode('graph'));
       await tester.pumpAndSettle();
@@ -480,7 +480,7 @@ void main() {
   );
   testWidgets('page edit/cancel/save and undo', (tester) async {
     final adapter = await _mount(tester);
-    await tester.tap(find.byKey(const ValueKey('mermaid-edit-diagram')));
+    await _openSource(tester);
     await tester.pumpAndSettle();
     await tester.enterText(
       find.byKey(const ValueKey('mermaid-input')),
@@ -490,7 +490,7 @@ void main() {
     await tester.tap(find.text('取消'));
     await tester.pumpAndSettle();
     expect(adapter.blocks[1].text, 'flowchart LR\nA-->B');
-    await tester.tap(find.byKey(const ValueKey('mermaid-edit-diagram')));
+    await _openSource(tester);
     await tester.pumpAndSettle();
     await tester.enterText(
       find.byKey(const ValueKey('mermaid-input')),
@@ -508,7 +508,7 @@ void main() {
     tester,
   ) async {
     final adapter = await _mount(tester);
-    await tester.tap(find.byKey(const ValueKey('mermaid-edit-diagram')));
+    await _openSource(tester);
     await tester.pumpAndSettle();
     await tester.enterText(
       find.byKey(const ValueKey('mermaid-input')),
@@ -567,7 +567,7 @@ void main() {
       tester.view.resetDevicePixelRatio();
     });
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey('mermaid-edit-diagram')));
+    await _openSource(tester);
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
     expect(
@@ -708,3 +708,11 @@ List<CollabEditorBlock> _withMode(
   ),
   _tail,
 ];
+
+/// 在借用[tester]中经统一标题栏更多菜单打开源码，等待菜单退场后再编辑。
+Future<void> _openSource(WidgetTester tester) async {
+  expect(find.byKey(const ValueKey('mermaid-edit-diagram')), findsNothing);
+  await tester.tap(find.byKey(const ValueKey('block-more-diagram')));
+  await tester.pumpAndSettle();
+  await tester.tap(find.byKey(const ValueKey('mermaid-edit-diagram')));
+}

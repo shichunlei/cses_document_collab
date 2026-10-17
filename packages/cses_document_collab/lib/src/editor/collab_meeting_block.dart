@@ -1,10 +1,11 @@
-import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
-import 'package:cses_document_collab/src/model/collab_meeting_card_data.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
-import 'package:cses_document_collab/src/model/collab_host_services.dart';
+import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
+import 'package:cses_document_collab/src/editor/collab_card_frame.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
+import 'package:cses_document_collab/src/model/collab_host_services.dart';
 import 'package:cses_document_collab/src/model/collab_meeting.dart';
+import 'package:cses_document_collab/src/model/collab_meeting_card_data.dart';
+import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -25,21 +26,14 @@ class CollabMeetingBlockComponentBuilder extends BlockComponentBuilder {
 
   /// 使用借用 [context] 的节点与配置创建组件，不写入共享属性。
   @override
-  BlockComponentWidget build(BlockComponentContext context) => _MeetingBlock(
-    key: context.node.key,
-    node: context.node,
-    configuration: configuration,
-  );
+  BlockComponentWidget build(BlockComponentContext context) =>
+      _MeetingBlock(key: context.node.key, node: context.node, configuration: configuration);
 }
 
 /// 借用 AppFlowy 节点展示会议引用，无定时器、连接或输入控制器。
 class _MeetingBlock extends BlockComponentStatefulWidget {
   /// [key] 控制身份与状态复用，[node] 与 [configuration] 均由编辑器持有。
-  const _MeetingBlock({
-    super.key,
-    required super.node,
-    required super.configuration,
-  });
+  const _MeetingBlock({super.key, required super.node, required super.configuration});
 
   /// 创建整块选区代理，编辑器仍由调用方持有。
   @override
@@ -83,19 +77,15 @@ class _MeetingBlockState extends State<_MeetingBlock> with SelectableMixin {
         key: ValueKey((meetingId, services)),
         future: future,
         builder: (context, snapshot) {
-          final loading =
-              future != null &&
-              snapshot.connectionState != ConnectionState.done;
-          final data = future == null || loading || snapshot.hasError
-              ? null
-              : snapshot.data;
-          final unavailable =
-              future != null && !loading && !snapshot.hasError && data == null;
+          final loading = future != null && snapshot.connectionState != ConnectionState.done;
+          final data = future == null || loading || snapshot.hasError ? null : snapshot.data;
+          final unavailable = future != null && !loading && !snapshot.hasError && data == null;
           return ListenableBuilder(
             listenable: editor.editableNotifier,
             builder: (context, _) => _MeetingCardView(
               key: ValueKey('collab-meeting-$id'),
               blockId: id,
+              readOnly: !editor.editable,
               title: data?.title ?? values.string('title'),
               number: data?.number ?? values.string('number'),
               data: data,
@@ -122,12 +112,7 @@ class _MeetingBlockState extends State<_MeetingBlock> with SelectableMixin {
                   (
                     label: '删除卡片',
                     key: ValueKey('meeting-delete-$id'),
-                    run: () => _deleteReference(
-                      editor,
-                      id,
-                      values.properties,
-                      services,
-                    ),
+                    run: () => _deleteReference(editor, id, values.properties, services),
                   ),
                 ],
               ),
@@ -170,13 +155,7 @@ class _MeetingBlockState extends State<_MeetingBlock> with SelectableMixin {
   }
 
   /// 检查借用[editor]中稳定块[id]是否仍引用[meetingId]，且[services]/[generation]仍属于当前请求。
-  bool _isCurrentRequest(
-    EditorState editor,
-    String id,
-    String meetingId,
-    CollabHostServices services,
-    int generation,
-  ) {
+  bool _isCurrentRequest(EditorState editor, String id, String meetingId, CollabHostServices services, int generation) {
     if (!mounted ||
         editor.isDisposed ||
         generation != _detailGeneration ||
@@ -184,9 +163,7 @@ class _MeetingBlockState extends State<_MeetingBlock> with SelectableMixin {
       return false;
     }
     final node = findCollabMeeting(editor, id);
-    return node != null &&
-        CollabMeeting.readAttributes(node.attributes).string('meetingId') ==
-            meetingId;
+    return node != null && CollabMeeting.readAttributes(node.attributes).string('meetingId') == meetingId;
   }
 
   /// 从借用[services]加载[editor]中稳定块[id]的[meetingId]详情；[generation]隔离迟到响应。
@@ -238,10 +215,7 @@ class _MeetingBlockState extends State<_MeetingBlock> with SelectableMixin {
     CollabHostServices services,
     CollabMeetingCardData? data,
   ) async {
-    if (_busy ||
-        !mounted ||
-        editor.isDisposed ||
-        !identical(services, CollabRuntime.services)) {
+    if (_busy || !mounted || editor.isDisposed || !identical(services, CollabRuntime.services)) {
       return;
     }
     final current = findCollabMeeting(editor, id);
@@ -256,23 +230,15 @@ class _MeetingBlockState extends State<_MeetingBlock> with SelectableMixin {
     setState(() => _busy = true);
     try {
       await runEditorHeaderAction<void>(context, editor, () async {
-        if (!mounted ||
-            editor.isDisposed ||
-            !identical(services, CollabRuntime.services)) {
+        if (!mounted || editor.isDisposed || !identical(services, CollabRuntime.services)) {
           return;
         }
-        await callback(
-          meetingId,
-          data?.title ?? values.string('title'),
-          data?.number ?? values.string('number'),
-        );
+        await callback(meetingId, data?.title ?? values.string('title'), data?.number ?? values.string('number'));
       }, canRestore: () => false);
     } catch (error, stack) {
       services.report('打开会议失败', error, stack, 'DocCollab');
       if (mounted && identical(services, CollabRuntime.services)) {
-        ScaffoldMessenger.maybeOf(
-          context,
-        )?.showSnackBar(const SnackBar(content: Text('打开会议失败，请重试')));
+        ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(content: Text('打开会议失败，请重试')));
       }
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -281,17 +247,8 @@ class _MeetingBlockState extends State<_MeetingBlock> with SelectableMixin {
 
   /// 在借用[editor]中删除稳定[id]的会议引用，[expected]为按钮展示时的完整属性JSON。
   /// [services]是原宿主，失效/撤权不执行；成功直接移除块，可撤销，不调用详情回调或打开键盘。
-  Future<void> _deleteReference(
-    EditorState editor,
-    String id,
-    String expected,
-    CollabHostServices services,
-  ) async {
-    if (_busy ||
-        !mounted ||
-        editor.isDisposed ||
-        !editor.editable ||
-        !identical(services, CollabRuntime.services)) {
+  Future<void> _deleteReference(EditorState editor, String id, String expected, CollabHostServices services) async {
+    if (_busy || !mounted || editor.isDisposed || !editor.editable || !identical(services, CollabRuntime.services)) {
       return;
     }
     setState(() => _busy = true);
@@ -302,19 +259,13 @@ class _MeetingBlockState extends State<_MeetingBlock> with SelectableMixin {
         () => deleteCollabMeeting(editor, id, expected: expected),
         canRestore: () => false,
       );
-      if (deleted == false &&
-          mounted &&
-          identical(services, CollabRuntime.services)) {
-        ScaffoldMessenger.maybeOf(
-          context,
-        )?.showSnackBar(const SnackBar(content: Text('引用已变化或不可编辑，请重试')));
+      if (deleted == false && mounted && identical(services, CollabRuntime.services)) {
+        ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(content: Text('引用已变化或不可编辑，请重试')));
       }
     } catch (error, stack) {
       services.report('删除会议引用失败', error, stack, 'DocCollab');
       if (mounted && identical(services, CollabRuntime.services)) {
-        ScaffoldMessenger.maybeOf(
-          context,
-        )?.showSnackBar(const SnackBar(content: Text('删除失败，请重试')));
+        ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(content: Text('删除失败，请重试')));
       }
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -352,17 +303,11 @@ class _MeetingBlockState extends State<_MeetingBlock> with SelectableMixin {
 
   /// [position] 命中整块，[shiftWithBaseOffset] 保持组件内坐标约定。
   @override
-  Rect? getCursorRectInPosition(
-    Position position, {
-    bool shiftWithBaseOffset = false,
-  }) => getBlockRect();
+  Rect? getCursorRectInPosition(Position position, {bool shiftWithBaseOffset = false}) => getBlockRect();
 
   /// [selection] 对应完整矩形，[shiftWithBaseOffset] 保持组件内坐标约定。
   @override
-  List<Rect> getRectsInSelection(
-    Selection selection, {
-    bool shiftWithBaseOffset = false,
-  }) => [getBlockRect()];
+  List<Rect> getRectsInSelection(Selection selection, {bool shiftWithBaseOffset = false}) => [getBlockRect()];
 
   /// [start]/[end] 的拖动范围总是映射为无正文块的完整选区。
   @override
@@ -380,10 +325,12 @@ class _MeetingCardView extends StatelessWidget {
   /// [key]控制身份与状态复用，[blockId]为稳定块身份，[title]/[number]为有效展示字段，[data]为可空业务快照。
   /// [loading]/[failed]/[unavailable]分别表示加载、失败、会议不存在；[busy]屏蔽重复操作。
   /// [onOpen]仅绑定加入/查看按钮；删除与插入正文统一交由[moreActions]。
+  /// [readOnly]控制标题栏更多按钮显隐，不影响会议查看；
   /// [onRetry]为空不显示重试，[moreActions]提供更多操作，回调及其资源由调用方持有。
   const _MeetingCardView({
     super.key,
     required this.blockId,
+    required this.readOnly,
     required this.title,
     required this.number,
     required this.data,
@@ -395,6 +342,9 @@ class _MeetingCardView extends StatelessWidget {
     required this.moreActions,
     required this.onRetry,
   });
+
+  /// 是否只读；隐藏标题栏更多操作及其占位。
+  final bool readOnly;
 
   /// 稳定引用块身份，用于独立按钮键。
   final String blockId;
@@ -429,7 +379,7 @@ class _MeetingCardView extends StatelessWidget {
   /// 失败重试回调，null不显示。
   final VoidCallback? onRetry;
 
-  /// 在借用[context]内按状态绘制边框、强调条、淡底色及状态标签；窄屏信息自然换行。
+  /// 在借用[context]内绘制统一标题栏与白底内容；仅左侧纵条按状态着色，标签和主操作语义保持。
   @override
   Widget build(BuildContext context) {
     final state = data?.state ?? CollabMeetingCardState.unknown;
@@ -446,152 +396,113 @@ class _MeetingCardView extends StatelessWidget {
         : unavailable
         ? '会议不存在'
         : state.label;
-    final action =
-        state == CollabMeetingCardState.completed ||
-            state == CollabMeetingCardState.canceled
+    final action = state == CollabMeetingCardState.completed || state == CollabMeetingCardState.canceled
         ? '查看会议'
         : '加入会议';
     final time = data?.startTime?.toLocal();
     return ExcludeFocus(
-      child: Container(
-        key: ValueKey('meeting-card-surface-$blockId'),
-        decoration: BoxDecoration(
-          border: Border.all(color: color.withValues(alpha: .3)),
-          borderRadius: BorderRadius.circular(8),
-          gradient: LinearGradient(
-            colors: [color.withValues(alpha: .06), Colors.white],
-            stops: const [0, .65],
-          ),
+      child: CollabCardFrame(
+        surfaceKey: ValueKey('meeting-card-surface-$blockId'),
+        header: CollabCardHeader(
+          leading: const Icon(Icons.groups_outlined, color: Color(0xFF4A7AFE)),
+          title: const Text('会议'),
+          readOnly: readOnly,
+          more: moreActions,
         ),
-        clipBehavior: Clip.antiAlias,
-        child: Stack(
-          children: [
-            Positioned(
-              left: 0,
-              top: 0,
-              bottom: 0,
-              width: 3,
-              child: ColoredBox(
-                key: ValueKey('meeting-card-accent-$blockId'),
-                color: color,
+        child: ColoredBox(
+          key: ValueKey('meeting-card-content-$blockId'),
+          color: Colors.white,
+          child: Stack(
+            children: [
+              Positioned(
+                left: 0,
+                top: 0,
+                bottom: 0,
+                width: 3,
+                child: ColoredBox(key: ValueKey('meeting-card-accent-$blockId'), color: color),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 12, 12, 6),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Icon(
-                        Icons.groups_outlined,
-                        color: Color(0xFF4A7AFE),
-                        size: 22,
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          title.isEmpty ? '未命名会议' : title,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF1F2329),
-                          ),
-                        ),
-                      ),
-                      moreActions,
-                    ],
-                  ),
-                  const SizedBox(height: 6),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 32),
-                    child: Wrap(
-                      spacing: 8,
-                      runSpacing: 6,
-                      crossAxisAlignment: WrapCrossAlignment.center,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(12, 12, 12, 6),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: color.withValues(alpha: .1),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                        Expanded(
                           child: Text(
-                            '● $label',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: color,
-                              fontWeight: FontWeight.w500,
-                            ),
+                            title.isEmpty ? '未命名会议' : title,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF1F2329)),
                           ),
                         ),
-                        if (time != null)
-                          _meta(
-                            '${_twoDigits(time.month)}-${_twoDigits(time.day)} ${_twoDigits(time.hour)}:${_twoDigits(time.minute)}',
-                          ),
-                        if (data?.moderatorName?.isNotEmpty == true)
-                          _meta(data!.moderatorName!),
-                        if (data?.memberCount != null)
-                          _meta('${data!.memberCount}人'),
-                        if (number.isNotEmpty) _meta('会议编号：$number'),
-                        if (onRetry != null)
-                          TextButton(
-                            onPressed: onRetry,
-                            child: const Text('重试'),
-                          ),
                       ],
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  OverflowBar(
-                    alignment: MainAxisAlignment.end,
-                    overflowAlignment: OverflowBarAlignment.end,
-                    spacing: 8,
-                    overflowSpacing: 8,
-                    children: [
-                      FilledButton(
-                        key: ValueKey('meeting-open-$blockId'),
-                        onPressed: onOpen,
-                        style: FilledButton.styleFrom(
-                          backgroundColor: const Color(0xFF4A7AFE),
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6),
+                    const SizedBox(height: 6),
+                    Padding(
+                      padding: EdgeInsets.zero,
+                      child: Wrap(
+                        spacing: 8,
+                        runSpacing: 6,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: color.withValues(alpha: .1),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              '● $label',
+                              style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.w500),
+                            ),
                           ),
-                        ),
-                        child: busy
-                            ? const SizedBox(
-                                width: 18,
-                                height: 18,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : Text(action),
+                          if (time != null)
+                            _meta(
+                              '${_twoDigits(time.month)}-${_twoDigits(time.day)} ${_twoDigits(time.hour)}:${_twoDigits(time.minute)}',
+                            ),
+                          if (data?.moderatorName?.isNotEmpty == true) _meta(data!.moderatorName!),
+                          if (data?.memberCount != null) _meta('${data!.memberCount}人'),
+                          if (number.isNotEmpty) _meta('会议编号：$number'),
+                          if (onRetry != null) TextButton(onPressed: onRetry, child: const Text('重试')),
+                        ],
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                    const SizedBox(height: 8),
+                    OverflowBar(
+                      alignment: MainAxisAlignment.end,
+                      overflowAlignment: OverflowBarAlignment.end,
+                      spacing: 8,
+                      overflowSpacing: 8,
+                      children: [
+                        FilledButton(
+                          key: ValueKey('meeting-open-$blockId'),
+                          onPressed: onOpen,
+                          style: FilledButton.styleFrom(
+                            backgroundColor: const Color(0xFF4A7AFE),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                          ),
+                          child: busy
+                              ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
+                              : Text(action),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
   /// 为本地元信息[value]提供小号中性色文本，允许窄屏按Wrap换行。
-  Widget _meta(String value) => Text(
-    value,
-    style: const TextStyle(fontSize: 12, color: Color(0xFF8A8F99)),
-  );
+  Widget _meta(String value) => Text(value, style: const TextStyle(fontSize: 12, color: Color(0xFF8A8F99)));
 
   /// 将月份、日或时分[value]补齐两位，不依赖宿主本地化包。
   String _twoDigits(int value) => value.toString().padLeft(2, '0');

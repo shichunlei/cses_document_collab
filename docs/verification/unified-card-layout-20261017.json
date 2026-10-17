@@ -1,0 +1,141 @@
+{
+  "date": "2026-10-17",
+  "scope": [
+    "meeting",
+    "task",
+    "bookmark",
+    "embed",
+    "figma-embed",
+    "juejin-embed",
+    "mermaid",
+    "code",
+    "audio"
+  ],
+  "implementation": {
+    "shared_widgets": "lib/src/editor/collab_card_frame.dart: CollabCardFrame / CollabCardHeader",
+    "header": "12px corner radius, fixed trailing more, single-line title or title+URL, inherited theme font, readonly removes more and its space",
+    "audio_latest_request": "No compact variant: icon + audio name + more in standard header; play/pause, seek timeline and times in separate body; readonly retains playback",
+    "content": "Existing meeting/task data, WebView/metadata contents, Mermaid source/graph, rich code delegate and audio controller retained",
+    "menus": "Mermaid source edit and code copy are in more; code more supports independent delete/undo with stable replacement-paragraph identity",
+    "out_of_scope": "Other card types retain existing layout and readonly menu behavior; no schema, FRB, dependency or native source changes"
+  },
+  "upstream_version": {
+    "latest": "unverified",
+    "reason": "Configured desktop repository /Users/shichunlei/workspace/cses/cses-client is absent. Its registry, declaration/lock/installed package, skills and MIGRATIONS are unavailable.",
+    "historical_only": {
+      "latest": "0.11.21",
+      "desktop_declared": "0.11.21",
+      "desktop_locked": "0.11.21",
+      "desktop_installed": "0.11.17"
+    },
+    "required_followup": "Verify configured registry/latest and desktop artifacts in the desktop environment; historical values are not a current latest claim."
+  },
+  "validation": {
+    "targeted_final": {
+      "command": "flutter test --no-pub test/collab_card_frame_test.dart test/collab_code_block_test.dart test/collab_task_card_test.dart test/collab_meeting_card_test.dart test/collab_resource_block_test.dart test/collab_mermaid_test.dart test/collab_link_actions_test.dart",
+      "passed": 122,
+      "result": "00:51 +122: All tests passed!"
+    },
+    "package_full_run": {
+      "command": "flutter test --no-pub",
+      "passed_initial": 1151,
+      "failed_initial": 11,
+      "total": 1162,
+      "result": "05:20 +1151 -11: Some tests failed.",
+      "resolution": "10 old host-native ABI decoding failures passed after rebuilding the documented Darwin library; the remaining old readonly-audio-menu assertion was updated to the accepted rule and the entire block-actions file passed."
+    },
+    "native_rebuild": {
+      "command": "cargo build --manifest-path rust/Cargo.toml",
+      "result": "passed; no Rust source/generated code changes"
+    },
+    "native_retest": {
+      "files": [
+        "callout_native_integration_test.dart",
+        "inline_formula_native_integration_test.dart",
+        "link_view_native_test.dart",
+        "meeting_native_integration_test.dart",
+        "mermaid_native_integration_test.dart"
+      ],
+      "passed": 10,
+      "result": "00:07 +10: All tests passed!"
+    },
+    "block_actions_retest": {
+      "command": "flutter test --no-pub test/collab_block_actions_test.dart",
+      "passed": 28,
+      "result": "00:11 +28: All tests passed!"
+    },
+    "consumer_tests": {
+      "directory": "repository root",
+      "command": "flutter test --no-pub",
+      "passed": 56,
+      "result": "01:04 +56: All tests passed!"
+    },
+    "static_analysis": "flutter analyze --no-pub over all 7 changed production Dart files and 6 changed test files: no issues (13 targets).",
+    "format": "dart format run only on the changed handwritten Dart files",
+    "diff_check": "git diff --check passed",
+    "visual_checks": "Actual Flutter task normal/narrow and all meeting-state/narrow renders captured with Chinese/Material fonts; title font inheritance checked in widget tests; long titles at 260px/2x and task 320px/1.5x keep separate actions.",
+    "final_diff_check": "git diff --check passed after evidence/documentation updates"
+  },
+  "device": {
+    "device": "Android 24053PY09C / USB",
+    "application": "com.cses.cses_mobile_collab_demo",
+    "applied": "IDE DTD hot restart and final hot reload succeeded; runtime error query was clean after recovery and final reload.",
+    "debug_reload_limitation": "Structural hot reload initially produced Flutter debug layout/RawTooltip assertions; hot restart recovered the debug session. Latest code then reloaded cleanly.",
+    "current_flow": "Debug restart returns to sign-in; user can sign in to inspect the new UI through the existing local stream.",
+    "gestures": "ADB input swipe rejected with INJECT_EVENTS permission error; no device permission setting was changed. Full manual device walkthrough remains unverified."
+  },
+  "unchanged_status_counts": {
+    "adapted": 13,
+    "partial": 12,
+    "structural": 1,
+    "unadapted": 15,
+    "total": 41
+  },
+  "preserved_existing_changes": {
+    "collab_color_picker.dart_sha1": "4a28764068ee10e95c68d277e09d517aaf9c480d",
+    "root_pubspec.yaml_sha1": "787b223955adbc73d238368a8b5f8949812bd6eb",
+    "mermaid": "Existing view-switching/formatting changes retained when replacing only its card shell.",
+    "concurrent_files_left_untouched": [
+      "collab_inline_formula.dart",
+      "collab_link_actions.dart",
+      "collab_link_preview.dart",
+      "collab_mermaid_visual.dart",
+      "collab_mobile_selection_menu.dart"
+    ]
+  },
+  "remaining": [
+    "Desktop latest/migration verification",
+    "iOS application UI",
+    "Full physical-device gesture walkthrough",
+    "Real website/embed/audio network decoding and business routes",
+    "Desktop online two-way collaboration reacceptance"
+  ],
+  "style_followup": {
+    "date": "2026-10-17",
+    "request": "会议内容区去渐变，仅保留左侧纵向状态条；任务首行放大按钮贴右对齐。",
+    "meeting": "Explicit white ColoredBox body, existing 3px left state accent and colored status badge retained; title/actions unchanged.",
+    "task": "Detail IconButton uses a 44x44 tight target, shrinkWrap tap target and centerRight icon alignment; its icon right edge matches the content/progress right edge at 390px/1x and 320px/1.5x.",
+    "tests": {
+      "command": "flutter test --no-pub test/collab_meeting_card_test.dart test/collab_task_card_test.dart",
+      "passed": 37,
+      "failed": 0,
+      "assertions": "All five meeting states keep white body and correct left accent; normal/narrow large-text task detail icon right alignment and 44px target verified; existing callbacks, stale requests, menus and history regressions pass."
+    },
+    "analysis": {
+      "command": "flutter analyze --no-pub lib/src/editor/collab_meeting_block.dart lib/src/editor/collab_task_card_view.dart test/collab_meeting_card_test.dart test/collab_task_card_test.dart",
+      "result": "No issues found"
+    },
+    "format": "dart format on the two changed production files and two corresponding tests",
+    "diff_check": "git diff --check passed",
+    "device": "Applied to the existing USB Android session via DTD hot reload",
+    "upstream": "Rechecked expected adjacent desktop repository before this work; still unavailable. latest/declaration/lock/installation/skills/migrations remain unverified in this environment.",
+    "scope": "Only the two requested card styles changed; shared schema/native code, other card implementations and pre-existing workspace changes preserved.",
+    "status_counts_unchanged": {
+      "adapted": 13,
+      "partial": 12,
+      "structural": 1,
+      "unadapted": 15,
+      "total": 41
+    }
+  }
+}

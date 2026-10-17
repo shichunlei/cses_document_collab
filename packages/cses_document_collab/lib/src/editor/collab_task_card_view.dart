@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/editor/collab_card_frame.dart';
 import 'package:cses_document_collab/src/editor/collab_host_mention_ui.dart';
 import 'package:cses_document_collab/src/model/collab_task_card_data.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
@@ -12,9 +13,10 @@ import 'package:flutter/material.dart';
 class CollabTaskCardView extends StatelessWidget {
   /// [key]控制身份复用，[blockId]生成稳定测试/操作标记，[title]为共享标题。
   /// [data]可选本地详情，null只展示引用；[loading]/[failed]/[missing]控制反馈，不推断业务状态。
-  /// [busy]表示宿主导航或删除尚未结束，默认false；[onOpen]仅右上详情图标调用。
-  /// [onDelete]存在时显示更多菜单，删除只影响文档引用；[onRetry]用于失败后手动重试。
+  /// [busy]表示宿主导航或删除尚未结束，默认false；[onOpen]仅内容区详情图标调用。
+  /// [onDelete]存在且非只读时显示更多菜单，删除只影响文档引用；[onRetry]用于失败后手动重试。
   /// [moreActions]可替换默认删除菜单，null保留默认行为，控件由编辑器提供。
+  /// [readOnly]默认false，为true隐藏更多菜单而保留详情入口。
   const CollabTaskCardView({
     super.key,
     required this.blockId,
@@ -28,6 +30,7 @@ class CollabTaskCardView extends StatelessWidget {
     this.onDelete,
     this.onRetry,
     this.moreActions,
+    this.readOnly = false,
   });
 
   /// 必填稳定块身份，不用任务ID代替，允许同一任务多次引用。
@@ -51,7 +54,7 @@ class CollabTaskCardView extends StatelessWidget {
   /// 默认false，等待宿主操作时禁用卡片事件。
   final bool busy;
 
-  /// 可选详情事件；null禁用右上角图标，其他区域不派发。
+  /// 可选详情事件；null禁用内容区首行右对齐的详情图标，其他区域不派发。
   final Future<void> Function()? onOpen;
 
   /// 可选删除事件；null隐藏更多菜单，由编辑器持有权限和事务。
@@ -60,10 +63,14 @@ class CollabTaskCardView extends StatelessWidget {
   /// 可选更多操作控件；null保留仅含删除的独立视图菜单，不拥有资源。
   final Widget? moreActions;
 
+  /// 是否只读，默认false；只影响更多菜单，不禁用详情回调。
+  final bool readOnly;
+
   /// 可选失败重试，由调用方管理请求代次。
   final VoidCallback? onRetry;
 
-  /// 在借用[context]中绘制白底细边卡片，宽度最多400，窄屏和大字号自动换行。
+  /// 在借用[context]中绘制统一卡片；首行详情图标贴齐内容右边界，44像素热区不额外留白。
+  /// 卡片宽度最多400，窄屏和大字号自动换行。
   @override
   Widget build(BuildContext context) {
     final detail = data;
@@ -74,194 +81,195 @@ class CollabTaskCardView extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 400),
-        child: Container(
-          key: ValueKey('task-card-surface-$blockId'),
+        child: CollabCardFrame(
+          surfaceKey: ValueKey('task-card-surface-$blockId'),
           margin: const EdgeInsets.symmetric(vertical: 8),
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(color: const Color(0xFFE5E6EB)),
-            borderRadius: BorderRadius.circular(8),
+          header: CollabCardHeader(
+            leading: const Icon(Icons.ballot_rounded, color: Color(0xFF5755E7)),
+            title: const Text('任务'),
+            readOnly: readOnly,
+            more:
+                moreActions ??
+                (onDelete == null
+                    ? null
+                    : PopupMenuButton<Future<void> Function()>(
+                        key: ValueKey('task-card-more-$blockId'),
+                        tooltip: '更多操作',
+                        enabled: !busy,
+                        icon: const Icon(
+                          Icons.more_horiz,
+                          size: 18,
+                          color: Color(0xFF9CA3AF),
+                        ),
+                        onSelected: (action) async {
+                          await action();
+                        },
+                        itemBuilder: (_) => [
+                          PopupMenuItem(
+                            value: onDelete!,
+                            key: ValueKey('task-card-delete-$blockId'),
+                            child: const Text('删除卡片'),
+                          ),
+                        ],
+                      )),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                children: [
-                  const Icon(
-                    Icons.ballot_rounded,
-                    color: Color(0xFF5755E7),
-                    size: 22,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: priority != null && priority.name.isNotEmpty
-                          ? _TaskTag(tag: priority)
-                          : const Text(
-                              '任务卡片',
-                              style: TextStyle(
-                                color: Color(0xFF9CA3AF),
-                                fontSize: 12,
-                              ),
-                            ),
-                    ),
-                  ),
-                  if (loading)
-                    const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    ),
-                  if (!loading && detail != null) _TaskLeaders(data: detail),
-                  IconButton(
-                    key: ValueKey('task-card-open-$blockId'),
-                    tooltip: '打开任务详情',
-                    constraints: const BoxConstraints.tightFor(
-                      width: 32,
-                      height: 32,
-                    ),
-                    padding: EdgeInsets.zero,
-                    icon: const Icon(
-                      Icons.open_in_full,
-                      size: 16,
-                      color: Color(0xFF9CA3AF),
-                    ),
-                    onPressed: busy || onOpen == null
-                        ? null
-                        : () async {
-                            await onOpen!();
-                          },
-                  ),
-                  if (moreActions != null)
-                    moreActions!
-                  else if (onDelete != null)
-                    PopupMenuButton<Future<void> Function()>(
-                      key: ValueKey('task-card-more-$blockId'),
-                      tooltip: '任务卡片操作',
-                      enabled: !busy,
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(minWidth: 140),
-                      iconSize: 18,
-                      icon: const Icon(
-                        Icons.more_horiz,
-                        color: Color(0xFF9CA3AF),
-                      ),
-                      onSelected: (action) async {
-                        await action();
-                      },
-                      itemBuilder: (_) => [
-                        PopupMenuItem(
-                          value: onDelete!,
-                          key: ValueKey('task-card-delete-$blockId'),
-                          child: const Text('删除卡片'),
-                        ),
-                      ],
-                    ),
-                ],
-              ),
-              const SizedBox(height: 6),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Text(
-                      displayTitle.isEmpty ? '未命名任务' : displayTitle,
-                      key: ValueKey('task-card-title-$blockId'),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF1D2129),
-                        height: 1.35,
-                      ),
-                    ),
-                  ),
-                  if (!loading && status != null && status.name.isNotEmpty) ...[
-                    const SizedBox(width: 8),
-                    ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 112),
-                      child: _TaskTag(tag: status),
-                    ),
-                  ],
-                ],
-              ),
-              if (detail?.startTime != null || detail?.endTime != null) ...[
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 6,
-                  runSpacing: 4,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    if (detail?.startTime != null)
-                      _TaskTime(
-                        icon: Icons.calendar_today_outlined,
-                        time: detail!.startTime!,
-                      ),
-                    if (detail?.startTime != null && detail?.endTime != null)
-                      const Text(
-                        '-',
-                        style: TextStyle(
-                          color: Color(0xFF86909C),
-                          fontSize: 12,
-                        ),
-                      ),
-                    if (detail?.endTime != null)
-                      _TaskTime(
-                        icon: Icons.event_outlined,
-                        time: detail!.endTime!,
-                      ),
-                  ],
-                ),
-              ],
-              const SizedBox(height: 8),
-              _TaskProgress(blockId: blockId, progress: detail?.progress),
-              const SizedBox(height: 6),
-              Row(
-                children: [
-                  Expanded(child: _TaskPath(nodes: detail?.path ?? const [])),
-                  if (detail?.fileCount != null)
-                    _TaskCount(
-                      icon: Icons.attach_file,
-                      label: '附件',
-                      count: detail!.fileCount!,
-                    ),
-                  if (detail?.subTaskCount != null) ...[
-                    const SizedBox(width: 8),
-                    _TaskCount(
-                      icon: Icons.account_tree_outlined,
-                      label: '子任务',
-                      count: detail!.subTaskCount!,
-                    ),
-                  ],
-                ],
-              ),
-              if (failed || missing || detail?.deleted == true) ...[
-                const SizedBox(height: 6),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
                 Row(
                   children: [
                     Expanded(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: priority != null && priority.name.isNotEmpty
+                            ? _TaskTag(tag: priority)
+                            : const Text(
+                                '任务卡片',
+                                style: TextStyle(
+                                  color: Color(0xFF9CA3AF),
+                                  fontSize: 12,
+                                ),
+                              ),
+                      ),
+                    ),
+                    if (loading)
+                      const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                    if (!loading && detail != null) _TaskLeaders(data: detail),
+                    IconButton(
+                      key: ValueKey('task-card-open-$blockId'),
+                      tooltip: '打开任务详情',
+                      constraints: const BoxConstraints.tightFor(
+                        width: 44,
+                        height: 44,
+                      ),
+                      style: const ButtonStyle(
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      padding: EdgeInsets.zero,
+                      alignment: Alignment.centerRight,
+                      icon: const Icon(
+                        Icons.open_in_full,
+                        size: 16,
+                        color: Color(0xFF9CA3AF),
+                      ),
+                      onPressed: busy || onOpen == null
+                          ? null
+                          : () async {
+                              await onOpen!();
+                            },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
                       child: Text(
-                        failed ? '任务加载失败' : '任务不存在或已删除',
+                        displayTitle.isEmpty ? '未命名任务' : displayTitle,
+                        key: ValueKey('task-card-title-$blockId'),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                          fontSize: 12,
-                          color: Color(0xFF86909C),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF1D2129),
+                          height: 1.35,
                         ),
                       ),
                     ),
-                    if (failed)
-                      TextButton(
-                        key: ValueKey('task-card-retry-$blockId'),
-                        onPressed: onRetry,
-                        child: const Text('重试'),
+                    if (!loading &&
+                        status != null &&
+                        status.name.isNotEmpty) ...[
+                      const SizedBox(width: 8),
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 112),
+                        child: _TaskTag(tag: status),
                       ),
+                    ],
                   ],
                 ),
+                if (detail?.startTime != null || detail?.endTime != null) ...[
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 4,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      if (detail?.startTime != null)
+                        _TaskTime(
+                          icon: Icons.calendar_today_outlined,
+                          time: detail!.startTime!,
+                        ),
+                      if (detail?.startTime != null && detail?.endTime != null)
+                        const Text(
+                          '-',
+                          style: TextStyle(
+                            color: Color(0xFF86909C),
+                            fontSize: 12,
+                          ),
+                        ),
+                      if (detail?.endTime != null)
+                        _TaskTime(
+                          icon: Icons.event_outlined,
+                          time: detail!.endTime!,
+                        ),
+                    ],
+                  ),
+                ],
+                const SizedBox(height: 8),
+                _TaskProgress(blockId: blockId, progress: detail?.progress),
+                const SizedBox(height: 6),
+                Row(
+                  children: [
+                    Expanded(child: _TaskPath(nodes: detail?.path ?? const [])),
+                    if (detail?.fileCount != null)
+                      _TaskCount(
+                        icon: Icons.attach_file,
+                        label: '附件',
+                        count: detail!.fileCount!,
+                      ),
+                    if (detail?.subTaskCount != null) ...[
+                      const SizedBox(width: 8),
+                      _TaskCount(
+                        icon: Icons.account_tree_outlined,
+                        label: '子任务',
+                        count: detail!.subTaskCount!,
+                      ),
+                    ],
+                  ],
+                ),
+                if (failed || missing || detail?.deleted == true) ...[
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          failed ? '任务加载失败' : '任务不存在或已删除',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Color(0xFF86909C),
+                          ),
+                        ),
+                      ),
+                      if (failed)
+                        TextButton(
+                          key: ValueKey('task-card-retry-$blockId'),
+                          onPressed: onRetry,
+                          child: const Text('重试'),
+                        ),
+                    ],
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),
