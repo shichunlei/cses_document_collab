@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:cses_document_collab/src/model/document_cover_catalog.dart';
+import 'package:flutter/material.dart';
 
 /// 将桌面静态清单显示为分组图库；缩略图失败仍可选择CSES原图，不执行业务保存。
 /// 父组件提供滚动区域，本视图只按宽度排两列/四列，不拥有业务控制器。
@@ -14,11 +14,7 @@ import 'package:cses_document_collab/src/model/document_cover_catalog.dart';
 class DocumentCoverGallery extends StatelessWidget {
   /// [key] 标识视图；[selectedUrl] 是当前原图URL，空值表示无选中项。
   /// [onSelected] 必填，点击时同步交出原图记录，保存和权限由调用方处理。
-  const DocumentCoverGallery({
-    super.key,
-    required this.selectedUrl,
-    required this.onSelected,
-  });
+  const DocumentCoverGallery({super.key, required this.selectedUrl, required this.onSelected});
 
   /// 当前原图URL，用于选中边框和语义，状态由调用方持有。
   final String selectedUrl;
@@ -36,10 +32,7 @@ class DocumentCoverGallery extends StatelessWidget {
         for (final group in documentCoverGroups) ...[
           Padding(
             padding: const EdgeInsets.only(bottom: 10),
-            child: Text(
-              group.title,
-              style: Theme.of(context).textTheme.titleSmall,
-            ),
+            child: Text(group.title, style: Theme.of(context).textTheme.titleSmall),
           ),
           GridView.count(
             primary: false,
@@ -75,9 +68,7 @@ class DocumentCoverGallery extends StatelessWidget {
             Image.network(
               image.previewUrl,
               fit: BoxFit.cover,
-              errorBuilder: (_, _, _) => const Center(
-                child: Icon(Icons.image_outlined, color: Color(0xFF7C8799)),
-              ),
+              errorBuilder: (_, _, _) => const Center(child: Icon(Icons.image_outlined, color: Color(0xFF7C8799))),
             ),
             const DecoratedBox(
               decoration: BoxDecoration(
@@ -103,9 +94,7 @@ class DocumentCoverGallery extends StatelessWidget {
             if (image.url == selectedUrl)
               const DecoratedBox(
                 decoration: BoxDecoration(
-                  border: Border.fromBorderSide(
-                    BorderSide(color: Color(0xFF5B5BD6), width: 2),
-                  ),
+                  border: Border.fromBorderSide(BorderSide(color: Color(0xFF5B5BD6), width: 2)),
                   borderRadius: BorderRadius.all(Radius.circular(8)),
                 ),
               ),

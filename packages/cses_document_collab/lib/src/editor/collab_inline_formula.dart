@@ -71,51 +71,25 @@ class CollabInlineFormula extends StatelessWidget {
           behavior: HitTestBehavior.opaque,
           onTap: editor.editable
               ? () async {
-                  final target = CollabInlineFormulaTarget.capture(
-                    node,
-                    offset,
-                  );
+                  final target = CollabInlineFormulaTarget.capture(node, offset);
                   if (target == null) return;
                   try {
-                    await runEditorHeaderAction<void>(
-                      context,
-                      editor,
-                      () async {
-                        await showCollabFormulaInput(
-                          context,
-                          editor,
-                          inlineTarget: target,
-                        );
-                      },
-                    );
+                    await runEditorHeaderAction<void>(context, editor, () async {
+                      await showCollabFormulaInput(context, editor, inlineTarget: target);
+                    });
                   } catch (error, stack) {
-                    CollabDiagnostics.report(
-                      '行内公式编辑失败',
-                      error: error,
-                      stackTrace: stack,
-                      tag: 'DocCollab',
-                    );
+                    CollabDiagnostics.report('行内公式编辑失败', error: error, stackTrace: stack, tag: 'DocCollab');
                     if (context.mounted) {
-                      ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-                        const SnackBar(content: Text('公式编辑失败，请重试')),
-                      );
+                      ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(content: Text('公式编辑失败，请重试')));
                     }
                   }
                 }
               : null,
           child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: (MediaQuery.sizeOf(context).width - 40).clamp(
-                40,
-                double.infinity,
-              ),
-            ),
+            constraints: BoxConstraints(maxWidth: (MediaQuery.sizeOf(context).width - 40).clamp(40, double.infinity)),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 2),
-                child: body,
-              ),
+              child: Padding(padding: const EdgeInsets.symmetric(horizontal: 2), child: body),
             ),
           ),
         ),

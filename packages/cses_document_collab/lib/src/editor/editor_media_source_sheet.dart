@@ -1,11 +1,12 @@
 import 'dart:math' as math;
-import 'document_cover_gallery.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
 
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/model/editor_media_upload.dart';
+import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+
+import 'document_cover_gallery.dart';
 
 /// 在借用的 [context] 中展示媒体来源面板；[blockType] 为正文资源或document_banner/document_icon。
 /// [initialValue] 默认空，预填链接；[allowRemove] 默认false，true允许返回空URL移除。
@@ -26,9 +27,7 @@ Future<EditorMediaSource?> showEditorMediaSourceSheet(
     isScrollControlled: true,
     useSafeArea: true,
     backgroundColor: Colors.white,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-    ),
+    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
     clipBehavior: Clip.antiAlias,
     requestFocus: true,
     builder: (context) {
@@ -174,9 +173,7 @@ class _MediaSourceSheetState extends State<EditorMediaSourcePanel> {
 
   /// 链接输入的格式示例，不作为实际资源或默认保存值。
   String get _hint => switch (widget.kind) {
-    'image' ||
-    'document_banner' ||
-    'document_icon' => 'https://example.com/image.png',
+    'image' || 'document_banner' || 'document_icon' => 'https://example.com/image.png',
     'video' => 'https://example.com/video.mp4',
     'audio' => 'https://example.com/audio.mp3',
     _ => 'https://example.com/resource',
@@ -219,9 +216,7 @@ class _MediaSourceSheetState extends State<EditorMediaSourcePanel> {
       });
     } catch (e) {
       if (mounted) {
-        setState(
-          () => _error = e is FormatException ? e.message : '无法选择文件，请重试',
-        );
+        setState(() => _error = e is FormatException ? e.message : '无法选择文件，请重试');
       }
     } finally {
       if (mounted) setState(() => _picking = false);
@@ -239,8 +234,7 @@ class _MediaSourceSheetState extends State<EditorMediaSourcePanel> {
       if (uri == null ||
           !{'http', 'https'}.contains(uri.scheme) ||
           uri.host.isEmpty ||
-          (isCollabResourceType(widget.kind) &&
-              !isCollabResourceUrl(widget.kind, url))) {
+          (isCollabResourceType(widget.kind) && !isCollabResourceUrl(widget.kind, url))) {
         setState(() => _error = '请输入完整的 http:// 或 https:// 链接');
         return;
       }
@@ -272,9 +266,7 @@ class _MediaSourceSheetState extends State<EditorMediaSourcePanel> {
       }
     } catch (e) {
       if (mounted && !cancel.isCancelled) {
-        setState(
-          () => _error = e is FormatException ? e.message : '上传失败，请检查网络后重试',
-        );
+        setState(() => _error = e is FormatException ? e.message : '上传失败，请检查网络后重试');
       }
     } finally {
       if (mounted) setState(() => _uploading = false);
@@ -317,10 +309,7 @@ class _MediaSourceSheetState extends State<EditorMediaSourcePanel> {
           width: 36,
           height: 4,
           margin: const EdgeInsets.only(bottom: 18),
-          decoration: BoxDecoration(
-            color: const Color(0xFFE1E3E9),
-            borderRadius: BorderRadius.circular(2),
-          ),
+          decoration: BoxDecoration(color: const Color(0xFFE1E3E9), borderRadius: BorderRadius.circular(2)),
         ),
       ),
       Row(
@@ -328,10 +317,7 @@ class _MediaSourceSheetState extends State<EditorMediaSourcePanel> {
           Container(
             width: 42,
             height: 42,
-            decoration: BoxDecoration(
-              color: const Color(0xFFEEEEFF),
-              borderRadius: BorderRadius.circular(12),
-            ),
+            decoration: BoxDecoration(color: const Color(0xFFEEEEFF), borderRadius: BorderRadius.circular(12)),
             child: Icon(_icon, color: accent, size: 22),
           ),
           const SizedBox(width: 12),
@@ -340,14 +326,8 @@ class _MediaSourceSheetState extends State<EditorMediaSourcePanel> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.kind == 'document_icon' && widget.firstTab != null
-                      ? '修改图标'
-                      : _label,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF202636),
-                  ),
+                  widget.kind == 'document_icon' && widget.firstTab != null ? '修改图标' : _label,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Color(0xFF202636)),
                 ),
                 const SizedBox(height: 3),
                 Text(
@@ -358,10 +338,7 @@ class _MediaSourceSheetState extends State<EditorMediaSourcePanel> {
                       : upload
                       ? '通过链接或本地文件添加$_label'
                       : '通过链接添加$_label',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Color(0xFF7C8799),
-                  ),
+                  style: const TextStyle(fontSize: 12, color: Color(0xFF7C8799)),
                 ),
               ],
             ),
@@ -382,9 +359,7 @@ class _MediaSourceSheetState extends State<EditorMediaSourcePanel> {
               _tab(
                 'first',
                 _banner ? '公共图库' : widget.firstTabLabel!,
-                _banner
-                    ? Icons.photo_library_outlined
-                    : Icons.emoji_emotions_outlined,
+                _banner ? Icons.photo_library_outlined : Icons.emoji_emotions_outlined,
               ),
             if (_hasFirstTab) ...[
               _tab('upload', '上传', Icons.file_upload_outlined),
@@ -401,9 +376,7 @@ class _MediaSourceSheetState extends State<EditorMediaSourcePanel> {
       if (tabAction != null) ...[
         Align(
           alignment: Alignment.centerRight,
-          child: _busy
-              ? IgnorePointer(child: Opacity(opacity: .4, child: tabAction))
-              : tabAction,
+          child: _busy ? IgnorePointer(child: Opacity(opacity: .4, child: tabAction)) : tabAction,
         ),
         const SizedBox(height: 8),
       ],
@@ -431,20 +404,14 @@ class _MediaSourceSheetState extends State<EditorMediaSourcePanel> {
           decoration: InputDecoration(
             hintText: _hint,
             labelText: '$_label链接',
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 14,
-              vertical: 16,
-            ),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
           ),
           onChanged: (_) => setState(() => _error = null),
           onSubmitted: (_) => _submit(),
         ),
         const SizedBox(height: 10),
-        Text(
-          '支持可直接访问的$_label链接',
-          style: const TextStyle(fontSize: 12, color: Color(0xFF7C8799)),
-        ),
+        Text('支持可直接访问的$_label链接', style: const TextStyle(fontSize: 12, color: Color(0xFF7C8799))),
       ] else ...[
         Material(
           color: const Color(0xFFF8F9FC),
@@ -461,21 +428,14 @@ class _MediaSourceSheetState extends State<EditorMediaSourcePanel> {
               ),
               child: Column(
                 children: [
-                  Icon(
-                    _file == null ? Icons.cloud_upload_outlined : _icon,
-                    size: 32,
-                    color: accent,
-                  ),
+                  Icon(_file == null ? Icons.cloud_upload_outlined : _icon, size: 32, color: accent),
                   const SizedBox(height: 12),
                   Text(
                     _picking ? '正在选择文件…' : (_file?.name ?? '点击选择$_label文件'),
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -487,10 +447,7 @@ class _MediaSourceSheetState extends State<EditorMediaSourcePanel> {
                               : '当前环境暂不支持图片上传，请使用表情或链接')
                         : '${(_file!.size / 1024 / 1024).toStringAsFixed(2)} MB · 点击重新选择',
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Color(0xFF7C8799),
-                    ),
+                    style: const TextStyle(fontSize: 12, color: Color(0xFF7C8799)),
                   ),
                 ],
               ),
@@ -499,11 +456,7 @@ class _MediaSourceSheetState extends State<EditorMediaSourcePanel> {
         ),
         if (_uploading) ...[
           const SizedBox(height: 16),
-          LinearProgressIndicator(
-            value: _progress,
-            color: accent,
-            borderRadius: BorderRadius.circular(3),
-          ),
+          LinearProgressIndicator(value: _progress, color: accent, borderRadius: BorderRadius.circular(3)),
           const SizedBox(height: 8),
           Text(
             _progress >= 1 ? '正在保存文件…' : '正在上传 ${(_progress * 100).round()}%',
@@ -531,28 +484,17 @@ class _MediaSourceSheetState extends State<EditorMediaSourcePanel> {
             if (widget.allowRemove && !_banner)
               TextButton(
                 key: const ValueKey('editor-cover-url-remove'),
-                onPressed: _busy
-                    ? null
-                    : () => Navigator.pop(context, const EditorMediaSource('')),
+                onPressed: _busy ? null : () => Navigator.pop(context, const EditorMediaSource('')),
                 child: const Text('移除封面'),
               ),
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('取消'),
-            ),
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text('取消')),
             FilledButton(
               key: const ValueKey('editor-url-block-submit'),
               style: FilledButton.styleFrom(
                 backgroundColor: accent,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 13,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 13),
               ),
-              onPressed:
-                  _busy || (_local ? _file == null : _url.text.trim().isEmpty)
-                  ? null
-                  : _submit,
+              onPressed: _busy || (_local ? _file == null : _url.text.trim().isEmpty) ? null : _submit,
               child: Text(
                 _uploading
                     ? '上传中…'
@@ -584,11 +526,7 @@ class _MediaSourceSheetState extends State<EditorMediaSourcePanel> {
         top: false,
         child: ConstrainedBox(
           constraints: BoxConstraints(
-            maxHeight: math.max(
-              0,
-              MediaQuery.sizeOf(context).height * .9 -
-                  MediaQuery.viewInsetsOf(context).bottom,
-            ),
+            maxHeight: math.max(0, MediaQuery.sizeOf(context).height * .9 - MediaQuery.viewInsetsOf(context).bottom),
           ),
           child: _banner
               ? Column(
@@ -621,8 +559,7 @@ class _MediaSourceSheetState extends State<EditorMediaSourcePanel> {
       enabled: !_busy,
       child: InkWell(
         key: ValueKey(switch (source) {
-          'first' =>
-            _banner ? 'document-cover-library-tab' : 'document-icon-emoji-tab',
+          'first' => _banner ? 'document-cover-library-tab' : 'document-icon-emoji-tab',
           'upload' => 'editor-media-upload-tab',
           _ => 'editor-media-link-tab',
         }),
@@ -642,37 +579,22 @@ class _MediaSourceSheetState extends State<EditorMediaSourcePanel> {
           padding: const EdgeInsets.only(bottom: 12),
           decoration: BoxDecoration(
             border: Border(
-              bottom: BorderSide(
-                color: _source == source
-                    ? const Color(0xFF5B5BD6)
-                    : Colors.transparent,
-                width: 2,
-              ),
+              bottom: BorderSide(color: _source == source ? const Color(0xFF5B5BD6) : Colors.transparent, width: 2),
             ),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (!_hasFirstTab)
-                Icon(
-                  icon,
-                  size: 17,
-                  color: _source == source
-                      ? const Color(0xFF5B5BD6)
-                      : const Color(0xFF7C8799),
-                ),
+                Icon(icon, size: 17, color: _source == source ? const Color(0xFF5B5BD6) : const Color(0xFF7C8799)),
               if (!_hasFirstTab) const SizedBox(width: 7),
               Flexible(
                 child: Text(
                   label,
                   style: TextStyle(
                     fontSize: 14,
-                    fontWeight: _source == source
-                        ? FontWeight.w600
-                        : FontWeight.normal,
-                    color: _source == source
-                        ? const Color(0xFF5B5BD6)
-                        : const Color(0xFF7C8799),
+                    fontWeight: _source == source ? FontWeight.w600 : FontWeight.normal,
+                    color: _source == source ? const Color(0xFF5B5BD6) : const Color(0xFF7C8799),
                   ),
                 ),
               ),

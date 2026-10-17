@@ -8,11 +8,11 @@ import 'package:cses_document_collab/src/model/collab_code.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
 import 'package:cses_document_collab/src/model/collab_entity_mention.dart';
 import 'package:cses_document_collab/src/model/collab_formula.dart';
-import 'package:cses_document_collab/src/model/collab_mermaid.dart';
 import 'package:cses_document_collab/src/model/collab_image.dart';
 import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
 import 'package:cses_document_collab/src/model/collab_link_view.dart';
 import 'package:cses_document_collab/src/model/collab_meeting.dart';
+import 'package:cses_document_collab/src/model/collab_mermaid.dart';
 import 'package:cses_document_collab/src/model/collab_ordered.dart';
 import 'package:cses_document_collab/src/model/collab_paragraph_style.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
@@ -169,11 +169,7 @@ const csesReplacementSourceAttribute = 'cses_replacement_source';
 /// subscript text follows the same path as its built-in rich-text styles.
 /// Desktop typography keys also participate in caret inheritance and IME slicing.
 void registerCsesRichTextAttributes() {
-  for (final attribute in [
-    csesSuperscriptAttribute,
-    csesSubscriptAttribute,
-    ...collabTypographyKeys,
-  ]) {
+  for (final attribute in [csesSuperscriptAttribute, csesSubscriptAttribute, ...collabTypographyKeys]) {
     if (!AppFlowyRichTextKeys.supportToggled.contains(attribute)) {
       AppFlowyRichTextKeys.supportToggled.add(attribute);
     }
@@ -292,8 +288,7 @@ final class CollabEditorTextSegment {
 
   /// AppFlowy 内存属性；href映射内置链接键，inlineLatex使用私有对象键。
   Attributes get attributes => {
-    if (typography != null)
-      ...Map<String, dynamic>.from(jsonDecode(typography!) as Map),
+    if (typography != null) ...Map<String, dynamic>.from(jsonDecode(typography!) as Map),
     if (href != null) AppFlowyRichTextKeys.href: href,
     if (bold) AppFlowyRichTextKeys.bold: true,
     if (italic) AppFlowyRichTextKeys.italic: true,
@@ -301,16 +296,14 @@ final class CollabEditorTextSegment {
     if (strikethrough) AppFlowyRichTextKeys.strikethrough: true,
     if (code) AppFlowyRichTextKeys.code: true,
     if (textColor != null) AppFlowyRichTextKeys.textColor: textColor,
-    if (backgroundColor != null)
-      AppFlowyRichTextKeys.backgroundColor: backgroundColor,
+    if (backgroundColor != null) AppFlowyRichTextKeys.backgroundColor: backgroundColor,
     if (superscript) csesSuperscriptAttribute: true,
     if (subscript) csesSubscriptAttribute: true,
     if (inlineLatex != null) collabInlineLatexAttribute: inlineLatex,
     if (inlineMention != null) collabInlineMentionAttribute: inlineMention,
     if (mentionId != null) collabMentionIdAttribute: mentionId,
     if (mentionType != null) collabMentionTypeAttribute: mentionType,
-    if (mentionAttributes != null)
-      collabMentionAttributesAttribute: mentionAttributes,
+    if (mentionAttributes != null) collabMentionAttributesAttribute: mentionAttributes,
   };
 
   /// 基于原文、链接、格式与公式/提及身份及实体属性快照计算哈希。
@@ -510,16 +503,12 @@ final class AppFlowyBlockEditorAdapter {
   /// [onLocalBlocksChanged] 在本地事务完成后接收完整投影；远端回放不调用它。
   /// [initialBlocks] 默认空，由适配器创建可落光标的正文。适配器拥有 EditorState 和事务订阅，
   /// 调用方必须在不再使用编辑器时 dispose，不另行关闭借用的 editorState。
-  AppFlowyBlockEditorAdapter({
-    required this.onLocalBlocksChanged,
-    List<CollabEditorBlock> initialBlocks = const [],
-  }) : editorState = _createEditorState(initialBlocks) {
+  AppFlowyBlockEditorAdapter({required this.onLocalBlocksChanged, List<CollabEditorBlock> initialBlocks = const []})
+    : editorState = _createEditorState(initialBlocks) {
     registerCsesRichTextAttributes();
     _paragraphTyping = CollabParagraphTyping(editorState);
     _lastPublishedBlocks = _readBlocks(editorState, const []);
-    _transactionSubscription = editorState.transactionStream.listen(
-      _handleTransaction,
-    );
+    _transactionSubscription = editorState.transactionStream.listen(_handleTransaction);
   }
 
   static const collabBlockIdAttribute = 'cses_collab_block_id';
@@ -583,8 +572,7 @@ final class AppFlowyBlockEditorAdapter {
           currentNodes.length,
           (index) =>
               _nodeBlockId(currentNodes[index]) == targetBlocks[index].id &&
-              _nodeBlockType(currentNodes[index]) ==
-                  targetBlocks[index].blockType &&
+              _nodeBlockType(currentNodes[index]) == targetBlocks[index].blockType &&
               currentBlocks[index].parentId == targetBlocks[index].parentId &&
               (currentNodes[index].type == csesUnsupportedBlockType ||
                   isCollabContainerType(currentNodes[index].type) ||
@@ -614,9 +602,7 @@ final class AppFlowyBlockEditorAdapter {
             // updateNode 合并属性，故可选图片投影缺失时需要显式 null 删除旧值。
             transaction.updateNode(node, {
               ..._nodeFromBlock(target).attributes,
-              if (target.blockType == ImageBlockKeys.type &&
-                  target.image == null)
-                collabImageAttribute: null,
+              if (target.blockType == ImageBlockKeys.type && target.image == null) collabImageAttribute: null,
             });
           }
           continue;
@@ -628,9 +614,7 @@ final class AppFlowyBlockEditorAdapter {
           final currentDelta = node.delta ?? Delta();
           final patch = currentDelta.diff(_deltaFromBlock(target));
           if (patch.isNotEmpty) {
-            transaction.add(
-              UpdateTextOperation(node.path, patch, patch.invert(currentDelta)),
-            );
+            transaction.add(UpdateTextOperation(node.path, patch, patch.invert(currentDelta)));
           }
         } else {
           final currentText = node.delta?.toPlainText() ?? '';
@@ -642,45 +626,29 @@ final class AppFlowyBlockEditorAdapter {
             transaction.insertText(node, delta.index, delta.insertText);
           }
         }
-        if (node.type == TodoListBlockKeys.type &&
-            node.attributes[TodoListBlockKeys.checked] != target.checked) {
-          transaction.updateNode(node, {
-            TodoListBlockKeys.checked: target.checked,
-          });
+        if (node.type == TodoListBlockKeys.type && node.attributes[TodoListBlockKeys.checked] != target.checked) {
+          transaction.updateNode(node, {TodoListBlockKeys.checked: target.checked});
         }
         if (supportsCollabParagraph(node) &&
-            readCollabParagraph(node).properties !=
-                target.paragraphStyle?.properties) {
-          transaction.updateNode(
-            node,
-            paragraphNodeAttributes(target.paragraphStyle),
-          );
+            readCollabParagraph(node).properties != target.paragraphStyle?.properties) {
+          transaction.updateNode(node, paragraphNodeAttributes(target.paragraphStyle));
         }
-        final targetIndent = _supportsIndent(target.blockType)
-            ? target.indent
-            : 0;
-        if (node.attributes[csesCalloutPrefixAttribute] !=
-                target.calloutPrefix ||
-            node.attributes[csesBlockTextColorAttribute] !=
-                target.blockTextColor ||
-            node.attributes[csesBlockBackgroundColorAttribute] !=
-                target.blockBackgroundColor ||
-            node.attributes[csesBlockBorderColorAttribute] !=
-                target.blockBorderColor ||
+        final targetIndent = _supportsIndent(target.blockType) ? target.indent : 0;
+        if (node.attributes[csesCalloutPrefixAttribute] != target.calloutPrefix ||
+            node.attributes[csesBlockTextColorAttribute] != target.blockTextColor ||
+            node.attributes[csesBlockBackgroundColorAttribute] != target.blockBackgroundColor ||
+            node.attributes[csesBlockBorderColorAttribute] != target.blockBorderColor ||
             node.attributes[blockComponentAlign] != target.alignment ||
             node.attributes[csesBlockIndentAttribute] != targetIndent ||
             _readOrdered(node) != target.ordered ||
             _readCode(node) != target.code ||
-            node.attributes[csesReplacementSourceAttribute] !=
-                target.replacesId) {
+            node.attributes[csesReplacementSourceAttribute] != target.replacesId) {
           transaction.updateNode(node, {
             csesCalloutPrefixAttribute: target.calloutPrefix,
             csesBlockTextColorAttribute: target.blockTextColor,
             csesBlockBackgroundColorAttribute: target.blockBackgroundColor,
             csesBlockBorderColorAttribute: target.blockBorderColor,
-            blockComponentBackgroundColor: parseCollabBlockColor(
-              target.blockBackgroundColor,
-            )?.toHex(),
+            blockComponentBackgroundColor: parseCollabBlockColor(target.blockBackgroundColor)?.toHex(),
             blockComponentAlign: target.alignment,
             csesBlockIndentAttribute: targetIndent,
             csesOrderedAttribute: target.ordered?.toJson(),
@@ -688,9 +656,7 @@ final class AppFlowyBlockEditorAdapter {
             for (final entry in collabCodePropertyAttributes.entries)
               entry.value: target.code?.propertyAttribute(entry.key),
             csesOrderedNumberingAttribute: target.ordered?.numbering,
-            csesOrderedTargetAttribute: target.ordered == null
-                ? null
-                : target.id,
+            csesOrderedTargetAttribute: target.ordered == null ? null : target.id,
             csesReplacementSourceAttribute: target.replacesId,
           });
         }
@@ -699,22 +665,15 @@ final class AppFlowyBlockEditorAdapter {
       if (currentRootNodes.isNotEmpty) {
         transaction.deleteNodesAtPath([0], currentRootNodes.length);
       }
-      transaction.add(
-        InsertOperation([0], _nodesFromBlocks(targetBlocks)),
-        transform: false,
-      );
+      transaction.add(InsertOperation([0], _nodesFromBlocks(targetBlocks)), transform: false);
     }
 
     if (transaction.operations.isEmpty) {
       _lastPublishedBlocks = targetBlocks;
       return;
     }
-    final invalidateTableHistory = _tableContentChanged(
-      currentBlocks,
-      targetBlocks,
-    );
-    if (invalidateTableHistory ||
-        _mermaidContentChanged(currentBlocks, targetBlocks)) {
+    final invalidateTableHistory = _tableContentChanged(currentBlocks, targetBlocks);
+    if (invalidateTableHistory || _mermaidContentChanged(currentBlocks, targetBlocks)) {
       editorState.undoManager.undoStack.clear();
       editorState.undoManager.redoStack.clear();
       // 路径历史不能越过远端换行/删行/合并或正文覆盖后继续作用于其他单元格。
@@ -750,10 +709,7 @@ final class AppFlowyBlockEditorAdapter {
   /// 比较 [before] 与 [after] 的绘图源码和结构，远端变更后使路径历史失效。
   /// 现有编辑器不对历史执行文本OT；不能让旧偏移覆盖远端源码或另一个块。
   /// 远端共享视图变化及绘图存在时的结构变更清空整个编辑器历史，普通正文内容与属性更新保持历史。
-  static bool _mermaidContentChanged(
-    List<CollabEditorBlock> before,
-    List<CollabEditorBlock> after,
-  ) {
+  static bool _mermaidContentChanged(List<CollabEditorBlock> before, List<CollabEditorBlock> after) {
     if (![...before, ...after].any((b) => b.blockType == collabMermaidType)) {
       return false;
     }
@@ -761,9 +717,7 @@ final class AppFlowyBlockEditorAdapter {
     for (var index = 0; index < before.length; index++) {
       final old = before[index];
       final next = after[index];
-      if (old.id != next.id ||
-          old.parentId != next.parentId ||
-          old.blockType != next.blockType) {
+      if (old.id != next.id || old.parentId != next.parentId || old.blockType != next.blockType) {
         return true;
       }
       if (old.blockType == collabMermaidType &&
@@ -772,8 +726,7 @@ final class AppFlowyBlockEditorAdapter {
         return true;
       }
       if (old.blockType == collabMermaidSourceType &&
-          (old.text != next.text ||
-              !_segmentsEqual(old.segments, next.segments))) {
+          (old.text != next.text || !_segmentsEqual(old.segments, next.segments))) {
         return true;
       }
     }
@@ -849,9 +802,7 @@ final class AppFlowyBlockEditorAdapter {
       final node = editorState.getNodeAtPath(operation.path);
       if (node != null && supportsCollabParagraph(node)) {
         for (final key in collabParagraphKeys) {
-          if (operation.attributes.containsKey(
-            paragraphPropertyAttribute(key),
-          )) {
+          if (operation.attributes.containsKey(paragraphPropertyAttribute(key))) {
             paragraphEdits.putIfAbsent(node, () => {}).add(key);
           }
         }
@@ -861,9 +812,7 @@ final class AppFlowyBlockEditorAdapter {
           operation.attributes.containsKey(collabMermaidModeAttribute)) {
         resourceEdits.putIfAbsent(node, () => {}).add('mode');
       }
-      if (node != null &&
-          node.type == collabFormulaType &&
-          operation.attributes.containsKey(collabFormulaAttribute)) {
+      if (node != null && node.type == collabFormulaType && operation.attributes.containsKey(collabFormulaAttribute)) {
         resourceEdits.putIfAbsent(node, () => {}).add('latex');
       }
       if (node != null && node.type == collabMeetingType) {
@@ -885,9 +834,7 @@ final class AppFlowyBlockEditorAdapter {
           resourceEdits.putIfAbsent(node, () => {}).add('url');
         }
         for (final key in collabResourceKeys) {
-          if (operation.attributes.containsKey(
-            resourcePropertyAttribute(key),
-          )) {
+          if (operation.attributes.containsKey(resourcePropertyAttribute(key))) {
             resourceEdits.putIfAbsent(node, () => {}).add(key);
           }
         }
@@ -909,13 +856,7 @@ final class AppFlowyBlockEditorAdapter {
         if (!supportsCollabParagraph(node)) continue;
         paragraphEdits
             .putIfAbsent(node, () => {})
-            .addAll(
-              collabParagraphKeys.where(
-                (key) => node.attributes.containsKey(
-                  paragraphPropertyAttribute(key),
-                ),
-              ),
-            );
+            .addAll(collabParagraphKeys.where((key) => node.attributes.containsKey(paragraphPropertyAttribute(key))));
       }
     }
     final nextBlocks = _readBlocks(
@@ -987,13 +928,9 @@ final class AppFlowyBlockEditorAdapter {
         transaction.operations.every(
           (operation) =>
               operation is UpdateOperation &&
-              (operation.attributes.containsKey(
-                    collabParagraphTargetAttribute,
-                  ) ||
+              (operation.attributes.containsKey(collabParagraphTargetAttribute) ||
                   operation.attributes.containsKey(collabCodeTargetAttribute) ||
-                  operation.attributes.containsKey(
-                    collabResourceTargetAttribute,
-                  )),
+                  operation.attributes.containsKey(collabResourceTargetAttribute)),
         );
     if (codePropertiesOnly) {
       // Header undo should preserve the current caret, including after reorder/deletion.
@@ -1007,15 +944,14 @@ final class AppFlowyBlockEditorAdapter {
         continue;
       }
       if (operation.attributes.containsKey(collabParagraphTargetAttribute)) {
-        var id =
-            operation.attributes[collabParagraphTargetAttribute] as String?;
+        var id = operation.attributes[collabParagraphTargetAttribute] as String?;
         final seen = <String>{};
         while (id != null && _replacementIds.containsKey(id) && seen.add(id)) {
           id = _replacementIds[id];
         }
-        final node = _flattenNodes(editorState.document.root.children)
-            .where((n) => _nodeBlockId(n) == id && supportsCollabParagraph(n))
-            .firstOrNull;
+        final node = _flattenNodes(
+          editorState.document.root.children,
+        ).where((n) => _nodeBlockId(n) == id && supportsCollabParagraph(n)).firstOrNull;
         if (node != null && editorState.editable) {
           operations.add(_relocateParagraphHistory(operation, node.path));
         }
@@ -1033,15 +969,9 @@ final class AppFlowyBlockEditorAdapter {
         }
         continue;
       }
-      final isCallout = operation.attributes.containsKey(
-        csesCalloutTargetAttribute,
-      );
-      final isCode = operation.attributes.containsKey(
-        collabCodeTargetAttribute,
-      );
-      final isOrdered = operation.attributes.containsKey(
-        csesOrderedNumberingAttribute,
-      );
+      final isCallout = operation.attributes.containsKey(csesCalloutTargetAttribute);
+      final isCode = operation.attributes.containsKey(collabCodeTargetAttribute);
+      final isOrdered = operation.attributes.containsKey(csesOrderedNumberingAttribute);
       if (!isCallout && !isCode && !isOrdered) {
         operations.add(operation);
         continue;
@@ -1163,19 +1093,14 @@ final class AppFlowyBlockEditorAdapter {
         id: block.id,
         attributes: {
           collabBlockIdAttribute: block.id,
-          collabTableLayoutAttribute:
-              block.resource?.toJson() ?? const {'properties': '{}'},
+          collabTableLayoutAttribute: block.resource?.toJson() ?? const {'properties': '{}'},
           csesBlockBackgroundColorAttribute: block.blockBackgroundColor,
           csesBlockBorderColorAttribute: block.blockBorderColor,
         },
       );
     }
     if (block.blockType == csesUnsupportedBlockType) {
-      return Node(
-        type: csesUnsupportedBlockType,
-        id: block.id,
-        attributes: {collabBlockIdAttribute: block.id},
-      );
+      return Node(type: csesUnsupportedBlockType, id: block.id, attributes: {collabBlockIdAttribute: block.id});
     }
     if (block.blockType == collabTaskCardType) {
       return Node(
@@ -1183,8 +1108,7 @@ final class AppFlowyBlockEditorAdapter {
         id: block.id,
         attributes: {
           collabBlockIdAttribute: block.id,
-          collabResourceAttribute: (block.resource ?? const CollabResource())
-              .toJson(),
+          collabResourceAttribute: (block.resource ?? const CollabResource()).toJson(),
         },
       );
     }
@@ -1194,9 +1118,7 @@ final class AppFlowyBlockEditorAdapter {
         id: block.id,
         attributes: {
           collabBlockIdAttribute: block.id,
-          ...CollabMeeting.nodeAttributes(
-            block.resource ?? const CollabResource(),
-          ),
+          ...CollabMeeting.nodeAttributes(block.resource ?? const CollabResource()),
         },
       );
     }
@@ -1206,9 +1128,7 @@ final class AppFlowyBlockEditorAdapter {
         id: block.id,
         attributes: {
           collabBlockIdAttribute: block.id,
-          ...collabFormulaNodeAttributes(
-            block.resource ?? const CollabResource(),
-          ),
+          ...collabFormulaNodeAttributes(block.resource ?? const CollabResource()),
         },
       );
     }
@@ -1218,9 +1138,7 @@ final class AppFlowyBlockEditorAdapter {
         id: block.id,
         attributes: {
           collabBlockIdAttribute: block.id,
-          ...CollabDivider.nodeAttributes(
-            block.resource ?? const CollabResource(),
-          ),
+          ...CollabDivider.nodeAttributes(block.resource ?? const CollabResource()),
         },
       );
     }
@@ -1230,9 +1148,7 @@ final class AppFlowyBlockEditorAdapter {
         id: block.id,
         attributes: {
           collabBlockIdAttribute: block.id,
-          ...collabMermaidNodeAttributes(
-            block.resource ?? const CollabResource(),
-          ),
+          ...collabMermaidNodeAttributes(block.resource ?? const CollabResource()),
         },
       );
     }
@@ -1240,10 +1156,7 @@ final class AppFlowyBlockEditorAdapter {
       return Node(
         type: collabMermaidSourceType,
         id: block.id,
-        attributes: {
-          collabBlockIdAttribute: block.id,
-          blockComponentDelta: _deltaFromBlock(block).toJson(),
-        },
+        attributes: {collabBlockIdAttribute: block.id, blockComponentDelta: _deltaFromBlock(block).toJson()},
       );
     }
     if (block.blockType == csesCalloutBlockType) {
@@ -1269,19 +1182,15 @@ final class AppFlowyBlockEditorAdapter {
           // AppFlowy's image component and the custom embed components both
           // currently use `url`; spelling out the key choice documents which
           // renderer owns the attribute and avoids coupling future formats.
-          if (isCollabResourceType(block.blockType))
-            ...(block.resource ?? const CollabResource()).nodeAttributes,
+          if (isCollabResourceType(block.blockType)) ...(block.resource ?? const CollabResource()).nodeAttributes,
           if (isImage) ImageBlockKeys.url: block.text,
           if (!isImage) csesEmbedUrlAttribute: block.text,
           if (isImage) ImageBlockKeys.align: block.alignment,
-          if (isImage && block.image != null)
-            collabImageAttribute: block.image!.toJson(),
+          if (isImage && block.image != null) collabImageAttribute: block.image!.toJson(),
           collabBlockIdAttribute: block.id,
           csesBlockBackgroundColorAttribute: block.blockBackgroundColor,
           csesBlockBorderColorAttribute: block.blockBorderColor,
-          blockComponentBackgroundColor: parseCollabBlockColor(
-            block.blockBackgroundColor,
-          )?.toHex(),
+          blockComponentBackgroundColor: parseCollabBlockColor(block.blockBackgroundColor)?.toHex(),
           blockComponentAlign: block.alignment,
           csesBlockIndentAttribute: 0,
         },
@@ -1292,41 +1201,18 @@ final class AppFlowyBlockEditorAdapter {
       final type when type.startsWith('heading_') => (
         HeadingBlockKeys.type,
         HeadingBlockKeys.delta,
-        <String, Object>{
-          HeadingBlockKeys.level:
-              int.tryParse(type.substring('heading_'.length))?.clamp(1, 9) ?? 1,
-        },
+        <String, Object>{HeadingBlockKeys.level: int.tryParse(type.substring('heading_'.length))?.clamp(1, 9) ?? 1},
       ),
-      BulletedListBlockKeys.type => (
-        BulletedListBlockKeys.type,
-        BulletedListBlockKeys.delta,
-        <String, Object>{},
-      ),
-      NumberedListBlockKeys.type => (
-        NumberedListBlockKeys.type,
-        NumberedListBlockKeys.delta,
-        <String, Object>{},
-      ),
+      BulletedListBlockKeys.type => (BulletedListBlockKeys.type, BulletedListBlockKeys.delta, <String, Object>{}),
+      NumberedListBlockKeys.type => (NumberedListBlockKeys.type, NumberedListBlockKeys.delta, <String, Object>{}),
       TodoListBlockKeys.type => (
         TodoListBlockKeys.type,
         TodoListBlockKeys.delta,
         <String, Object>{TodoListBlockKeys.checked: block.checked},
       ),
-      QuoteBlockKeys.type => (
-        QuoteBlockKeys.type,
-        QuoteBlockKeys.delta,
-        <String, Object>{},
-      ),
-      csesCodeBlockType => (
-        csesCodeBlockType,
-        blockComponentDelta,
-        <String, Object>{},
-      ),
-      _ => (
-        ParagraphBlockKeys.type,
-        ParagraphBlockKeys.delta,
-        <String, Object>{},
-      ),
+      QuoteBlockKeys.type => (QuoteBlockKeys.type, QuoteBlockKeys.delta, <String, Object>{}),
+      csesCodeBlockType => (csesCodeBlockType, blockComponentDelta, <String, Object>{}),
+      _ => (ParagraphBlockKeys.type, ParagraphBlockKeys.delta, <String, Object>{}),
     };
     return Node(
       type: nodeType,
@@ -1340,22 +1226,15 @@ final class AppFlowyBlockEditorAdapter {
         collabBlockIdAttribute: block.id,
         if (block.code != null) collabCodeAttribute: block.code!.toJson(),
         if (block.code != null) ...block.code!.nodeAttributes,
-        if (block.ordered != null)
-          csesOrderedAttribute: block.ordered!.toJson(),
-        if (block.ordered != null)
-          csesOrderedNumberingAttribute: block.ordered!.numbering,
+        if (block.ordered != null) csesOrderedAttribute: block.ordered!.toJson(),
+        if (block.ordered != null) csesOrderedNumberingAttribute: block.ordered!.numbering,
         if (block.ordered != null) csesOrderedTargetAttribute: block.id,
-        if (block.replacesId != null)
-          csesReplacementSourceAttribute: block.replacesId,
+        if (block.replacesId != null) csesReplacementSourceAttribute: block.replacesId,
         csesBlockBackgroundColorAttribute: block.blockBackgroundColor,
         csesBlockBorderColorAttribute: block.blockBorderColor,
-        blockComponentBackgroundColor: parseCollabBlockColor(
-          block.blockBackgroundColor,
-        )?.toHex(),
+        blockComponentBackgroundColor: parseCollabBlockColor(block.blockBackgroundColor)?.toHex(),
         blockComponentAlign: block.alignment,
-        csesBlockIndentAttribute: _supportsIndent(block.blockType)
-            ? block.indent
-            : 0,
+        csesBlockIndentAttribute: _supportsIndent(block.blockType) ? block.indent : 0,
         ...extraAttributes,
       },
     );
@@ -1390,27 +1269,21 @@ final class AppFlowyBlockEditorAdapter {
     return List<CollabEditorBlock>.generate(nodes.length, (index) {
       final node = nodes[index];
       var blockId = _nodeBlockId(node);
-      while (!previousById.containsKey(blockId) &&
-          _replacementIds.containsKey(blockId)) {
+      while (!previousById.containsKey(blockId) && _replacementIds.containsKey(blockId)) {
         blockId = _replacementIds[blockId]!;
       }
       final attributeValue = node.attributes[collabBlockIdAttribute];
-      final hasExplicitId =
-          attributeValue is String && attributeValue.isNotEmpty;
+      final hasExplicitId = attributeValue is String && attributeValue.isNotEmpty;
       if (!hasExplicitId || blockId.isEmpty || seenIds.contains(blockId)) {
         final previousId = index < previous.length ? previous[index].id : null;
-        blockId =
-            previousId != null &&
-                !explicitIds.contains(previousId) &&
-                !seenIds.contains(previousId)
+        blockId = previousId != null && !explicitIds.contains(previousId) && !seenIds.contains(previousId)
             ? previousId
             : node.id;
       }
       final before = previousById[blockId];
       if (!_applyingRemote &&
           before != null &&
-          _formalFlavour(before.blockType) !=
-              _formalFlavour(_nodeBlockType(node))) {
+          _formalFlavour(before.blockType) != _formalFlavour(_nodeBlockType(node))) {
         final source = blockId;
         blockId = Node(type: ParagraphBlockKeys.type).id;
         _replacementIds[source] = blockId;
@@ -1421,8 +1294,7 @@ final class AppFlowyBlockEditorAdapter {
             csesOrderedNumberingAttribute: null,
             csesOrderedTargetAttribute: null,
           },
-          if (node.type == NumberedListBlockKeys.type)
-            csesOrderedTargetAttribute: blockId,
+          if (node.type == NumberedListBlockKeys.type) csesOrderedTargetAttribute: blockId,
         });
       }
       seenIds.add(blockId);
@@ -1433,15 +1305,11 @@ final class AppFlowyBlockEditorAdapter {
           ? readCollabParagraph(node, edited: paragraphEdits[node] ?? const {})
           : null;
       return CollabEditorBlock(
-        paragraphStyle:
-            paragraph != null &&
-                (paragraph.values.isNotEmpty || paragraph.propertyEdits != null)
+        paragraphStyle: paragraph != null && (paragraph.values.isNotEmpty || paragraph.propertyEdits != null)
             ? paragraph
             : null,
         id: blockId,
-        parentId: isCollabContainerType(node.parent?.type ?? '')
-            ? _nodeBlockId(node.parent!)
-            : null,
+        parentId: isCollabContainerType(node.parent?.type ?? '') ? _nodeBlockId(node.parent!) : null,
         calloutPrefix: node.type == csesCalloutBlockType
             ? node.attributes[csesCalloutPrefixAttribute] as String?
             : null,
@@ -1449,34 +1317,19 @@ final class AppFlowyBlockEditorAdapter {
             ? node.attributes[csesBlockTextColorAttribute] as String?
             : null,
         resource: node.type == collabMermaidType
-            ? readCollabMermaidProperties(
-                node.attributes,
-                edited: resourceEdits[node]?.contains('mode') == true,
-              )
+            ? readCollabMermaidProperties(node.attributes, edited: resourceEdits[node]?.contains('mode') == true)
             : collabTableTypes.contains(node.type)
             ? readCollabTable(node.attributes, before?.resource)
             : node.type == collabTaskCardType
             ? CollabTaskCard.read(node.attributes)
             : node.type == collabMeetingType
-            ? CollabMeeting.readAttributes(
-                node.attributes,
-                edited: resourceEdits[node] ?? const {},
-              )
+            ? CollabMeeting.readAttributes(node.attributes, edited: resourceEdits[node] ?? const {})
             : node.type == collabFormulaType
-            ? readCollabFormula(
-                node.attributes,
-                edited: resourceEdits[node]?.contains('latex') == true,
-              )
+            ? readCollabFormula(node.attributes, edited: resourceEdits[node]?.contains('latex') == true)
             : node.type == collabDividerType
-            ? CollabDivider.readAttributes(
-                node.attributes,
-                edited: resourceEdits[node] ?? const {},
-              )
+            ? CollabDivider.readAttributes(node.attributes, edited: resourceEdits[node] ?? const {})
             : isCollabResourceType(node.type)
-            ? CollabResource.fromAttributes(
-                node.attributes,
-                edited: resourceEdits[node] ?? const {},
-              )
+            ? CollabResource.fromAttributes(node.attributes, edited: resourceEdits[node] ?? const {})
             : null,
         code: _readCode(node, editedProperties: codeEdits[node] ?? const {}),
         blockType: _nodeBlockType(node),
@@ -1485,29 +1338,16 @@ final class AppFlowyBlockEditorAdapter {
             ? _readOrdered(node, edited: numberingNodes.contains(node))
             : null,
         replacesId: node.attributes[csesReplacementSourceAttribute] as String?,
-        image:
-            node.type == ImageBlockKeys.type &&
-                node.attributes[collabImageAttribute] is Map
-            ? CollabImage.fromJson(
-                Map<String, dynamic>.from(
-                  node.attributes[collabImageAttribute] as Map,
-                ),
-              )
+        image: node.type == ImageBlockKeys.type && node.attributes[collabImageAttribute] is Map
+            ? CollabImage.fromJson(Map<String, dynamic>.from(node.attributes[collabImageAttribute] as Map))
             : null,
         segments: _readNodeSegments(node),
-        checked:
-            node.type == TodoListBlockKeys.type &&
-            (node.attributes[TodoListBlockKeys.checked] as bool? ?? false),
-        blockBackgroundColor:
-            node.attributes[csesBlockBackgroundColorAttribute] as String?,
-        blockBorderColor:
-            node.attributes[csesBlockBorderColorAttribute] as String?,
+        checked: node.type == TodoListBlockKeys.type && (node.attributes[TodoListBlockKeys.checked] as bool? ?? false),
+        blockBackgroundColor: node.attributes[csesBlockBackgroundColorAttribute] as String?,
+        blockBorderColor: node.attributes[csesBlockBorderColorAttribute] as String?,
         alignment: _nodeAlignment(node),
         indent: _supportsIndent(_nodeBlockType(node))
-            ? (node.attributes[csesBlockIndentAttribute] as int? ?? 0).clamp(
-                0,
-                6,
-              )
+            ? (node.attributes[csesBlockIndentAttribute] as int? ?? 0).clamp(0, 6)
             : 0,
       );
     }, growable: false);
@@ -1521,32 +1361,21 @@ final class AppFlowyBlockEditorAdapter {
     if (value is! Map) return null;
     final ordered = CollabOrdered.fromJson(Map<String, dynamic>.from(value));
     return ordered.withNumbering(
-      node.attributes[csesOrderedNumberingAttribute] as String? ??
-          ordered.numbering,
+      node.attributes[csesOrderedNumberingAttribute] as String? ?? ordered.numbering,
       edited: edited,
     );
   }
 
-  static CollabCode? _readCode(
-    Node node, {
-    Set<String> editedProperties = const {},
-  }) {
+  static CollabCode? _readCode(Node node, {Set<String> editedProperties = const {}}) {
     final value = node.attributes[collabCodeAttribute];
     return node.type == csesCodeBlockType &&
-            (value is Map ||
-                collabCodePropertyAttributes.values.any(
-                  node.attributes.containsKey,
-                ))
-        ? CollabCode.fromAttributes(
-            node.attributes,
-            editedProperties: editedProperties,
-          )
+            (value is Map || collabCodePropertyAttributes.values.any(node.attributes.containsKey))
+        ? CollabCode.fromAttributes(node.attributes, editedProperties: editedProperties)
         : null;
   }
 
   /// 将手机 [type] 归到正式 flavour；标题级别变化仍是同一 paragraph，不替换身份。
-  static String _formalFlavour(String type) =>
-      type.startsWith('heading_') ? 'paragraph' : type;
+  static String _formalFlavour(String type) => type.startsWith('heading_') ? 'paragraph' : type;
 
   static String _nodeBlockId(Node node) {
     final value = node.attributes[collabBlockIdAttribute];
@@ -1625,36 +1454,27 @@ final class AppFlowyBlockEditorAdapter {
           final attributes = operation.attributes ?? const <String, Object>{};
           return CollabEditorTextSegment(
             text: operation.text,
-            typography:
-                attributes.keys.any(
-                  (key) =>
-                      collabTypographyKeys.contains(key) &&
-                      attributes[key] != null,
-                )
+            typography: attributes.keys.any((key) => collabTypographyKeys.contains(key) && attributes[key] != null)
                 ? jsonEncode({
                     for (final key in collabTypographyKeys.toList()..sort())
                       if (attributes[key] != null) key: attributes[key],
                   })
                 : null,
             href: attributes[AppFlowyRichTextKeys.href] as String?,
-            inlineLatex:
-                operation.attributes?[collabInlineLatexAttribute] as String?,
+            inlineLatex: operation.attributes?[collabInlineLatexAttribute] as String?,
             inlineMention: attributes[collabInlineMentionAttribute] as String?,
             mentionId: attributes[collabMentionIdAttribute] as String?,
             mentionType: attributes[collabMentionTypeAttribute] as String?,
-            mentionAttributes:
-                attributes[collabMentionAttributesAttribute] as String?,
+            mentionAttributes: attributes[collabMentionAttributesAttribute] as String?,
             bold: attributes[AppFlowyRichTextKeys.bold] == true,
             italic: attributes[AppFlowyRichTextKeys.italic] == true,
             underline: attributes[AppFlowyRichTextKeys.underline] == true,
-            strikethrough:
-                attributes[AppFlowyRichTextKeys.strikethrough] == true,
+            strikethrough: attributes[AppFlowyRichTextKeys.strikethrough] == true,
             code: attributes[AppFlowyRichTextKeys.code] == true,
             textColor: attributes[AppFlowyRichTextKeys.textColor] is String
                 ? attributes[AppFlowyRichTextKeys.textColor] as String
                 : null,
-            backgroundColor:
-                attributes[AppFlowyRichTextKeys.backgroundColor] is String
+            backgroundColor: attributes[AppFlowyRichTextKeys.backgroundColor] is String
                 ? attributes[AppFlowyRichTextKeys.backgroundColor] as String
                 : null,
             superscript: attributes[csesSuperscriptAttribute] == true,

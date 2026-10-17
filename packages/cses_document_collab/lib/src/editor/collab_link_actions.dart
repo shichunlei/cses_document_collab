@@ -1,7 +1,7 @@
-import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_link_view.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
@@ -76,36 +76,22 @@ Future<void> showCollabLinkActions(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  ListTile(
-                    title: Text(
-                      url,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
+                  ListTile(title: Text(url, maxLines: 2, overflow: TextOverflow.ellipsis)),
                   ListTile(
                     leading: const Icon(Icons.open_in_new),
                     title: const Text('在浏览器打开'),
                     onTap: () async {
                       try {
-                        if (!await launchUrl(
-                          Uri.parse(url),
-                          mode: LaunchMode.externalApplication,
-                        )) {
+                        if (!await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication)) {
                           throw StateError('无法打开链接');
                         }
                         if (sheetContext.mounted) Navigator.pop(sheetContext);
                       } catch (error, stack) {
-                        services.onError?.call(
-                          '无法打开链接',
-                          error,
-                          stack,
-                          'DocCollab',
-                        );
+                        services.onError?.call('无法打开链接', error, stack, 'DocCollab');
                         if (sheetContext.mounted) {
-                          ScaffoldMessenger.maybeOf(sheetContext)?.showSnackBar(
-                            const SnackBar(content: Text('无法打开此链接')),
-                          );
+                          ScaffoldMessenger.maybeOf(
+                            sheetContext,
+                          )?.showSnackBar(const SnackBar(content: Text('无法打开此链接')));
                         }
                       }
                     },
@@ -114,43 +100,35 @@ Future<void> showCollabLinkActions(
                     key: const ValueKey('link-copy'),
                     leading: const Icon(Icons.copy_outlined),
                     title: const Text('复制链接'),
-                    onTap: () =>
-                        Navigator.pop(sheetContext, _LinkAction.copyLink),
+                    onTap: () => Navigator.pop(sheetContext, _LinkAction.copyLink),
                   ),
                   if (state.editable && onEdit != null)
                     ListTile(
                       key: ValueKey('resource-edit-$id'),
                       leading: const Icon(Icons.edit_outlined),
                       title: const Text('修改'),
-                      onTap: () =>
-                          Navigator.pop(sheetContext, _LinkAction.edit),
+                      onTap: () => Navigator.pop(sheetContext, _LinkAction.edit),
                     ),
                   if (state.editable && onDelete != null)
                     ListTile(
                       key: ValueKey('resource-delete-$id'),
                       leading: const Icon(Icons.delete_outline),
                       title: const Text('删除卡片'),
-                      onTap: () =>
-                          Navigator.pop(sheetContext, _LinkAction.delete),
+                      onTap: () => Navigator.pop(sheetContext, _LinkAction.delete),
                     ),
-                  if (state.editable &&
-                      const {'page', 'callout'}.contains(node.parent?.type))
+                  if (state.editable && const {'page', 'callout'}.contains(node.parent?.type))
                     ListTile(
                       key: const ValueKey('link-insert-below'),
                       leading: const Icon(Icons.add),
                       title: const Text('在下方插入'),
-                      onTap: () =>
-                          Navigator.pop(sheetContext, _LinkAction.insertBelow),
+                      onTap: () => Navigator.pop(sheetContext, _LinkAction.insertBelow),
                     ),
-                  if (state.editable &&
-                      const {'page', 'callout'}.contains(node.parent?.type))
+                  if (state.editable && const {'page', 'callout'}.contains(node.parent?.type))
                     for (final view in CollabLinkView.values)
                       ListTile(
                         key: ValueKey('link-view-${view.name}'),
                         title: Text(view.label),
-                        trailing: view == currentView
-                            ? const Icon(Icons.check)
-                            : null,
+                        trailing: view == currentView ? const Icon(Icons.check) : null,
                         onTap: () => Navigator.pop(sheetContext, view),
                       ),
                 ],
@@ -169,16 +147,12 @@ Future<void> showCollabLinkActions(
         }
         final source = findCollabLinkNode(state, id);
         if (source == null || collabLinkFingerprint(source) != fingerprint) {
-          ScaffoldMessenger.maybeOf(
-            hostContext,
-          )?.showSnackBar(const SnackBar(content: Text('内容已更新，请重新选择')));
+          ScaffoldMessenger.maybeOf(hostContext)?.showSnackBar(const SnackBar(content: Text('内容已更新，请重新选择')));
           return;
         }
         if (action == _LinkAction.copyLink) {
           await Clipboard.setData(ClipboardData(text: url));
-          if (hostContext.mounted &&
-              !state.isDisposed &&
-              identical(CollabRuntime.services, services)) {
+          if (hostContext.mounted && !state.isDisposed && identical(CollabRuntime.services, services)) {
             ScaffoldMessenger.maybeOf(hostContext)
               ?..hideCurrentSnackBar()
               ..showSnackBar(const SnackBar(content: Text('链接已复制')));
@@ -199,21 +173,13 @@ Future<void> showCollabLinkActions(
           final paragraph = await insertCollabParagraphBelow(state, source);
           insertedId = paragraph == null
               ? null
-              : paragraph.attributes['cses_collab_block_id'] as String? ??
-                    paragraph.id;
+              : paragraph.attributes['cses_collab_block_id'] as String? ?? paragraph.id;
           return;
         }
         if (action is CollabLinkView &&
-            !await changeCollabLinkView(
-              state,
-              source,
-              action as CollabLinkView,
-              fingerprint: fingerprint,
-            )) {
+            !await changeCollabLinkView(state, source, action as CollabLinkView, fingerprint: fingerprint)) {
           if (hostContext.mounted && state.editable) {
-            ScaffoldMessenger.maybeOf(
-              hostContext,
-            )?.showSnackBar(const SnackBar(content: Text('内容已更新，请重新选择')));
+            ScaffoldMessenger.maybeOf(hostContext)?.showSnackBar(const SnackBar(content: Text('内容已更新，请重新选择')));
           }
         }
       },
@@ -221,25 +187,16 @@ Future<void> showCollabLinkActions(
           action != _LinkAction.delete &&
           !permissionRevoked &&
           identical(CollabRuntime.services, services) &&
-          (insertedId == null ||
-              findCollabLinkNode(state, insertedId!) != null),
+          (insertedId == null || findCollabLinkNode(state, insertedId!) != null),
       selectionAfterAction: () {
-        final target = insertedId == null
-            ? null
-            : findCollabLinkNode(state, insertedId!);
-        return target == null
-            ? null
-            : Selection.single(path: target.path, startOffset: 0);
+        final target = insertedId == null ? null : findCollabLinkNode(state, insertedId!);
+        return target == null ? null : Selection.single(path: target.path, startOffset: 0);
       },
     );
   } catch (error, stack) {
     services.onError?.call('链接操作失败', error, stack, 'DocCollab');
-    if (hostContext.mounted &&
-        !state.isDisposed &&
-        identical(CollabRuntime.services, services)) {
-      ScaffoldMessenger.maybeOf(
-        hostContext,
-      )?.showSnackBar(const SnackBar(content: Text('操作失败，请重试')));
+    if (hostContext.mounted && !state.isDisposed && identical(CollabRuntime.services, services)) {
+      ScaffoldMessenger.maybeOf(hostContext)?.showSnackBar(const SnackBar(content: Text('操作失败，请重试')));
     }
   } finally {
     state.editableNotifier.removeListener(trackPermission);
@@ -251,15 +208,9 @@ Future<void> showCollabLinkActions(
 /// [span] must be the mobile decorator's span, whose recognizer stays owned by
 /// the rich-text renderer. Mixed paragraphs keep their normal behavior; replacing
 /// both tap handlers avoids scheduling the upstream long-press editing timer.
-TextSpan decorateCollabLinkSpan(
-  BuildContext context,
-  Node node,
-  TextSpan span,
-) {
+TextSpan decorateCollabLinkSpan(BuildContext context, Node node, TextSpan span) {
   final recognizer = span.recognizer;
-  if (node.type == 'paragraph' &&
-      collabLinkUrl(node) != null &&
-      recognizer is TapGestureRecognizer) {
+  if (node.type == 'paragraph' && collabLinkUrl(node) != null && recognizer is TapGestureRecognizer) {
     recognizer
       ..onTapDown = null
       ..onTapUp = (_) => unawaited(showCollabLinkActions(context, node));

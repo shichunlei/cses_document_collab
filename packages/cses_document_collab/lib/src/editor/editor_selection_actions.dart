@@ -9,25 +9,14 @@ import 'package:flutter/material.dart';
 /// 在借用 [context]/[editor] 中编辑单段文字链接；取消不写入。
 /// 仅修改 href，保留原文和其他格式；弹窗完整退场后重新核对稳定身份、原文及权限。
 /// 错误由此边界报告，失败保留原文并显示提示，不拥有编辑器。
-Future<void> showEditorTextLink(
-  BuildContext context,
-  EditorState editor,
-) async {
+Future<void> showEditorTextLink(BuildContext context, EditorState editor) async {
   final range = CollabTextRange.capture(editor);
   if (!editor.editable || range == null || !range.canConvert) return;
   final selection = range.resolve(editor)!;
   final node = editor.getNodeAtPath(selection.start.path)!;
-  final selected = node.delta!.slice(
-    selection.start.offset,
-    selection.end.offset,
-  );
-  final links = selected
-      .map((op) => op.attributes?[AppFlowyRichTextKeys.href])
-      .toList();
-  final initial =
-      links.every((link) => link == links.first) && links.first is String
-      ? links.first as String
-      : '';
+  final selected = node.delta!.slice(selection.start.offset, selection.end.offset);
+  final links = selected.map((op) => op.attributes?[AppFlowyRichTextKeys.href]).toList();
+  final initial = links.every((link) => link == links.first) && links.first is String ? links.first as String : '';
   try {
     await runEditorHeaderAction<void>(context, editor, () async {
       ModalRoute<String>? route;
@@ -35,17 +24,11 @@ Future<void> showEditorTextLink(
         context: context,
         builder: (dialogContext) {
           route = ModalRoute.of<String>(dialogContext);
-          return _TextLinkDialog(
-            initial: initial,
-            canRemove: links.any((link) => link is String),
-          );
+          return _TextLinkDialog(initial: initial, canRemove: links.any((link) => link is String));
         },
       );
       await route?.completed;
-      if (result == null ||
-          !context.mounted ||
-          editor.isDisposed ||
-          !editor.editable) {
+      if (result == null || !context.mounted || editor.isDisposed || !editor.editable) {
         return;
       }
       final current = range.resolve(editor);
@@ -58,23 +41,15 @@ Future<void> showEditorTextLink(
       }
       final target = editor.getNodeAtPath(current.start.path)!;
       await editor.apply(
-        editor.transaction..formatText(
-          target,
-          current.start.offset,
-          current.end.offset - current.start.offset,
-          {AppFlowyRichTextKeys.href: result.isEmpty ? null : result},
-        ),
+        editor.transaction..formatText(target, current.start.offset, current.end.offset - current.start.offset, {
+          AppFlowyRichTextKeys.href: result.isEmpty ? null : result,
+        }),
         withUpdateSelection: false,
         skipHistoryDebounce: true,
       );
     });
   } catch (error, stack) {
-    CollabDiagnostics.report(
-      '文字链接修改失败',
-      error: error,
-      stackTrace: stack,
-      tag: 'DocCollab',
-    );
+    CollabDiagnostics.report('文字链接修改失败', error: error, stackTrace: stack, tag: 'DocCollab');
     if (context.mounted) _selectionMessage(context, '链接修改失败，请重试');
   }
 }
@@ -82,24 +57,14 @@ Future<void> showEditorTextLink(
 /// 在借用 [context]/[editor] 中预填选中文字并预览 LaTeX，确认后复用行内公式原子命令。
 /// 仅支持单段非空普通文字；取消、权限撤销及原文或格式变化均不替换。
 /// 成功作为独立历史项，撤销恢复原文字及格式；面板退场后恢复公式后的光标。
-Future<void> showEditorSelectionFormula(
-  BuildContext context,
-  EditorState editor,
-) async {
+Future<void> showEditorSelectionFormula(BuildContext context, EditorState editor) async {
   final range = CollabTextRange.capture(editor);
   if (!editor.editable || range == null || !range.canConvert) return;
   Selection? landing;
   try {
     await runEditorHeaderAction<void>(context, editor, () async {
-      final latex = await showCollabFormulaInput(
-        context,
-        editor,
-        initialLatex: range.text,
-      );
-      if (latex == null ||
-          !context.mounted ||
-          editor.isDisposed ||
-          !editor.editable) {
+      final latex = await showCollabFormulaInput(context, editor, initialLatex: range.text);
+      if (latex == null || !context.mounted || editor.isDisposed || !editor.editable) {
         return;
       }
       final current = range.resolve(editor);
@@ -113,21 +78,14 @@ Future<void> showEditorSelectionFormula(
       }
     }, selectionAfterAction: () => landing);
   } catch (error, stack) {
-    CollabDiagnostics.report(
-      '选中文字转换公式失败',
-      error: error,
-      stackTrace: stack,
-      tag: 'DocCollab',
-    );
+    CollabDiagnostics.report('选中文字转换公式失败', error: error, stackTrace: stack, tag: 'DocCollab');
     if (context.mounted) _selectionMessage(context, '转换失败，请重试');
   }
 }
 
 /// 在借用 [context] 中提示可重试的选区错误，[message] 为面向用户的原因。
 void _selectionMessage(BuildContext context, String message) {
-  ScaffoldMessenger.maybeOf(
-    context,
-  )?.showSnackBar(SnackBar(content: Text(message)));
+  ScaffoldMessenger.maybeOf(context)?.showSnackBar(SnackBar(content: Text(message)));
 }
 
 /// 文字链接输入框，拥有输入控制器；返回空字符串表示移除链接，null 表示取消。
@@ -143,7 +101,7 @@ class _TextLinkDialog extends StatefulWidget {
 
   /// 创建本弹窗持有的输入状态。
   @override
-  State<_TextLinkDialog> createState() => _TextLinkDialogState();
+  createState() => _TextLinkDialogState();
 }
 
 /// 持有链接输入和错误提示，不直接修改正文。
@@ -173,10 +131,8 @@ class _TextLinkDialogState extends State<_TextLinkDialog> {
         value.length <= 4096 &&
         !RegExp(r'\s').hasMatch(value) &&
         uri != null &&
-        ((const {'http', 'https'}.contains(uri.scheme) &&
-                uri.host.isNotEmpty) ||
-            (const {'mailto', 'tel'}.contains(uri.scheme) &&
-                uri.path.isNotEmpty));
+        ((const {'http', 'https'}.contains(uri.scheme) && uri.host.isNotEmpty) ||
+            (const {'mailto', 'tel'}.contains(uri.scheme) && uri.path.isNotEmpty));
     if (!valid) {
       setState(() => _error = '请输入完整的 http(s)、mailto 或 tel 链接');
       return;
@@ -193,10 +149,7 @@ class _TextLinkDialogState extends State<_TextLinkDialog> {
       controller: _input,
       autofocus: true,
       keyboardType: TextInputType.url,
-      decoration: InputDecoration(
-        hintText: 'https://example.com',
-        errorText: _error,
-      ),
+      decoration: InputDecoration(hintText: 'https://example.com', errorText: _error),
       onSubmitted: (_) => _confirm(),
     ),
     actions: [
@@ -206,15 +159,8 @@ class _TextLinkDialogState extends State<_TextLinkDialog> {
           onPressed: () => Navigator.pop(context, ''),
           child: const Text('移除链接'),
         ),
-      TextButton(
-        onPressed: () => Navigator.pop(context),
-        child: const Text('取消'),
-      ),
-      FilledButton(
-        key: const ValueKey('editor-text-link-save'),
-        onPressed: _confirm,
-        child: const Text('保存'),
-      ),
+      TextButton(onPressed: () => Navigator.pop(context), child: const Text('取消')),
+      FilledButton(key: const ValueKey('editor-text-link-save'), onPressed: _confirm, child: const Text('保存')),
     ],
   );
 }

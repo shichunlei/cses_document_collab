@@ -22,7 +22,7 @@ class CollabMermaidVisual extends StatefulWidget {
 
   /// 创建仅负责本地预览的状态。
   @override
-  State<CollabMermaidVisual> createState() => _MermaidVisualState();
+  createState() => _MermaidVisualState();
 }
 
 /// 预览代次隔离迟到回调；不保存账号、文档或共享数据引用。
@@ -88,11 +88,7 @@ class _MermaidVisualState extends State<CollabMermaidVisual> {
             final data = jsonDecode(message.message);
             if (data is! Map) return;
             if (data['generation'] == _generation) {
-              setState(
-                () => _error = data['failed'] == true
-                    ? '语法暂时无法绘制，源码仍可编辑和保存'
-                    : null,
-              );
+              setState(() => _error = data['failed'] == true ? '语法暂时无法绘制，源码仍可编辑和保存' : null);
             }
           } on FormatException {
             // 非本地状态消息不影响文档或可用预览。
@@ -103,9 +99,7 @@ class _MermaidVisualState extends State<CollabMermaidVisual> {
       await controller.setNavigationDelegate(
         NavigationDelegate(
           onNavigationRequest: (request) =>
-              !_ready && request.url.startsWith('file:')
-              ? NavigationDecision.navigate
-              : NavigationDecision.prevent,
+              !_ready && request.url.startsWith('file:') ? NavigationDecision.navigate : NavigationDecision.prevent,
           onPageFinished: (_) {
             if (!current()) return;
             _ready = true;
@@ -119,9 +113,7 @@ class _MermaidVisualState extends State<CollabMermaidVisual> {
         ),
       );
       if (!current()) return;
-      await controller.loadFlutterAsset(
-        'packages/cses_document_collab/assets/mermaid/index.html',
-      );
+      await controller.loadFlutterAsset('packages/cses_document_collab/assets/mermaid/index.html');
       if (current()) setState(() {});
     } catch (_) {
       if (current()) setState(() => _error = '绘图组件加载失败，请重试');
@@ -134,13 +126,9 @@ class _MermaidVisualState extends State<CollabMermaidVisual> {
     if (!mounted || !_ready || controller == null) return;
     final generation = _generation;
     try {
-      await controller.runJavaScript(
-        'window.invalidateDiagram($generation, ${widget.source.trim().isEmpty});',
-      );
+      await controller.runJavaScript('window.invalidateDiagram($generation, ${widget.source.trim().isEmpty});');
     } catch (_) {
-      if (mounted &&
-          generation == _generation &&
-          identical(controller, _controller)) {
+      if (mounted && generation == _generation && identical(controller, _controller)) {
         setState(() => _error = '绘图组件加载失败，请重试');
       }
     }
@@ -152,13 +140,9 @@ class _MermaidVisualState extends State<CollabMermaidVisual> {
     if (!mounted || !_ready || controller == null) return;
     final generation = ++_generation;
     try {
-      await controller.runJavaScript(
-        'window.renderDiagram(${jsonEncode(widget.source)}, $generation);',
-      );
+      await controller.runJavaScript('window.renderDiagram(${jsonEncode(widget.source)}, $generation);');
     } catch (_) {
-      if (mounted &&
-          generation == _generation &&
-          identical(controller, _controller)) {
+      if (mounted && generation == _generation && identical(controller, _controller)) {
         setState(() => _error = '绘图组件加载失败，请重试');
       }
     }
@@ -183,22 +167,14 @@ class _MermaidVisualState extends State<CollabMermaidVisual> {
         if (_error != null)
           Row(
             children: [
-              Expanded(
-                child: Text(_error!, style: const TextStyle(fontSize: 12)),
-              ),
-              TextButton(
-                onPressed: () => unawaited(_load()),
-                child: const Text('重试'),
-              ),
+              Expanded(child: Text(_error!, style: const TextStyle(fontSize: 12))),
+              TextButton(onPressed: () => unawaited(_load()), child: const Text('重试')),
             ],
           ),
         Expanded(
           child: _controller == null
               ? Center(child: Text(_error ?? '正在加载绘图…'))
-              : WebViewWidget(
-                  key: ValueKey(_controller),
-                  controller: _controller!,
-                ),
+              : WebViewWidget(key: ValueKey(_controller), controller: _controller!),
         ),
       ],
     ),

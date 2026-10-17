@@ -23,12 +23,7 @@ import 'package:flutter/material.dart';
 class DocumentFeedbackFooter extends StatefulWidget {
   /// [controller]为所属文档的互动状态，[editorState]用于关闭正文键盘，均由调用方持有/释放。
   /// [enabled]默认true，false暂停点击；[key]控制组件身份与状态复用。
-  const DocumentFeedbackFooter({
-    super.key,
-    required this.controller,
-    required this.editorState,
-    this.enabled = true,
-  });
+  const DocumentFeedbackFooter({super.key, required this.controller, required this.editorState, this.enabled = true});
 
   /// 必填借用的文档互动控制器，切换模式或滚动重建不会丢失状态。
   final DocumentFeedbackController controller;
@@ -41,7 +36,7 @@ class DocumentFeedbackFooter extends StatefulWidget {
 
   /// 创建初始加载生命周期，不持有宿主业务资源。
   @override
-  State<DocumentFeedbackFooter> createState() => _DocumentFeedbackFooterState();
+  createState() => _DocumentFeedbackFooterState();
 }
 
 /// 仅负责挂接互动状态与输入边界，不在视图中保留业务快照。
@@ -65,9 +60,7 @@ class _DocumentFeedbackFooterState extends State<DocumentFeedbackFooter> {
   /// 收起正文键盘并等待[action]；未启用、正文已关闭或已有任务时忽略点击。
   /// action由控制器捕获宿主异常，完成后不恢复正文输入或更新已卸载视图。
   Future<void> _invoke(Future<void> Function() action) async {
-    if (!widget.enabled ||
-        widget.controller.busy ||
-        widget.editorState.isDisposed) {
+    if (!widget.enabled || widget.controller.busy || widget.editorState.isDisposed) {
       return;
     }
     widget.editorState.service.keyboardService?.closeKeyboard();
@@ -77,10 +70,8 @@ class _DocumentFeedbackFooterState extends State<DocumentFeedbackFooter> {
 
   /// 在[context]主题中订阅当前业务状态，仅重建文末区。
   @override
-  Widget build(BuildContext context) => ListenableBuilder(
-    listenable: widget.controller,
-    builder: (context, _) => _buildContent(context),
-  );
+  Widget build(BuildContext context) =>
+      ListenableBuilder(listenable: widget.controller, builder: (context, _) => _buildContent(context));
 
   /// 在[context]主题中渲染圆形点赞按钮、居中提示和全文评论按钮，不构建输入框。
   Widget _buildContent(BuildContext context) {
@@ -112,10 +103,7 @@ class _DocumentFeedbackFooterState extends State<DocumentFeedbackFooter> {
                 side: BorderSide(color: likeColor),
                 fixedSize: const Size(64, 64),
               ),
-              icon: Icon(
-                likes.isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
-                size: 28,
-              ),
+              icon: Icon(likes.isLiked ? Icons.thumb_up : Icons.thumb_up_outlined, size: 28),
             ),
           ),
           const SizedBox(height: 20),
@@ -161,45 +149,26 @@ class _DocumentFeedbackFooterState extends State<DocumentFeedbackFooter> {
                                 size: 28,
                                 avatarUrl: member.avatarUrl,
                               ) ??
-                              CircleAvatar(
-                                child: Text(
-                                  member.name.isEmpty
-                                      ? '?'
-                                      : member.name.characters.first,
-                                ),
-                              ),
+                              CircleAvatar(child: Text(member.name.isEmpty ? '?' : member.name.characters.first)),
                         ),
                       ),
                     ),
                   ),
                 if (likes.members.length > 10)
-                  SizedBox(
-                    height: 28,
-                    child: Center(
-                      child: Text('+${likes.members.length - 10}人'),
-                    ),
-                  ),
+                  SizedBox(height: 28, child: Center(child: Text('+${likes.members.length - 10}人'))),
               ],
             ),
           ],
           if (controller.busy) ...[
             const SizedBox(height: 16),
-            const Center(
-              child: SizedBox(
-                width: 18,
-                height: 18,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
-            ),
+            const Center(child: SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))),
           ],
           if (controller.error != null) ...[
             const SizedBox(height: 12),
             Text(controller.error!, textAlign: TextAlign.center),
             if (!controller.ready)
               TextButton(
-                onPressed: widget.enabled && !controller.busy
-                    ? () async => await _invoke(controller.refresh)
-                    : null,
+                onPressed: widget.enabled && !controller.busy ? () async => await _invoke(controller.refresh) : null,
                 child: const Text('重新加载'),
               ),
           ],
@@ -213,16 +182,10 @@ class _DocumentFeedbackFooterState extends State<DocumentFeedbackFooter> {
               alignment: Alignment.centerLeft,
               foregroundColor: colors.onSurfaceVariant,
               minimumSize: const Size.fromHeight(48),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               side: BorderSide(color: colors.outlineVariant),
             ),
-            child: Text(
-              feedback.commentCount == 0
-                  ? '评论全文…'
-                  : '评论全文（${feedback.commentCount}）',
-            ),
+            child: Text(feedback.commentCount == 0 ? '评论全文…' : '评论全文（${feedback.commentCount}）'),
           ),
         ],
       ),

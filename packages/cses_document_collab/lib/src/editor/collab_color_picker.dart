@@ -64,7 +64,7 @@ class CollabColorPicker extends StatefulWidget {
 
   /// 创建仅持有单次保存状态的组件，不拥有文档或订阅。
   @override
-  State<CollabColorPicker> createState() => _CollabColorPickerState();
+  createState() => _CollabColorPickerState();
 }
 
 /// 串行保存并在仍挂载时报告错误，关闭后不触发视图更新。
