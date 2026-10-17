@@ -25,6 +25,7 @@
 | 场景 | 入口/内容实现（均在 `lib/src/editor/`） | 已确认规则 |
 |---|---|---|
 | 块更多操作 | `collab_block_actions.dart` | 下方插入用 `listEnd`；删除整行红色；保留稳定身份、远端快照和权限失效保护 |
+| 会议/任务卡片快捷操作 | `collab_meeting_block.dart`、`collab_task_card_block.dart` | 通过公共菜单的 `menuTitle/menuIcon` 显式配置“会议操作＋users”或“任务操作＋listTodo”；其他块保持原默认或按业务配置，命令/权限逻辑不变 |
 | 图片/视频更多 | `collab_image_block.dart`、`collab_video_block.dart`、`collab_media_block_base.dart` | 视频必须有“删除视频”；图片编辑弹窗不再重复提供整块删除；删除沿用原事务和资源释放 |
 | 链接/网页卡片 | `collab_link_actions.dart` | 头部完整URL单行省略；删除卡片图标及文字红色；资源操作与视图选项之间有浅色分割线；下方插入用 `listEnd` |
 | 文档/会议/任务提及 | `collab_inline_entity_mention.dart` | “删除提及”与块菜单同样使用红色整行操作，保留预览禁用；不删除实体业务数据 |

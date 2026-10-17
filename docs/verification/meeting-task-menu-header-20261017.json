@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-17",
+  "request": "会议和任务的快捷操作弹窗缺少具体标题和类型图标",
+  "cause": "两个卡片入口均复用CollabBlockMoreButton，其弹窗原固定为块操作标题和ellipsis图标，没有业务头部配置。",
+  "fix": {
+    "shared_component": "CollabBlockMoreButton增加menuTitle/menuIcon可选参数，默认保持块操作与LucideIcons.ellipsis，不影响原更多按钮及菜单命令。",
+    "meeting": {
+      "title": "会议操作",
+      "icon": "LucideIcons.users"
+    },
+    "task": {
+      "title": "任务操作",
+      "icon": "LucideIcons.listTodo"
+    },
+    "source_files": [
+      "packages/cses_document_collab/lib/src/editor/collab_block_actions.dart",
+      "packages/cses_document_collab/lib/src/editor/collab_meeting_block.dart",
+      "packages/cses_document_collab/lib/src/editor/collab_task_card_block.dart"
+    ]
+  },
+  "validation": {
+    "command": "flutter test --no-pub test/collab_block_actions_test.dart test/collab_meeting_test.dart test/collab_meeting_card_test.dart test/collab_task_card_test.dart --reporter expanded",
+    "passed": 81,
+    "failed": 0,
+    "analysis": "flutter analyze --no-pub lib/src/editor/collab_block_actions.dart lib/src/editor/collab_meeting_block.dart lib/src/editor/collab_task_card_block.dart：无问题。",
+    "format": "三个修改的手写Dart文件按既有80/120行宽格式化。",
+    "git_diff_check": "通过"
+  },
+  "preserved": "菜单默认调用、更多按钮、原插入/删除命令、权限失效、稳定身份、选区和焦点保护保持；未改变包级导出、依赖、Schema、FRB或原生。",
+  "guidance": "collab-modal-ui skill及场景参考同步会议/任务快捷操作的显式头部要求。",
+  "blockcraft_version_check": {
+    "latest": "待核对",
+    "desktop_declaration_lock_installed": "本轮无法重新复核",
+    "reason": "修改前检索workspace的package.json/.npmrc仍无桌面项目及其包仓库配置，无法按指定仓库查询latest或读取随包技能/MIGRATIONS/实现；不将历史版本作为本轮结论。"
+  },
+  "block_status_counts": {
+    "adapted": 13,
+    "partial": 12,
+    "structural": 1,
+    "unadapted": 15,
+    "total": 41
+  },
+  "limitations": "未新增Android/iOS真机截图或真实桌面协同验收；本轮仅菜单头部展示。",
+  "preserved_workspace_change": "根pubspec.yaml已有本地路径修改保持原样。"
+}
