@@ -1,3 +1,5 @@
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
 import 'package:cses_document_collab/src/model/collab_color_palette.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
@@ -22,6 +24,7 @@ class CollabColorPicker extends StatefulWidget {
   /// [horizontal] 默认 false 使用自动换行；true 适配单行工具栏。
   /// [enabled] 默认 true；[onBack] 非空时显示返回按钮。
   /// [resetLabel] 指定恢复默认提示；[resetKey] 可保留既有入口标识。
+  /// [circular] 默认false，底部弹窗设为true展示圆形色块。
   const CollabColorPicker({
     super.key,
     required this.keyPrefix,
@@ -33,6 +36,7 @@ class CollabColorPicker extends StatefulWidget {
     this.onBack,
     this.resetLabel = '清除颜色',
     this.resetKey,
+    this.circular = false,
   });
 
   /// 必填稳定前缀；预设色的 key 为此前缀加色系 ID。
@@ -61,6 +65,9 @@ class CollabColorPicker extends StatefulWidget {
 
   /// 可选恢复默认按钮标识，缺省为 keyPrefix-default。
   final Key? resetKey;
+
+  /// 是否采用弹窗设计稿的30像素圆形色块，默认false保持工具栏样式。
+  final bool circular;
 
   /// 创建仅持有单次保存状态的组件，不拥有文档或订阅。
   @override
@@ -158,7 +165,12 @@ class _CollabColorPickerState extends State<CollabColorPicker> {
         child: Row(children: children),
       );
     }
-    return Wrap(spacing: 4, runSpacing: 4, children: children);
+    return Wrap(
+      key: ValueKey('${widget.keyPrefix}-menu'),
+      spacing: widget.circular ? 0 : 4,
+      runSpacing: 4,
+      children: children,
+    );
   }
 
   /// 绘制 [key] 标识的 [label] 色块，[value] 为原始颜色，null 为恢复默认。
@@ -166,6 +178,53 @@ class _CollabColorPickerState extends State<CollabColorPicker> {
   Widget _chip(Key key, String label, String? value, bool selected) {
     final colors = Theme.of(context).colorScheme;
     final color = parseCollabBlockColor(value);
+    if (widget.circular) {
+      final c = CollabModalColors.of(context);
+      final fill = color ?? c.field;
+      return Semantics(
+        key: key,
+        container: true,
+        label: label,
+        button: true,
+        selected: selected,
+        enabled: widget.enabled && !_saving,
+        child: ExcludeSemantics(
+          child: IconButton(
+            tooltip: label,
+            onPressed: widget.enabled && !_saving
+                ? () async => _select(value)
+                : null,
+            style: IconButton.styleFrom(
+              minimumSize: const Size(44, 44),
+              padding: const EdgeInsets.all(7),
+            ),
+            icon: Container(
+              width: 30,
+              height: 30,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: fill,
+                shape: BoxShape.circle,
+                border: selected ? Border.all(color: c.accent, width: 2) : null,
+              ),
+              child: selected
+                  ? Icon(
+                      LucideIcons.check,
+                      size: 15,
+                      color:
+                          ThemeData.estimateBrightnessForColor(fill) ==
+                              Brightness.dark
+                          ? Colors.white
+                          : const Color(0xFF393246),
+                    )
+                  : value == null
+                  ? Icon(LucideIcons.rotateCcw, size: 14, color: c.muted)
+                  : null,
+            ),
+          ),
+        ),
+      );
+    }
     return Semantics(
       key: key,
       container: true,

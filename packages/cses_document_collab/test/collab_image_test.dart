@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
@@ -258,7 +259,7 @@ void main() {
       expect(find.byKey(const ValueKey('collab-image-delete')), findsNothing);
       expect(find.text('删除图片'), findsNothing);
       expect(
-        tester.widget<AlertDialog>(find.byType(AlertDialog)).actions,
+        tester.widget<CollabDialog>(find.byType(CollabDialog)).actions,
         hasLength(2),
       );
       await tester.enterText(

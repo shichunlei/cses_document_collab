@@ -8,6 +8,8 @@ import 'package:cses_document_collab/src/editor/collaborative_editor_page.dart';
 import 'package:cses_document_collab/src/model/collab_entity_mention.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/model/collab_user_mention.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -289,6 +291,15 @@ void main() {
           find.text('切换为卡片视图'),
           kind == 'doc' ? findsNothing : findsOneWidget,
         );
+        final deletion = find.byKey(const ValueKey('entity-mention-delete'));
+        final deleteTile = tester.widget<ListTile>(deletion);
+        final colors = CollabModalColors.of(tester.element(deletion));
+        expect((deleteTile.leading! as Icon).icon, LucideIcons.trash2);
+        expect((deleteTile.leading! as Icon).color, colors.danger);
+        expect((deleteTile.title! as Text).style!.color, colors.danger);
+        final open = find.byKey(const ValueKey('entity-mention-open-detail'));
+        expect(tester.getRect(deletion).left, tester.getRect(open).left);
+        expect(tester.getRect(deletion).width, tester.getRect(open).width);
         await tester.tap(find.byKey(const ValueKey('entity-mention-delete')));
         await tester.pumpAndSettle();
         expect(adapter.blocks.first.text, '前😀后');
@@ -302,11 +313,11 @@ void main() {
         await tester.pumpAndSettle();
         expect(
           tester
-              .widget<TextButton>(
+              .widget<ListTile>(
                 find.byKey(const ValueKey('entity-mention-delete')),
               )
-              .onPressed,
-          isNull,
+              .enabled,
+          isFalse,
         );
         final switchView = find.byKey(
           const ValueKey('entity-mention-switch-view'),

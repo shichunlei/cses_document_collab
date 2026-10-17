@@ -1,3 +1,5 @@
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_table.dart';
@@ -15,16 +17,10 @@ Future<void> showCollabTableSheet(
   final expected = collabTableFingerprint(table);
   final hostContext = Navigator.of(context).context;
   await runEditorHeaderAction<void>(hostContext, state, () async {
-    final route = ModalBottomSheetRoute<_TableRequest>(
+    final result = await showCollabBottomSheet<_TableRequest>(
+      context: context,
       builder: (_) => _TableOptions(editor: state, table: table, area: area),
-      isScrollControlled: true,
-      capturedThemes: InheritedTheme.capture(
-        from: context,
-        to: Navigator.of(context).context,
-      ),
     );
-    final result = await Navigator.of(hostContext).push(route);
-    await route.completed;
     if (result == null ||
         !hostContext.mounted ||
         state.isDisposed ||
@@ -188,9 +184,8 @@ class _TableOptionsState extends State<_TableOptions> {
     String label,
     CollabTableAction action, {
     bool enabled = true,
-  }) => OutlinedButton(
-    key: ValueKey('table-action-${action.name}-$label'),
-    onPressed: enabled && _enabled
+  }) {
+    final onPressed = enabled && _enabled
         ? () => Navigator.pop(
             context,
             _TableRequest(
@@ -201,9 +196,69 @@ class _TableOptionsState extends State<_TableOptions> {
               endColumn: _endColumn,
             ),
           )
-        : null,
-    child: Text(label),
-  );
+        : null;
+    if (action == CollabTableAction.merge) {
+      return FilledButton(
+        key: ValueKey('table-action-${action.name}-$label'),
+        onPressed: onPressed,
+        child: Text(label),
+      );
+    }
+    return OutlinedButton(
+      key: ValueKey('table-action-${action.name}-$label'),
+      onPressed: onPressed,
+      child: Text(label),
+    );
+  }
+
+  /// 在借用 [context] 中展示至多3×3的真实单元格摘要，不创建编辑器或修改文档。
+  /// 从当前选中位置起预览，合并范围以浅紫标记，长文字仅在预览中省略。
+  Widget _buildPreview(BuildContext context) {
+    final c = CollabModalColors.of(context);
+    final rows = widget.table.children;
+    final startRow = widget.area.row;
+    final startColumn = widget.area.column;
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(9),
+      child: Table(
+        border: TableBorder.all(color: c.line),
+        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+        children: [
+          for (var r = startRow; r < rows.length && r < startRow + 3; r++)
+            TableRow(
+              children: [
+                for (
+                  var column = startColumn;
+                  column < rows[r].children.length && column < startColumn + 3;
+                  column++
+                )
+                  Container(
+                    color: r <= _endRow && column <= _endColumn
+                        ? c.soft
+                        : c.field,
+                    padding: const EdgeInsets.all(12),
+                    child: Text(
+                      rows[r].children[column].delta?.toPlainText() ??
+                          rows[r].children[column].children.firstOrNull?.delta
+                              ?.toPlainText() ??
+                          '',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: r <= _endRow && column <= _endColumn
+                            ? c.accent
+                            : c.muted,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+        ],
+      ),
+    );
+  }
 
   /// 在借用[context]中构建按内容收缩的合并/拆分面板，长内容仍可在屏幕高度内滚动。
   @override
@@ -211,110 +266,107 @@ class _TableOptionsState extends State<_TableOptions> {
     final a = widget.area;
     final rows = widget.table.children.length;
     final columns = widget.table.children.first.children.length;
-    return SafeArea(
-      top: false,
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.sizeOf(context).height * 0.76,
+    return CollabBottomSheet(
+      title: const Text('单元格设置'),
+      icon: LucideIcons.table2,
+      subtitle: '当前选中：第 ${a.row + 1} 行 · 第 ${a.column + 1} 列',
+      actions: [
+        _button(
+          context,
+          '拆分单元格',
+          CollabTableAction.split,
+          enabled: a.rows * a.columns > 1,
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              title: Text('单元格 ${a.row + 1} 行 · ${a.column + 1} 列'),
-              trailing: IconButton(
-                onPressed: () => Navigator.pop(context),
-                icon: const Icon(Icons.close),
-              ),
-            ),
-            Flexible(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    if (!_enabled)
-                      const Padding(
-                        padding: EdgeInsets.only(bottom: 12),
-                        child: Text('表格或权限已更新，请关闭后重新打开'),
-                      ),
-                    const Text('合并范围（从当前格到）'),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: DropdownButton<int>(
-                            key: const ValueKey('table-merge-end-row'),
-                            value: _endRow,
-                            isExpanded: true,
-                            items: [
-                              for (var r = a.row; r < rows; r++)
-                                DropdownMenuItem(
-                                  value: r,
-                                  child: Text('第${r + 1}行'),
-                                ),
-                            ],
-                            onChanged: !_enabled
-                                ? null
-                                : (value) {
-                                    if (value != null) {
-                                      setState(() => _endRow = value);
-                                    }
-                                  },
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: DropdownButton<int>(
-                            key: const ValueKey('table-merge-end-column'),
-                            value: _endColumn,
-                            isExpanded: true,
-                            items: [
-                              for (var c = a.column; c < columns; c++)
-                                DropdownMenuItem(
-                                  value: c,
-                                  child: Text('第${c + 1}列'),
-                                ),
-                            ],
-                            onChanged: !_enabled
-                                ? null
-                                : (value) {
-                                    if (value != null) {
-                                      setState(() => _endColumn = value);
-                                    }
-                                  },
-                          ),
-                        ),
-                      ],
-                    ),
-                    Wrap(
-                      spacing: 8,
-                      children: [
-                        _button(
-                          context,
-                          '合并所选区域',
-                          CollabTableAction.merge,
-                          enabled:
-                              _endRow > a.row + a.rows - 1 ||
-                              _endColumn > a.column + a.columns - 1,
-                        ),
-                        _button(
-                          context,
-                          '拆分单元格',
-                          CollabTableAction.split,
-                          enabled: a.rows * a.columns > 1,
-                        ),
-                      ],
-                    ),
-                    const Text(
-                      '合并保留全部正文；拆分后正文留在左上格。',
-                      style: TextStyle(fontSize: 12),
-                    ),
-                  ],
+        _button(
+          context,
+          '合并所选区域',
+          CollabTableAction.merge,
+          enabled:
+              _endRow > a.row + a.rows - 1 ||
+              _endColumn > a.column + a.columns - 1,
+        ),
+      ],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (!_enabled)
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 12),
+                  child: Text('表格或权限已更新，请关闭后重新打开'),
                 ),
+              _buildPreview(context),
+              const SizedBox(height: 18),
+              const Text(
+                '合并至',
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
               ),
-            ),
-          ],
-        ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child: CollabModalField(
+                      label: '结束行',
+                      child: DropdownButtonFormField<int>(
+                        key: const ValueKey('table-merge-end-row'),
+                        initialValue: _endRow,
+                        isExpanded: true,
+                        decoration: const InputDecoration(),
+                        items: [
+                          for (var r = a.row; r < rows; r++)
+                            DropdownMenuItem(
+                              value: r,
+                              child: Text('第${r + 1}行'),
+                            ),
+                        ],
+                        onChanged: !_enabled
+                            ? null
+                            : (value) {
+                                if (value != null) {
+                                  setState(() => _endRow = value);
+                                }
+                              },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: CollabModalField(
+                      label: '结束列',
+                      child: DropdownButtonFormField<int>(
+                        key: const ValueKey('table-merge-end-column'),
+                        initialValue: _endColumn,
+                        isExpanded: true,
+                        decoration: const InputDecoration(),
+                        items: [
+                          for (var c = a.column; c < columns; c++)
+                            DropdownMenuItem(
+                              value: c,
+                              child: Text('第${c + 1}列'),
+                            ),
+                        ],
+                        onChanged: !_enabled
+                            ? null
+                            : (value) {
+                                if (value != null) {
+                                  setState(() => _endColumn = value);
+                                }
+                              },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              const Text(
+                '合并保留全部正文；拆分后正文留在左上格。',
+                style: TextStyle(fontSize: 12),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

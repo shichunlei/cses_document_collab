@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/controller/document_metadata_controller.dart';
 import 'package:cses_document_collab/src/model/document_metadata.dart';
@@ -131,7 +132,7 @@ void main() {
         await tester.pumpAndSettle();
         await tester.tap(find.byKey(const ValueKey('editor-import-markdown')));
         await tester.pump(const Duration(milliseconds: 300));
-        expect(find.textContaining('追加到文末'), findsOneWidget);
+        expect(find.textContaining('追加到当前文档末尾'), findsOneWidget);
         await tester.tap(find.text('选择文件'));
         await tester.pump(const Duration(milliseconds: 300));
         expect(adapter.editorState.editable, isFalse);

@@ -2,6 +2,7 @@ import 'package:cses_document_collab/src/editor/collab_card_frame.dart';
 import 'package:cses_document_collab/src/editor/collab_host_mention_ui.dart';
 import 'package:cses_document_collab/src/model/collab_task_card_data.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:flutter/material.dart';
 
 /// 桌面同款任务引用外观，借用数据与事件，不发请求或写正文。
@@ -71,6 +72,7 @@ class CollabTaskCardView extends StatelessWidget {
 
   /// 在借用[context]中绘制统一卡片；首行详情图标贴齐内容右边界，44像素热区不额外留白。
   /// 卡片宽度最多400，窄屏和大字号自动换行。
+  /// 未提供自定义菜单时，默认删除入口使用共用危险操作红色。
   @override
   Widget build(BuildContext context) {
     final detail = data;
@@ -108,7 +110,12 @@ class CollabTaskCardView extends StatelessWidget {
                           PopupMenuItem(
                             value: onDelete!,
                             key: ValueKey('task-card-delete-$blockId'),
-                            child: const Text('删除卡片'),
+                            child: Text(
+                              '删除卡片',
+                              style: TextStyle(
+                                color: CollabModalColors.of(context).danger,
+                              ),
+                            ),
                           ),
                         ],
                       )),

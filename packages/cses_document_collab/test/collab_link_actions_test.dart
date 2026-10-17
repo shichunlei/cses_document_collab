@@ -20,7 +20,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metalink/metalink.dart';
 import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
-
 import 'support/fake_link_web_platform.dart';
 
 /// Returns metadata from fixture HTML for original [url], without external requests.
@@ -578,6 +577,8 @@ void main() {
         for (final option in ['inline', 'embed', 'card']) {
           expect(find.byKey(ValueKey('link-view-$option')), findsOneWidget);
         }
+        await tester.ensureVisible(find.byKey(ValueKey('link-view-$mode')));
+        await tester.pumpAndSettle();
         await tester.tap(find.byKey(ValueKey('link-view-$mode')));
         await tester.pumpAndSettle();
         expect(adapter.blocks.single.blockType, switch (mode) {

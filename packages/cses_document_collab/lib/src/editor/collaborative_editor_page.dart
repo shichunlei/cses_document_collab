@@ -1,3 +1,5 @@
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/controller/collab_controller.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
@@ -40,7 +42,6 @@ import 'package:cses_document_collab/src/model/collab_user_mention.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
 import 'collab_inline_entity_mention.dart';
 import 'collab_table_block.dart';
 import 'collab_table_row_block.dart';
@@ -186,11 +187,41 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
     state.service.keyboardService?.closeKeyboard();
     FocusManager.instance.primaryFocus?.unfocus();
     try {
-      final confirmed = await showDialog<bool>(
+      final confirmed = await showCollabDialog<bool>(
         context: context,
-        builder: (context) => AlertDialog(
+        builder: (context) => CollabDialog(
+          icon: LucideIcons.fileInput,
           title: const Text('导入 Markdown'),
-          content: const Text('选择 UTF-8 编码的 .md 文件（最大 5 MB），内容将追加到文末，可撤销。表格转为文本行，独立网络图片转为图片块，其他图片保留地址；不上传本地资源。'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Text('选择 Markdown 文件，将内容追加到当前文档末尾。'),
+              const SizedBox(height: 14),
+              Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: CollabModalColors.of(context).field,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text('UTF-8 编码 · .md 文件 · 最大 5 MB', style: TextStyle(fontSize: 12)),
+                    SizedBox(height: 8),
+                    Text('导入后可以撤销', style: TextStyle(fontSize: 12)),
+                    SizedBox(height: 8),
+                    Text('不上传文件中的本地图片', style: TextStyle(fontSize: 12)),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 14),
+              Text(
+                '表格转为文本行；独立网络图片转为图片块，其他图片保留地址。',
+                style: TextStyle(fontSize: 11, color: CollabModalColors.of(context).muted),
+              ),
+            ],
+          ),
           actions: [
             TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('取消')),
             FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('选择文件')),

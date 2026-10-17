@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_block_delete.dart';
@@ -364,18 +366,14 @@ Future<void> showEditorSelectionFormats(BuildContext context, EditorState editor
   try {
     await runEditorHeaderAction<void>(context, editorState, () async {
       editorState.selection = range.resolve(editorState);
-      ModalRoute<void>? route;
-      await showModalBottomSheet<void>(
+
+      await showCollabBottomSheet<void>(
         context: context,
-        useSafeArea: true,
-        showDragHandle: true,
         requestFocus: false,
         builder: (sheetContext) {
-          route = ModalRoute.of<void>(sheetContext);
           return _SelectionFormatSheet(editorState: editorState, range: range);
         },
       );
-      await route?.completed;
     }, selectionAfterAction: () => editorState.selection);
   } catch (error, stack) {
     CollabDiagnostics.report('划词格式修改失败', error: error, stackTrace: stack, tag: 'DocCollab');
@@ -436,61 +434,73 @@ class _SelectionFormatSheetState extends State<_SelectionFormatSheet> {
       builder: (context, _) {
         final selection = _range?.resolve(widget.editorState, checkFormatting: false);
         final enabled = widget.editorState.editable && selection != null;
-        return SafeArea(
+        return CollabBottomSheet(
+          key: const ValueKey('editor-selection-format-sheet'),
+          title: const Text('文字格式'),
+          subtitle: '格式修改即时生效',
+          icon: LucideIcons.textCursorInput,
+          actions: [FilledButton(onPressed: () => Navigator.pop(context), child: const Text('完成'))],
           child: MobileToolbarTheme(
-            child: Padding(
-              key: const ValueKey('editor-selection-format-sheet'),
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    children: [
-                      const Expanded(child: Text('文字格式', style: TextStyle(fontSize: 18))),
-                      TextButton(onPressed: () => Navigator.pop(context), child: const Text('完成')),
-                    ],
-                  ),
-                  if (!enabled) const Text('选区或编辑权限已变化，请关闭后重新选择'),
-                  IgnorePointer(
-                    ignoring: !enabled,
-                    child: Listener(
-                      onPointerDown: (_) {
-                        final current = _range?.resolve(widget.editorState, checkFormatting: false);
-                        widget.editorState.selection = widget.editorState.editable ? current : null;
-                        if (current == null) {
-                          setState(() {});
-                        }
-                      },
-                      child: Opacity(
-                        opacity: enabled ? 1 : .35,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SizedBox(
-                              height: 60,
-                              child: _BlockStyleMenu(
-                                editorState: widget.editorState,
-                                onRangeChanged: _acceptLocalRange,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (!enabled) const Text('选区或编辑权限已变化，请关闭后重新选择'),
+                IgnorePointer(
+                  ignoring: !enabled,
+                  child: Listener(
+                    onPointerDown: (_) {
+                      final current = _range?.resolve(widget.editorState, checkFormatting: false);
+                      widget.editorState.selection = widget.editorState.editable ? current : null;
+                      if (current == null) {
+                        setState(() {});
+                      }
+                    },
+                    child: Opacity(
+                      opacity: enabled ? 1 : .35,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          if (_range != null)
+                            Container(
+                              padding: const EdgeInsets.all(15),
+                              margin: const EdgeInsets.only(bottom: 18),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: CollabModalColors.of(context).line),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(
+                                _range!.text,
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(color: CollabModalColors.of(context).accent),
                               ),
                             ),
-                            SizedBox(
-                              height: 60,
-                              child: _InlineStyleMenu(editorState: widget.editorState, inlineStyleController: _styles),
-                            ),
-                            SizedBox(
-                              height: 60,
-                              child: _BlockLayoutMenu(
-                                editorState: widget.editorState,
-                                onRangeChanged: _acceptLocalRange,
-                              ),
-                            ),
-                          ],
-                        ),
+                          _InlineStyleMenu(
+                            editorState: widget.editorState,
+                            inlineStyleController: _styles,
+                            expanded: true,
+                          ),
+                          const SizedBox(height: 20),
+                          const Text('段落布局', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+                          const SizedBox(height: 8),
+                          SizedBox(
+                            height: 60,
+                            child: _BlockLayoutMenu(editorState: widget.editorState, onRangeChanged: _acceptLocalRange),
+                          ),
+                          const SizedBox(height: 12),
+                          const Text('段落类型', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+                          const SizedBox(height: 8),
+                          SizedBox(
+                            height: 60,
+                            child: _BlockStyleMenu(editorState: widget.editorState, onRangeChanged: _acceptLocalRange),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         );
@@ -695,19 +705,12 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
       final completion = changeCollabBlockIndent(state, delta);
       final range = CollabTextRange.capture(state);
       await completion;
-      if (mounted &&
-          identical(widget.editorState, state) &&
-          !state.isDisposed) {
+      if (mounted && identical(widget.editorState, state) && !state.isDisposed) {
         widget.onRangeChanged?.call(range);
         setState(() {});
       }
     } catch (error, stackTrace) {
-      CollabDiagnostics.report(
-        '文档块缩进失败',
-        error: error,
-        stackTrace: stackTrace,
-        tag: 'DocCollab',
-      );
+      CollabDiagnostics.report('文档块缩进失败', error: error, stackTrace: stackTrace, tag: 'DocCollab');
       FlutterError.reportError(
         FlutterErrorDetails(
           exception: error,
@@ -974,12 +977,21 @@ class _BlockStyleAction {
   }
 }
 
+/// 借用编辑器和输入样式控制器，工具栏采用单行模式，弹窗采用展开模式。
 class _InlineStyleMenu extends StatefulWidget {
-  const _InlineStyleMenu({required this.editorState, required this.inlineStyleController});
+  /// [editorState] 和 [inlineStyleController] 为借用对象；[expanded] 默认false，true展开样式和色板。
+  const _InlineStyleMenu({required this.editorState, required this.inlineStyleController, this.expanded = false});
 
+  /// 借用的当前文档编辑器，不由菜单释放。
   final EditorState editorState;
+
+  /// 借用的输入格式控制器，由所属工具栏或面板创建并释放。
   final _InlineStyleController inlineStyleController;
 
+  /// 是否展示完整文字样式及两组色板，状态仍由当前编辑器持有。
+  final bool expanded;
+
+  /// 创建仅管理局部展示状态的组件，不释放借用控制器。
   @override
   createState() => _InlineStyleMenuState();
 }
@@ -1042,6 +1054,8 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
       return const SizedBox.shrink();
     }
 
+    if (widget.expanded) return _buildExpanded(selection);
+
     final colorPicker = _colorPicker;
     if (colorPicker != null) {
       return _buildColorPicker(selection, colorPicker);
@@ -1101,6 +1115,109 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
           },
         );
       },
+    );
+  }
+
+  /// 用借用的 [selection] 构建设计稿中的文字样式与圆形色板，所有写入复用既有命令。
+  /// 上下标保留为第二行，完整九色及自定义色不被预览中的示例色替换。
+  Widget _buildExpanded(Selection selection) {
+    final c = CollabModalColors.of(context);
+    const icons = [
+      LucideIcons.bold,
+      LucideIcons.italic,
+      LucideIcons.underline,
+      LucideIcons.strikethrough,
+      LucideIcons.codeXml,
+      LucideIcons.superscript,
+      LucideIcons.subscript,
+    ];
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const Text('文字样式', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            for (var i = 0; i < 5; i++) ...[
+              if (i > 0) const SizedBox(width: 6),
+              Expanded(child: _expandedStyle(selection, _styles[i], icons[i])),
+            ],
+          ],
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            for (var i = 5; i < _styles.length; i++) ...[
+              if (i > 5) const SizedBox(width: 6),
+              Expanded(child: _expandedStyle(selection, _styles[i], icons[i])),
+            ],
+          ],
+        ),
+        for (final (attribute, label, prefix, target) in [
+          (AppFlowyRichTextKeys.textColor, '文字颜色', 'editor-text-color', 'text'),
+          (AppFlowyRichTextKeys.backgroundColor, '文字背景颜色', 'editor-background-color', 'background'),
+        ]) ...[
+          const SizedBox(height: 20),
+          Row(
+            key: ValueKey('editor-inline-$target-color'),
+            children: [
+              Expanded(
+                child: Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+              ),
+              Icon(
+                LucideIcons.palette,
+                key: ValueKey('editor-inline-$target-color-icon'),
+                size: 16,
+                color: parseCollabBlockColor(_currentColor(selection, attribute).value) ?? c.muted,
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          CollabColorPicker(
+            keyPrefix: prefix,
+            circular: true,
+            textColors: attribute == AppFlowyRichTextKeys.textColor,
+            selection: _currentColor(selection, attribute),
+            resetLabel: attribute == AppFlowyRichTextKeys.textColor ? '默认颜色' : '清除背景色',
+            onSelected: (value) => _applyColor(attribute, collabColorToEditor(value)),
+          ),
+        ],
+      ],
+    );
+  }
+
+  /// 为借用 [selection] 展示 [style] 的选中状态，[icon] 为设计稿线性图标。
+  /// 点击只切换当前有效范围，异常由既有完整格式操作边界处理。
+  Widget _expandedStyle(Selection selection, _InlineStyleAction style, IconData icon) {
+    final c = CollabModalColors.of(context);
+    final selected = _isSelected(selection, style.key);
+    final key = switch (style.key) {
+      csesSuperscriptAttribute => 'editor-inline-superscript',
+      csesSubscriptAttribute => 'editor-inline-subscript',
+      _ => 'editor-inline-${style.key}',
+    };
+    return Semantics(
+      selected: selected,
+      button: true,
+      child: Tooltip(
+        message: style.label,
+        child: InkWell(
+          key: ValueKey(key),
+          borderRadius: BorderRadius.circular(8),
+          onTap: () => unawaited(_toggleStyle(style.key)),
+          child: Container(
+            height: 42,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: selected ? c.soft : c.field,
+              border: Border.all(color: selected ? c.accent : c.line),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(icon, size: 19, color: selected ? c.accent : c.text),
+          ),
+        ),
+      ),
     );
   }
 
@@ -1213,7 +1330,10 @@ enum _InlineColorTarget {
   background,
 }
 
+/// 工具栏与格式面板的局部操作按钮；面板内使用统一边框和选中背景。
 class _PopupIconButton extends StatelessWidget {
+  /// [key] 控制身份；[tooltip] 为名称；[selected] 控制选中态；[icon] 是借用图标。
+  /// [onPressed] 由业务处理完整异步边界；[enabled] 默认true，false禁用点击。
   const _PopupIconButton({
     super.key,
     required this.tooltip,
@@ -1223,25 +1343,55 @@ class _PopupIconButton extends StatelessWidget {
     this.enabled = true,
   });
 
+  /// 必需的操作名称，同时用于触摸提示。
   final String tooltip;
+
+  /// 由业务持有的选中状态，控制背景和边线。
   final bool selected;
+
+  /// 借用的图标或文本，不接管其资源。
   final Widget icon;
+
+  /// 业务操作回调，调用方负责异步错误边界。
   final VoidCallback onPressed;
+
+  /// 是否允许点击，默认true，禁用时保留占位和说明。
   final bool enabled;
 
+  /// 根据借用 [context] 是否位于底部面板内选择对应外观，不修改业务状态。
   @override
   Widget build(BuildContext context) {
+    final inModal = context.findAncestorWidgetOfExactType<CollabBottomSheet>() != null;
+    final colors = CollabModalColors.of(context);
     return Tooltip(
       message: tooltip,
       child: Opacity(
         opacity: enabled ? 1 : 0.35,
         child: Material(
-          color: selected ? const Color(0xFFE6EEFF) : Colors.transparent,
+          color: inModal
+              ? (selected ? colors.soft : colors.field)
+              : selected
+              ? const Color(0xFFE6EEFF)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(10),
           child: InkWell(
             borderRadius: BorderRadius.circular(10),
             onTap: enabled ? onPressed : null,
-            child: SizedBox(width: 48, height: 48, child: Center(child: icon)),
+            child: Container(
+              width: 48,
+              height: inModal ? 44 : 48,
+              alignment: Alignment.center,
+              decoration: inModal
+                  ? BoxDecoration(
+                      border: Border.all(color: selected ? colors.accent : colors.line),
+                      borderRadius: BorderRadius.circular(8),
+                    )
+                  : null,
+              child: IconTheme(
+                data: IconThemeData(size: 19, color: selected ? colors.accent : colors.text),
+                child: icon,
+              ),
+            ),
           ),
         ),
       ),
@@ -1366,16 +1516,12 @@ Future<void> showEditorAddBlockSheet(BuildContext context, EditorState editorSta
   final services = CollabRuntime.services;
   final session = _EditorModalSession(editorState);
   Selection? appliedSelection;
-  ModalRoute<Selection>? route;
+
   try {
-    appliedSelection = await showModalBottomSheet<Selection>(
+    appliedSelection = await showCollabBottomSheet<Selection>(
       context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
       requestFocus: true,
-      backgroundColor: Colors.transparent,
       builder: (context) {
-        route = ModalRoute.of<Selection>(context);
         return _AddBlockSheet(
           editorState: editorState,
           bookmark: session.bookmark!,
@@ -1383,7 +1529,6 @@ Future<void> showEditorAddBlockSheet(BuildContext context, EditorState editorSta
         );
       },
     );
-    await route?.completed;
   } finally {
     await session.finish(
       context.mounted && identical(CollabRuntime.services, services) ? context : null,
@@ -1575,373 +1720,342 @@ class _AddBlockSheet extends StatelessWidget {
   /// 插入前重查原始书签，权限/文档失效时不插入。
   @override
   Widget build(BuildContext context) {
-    final height = math.min(MediaQuery.sizeOf(context).height * 0.72, 640.0);
-    return Container(
+    return CollabBottomSheet(
       key: const ValueKey('editor-add-block-sheet'),
-      height: height,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      clipBehavior: Clip.antiAlias,
+      title: const Text('添加内容'),
+      subtitle: '在当前光标位置插入',
+      icon: LucideIcons.plus,
+      expand: true,
+      closeKey: const ValueKey('editor-add-block-close'),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const _SectionTitle('基础'),
+          const SizedBox(height: 14),
+          // H1-H9 belong to one ordered family, so a horizontal list
+          // preserves their sequence without wrapping H7-H9 onto a
+          // visually separate row. Explicit dimensions also keep the
+          // touch targets stable on narrow phones.
           SizedBox(
-            height: 64,
-            width: double.infinity,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                const Text('添加', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
-                Positioned(
-                  left: 8,
-                  child: IconButton(
-                    key: const ValueKey('editor-add-block-close'),
-                    tooltip: '关闭',
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.close, size: 28),
+            height: 78,
+            child: ListView.separated(
+              key: const ValueKey('editor-add-heading-list'),
+              scrollDirection: Axis.horizontal,
+              scrollCacheExtent: const ScrollCacheExtent.pixels(1000),
+              itemCount: _maxHeadingLevel,
+              separatorBuilder: (_, _) => const SizedBox(width: 8),
+              itemBuilder: (context, index) {
+                final level = index + 1;
+                return SizedBox(
+                  width: 52,
+                  child: _HeadingShortcutTile(
+                    level: level,
+                    onTap: () => _applyAndClose(context, _BlockShortcut.heading(level)),
                   ),
-                ),
-              ],
+                );
+              },
             ),
           ),
-          const Divider(height: 0),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(20, 22, 20, 28),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          const SizedBox(height: 18),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final crossAxisCount = MediaQuery.textScalerOf(context).scale(14) > 22 ? 2 : 3;
+              return GridView.count(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: crossAxisCount,
+                mainAxisSpacing: 12,
+                crossAxisSpacing: 10,
+                childAspectRatio: 1.18,
                 children: [
-                  const _SectionTitle('基础'),
-                  const SizedBox(height: 14),
-                  // H1-H9 belong to one ordered family, so a horizontal list
-                  // preserves their sequence without wrapping H7-H9 onto a
-                  // visually separate row. Explicit dimensions also keep the
-                  // touch targets stable on narrow phones.
-                  SizedBox(
-                    height: 78,
-                    child: ListView.separated(
-                      key: const ValueKey('editor-add-heading-list'),
-                      scrollDirection: Axis.horizontal,
-                      scrollCacheExtent: const ScrollCacheExtent.pixels(1000),
-                      itemCount: _maxHeadingLevel,
-                      separatorBuilder: (_, _) => const SizedBox(width: 8),
-                      itemBuilder: (context, index) {
-                        final level = index + 1;
-                        return SizedBox(
-                          width: 52,
-                          child: _HeadingShortcutTile(
-                            level: level,
-                            onTap: () => _applyAndClose(context, _BlockShortcut.heading(level)),
-                          ),
-                        );
-                      },
-                    ),
+                  _ActionShortcutTile(
+                    key: const ValueKey('editor-shortcut-numbered-list'),
+                    icon: LucideIcons.listOrdered,
+                    label: '有序列表',
+                    onTap: () => _applyAndClose(context, const _BlockShortcut(NumberedListBlockKeys.type)),
                   ),
-                  const SizedBox(height: 18),
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      final crossAxisCount = constraints.maxWidth < 340 ? 4 : 5;
-                      return GridView.count(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        crossAxisCount: crossAxisCount,
-                        mainAxisSpacing: 12,
-                        crossAxisSpacing: 10,
-                        childAspectRatio: 0.8,
-                        children: [
-                          _ActionShortcutTile(
-                            key: const ValueKey('editor-shortcut-numbered-list'),
-                            icon: Icons.format_list_numbered,
-                            label: '有序列表',
-                            onTap: () => _applyAndClose(context, const _BlockShortcut(NumberedListBlockKeys.type)),
-                          ),
-                          _ActionShortcutTile(
-                            key: const ValueKey('editor-shortcut-bulleted-list'),
-                            icon: Icons.format_list_bulleted,
-                            label: '无序列表',
-                            onTap: () => _applyAndClose(context, const _BlockShortcut(BulletedListBlockKeys.type)),
-                          ),
-                          _ActionShortcutTile(
-                            key: const ValueKey('editor-shortcut-todo-list'),
-                            icon: Icons.check_box_outlined,
-                            label: '待办列表',
-                            onTap: () => _applyAndClose(context, const _BlockShortcut(TodoListBlockKeys.type)),
-                          ),
-                          _ActionShortcutTile(
-                            key: const ValueKey('editor-shortcut-code-block'),
-                            icon: Icons.data_object,
-                            label: '代码块',
-                            onTap: () => _applyAndClose(context, const _BlockShortcut(csesCodeBlockType)),
-                          ),
-                          _ActionShortcutTile(
-                            key: const ValueKey('editor-shortcut-quote'),
-                            icon: Icons.format_quote,
-                            label: '引用',
-                            onTap: () => _applyAndClose(context, const _BlockShortcut(QuoteBlockKeys.type)),
-                          ),
-                        ],
-                      );
-                    },
+                  _ActionShortcutTile(
+                    key: const ValueKey('editor-shortcut-bulleted-list'),
+                    icon: LucideIcons.list,
+                    label: '无序列表',
+                    onTap: () => _applyAndClose(context, const _BlockShortcut(BulletedListBlockKeys.type)),
                   ),
-                  const SizedBox(height: 24),
-                  const _SectionTitle('常用'),
-                  const SizedBox(height: 14),
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      final crossAxisCount = constraints.maxWidth < 340 ? 4 : 5;
-                      return GridView.count(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        crossAxisCount: crossAxisCount,
-                        mainAxisSpacing: 14,
-                        crossAxisSpacing: 10,
-                        childAspectRatio: 0.8,
-                        children: [
-                          _ActionShortcutTile(
-                            key: const ValueKey('editor-shortcut-image-block'),
-                            icon: Icons.image_outlined,
-                            label: '图片',
-                            accent: const Color(0xFFF4B400),
-                            tint: const Color(0xFFFFF8E1),
-                            onTap: () => _requestUrlAndClose(context, ImageBlockKeys.type),
-                          ),
-                          _ActionShortcutTile(
-                            key: const ValueKey('editor-shortcut-link-block'),
-                            icon: Icons.link,
-                            label: '链接',
-                            accent: const Color(0xFF2563EB),
-                            tint: const Color(0xFFDBEAFE),
-                            onTap: () => _requestUrlAndClose(context, csesLinkBlockType),
-                          ),
-                          _ActionShortcutTile(
-                            key: const ValueKey('editor-shortcut-video-block'),
-                            icon: Icons.movie_outlined,
-                            label: '视频',
-                            accent: const Color(0xFF7C3AED),
-                            tint: const Color(0xFFEDE9FE),
-                            onTap: () => _requestUrlAndClose(context, csesVideoBlockType),
-                          ),
-                          for (final resource in const [
-                            ('attachment', '附件', Icons.attach_file),
-                            ('audio', '音频', Icons.audiotrack_outlined),
-                            ('bookmark', '网页卡片', Icons.bookmark_border),
-                            ('embed', '网页嵌入', Icons.language),
-                            ('juejin-embed', '掘金', Icons.article_outlined),
-                            ('figma-embed', 'Figma', Icons.design_services_outlined),
-                          ])
-                            _ActionShortcutTile(
-                              key: ValueKey('editor-shortcut-${resource.$1}-block'),
-                              icon: resource.$3,
-                              label: resource.$2,
-                              accent: const Color(0xFF2563EB),
-                              tint: const Color(0xFFEFF6FF),
-                              onTap: () => _requestUrlAndClose(context, resource.$1),
-                            ),
-                          _ActionShortcutTile(
-                            key: const ValueKey('editor-shortcut-table'),
-                            icon: Icons.table_chart_outlined,
-                            label: '表格',
-                            accent: const Color(0xFF14B8A6),
-                            tint: const Color(0xFFCCFBF1),
-                            onTap: () async {
-                              if (!canUseHost()) return;
-                              final captured = bookmark.resolve(editorState);
-                              if (captured == null) return;
-                              final selection = await insertCollabTable(editorState, captured);
-                              if (context.mounted && selection != null) {
-                                Navigator.pop<Selection>(context, selection);
-                              }
-                            },
-                          ),
-                          _ActionShortcutTile(
-                            key: const ValueKey('editor-shortcut-callout'),
-                            icon: Icons.view_stream_outlined,
-                            label: '高亮块',
-                            accent: const Color(0xFFF97316),
-                            tint: const Color(0xFFFFEDD5),
-                            onTap: () async {
-                              final capturedSelection = bookmark.resolve(editorState);
-                              if (capturedSelection == null) return;
-                              final selection = await insertCollabCallout(editorState, capturedSelection);
-                              if (context.mounted && selection != null) {
-                                Navigator.pop<Selection>(context, selection);
-                              }
-                            },
-                          ),
-                          if (CollabRuntime.services.pickMeetingReference != null)
-                            _ActionShortcutTile(
-                              key: const ValueKey('editor-shortcut-meeting'),
-                              icon: Icons.groups_outlined,
-                              label: '会议',
-                              onTap: () async {
-                                final services = CollabRuntime.services;
-                                try {
-                                  final reference = await pickHostMeetingReference(context, editorState);
-                                  if (!context.mounted || reference == null) {
-                                    return;
-                                  }
-                                  final selection = bookmark.resolve(editorState);
-                                  if (selection == null) {
-                                    _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
-                                    return;
-                                  }
-                                  final landing = await insertCollabMeeting(editorState, selection, {
-                                    'meetingId': reference.meetingId,
-                                    'title': reference.title,
-                                    'number': reference.number,
-                                  });
-                                  if (context.mounted && landing != null) {
-                                    Navigator.pop<Selection>(context, landing);
-                                  } else if (context.mounted && editorState.editable) {
-                                    _showToolbarMessage(context, '会议引用无效或插入位置已变化');
-                                  }
-                                } catch (error, stack) {
-                                  services.report('插入会议引用失败', error, stack, 'DocCollab');
-                                  if (context.mounted && identical(services, CollabRuntime.services)) {
-                                    _showToolbarMessage(context, '插入失败，请重试');
-                                  }
-                                }
-                              },
-                            ),
-                          _ActionShortcutTile(
-                            key: const ValueKey('editor-shortcut-formula'),
-                            icon: Icons.functions,
-                            label: '公式',
-                            onTap: () async {
-                              try {
-                                final latex = await showCollabFormulaInput(context, editorState);
-                                if (!context.mounted || latex == null) return;
-                                final selection = bookmark.resolve(editorState);
-                                if (selection == null) {
-                                  _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
-                                  return;
-                                }
-                                final landing = await insertCollabFormula(editorState, selection, latex);
-                                if (context.mounted && landing != null) {
-                                  Navigator.pop<Selection>(context, landing);
-                                }
-                              } catch (error, stack) {
-                                CollabDiagnostics.report('插入公式失败', error: error, stackTrace: stack, tag: 'DocCollab');
-                                if (context.mounted) {
-                                  _showToolbarMessage(context, '插入失败，请重试');
-                                }
-                              }
-                            },
-                          ),
-                          _ActionShortcutTile(
-                            key: const ValueKey('editor-shortcut-mermaid'),
-                            icon: Icons.account_tree_outlined,
-                            label: '代码绘图',
-                            onTap: () async {
-                              try {
-                                final draft = await showCollabMermaidInput(context, editorState);
-                                if (!context.mounted || draft == null) return;
-                                final selection = bookmark.resolve(editorState);
-                                if (selection == null) {
-                                  _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
-                                  return;
-                                }
-                                final landing = await insertCollabMermaid(
-                                  editorState,
-                                  selection,
-                                  draft.source,
-                                  view: draft.view,
-                                );
-                                if (context.mounted && landing != null) {
-                                  Navigator.pop<Selection>(context, landing);
-                                }
-                              } catch (error, stack) {
-                                CollabDiagnostics.report('插入代码绘图失败', error: error, stackTrace: stack, tag: 'DocCollab');
-                                if (context.mounted) {
-                                  _showToolbarMessage(context, '插入失败，请重试');
-                                }
-                              }
-                            },
-                          ),
-                          _ActionShortcutTile(
-                            key: const ValueKey('editor-shortcut-mention-more'),
-                            icon: Icons.alternate_email,
-                            label: '@用户',
-                            onTap: () => _insertMention(context),
-                          ),
-                          _ActionShortcutTile(
-                            key: const ValueKey('editor-shortcut-inline-formula'),
-                            icon: Icons.functions,
-                            label: '行内公式',
-                            onTap: () async {
-                              try {
-                                final latex = await showCollabFormulaInput(context, editorState);
-                                if (!context.mounted || latex == null) return;
-                                final selection = bookmark.resolve(editorState);
-                                if (selection == null) {
-                                  _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
-                                  return;
-                                }
-                                final landing = await insertCollabInlineFormula(editorState, selection, latex);
-                                if (context.mounted && landing != null) {
-                                  Navigator.pop<Selection>(context, landing);
-                                } else if (context.mounted) {
-                                  _showToolbarMessage(context, '请选择同一段正文中的位置，公式内容不能为空');
-                                }
-                              } catch (error, stack) {
-                                CollabDiagnostics.report('插入行内公式失败', error: error, stackTrace: stack, tag: 'DocCollab');
-                                if (context.mounted) {
-                                  _showToolbarMessage(context, '插入失败，请重试');
-                                }
-                              }
-                            },
-                          ),
-                          _ActionShortcutTile(
-                            key: const ValueKey('editor-shortcut-divider'),
-                            icon: Icons.horizontal_rule,
-                            label: '分割线',
-                            accent: const Color(0xFF6366F1),
-                            tint: const Color(0xFFE0E7FF),
-                            onTap: () async {
-                              final selection = bookmark.resolve(editorState);
-                              if (selection == null) {
-                                _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
-                                return;
-                              }
-                              try {
-                                final landing = await insertCollabDivider(editorState, selection);
-                                if (context.mounted && landing != null) {
-                                  Navigator.pop<Selection>(context, landing);
-                                }
-                              } catch (error, stack) {
-                                CollabDiagnostics.report('插入分割线失败', error: error, stackTrace: stack, tag: 'DocCollab');
-                                if (context.mounted) {
-                                  _showToolbarMessage(context, '插入失败，请重试');
-                                }
-                              }
-                            },
-                          ),
-                          const _ActionShortcutTile(
-                            icon: Icons.grid_on_outlined,
-                            label: '电子表格',
-                            accent: Color(0xFF22C55E),
-                            tint: Color(0xFFDCFCE7),
-                          ),
-                          const _ActionShortcutTile(
-                            icon: Icons.dashboard_customize_outlined,
-                            label: '多维表格',
-                            accent: Color(0xFFA855F7),
-                            tint: Color(0xFFF3E8FF),
-                          ),
-                          const _ActionShortcutTile(
-                            icon: Icons.account_tree_outlined,
-                            label: '思维导图',
-                            accent: Color(0xFF06B6D4),
-                            tint: Color(0xFFCFFAFE),
-                          ),
-                        ],
-                      );
-                    },
+                  _ActionShortcutTile(
+                    key: const ValueKey('editor-shortcut-todo-list'),
+                    icon: LucideIcons.squareCheck,
+                    label: '待办列表',
+                    onTap: () => _applyAndClose(context, const _BlockShortcut(TodoListBlockKeys.type)),
+                  ),
+                  _ActionShortcutTile(
+                    key: const ValueKey('editor-shortcut-code-block'),
+                    icon: LucideIcons.code,
+                    label: '代码块',
+                    onTap: () => _applyAndClose(context, const _BlockShortcut(csesCodeBlockType)),
+                  ),
+                  _ActionShortcutTile(
+                    key: const ValueKey('editor-shortcut-quote'),
+                    icon: LucideIcons.quote,
+                    label: '引用',
+                    onTap: () => _applyAndClose(context, const _BlockShortcut(QuoteBlockKeys.type)),
                   ),
                 ],
-              ),
-            ),
+              );
+            },
+          ),
+          const SizedBox(height: 24),
+          const _SectionTitle('常用'),
+          const SizedBox(height: 14),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final crossAxisCount = MediaQuery.textScalerOf(context).scale(14) > 22 ? 2 : 3;
+              return GridView.count(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: crossAxisCount,
+                mainAxisSpacing: 14,
+                crossAxisSpacing: 10,
+                childAspectRatio: 1.18,
+                children: [
+                  _ActionShortcutTile(
+                    key: const ValueKey('editor-shortcut-image-block'),
+                    icon: LucideIcons.image,
+                    label: '图片',
+                    accent: const Color(0xFFF4B400),
+                    tint: const Color(0xFFFFF8E1),
+                    onTap: () => _requestUrlAndClose(context, ImageBlockKeys.type),
+                  ),
+                  _ActionShortcutTile(
+                    key: const ValueKey('editor-shortcut-link-block'),
+                    icon: Icons.link,
+                    label: '链接',
+                    accent: const Color(0xFF2563EB),
+                    tint: const Color(0xFFDBEAFE),
+                    onTap: () => _requestUrlAndClose(context, csesLinkBlockType),
+                  ),
+                  _ActionShortcutTile(
+                    key: const ValueKey('editor-shortcut-video-block'),
+                    icon: Icons.movie_outlined,
+                    label: '视频',
+                    accent: const Color(0xFF7C3AED),
+                    tint: const Color(0xFFEDE9FE),
+                    onTap: () => _requestUrlAndClose(context, csesVideoBlockType),
+                  ),
+                  for (final resource in const [
+                    ('attachment', '附件', LucideIcons.paperclip),
+                    ('audio', '音频', Icons.audiotrack_outlined),
+                    ('bookmark', '网页卡片', Icons.bookmark_border),
+                    ('embed', '网页嵌入', Icons.language),
+                    ('juejin-embed', '掘金', Icons.article_outlined),
+                    ('figma-embed', 'Figma', Icons.design_services_outlined),
+                  ])
+                    _ActionShortcutTile(
+                      key: ValueKey('editor-shortcut-${resource.$1}-block'),
+                      icon: resource.$3,
+                      label: resource.$2,
+                      accent: const Color(0xFF2563EB),
+                      tint: const Color(0xFFEFF6FF),
+                      onTap: () => _requestUrlAndClose(context, resource.$1),
+                    ),
+                  _ActionShortcutTile(
+                    key: const ValueKey('editor-shortcut-table'),
+                    icon: LucideIcons.table2,
+                    label: '表格',
+                    accent: const Color(0xFF14B8A6),
+                    tint: const Color(0xFFCCFBF1),
+                    onTap: () async {
+                      if (!canUseHost()) return;
+                      final captured = bookmark.resolve(editorState);
+                      if (captured == null) return;
+                      final selection = await insertCollabTable(editorState, captured);
+                      if (context.mounted && selection != null) {
+                        Navigator.pop<Selection>(context, selection);
+                      }
+                    },
+                  ),
+                  _ActionShortcutTile(
+                    key: const ValueKey('editor-shortcut-callout'),
+                    icon: Icons.view_stream_outlined,
+                    label: '高亮块',
+                    accent: const Color(0xFFF97316),
+                    tint: const Color(0xFFFFEDD5),
+                    onTap: () async {
+                      final capturedSelection = bookmark.resolve(editorState);
+                      if (capturedSelection == null) return;
+                      final selection = await insertCollabCallout(editorState, capturedSelection);
+                      if (context.mounted && selection != null) {
+                        Navigator.pop<Selection>(context, selection);
+                      }
+                    },
+                  ),
+                  if (CollabRuntime.services.pickMeetingReference != null)
+                    _ActionShortcutTile(
+                      key: const ValueKey('editor-shortcut-meeting'),
+                      icon: Icons.groups_outlined,
+                      label: '会议',
+                      onTap: () async {
+                        final services = CollabRuntime.services;
+                        try {
+                          final reference = await pickHostMeetingReference(context, editorState);
+                          if (!context.mounted || reference == null) {
+                            return;
+                          }
+                          final selection = bookmark.resolve(editorState);
+                          if (selection == null) {
+                            _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
+                            return;
+                          }
+                          final landing = await insertCollabMeeting(editorState, selection, {
+                            'meetingId': reference.meetingId,
+                            'title': reference.title,
+                            'number': reference.number,
+                          });
+                          if (context.mounted && landing != null) {
+                            Navigator.pop<Selection>(context, landing);
+                          } else if (context.mounted && editorState.editable) {
+                            _showToolbarMessage(context, '会议引用无效或插入位置已变化');
+                          }
+                        } catch (error, stack) {
+                          services.report('插入会议引用失败', error, stack, 'DocCollab');
+                          if (context.mounted && identical(services, CollabRuntime.services)) {
+                            _showToolbarMessage(context, '插入失败，请重试');
+                          }
+                        }
+                      },
+                    ),
+                  _ActionShortcutTile(
+                    key: const ValueKey('editor-shortcut-formula'),
+                    icon: LucideIcons.sigma,
+                    label: '公式',
+                    onTap: () async {
+                      try {
+                        final latex = await showCollabFormulaInput(context, editorState);
+                        if (!context.mounted || latex == null) return;
+                        final selection = bookmark.resolve(editorState);
+                        if (selection == null) {
+                          _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
+                          return;
+                        }
+                        final landing = await insertCollabFormula(editorState, selection, latex);
+                        if (context.mounted && landing != null) {
+                          Navigator.pop<Selection>(context, landing);
+                        }
+                      } catch (error, stack) {
+                        CollabDiagnostics.report('插入公式失败', error: error, stackTrace: stack, tag: 'DocCollab');
+                        if (context.mounted) {
+                          _showToolbarMessage(context, '插入失败，请重试');
+                        }
+                      }
+                    },
+                  ),
+                  _ActionShortcutTile(
+                    key: const ValueKey('editor-shortcut-mermaid'),
+                    icon: Icons.account_tree_outlined,
+                    label: '代码绘图',
+                    onTap: () async {
+                      try {
+                        final draft = await showCollabMermaidInput(context, editorState);
+                        if (!context.mounted || draft == null) return;
+                        final selection = bookmark.resolve(editorState);
+                        if (selection == null) {
+                          _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
+                          return;
+                        }
+                        final landing = await insertCollabMermaid(
+                          editorState,
+                          selection,
+                          draft.source,
+                          view: draft.view,
+                        );
+                        if (context.mounted && landing != null) {
+                          Navigator.pop<Selection>(context, landing);
+                        }
+                      } catch (error, stack) {
+                        CollabDiagnostics.report('插入代码绘图失败', error: error, stackTrace: stack, tag: 'DocCollab');
+                        if (context.mounted) {
+                          _showToolbarMessage(context, '插入失败，请重试');
+                        }
+                      }
+                    },
+                  ),
+                  _ActionShortcutTile(
+                    key: const ValueKey('editor-shortcut-mention-more'),
+                    icon: Icons.alternate_email,
+                    label: '@用户',
+                    onTap: () => _insertMention(context),
+                  ),
+                  _ActionShortcutTile(
+                    key: const ValueKey('editor-shortcut-inline-formula'),
+                    icon: LucideIcons.sigma,
+                    label: '行内公式',
+                    onTap: () async {
+                      try {
+                        final latex = await showCollabFormulaInput(context, editorState);
+                        if (!context.mounted || latex == null) return;
+                        final selection = bookmark.resolve(editorState);
+                        if (selection == null) {
+                          _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
+                          return;
+                        }
+                        final landing = await insertCollabInlineFormula(editorState, selection, latex);
+                        if (context.mounted && landing != null) {
+                          Navigator.pop<Selection>(context, landing);
+                        } else if (context.mounted) {
+                          _showToolbarMessage(context, '请选择同一段正文中的位置，公式内容不能为空');
+                        }
+                      } catch (error, stack) {
+                        CollabDiagnostics.report('插入行内公式失败', error: error, stackTrace: stack, tag: 'DocCollab');
+                        if (context.mounted) {
+                          _showToolbarMessage(context, '插入失败，请重试');
+                        }
+                      }
+                    },
+                  ),
+                  _ActionShortcutTile(
+                    key: const ValueKey('editor-shortcut-divider'),
+                    icon: LucideIcons.minus,
+                    label: '分割线',
+                    accent: const Color(0xFF6366F1),
+                    tint: const Color(0xFFE0E7FF),
+                    onTap: () async {
+                      final selection = bookmark.resolve(editorState);
+                      if (selection == null) {
+                        _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
+                        return;
+                      }
+                      try {
+                        final landing = await insertCollabDivider(editorState, selection);
+                        if (context.mounted && landing != null) {
+                          Navigator.pop<Selection>(context, landing);
+                        }
+                      } catch (error, stack) {
+                        CollabDiagnostics.report('插入分割线失败', error: error, stackTrace: stack, tag: 'DocCollab');
+                        if (context.mounted) {
+                          _showToolbarMessage(context, '插入失败，请重试');
+                        }
+                      }
+                    },
+                  ),
+                  const _ActionShortcutTile(
+                    icon: Icons.grid_on_outlined,
+                    label: '电子表格',
+                    accent: Color(0xFF22C55E),
+                    tint: Color(0xFFDCFCE7),
+                  ),
+                  const _ActionShortcutTile(
+                    icon: Icons.dashboard_customize_outlined,
+                    label: '多维表格',
+                    accent: Color(0xFFA855F7),
+                    tint: Color(0xFFF3E8FF),
+                  ),
+                  const _ActionShortcutTile(
+                    icon: Icons.account_tree_outlined,
+                    label: '思维导图',
+                    accent: Color(0xFF06B6D4),
+                    tint: Color(0xFFCFFAFE),
+                  ),
+                ],
+              );
+            },
           ),
         ],
       ),
@@ -2215,47 +2329,65 @@ Node _emptyNode(String blockType, int? headingLevel) {
   );
 }
 
+/// 添加面板的12像素分组标题，不持有状态。
 class _SectionTitle extends StatelessWidget {
+  /// [label] 为分组名称。
   const _SectionTitle(this.label);
 
+  /// 必需的分组名称。
   final String label;
 
+  /// 在借用 [context] 中展示统一分组文字。
   @override
-  Widget build(BuildContext context) {
-    return Text(label, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700));
-  }
+  Widget build(BuildContext context) => Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500));
 }
 
+/// 保留H1～H9入口的紧凑标题选择项。
 class _HeadingShortcutTile extends StatelessWidget {
+  /// [level] 为1～9标题等级；[onTap] 由业务持有并执行插入。
   const _HeadingShortcutTile({required this.level, required this.onTap});
 
+  /// 必需的标题等级，调用方提供1～9。
   final int level;
+
+  /// 必需的借用插入回调，本组件不持有编辑器。
   final VoidCallback onTap;
 
+  /// 根据 [context] 构建带稳定身份的标题入口，不接管业务资源。
   @override
   Widget build(BuildContext context) {
+    final c = CollabModalColors.of(context);
     return InkWell(
       key: ValueKey('editor-shortcut-heading-$level'),
-      borderRadius: BorderRadius.circular(14),
+      borderRadius: BorderRadius.circular(12),
       onTap: onTap,
-      child: Column(
-        spacing: 5,
-        children: [
-          Container(
-            decoration: BoxDecoration(color: const Color(0xFFF6F7F9), borderRadius: BorderRadius.circular(14)),
-            alignment: Alignment.center,
-            width: 52,
-            height: 52,
-            child: Text('H$level', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
-          ),
-          Text('标题 $level', style: const TextStyle(fontSize: 11)),
-        ],
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        decoration: BoxDecoration(
+          color: c.field,
+          border: Border.all(color: c.line),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'H$level',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: c.accent),
+            ),
+            const SizedBox(height: 5),
+            Text('标题 $level', style: const TextStyle(fontSize: 11)),
+          ],
+        ),
       ),
     );
   }
 }
 
+/// 添加面板的统一内容入口，未知能力仍提示尚不支持。
 class _ActionShortcutTile extends StatelessWidget {
+  /// [key] 控制身份；[icon]/[label] 为图标及名称；[onTap] 为 null 时提示尚不支持。
+  /// [accent]/[tint] 保留既有调用签名，视觉统一由弹窗配色决定。
   const _ActionShortcutTile({
     super.key,
     required this.icon,
@@ -2265,42 +2397,49 @@ class _ActionShortcutTile extends StatelessWidget {
     this.tint = const Color(0xFFF6F7F9),
   });
 
+  /// 必需的内容图标，按统一紫色主题展示。
   final IconData icon;
+
+  /// 必需的内容名称，窄屏允许两行。
   final String label;
+
+  /// 可选操作回调，null时显示尚未支持提示。
   final VoidCallback? onTap;
+
+  /// 既有入口提供的图标色；当前统一面板外观使用主题紫色。
   final Color accent;
+
+  /// 既有入口提供的底色；当前统一面板外观使用主题字段底色。
   final Color tint;
 
+  /// 在 [context] 中以整块浅灰背景、紫色图标和12像素标签展示入口。
   @override
   Widget build(BuildContext context) {
-    final enabled = onTap != null;
+    final c = CollabModalColors.of(context);
     return InkWell(
-      borderRadius: BorderRadius.circular(14),
+      borderRadius: BorderRadius.circular(12),
       onTap: onTap ?? () => _showUnsupportedMessage(context, label),
-      child: Column(
-        children: [
-          Expanded(
-            child: Stack(
-              children: [
-                Positioned.fill(
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(color: tint, borderRadius: BorderRadius.circular(14)),
-                    child: Icon(icon, color: enabled ? accent : accent.withValues(alpha: 0.78), size: 28),
-                  ),
-                ),
-                if (!enabled)
-                  const Positioned(right: 5, top: 4, child: Icon(Icons.schedule, size: 12, color: Color(0xFF9CA3AF))),
-              ],
+      child: Container(
+        decoration: BoxDecoration(
+          color: c.field,
+          border: Border.all(color: c.line),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: onTap != null ? c.accent : c.muted, size: 24),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 12, height: 1.3, color: onTap != null ? c.text : c.muted),
             ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            label,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 11, color: enabled ? const Color(0xFF111827) : const Color(0xFF6B7280)),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

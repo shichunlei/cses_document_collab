@@ -1,3 +1,5 @@
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_divider_visual.dart';
 import 'package:cses_document_collab/src/editor/collab_color_picker.dart';
@@ -16,18 +18,13 @@ Future<void> showCollabDividerSettings(BuildContext context, EditorState editor,
   }
   try {
     await runEditorHeaderAction<void>(context, editor, () async {
-      ModalRoute<void>? route;
-      await showModalBottomSheet<void>(
+      await showCollabBottomSheet<void>(
         context: context,
         useRootNavigator: false,
-        isScrollControlled: true,
-        showDragHandle: true,
         builder: (context) {
-          route = ModalRoute.of<void>(context);
           return _DividerSettings(editor: editor, id: id);
         },
       );
-      await route?.completed;
     });
   } catch (error, stack) {
     CollabDiagnostics.report('分割线设置失败', error: error, stackTrace: stack, tag: 'DocCollab');
@@ -213,6 +210,7 @@ class _DividerSettingsState extends State<_DividerSettings> {
   /// 样式页以选中背景区分，不显示挤占标签宽度的勾选图标；三页名称始终完整单行。
   /// 贴纸胶带页隐藏不影响预设图案的线色控件；切换页不清除已有颜色属性。
   /// 清除与预设颜色使用一致的选中、可用状态和布局，重复选择不提交事务。
+  /// 删除入口使用共用危险操作红色，禁用时保留按钮主题的不可用状态。
   @override
   Widget build(BuildContext context) {
     final divider = _divider;
@@ -227,150 +225,124 @@ class _DividerSettingsState extends State<_DividerSettings> {
               : !e.key.startsWith('tape-') && !e.key.startsWith('edge-'),
         )
         .toList();
-    return SafeArea(
-      top: false,
-      child: SizedBox(
-        key: const ValueKey('collab-divider-settings'),
-        height: mathHeight(context),
+    return CollabBottomSheet(
+      key: const ValueKey('collab-divider-settings'),
+      title: const Text('分割线'),
+      subtitle: '外观修改即时生效',
+      icon: LucideIcons.minus,
+      canClose: !_saving,
+      expand: true,
+      scrollController: _contentScrollController,
+      scrollKey: const ValueKey('divider-settings-content'),
+      header: Padding(
+        key: const ValueKey('divider-settings-header'),
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(
+              key: const ValueKey('divider-settings-preview'),
+              height: _previewHeight,
+              child: Center(
+                child: divider == null
+                    ? const Text('分割线已删除')
+                    : Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: CollabDividerVisual(divider: current),
+                      ),
+              ),
+            ),
+            CollabModalSegments<int>(
+              values: const {0: '线型', 1: '贴纸胶带', 2: '花边'},
+              selected: _tab,
+              onSelected: (value) => _selectStyleTab({value}),
+            ),
+          ],
+        ),
+      ),
+      leadingAction: TextButton.icon(
+        key: const ValueKey('divider-delete'),
+        style: TextButton.styleFrom(foregroundColor: CollabModalColors.of(context).danger),
+        onPressed: enabled ? _delete : null,
+        icon: const Icon(Icons.delete_outline),
+        label: const Text('删除分割线'),
+      ),
+      actions: [TextButton(onPressed: _saving ? null : () => Navigator.pop(context), child: const Text('完成'))],
+      child: KeyedSubtree(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Padding(
-              key: const ValueKey('divider-settings-header'),
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    children: [
-                      const Expanded(
-                        child: Text('分割线', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-                      ),
-                      IconButton(tooltip: '关闭', onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close)),
-                    ],
-                  ),
-                  SizedBox(
-                    key: const ValueKey('divider-settings-preview'),
-                    height: _previewHeight,
-                    child: Center(
-                      child: divider == null
-                          ? const Text('分割线已删除')
-                          : Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              child: CollabDividerVisual(divider: current),
-                            ),
-                    ),
-                  ),
-                  SegmentedButton<int>(
-                    showSelectedIcon: false,
-                    segments: const [
-                      ButtonSegment(value: 0, label: _DividerStyleTabLabel('线型')),
-                      ButtonSegment(value: 1, label: _DividerStyleTabLabel('贴纸胶带')),
-                      ButtonSegment(value: 2, label: _DividerStyleTabLabel('花边')),
-                    ],
-                    selected: {_tab},
-                    onSelectionChanged: _selectStyleTab,
-                  ),
-                  const SizedBox(height: 12),
-                ],
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: styles.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisExtent: 56,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 8,
               ),
+              itemBuilder: (context, index) {
+                final entry = styles[index];
+                return Semantics(
+                  label: entry.value,
+                  selected: current.style == entry.key,
+                  button: true,
+                  child: InkWell(
+                    key: ValueKey('divider-style-${entry.key}'),
+                    onTap: enabled ? () async => await _change('style', entry.key) : null,
+                    borderRadius: BorderRadius.circular(8),
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: current.style == entry.key
+                              ? Theme.of(context).colorScheme.primary
+                              : Theme.of(context).dividerColor,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: CollabDividerVisual(
+                        divider: CollabDivider({'style': entry.key, 'lineColor': current.lineColor}),
+                        preview: true,
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
-            Expanded(
-              child: SingleChildScrollView(
-                key: const ValueKey('divider-settings-content'),
-                controller: _contentScrollController,
-                padding: EdgeInsets.fromLTRB(20, 0, 20, 20 + MediaQuery.viewInsetsOf(context).bottom),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: styles.length,
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisExtent: 56,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 8,
-                      ),
-                      itemBuilder: (context, index) {
-                        final entry = styles[index];
-                        return Semantics(
-                          label: entry.value,
-                          selected: current.style == entry.key,
-                          button: true,
-                          child: InkWell(
-                            key: ValueKey('divider-style-${entry.key}'),
-                            onTap: enabled ? () async => await _change('style', entry.key) : null,
-                            borderRadius: BorderRadius.circular(8),
-                            child: Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: current.style == entry.key
-                                      ? Theme.of(context).colorScheme.primary
-                                      : Theme.of(context).dividerColor,
-                                ),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: CollabDividerVisual(
-                                divider: CollabDivider({'style': entry.key, 'lineColor': current.lineColor}),
-                                preview: true,
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    if (_tab != 1) ...[
-                      const SizedBox(height: 16),
-                      const Text('线色'),
-                      CollabColorPicker(
-                        keyPrefix: 'divider-color',
-                        resetKey: const ValueKey('divider-color-clear'),
-                        textColors: true,
-                        enabled: enabled,
-                        selection: CollabColorSelection(current.lineColor),
-                        onSelected: (value) => _change('lineColor', value ?? ''),
-                      ),
-                    ],
-                    const SizedBox(height: 12),
-                    const Text('长度'),
-                    _options('length', current.length, const {
-                      'short': '短',
-                      'medium': '中',
-                      'long': '长',
-                      'full': '通栏',
-                    }, enabled),
-                    const SizedBox(height: 12),
-                    const Text('粗细'),
-                    _options('thickness', current.thickness, const {
-                      'thin': '细',
-                      'regular': '常规',
-                      'thick': '粗',
-                    }, enabled),
-                    const SizedBox(height: 12),
-                    Text('透明度 ${((_opacityDraft ?? current.opacity) * 100).round()}%'),
-                    Slider(
-                      key: const ValueKey('divider-opacity'),
-                      value: _opacityDraft ?? current.opacity,
-                      min: .1,
-                      max: 1,
-                      divisions: 90,
-                      onChanged: enabled ? (value) => setState(() => _opacityDraft = value) : null,
-                      onChangeEnd: enabled ? (value) async => await _change('opacity', value) : null,
-                    ),
-                    if (_error != null) Text(_error!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
-                    TextButton.icon(
-                      key: const ValueKey('divider-delete'),
-                      onPressed: enabled ? _delete : null,
-                      icon: const Icon(Icons.delete_outline),
-                      label: const Text('删除分割线'),
-                    ),
-                  ],
-                ),
+            if (_tab != 1) ...[
+              const SizedBox(height: 16),
+              const Text('线色'),
+              CollabColorPicker(
+                circular: true,
+                keyPrefix: 'divider-color',
+                resetKey: const ValueKey('divider-color-clear'),
+                textColors: true,
+                enabled: enabled,
+                selection: CollabColorSelection(current.lineColor),
+                onSelected: (value) => _change('lineColor', value ?? ''),
               ),
+            ],
+            const SizedBox(height: 12),
+            const Text('长度'),
+            _options('length', current.length, const {'short': '短', 'medium': '中', 'long': '长', 'full': '通栏'}, enabled),
+            const SizedBox(height: 12),
+            const Text('粗细'),
+            _options('thickness', current.thickness, const {'thin': '细', 'regular': '常规', 'thick': '粗'}, enabled),
+            const SizedBox(height: 12),
+            Text('透明度 ${((_opacityDraft ?? current.opacity) * 100).round()}%'),
+            Slider(
+              key: const ValueKey('divider-opacity'),
+              value: _opacityDraft ?? current.opacity,
+              min: .1,
+              max: 1,
+              divisions: 90,
+              onChanged: enabled ? (value) => setState(() => _opacityDraft = value) : null,
+              onChangeEnd: enabled ? (value) async => await _change('opacity', value) : null,
             ),
+            if (_error != null) Text(_error!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
           ],
         ),
       ),
@@ -379,34 +351,10 @@ class _DividerSettingsState extends State<_DividerSettings> {
 
   /// [property] 控件按 [selected] 展示，[options] 提供键/标签；[enabled] 控制写入。
   Widget _options(String property, String selected, Map<String, String> options, bool enabled) =>
-      SegmentedButton<String>(
-        segments: [
-          for (final e in options.entries)
-            ButtonSegment(
-              value: e.key,
-              label: Text(e.value, key: ValueKey('divider-$property-${e.key}')),
-            ),
-        ],
-        selected: {selected},
-        onSelectionChanged: enabled ? (values) async => await _change(property, values.single) : null,
+      CollabModalSegments<String>(
+        values: options,
+        selected: selected,
+        itemKeys: {for (final entry in options.entries) entry.key: ValueKey('divider-$property-${entry.key}')},
+        onSelected: enabled ? (value) async => await _change(property, value) : null,
       );
-
-  /// [context] 的可用屏幕高度，面板最多占 80% 且不超过 720 逻辑像素。
-  double mathHeight(BuildContext context) => (MediaQuery.sizeOf(context).height * .8).clamp(0, 720);
-}
-
-/// 分割线样式页的完整单行标签；窄屏或大字号超出可用宽度时仅缩小显示，不截断。
-/// 不持有状态，选中背景和无障碍选中语义由外层 SegmentedButton 提供。
-class _DividerStyleTabLabel extends StatelessWidget {
-  /// [label] 是该样式页的完整名称，按当前文字样式显示且不主动放大。
-  const _DividerStyleTabLabel(this.label);
-
-  /// 必需的完整页名，不包含图标或额外状态。
-  final String label;
-
-  /// 借用 [context] 的文字样式和缩放设置，返回按可用空间缩小的单行标签。
-  /// 不修改系统文字缩放或标签语义；该 Widget 无需释放资源。
-  @override
-  Widget build(BuildContext context) =>
-      FittedBox(fit: BoxFit.scaleDown, child: Text(label, maxLines: 1, softWrap: false));
 }

@@ -1,3 +1,5 @@
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'collab_mention_tap_handler.dart';
 import 'package:cses_document_collab/src/model/collab_entity_mention.dart';
@@ -125,6 +127,7 @@ class _EntityMentionState extends State<CollabInlineEntityMention> {
 
   /// 为借用[state]中的原子展示详情/视图/删除操作，退场后复核目标与会话。
   /// 只有打开详情调用onMentionTap；文档不提供视图切换，会议/任务转换及删除不调用宿主。
+  /// 删除使用与块菜单一致的红色整行操作；预览/只读时保持禁用，不修改实体业务数据。
   Future<void> _showActions(EditorState state) async {
     final target = CollabEntityMentionTarget.capture(
       widget.node,
@@ -137,83 +140,71 @@ class _EntityMentionState extends State<CollabInlineEntityMention> {
         'task' => '任务',
         _ => '文档',
       };
-      final route = ModalBottomSheetRoute<_EntityAction>(
-        builder: (sheetContext) => SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          target.name.isEmpty ? '未命名$kind' : target.name,
-                          style: Theme.of(sheetContext).textTheme.titleMedium,
-                        ),
-                      ),
-                      IconButton(
-                        tooltip: '关闭',
-                        onPressed: () => Navigator.of(sheetContext).pop(),
-                        icon: const Icon(Icons.close),
-                      ),
-                    ],
-                  ),
-                  ListTile(
-                    key: const ValueKey('entity-mention-open-detail'),
-                    leading: const Icon(Icons.open_in_new),
-                    title: Text('打开$kind详情'),
-                    enabled: services.onMentionTap != null,
-                    onTap: () =>
-                        Navigator.of(sheetContext).pop(_EntityAction.detail),
-                  ),
-                  ListenableBuilder(
-                    listenable: state.editableNotifier,
-                    builder: (context, _) => Column(
-                      children: [
-                        if (const {
-                          'meeting',
-                          'task',
-                        }.contains(target.entityType))
-                          ListTile(
-                            key: const ValueKey('entity-mention-switch-view'),
-                            leading: const Icon(Icons.view_agenda_outlined),
-                            title: const Text('切换为卡片视图'),
-                            subtitle: const Text('当前：链接视图'),
-                            enabled: state.editable,
-                            onTap: () => Navigator.of(
-                              sheetContext,
-                            ).pop(_EntityAction.switchView),
-                          ),
-                        TextButton.icon(
-                          key: const ValueKey('entity-mention-delete'),
-                          onPressed: state.editable
-                              ? () => Navigator.of(
-                                  sheetContext,
-                                ).pop(_EntityAction.delete)
-                              : null,
-                          icon: const Icon(Icons.delete_outline),
-                          label: const Text('删除提及'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+      final action = await showCollabBottomSheet<_EntityAction>(
+        context: context,
+        builder: (sheetContext) => CollabBottomSheet(
+          title: Text(target.name.isEmpty ? '未命名$kind' : target.name),
+          icon: switch (target.entityType) {
+            'meeting' => LucideIcons.video,
+            'task' => LucideIcons.squareCheck,
+            _ => LucideIcons.fileText,
+          },
+          subtitle: '$kind引用 · 当前为链接视图',
+          contentPadding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                key: const ValueKey('entity-mention-open-detail'),
+                leading: const Icon(LucideIcons.externalLink),
+                title: Text('打开$kind详情'),
+                enabled: services.onMentionTap != null,
+                onTap: () =>
+                    Navigator.of(sheetContext).pop(_EntityAction.detail),
               ),
-            ),
+              ListenableBuilder(
+                listenable: state.editableNotifier,
+                builder: (context, _) => Column(
+                  children: [
+                    if (const {'meeting', 'task'}.contains(target.entityType))
+                      ListTile(
+                        key: const ValueKey('entity-mention-switch-view'),
+                        leading: const Icon(LucideIcons.panelTop),
+                        title: const Text('切换为卡片视图'),
+                        subtitle: const Text('当前：链接视图'),
+                        enabled: state.editable,
+                        onTap: () => Navigator.of(
+                          sheetContext,
+                        ).pop(_EntityAction.switchView),
+                      ),
+                    ListTile(
+                      key: const ValueKey('entity-mention-delete'),
+                      enabled: state.editable,
+                      leading: Icon(
+                        LucideIcons.trash2,
+                        color: state.editable
+                            ? CollabModalColors.of(context).danger
+                            : null,
+                      ),
+                      title: Text(
+                        '删除提及',
+                        style: state.editable
+                            ? TextStyle(
+                                color: CollabModalColors.of(context).danger,
+                              )
+                            : null,
+                      ),
+                      onTap: () =>
+                          Navigator.of(sheetContext).pop(_EntityAction.delete),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
-        isScrollControlled: true,
-        useSafeArea: true,
-        modalBarrierColor: Colors.black54,
-        capturedThemes: InheritedTheme.capture(
-          from: context,
-          to: Navigator.of(context).context,
-        ),
       );
-      final action = await Navigator.of(context).push(route);
-      await route.completed;
+
       if (!mounted ||
           state.isDisposed ||
           !identical(CollabRuntime.services, services)) {

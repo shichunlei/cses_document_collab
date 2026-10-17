@@ -7,7 +7,9 @@ import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_mermaid.dart';
 import 'package:cses_document_collab/src/model/collab_mermaid_options.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 
 /// 为正式 mermaid 注册可选中的容器组件；点击打开独立源码子块的编辑面板。
@@ -53,14 +55,53 @@ class _MermaidBlockState extends State<_MermaidBlock> with SelectableMixin {
   /// 内部视觉边界，随本 Widget 释放，不绑定编辑输入。
   final _bodyKey = GlobalKey();
 
-  /// 按稳定 [id] 将借用 [editor] 的共享视图切换为 [view]。
+  /// 从打开菜单到视图提交结束拒绝重复打开；状态归当前块组件持有。
+  bool _viewMenuOpen = false;
+
+  /// 在借用 [anchorContext] 对应按钮下打开220逻辑像素的共用菜单。
+  /// [currentView] 为当前选中快照，按稳定 [id] 更新借用 [editor] 的共享视图。
   /// 菜单退场后重新核对权限和目标，关闭输入并等待独立事务，失败提示且不上抛未处理异步错误。
   Future<void> _switchView(
+    BuildContext anchorContext,
     EditorState editor,
     String id,
-    CollabMermaidView view,
+    CollabMermaidView currentView,
   ) async {
+    if (_viewMenuOpen || !mounted || editor.isDisposed || !editor.editable) {
+      return;
+    }
+    _viewMenuOpen = true;
     try {
+      final view = await showCollabPopover<CollabMermaidView>(
+        context: anchorContext,
+        title: '切换视图',
+        width: 220,
+        builder: (menuContext) => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final mode in CollabMermaidView.values)
+              Semantics(
+                selected: mode == currentView,
+                child: ListTile(
+                  key: ValueKey('mermaid-view-option-${mode.name}'),
+                  leading: Icon(switch (mode) {
+                    CollabMermaidView.text => LucideIcons.code,
+                    CollabMermaidView.graph => LucideIcons.panelTop,
+                    CollabMermaidView.both => LucideIcons.panelsTopLeft,
+                  }, size: 19),
+                  title: Text(mode.label),
+                  trailing: mode == currentView
+                      ? const Icon(LucideIcons.check, size: 16)
+                      : null,
+                  onTap: () => Navigator.pop(menuContext, mode),
+                ),
+              ),
+          ],
+        ),
+      );
+      if (view == null || !mounted || editor.isDisposed || !editor.editable) {
+        return;
+      }
       await runEditorHeaderAction<void>(context, editor, () async {
         await changeCollabMermaidView(editor, id, view);
       });
@@ -76,10 +117,13 @@ class _MermaidBlockState extends State<_MermaidBlock> with SelectableMixin {
           context,
         )?.showSnackBar(const SnackBar(content: Text('切换视图失败，请重试')));
       }
+    } finally {
+      _viewMenuOpen = false;
     }
   }
 
   /// 在借用 [context] 内按共享 mode 展示源码、图形或两者，监听远端属性和源码更新。
+  /// 视图入口使用与编号菜单一致的锚点浮层、紧凑列表及当前选项勾选。
   @override
   Widget build(BuildContext context) {
     final editor = context.read<EditorState>();
@@ -104,18 +148,15 @@ class _MermaidBlockState extends State<_MermaidBlock> with SelectableMixin {
                   child: SizedBox(
                     width: 44,
                     height: 44,
-                    child: PopupMenuButton<CollabMermaidView>(
-                      key: ValueKey('mermaid-view-$id'),
-                      tooltip: '切换视图：${view.label}',
-                      initialValue: view,
-                      onSelected: (value) async {
-                        await _switchView(editor, id, value);
-                      },
-                      icon: const Icon(Icons.swap_horiz, size: 18),
-                      itemBuilder: (_) => [
-                        for (final mode in CollabMermaidView.values)
-                          PopupMenuItem(value: mode, child: Text(mode.label)),
-                      ],
+                    child: Builder(
+                      builder: (anchorContext) => IconButton(
+                        key: ValueKey('mermaid-view-$id'),
+                        tooltip: '切换视图：${view.label}',
+                        onPressed: () async {
+                          await _switchView(anchorContext, editor, id, view);
+                        },
+                        icon: const Icon(Icons.swap_horiz, size: 18),
+                      ),
                     ),
                   ),
                 )

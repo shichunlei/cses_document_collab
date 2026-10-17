@@ -1,3 +1,5 @@
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_formula_visual.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
@@ -50,14 +52,11 @@ Future<String?> showCollabFormulaInput(
       (id != null && inlineTarget != null)) {
     return null;
   }
-  ModalRoute<String>? route;
-  final result = await showModalBottomSheet<String>(
+
+  final result = await showCollabBottomSheet<String>(
     context: context,
-    isScrollControlled: true,
     useRootNavigator: false,
-    showDragHandle: true,
     builder: (context) {
-      route = ModalRoute.of<String>(context);
       return _FormulaSheet(
         editor: editor,
         id: id,
@@ -66,7 +65,7 @@ Future<String?> showCollabFormulaInput(
       );
     },
   );
-  await route?.completed;
+
   return result;
 }
 
@@ -303,118 +302,91 @@ class _FormulaSheetState extends State<_FormulaSheet> {
     super.dispose();
   }
 
-  /// 在借用 [context] 中构建适应键盘、窄屏与大字的滚动面板，关闭入口保持可见。
+  /// 在借用 [context] 中显示独立滚动的公式草稿/预览，操作区始终可达。
+  /// 保存期间禁止关闭；失效、冲突和长度限制保持原有提交门禁。
   @override
   Widget build(BuildContext context) {
     final tooLong = _input.text.length > collabFormulaMaxLength;
-    return SafeArea(
-      child: Padding(
-        key: const ValueKey('collab-formula-sheet'),
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.viewInsetsOf(context).bottom,
+    final colors = CollabModalColors.of(context);
+    return CollabBottomSheet(
+      key: const ValueKey('collab-formula-sheet'),
+      title: Text(widget.inlineTarget == null ? '数学公式' : '行内公式'),
+      subtitle: '编辑 LaTeX，实时预览',
+      icon: LucideIcons.sigma,
+      canClose: !_saving,
+      closeKey: const ValueKey('formula-close'),
+      leadingAction: _editing
+          ? TextButton(
+              key: const ValueKey('formula-delete'),
+              style: TextButton.styleFrom(foregroundColor: colors.danger),
+              onPressed: _enabled && (widget.inlineTarget == null || !_conflict)
+                  ? _delete
+                  : null,
+              child: const Text('删除公式'),
+            )
+          : null,
+      actions: [
+        TextButton(
+          onPressed: _saving ? null : () => Navigator.pop(context),
+          child: const Text('取消'),
         ),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.sizeOf(context).height * .78,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                children: [
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Text(
-                      widget.inlineTarget == null ? '数学公式' : '行内公式',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    key: const ValueKey('formula-close'),
-                    tooltip: '关闭',
-                    onPressed: _saving ? null : () => Navigator.pop(context),
-                    icon: const Icon(Icons.close),
-                  ),
-                ],
-              ),
-              Flexible(
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        TextField(
-                          key: const ValueKey('formula-input'),
-                          controller: _input,
-                          enabled: _enabled,
-                          minLines: 3,
-                          maxLines: 6,
-                          autocorrect: false,
-                          enableSuggestions: false,
-                          keyboardType: TextInputType.multiline,
-                          decoration: const InputDecoration(
-                            labelText: 'LaTeX',
-                            hintText: r'\frac{a}{b}',
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        const Text('预览'),
-                        CollabFormulaVisual(latex: _input.text),
-                        if (tooLong)
-                          const Text(
-                            '公式不能超过 20000 个字符',
-                            style: TextStyle(color: Colors.red),
-                          ),
-                        if (!_enabledAfterSave)
-                          Text(
-                            widget.inlineTarget == null
-                                ? '公式已删除或当前不可编辑'
-                                : '公式已删除、位置变化或当前不可编辑',
-                          ),
-                        if (_conflict) ...[
-                          const Text('公式已由其他设备修改，请重新加载后编辑'),
-                          TextButton(
-                            key: const ValueKey('formula-reload'),
-                            onPressed: _saving ? null : () => setState(_load),
-                            child: const Text('重新加载'),
-                          ),
-                        ],
-                        if (_error != null)
-                          Text(
-                            _error!,
-                            style: const TextStyle(color: Colors.red),
-                          ),
-                        FilledButton(
-                          key: const ValueKey('formula-save'),
-                          onPressed: _enabled && !_conflict && !tooLong
-                              ? _save
-                              : null,
-                          child: Text(_saving ? '保存中…' : '保存'),
-                        ),
-                        if (_editing)
-                          TextButton(
-                            key: const ValueKey('formula-delete'),
-                            onPressed:
-                                _enabled &&
-                                    (widget.inlineTarget == null || !_conflict)
-                                ? _delete
-                                : null,
-                            child: const Text('删除公式'),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+        FilledButton(
+          key: const ValueKey('formula-save'),
+          onPressed: _enabled && !_conflict && !tooLong ? _save : null,
+          child: Text(_saving ? '保存中…' : '保存'),
         ),
+      ],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          CollabModalField(
+            label: 'LaTeX 源码',
+            child: TextField(
+              key: const ValueKey('formula-input'),
+              controller: _input,
+              enabled: _enabled,
+              minLines: 3,
+              maxLines: 6,
+              autocorrect: false,
+              enableSuggestions: false,
+              keyboardType: TextInputType.multiline,
+              decoration: const InputDecoration(hintText: r'\frac{a}{b}'),
+            ),
+          ),
+          const Text(
+            '公式预览',
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+          ),
+          const SizedBox(height: 10),
+          Container(
+            padding: const EdgeInsets.all(25),
+            decoration: BoxDecoration(
+              color: colors.field,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: CollabFormulaVisual(latex: _input.text),
+          ),
+          const SizedBox(height: 12),
+          if (tooLong)
+            Text('公式不能超过 20000 个字符', style: TextStyle(color: colors.danger)),
+          if (!_enabledAfterSave)
+            Text(
+              widget.inlineTarget == null
+                  ? '公式已删除或当前不可编辑'
+                  : '公式已删除、位置变化或当前不可编辑',
+            ),
+          if (_conflict) ...[
+            const Text('公式已由其他设备修改，请重新加载后编辑'),
+            TextButton(
+              key: const ValueKey('formula-reload'),
+              onPressed: _saving ? null : () => setState(_load),
+              child: const Text('重新加载'),
+            ),
+          ],
+          if (_error != null)
+            Text(_error!, style: TextStyle(color: colors.danger)),
+        ],
       ),
     );
   }

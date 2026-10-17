@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui' as ui;
 
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/controller/collab_controller.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
@@ -339,12 +340,14 @@ void main() {
           final button = tester.widget<IconButton>(
             find.descendant(of: option.$1, matching: find.byType(IconButton)),
           );
-          final side = button.style!.side!.resolve({});
+          final circle = button.icon as Container;
+          final decoration = circle.decoration! as BoxDecoration;
+          expect(decoration.shape, BoxShape.circle);
           expect(
-            side!.color,
+            decoration.border?.top.color,
             option.$2
                 ? Theme.of(tester.element(option.$1)).colorScheme.primary
-                : Colors.transparent,
+                : isNull,
           );
           expect(tester.getSize(option.$1).width, greaterThanOrEqualTo(44));
           expect(button.onPressed, enabled ? isNotNull : isNull);
@@ -435,7 +438,7 @@ void main() {
         await tester.pumpAndSettle();
         await tester.tap(find.byKey(const ValueKey('collab-divider-line')));
         await tester.pumpAndSettle();
-        final tabs = find.byType(SegmentedButton<int>);
+        final tabs = find.byType(CollabModalSegments<int>);
         final initialHeight = tester.getSize(tabs).height;
         final header = find.byKey(const ValueKey('divider-settings-header'));
         final preview = find.byKey(const ValueKey('divider-settings-preview'));
@@ -556,11 +559,14 @@ void main() {
           final deleteCenter = tester.getCenter(
             find.byKey(const ValueKey('divider-delete')),
           );
-          final viewport = tester.getRect(content);
+          final viewport = tester.getRect(
+            find.byKey(const ValueKey('collab-divider-settings')),
+          );
           expect(
             viewport.contains(deleteCenter),
             isTrue,
-            reason: 'the last setting remains reachable',
+            reason:
+                'the fixed delete action remains reachable below the settings',
           );
           expect(tester.takeException(), isNull);
         }

@@ -1,3 +1,6 @@
+import 'package:cses_document_collab/src/editor/collab_cached_image.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
@@ -145,7 +148,7 @@ Future<void> showCollabImageEditor(
   if (!editorState.editable) return;
   final original = _snapshot(node);
   try {
-    final result = await showDialog<CollabEditorBlock>(
+    final result = await showCollabDialog<CollabEditorBlock>(
       context: context,
       builder: (_) =>
           _CollabImageEditDialog(original: original, captionOnly: captionOnly),
@@ -230,71 +233,90 @@ class _CollabImageEditDialogState extends State<_CollabImageEditDialog> {
 
   /// 使用 [context] 渲染表单；确认只返回投影，外层执行当前文档事务。
   @override
-  Widget build(BuildContext context) => AlertDialog(
+  Widget build(BuildContext context) => CollabDialog(
     key: const ValueKey('collab-image-edit-dialog'),
+    icon: widget.captionOnly ? LucideIcons.captions : LucideIcons.image,
     title: Text(
       widget.captionOnly ? (image.captions.isEmpty ? '添加题注' : '编辑题注') : '编辑图片',
     ),
-    content: SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (!widget.captionOnly) ...[
-            TextField(
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (const {
+          'http',
+          'https',
+        }.contains(Uri.tryParse(original.text)?.scheme))
+          Padding(
+            padding: const EdgeInsets.only(bottom: 18),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(9),
+              child: SizedBox(
+                height: 116,
+                child: CollabCachedImage(
+                  url: original.text,
+                  fit: BoxFit.cover,
+                  loading: const Center(child: Icon(LucideIcons.image)),
+                  failure: const Center(child: Icon(LucideIcons.imageOff)),
+                ),
+              ),
+            ),
+          ),
+        if (!widget.captionOnly) ...[
+          CollabModalField(
+            label: '图片链接',
+            child: TextField(
               key: const ValueKey('collab-image-url-input'),
               controller: url,
-              decoration: const InputDecoration(labelText: '图片链接'),
               keyboardType: TextInputType.url,
+              decoration: const InputDecoration(),
             ),
-            TextField(
+          ),
+          CollabModalField(
+            label: '宽度百分比（0.1～100）',
+            child: TextField(
               key: const ValueKey('collab-image-width-input'),
               controller: wr,
-              decoration: const InputDecoration(
-                labelText: '宽度百分比（0.1～100）',
-                hintText: '默认 100',
-              ),
+              decoration: const InputDecoration(hintText: '默认 100'),
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
             ),
-            TextField(
+          ),
+          CollabModalField(
+            label: '宽高比',
+            child: TextField(
               key: const ValueKey('collab-image-ratio-input'),
               controller: ar,
-              decoration: const InputDecoration(
-                labelText: '宽高比',
-                hintText: '默认 4:3',
-              ),
+              decoration: const InputDecoration(hintText: '默认 4:3'),
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
             ),
-            DropdownButton<String>(
-              value: alignment,
-              isExpanded: true,
-              items: const [
-                DropdownMenuItem(value: 'left', child: Text('左对齐')),
-                DropdownMenuItem(value: 'center', child: Text('居中')),
-                DropdownMenuItem(value: 'right', child: Text('右对齐')),
-              ],
-              onChanged: (value) {
-                if (value != null) setState(() => alignment = value);
-              },
+          ),
+          CollabModalField(
+            label: '对齐方式',
+            child: CollabModalSegments<String>(
+              values: const {'left': '居左', 'center': '居中', 'right': '居右'},
+              selected: alignment,
+              onSelected: (value) => setState(() => alignment = value),
             ),
-          ],
-          if (widget.captionOnly)
-            for (var i = 0; i < texts.length; i++)
-              TextField(
+          ),
+        ],
+        if (widget.captionOnly)
+          for (var i = 0; i < texts.length; i++)
+            CollabModalField(
+              label: texts.length == 1 ? '题注（可选）' : '题注 ${i + 1}',
+              child: TextField(
                 key: ValueKey('collab-image-caption-input-$i'),
                 controller: texts[i],
                 maxLines: null,
-                decoration: InputDecoration(
-                  labelText: texts.length == 1 ? '题注（可选）' : '题注 ${i + 1}',
-                ),
+                decoration: InputDecoration(),
               ),
-          if (errorText != null)
-            Text(errorText!, style: const TextStyle(color: Colors.red)),
-        ],
-      ),
+            ),
+        if (errorText != null)
+          Text(errorText!, style: const TextStyle(color: Colors.red)),
+      ],
     ),
     actions: [
       TextButton(

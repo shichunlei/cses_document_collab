@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
@@ -39,8 +41,13 @@ BuildContext collabBlockActionContext(BuildContext context) {
 /// parents. Root/callout children are supported, including whole containers.
 /// Selection stays suspended; the caller restores input after its menu dismisses.
 /// Errors propagate through the apply future; neither borrowed argument is owned.
-Future<Node?> insertCollabParagraphBelow(EditorState editor, Node source) async {
-  if (editor.isDisposed || !editor.editable || !const {'page', 'callout'}.contains(source.parent?.type)) {
+Future<Node?> insertCollabParagraphBelow(
+  EditorState editor,
+  Node source,
+) async {
+  if (editor.isDisposed ||
+      !editor.editable ||
+      !const {'page', 'callout'}.contains(source.parent?.type)) {
     return null;
   }
   final id = source.attributes['cses_collab_block_id'] as String? ?? source.id;
@@ -132,6 +139,7 @@ class CollabBlockMoreButton extends StatelessWidget {
   );
 
   /// Opens one sheet in borrowed [context], rejects stale targets and catches failures.
+  /// Insertion below uses the text-line and downward-return icon to show its destination.
   Future<void> _show(BuildContext context) async {
     if (editor.isDisposed ||
         (!editor.editable && readOnlyActions.isEmpty) ||
@@ -163,33 +171,50 @@ class CollabBlockMoreButton extends StatelessWidget {
         host,
         editor,
         () async {
-          final route = ModalBottomSheetRoute<int>(
-            isScrollControlled: true,
-            builder: (sheet) => SafeArea(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (wasEditable)
-                      ListTile(
-                        key: ValueKey('block-insert-below-$id'),
-                        leading: const Icon(Icons.add),
-                        title: const Text('在下方插入'),
-                        onTap: () => Navigator.pop(sheet, -1),
+          choice = await showCollabBottomSheet<int>(
+            context: host,
+            builder: (sheet) => CollabBottomSheet(
+              title: Text('块操作'),
+              icon: LucideIcons.ellipsis,
+              contentPadding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (wasEditable)
+                    ListTile(
+                      key: ValueKey('block-insert-below-$id'),
+                      leading: const Icon(LucideIcons.listEnd),
+                      title: const Text('在下方插入'),
+                      onTap: () => Navigator.pop(sheet, -1),
+                    ),
+                  for (var i = 0; i < commands.length; i++)
+                    ListTile(
+                      key: commands[i].key,
+                      leading: Icon(
+                        commands[i].label.contains('删除')
+                            ? LucideIcons.trash2
+                            : commands[i].label.contains('复制')
+                            ? LucideIcons.copy
+                            : LucideIcons.pencil,
+                        color: commands[i].label.contains('删除')
+                            ? CollabModalColors.of(sheet).danger
+                            : null,
                       ),
-                    for (var i = 0; i < commands.length; i++)
-                      ListTile(
-                        key: commands[i].key,
-                        title: Text(commands[i].label),
-                        onTap: () => Navigator.pop(sheet, i),
+                      title: Text(
+                        commands[i].label,
+                        style: commands[i].label.contains('删除')
+                            ? TextStyle(
+                                color: CollabModalColors.of(sheet).danger,
+                              )
+                            : null,
                       ),
-                  ],
-                ),
+                      onTap: () => Navigator.pop(sheet, i),
+                    ),
+                ],
               ),
             ),
           );
-          choice = await Navigator.of(host).push(route);
-          await route.completed;
+
           if (choice == null ||
               permissionRevoked ||
               !host.mounted ||
@@ -217,16 +242,22 @@ class CollabBlockMoreButton extends StatelessWidget {
           final paragraph = await insertCollabParagraphBelow(editor, source);
           insertedId = paragraph == null
               ? null
-              : paragraph.attributes['cses_collab_block_id'] as String? ?? paragraph.id;
+              : paragraph.attributes['cses_collab_block_id'] as String? ??
+                    paragraph.id;
         },
         canRestore: () =>
             !permissionRevoked &&
             (choice == null || choice == -1) &&
             identical(CollabRuntime.services, services) &&
-            (insertedId == null || findCollabActionNode(editor, insertedId!) != null),
+            (insertedId == null ||
+                findCollabActionNode(editor, insertedId!) != null),
         selectionAfterAction: () {
-          final target = insertedId == null ? null : findCollabActionNode(editor, insertedId!);
-          return target == null ? null : Selection.single(path: target.path, startOffset: 0);
+          final target = insertedId == null
+              ? null
+              : findCollabActionNode(editor, insertedId!);
+          return target == null
+              ? null
+              : Selection.single(path: target.path, startOffset: 0);
         },
       );
     } catch (error, stack) {

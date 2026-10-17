@@ -1,3 +1,5 @@
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
@@ -5,6 +7,7 @@ import 'package:cses_document_collab/src/editor/collab_color_picker.dart';
 import 'package:cses_document_collab/src/editor/collab_emoji_picker.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
 import 'package:cses_document_collab/src/model/collab_color_palette.dart';
+import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -260,14 +263,17 @@ Future<void> updateCollabCalloutAppearance(EditorState editor, String id, String
   await editor.apply(transaction, withUpdateSelection: false, skipHistoryDebounce: true);
 }
 
+/// 为借用的 [context]/[editor] 打开 [node] 的颜色面板，保存即时生效，完整退场后完成。
 Future<void> showCollabCalloutSettings(BuildContext context, EditorState editor, Node node) =>
     _showCalloutSettings(context, editor, node, _CalloutSettingsKind.colors);
 
+/// 为借用的 [context]/[editor] 打开 [node] 的表情面板，确认后保存并完整退场。
 Future<void> showCollabCalloutEmojiPicker(BuildContext context, EditorState editor, Node node) =>
     _showCalloutSettings(context, editor, node, _CalloutSettingsKind.emoji);
 
 enum _CalloutSettingsKind { emoji, colors }
 
+/// 根据 [kind] 展示借用 [context]/[editor] 中稳定 [node] 的外观设置，不接管编辑器资源。
 Future<void> _showCalloutSettings(
   BuildContext context,
   EditorState editor,
@@ -276,11 +282,8 @@ Future<void> _showCalloutSettings(
 ) async {
   if (!editor.editable || editor.isDisposed) return;
   final id = node.attributes[AppFlowyBlockEditorAdapter.collabBlockIdAttribute] as String? ?? node.id;
-  await showModalBottomSheet<void>(
+  await showCollabBottomSheet<void>(
     context: context,
-    isScrollControlled: true,
-    useSafeArea: true,
-    backgroundColor: Colors.white,
     builder: (_) => _CalloutSettings(editor: editor, id: id, kind: kind),
   );
 }
@@ -306,21 +309,42 @@ class _CalloutSettings extends StatefulWidget {
 
 /// 用字段级事务处理外观，不保存正文或替换已有自定义颜色。
 class _CalloutSettingsState extends State<_CalloutSettings> {
+  /// 表情提交期间阻止选择、移除和重复关闭，避免同一面板发起重叠事务。
+  bool _savingEmoji = false;
+
   /// 每次保存重新查找稳定目标，不持有可能被远端删除的旧节点。
   Node? get _node => widget.editor.isDisposed ? null : _findCallout(widget.editor, widget.id);
 
   /// 保存 [attribute] 对应的 [value]；只提交一个字段，空值语义由所属属性决定。
-  /// 表情保存后关闭面板，颜色保存后继续选择；失败交由共用选择器提示。
+  /// 表情保存后关闭面板，颜色保存后继续选择；失败向调用方传播以显示提示。
   Future<void> _set(String attribute, String? value) async {
-    if (widget.editor.isDisposed || !widget.editor.editable || _node == null) {
+    if (_savingEmoji || widget.editor.isDisposed || !widget.editor.editable || _node == null) {
       return;
     }
-    await updateCollabCalloutAppearance(widget.editor, widget.id, attribute, value);
-    if (!mounted) return;
-    if (widget.kind == _CalloutSettingsKind.emoji && attribute == csesCalloutPrefixAttribute) {
-      if (ModalRoute.of(context)?.isCurrent == true) Navigator.pop(context);
-    } else {
-      setState(() {});
+    final savingEmoji = widget.kind == _CalloutSettingsKind.emoji && attribute == csesCalloutPrefixAttribute;
+    if (savingEmoji) setState(() => _savingEmoji = true);
+    try {
+      await updateCollabCalloutAppearance(widget.editor, widget.id, attribute, value);
+      if (!mounted) return;
+      if (savingEmoji) {
+        if (ModalRoute.of(context)?.isCurrent == true) Navigator.pop(context);
+      } else {
+        setState(() {});
+      }
+    } finally {
+      if (mounted && savingEmoji) setState(() => _savingEmoji = false);
+    }
+  }
+
+  /// 清空表情并沿用字段级撤销；提交失败时保留面板、记录诊断并提示重试。
+  Future<void> _clearEmoji() async {
+    try {
+      await _set(csesCalloutPrefixAttribute, '');
+    } catch (error, stack) {
+      CollabDiagnostics.report('表情设置失败', error: error, stackTrace: stack, tag: 'DocCollab');
+      if (mounted) {
+        ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(content: Text('表情设置失败，请重试')));
+      }
     }
   }
 
@@ -329,9 +353,10 @@ class _CalloutSettingsState extends State<_CalloutSettings> {
   Widget _colorRow(String label, String attribute, String key) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+      Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
       const SizedBox(height: 8),
       CollabColorPicker(
+        circular: true,
         keyPrefix: 'callout-$key',
         enabled: !widget.editor.isDisposed && widget.editor.editable && _node != null,
         textColors: attribute == csesBlockTextColorAttribute,
@@ -342,66 +367,59 @@ class _CalloutSettingsState extends State<_CalloutSettings> {
   );
 
   /// 按 [context] 约束展示共用表情或三组颜色，保存时重新核对目标和权限。
+  /// 表情移除固定在左下角，使用共用危险操作红色。
   @override
   Widget build(BuildContext context) {
     final enabled = !widget.editor.isDisposed && widget.editor.editable && _node != null;
-    return SafeArea(
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(20, 8, 20, 20 + MediaQuery.viewInsetsOf(context).bottom),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * .8),
-          child: SingleChildScrollView(
-            key: ValueKey(
-              widget.kind == _CalloutSettingsKind.emoji
-                  ? 'callout-emoji-settings-panel'
-                  : 'callout-color-settings-panel',
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        widget.kind == _CalloutSettingsKind.emoji ? '设置表情' : '设置颜色',
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                    IconButton(tooltip: '完成', onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close)),
+    return CollabBottomSheet(
+      key: ValueKey(
+        widget.kind == _CalloutSettingsKind.emoji ? 'callout-emoji-settings-panel' : 'callout-color-settings-panel',
+      ),
+      title: Text(widget.kind == _CalloutSettingsKind.emoji ? '设置表情' : '设置颜色'),
+      subtitle: widget.kind == _CalloutSettingsKind.colors ? '外观修改即时生效' : null,
+      icon: widget.kind == _CalloutSettingsKind.emoji ? LucideIcons.smile : LucideIcons.palette,
+      canClose: !_savingEmoji,
+      leadingAction: widget.kind == _CalloutSettingsKind.emoji
+          ? TextButton.icon(
+              key: const ValueKey('callout-emoji-clear'),
+              style: TextButton.styleFrom(foregroundColor: CollabModalColors.of(context).danger),
+              onPressed: enabled && !_savingEmoji ? _clearEmoji : null,
+              icon: const Icon(Icons.remove_circle_outline, size: 16),
+              label: const Text('移除'),
+            )
+          : null,
+      actions: [TextButton(onPressed: _savingEmoji ? null : () => Navigator.pop(context), child: const Text('完成'))],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (!enabled) const Text('当前高亮块不可编辑'),
+          IgnorePointer(
+            ignoring: !enabled,
+            child: Opacity(
+              opacity: enabled ? 1 : .45,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (widget.kind == _CalloutSettingsKind.emoji)
+                    CollabEmojiPicker(
+                      keyPrefix: 'callout-emoji',
+                      current: _node?.attributes[csesCalloutPrefixAttribute] as String?,
+                      enabled: enabled && !_savingEmoji,
+                      onSelected: (value) => _set(csesCalloutPrefixAttribute, value),
+                    )
+                  else ...[
+                    const SizedBox(height: 8),
+                    _colorRow('文字颜色', csesBlockTextColorAttribute, 'text'),
+                    const SizedBox(height: 16),
+                    _colorRow('背景色', csesBlockBackgroundColorAttribute, 'background'),
+                    const SizedBox(height: 16),
+                    _colorRow('边框色', csesBlockBorderColorAttribute, 'border'),
                   ],
-                ),
-                if (!enabled) const Text('当前高亮块不可编辑'),
-                IgnorePointer(
-                  ignoring: !enabled,
-                  child: Opacity(
-                    opacity: enabled ? 1 : .45,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        if (widget.kind == _CalloutSettingsKind.emoji)
-                          CollabEmojiPicker(
-                            keyPrefix: 'callout-emoji',
-                            current: _node?.attributes[csesCalloutPrefixAttribute] as String?,
-                            enabled: enabled,
-                            onSelected: (value) => _set(csesCalloutPrefixAttribute, value),
-                            onClear: () => _set(csesCalloutPrefixAttribute, ''),
-                          )
-                        else ...[
-                          const SizedBox(height: 8),
-                          _colorRow('文字颜色', csesBlockTextColorAttribute, 'text'),
-                          const SizedBox(height: 16),
-                          _colorRow('背景色', csesBlockBackgroundColorAttribute, 'background'),
-                          const SizedBox(height: 16),
-                          _colorRow('边框色', csesBlockBorderColorAttribute, 'border'),
-                        ],
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

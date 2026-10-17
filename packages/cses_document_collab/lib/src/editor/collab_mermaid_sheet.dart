@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_mermaid_visual.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
@@ -52,17 +54,14 @@ Future<CollabMermaidDraft?> showCollabMermaidInput(
       collabMermaidSource(findCollabMermaid(editor, id)) == null) {
     return null;
   }
-  ModalRoute<CollabMermaidDraft>? route;
-  final result = await showModalBottomSheet<CollabMermaidDraft>(
+
+  final result = await showCollabBottomSheet<CollabMermaidDraft>(
     context: context,
-    isScrollControlled: true,
-    showDragHandle: true,
     builder: (context) {
-      route = ModalRoute.of<CollabMermaidDraft>(context);
       return _MermaidSheet(editor: editor, id: id);
     },
   );
-  await route?.completed;
+
   return result;
 }
 
@@ -101,6 +100,9 @@ class _MermaidSheetState extends State<_MermaidSheet> {
   String? _error;
   bool _saving = false;
   bool _revoked = false;
+
+  /// 类型或模板菜单打开期间拒绝重复打开，生命周期归当前草稿面板。
+  bool _exampleMenuOpen = false;
 
   /// 当前借用的源码节点；插入模式或目标失效返回 null。
   Node? get _source => widget.id == null
@@ -252,63 +254,77 @@ class _MermaidSheetState extends State<_MermaidSheet> {
     });
   }
 
-  /// [replace] 区分模板替换与类型前缀插入；菜单选择只影响当前草稿。
-  Widget _exampleMenu({required bool replace}) =>
-      PopupMenuButton<CollabMermaidExample>(
-        key: ValueKey(replace ? 'mermaid-template-menu' : 'mermaid-type-menu'),
-        tooltip: replace ? '用模板替换草稿' : '插入类型前缀',
-        enabled: _valid && !_saving && !_conflict,
-        onSelected: (example) => _applyExample(example, replace: replace),
-        itemBuilder: (_) => [
-          for (final example in collabMermaidExamples)
-            PopupMenuItem(
-              key: ValueKey(
-                'mermaid-${replace ? 'template' : 'type'}-${example.id}',
-              ),
-              value: example,
-              child: Text(example.label),
-            ),
-        ],
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-          child: Row(
+  /// 在借用 [anchorContext] 下打开220逻辑像素的共用类型或模板浮层。
+  /// [replace] 为 true 时选择完整模板，否则插入类型前缀；取消不改草稿。
+  /// 返回后重新检查面板、权限和冲突；菜单失败记录诊断并显示重试提示。
+  Future<void> _openExampleMenu(
+    BuildContext anchorContext, {
+    required bool replace,
+  }) async {
+    if (_exampleMenuOpen || !_valid || _saving || _conflict) return;
+    _exampleMenuOpen = true;
+    try {
+      final example = await showCollabPopover<CollabMermaidExample>(
+        context: anchorContext,
+        title: replace ? '绘图模板' : '绘图类型',
+        width: 220,
+        builder: (menuContext) => SingleChildScrollView(
+          child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(replace ? '模板' : '类型'),
-              const Icon(Icons.expand_more, size: 18),
+              for (final example in collabMermaidExamples)
+                ListTile(
+                  key: ValueKey(
+                    'mermaid-${replace ? 'template' : 'type'}-${example.id}',
+                  ),
+                  leading: Icon(
+                    replace ? LucideIcons.panelsTopLeft : LucideIcons.code,
+                    size: 19,
+                  ),
+                  title: Text(example.label),
+                  onTap: () => Navigator.pop(menuContext, example),
+                ),
             ],
           ),
         ),
       );
+      if (mounted && example != null) _applyExample(example, replace: replace);
+    } catch (error, stack) {
+      CollabDiagnostics.report(
+        '打开绘图选项失败',
+        error: error,
+        stackTrace: stack,
+        tag: 'DocCollab',
+      );
+      if (mounted) setState(() => _error = '打开绘图选项失败，请重试');
+    } finally {
+      _exampleMenuOpen = false;
+    }
+  }
 
-  /// 使用可换行菜单排列五类类型/模板和三种视图，适应窄屏与大字体。
-  Widget _buildControls() => Wrap(
-    spacing: 4,
-    children: [
-      _exampleMenu(replace: false),
-      _exampleMenu(replace: true),
-      PopupMenuButton<CollabMermaidView>(
-        key: const ValueKey('mermaid-sheet-view'),
-        tooltip: '切换视图',
-        enabled: _valid && !_saving && !_conflict,
-        initialValue: _view,
-        onSelected: _selectView,
-        itemBuilder: (_) => [
-          for (final view in CollabMermaidView.values)
-            PopupMenuItem(value: view, child: Text(view.label)),
-        ],
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(_view.label),
-              const Icon(Icons.expand_more, size: 18),
-            ],
-          ),
+  /// 构建借用当前草稿的菜单入口；[replace] 区分模板替换与类型前缀插入。
+  /// 使用入口自身上下文锚定共用浮层，失效、忙碌和冲突时禁用。
+  Widget _exampleMenu({required bool replace}) => Builder(
+    builder: (anchorContext) => TextButton(
+      key: ValueKey(replace ? 'mermaid-template-menu' : 'mermaid-type-menu'),
+      style: TextButton.styleFrom(
+        foregroundColor: CollabModalColors.of(anchorContext).text,
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+      ),
+      onPressed: _valid && !_saving && !_conflict
+          ? () async => _openExampleMenu(anchorContext, replace: replace)
+          : null,
+      child: Tooltip(
+        message: replace ? '用模板替换草稿' : '插入类型前缀',
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(replace ? '模板' : '类型'),
+            const Icon(Icons.expand_more, size: 18),
+          ],
         ),
       ),
-    ],
+    ),
   );
 
   /// 解除所有借用监听并释放本面板创建的控制器。
@@ -323,90 +339,93 @@ class _MermaidSheetState extends State<_MermaidSheet> {
     super.dispose();
   }
 
-  /// 在借用 [context] 中按草稿视图显示源码与预览，固定取消/保存按钮适应键盘和窄屏。
+  /// 按借用 [context] 的可用空间显示源码和真实图形，固定操作区避让键盘。
+  /// 类型/模板操作保留，视图分段只改本地草稿，确认时沿用原子保存和冲突校验。
+  /// 类型与模板入口共用紧凑锚点菜单，低可用高度时选项独立滚动。
   @override
-  Widget build(BuildContext context) => SafeArea(
-    child: SizedBox(
-      height: MediaQuery.sizeOf(context).height * .85,
-      child: Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.viewInsetsOf(context).bottom,
-        ),
-        child: Column(
-          children: [
-            const Padding(padding: EdgeInsets.all(8), child: Text('代码绘图')),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    _buildControls(),
-                    if (_view != CollabMermaidView.graph)
-                      TextField(
-                        key: const ValueKey('mermaid-input'),
-                        controller: _input,
-                        enabled: _valid && !_saving,
-                        minLines: 5,
-                        maxLines: 12,
-                        maxLength: collabMermaidMaxLength,
-                        maxLengthEnforcement: MaxLengthEnforcement.none,
-                        autocorrect: false,
-                        enableSuggestions: false,
-                        style: const TextStyle(
-                          fontFamily: 'monospace',
-                          fontSize: 14,
-                        ),
-                        decoration: const InputDecoration(
-                          labelText: 'Mermaid 源码',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                    if (_view != CollabMermaidView.text)
-                      CollabMermaidVisual(source: _input.text),
-                    if (!_valid) const Text('当前不可编辑，请关闭后重新打开'),
-                    if (_conflict && _valid)
-                      Row(
-                        children: [
-                          const Expanded(child: Text('源码已被更新，草稿未覆盖远端内容')),
-                          TextButton(
-                            key: const ValueKey('mermaid-reload'),
-                            onPressed: _saving ? null : () => setState(_load),
-                            child: const Text('重新加载'),
-                          ),
-                        ],
-                      ),
-                    if (_error != null) Text(_error!),
-                  ],
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: Row(
-                children: [
-                  TextButton(
-                    onPressed: _saving ? null : () => Navigator.pop(context),
-                    child: const Text('取消'),
-                  ),
-                  const Spacer(),
-                  FilledButton(
-                    key: const ValueKey('mermaid-save'),
-                    onPressed:
-                        _valid &&
-                            !_conflict &&
-                            !_saving &&
-                            _input.text.length <= collabMermaidMaxLength
-                        ? _save
-                        : null,
-                    child: Text(_saving ? '保存中…' : '保存'),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+  Widget build(BuildContext context) => CollabBottomSheet(
+    title: const Text('代码绘图'),
+    icon: LucideIcons.workflow,
+    subtitle: '用简洁的语法表达复杂的想法',
+    canClose: !_saving,
+    header: Padding(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+      child: CollabModalSegments<CollabMermaidView>(
+        key: const ValueKey('mermaid-sheet-view'),
+        itemKeys: {
+          for (final view in CollabMermaidView.values)
+            view: ValueKey('mermaid-sheet-view-${view.name}'),
+        },
+        values: const {
+          CollabMermaidView.both: '源码与预览',
+          CollabMermaidView.text: '仅源码',
+          CollabMermaidView.graph: '仅图形',
+        },
+        selected: _view,
+        onSelected: _valid && !_saving && !_conflict ? _selectView : null,
       ),
+    ),
+    actions: [
+      TextButton(
+        onPressed: _saving ? null : () => Navigator.pop(context),
+        child: const Text('取消'),
+      ),
+      FilledButton(
+        key: const ValueKey('mermaid-save'),
+        onPressed:
+            _valid &&
+                !_conflict &&
+                !_saving &&
+                _input.text.length <= collabMermaidMaxLength
+            ? _save
+            : null,
+        child: Text(_saving ? '保存中…' : '保存'),
+      ),
+    ],
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Wrap(
+          spacing: 4,
+          children: [_exampleMenu(replace: false), _exampleMenu(replace: true)],
+        ),
+        if (_view != CollabMermaidView.graph)
+          CollabModalField(
+            label: 'Mermaid 源码',
+            child: TextField(
+              key: const ValueKey('mermaid-input'),
+              controller: _input,
+              enabled: _valid && !_saving,
+              minLines: 5,
+              maxLines: 12,
+              maxLength: collabMermaidMaxLength,
+              maxLengthEnforcement: MaxLengthEnforcement.none,
+              autocorrect: false,
+              enableSuggestions: false,
+              style: const TextStyle(fontFamily: 'monospace', fontSize: 14),
+              decoration: const InputDecoration(),
+            ),
+          ),
+        if (_view != CollabMermaidView.text) ...[
+          const Text(
+            '图形预览',
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+          ),
+          const SizedBox(height: 10),
+          CollabMermaidVisual(source: _input.text),
+        ],
+        if (!_valid) const Text('当前不可编辑，请关闭后重新打开'),
+        if (_conflict && _valid) ...[
+          const Text('源码已被更新，草稿未覆盖远端内容'),
+          TextButton(
+            key: const ValueKey('mermaid-reload'),
+            onPressed: _saving ? null : () => setState(_load),
+            child: const Text('重新加载'),
+          ),
+        ],
+        if (_error != null) Text(_error!),
+      ],
     ),
   );
 }

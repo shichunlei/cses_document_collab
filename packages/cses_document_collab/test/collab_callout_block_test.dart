@@ -449,6 +449,42 @@ void main() {
     },
   );
 
+  testWidgets('footer removes emoji and preserves independent undo', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 844));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final changes = <List<CollabEditorBlock>>[];
+    final adapter = AppFlowyBlockEditorAdapter(
+      initialBlocks: _fixture,
+      onLocalBlocksChanged: changes.add,
+    );
+    addTearDown(adapter.dispose);
+    await _pump(tester, adapter);
+    await tester.tap(find.byKey(const ValueKey('collab-callout-prefix')));
+    await tester.pumpAndSettle();
+
+    final remove = find.byKey(const ValueKey('callout-emoji-clear'));
+    final done = find.widgetWithText(TextButton, '完成');
+    expect(remove, findsOneWidget);
+    expect(tester.getCenter(remove).dy, tester.getCenter(done).dy);
+    expect(tester.getRect(remove).right, lessThan(tester.getRect(done).left));
+    await tester.tap(remove);
+    await tester.pumpAndSettle();
+    expect(
+      find.byKey(const ValueKey('callout-emoji-settings-panel')),
+      findsNothing,
+    );
+    expect(adapter.blocks.first.calloutPrefix, '');
+    expect(adapter.blocks.skip(1), _fixture.skip(1));
+    expect(changes, hasLength(1));
+    adapter.editorState.undoManager.undo();
+    await tester.pumpAndSettle();
+    expect(adapter.blocks, _fixture);
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
+
   testWidgets(
     'remote appearance keeps child identity and caret; undo follows reordered callout',
     (tester) async {

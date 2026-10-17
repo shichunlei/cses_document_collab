@@ -1,3 +1,5 @@
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart' show csesEmbedUrlAttribute;
 import 'package:cses_document_collab/src/model/collab_resource.dart';
@@ -14,8 +16,9 @@ Future<void> showCollabResourceSettings(
   required String label,
 }) async {
   if (!context.mounted || editor.isDisposed || !editor.editable) return;
-  final route = DialogRoute<void>(
+  await showCollabDialog<void>(
     context: context,
+    useRootNavigator: false,
     builder: (_) => _ResourceSettings(
       editor: editor,
       id: node.attributes['cses_collab_block_id'] as String? ?? node.id,
@@ -25,8 +28,6 @@ Future<void> showCollabResourceSettings(
       label: label,
     ),
   );
-  await Navigator.of(context).push(route);
-  await route.completed;
 }
 
 /// 共用资源设置视图；只借用编辑器与属性快照，字段控制器由其State持有。
@@ -187,34 +188,40 @@ class _ResourceSettingsState extends State<_ResourceSettings> {
 
   /// 在借用[context]中显示原字段和校验信息；保存完成后才关闭弹窗。
   @override
-  Widget build(BuildContext context) => AlertDialog(
+  Widget build(BuildContext context) => CollabDialog(
+    icon: switch (widget.kind) {
+      'audio' => LucideIcons.audioLines,
+      'video' => LucideIcons.video,
+      'attachment' => LucideIcons.paperclip,
+      _ => LucideIcons.link,
+    },
+    canClose: !_saving,
     title: Text('修改${widget.label}'),
-    content: SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          for (final entry in _fields.entries)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12),
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (final entry in _fields.entries)
+          Padding(
+            padding: EdgeInsets.zero,
+            child: CollabModalField(
+              label: switch (entry.key) {
+                'url' => '资源链接',
+                'name' => '名称',
+                'title' => '标题',
+                'description' => '摘要',
+                'wr' => '宽度（%）',
+                _ => '宽高比',
+              },
               child: TextField(
                 key: ValueKey('resource-field-${entry.key}'),
                 controller: entry.value,
                 maxLines: entry.key == 'description' ? 3 : 1,
-                decoration: InputDecoration(
-                  labelText: switch (entry.key) {
-                    'url' => '资源链接',
-                    'name' => '名称',
-                    'title' => '标题',
-                    'description' => '摘要',
-                    'wr' => '宽度（%）',
-                    _ => '宽高比',
-                  },
-                ),
+                decoration: InputDecoration(),
               ),
             ),
-          if (_error != null) Text(_error!, style: const TextStyle(color: Colors.red, fontSize: 12)),
-        ],
-      ),
+          ),
+        if (_error != null) Text(_error!, style: const TextStyle(color: Colors.red, fontSize: 12)),
+      ],
     ),
     actions: [
       TextButton(onPressed: _saving ? null : () => Navigator.pop(context), child: const Text('取消')),

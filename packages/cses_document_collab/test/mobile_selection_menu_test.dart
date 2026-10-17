@@ -414,7 +414,7 @@ void main() {
         find.byKey(const ValueKey('editor-selection-format-sheet')),
         findsOneWidget,
       );
-      await tester.tap(find.byKey(const ValueKey('editor-inline-bold')));
+      await _tapFormatControl(tester, 'editor-inline-bold');
       await tester.pumpAndSettle();
       expect(
         harness.adapter.blocks.single.segments.any(
@@ -422,8 +422,6 @@ void main() {
         ),
         isTrue,
       );
-      await tester.tap(find.byKey(const ValueKey('editor-inline-text-color')));
-      await tester.pumpAndSettle();
       await _tapPanelAction(
         tester,
         'editor-text-color-blue',
@@ -435,22 +433,17 @@ void main() {
             .textColor,
         '0xff0b6e99',
       );
-      await _tapPanelAction(
-        tester,
-        'editor-text-color-back',
-        menu: 'editor-text-color-menu',
-      );
-      await tester.tap(find.byKey(const ValueKey('editor-block-align-center')));
+      await _tapFormatControl(tester, 'editor-block-align-center');
       await tester.pumpAndSettle();
       expect(harness.adapter.blocks.single.alignment, 'center');
-      await tester.tap(find.byKey(const ValueKey('editor-block-heading-1')));
+      await _tapFormatControl(tester, 'editor-block-heading-1');
       await tester.pumpAndSettle();
       expect(
         harness.state.document.first!.attributes[HeadingBlockKeys.level],
         1,
       );
       expect(find.text('选区或编辑权限已变化，请关闭后重新选择'), findsNothing);
-      await tester.tap(find.byKey(const ValueKey('editor-inline-bold')));
+      await _tapFormatControl(tester, 'editor-inline-bold');
       await tester.pumpAndSettle();
       expect(
         harness.adapter.blocks.single.segments
@@ -458,7 +451,7 @@ void main() {
             .bold,
         isTrue,
       );
-      await tester.tap(find.byKey(const ValueKey('editor-block-align-left')));
+      await _tapFormatControl(tester, 'editor-block-align-left');
       await tester.pumpAndSettle();
       expect(harness.adapter.blocks.single.alignment, 'left');
       await tester.tap(find.text('完成'));
@@ -494,7 +487,7 @@ void main() {
           harness.state.selection?.normalized,
           Selection.single(path: [0], startOffset: 3, endOffset: 6),
         );
-        await tester.tap(find.byKey(const ValueKey('editor-inline-italic')));
+        await _tapFormatControl(tester, 'editor-inline-italic');
         await tester.pumpAndSettle();
         expect(
           harness.adapter.blocks.single.segments
@@ -502,7 +495,7 @@ void main() {
               .italic,
           isTrue,
         );
-        await tester.tap(find.byKey(const ValueKey('editor-inline-italic')));
+        await _tapFormatControl(tester, 'editor-inline-italic');
         await tester.pumpAndSettle();
       }
       await tester.tap(find.text('完成'));
@@ -527,11 +520,11 @@ void main() {
       );
       await harness.select(tester, 3, 6);
       await _choose(tester, '格式');
-      await tester.tap(find.byKey(const ValueKey('editor-block-outdent')));
+      await _tapFormatControl(tester, 'editor-block-outdent');
       await tester.pumpAndSettle();
       expect(harness.adapter.blocks.single.blockType, 'paragraph');
       expect(find.text('选区或编辑权限已变化，请关闭后重新选择'), findsNothing);
-      await tester.tap(find.byKey(const ValueKey('editor-inline-italic')));
+      await _tapFormatControl(tester, 'editor-inline-italic');
       await tester.pumpAndSettle();
       expect(
         harness.adapter.blocks.single.segments
@@ -553,7 +546,7 @@ void main() {
         final harness = await _Harness.mount(tester);
         await harness.select(tester, 3, 6);
         await _choose(tester, '格式');
-        await tester.tap(find.byKey(const ValueKey('editor-block-heading-1')));
+        await _tapFormatControl(tester, 'editor-block-heading-1');
         await tester.pumpAndSettle();
         final original = harness.adapter.blocks.single;
         if (change == 'readonly') {
@@ -583,7 +576,7 @@ void main() {
         final before = harness.state.document.toJson();
         if (change == 'reorder') {
           expect(find.text('选区或编辑权限已变化，请关闭后重新选择'), findsNothing);
-          await tester.tap(find.byKey(const ValueKey('editor-inline-italic')));
+          await _tapFormatControl(tester, 'editor-inline-italic');
           await tester.pumpAndSettle();
           expect(harness.adapter.blocks.first.segments, isEmpty);
           expect(
@@ -770,7 +763,7 @@ Future<void> verifyMobileSelectionMenuGestures(WidgetTester tester) async {
   expect(AppFlowyClipboard.lastText, isNotEmpty);
   await harness.select(tester, 0, 5);
   await _tapVisibleAction(tester, '格式');
-  await tester.tap(find.byKey(const ValueKey('editor-inline-italic')));
+  await _tapFormatControl(tester, 'editor-inline-italic');
   await tester.pumpAndSettle();
   expect(harness.adapter.blocks.single.segments.first.italic, isTrue);
   await tester.tap(find.text('完成'));
@@ -841,23 +834,49 @@ Future<void> _settleAction(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
-/// 在借用 [tester] 的横向 [menu] 中滚动找到并触摸 [key]；从左端开始以支持连续反向选择。
-/// 按真实命中检查按钮，避免懒加载或色板增加选项后触摸落在面板外。
+/// 在借用 [tester] 中先显示 [menu] 所在的纵向区域，再定位其 [key]。
+/// 横向惰性列表从左端搜索，展开色板直接滚到目标；不跳过命中或业务结果断言。
 Future<void> _tapPanelAction(
   WidgetTester tester,
   String key, {
   required String menu,
 }) async {
-  final scrollable = find
-      .descendant(
-        of: find.byKey(ValueKey(menu)),
-        matching: find.byType(Scrollable),
-      )
-      .first;
-  tester.state<ScrollableState>(scrollable).position.jumpTo(0);
+  final panel = find.byKey(ValueKey(menu));
+  await tester.ensureVisible(panel);
   await tester.pumpAndSettle();
+  final scrollables = find.descendant(
+    of: panel,
+    matching: find.byType(Scrollable),
+  );
   final target = find.byKey(ValueKey(key));
-  await tester.scrollUntilVisible(target, 100, scrollable: scrollable);
+  if (scrollables.evaluate().isNotEmpty) {
+    final scrollable = scrollables.first;
+    tester.state<ScrollableState>(scrollable).position.jumpTo(0);
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(target, 100, scrollable: scrollable);
+  } else {
+    await tester.ensureVisible(target);
+  }
+  await tester.pumpAndSettle();
+  expect(target.hitTestable(), findsOneWidget, reason: key);
+  await tester.tap(target);
+  await tester.pumpAndSettle();
+}
+
+/// 在借用 [tester] 中将格式面板的 [key] 滚入视口后触摸，适配展开式内容区。
+Future<void> _tapFormatControl(WidgetTester tester, String key) async {
+  final target = find.byKey(ValueKey(key));
+  if (target.evaluate().isEmpty && key.startsWith('editor-block-')) {
+    await _tapPanelAction(
+      tester,
+      key,
+      menu: key.startsWith('editor-block-align-') || key.endsWith('indent')
+          ? 'editor-block-layout-menu'
+          : 'editor-block-style-menu',
+    );
+    return;
+  }
+  await tester.ensureVisible(target);
   await tester.pumpAndSettle();
   expect(target.hitTestable(), findsOneWidget, reason: key);
   await tester.tap(target);

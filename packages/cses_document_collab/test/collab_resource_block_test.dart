@@ -230,7 +230,8 @@ void main() {
       expect(find.textContaining('2.0 KB'), findsOneWidget);
       await tester.tap(find.byKey(const ValueKey('block-more-resource')));
       await tester.pumpAndSettle();
-      expect(find.byType(IconButton), findsNWidgets(1));
+      expect(find.byTooltip('关闭'), findsOneWidget);
+      expect(find.byTooltip('更多操作'), findsOneWidget);
       await tester.tap(find.byKey(const ValueKey('resource-edit-resource')));
       await tester.pumpAndSettle();
       await tester.enterText(

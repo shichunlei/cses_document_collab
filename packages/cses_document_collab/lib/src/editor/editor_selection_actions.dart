@@ -1,3 +1,5 @@
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_formula_sheet.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
@@ -19,15 +21,13 @@ Future<void> showEditorTextLink(BuildContext context, EditorState editor) async 
   final initial = links.every((link) => link == links.first) && links.first is String ? links.first as String : '';
   try {
     await runEditorHeaderAction<void>(context, editor, () async {
-      ModalRoute<String>? route;
-      final result = await showDialog<String>(
+      final result = await showCollabDialog<String>(
         context: context,
         builder: (dialogContext) {
-          route = ModalRoute.of<String>(dialogContext);
           return _TextLinkDialog(initial: initial, canRemove: links.any((link) => link is String));
         },
       );
-      await route?.completed;
+
       if (result == null || !context.mounted || editor.isDisposed || !editor.editable) {
         return;
       }
@@ -140,25 +140,31 @@ class _TextLinkDialogState extends State<_TextLinkDialog> {
     Navigator.pop(context, value);
   }
 
-  /// 在借用 [context] 中展示输入和显式移除动作，取消不产生结果。
+  /// 在借用 [context] 中展示输入和红色移除动作，取消不产生结果。
   @override
-  Widget build(BuildContext context) => AlertDialog(
+  Widget build(BuildContext context) => CollabDialog(
+    icon: LucideIcons.link,
     title: const Text('文字链接'),
-    content: TextField(
-      key: const ValueKey('editor-text-link-input'),
-      controller: _input,
-      autofocus: true,
-      keyboardType: TextInputType.url,
-      decoration: InputDecoration(hintText: 'https://example.com', errorText: _error),
-      onSubmitted: (_) => _confirm(),
+    content: CollabModalField(
+      label: '链接地址',
+      child: TextField(
+        key: const ValueKey('editor-text-link-input'),
+        controller: _input,
+        autofocus: true,
+        keyboardType: TextInputType.url,
+        decoration: InputDecoration(hintText: 'https://example.com', errorText: _error),
+        onSubmitted: (_) => _confirm(),
+      ),
     ),
+    leadingAction: widget.canRemove
+        ? TextButton(
+            key: const ValueKey('editor-text-link-remove'),
+            style: TextButton.styleFrom(foregroundColor: CollabModalColors.of(context).danger),
+            onPressed: () => Navigator.pop(context, ''),
+            child: const Text('移除链接'),
+          )
+        : null,
     actions: [
-      if (widget.canRemove)
-        TextButton(
-          key: const ValueKey('editor-text-link-remove'),
-          onPressed: () => Navigator.pop(context, ''),
-          child: const Text('移除链接'),
-        ),
       TextButton(onPressed: () => Navigator.pop(context), child: const Text('取消')),
       FilledButton(key: const ValueKey('editor-text-link-save'), onPressed: _confirm, child: const Text('保存')),
     ],

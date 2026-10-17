@@ -5,9 +5,11 @@ import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_link_view.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -37,8 +39,12 @@ enum _LinkAction {
 /// Failures report to the original host and surface a local message; this future
 /// completes after dismissal and any transaction. Optional [onEdit]/[onDelete]
 /// receive the revalidated current node after dismissal and only while editable;
-/// null omits that command, as for whole-link paragraph actions. Callbacks are
+/// null omits that command, as for whole-link paragraph actions. Deletion uses
+/// the shared danger color for its icon and label. Callbacks are
 /// borrowed and must await their own dialogs, including closing animations.
+/// View choices are separated from resource actions by a divider; the header
+/// shows the URL on one ellipsized line while actions retain the original URL.
+/// Insertion below shares the block menu's text-line and downward-return icon.
 Future<void> showCollabLinkActions(
   BuildContext context,
   Node node, {
@@ -69,75 +75,83 @@ Future<void> showCollabLinkActions(
       hostContext,
       state,
       () async {
-        final route = ModalBottomSheetRoute<Object>(
-          isScrollControlled: true,
-          builder: (sheetContext) => SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ListTile(title: Text(url, maxLines: 2, overflow: TextOverflow.ellipsis)),
-                  ListTile(
-                    leading: const Icon(Icons.open_in_new),
-                    title: const Text('在浏览器打开'),
-                    onTap: () async {
-                      try {
-                        if (!await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication)) {
-                          throw StateError('无法打开链接');
-                        }
-                        if (sheetContext.mounted) Navigator.pop(sheetContext);
-                      } catch (error, stack) {
-                        services.onError?.call('无法打开链接', error, stack, 'DocCollab');
-                        if (sheetContext.mounted) {
-                          ScaffoldMessenger.maybeOf(
-                            sheetContext,
-                          )?.showSnackBar(const SnackBar(content: Text('无法打开此链接')));
-                        }
+        action = await showCollabBottomSheet<Object>(
+          context: hostContext,
+          builder: (sheetContext) => CollabBottomSheet(
+            title: const Text('链接操作'),
+            subtitle: url,
+            icon: LucideIcons.link,
+            contentPadding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  leading: const Icon(LucideIcons.externalLink),
+                  title: const Text('在浏览器打开'),
+                  onTap: () async {
+                    try {
+                      if (!await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication)) {
+                        throw StateError('无法打开链接');
                       }
-                    },
-                  ),
+                      if (sheetContext.mounted) Navigator.pop(sheetContext);
+                    } catch (error, stack) {
+                      services.onError?.call('无法打开链接', error, stack, 'DocCollab');
+                      if (sheetContext.mounted) {
+                        ScaffoldMessenger.maybeOf(sheetContext)?.showSnackBar(const SnackBar(content: Text('无法打开此链接')));
+                      }
+                    }
+                  },
+                ),
+                ListTile(
+                  key: const ValueKey('link-copy'),
+                  leading: const Icon(LucideIcons.copy),
+                  title: const Text('复制链接'),
+                  onTap: () => Navigator.pop(sheetContext, _LinkAction.copyLink),
+                ),
+                if (state.editable && onEdit != null)
                   ListTile(
-                    key: const ValueKey('link-copy'),
-                    leading: const Icon(Icons.copy_outlined),
-                    title: const Text('复制链接'),
-                    onTap: () => Navigator.pop(sheetContext, _LinkAction.copyLink),
+                    key: ValueKey('resource-edit-$id'),
+                    leading: const Icon(LucideIcons.pencil),
+                    title: const Text('修改'),
+                    onTap: () => Navigator.pop(sheetContext, _LinkAction.edit),
                   ),
-                  if (state.editable && onEdit != null)
+                if (state.editable && onDelete != null)
+                  ListTile(
+                    key: ValueKey('resource-delete-$id'),
+                    iconColor: CollabModalColors.of(sheetContext).danger,
+                    textColor: CollabModalColors.of(sheetContext).danger,
+                    leading: const Icon(LucideIcons.trash2),
+                    title: const Text('删除链接'),
+                    onTap: () => Navigator.pop(sheetContext, _LinkAction.delete),
+                  ),
+                if (state.editable && const {'page', 'callout'}.contains(node.parent?.type))
+                  ListTile(
+                    key: const ValueKey('link-insert-below'),
+                    leading: const Icon(LucideIcons.listEnd),
+                    title: const Text('在下方插入'),
+                    onTap: () => Navigator.pop(sheetContext, _LinkAction.insertBelow),
+                  ),
+                if (state.editable && const {'page', 'callout'}.contains(node.parent?.type)) ...[
+                  Divider(
+                    height: 16,
+                    thickness: 1,
+                    indent: 12,
+                    endIndent: 12,
+                    color: CollabModalColors.of(sheetContext).line,
+                  ),
+                  for (final view in CollabLinkView.values)
                     ListTile(
-                      key: ValueKey('resource-edit-$id'),
-                      leading: const Icon(Icons.edit_outlined),
-                      title: const Text('修改'),
-                      onTap: () => Navigator.pop(sheetContext, _LinkAction.edit),
+                      key: ValueKey('link-view-${view.name}'),
+                      title: Text(view.label),
+                      trailing: view == currentView ? const Icon(LucideIcons.check) : null,
+                      onTap: () => Navigator.pop(sheetContext, view),
                     ),
-                  if (state.editable && onDelete != null)
-                    ListTile(
-                      key: ValueKey('resource-delete-$id'),
-                      leading: const Icon(Icons.delete_outline),
-                      title: const Text('删除卡片'),
-                      onTap: () => Navigator.pop(sheetContext, _LinkAction.delete),
-                    ),
-                  if (state.editable && const {'page', 'callout'}.contains(node.parent?.type))
-                    ListTile(
-                      key: const ValueKey('link-insert-below'),
-                      leading: const Icon(Icons.add),
-                      title: const Text('在下方插入'),
-                      onTap: () => Navigator.pop(sheetContext, _LinkAction.insertBelow),
-                    ),
-                  if (state.editable && const {'page', 'callout'}.contains(node.parent?.type))
-                    for (final view in CollabLinkView.values)
-                      ListTile(
-                        key: ValueKey('link-view-${view.name}'),
-                        title: Text(view.label),
-                        trailing: view == currentView ? const Icon(Icons.check) : null,
-                        onTap: () => Navigator.pop(sheetContext, view),
-                      ),
                 ],
-              ),
+              ],
             ),
           ),
         );
-        action = await Navigator.of(hostContext).push(route);
-        await route.completed;
+
         if (action == null ||
             action == currentView ||
             !hostContext.mounted ||

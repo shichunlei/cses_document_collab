@@ -365,8 +365,6 @@ void main() {
     await _activateTable(tester, adapter);
     await tester.tap(header);
     await tester.pumpAndSettle();
-    await tester.tap(find.text('插入列'));
-    await tester.pumpAndSettle();
     expect(header, findsOneWidget);
     expect(find.text('向左插入列'), findsOneWidget);
     Navigator.of(tester.element(find.text('向左插入列'))).pop();
@@ -396,8 +394,7 @@ void main() {
           );
           await tester.pumpAndSettle();
           expect(state.selection, isNull);
-          await tester.tap(find.text(column ? '插入列' : '插入行'));
-          await tester.pumpAndSettle();
+
           await tester.tap(
             find.text(
               column
@@ -471,10 +468,8 @@ void main() {
       await tester.pumpAndSettle();
       final label = axis == 'row' ? '删除行' : '删除列';
       expect(
-        tester
-            .widget<TextButton>(find.widgetWithText(TextButton, label))
-            .onPressed,
-        isNull,
+        tester.widget<ListTile>(find.widgetWithText(ListTile, label)).enabled,
+        isFalse,
       );
       Navigator.of(tester.element(find.text(label))).pop();
       await tester.pumpAndSettle();
@@ -582,10 +577,8 @@ void main() {
         }
         await tester.pumpAndSettle();
         expect(
-          tester
-              .widget<TextButton>(find.widgetWithText(TextButton, '删除列'))
-              .onPressed,
-          isNull,
+          tester.widget<ListTile>(find.widgetWithText(ListTile, '删除列')).enabled,
+          isFalse,
         );
         Navigator.of(tester.element(find.text('删除列'))).pop();
         await tester.pumpAndSettle();
@@ -661,7 +654,7 @@ void main() {
       expect(find.byType(Slider), findsNothing);
       expect(find.text('合并所选区域'), findsOneWidget);
       expect(find.text('拆分单元格'), findsOneWidget);
-      await tester.tap(find.byIcon(Icons.close));
+      await tester.tap(find.byTooltip('关闭'));
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
     },
@@ -722,9 +715,7 @@ void main() {
         await tester.pumpAndSettle();
         expect(
           tester
-              .widget<OutlinedButton>(
-                find.widgetWithText(OutlinedButton, '合并所选区域'),
-              )
+              .widget<FilledButton>(find.widgetWithText(FilledButton, '合并所选区域'))
               .onPressed,
           isNotNull,
         );
@@ -734,8 +725,8 @@ void main() {
           await adapter.replaceFromRemote(_blocks(width: 220));
         }
         await tester.pumpAndSettle();
-        final button = tester.widget<OutlinedButton>(
-          find.widgetWithText(OutlinedButton, '合并所选区域'),
+        final button = tester.widget<FilledButton>(
+          find.widgetWithText(FilledButton, '合并所选区域'),
         );
         expect(button.onPressed, isNull);
         if (revoke) {
@@ -743,15 +734,15 @@ void main() {
           await tester.pumpAndSettle();
           expect(
             tester
-                .widget<OutlinedButton>(
-                  find.widgetWithText(OutlinedButton, '合并所选区域'),
+                .widget<FilledButton>(
+                  find.widgetWithText(FilledButton, '合并所选区域'),
                 )
                 .onPressed,
             isNull,
           );
         }
         expect(find.text('表格或权限已更新，请关闭后重新打开'), findsOneWidget);
-        await tester.tap(find.byIcon(Icons.close));
+        await tester.tap(find.byTooltip('关闭'));
         await tester.pumpAndSettle();
         expect(adapter.editorState.document.first!.children.length, 1);
         expect(tester.takeException(), isNull);

@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/controller/collab_controller.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
@@ -191,9 +192,9 @@ void main() {
         CollabMermaidView.text,
         CollabMermaidView.both,
       ]) {
-        await tester.tap(find.byKey(const ValueKey('mermaid-sheet-view')));
-        await tester.pumpAndSettle();
-        await tester.tap(find.text(view.label).last);
+        await tester.tap(
+          find.byKey(ValueKey('mermaid-sheet-view-${view.name}')),
+        );
         await tester.pumpAndSettle();
         expect(
           find.byKey(const ValueKey('mermaid-input')),
@@ -223,9 +224,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('mermaid-template-class')));
       await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const ValueKey('mermaid-sheet-view')));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('仅文本').last);
+      await tester.tap(find.byKey(const ValueKey('mermaid-sheet-view-text')));
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('mermaid-save')));
       await tester.pumpAndSettle();

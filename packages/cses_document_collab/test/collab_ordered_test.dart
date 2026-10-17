@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/model/collab_ordered.dart';
@@ -57,14 +59,20 @@ void main() {
     expect(find.text('重新编号'), findsOneWidget);
     final menu = find.byKey(const ValueKey('collab-numbering-menu'));
     expect(find.byType(CheckedPopupMenuItem<bool>), findsNothing);
-    final menuOrigin = tester.getTopLeft(menu);
-    expect(menuOrigin.dx, inInclusiveRange(190, 240));
-    expect(menuOrigin.dy, inInclusiveRange(110, 160));
-    expect(tester.getSize(menu).width, lessThanOrEqualTo(110));
-    expect(tester.getSize(menu).height, lessThanOrEqualTo(80));
+    final surface = find.byType(CollabPopover);
+    expect(tester.getSize(surface).width, 220);
+    expect(tester.getSize(menu).width, lessThanOrEqualTo(206));
+    expect(tester.getSize(menu).height, lessThanOrEqualTo(110));
     expect(
-      tester.widget<Text>(find.text('重新编号')).style!.color,
-      const Color(0xFF9CA3AF),
+      tester.getRect(surface).top - tester.getRect(find.text('3.')).bottom,
+      inInclusiveRange(8, 16),
+    );
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('collab-numbering-restart')),
+        matching: find.byIcon(LucideIcons.check),
+      ),
+      findsOneWidget,
     );
     await tester.tap(find.byKey(const ValueKey('collab-numbering-restart')));
     await tester.pumpAndSettle();

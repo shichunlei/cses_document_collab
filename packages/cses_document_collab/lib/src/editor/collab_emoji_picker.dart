@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:flutter/material.dart';
 
 /// 共用的常用表情目录；条目为原生 Unicode 和可搜索的中英文名称。
@@ -179,6 +180,7 @@ class _CollabEmojiPickerState extends State<CollabEmojiPicker> {
   }
 
   /// 按 [context] 约束自动换行展示目录；搜索匹配全目录，粘贴始终保留完整原文。
+  /// 配置移除回调时以共用危险操作红色展示入口。
   @override
   Widget build(BuildContext context) {
     final query = _search.text.trim().toLowerCase();
@@ -260,6 +262,9 @@ class _CollabEmojiPickerState extends State<CollabEmojiPicker> {
             alignment: Alignment.centerLeft,
             child: TextButton(
               key: ValueKey('${widget.keyPrefix}-clear'),
+              style: TextButton.styleFrom(
+                foregroundColor: CollabModalColors.of(context).danger,
+              ),
               onPressed: enabled ? () async => _select(null) : null,
               child: const Text('移除'),
             ),

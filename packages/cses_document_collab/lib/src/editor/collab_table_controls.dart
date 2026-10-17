@@ -1,9 +1,10 @@
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/model/collab_table.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-
 import 'collab_table_grid.dart';
 import 'editor_shortcut_toolbar.dart';
 
@@ -270,20 +271,16 @@ class _CollabTableControlsState extends State<CollabTableControls> {
   Future<void> _open(bool column, int index, BuildContext anchorContext) async {
     if (_busy || !widget.editor.editable || widget.editor.isDisposed) return;
     _select(column, index);
-    final box = anchorContext.findRenderObject()! as RenderBox;
-    final anchor = box.localToGlobal(Offset.zero) & box.size;
     final host = Navigator.of(context).context;
     _busy = true;
     final valid = ValueNotifier(true);
     _menuValid = valid;
     try {
       await runEditorHeaderAction<void>(host, widget.editor, () async {
-        final route = DialogRoute<_AxisAction>(
-          context: host,
-          useSafeArea: false,
-          barrierColor: Colors.transparent,
+        final action = await showCollabPopover<_AxisAction>(
+          context: anchorContext,
+          title: column ? '列操作' : '行操作',
           builder: (_) => _AxisMenu(
-            anchor: anchor,
             group: _tapGroup,
             column: column,
             canDelete:
@@ -291,8 +288,6 @@ class _CollabTableControlsState extends State<CollabTableControls> {
             valid: valid,
           ),
         );
-        final action = await Navigator.of(host).push(route);
-        await route.completed;
         if (action == null || !_valid) return;
         final actual = action == _AxisAction.delete
             ? (column
@@ -515,17 +510,13 @@ enum _AxisAction {
 
 /// 浮动的两级行列菜单；只返回动作请求，不持有或修改共享表格。
 class _AxisMenu extends StatefulWidget {
-  /// [anchor]为屏幕全局操作条范围；[group]为表格点击分组；[column]区分行列；[canDelete]保护最后行列；[valid]由父控件持有。
+  /// [group]为表格点击分组；[column]区分行列；[canDelete]保护最后行列；[valid]由父控件持有。
   const _AxisMenu({
-    required this.anchor,
     required this.group,
     required this.column,
     required this.canDelete,
     required this.valid,
   });
-
-  /// 用于定位浮层的全局逻辑像素范围。
-  final Rect anchor;
 
   /// 与表格共用的点击分组，外部点击才退出表格激活状态。
   final Object group;
@@ -544,91 +535,63 @@ class _AxisMenu extends StatefulWidget {
   State<_AxisMenu> createState() => _AxisMenuState();
 }
 
-/// 一级显示插入/删除，二级显示插入的前后方向。
+/// 直接显示前插、后插与删除，保留权限和最后行列保护。
 class _AxisMenuState extends State<_AxisMenu> {
-  /// 是否正在选择插入方向。
-  bool _inserting = false;
+  /// 为借用 [context] 构建 [label] 对应的 [action]；[icon] 为装饰图标。
+  Widget _item(
+    BuildContext context,
+    String label,
+    _AxisAction action,
+    IconData icon,
+  ) => ListTile(
+    leading: Icon(
+      icon,
+      color: action == _AxisAction.delete
+          ? CollabModalColors.of(context).danger
+          : null,
+    ),
+    title: Text(
+      label,
+      style: action == _AxisAction.delete
+          ? TextStyle(color: CollabModalColors.of(context).danger)
+          : null,
+    ),
+    enabled:
+        widget.valid.value &&
+        (action != _AxisAction.delete || widget.canDelete),
+    onTap: () => Navigator.pop(context, action),
+  );
 
-  /// 在借用[context]中构建[label]按钮；[action]为返回请求，null表示打开方向菜单。
-  Widget _item(BuildContext context, String label, _AxisAction? action) =>
-      Expanded(
-        child: TextButton(
-          onPressed:
-              !widget.valid.value ||
-                  (action == _AxisAction.delete && !widget.canDelete)
-              ? null
-              : () {
-                  if (action == null) {
-                    setState(() => _inserting = true);
-                  } else {
-                    Navigator.pop(context, action);
-                  }
-                },
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 15),
-          ),
-        ),
-      );
-
-  /// 浮层夹在屏幕安全区域内；[context]用于菜单退场与媒体尺寸读取。
+  /// 在借用 [context] 中显示仍有效的行列动作，定位和退场由共用浮层负责。
   @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
-    final padding = MediaQuery.paddingOf(context);
-    final width = (size.width - 24).clamp(0.0, 320.0);
-    final left = widget.anchor.left.clamp(
-      12.0,
-      (size.width - width - 12).clamp(12.0, double.infinity),
-    );
-    final top = (widget.anchor.top - 64).clamp(
-      padding.top + 8,
-      size.height - padding.bottom - 64,
-    );
-    return Stack(
-      children: [
-        Positioned(
-          left: left,
-          top: top,
-          width: width,
-          child: TapRegion(
-            groupId: widget.group,
-            child: Material(
-              elevation: 8,
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(14),
-              child: ValueListenableBuilder<bool>(
-                valueListenable: widget.valid,
-                builder: (context, valid, _) => Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: _inserting
-                      ? [
-                          _item(
-                            context,
-                            widget.column ? '向左插入列' : '向上插入行',
-                            _AxisAction.before,
-                          ),
-                          _item(
-                            context,
-                            widget.column ? '向右插入列' : '向下插入行',
-                            _AxisAction.after,
-                          ),
-                        ]
-                      : [
-                          _item(context, widget.column ? '插入列' : '插入行', null),
-                          _item(
-                            context,
-                            widget.column ? '删除列' : '删除行',
-                            _AxisAction.delete,
-                          ),
-                        ],
-                ),
-              ),
-            ),
+  Widget build(BuildContext context) => TapRegion(
+    groupId: widget.group,
+    child: ValueListenableBuilder<bool>(
+      valueListenable: widget.valid,
+      builder: (context, valid, _) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _item(
+            context,
+            widget.column ? '向左插入列' : '向上插入行',
+            _AxisAction.before,
+            LucideIcons.panelLeftOpen,
           ),
-        ),
-      ],
-    );
-  }
+          _item(
+            context,
+            widget.column ? '向右插入列' : '向下插入行',
+            _AxisAction.after,
+            LucideIcons.panelRightOpen,
+          ),
+          const Divider(height: 15),
+          _item(
+            context,
+            widget.column ? '删除列' : '删除行',
+            _AxisAction.delete,
+            LucideIcons.trash2,
+          ),
+        ],
+      ),
+    ),
+  );
 }

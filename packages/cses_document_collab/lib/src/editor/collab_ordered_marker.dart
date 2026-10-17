@@ -1,5 +1,5 @@
-import 'dart:math' as math;
-
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
@@ -76,6 +76,7 @@ Widget buildCollabOrderedMarker(
 /// 使用借用的 [context] 定位序号菜单；[state] 由宿主释放，[blockId] 是稳定协同身份。
 /// 打开及提交时均重新检查节点、类型与可编辑性；取消菜单或页面销毁不产生写入。
 /// 不主动移动选区或焦点；异步菜单异常由此边界记录并提示，Future 在操作结束后完成。
+/// 菜单首选宽度220逻辑像素，以紧凑展示两种编号操作；窄屏仍由共用定位限幅。
 Future<void> _showNumberingMenu(
   BuildContext context,
   EditorState state,
@@ -99,37 +100,11 @@ Future<void> _showNumberingMenu(
               raw['numbering'] as String? ??
               '{}',
         );
-    final box = context.findRenderObject() as RenderBox?;
-    final overlay =
-        Navigator.of(context).overlay?.context.findRenderObject() as RenderBox?;
-    if (box == null || overlay == null) return;
-    final origin = box.localToGlobal(Offset.zero, ancestor: overlay);
-    final anchor = origin & box.size;
-    final direction = Directionality.of(context);
-    final restart = await showGeneralDialog<bool>(
+    final restart = await showCollabPopover<bool>(
       context: context,
-      requestFocus: false,
-      useRootNavigator: false,
-      barrierDismissible: true,
-      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-      barrierColor: Colors.transparent,
-      transitionDuration: const Duration(milliseconds: 100),
-      pageBuilder: (menuContext, _, _) {
-        final media = MediaQuery.of(menuContext);
-        return CustomSingleChildLayout(
-          delegate: _NumberingMenuLayout(
-            anchor: anchor,
-            direction: direction,
-            insets: EdgeInsets.fromLTRB(
-              media.padding.left + 8,
-              media.padding.top + 8,
-              media.padding.right + 8,
-              math.max(media.padding.bottom, media.viewInsets.bottom) + 8,
-            ),
-          ),
-          child: _NumberingMenu(value: value),
-        );
-      },
+      title: '列表编号',
+      width: 220,
+      builder: (_) => _NumberingMenu(value: value),
     );
     if (restart == null || !context.mounted) return;
     await changeCollabOrderedNumbering(state, blockId, restart: restart);
@@ -148,51 +123,31 @@ Future<void> _showNumberingMenu(
   }
 }
 
-/// Compact custom surface; no stock popup sizing or checkmark column.
+/// 只返回重开/接续请求的编号菜单，当前选项用勾选标识。
 class _NumberingMenu extends StatelessWidget {
+  /// [value] 为打开菜单时的编号属性快照。
   const _NumberingMenu({required this.value});
 
+  /// 打开时借用的编号快照，菜单仅输出重开或接续请求。
   final CollabOrdered value;
 
+  /// 在借用 [context] 中显示两种编号操作，不直接写入文档。
   @override
-  Widget build(BuildContext context) {
-    return Material(
-      key: const ValueKey('collab-numbering-menu'),
-      color: Colors.white,
-      surfaceTintColor: Colors.transparent,
-      elevation: 4,
-      shadowColor: const Color(0x26000000),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(4),
-        side: const BorderSide(color: Color(0xFFE5E7EB)),
+  Widget build(BuildContext context) => Column(
+    key: const ValueKey('collab-numbering-menu'),
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      _item(context, label: '重新编号', restart: true, selected: value.restarts),
+      _item(
+        context,
+        label: '继续编号',
+        restart: false,
+        selected: value.continuesPrevious,
       ),
-      clipBehavior: Clip.antiAlias,
-      child: IntrinsicWidth(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _item(
-                context,
-                label: '继续编号',
-                restart: false,
-                selected: value.continuesPrevious,
-              ),
-              _item(
-                context,
-                label: '重新编号',
-                restart: true,
-                selected: value.restarts,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+    ],
+  );
 
+  /// 为借用 [context] 返回 [restart] 请求；[label] 为名称，[selected] 为当前标记。
   Widget _item(
     BuildContext context, {
     required String label,
@@ -201,69 +156,17 @@ class _NumberingMenu extends StatelessWidget {
   }) => Semantics(
     button: true,
     selected: selected,
-    child: InkWell(
+    child: ListTile(
       key: ValueKey('collab-numbering-${restart ? 'restart' : 'continue'}'),
-      onTap: () => Navigator.of(context).pop(restart),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 14,
-            height: 1.2,
-            fontWeight: FontWeight.w400,
-            color: selected ? const Color(0xFF9CA3AF) : const Color(0xFF374151),
-          ),
-        ),
+      leading: Icon(
+        restart ? LucideIcons.listRestart : LucideIcons.listOrdered,
+        size: 19,
       ),
+      title: Text(label),
+      trailing: selected ? const Icon(LucideIcons.check, size: 16) : null,
+      onTap: () => Navigator.pop(context, restart),
     ),
   );
-}
-
-/// Anchors below the number, flips above when needed, and avoids the keyboard.
-class _NumberingMenuLayout extends SingleChildLayoutDelegate {
-  const _NumberingMenuLayout({
-    required this.anchor,
-    required this.direction,
-    required this.insets,
-  });
-
-  final Rect anchor;
-  final TextDirection direction;
-  final EdgeInsets insets;
-
-  @override
-  BoxConstraints getConstraintsForChild(BoxConstraints constraints) =>
-      BoxConstraints.loose(
-        Size(
-          math.max(0, constraints.maxWidth - insets.horizontal),
-          math.max(0, constraints.maxHeight - insets.vertical),
-        ),
-      );
-
-  @override
-  Offset getPositionForChild(Size size, Size childSize) {
-    final right = math.max(
-      insets.left,
-      size.width - insets.right - childSize.width,
-    );
-    final bottom = math.max(
-      insets.top,
-      size.height - insets.bottom - childSize.height,
-    );
-    final x = direction == TextDirection.rtl
-        ? anchor.right - childSize.width
-        : anchor.left;
-    final below = anchor.bottom + 4;
-    final y = below <= bottom ? below : anchor.top - childSize.height - 4;
-    return Offset(x.clamp(insets.left, right), y.clamp(insets.top, bottom));
-  }
-
-  @override
-  bool shouldRelayout(_NumberingMenuLayout oldDelegate) =>
-      anchor != oldDelegate.anchor ||
-      direction != oldDelegate.direction ||
-      insets != oldDelegate.insets;
 }
 
 /// 对借用的草稿 [node] 计算相邻一基起始编号的零基序号；正式列表使用 Rust 投影。
