@@ -1,4 +1,5 @@
-import 'package:cses_document_collab/src/editor/collab_embed_block.dart';
+import 'package:cses_document_collab/src/editor/collab_image_block.dart';
+import 'package:cses_document_collab/src/editor/collab_video_block.dart';
 import 'package:cses_document_collab/src/model/collab_image.dart';
 import 'dart:async';
 import 'dart:io';
@@ -7,7 +8,9 @@ import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_meeting_block.dart';
-import 'package:cses_document_collab/src/editor/collab_resource_block.dart';
+import 'package:cses_document_collab/src/editor/collab_audio_block.dart';
+import 'package:cses_document_collab/src/editor/collab_attachment_block.dart';
+import 'package:cses_document_collab/src/editor/collab_web_block.dart';
 import 'package:cses_document_collab/src/editor/collab_task_card_block.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
@@ -403,16 +406,19 @@ Future<void> _mount(
           editorStyle: const EditorStyle.mobile(padding: EdgeInsets.all(16)),
           blockComponentBuilders: {
             ...standardBlockComponentBuilderMap,
-            'image': CollabEmbedBlockComponentBuilder(
-              kind: CollabEmbedKind.image,
-            ),
-            'video': CollabEmbedBlockComponentBuilder(
-              kind: CollabEmbedKind.video,
-            ),
+            'image': CollabImageBlockComponentBuilder(),
+            'video': CollabVideoBlockComponentBuilder(),
             'meeting': CollabMeetingBlockComponentBuilder(),
             'task': CollabTaskCardBlockComponentBuilder(),
-            for (final kind in collabResourceTypes)
-              kind: CollabResourceBlockComponentBuilder(loadPreview: _metadata),
+            'audio': CollabAudioBlockComponentBuilder(),
+            'attachment': CollabAttachmentBlockComponentBuilder(),
+            for (final kind in [
+              'bookmark',
+              'embed',
+              'juejin-embed',
+              'figma-embed',
+            ])
+              kind: CollabWebBlockComponentBuilder(loadPreview: _metadata),
           },
         ),
       ),
@@ -469,6 +475,8 @@ class _LocalPlayer extends VideoPlayerPlatform {
   @override
   Future<int?> createWithOptions(VideoCreationOptions options) async {
     final id = _next++;
+    // Ownership transfers to _streams; dispose/close await every retained sink.
+    // ignore: close_sinks
     final stream = StreamController<VideoEvent>();
     _streams[id] = stream;
     stream.add(

@@ -1,0 +1,122 @@
+{
+  "date": "2026-10-17",
+  "request": "Only split the existing resource block into audio, attachment and web (including Juejin/Figma), extracting common classes without changing appearance, data or interactions.",
+  "implementation": {
+    "audio": {
+      "path": "packages/cses_document_collab/lib/src/editor/collab_audio_block.dart",
+      "builder": "CollabAudioBlockComponentBuilder",
+      "types": [
+        "audio"
+      ],
+      "ownership": "Audio player stays local to this file; controller initialization, seek serialization and disposal code moved unchanged."
+    },
+    "attachment": {
+      "path": "packages/cses_document_collab/lib/src/editor/collab_attachment_block.dart",
+      "builder": "CollabAttachmentBlockComponentBuilder",
+      "types": [
+        "attachment"
+      ],
+      "ownership": "File badge, MIME/extension fallback, filename and size formatting stay local; no file handles or downloads are allocated by rendering."
+    },
+    "web": {
+      "path": "packages/cses_document_collab/lib/src/editor/collab_web_block.dart",
+      "builder": "CollabWebBlockComponentBuilder",
+      "types": [
+        "bookmark",
+        "embed",
+        "juejin-embed",
+        "figma-embed"
+      ],
+      "ownership": "Injected metadata loader remains borrowed; existing CollabLinkPreview / CollabEmbeddedPage keep request/WebView ownership and source keys."
+    },
+    "base": {
+      "path": "packages/cses_document_collab/lib/src/editor/collab_resource_block_base.dart",
+      "classes": [
+        "CollabResourceBlock",
+        "CollabResourceBlockState"
+      ],
+      "responsibilities": [
+        "borrowed editor/node",
+        "stable ID and resource attributes",
+        "selection geometry",
+        "shared audio/attachment menu",
+        "external open",
+        "conflict-protected settings routing",
+        "independent delete/undo transaction"
+      ]
+    },
+    "settings": {
+      "path": "packages/cses_document_collab/lib/src/editor/collab_resource_settings.dart",
+      "entry": "showCollabResourceSettings",
+      "ownership": "Dialog owns and releases field controllers; editor/node snapshots are borrowed; existing type/field validation and remote-conflict checks retained."
+    },
+    "removed_dispatcher": "packages/cses_document_collab/lib/src/editor/collab_resource_block.dart",
+    "registration": "Formal page and all affected test/device-test harnesses register distinct builders; no compatibility dispatcher, part/part-of files or new global aggregation export."
+  },
+  "checks": {
+    "old_dispatcher_source_references": 0,
+    "player_move_equal_ignoring_whitespace": true,
+    "attachment_visual_helpers_equal_ignoring_whitespace": true,
+    "old_workspace_resource_file_sha256": "b7229c48122bc97d945af2dc187eb9098824ea0270696bbe90cff91845e132ec",
+    "schema_native_dependencies_and_package_exports": "unchanged",
+    "status_counts": {
+      "adapted": 13,
+      "partial": 12,
+      "structural": 1,
+      "unadapted": 15,
+      "total": 41
+    },
+    "format": "dart format run on the 5 new handwritten libraries and all 5 migrated Dart callers. Unrelated existing formatting in the formal page was retained after formatting its migration.",
+    "diff_check": "git diff --check passed"
+  },
+  "validation": {
+    "target_tests": {
+      "directory": "packages/cses_document_collab",
+      "command": "flutter test --no-pub test/collab_resource_block_test.dart test/collab_link_actions_test.dart test/collab_block_actions_test.dart",
+      "passed": 83,
+      "result": "00:19 +83: All tests passed!"
+    },
+    "full_package_tests": {
+      "directory": "packages/cses_document_collab",
+      "command": "flutter test --no-pub",
+      "passed": 1162,
+      "failed": 0,
+      "result": "02:56 +1162: All tests passed!"
+    },
+    "consumer_tests": {
+      "directory": "repository root",
+      "command": "flutter test --no-pub",
+      "passed": 56,
+      "failed": 0,
+      "result": "00:31 +56: All tests passed!"
+    },
+    "target_analysis": {
+      "command": "flutter analyze --no-pub over the 5 new libraries, formal page, 3 affected test files and device-test target",
+      "result": "No issues found (10 targets)"
+    },
+    "package_analysis": {
+      "command": "flutter analyze --no-pub",
+      "errors": 0,
+      "warnings": 0,
+      "existing_infos": [
+        "test/collab_controller_native_test.dart:186 close_sinks",
+        "test/collab_video_update_test.dart:315 close_sinks"
+      ],
+      "exit_status": 1,
+      "note": "These information-level diagnostics are outside this migration; their source files were not modified or suppressed."
+    }
+  },
+  "upstream_version_check": {
+    "latest": "unverified",
+    "desktop_declared_locked_installed": "unverified",
+    "reason": "Rechecked the expected adjacent desktop repository before migration; /Users/shichunlei/workspace/cses/cses-client remains absent, so configured-registry latest and packaged skills/MIGRATIONS/affected upstream implementation are unavailable.",
+    "followup": "Repeat configured-registry and desktop artifact verification in an accessible desktop environment; no historical version is asserted as current latest."
+  },
+  "scope_and_limits": [
+    "Only these three resource groups were reorganized; other block implementations and existing workspace changes were retained.",
+    "Shared data models, schema/flavours, native source/generated code, dependencies and package public exports were not changed.",
+    "Full native bridge/SQLite unit tests are included in the passing package suite; no native source migration or rebuild was needed.",
+    "Device-test registrations compile/analyze but the physical-device gesture suite and iOS UI were not rerun.",
+    "No phone restart, sign-in, live document write or account action was performed for this source-only reorganization."
+  ]
+}

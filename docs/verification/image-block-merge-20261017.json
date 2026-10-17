@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-17",
+  "request": "Merge CollabImageContent and the image block into a single image block/state; preserve existing business and UI.",
+  "implementation": {
+    "file": "packages/cses_document_collab/lib/src/editor/collab_image_block.dart",
+    "builder": "CollabImageBlockComponentBuilder",
+    "widget": "CollabImageBlock",
+    "state": "_CollabImageBlockState",
+    "merge": "The block state directly implements buildMedia and owns the previous data URI decode fields/hooks. No intermediate content Widget/State remains.",
+    "removed_file": "packages/cses_document_collab/lib/src/editor/collab_image_content.dart",
+    "preserved": [
+      "Shared original media selection/action/configuration wrapper",
+      "Legacy AppFlowy image fallback",
+      "Image URL/type rules, 32 MiB data URI limit and background compute",
+      "Source/mounted invalidation and same-node URL refresh",
+      "Dimensions, rotation, alignment, captions, original image/SVG/raster/loading/error UI",
+      "Existing cache helper, editor sheet, stable-ID menu/property/deletion operations"
+    ],
+    "callers": "The 2 content-only test files now exercise the complete image block under a borrowed EditorState Provider with explicitly initialized fixture editorStyle. The production registration/builder API remains the same."
+  },
+  "parity": {
+    "methods": {
+      "Future<void> _prepareSource": true,
+      "Widget _buildImage": true,
+      "Uint8List _decodeImageData": true,
+      "content_UI_and_actions": true
+    },
+    "normalization": "Whitespace and formatter-optional commas, plus the equivalent change from the child widget editorState parameter to a borrowed Provider editor in the merged state.",
+    "old_content_sha256": "25710adf3f0ba6bbc9b35263ee8d0aae2f0c2bf103438854fc27130fb82dad04",
+    "old_block_sha256": "de51162f920a73e644ec7befef5f6a51e1cbf781abf48a375a2053d1237ecfef",
+    "old_Dart_symbols_and_imports_remaining": 0,
+    "same_state_after_URL_change": "Explicit assertion in the existing URL replacement test passed."
+  },
+  "validation": {
+    "target_tests": {
+      "command": "flutter test --no-pub test/collab_image_test.dart test/collab_image_svg_test.dart test/collab_block_actions_test.dart test/editor_modal_focus_test.dart",
+      "passed": 61,
+      "result": "00:18 +61: All tests passed!"
+    },
+    "additional_state_assertion": {
+      "command": "flutter test --no-pub test/collab_image_test.dart",
+      "passed": 13,
+      "result": "00:13 +13: All tests passed!"
+    },
+    "full_package_tests": {
+      "command": "flutter test --no-pub",
+      "status": "passed",
+      "passed": 1162,
+      "failed": 0,
+      "result": "04:02 +1162: All tests passed!"
+    },
+    "host_tests": {
+      "command": "flutter test --no-pub",
+      "passed": 56,
+      "result": "00:44 +56: All tests passed!"
+    },
+    "target_analysis": "Final flutter analyze --no-pub over the merged image library and 2 changed tests: no issues found.",
+    "package_analysis": {
+      "command": "flutter analyze --no-pub",
+      "errors": 0,
+      "warnings": 0,
+      "existing_infos": [
+        "test/collab_controller_native_test.dart:186 close_sinks"
+      ],
+      "exit_status": 1
+    },
+    "format": "dart format run only on the merged handwritten image library and the 2 migrated test files.",
+    "diff_check": "git diff --check passed"
+  },
+  "upstream_version": {
+    "latest": "unverified",
+    "reason": "Expected adjacent desktop repository rechecked before this work and remains absent; configured registry/latest, declaration/lock/install artifacts and packaged skills/MIGRATIONS unavailable."
+  },
+  "unchanged_status_counts": {
+    "adapted": 13,
+    "partial": 12,
+    "structural": 1,
+    "unadapted": 15,
+    "total": 41
+  },
+  "limits": [
+    "No schema/native/generated/dependency/package-entry changes.",
+    "No business/UI redesign; internal image state ownership is intentionally consolidated.",
+    "No phone restart, live document writes, full physical-device/iOS or desktop online reacceptance performed.",
+    "Existing workspace changes outside this merge retained."
+  ]
+}

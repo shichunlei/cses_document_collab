@@ -2,7 +2,7 @@ import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/model/collab_image.dart';
 import 'package:cses_document_collab/src/model/collab_ordered.dart';
-import 'package:cses_document_collab/src/editor/collab_embed_block.dart';
+import 'package:cses_document_collab/src/editor/collab_image_block.dart';
 import 'package:cses_document_collab/src/editor/collab_list_editing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -82,9 +82,7 @@ void main() {
                 ],
                 blockComponentBuilders: {
                   ...standardBlockComponentBuilderMap,
-                  'image': CollabEmbedBlockComponentBuilder(
-                    kind: CollabEmbedKind.image,
-                  ),
+                  'image': CollabImageBlockComponentBuilder(),
                 },
               ),
             ),

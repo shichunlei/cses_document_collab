@@ -2,10 +2,11 @@ import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/model/collab_image.dart';
-import 'package:cses_document_collab/src/editor/collab_image_content.dart';
+import 'package:cses_document_collab/src/editor/collab_image_block.dart';
 import 'package:cses_document_collab/src/editor/collab_image_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
 
 /// 创建独立图片投影；[image] 为专属布局，[url] 默认其他端 blob，用于无网络 Widget 测试。
 CollabEditorBlock _block(
@@ -195,7 +196,7 @@ void main() {
           body: Center(
             child: SizedBox(
               width: 300,
-              child: CollabImageContent(
+              child: _imageBlock(
                 node: adapter.editorState.document.root.children.single,
                 editorState: adapter.editorState,
               ),
@@ -242,7 +243,7 @@ void main() {
           home: Scaffold(
             body: SizedBox(
               width: 300,
-              child: CollabImageContent(
+              child: _imageBlock(
                 node: adapter.editorState.document.root.children.single,
                 editorState: adapter.editorState,
               ),
@@ -326,7 +327,7 @@ void main() {
           home: Scaffold(
             body: SizedBox(
               width: 300,
-              child: CollabImageContent(
+              child: _imageBlock(
                 node: adapter.editorState.document.first!,
                 editorState: adapter.editorState,
               ),
@@ -408,14 +409,12 @@ void main() {
       home: Scaffold(
         body: SizedBox(
           width: 300,
-          child: CollabImageContent(
-            node: node,
-            editorState: adapter.editorState,
-          ),
+          child: _imageBlock(node: node, editorState: adapter.editorState),
         ),
       ),
     );
     await tester.pumpWidget(view());
+    final imageState = tester.state(find.byType(CollabImageBlock));
     expect(
       tester
           .widget<CachedNetworkImage>(find.byType(CachedNetworkImage))
@@ -429,6 +428,7 @@ void main() {
       isRemote: true,
     );
     await tester.pumpWidget(view());
+    expect(tester.state(find.byType(CollabImageBlock)), same(imageState));
     expect(
       tester
           .widget<CachedNetworkImage>(find.byType(CachedNetworkImage))
@@ -438,4 +438,13 @@ void main() {
     expect(tester.takeException(), isNull);
     await tester.pumpWidget(const SizedBox.shrink());
   });
+}
+
+/// 为借用[node]和[editorState]提供正式图片块环境，初始化选区样式但不拥有编辑器或原生资源。
+Widget _imageBlock({required Node node, required EditorState editorState}) {
+  editorState.editorStyle = const EditorStyle.mobile();
+  return Provider<EditorState>.value(
+    value: editorState,
+    child: CollabImageBlock(key: node.key, node: node),
+  );
 }

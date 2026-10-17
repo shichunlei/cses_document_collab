@@ -1,15 +1,11 @@
-import 'package:cses_document_collab/src/editor/collab_resource_block.dart';
 import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
-
-
-
-
-
-
+import 'package:cses_document_collab/src/editor/collab_audio_block.dart';
+import 'package:cses_document_collab/src/editor/collab_attachment_block.dart';
+import 'package:cses_document_collab/src/editor/collab_web_block.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -44,14 +40,12 @@ Widget _app(
       disableKeyboardService: true,
       blockComponentBuilders: {
         ...standardBlockComponentBuilderMap,
-        'audio': CollabResourceBlockComponentBuilder(),
-        'attachment': CollabResourceBlockComponentBuilder(),
-        'bookmark': CollabResourceBlockComponentBuilder(
-          loadPreview: loadPreview ?? _metadata,
-        ),
-        'embed': CollabResourceBlockComponentBuilder(),
-        'juejin-embed': CollabResourceBlockComponentBuilder(),
-        'figma-embed': CollabResourceBlockComponentBuilder(),
+        'audio': CollabAudioBlockComponentBuilder(),
+        'attachment': CollabAttachmentBlockComponentBuilder(),
+        for (final kind in ['bookmark', 'embed', 'juejin-embed', 'figma-embed'])
+          kind: CollabWebBlockComponentBuilder(
+            loadPreview: loadPreview ?? _metadata,
+          ),
       },
     ),
   ),

@@ -1,16 +1,12 @@
-import 'package:cses_document_collab/src/editor/collab_resource_block.dart';
 import 'package:cses_document_collab/src/editor/collab_link_preview.dart';
 import 'package:cses_document_collab/src/editor/collab_embedded_page.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_link_actions.dart';
 import 'package:cses_document_collab/src/editor/collab_callout_block.dart';
-
-
-
-
-
-
+import 'package:cses_document_collab/src/editor/collab_audio_block.dart';
+import 'package:cses_document_collab/src/editor/collab_attachment_block.dart';
+import 'package:cses_document_collab/src/editor/collab_web_block.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/model/collab_host_services.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
@@ -70,14 +66,15 @@ Widget _app(AppFlowyBlockEditorAdapter adapter, {bool keyboard = false}) =>
           blockComponentBuilders: {
             ...standardBlockComponentBuilderMap,
             'callout': CollabCalloutBlockComponentBuilder(),
-            'audio': CollabResourceBlockComponentBuilder(),
-            'attachment': CollabResourceBlockComponentBuilder(),
-            'bookmark': CollabResourceBlockComponentBuilder(
-              loadPreview: _metadata,
-            ),
-            'embed': CollabResourceBlockComponentBuilder(),
-            'juejin-embed': CollabResourceBlockComponentBuilder(),
-            'figma-embed': CollabResourceBlockComponentBuilder(),
+            'audio': CollabAudioBlockComponentBuilder(),
+            'attachment': CollabAttachmentBlockComponentBuilder(),
+            for (final kind in [
+              'bookmark',
+              'embed',
+              'juejin-embed',
+              'figma-embed',
+            ])
+              kind: CollabWebBlockComponentBuilder(loadPreview: _metadata),
           },
         ),
       ),

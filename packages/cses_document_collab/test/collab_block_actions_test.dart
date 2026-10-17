@@ -3,10 +3,12 @@ import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.da
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/editor/collab_callout_block.dart';
 import 'package:cses_document_collab/src/editor/collab_code_block.dart';
-import 'package:cses_document_collab/src/editor/collab_embed_block.dart';
+import 'package:cses_document_collab/src/editor/collab_image_block.dart';
+import 'package:cses_document_collab/src/editor/collab_video_block.dart';
 import 'package:cses_document_collab/src/editor/collab_formula_block.dart';
 import 'package:cses_document_collab/src/editor/collab_meeting_block.dart';
-import 'package:cses_document_collab/src/editor/collab_resource_block.dart';
+import 'package:cses_document_collab/src/editor/collab_audio_block.dart';
+import 'package:cses_document_collab/src/editor/collab_attachment_block.dart';
 import 'package:cses_document_collab/src/editor/collab_task_card_block.dart';
 import 'package:cses_document_collab/src/model/collab_image.dart';
 import 'package:cses_document_collab/src/model/collab_host_services.dart';
@@ -81,10 +83,10 @@ Widget _app(AppFlowyBlockEditorAdapter adapter) => MaterialApp(
         'meeting': CollabMeetingBlockComponentBuilder(),
         'code': CollabCodeBlockComponentBuilder(),
         'formula': CollabFormulaBlockComponentBuilder(),
-        'image': CollabEmbedBlockComponentBuilder(kind: CollabEmbedKind.image),
-        'video': CollabEmbedBlockComponentBuilder(kind: CollabEmbedKind.video),
-        for (final type in ['attachment', 'audio'])
-          type: CollabResourceBlockComponentBuilder(),
+        'image': CollabImageBlockComponentBuilder(),
+        'video': CollabVideoBlockComponentBuilder(),
+        'attachment': CollabAttachmentBlockComponentBuilder(),
+        'audio': CollabAudioBlockComponentBuilder(),
       },
     ),
   ),
@@ -234,7 +236,7 @@ void main() {
       adapter.editorState.editable = false;
       await _mount(tester, adapter);
       await tester.pumpAndSettle();
-      if (const {'audio', 'video', 'attachment'}.contains(kind)) {
+      if (const {'video', 'attachment'}.contains(kind)) {
         expect(find.byTooltip('更多操作'), findsOneWidget);
         await tester.tap(find.byTooltip('更多操作'));
         await tester.pumpAndSettle();

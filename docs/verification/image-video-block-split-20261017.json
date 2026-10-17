@@ -1,0 +1,114 @@
+{
+  "date": "2026-10-17",
+  "request": "Split image/video card block implementations without changing business behavior or UI.",
+  "implementation": {
+    "image": {
+      "file": "packages/cses_document_collab/lib/src/editor/collab_image_block.dart",
+      "builder": "CollabImageBlockComponentBuilder",
+      "preserved": "CollabImageContent, image projection, dimensions, captions, menus, cached/SVG/data-URI handling and legacy AppFlowy image fallback remain unchanged."
+    },
+    "video": {
+      "file": "packages/cses_document_collab/lib/src/editor/collab_video_block.dart",
+      "builder": "CollabVideoBlockComponentBuilder",
+      "ownership": "Video state alone owns the controller and pending-seek map; original source replacement, stale-initialize checks, play/pause, seek-before-dispose ordering and failure behavior are retained."
+    },
+    "common": {
+      "file": "packages/cses_document_collab/lib/src/editor/collab_media_block_base.dart",
+      "classes": [
+        "CollabMediaBlock",
+        "CollabMediaBlockState"
+      ],
+      "preserved": "Original Padding/Stack wrapper, menu placement/Material, block/cursor/selection modes, coordinate calculations, configuration and action wrapper. Does not adopt the separate resource-card UI shell."
+    },
+    "legacy_link": {
+      "file": "packages/cses_document_collab/lib/src/editor/collab_embed_block.dart",
+      "preserved": "Original independent-link factory/call signature, link enum value, card method, menu and external-opening behavior retained. Image/video enum members and dispatch branches removed after migrating every caller."
+    },
+    "migrated_callers": [
+      "packages/cses_document_collab/integration_test/mobile_card_pointer_test.dart",
+      "packages/cses_document_collab/test/collab_list_enter_focus_test.dart",
+      "packages/cses_document_collab/test/collab_list_backspace_focus_test.dart",
+      "packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart",
+      "packages/cses_document_collab/test/collab_video_update_test.dart",
+      "packages/cses_document_collab/test/collab_block_actions_test.dart",
+      "packages/cses_document_collab/test/editor_modal_focus_test.dart",
+      "packages/cses_document_collab/lib/src/editor/collaborative_editor_page.dart"
+    ],
+    "outside_scope": [
+      "Shared schema/flavours and resource fields",
+      "Rust/native/generated bridges",
+      "Dependencies and package public exports",
+      "Other block implementations",
+      "Image content/cache/editor source"
+    ]
+  },
+  "parity": {
+    "normalization": "Only whitespace, formatter-optional trailing commas and mechanical helper/getter names are normalized.",
+    "methods": {
+      "Widget _buildVideoCard(": true,
+      "Future<void> _initializeVideo(": true,
+      "Future<void> _disposeVideo(": true,
+      "Future<void> _seekVideo(": true,
+      "Future<void> _toggleVideo(": true,
+      "class _VideoPlaceholder": true,
+      "legacy_link_UI": true,
+      "external_open": true
+    },
+    "original_workspace_embed_sha256": "bbe92519e9f0e9b532635460ebde996df411e433560e8f3e542ad96ef679636d",
+    "selection_review": "Copied original selection geometry, support types, LTR direction, showActions/action callbacks and configuration behavior into the common base.",
+    "legacy_references": "Repository-wide Dart search found no CollabEmbedKind.image/video or _CollabEmbedBlockWidget references. Remaining original builder/enum uses intentionally target link only.",
+    "status_counts_unchanged": {
+      "adapted": 13,
+      "partial": 12,
+      "structural": 1,
+      "unadapted": 15,
+      "total": 41
+    }
+  },
+  "validation": {
+    "target_tests": {
+      "command": "flutter test --no-pub test/collab_video_update_test.dart test/collab_image_test.dart test/collab_image_svg_test.dart test/collab_block_actions_test.dart test/editor_modal_focus_test.dart",
+      "passed": 69,
+      "result": "00:25 +69: All tests passed!"
+    },
+    "package_tests": {
+      "command": "flutter test --no-pub",
+      "status": "passed",
+      "passed": 1162,
+      "failed": 0,
+      "result": "04:08 +1162: All tests passed!"
+    },
+    "host_tests": {
+      "command": "flutter test --no-pub",
+      "passed": 56,
+      "result": "00:40 +56: All tests passed!"
+    },
+    "target_analysis": {
+      "targets": 12,
+      "result": "No issues found; 4 media libraries, formal page, 6 affected tests and device test target"
+    },
+    "package_analysis": {
+      "command": "flutter analyze --no-pub",
+      "errors": 0,
+      "warnings": 0,
+      "existing_infos": [
+        "test/collab_controller_native_test.dart:186 close_sinks"
+      ],
+      "exit_status": 1,
+      "scope": "Unrelated native test left unchanged; touched video fixture documents existing stream ownership and scoped false-positive suppression."
+    },
+    "format": "dart format run on all changed handwritten Dart files; untouched formal-page declarations retain their prior layout.",
+    "diff_check": "git diff --check passed"
+  },
+  "upstream_version": {
+    "latest": "unverified",
+    "desktop_declared_locked_installed": "unverified",
+    "reason": "Before this task the expected adjacent desktop repository was checked and remains absent. Configured-registry latest and matching packaged skills/MIGRATIONS/implementation cannot be read from this host.",
+    "followup": "Verify in an accessible desktop environment; historical versions are not asserted as current latest."
+  },
+  "limits": [
+    "No live document writes or phone restarts performed for this source-only split.",
+    "Device-test registration analyzed, but complete physical-device gestures/iOS and live desktop collaboration were not rerun.",
+    "No business/UI redesign, native source or ABI change is included."
+  ]
+}

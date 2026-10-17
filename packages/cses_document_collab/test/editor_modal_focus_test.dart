@@ -4,6 +4,7 @@ import 'package:cses_document_collab/src/editor/editor_media_source_sheet.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/model/editor_media_upload.dart';
+import 'package:cses_document_collab/src/editor/collab_image_block.dart';
 import 'package:cses_document_collab/src/editor/collab_embed_block.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:dio/dio.dart';
@@ -79,9 +80,7 @@ class _Harness {
                     editorStyle: const EditorStyle.mobile(),
                     blockComponentBuilders: {
                       ...standardBlockComponentBuilderMap,
-                      'image': CollabEmbedBlockComponentBuilder(
-                        kind: CollabEmbedKind.image,
-                      ),
+                      'image': CollabImageBlockComponentBuilder(),
                       csesLinkBlockType: CollabEmbedBlockComponentBuilder(
                         kind: CollabEmbedKind.link,
                       ),

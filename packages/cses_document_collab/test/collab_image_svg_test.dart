@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
-import 'package:cses_document_collab/src/editor/collab_image_content.dart';
+import 'package:cses_document_collab/src/editor/collab_image_block.dart';
 import 'package:cses_document_collab/src/model/collab_image.dart';
 import 'package:file/file.dart';
 import 'package:file/memory.dart';
@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
 
 /// Returns a self-contained vector fixture marked by [color], with an XML header.
 String _svg(String color) =>
@@ -37,7 +38,7 @@ Widget _view(AppFlowyBlockEditorAdapter adapter) => MaterialApp(
   home: Scaffold(
     body: SizedBox(
       width: 300,
-      child: CollabImageContent(
+      child: _imageBlock(
         node: adapter.editorState.document.first!,
         editorState: adapter.editorState,
       ),
@@ -285,4 +286,13 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
     expect(tester.takeException(), isNull);
   });
+}
+
+/// 为借用[node]和[editorState]提供正式图片块环境，初始化选区样式但不拥有编辑器或原生资源。
+Widget _imageBlock({required Node node, required EditorState editorState}) {
+  editorState.editorStyle = const EditorStyle.mobile();
+  return Provider<EditorState>.value(
+    value: editorState,
+    child: CollabImageBlock(key: node.key, node: node),
+  );
 }

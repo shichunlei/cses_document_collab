@@ -1,0 +1,104 @@
+{
+  "date": "2026-10-17",
+  "scope": "Static audit of current mobile block registration and implementations; no production Dart, data, logic or UI edits.",
+  "definition": "A mixed block implementation means distinct registered node types routed through one concrete BlockComponentBuilder; shared bases, widgets/state for one block, attribute variants, inline objects and protected placeholders are separate categories.",
+  "actual_mixed_groups": [
+    {
+      "file": "packages/cses_document_collab/lib/src/editor/collab_table_block.dart",
+      "builder": "CollabTableBlockComponentBuilder",
+      "types": [
+        "table",
+        "table-row",
+        "table-cell"
+      ],
+      "evidence": "Formal registry maps all three to this builder; _TableBlock.build branches for table and table-row, then renders cell UI.",
+      "can_split": true,
+      "priority": "recommended next",
+      "risk": "medium",
+      "plan": "Retain table host and existing controls/grid; move row and cell branches to their own builders/widgets/files. Share children/empty-body handling and helpers. Preserve node tree, IDs, merge/layout metadata, renderer recursion, focus/selection and callback context."
+    },
+    {
+      "file": "packages/cses_document_collab/lib/src/editor/collab_web_block.dart",
+      "builder": "CollabWebBlockComponentBuilder",
+      "types": [
+        "bookmark",
+        "embed",
+        "juejin-embed",
+        "figma-embed"
+      ],
+      "evidence": "Formal registry and _webTypes share one builder; native metadata vs WebView, labels/icons and size paths depend on node type.",
+      "can_split": true,
+      "priority": "optional; intentionally grouped by earlier request",
+      "risk": "low to medium",
+      "plan": "Optional bookmark/web-embed/Juejin/Figma thin builders and view classes over shared resource selection/actions/preview helpers. Keep loaders, WebView/source keys, sizing, URL rules, menus and view-conversion semantics unchanged."
+    }
+  ],
+  "related_but_not_mixed_blocks": [
+    {
+      "category": "H1-H9 headings",
+      "evidence": "Adapter maps heading_1..heading_9 to the heading node type plus level; AppFlowy HeadingBlockComponentBuilder is already separate from paragraph/quote/list builders.",
+      "decision": "Keep level as data; do not create nine independent block types or duplicate renderers."
+    },
+    {
+      "category": "Paragraph/quote/bulleted/numbered/todo",
+      "evidence": "Distinct AppFlowy builder files; collab paragraph/list helpers and alignment wrappers share operations across types.",
+      "decision": "Already separated renderers. Shared editing/presentation is not a mixed block renderer; retain helpers."
+    },
+    {
+      "category": "Inline meeting/task/doc mentions",
+      "file": "packages/cses_document_collab/lib/src/editor/collab_inline_entity_mention.dart",
+      "decision": "Can optionally split presentation entry classes, but these are inline objects, not registered card blocks. Preserve that only meeting/task can convert to cards; lower priority."
+    },
+    {
+      "category": "Mermaid source and image captions",
+      "evidence": "Mermaid source is a unique formal Y.Text child consumed by its parent/editor sheet; image captions are displayed by image content.",
+      "decision": "Keep parent/child contracts. Optional helper extraction is possible; do not add standalone renderers or new registration semantics."
+    },
+    {
+      "category": "Legacy standalone link",
+      "file": "packages/cses_document_collab/lib/src/editor/collab_embed_block.dart",
+      "decision": "Only link remains after image/video split. No mixed implementation; optional file/class/enum naming cleanup only."
+    },
+    {
+      "category": "Resource settings, shared bases, adapter, registry",
+      "decision": "These are common forms/infrastructure/composition, not multiple card implementations. Preserve shared coordination in this class-only task."
+    },
+    {
+      "category": "Unsupported block placeholder",
+      "decision": "Protects multiple unsupported types without implementing them; do not count placeholder wrappers as completed individual block implementations."
+    }
+  ],
+  "confirmed_separate_custom_blocks": [
+    "audio",
+    "attachment",
+    "image",
+    "video",
+    "meeting",
+    "task",
+    "code",
+    "formula",
+    "callout",
+    "divider",
+    "mermaid",
+    "legacy link"
+  ],
+  "unchanged_counts": {
+    "adapted": 13,
+    "partial": 12,
+    "structural": 1,
+    "unadapted": 15,
+    "total": 41
+  },
+  "proposed_migration_constraints": [
+    "No type/flavour, ID, schema, attributes or document projection changes.",
+    "No validation/default/sizing/color/padding/menu/readonly behavior changes.",
+    "Retain controller/WebView/loader ownership, source identity and asynchronous invalidation.",
+    "Only move class declarations/render branches and update precise imports/registration; keep shared code in explicit bases/helpers.",
+    "Any later implementation requires targeted/full package and consumer checks and source/render parity verification."
+  ],
+  "upstream_version": {
+    "latest": "unverified",
+    "reason": "Expected adjacent desktop repository checked before this audit and remains unavailable; configured registry, declaration/lock/install artifacts, packaged skills/MIGRATIONS and upstream implementation cannot be verified here."
+  },
+  "verification": "Read-only source/registration inspection. No Flutter tests were rerun because no Dart code changed; git diff --check run for audit documentation."
+}

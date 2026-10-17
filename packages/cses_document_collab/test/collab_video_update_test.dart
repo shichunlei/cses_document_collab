@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
-import 'package:cses_document_collab/src/editor/collab_embed_block.dart';
+import 'package:cses_document_collab/src/editor/collab_video_block.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:video_player/video_player.dart';
@@ -38,9 +38,7 @@ void main() {
                 disableKeyboardService: true,
                 blockComponentBuilders: {
                   ...standardBlockComponentBuilderMap,
-                  csesVideoBlockType: CollabEmbedBlockComponentBuilder(
-                    kind: CollabEmbedKind.video,
-                  ),
+                  csesVideoBlockType: CollabVideoBlockComponentBuilder(),
                 },
               ),
             ),
@@ -169,9 +167,7 @@ void main() {
                   ),
                   blockComponentBuilders: {
                     ...standardBlockComponentBuilderMap,
-                    csesVideoBlockType: CollabEmbedBlockComponentBuilder(
-                      kind: CollabEmbedKind.video,
-                    ),
+                    csesVideoBlockType: CollabVideoBlockComponentBuilder(),
                   },
                 ),
               ),
@@ -312,6 +308,8 @@ class _MemoryVideoPlatform extends VideoPlayerPlatform {
   Future<int?> createWithOptions(VideoCreationOptions options) async {
     final id = sources.length;
     sources.add(options.dataSource.uri!);
+    // Ownership transfers to _events; dispose/close await each retained sink.
+    // ignore: close_sinks
     final events = StreamController<VideoEvent>();
     _events[id] = events;
     if (!pending) {
