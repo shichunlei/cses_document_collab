@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// 注册工具栏与添加面板的事务、光标恢复和权限回归；测试各自释放借用的编辑器。
 void main() {
@@ -741,7 +742,7 @@ void main() {
     await tester.pumpWidget(_toolbarApp(state));
     await tester.pump();
 
-    expect(find.text('T'), findsOneWidget);
+    expect(find.byIcon(LucideIcons.type), findsOneWidget);
     await tester.tap(find.byKey(const ValueKey('editor-shortcut-block-style')));
     await tester.pump();
 

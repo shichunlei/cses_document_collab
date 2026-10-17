@@ -182,7 +182,7 @@ class _EditorShortcutToolbarState extends State<EditorShortcutToolbar> {
     await SystemChannels.textInput.invokeMethod<void>('TextInput.show');
   }
 
-  /// 在借用 [context] 中按平台提供移动工具栏，包括人员提及入口。
+  /// 在借用 [context] 中按平台提供Lucide图标的移动工具栏，包括人员提及入口。
   @override
   Widget build(BuildContext context) {
     if (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS) {
@@ -248,10 +248,11 @@ class _InlineStyleController extends ChangeNotifier {
   }
 }
 
+/// 添加块入口，使用Lucide加号图标；业务面板负责异步错误与正文选区恢复。
 final _addBlockToolbarItem = MobileToolbarItem.action(
   itemIconBuilder: (_, _, _) => const Tooltip(
     message: '添加块',
-    child: KeyedSubtree(key: ValueKey('editor-shortcut-add'), child: Icon(Icons.add_circle_outline, size: 27)),
+    child: KeyedSubtree(key: ValueKey('editor-shortcut-add'), child: Icon(LucideIcons.circlePlus, size: 27)),
   ),
   actionHandler: (context, editorState) {
     unawaited(showEditorAddBlockSheet(context, editorState));
@@ -261,21 +262,22 @@ final _addBlockToolbarItem = MobileToolbarItem.action(
 /// The compact keyboard toolbar exposes the same image insertion flow as the
 /// exhaustive add sheet. Keeping both entry points on one function guarantees
 /// identical URL validation, collaborative node shape and caret restoration.
+/// The entry uses the same Lucide image icon as the insertion panel.
 final _imageToolbarItem = MobileToolbarItem.action(
   itemIconBuilder: (_, _, _) => const Tooltip(
     message: '插入图片',
-    child: KeyedSubtree(key: ValueKey('editor-shortcut-image'), child: Icon(Icons.image_outlined)),
+    child: KeyedSubtree(key: ValueKey('editor-shortcut-image'), child: Icon(LucideIcons.image)),
   ),
   actionHandler: (context, editorState) {
     unawaited(showEditorUrlBlockDialog(context, editorState, ImageBlockKeys.type));
   },
 );
 
-/// 人员工具栏入口；异步错误由完整弹窗流程报告，正文位置独立保存。
+/// 人员工具栏入口使用Lucide的@图标；异步错误由完整弹窗流程报告，正文位置独立保存。
 final _mentionToolbarItem = MobileToolbarItem.action(
   itemIconBuilder: (_, _, _) => const Tooltip(
     message: '@用户',
-    child: KeyedSubtree(key: ValueKey('editor-shortcut-mention'), child: Icon(Icons.alternate_email)),
+    child: KeyedSubtree(key: ValueKey('editor-shortcut-mention'), child: Icon(LucideIcons.atSign)),
   ),
   actionHandler: (context, state) {
     unawaited(showEditorUserMentionSheet(context, state));
@@ -347,11 +349,13 @@ Future<void> showEditorUserMentionSheet(
   }
 }
 
+/// 以Lucide文字样式图标构建菜单入口，借用 [inlineStyleController] 回显格式。
+/// 控制器由所属工具栏释放，入口不接管编辑器资源。
 MobileToolbarItem _textDecorationToolbarItem(_InlineStyleController inlineStyleController) =>
     MobileToolbarItem.withMenu(
-      itemIconBuilder: (context, editorState, isSelected) => KeyedSubtree(
-        key: const ValueKey('editor-shortcut-inline-style'),
-        child: textDecorationMobileToolbarItemV2.itemIconBuilder!(context, editorState, isSelected)!,
+      itemIconBuilder: (_, _, _) => const KeyedSubtree(
+        key: ValueKey('editor-shortcut-inline-style'),
+        child: Tooltip(message: '文字样式', child: Icon(LucideIcons.caseSensitive, size: 27)),
       ),
       itemMenuBuilder: (_, editorState, service) =>
           _InlineStyleMenu(editorState: editorState, inlineStyleController: inlineStyleController),
@@ -509,13 +513,11 @@ class _SelectionFormatSheetState extends State<_SelectionFormatSheet> {
   );
 }
 
+/// 块类型入口及展开菜单，使用Lucide文字图标并保留原选区命令。
 final _blockStyleToolbarItem = MobileToolbarItem.withMenu(
   itemIconBuilder: (context, editorState, service) => const KeyedSubtree(
     key: ValueKey('editor-shortcut-block-style'),
-    child: Tooltip(
-      message: '块类型',
-      child: Text('T', style: TextStyle(fontSize: 29, height: 1, fontWeight: FontWeight.w500)),
-    ),
+    child: Tooltip(message: '块类型', child: Icon(LucideIcons.type, size: 27)),
   ),
   itemMenuBuilder: (_, editorState, service) => _BlockStyleMenu(editorState: editorState),
 );
@@ -586,6 +588,7 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
   }
 
   /// 使用 [context] 渲染布局按钮；文本段遵守8级及兄弟深度约束，0级列表仍可退为段落。
+  /// 对齐、缩进与颜色入口统一使用Lucide图标，保持既有选中及禁用状态。
   @override
   Widget build(BuildContext context) {
     final selection = widget.editorState.selection;
@@ -606,7 +609,7 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
           tooltip: '减少缩进',
           enabled: canOutdent,
           selected: false,
-          icon: const Icon(Icons.format_indent_decrease, size: 28),
+          icon: const Icon(LucideIcons.indentDecrease, size: 28),
           onPressed: () => _changeIndent(-1),
         ),
         const SizedBox(width: 5),
@@ -615,16 +618,16 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
           tooltip: '增加缩进',
           enabled: canIncreaseIndent,
           selected: false,
-          icon: const Icon(Icons.format_indent_increase, size: 28),
+          icon: const Icon(LucideIcons.indentIncrease, size: 28),
           onPressed: () => _changeIndent(1),
         ),
         const SizedBox(width: 10),
         for (final option in const [
-          ('left', '左对齐', Icons.format_align_left),
-          ('center', '居中', Icons.format_align_center),
-          ('right', '右对齐', Icons.format_align_right),
-          ('justify', '两端对齐', Icons.format_align_justify),
-          ('distributed', '分散对齐', Icons.space_bar),
+          ('left', '左对齐', LucideIcons.textAlignStart),
+          ('center', '居中', LucideIcons.textAlignCenter),
+          ('right', '右对齐', LucideIcons.textAlignEnd),
+          ('justify', '两端对齐', LucideIcons.textAlignJustify),
+          ('distributed', '分散对齐', LucideIcons.space),
         ]) ...[
           _PopupIconButton(
             key: ValueKey('editor-block-align-${option.$1}'),
@@ -641,7 +644,7 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
           tooltip: '块背景色',
           enabled: nodes.any((n) => n.delta != null),
           selected: false,
-          icon: const Icon(Icons.format_color_fill, size: 28),
+          icon: const Icon(LucideIcons.paintBucket, size: 28),
           onPressed: () => setState(() => _colorAttribute = csesBlockBackgroundColorAttribute),
         ),
         if (nodes.any((n) => n.type == QuoteBlockKeys.type))
@@ -649,13 +652,13 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
             key: const ValueKey('editor-block-border-color'),
             tooltip: '左侧线条颜色',
             selected: false,
-            icon: const Icon(Icons.border_left, size: 28),
+            icon: const Icon(LucideIcons.panelLeft, size: 28),
             onPressed: () => setState(() => _colorAttribute = csesBlockBorderColorAttribute),
           ),
         for (final option in const [
-          (null, '下一段：默认', Icons.settings_backup_restore),
-          ('same', '下一段：延续样式', Icons.subdirectory_arrow_right),
-          ('body', '下一段：正文', Icons.notes),
+          (null, '下一段：默认', LucideIcons.rotateCcw),
+          ('same', '下一段：延续样式', LucideIcons.cornerDownRight),
+          ('body', '下一段：正文', LucideIcons.textAlignStart),
         ])
           _PopupIconButton(
             key: ValueKey('editor-next-paragraph-${option.$1 ?? 'default'}'),
@@ -750,10 +753,14 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
   }
 }
 
+/// 对齐和缩进入口，Lucide图标与展开布局菜单使用相同语义。
 final _blockLayoutToolbarItem = MobileToolbarItem.withMenu(
   itemIconBuilder: (_, _, _) => const Tooltip(
     message: '对齐与缩进',
-    child: KeyedSubtree(key: ValueKey('editor-shortcut-block-layout'), child: Icon(Icons.format_align_left, size: 27)),
+    child: KeyedSubtree(
+      key: ValueKey('editor-shortcut-block-layout'),
+      child: Icon(LucideIcons.textAlignStart, size: 27),
+    ),
   ),
   itemMenuBuilder: (_, editorState, service) => _BlockLayoutMenu(editorState: editorState),
 );
@@ -783,14 +790,30 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
   int _maxHeadingLevel = 3;
   String? _activeNodeId;
 
-  static const _paragraphStyle = _BlockStyleAction(blockType: ParagraphBlockKeys.type, label: '正文', text: 'T');
+  /// 正文类型的Lucide文字图标及转换目标。
+  static const _paragraphStyle = _BlockStyleAction(
+    blockType: ParagraphBlockKeys.type,
+    label: '正文',
+    icon: LucideIcons.type,
+  );
 
+  /// 图标库提供的一至六级标题；更高级别复用heading并单独标出数字。
+  static const _headingIcons = [
+    LucideIcons.heading1,
+    LucideIcons.heading2,
+    LucideIcons.heading3,
+    LucideIcons.heading4,
+    LucideIcons.heading5,
+    LucideIcons.heading6,
+  ];
+
+  /// 列表、代码与引用类型共享的Lucide图标及命令定义。
   static const _blockStyles = <_BlockStyleAction>[
-    _BlockStyleAction(blockType: NumberedListBlockKeys.type, label: '有序列表', icon: Icons.format_list_numbered),
-    _BlockStyleAction(blockType: BulletedListBlockKeys.type, label: '无序列表', icon: Icons.format_list_bulleted),
-    _BlockStyleAction(blockType: TodoListBlockKeys.type, label: '待办列表', icon: Icons.check_box_outlined),
-    _BlockStyleAction(blockType: 'code', label: '代码块', icon: Icons.data_object),
-    _BlockStyleAction(blockType: QuoteBlockKeys.type, label: '引用块', icon: Icons.format_quote),
+    _BlockStyleAction(blockType: NumberedListBlockKeys.type, label: '有序列表', icon: LucideIcons.listOrdered),
+    _BlockStyleAction(blockType: BulletedListBlockKeys.type, label: '无序列表', icon: LucideIcons.list),
+    _BlockStyleAction(blockType: TodoListBlockKeys.type, label: '待办列表', icon: LucideIcons.squareCheck),
+    _BlockStyleAction(blockType: 'code', label: '代码块', icon: LucideIcons.codeXml),
+    _BlockStyleAction(blockType: QuoteBlockKeys.type, label: '引用块', icon: LucideIcons.quote),
   ];
 
   @override
@@ -864,6 +887,7 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
 
   /// 为借用的 [context] 构建类型菜单；高亮当前起点类型，按钮在点击时读取最新选区。
   /// 构建过程无编辑副作用，列表命令由统一事务执行，Heading 选项按当前披露上限显示。
+  /// 所有类型使用Lucide图标；七至九级在heading图标旁标出级别，保持原有功能范围。
   @override
   Widget build(BuildContext context) {
     final selection = widget.editorState.selection;
@@ -878,7 +902,7 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
           blockType: HeadingBlockKeys.type,
           headingLevel: level,
           label: '$level 级标题',
-          text: 'H${_subscriptDigit(level)}',
+          icon: level <= _headingIcons.length ? _headingIcons[level - 1] : LucideIcons.heading,
         ),
       ..._blockStyles,
     ];
@@ -896,8 +920,22 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
           key: ValueKey('editor-block-${style.blockType}-${style.headingLevel ?? 0}'),
           tooltip: style.label,
           selected: selected,
-          icon: style.icon == null
-              ? Text(style.text!, style: const TextStyle(fontSize: 26, height: 1))
+          icon: style.headingLevel != null && style.headingLevel! > _headingIcons.length
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Icon(style.icon, size: 24),
+                    Text(
+                      '${style.headingLevel}',
+                      style: TextStyle(
+                        fontSize: 11,
+                        height: 1,
+                        color: selected ? CollabModalColors.of(context).accent : CollabModalColors.of(context).text,
+                      ),
+                    ),
+                  ],
+                )
               : Icon(style.icon, size: 27),
           onPressed: () => _apply(style),
         );
@@ -956,19 +994,25 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
   }
 }
 
-String _subscriptDigit(int value) =>
-    const {1: '₁', 2: '₂', 3: '₃', 4: '₄', 5: '₅', 6: '₆', 7: '₇', 8: '₈', 9: '₉'}[value]!;
-
+/// 类型菜单的不可变命令描述；图标与标签不参与文档数据写入。
 class _BlockStyleAction {
-  const _BlockStyleAction({required this.blockType, required this.label, this.headingLevel, this.text, this.icon})
-    : assert(text != null || icon != null);
+  /// [blockType] 是目标块类型，[label] 是提示，[icon] 是Lucide图标。
+  /// [headingLevel] 仅标题使用，范围1～9；其他类型为null。
+  const _BlockStyleAction({required this.blockType, required this.label, required this.icon, this.headingLevel});
 
+  /// 转换命令使用的目标类型，不由菜单重新定义Schema。
   final String blockType;
-  final int? headingLevel;
-  final String label;
-  final String? text;
-  final IconData? icon;
 
+  /// 标题级别，非标题为null。
+  final int? headingLevel;
+
+  /// 对用户展示的操作名称。
+  final String label;
+
+  /// 对应类型的Lucide图标，不持有资源。
+  final IconData icon;
+
+  /// 判断借用的 [node] 是否匹配类型及可选标题级别，用于回显选中状态。
   bool matches(Node node) {
     if (node.type != blockType) {
       return false;
@@ -1009,14 +1053,15 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
   // highlight behind the glyph (`bg_color`).
   _InlineColorTarget? _colorPicker;
 
+  /// 格式键与Lucide图标的映射，顺序供普通和展开样式菜单共用。
   static final _styles = <_InlineStyleAction>[
-    _InlineStyleAction(key: AppFlowyRichTextKeys.bold, label: '加粗', icon: Icons.format_bold),
-    _InlineStyleAction(key: AppFlowyRichTextKeys.italic, label: '斜体', icon: Icons.format_italic),
-    _InlineStyleAction(key: AppFlowyRichTextKeys.underline, label: '下划线', icon: Icons.format_underlined),
-    _InlineStyleAction(key: AppFlowyRichTextKeys.strikethrough, label: '删除线', icon: Icons.format_strikethrough),
-    _InlineStyleAction(key: AppFlowyRichTextKeys.code, label: '行内代码', icon: Icons.code),
-    _InlineStyleAction(key: csesSuperscriptAttribute, label: '上标', icon: Icons.superscript),
-    _InlineStyleAction(key: csesSubscriptAttribute, label: '下标', icon: Icons.subscript),
+    _InlineStyleAction(key: AppFlowyRichTextKeys.bold, label: '加粗', icon: LucideIcons.bold),
+    _InlineStyleAction(key: AppFlowyRichTextKeys.italic, label: '斜体', icon: LucideIcons.italic),
+    _InlineStyleAction(key: AppFlowyRichTextKeys.underline, label: '下划线', icon: LucideIcons.underline),
+    _InlineStyleAction(key: AppFlowyRichTextKeys.strikethrough, label: '删除线', icon: LucideIcons.strikethrough),
+    _InlineStyleAction(key: AppFlowyRichTextKeys.code, label: '行内代码', icon: LucideIcons.codeXml),
+    _InlineStyleAction(key: csesSuperscriptAttribute, label: '上标', icon: LucideIcons.superscript),
+    _InlineStyleAction(key: csesSubscriptAttribute, label: '下标', icon: LucideIcons.subscript),
   ];
 
   @override
@@ -1047,6 +1092,7 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
   }
 
   /// 在借用 [context] 中回显当前格式；点击命令时重新读取选区，避免使用构建阶段的旧路径。
+  /// 字色与背景色保留当前色值，图标与其他样式入口统一采用Lucide。
   @override
   Widget build(BuildContext context) {
     final selection = widget.editorState.selection;
@@ -1077,7 +1123,7 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
             tooltip: '文字颜色',
             selected: !currentTextColor.isMixed && currentTextColor.value != null,
             icon: Icon(
-              Icons.format_color_text,
+              LucideIcons.baseline,
               key: const ValueKey('editor-inline-text-color-icon'),
               size: 28,
               color: parseCollabBlockColor(currentTextColor.value),
@@ -1091,7 +1137,7 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
             tooltip: '文字背景颜色',
             selected: !currentBackgroundColor.isMixed && currentBackgroundColor.value != null,
             icon: Icon(
-              Icons.format_color_fill,
+              LucideIcons.paintBucket,
               key: const ValueKey('editor-inline-background-color-icon'),
               size: 28,
               color: parseCollabBlockColor(currentBackgroundColor.value),
@@ -1826,7 +1872,7 @@ class _AddBlockSheet extends StatelessWidget {
                   ),
                   _ActionShortcutTile(
                     key: const ValueKey('editor-shortcut-link-block'),
-                    icon: Icons.link,
+                    icon: LucideIcons.link,
                     label: '链接',
                     accent: const Color(0xFF2563EB),
                     tint: const Color(0xFFDBEAFE),
@@ -1834,7 +1880,7 @@ class _AddBlockSheet extends StatelessWidget {
                   ),
                   _ActionShortcutTile(
                     key: const ValueKey('editor-shortcut-video-block'),
-                    icon: Icons.movie_outlined,
+                    icon: LucideIcons.film,
                     label: '视频',
                     accent: const Color(0xFF7C3AED),
                     tint: const Color(0xFFEDE9FE),
@@ -1842,11 +1888,11 @@ class _AddBlockSheet extends StatelessWidget {
                   ),
                   for (final resource in const [
                     ('attachment', '附件', LucideIcons.paperclip),
-                    ('audio', '音频', Icons.audiotrack_outlined),
-                    ('bookmark', '网页卡片', Icons.bookmark_border),
-                    ('embed', '网页嵌入', Icons.language),
-                    ('juejin-embed', '掘金', Icons.article_outlined),
-                    ('figma-embed', 'Figma', Icons.design_services_outlined),
+                    ('audio', '音频', LucideIcons.music2),
+                    ('bookmark', '网页卡片', LucideIcons.bookmark),
+                    ('embed', '网页嵌入', LucideIcons.globe),
+                    ('juejin-embed', '掘金', LucideIcons.newspaper),
+                    ('figma-embed', 'Figma', LucideIcons.penTool),
                   ])
                     _ActionShortcutTile(
                       key: ValueKey('editor-shortcut-${resource.$1}-block'),
@@ -1874,7 +1920,7 @@ class _AddBlockSheet extends StatelessWidget {
                   ),
                   _ActionShortcutTile(
                     key: const ValueKey('editor-shortcut-callout'),
-                    icon: Icons.view_stream_outlined,
+                    icon: LucideIcons.squareSplitVertical,
                     label: '高亮块',
                     accent: const Color(0xFFF97316),
                     tint: const Color(0xFFFFEDD5),
@@ -1890,7 +1936,7 @@ class _AddBlockSheet extends StatelessWidget {
                   if (CollabRuntime.services.pickMeetingReference != null)
                     _ActionShortcutTile(
                       key: const ValueKey('editor-shortcut-meeting'),
-                      icon: Icons.groups_outlined,
+                      icon: LucideIcons.users,
                       label: '会议',
                       onTap: () async {
                         final services = CollabRuntime.services;
@@ -1949,7 +1995,7 @@ class _AddBlockSheet extends StatelessWidget {
                   ),
                   _ActionShortcutTile(
                     key: const ValueKey('editor-shortcut-mermaid'),
-                    icon: Icons.account_tree_outlined,
+                    icon: LucideIcons.network,
                     label: '代码绘图',
                     onTap: () async {
                       try {
@@ -1979,7 +2025,7 @@ class _AddBlockSheet extends StatelessWidget {
                   ),
                   _ActionShortcutTile(
                     key: const ValueKey('editor-shortcut-mention-more'),
-                    icon: Icons.alternate_email,
+                    icon: LucideIcons.atSign,
                     label: '@用户',
                     onTap: () => _insertMention(context),
                   ),
@@ -2036,19 +2082,19 @@ class _AddBlockSheet extends StatelessWidget {
                     },
                   ),
                   const _ActionShortcutTile(
-                    icon: Icons.grid_on_outlined,
+                    icon: LucideIcons.grid2X2,
                     label: '电子表格',
                     accent: Color(0xFF22C55E),
                     tint: Color(0xFFDCFCE7),
                   ),
                   const _ActionShortcutTile(
-                    icon: Icons.dashboard_customize_outlined,
+                    icon: LucideIcons.layoutDashboard,
                     label: '多维表格',
                     accent: Color(0xFFA855F7),
                     tint: Color(0xFFF3E8FF),
                   ),
                   const _ActionShortcutTile(
-                    icon: Icons.account_tree_outlined,
+                    icon: LucideIcons.network,
                     label: '思维导图',
                     accent: Color(0xFF06B6D4),
                     tint: Color(0xFFCFFAFE),

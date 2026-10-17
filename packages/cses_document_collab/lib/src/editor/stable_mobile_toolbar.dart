@@ -1,5 +1,6 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// A layout-based mobile toolbar that keeps the software keyboard visible.
 ///
@@ -131,6 +132,7 @@ class _StableMobileToolbarState extends State<StableMobileToolbar>
     );
   }
 
+  /// 在借用 [context] 中构建原有点击区域和选中背景，收起键盘使用Lucide图标。
   Widget _buildToolbarRow(BuildContext context) {
     final style = MobileToolbarTheme.of(context);
     return Container(
@@ -180,7 +182,7 @@ class _StableMobileToolbarState extends State<StableMobileToolbar>
             padding: EdgeInsets.zero,
             tooltip: '收起键盘',
             onPressed: _dismissKeyboard,
-            icon: Icon(Icons.keyboard_hide, color: style.iconColor),
+            icon: Icon(LucideIcons.keyboardOff, color: style.iconColor),
           ),
           const SizedBox(width: 4),
         ],
