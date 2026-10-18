@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:cses_document_collab/src/editor/collab_card_frame.dart';
 import 'package:cses_document_collab/src/editor/collab_host_mention_ui.dart';
 import 'package:cses_document_collab/src/model/collab_task_card_data.dart';
@@ -6,7 +8,8 @@ import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
-/// 桌面同款任务引用外观，借用数据与事件，不发请求或写正文。
+/// 展示任务引用的移动端卡片，借用数据与事件，不发请求或写正文。
+/// 骨架和详情共用固定行槽；行高随文字缩放计算，空字段保留留白，避免加载后推动正文。
 /// ```dart
 /// import 'package:flutter/material.dart';
 /// import 'package:cses_document_collab/src/editor/collab_task_card_view.dart';
@@ -44,7 +47,7 @@ class CollabTaskCardView extends StatelessWidget {
   /// 可选只读业务快照，不进入共享数据。
   final CollabTaskCardData? data;
 
-  /// 默认false，加载时展示固定占位，避免伪造状态和计数。
+  /// 默认false；true展示与详情同行高的骨架并禁用详情入口，不伪造状态和计数。
   final bool loading;
 
   /// 默认false，失败时显示重试反馈。
@@ -72,14 +75,10 @@ class CollabTaskCardView extends StatelessWidget {
   final VoidCallback? onRetry;
 
   /// 在借用[context]中绘制统一卡片；首行详情图标贴齐内容右边界，44像素热区不额外留白。
-  /// 卡片宽度最多400，窄屏和大字号自动换行。
+  /// 卡片宽度最多400，标题预留两行，起止时间各预留一行；行高随文字缩放增长。
   /// 未提供自定义菜单时，默认删除入口使用共用危险操作红色。
   @override
   Widget build(BuildContext context) {
-    final detail = data;
-    final displayTitle = detail?.title ?? title;
-    final priority = detail?.priority;
-    final status = detail?.status;
     return Align(
       alignment: Alignment.centerLeft,
       child: ConstrainedBox(
@@ -112,123 +111,232 @@ class CollabTaskCardView extends StatelessWidget {
                         ],
                       )),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: priority != null && priority.name.isNotEmpty
-                            ? _TaskTag(tag: priority)
-                            : const Text('任务卡片', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12)),
-                      ),
-                    ),
-                    if (loading)
-                      const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
-                    if (!loading && detail != null) _TaskLeaders(data: detail),
-                    IconButton(
-                      key: ValueKey('task-card-open-$blockId'),
-                      tooltip: '打开任务详情',
-                      constraints: const BoxConstraints.tightFor(width: 44, height: 44),
-                      style: const ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-                      padding: EdgeInsets.zero,
-                      alignment: Alignment.centerRight,
-                      icon: const Icon(LucideIcons.maximize2, size: 16, color: Color(0xFF9CA3AF)),
-                      onPressed: busy || onOpen == null
-                          ? null
-                          : () async {
-                              await onOpen!();
-                            },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 6),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        displayTitle.isEmpty ? '未命名任务' : displayTitle,
-                        key: ValueKey('task-card-title-$blockId'),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF1D2129),
-                          height: 1.35,
-                        ),
-                      ),
-                    ),
-                    if (!loading && status != null && status.name.isNotEmpty) ...[
-                      const SizedBox(width: 8),
-                      ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 112),
-                        child: _TaskTag(tag: status),
-                      ),
-                    ],
-                  ],
-                ),
-                if (detail?.startTime != null || detail?.endTime != null) ...[
-                  const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 6,
-                    runSpacing: 4,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      if (detail?.startTime != null)
-                        _TaskTime(icon: LucideIcons.calendarDays, time: detail!.startTime!),
-                      if (detail?.startTime != null && detail?.endTime != null)
-                        const Text('-', style: TextStyle(color: Color(0xFF86909C), fontSize: 12)),
-                      if (detail?.endTime != null) _TaskTime(icon: LucideIcons.calendarCheck, time: detail!.endTime!),
-                    ],
-                  ),
-                ],
-                const SizedBox(height: 8),
-                _TaskProgress(blockId: blockId, progress: detail?.progress),
-                const SizedBox(height: 6),
-                Row(
-                  children: [
-                    Expanded(child: _TaskPath(nodes: detail?.path ?? const [])),
-                    if (detail?.fileCount != null)
-                      _TaskCount(icon: LucideIcons.paperclip, label: '附件', count: detail!.fileCount!),
-                    if (detail?.subTaskCount != null) ...[
-                      const SizedBox(width: 8),
-                      _TaskCount(icon: LucideIcons.network, label: '子任务', count: detail!.subTaskCount!),
-                    ],
-                  ],
-                ),
-                if (failed || missing || detail?.deleted == true) ...[
-                  const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          failed ? '任务加载失败' : '任务不存在或已删除',
-                          style: const TextStyle(fontSize: 12, color: Color(0xFF86909C)),
-                        ),
-                      ),
-                      if (failed)
-                        TextButton(
-                          key: ValueKey('task-card-retry-$blockId'),
-                          onPressed: onRetry,
-                          child: const Text('重试'),
-                        ),
-                    ],
-                  ),
-                ],
-              ],
-            ),
-          ),
+          child: _buildBody(context),
         ),
       ),
     );
   }
+
+  /// 使用借用[context]的文字缩放计算行槽；行高仅随缩放变化，不随数据有无变化。
+  /// 标题最多两行，起止时间各占一行，空字段保留留白；骨架不构造虚假业务数据。
+  Widget _buildBody(BuildContext context) {
+    final detail = data;
+    final scaler = MediaQuery.textScalerOf(context);
+    final topHeight = math.max(44.0, scaler.scale(12) * 1.3 + 4);
+    final titleHeight = math.max(44.0, scaler.scale(16) * 1.35 * 2);
+    final timeHeight = math.max(18.0, scaler.scale(12) * 1.3);
+    final footerHeight = math.max(44.0, scaler.scale(14) * 1.4);
+
+    /// [name]标识行槽，[height]为逻辑像素，[child]借用该槽的内容并垂直居中。
+    Widget slot(String name, double height, Widget child) => SizedBox(
+      key: ValueKey('task-$name-row-$blockId'),
+      height: height,
+      child: Align(alignment: Alignment.centerLeft, child: child),
+    );
+
+    return Semantics(
+      label: loading ? '任务加载中' : null,
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            slot(
+              'people',
+              topHeight,
+              Row(
+                children: [
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: loading
+                          ? const _TaskSkeletonBar(widthFactor: .5, height: 12)
+                          : detail?.priority != null && detail!.priority!.name.isNotEmpty
+                          ? _TaskTag(tag: detail.priority!)
+                          : const Text('任务卡片', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12, height: 1.3)),
+                    ),
+                  ),
+                  if (loading)
+                    const SizedBox(
+                      width: 56,
+                      child: Row(
+                        children: [
+                          CircleAvatar(radius: 12, backgroundColor: Color(0xFFE5E7EB)),
+                          SizedBox(width: 4),
+                          CircleAvatar(radius: 12, backgroundColor: Color(0xFFE5E7EB)),
+                        ],
+                      ),
+                    )
+                  else if (detail != null)
+                    _TaskLeaders(data: detail),
+                  IconButton(
+                    key: ValueKey('task-card-open-$blockId'),
+                    tooltip: '打开任务详情',
+                    constraints: const BoxConstraints.tightFor(width: 44, height: 44),
+                    style: const ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+                    padding: EdgeInsets.zero,
+                    alignment: Alignment.centerRight,
+                    icon: const Icon(LucideIcons.maximize2, size: 16, color: Color(0xFF9CA3AF)),
+                    onPressed: loading || busy || onOpen == null
+                        ? null
+                        : () async {
+                            await onOpen!();
+                          },
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 6),
+            slot(
+              'title',
+              titleHeight,
+              loading
+                  ? Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _TaskSkeletonBar(widthFactor: .85, height: (titleHeight / 5).clamp(4.0, 12.0)),
+                        const SizedBox(height: 4),
+                        _TaskSkeletonBar(widthFactor: .6, height: (titleHeight / 5).clamp(4.0, 12.0)),
+                      ],
+                    )
+                  : Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            (detail?.title ?? title).isEmpty ? '未命名任务' : detail?.title ?? title,
+                            key: ValueKey('task-card-title-$blockId'),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF1D2129),
+                              height: 1.35,
+                            ),
+                          ),
+                        ),
+                        if (detail?.status != null && detail!.status!.name.isNotEmpty) ...[
+                          const SizedBox(width: 8),
+                          ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 112),
+                            child: _TaskTag(tag: detail.status!),
+                          ),
+                        ],
+                      ],
+                    ),
+            ),
+            const SizedBox(height: 8),
+            slot(
+              'start',
+              timeHeight,
+              loading
+                  ? const _TaskSkeletonBar(widthFactor: .62, height: 10)
+                  : detail?.startTime == null
+                  ? const SizedBox.shrink()
+                  : _TaskTime(icon: LucideIcons.calendarDays, time: detail!.startTime!),
+            ),
+            const SizedBox(height: 4),
+            slot(
+              'end',
+              timeHeight,
+              loading
+                  ? const _TaskSkeletonBar(widthFactor: .62, height: 10)
+                  : detail?.endTime == null
+                  ? const SizedBox.shrink()
+                  : _TaskTime(icon: LucideIcons.calendarCheck, time: detail!.endTime!),
+            ),
+            const SizedBox(height: 8),
+            if (loading)
+              const SizedBox(height: 8, child: _TaskSkeletonBar(height: 2))
+            else
+              _TaskProgress(blockId: blockId, progress: detail?.progress),
+            const SizedBox(height: 6),
+            slot(
+              'footer',
+              footerHeight,
+              loading
+                  ? const _TaskSkeletonBar(widthFactor: .8, height: 10)
+                  : failed || missing || detail?.deleted == true
+                  ? Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            failed ? '任务加载失败' : '任务不存在或已删除',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontSize: 12, height: 1.3, color: Color(0xFF86909C)),
+                          ),
+                        ),
+                        if (failed)
+                          TextButton(
+                            key: ValueKey('task-card-retry-$blockId'),
+                            onPressed: onRetry,
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              minimumSize: const Size(44, 44),
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            child: const Text('重试', style: TextStyle(fontSize: 14, height: 1.3)),
+                          ),
+                      ],
+                    )
+                  : _buildMetadata(context, detail),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 在借用[context]中展示可选[detail]的路径/统计；限制计数宽度，窄屏大字不撑开行槽。
+  Widget _buildMetadata(BuildContext context, CollabTaskCardData? detail) => LayoutBuilder(
+    builder: (context, constraints) => Row(
+      children: [
+        Expanded(child: _TaskPath(nodes: detail?.path ?? const [])),
+        if (detail?.fileCount != null)
+          ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: constraints.maxWidth * .25),
+            child: _TaskCount(icon: LucideIcons.paperclip, label: '附件', count: detail!.fileCount!),
+          ),
+        if (detail?.subTaskCount != null) ...[
+          const SizedBox(width: 8),
+          ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: constraints.maxWidth * .25),
+            child: _TaskCount(icon: LucideIcons.network, label: '子任务', count: detail!.subTaskCount!),
+          ),
+        ],
+      ],
+    ),
+  );
+}
+
+/// 单行骨架块，不创建动画、业务状态或网络请求。
+class _TaskSkeletonBar extends StatelessWidget {
+  /// [widthFactor]为父行可用宽度比例，默认1；[height]为逻辑像素高度，默认10。
+  const _TaskSkeletonBar({this.widthFactor = 1, this.height = 10});
+
+  /// 骨架宽度占行槽的比例。
+  final double widthFactor;
+
+  /// 骨架自身高度，不决定外围行槽高度。
+  final double height;
+
+  /// 在借用[context]中绘制静态灰条，加载状态不生成伪造的可访问文本。
+  @override
+  Widget build(BuildContext context) => Align(
+    alignment: Alignment.centerLeft,
+    child: FractionallySizedBox(
+      widthFactor: widthFactor,
+      child: SizedBox(
+        height: height,
+        child: DecoratedBox(
+          decoration: BoxDecoration(color: const Color(0xFFE5E7EB), borderRadius: BorderRadius.circular(4)),
+        ),
+      ),
+    ),
+  );
 }
 
 /// 根据桌面色板显示优先级或状态，不响应业务修改。
@@ -341,6 +449,7 @@ class _TaskTime extends StatelessWidget {
   final DateTime time;
 
   /// 在借用[context]中显示MM-dd HH:mm，完整日期保留于语义标签。
+  /// 窄屏或大字时单行省略，不撑高预留的时间行。
   @override
   Widget build(BuildContext context) {
     final local = time.toLocal();
@@ -353,7 +462,14 @@ class _TaskTime extends StatelessWidget {
         children: [
           Icon(icon, size: 12, color: const Color(0xFF86909C)),
           const SizedBox(width: 3),
-          Text(date, style: const TextStyle(fontSize: 12, color: Color(0xFF86909C))),
+          Flexible(
+            child: Text(
+              date,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 12, height: 1.3, color: Color(0xFF86909C)),
+            ),
+          ),
         ],
       ),
     );
@@ -463,7 +579,7 @@ class _TaskCount extends StatelessWidget {
   /// 借用计数。
   final int count;
 
-  /// 在借用[context]中展示图标和原始计数。
+  /// 在借用[context]中展示图标和计数，受父宽度约束时单行省略，语义仍保留原始计数。
   @override
   Widget build(BuildContext context) => Semantics(
     label: '$label $count',
@@ -472,7 +588,14 @@ class _TaskCount extends StatelessWidget {
       children: [
         Icon(icon, size: 12, color: const Color(0xFF9CA3AF)),
         const SizedBox(width: 3),
-        Text(count > 999 ? '999+' : '$count', style: const TextStyle(fontSize: 11, color: Color(0xFF9CA3AF))),
+        Flexible(
+          child: Text(
+            count > 999 ? '999+' : '$count',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 11, height: 1.3, color: Color(0xFF9CA3AF)),
+          ),
+        ),
       ],
     ),
   );

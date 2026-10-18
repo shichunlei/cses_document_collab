@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-18",
+  "request": "视频卡片固定16:9",
+  "version": {
+    "latest": "0.11.21",
+    "desktop_declared": "0.11.21",
+    "desktop_yarn": "0.11.21",
+    "desktop_installed": "0.11.21",
+    "desktop_pnpm": "0.2.78（既有不一致）",
+    "query": "桌面cses-client按已配置registry执行npm view @ccc/blockcraft dist-tags.latest --json",
+    "reviewed": [
+      "ai-skills/SKILL.md与blockcraft.md（同会话已读）",
+      "ai-skills/blockcraft-block.md对象尺寸说明",
+      "ai-skills/MIGRATIONS.md",
+      "fesm2022/ccc-blockcraft.mjs VideoBlockComponent模板及比例属性"
+    ],
+    "upgrade": false
+  },
+  "changes": [
+    "手机正文视频外框固定16:9，加载、未激活、初始化失败与成功播放保持相同尺寸。",
+    "原始视频按自身比例居中完整显示，余白为黑色；竖屏、正方形和超宽视频不拉伸或裁切。",
+    "播放按钮位于底部进度区上方的剩余空间，窄屏/大字下保持按钮和进度条点击区不重叠。",
+    "仅修改本地展示，不写回桌面props.ar/wr/width/height，不改协同结构、原生接口或播放/跳转/释放流程。"
+  ],
+  "validation": {
+    "tests": {
+      "command": "cd packages/cses_document_collab && flutter test --no-pub test/collab_video_update_test.dart",
+      "passed": 20,
+      "log": "/tmp/video-ratio-tests.log",
+      "new_cases": [
+        "1920x1080",
+        "1080x1920",
+        "2560x1080",
+        "初始化失败"
+      ],
+      "assertions": [
+        "未激活/加载/成功/失败外框16:9且后续正文坐标保持",
+        "画面比例/居中/边界保持",
+        "280宽/2倍字窄屏播放按钮可点击且不与进度条重叠",
+        "既有换源、删除历史、进度跳转和控制器释放回归"
+      ]
+    },
+    "analyze": {
+      "command": "flutter analyze --no-pub lib/src/editor/collab_video_block.dart test/collab_video_update_test.dart",
+      "result": "无问题",
+      "log": "/tmp/video-ratio-analyze.log"
+    },
+    "format": "本轮两个手写Dart文件执行dart format，延续原80/120列风格",
+    "diff": "git diff --check通过"
+  },
+  "status": "仍为部分支持，41块与13/13/1/14统计不变",
+  "limits": [
+    "本轮测试使用内存视频平台，无新增真机解码/设备重装或iOS验收",
+    "未修改桌面视频尺寸行为或扩展已有功能范围"
+  ],
+  "follow_up": {
+    "record": "video-play-center-20261018.json",
+    "note": "按钮位置已按用户后续要求改为整个卡片中央；当前展示及回归以跟进记录为准。"
+  }
+}

@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
 /// 视频块独立构建器，保留原网络校验、播放器、菜单和布局配置。
+/// 手机卡片外框固定16:9，原始画面等比居中显示，不改写共享视频尺寸属性。
 /// 不创建主连接或持有编辑器；具体状态拥有并释放播放器。
 /// ```dart
 /// import 'package:cses_document_collab/src/editor/collab_video_block.dart';
@@ -156,35 +157,27 @@ class _VideoBlockState extends CollabMediaBlockState<_VideoBlock> {
 
   /// 使用借用的[context]展示视频、直接播放按钮和画面内底部进度条，编辑/预览均可播放。
   /// 高频播放位置仅更新进度区域；视频控制器仍由此State创建与释放。
+  /// 外框与加载/失败占位统一固定16:9；画面按原始比例居中完整显示，空余区域留黑，不拉伸或裁切。
+  /// 播放按钮相对整个16:9外框水平、垂直居中；进度条固定底部，时间标签位于轨道上方。
   Widget _buildVideoCard(BuildContext context) {
     final controller = _videoController;
     if (controller?.value.isInitialized != true) {
       return _VideoPlaceholder(url: url, hasError: _videoError != null);
     }
 
-    final aspectRatio = controller!.value.aspectRatio > 0 ? controller.value.aspectRatio : 16 / 9;
+    final sourceAspectRatio = controller!.value.aspectRatio > 0 ? controller.value.aspectRatio : 16 / 9;
     return ClipRRect(
       borderRadius: BorderRadius.circular(14),
       child: ColoredBox(
         color: Colors.black,
         child: AspectRatio(
-          aspectRatio: aspectRatio,
+          key: const ValueKey('collab-video-viewport'),
+          aspectRatio: 16 / 9,
           child: Stack(
             fit: StackFit.expand,
             children: [
-              VideoPlayer(controller),
               Center(
-                child: ExcludeFocus(
-                  child: ValueListenableBuilder<VideoPlayerValue>(
-                    valueListenable: controller,
-                    builder: (context, value, _) => IconButton.filled(
-                      key: const ValueKey('collab-video-block-play'),
-                      tooltip: value.isPlaying ? '暂停' : '播放',
-                      onPressed: _toggleVideo,
-                      icon: Icon(value.isPlaying ? LucideIcons.pause : LucideIcons.play),
-                    ),
-                  ),
-                ),
+                child: AspectRatio(aspectRatio: sourceAspectRatio, child: VideoPlayer(controller)),
               ),
               Positioned(
                 left: 0,
@@ -204,6 +197,19 @@ class _VideoBlockState extends CollabMediaBlockState<_VideoBlock> {
                     key: ObjectKey(controller),
                     controller: controller,
                     onSeek: (target) => _seekVideo(controller, target),
+                  ),
+                ),
+              ),
+              Center(
+                child: ExcludeFocus(
+                  child: ValueListenableBuilder<VideoPlayerValue>(
+                    valueListenable: controller,
+                    builder: (context, value, _) => IconButton.filled(
+                      key: const ValueKey('collab-video-block-play'),
+                      tooltip: value.isPlaying ? '暂停' : '播放',
+                      onPressed: _toggleVideo,
+                      icon: Icon(value.isPlaying ? LucideIcons.pause : LucideIcons.play),
+                    ),
                   ),
                 ),
               ),
@@ -319,10 +325,11 @@ class _VideoPlaceholder extends StatelessWidget {
   /// Whether initialization failed; false displays loading.
   final bool hasError;
 
-  /// Builds the status surface using borrowed [context].
+  /// 使用借用的[context]构建固定16:9状态外框，加载或失败均保持后续正文位置。
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
+      key: const ValueKey('collab-video-viewport'),
       aspectRatio: 16 / 9,
       child: DecoratedBox(
         decoration: BoxDecoration(color: const Color(0xFF111827), borderRadius: BorderRadius.circular(14)),

@@ -9,6 +9,8 @@ import 'package:cses_document_collab/src/editor/collab_bookmark_block.dart';
 import 'package:cses_document_collab/src/editor/collab_web_embed_block.dart';
 import 'package:cses_document_collab/src/editor/collab_juejin_embed_block.dart';
 import 'package:cses_document_collab/src/editor/collab_figma_embed_block.dart';
+import 'package:cses_document_collab/src/editor/collab_card_frame.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -462,6 +464,139 @@ void main() {
       await tester.pumpWidget(const SizedBox.shrink());
       expect(tester.takeException(), isNull);
     });
+  }
+
+  for (final (width, scale) in [(390.0, 1.0), (320.0, 1.5), (280.0, 2.2)]) {
+    for (final mode in ['ready', 'zero', 'failure']) {
+      testWidgets('audio loading/ready geometry $width/$scale/$mode', (
+        tester,
+      ) async {
+        await tester.binding.setSurfaceSize(Size(width, 800));
+        final original = VideoPlayerPlatform.instance;
+        final platform = _AudioPlatform(true);
+        VideoPlayerPlatform.instance = platform;
+        final adapter = AppFlowyBlockEditorAdapter(
+          initialBlocks: [
+            _block(
+              'audio',
+              'https://example.test/loading.mp3',
+              props: {'name': '语音加载'},
+            ),
+            const CollabEditorBlock(
+              id: 'after-audio',
+              blockType: 'paragraph',
+              text: '音频后正文',
+            ),
+          ],
+          onLocalBlocksChanged: (_) =>
+              fail('loading must not modify the document'),
+        );
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox());
+          await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+          adapter.dispose();
+          await platform.close();
+          VideoPlayerPlatform.instance = original;
+          await tester.binding.setSurfaceSize(null);
+        });
+        await tester.pumpWidget(
+          MaterialApp(
+            builder: (context, child) => MediaQuery(
+              data: MediaQuery.of(
+                context,
+              ).copyWith(textScaler: TextScaler.linear(scale)),
+              child: child!,
+            ),
+            home: Scaffold(
+              body: AppFlowyEditor(
+                editorState: adapter.editorState,
+                disableKeyboardService: true,
+                editorStyle: const EditorStyle.mobile(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                ),
+                blockComponentBuilders: {
+                  ...standardBlockComponentBuilderMap,
+                  'audio': CollabAudioBlockComponentBuilder(),
+                },
+              ),
+            ),
+          ),
+        );
+        await tester.pump(const Duration(milliseconds: 100));
+        final loading = find.byKey(
+          const ValueKey('collab-audio-loading-progress'),
+        );
+        expect(loading, findsOneWidget);
+        expect(
+          tester
+              .widget<IconButton>(
+                find.byKey(const ValueKey('resource-audio-play')),
+              )
+              .onPressed,
+          isNull,
+        );
+        expect(find.text('--:--'), findsNWidgets(2));
+        final before = tester.getRect(find.byType(CollabCardFrame));
+        final slot = tester.getRect(
+          find.ancestor(of: loading, matching: find.byType(SizedBox)).first,
+        );
+        final tail = find.text('音频后正文', findRichText: true);
+        final tailTop = tester.getTopLeft(tail).dy;
+        if (mode == 'failure') {
+          platform.streams[0]!.addError(
+            PlatformException(code: 'fixture', message: 'decode failed'),
+          );
+        } else {
+          platform.streams[0]!.add(
+            VideoEvent(
+              eventType: VideoEventType.initialized,
+              duration: mode == 'zero'
+                  ? Duration.zero
+                  : const Duration(minutes: 1),
+              size: const Size(10, 10),
+            ),
+          );
+        }
+        await tester.pumpAndSettle();
+        expect(loading, findsNothing);
+        expect(tester.getRect(find.byType(CollabCardFrame)), before);
+        expect(tester.getTopLeft(tail).dy, closeTo(tailTop, .01));
+        final sliderFinder = find.byKey(
+          const ValueKey('collab-audio-progress'),
+        );
+        expect(
+          tester.getRect(
+            find
+                .ancestor(of: sliderFinder, matching: find.byType(SizedBox))
+                .first,
+          ),
+          slot,
+        );
+        if (mode == 'ready') {
+          expect(tester.widget<Slider>(sliderFinder).onChanged, isNotNull);
+          platform.streams[0]!.add(
+            VideoEvent(eventType: VideoEventType.bufferingStart),
+          );
+          await tester.pump();
+          await tester.pump();
+          expect(loading, findsOneWidget);
+          expect(tester.getRect(find.byType(CollabCardFrame)), before);
+          platform.streams[0]!.add(
+            VideoEvent(eventType: VideoEventType.bufferingEnd),
+          );
+          await tester.pumpAndSettle();
+          expect(loading, findsNothing);
+          final slider = tester.widget<Slider>(sliderFinder);
+          slider.onChanged!(30000);
+          slider.onChangeEnd!(30000);
+          await tester.pumpAndSettle();
+          expect(platform.positions, [const Duration(seconds: 30)]);
+        } else {
+          expect(tester.widget<Slider>(sliderFinder).onChanged, isNull);
+        }
+        expect(tester.takeException(), isNull);
+      });
+    }
   }
 
   for (final pending in [false, true]) {

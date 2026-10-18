@@ -5,12 +5,103 @@ import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.da
 import 'package:cses_document_collab/src/editor/collab_video_block.dart';
 import 'package:cses_document_collab/src/editor/collab_callout_block.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:video_player/video_player.dart';
 import 'package:video_player_platform_interface/video_player_platform_interface.dart';
 
 /// 隔离真实播放器，验证同一 Node 的源更新及退出时的所有权，不访问网络。
 void main() {
+  for (final (size, fail) in [
+    (const Size(1920, 1080), false),
+    (const Size(1080, 1920), false),
+    (const Size(2560, 1080), false),
+    (const Size(100, 100), true),
+  ]) {
+    testWidgets('16:9 video frame keeps geometry for $size failure=$fail', (
+      tester,
+    ) async {
+      final platform = _MemoryVideoPlatform(pending: true, size: size);
+      final original = VideoPlayerPlatform.instance;
+      VideoPlayerPlatform.instance = platform;
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: [
+          _video('ratio'),
+          const CollabEditorBlock(
+            id: 'tail-ratio',
+            blockType: 'paragraph',
+            text: 'after video',
+          ),
+        ],
+        onLocalBlocksChanged: (_) =>
+            throw TestFailure('rendering must not write shared props'),
+      );
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox());
+        await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+        adapter.dispose();
+        await platform.close();
+        VideoPlayerPlatform.instance = original;
+      });
+
+      /// 构建固定编辑器及节点，初始化事件由测试显式发送。
+      Widget page() => MaterialApp(
+        home: Scaffold(
+          body: AppFlowyEditor(
+            editorState: adapter.editorState,
+            disableKeyboardService: true,
+            blockComponentBuilders: {
+              ...standardBlockComponentBuilderMap,
+              csesVideoBlockType: CollabVideoBlockComponentBuilder(),
+            },
+          ),
+        ),
+      );
+      final frame = find.byKey(const ValueKey('collab-video-viewport'));
+      final tail = find.text('after video', findRichText: true);
+      await tester.pumpWidget(page());
+      await tester.pumpAndSettle();
+      final before = tester.getRect(frame);
+      final tailBefore = tester.getTopLeft(tail).dy;
+      expect(before.width / before.height, closeTo(16 / 9, 0.001));
+      if (fail) {
+        platform._events[0]!.addError(
+          PlatformException(
+            code: 'decoder',
+            message: 'fixture decoder failure',
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('视频加载失败'), findsOneWidget);
+      } else {
+        platform._events[0]!.add(
+          VideoEvent(
+            eventType: VideoEventType.initialized,
+            duration: platform.duration,
+            size: size,
+          ),
+        );
+        await tester.pumpAndSettle();
+        final picture = tester.getRect(find.byType(VideoPlayer));
+        expect(
+          picture.width / picture.height,
+          closeTo(size.aspectRatio, 0.001),
+        );
+        expect(picture.center.dx, closeTo(before.center.dx, 0.001));
+        expect(picture.center.dy, closeTo(before.center.dy, 0.001));
+        expect(picture.width, lessThanOrEqualTo(before.width + 0.001));
+        expect(picture.height, lessThanOrEqualTo(before.height + 0.001));
+        final play = tester.getRect(
+          find.byKey(const ValueKey('collab-video-block-play')),
+        );
+        expect(play.center.dx, closeTo(before.center.dx, 0.001));
+        expect(play.center.dy, closeTo(before.center.dy, 0.001));
+      }
+      expect(tester.getRect(frame), before);
+      expect(tester.getTopLeft(tail).dy, closeTo(tailBefore, 0.001));
+      expect(tester.takeException(), isNull);
+    });
+  }
   for (final pending in [false, true]) {
     testWidgets(
       'same node video source replacement releases controllers (pending=$pending)',
@@ -306,13 +397,34 @@ void main() {
       final progress = find.byKey(const ValueKey('collab-video-progress'));
       expect(progress, findsOneWidget);
       final picture = tester.getRect(find.byType(VideoPlayer));
+      final frame = tester.getRect(
+        find.byKey(const ValueKey('collab-video-viewport')),
+      );
+      final play = tester.getRect(
+        find.byKey(const ValueKey('collab-video-block-play')),
+      );
       final track = tester.getRect(progress);
       final elapsed = tester.getRect(
         find.byKey(const ValueKey('collab-video-position')),
       );
-      expect(track.top, greaterThan(picture.center.dy));
-      expect(elapsed.bottom, lessThanOrEqualTo(picture.bottom));
+      expect(play.center.dx, closeTo(frame.center.dx, 0.001));
+      expect(play.center.dy, closeTo(frame.center.dy, 0.001));
+      expect(track.top, greaterThanOrEqualTo(play.bottom));
+      expect(elapsed.bottom, lessThanOrEqualTo(frame.bottom));
+      expect(frame.width / frame.height, closeTo(16 / 9, 0.001));
       expect(picture.width / picture.height, closeTo(1, 0.01));
+      if (mode == 'narrow') {
+        await tester.tap(find.byKey(const ValueKey('collab-video-block-play')));
+        await tester.pumpAndSettle();
+        expect(
+          tester
+              .widget<VideoPlayer>(find.byType(VideoPlayer))
+              .controller
+              .value
+              .isPlaying,
+          isTrue,
+        );
+      }
       var slider = tester.widget<Slider>(progress);
       if (mode == 'zero') {
         expect(slider.onChanged, isNull);
@@ -414,10 +526,15 @@ CollabEditorBlock _video(String source) => CollabEditorBlock(
 /// 通过官方平台端口记录创建/释放，不使用真实解码器；测试持有流并负责 close。
 class _MemoryVideoPlatform extends VideoPlayerPlatform {
   /// [pending] 为 true 时不发送初始化完成事件，用于验证加载期间换源和退出。
+  /// [duration] 是模拟媒体时长，默认1秒；[size] 是原始像素尺寸，默认正方形。
   _MemoryVideoPlatform({
     required this.pending,
     this.duration = const Duration(seconds: 1),
+    this.size = const Size(100, 100),
   });
+
+  /// 模拟原始视频尺寸，不代表播放器在卡片内的显示尺寸。
+  final Size size;
 
   /// 夹具媒体时长；零模拟未知/不可跳转的时长。
   final Duration duration;
@@ -459,7 +576,7 @@ class _MemoryVideoPlatform extends VideoPlayerPlatform {
         VideoEvent(
           eventType: VideoEventType.initialized,
           duration: duration,
-          size: const Size(100, 100),
+          size: size,
         ),
       );
     }

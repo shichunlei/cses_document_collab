@@ -1,0 +1,105 @@
+{
+  "date": "2026-10-18",
+  "scope": "音频在最终播放布局内加载，任务使用同高骨架，防止加载后正文位置改变",
+  "blockcraft": {
+    "latest": "0.11.21",
+    "desktop_declared": "0.11.21",
+    "desktop_yarn": "0.11.21",
+    "desktop_installed": "0.11.21",
+    "desktop_pnpm": "0.2.78（既有不一致）",
+    "query": "桌面cses-client按已配置registry执行npm view @ccc/blockcraft dist-tags.latest --json",
+    "reviewed": [
+      "随包ai-skills/blockcraft.md、MIGRATIONS.md、blockcraft-plugins-block.md相关入口",
+      "fesm2022/ccc-blockcraft.mjs AudioBlockComponent",
+      "移动端音频/进度条/任务卡片及原有测试"
+    ],
+    "upgrade": false
+  },
+  "audio": {
+    "layout": "加载/完成/失败共享标题、播放按钮、32逻辑像素轨道槽及固定行高时间行；父卡片高度不随加载结果变化。",
+    "loading": "初始化或音频缓冲时，在轨道槽内显示不确定LinearProgressIndicator，初始化时间显示--:--，播放与拖动禁用；缓冲结束后恢复原可拖动Slider。原生接口不提供下载百分比，未虚构数值进度。",
+    "errors": "错误信息放在原时间行内，禁用交互，不追加高度。",
+    "ownership": "保持原播放器的延迟激活、换源/退出等待跳转后释放，播放位置只更新局部组件。"
+  },
+  "task": {
+    "skeleton": "移除转圈占位，在优先级/头像、两行标题、起止时间、进度及统计位置绘制静态骨架。",
+    "geometry": "加载与详情共用按文字缩放计算的行槽；标题预留两行，起止时间各预留一行，缺失字段留白。失败/缺失反馈替换统计槽，不追加行。",
+    "constraints": "时间、标签及路径按既有最大行数省略；计数有宽度预算，窄屏大字不撑开行槽；详情入口加载时禁用。",
+    "unchanged": "不发额外请求、不写正文、不改变业务快照或任务/音频Schema；共享缓存和后台解析策略保持。"
+  },
+  "validation": {
+    "target": {
+      "passed": 74,
+      "command": "flutter test --no-pub test/task_card_loading_geometry_test.dart test/collab_task_card_test.dart test/collab_resource_block_test.dart test/collab_video_update_test.dart",
+      "log": "/tmp/card-loading-target-tests.log"
+    },
+    "new_geometry": {
+      "audio_cases": 9,
+      "task_cases": 12,
+      "widths": [
+        390,
+        320,
+        280
+      ],
+      "text_scales": [
+        1,
+        1.5,
+        2.2
+      ],
+      "audio": [
+        "加载→完成、零时长、失败的卡片矩形/轨道槽矩形/后置正文位置相同",
+        "缓冲开始/结束高度保持，完成后恢复拖动且松手单次跳转"
+      ],
+      "task": [
+        "长标题/完整数据、稀疏数据、明确缺失、失败与骨架同高",
+        "people/title/start/end/footer各行矩形及后置正文坐标相同",
+        "骨架语义与无转圈占位"
+      ]
+    },
+    "package_full": {
+      "passed": 1257,
+      "command": "cd packages/cses_document_collab && flutter test --no-pub",
+      "log": "/tmp/card-loading-package-full.log"
+    },
+    "analysis": {
+      "result": "5项目标文件无问题",
+      "log": "/tmp/card-loading-analyze.log"
+    },
+    "real_font": {
+      "passed": 2,
+      "font": "Arial Unicode.ttf",
+      "command": "TASK_CARD_FONT=... TASK_CARD_PREVIEWS=/tmp/card-loading-preview flutter test --no-pub test/collab_task_card_test.dart --plain-name 'desktop layout with labels'",
+      "log": "/tmp/card-loading-font-tests.log",
+      "preview_paths": [
+        "/tmp/card-loading-preview/task-card-normal-20261015.png",
+        "/tmp/card-loading-preview/task-card-narrow-20261015.png"
+      ],
+      "note": "沿用旧截图测试的文件命名，本次实际生成于2026-10-18；文字布局已目视检查，未加载图标字体，不作为图标显示验收。"
+    },
+    "android": {
+      "build": "flutter build apk --debug --target-platform android-arm64 --no-pub通过",
+      "duration_seconds": 87.4,
+      "sha256": "f3bfa4489c69ac5f4c4e61193b00b9ff50159c1678bc14bffb0cade805b10469",
+      "log": "/tmp/card-loading-build.log",
+      "installation": "未安装：adb install返回no devices/emulators found，复查adb devices为空；安装包已生成，待USB连接恢复后安装并进行真机验收。"
+    },
+    "format": "本轮3个实现文件及2个测试文件已dart format",
+    "diff_check": "通过",
+    "ui_only_commit": {
+      "base": "6d21b56",
+      "scope": "基于HEAD只叠加本次UI实现、测试和文档；不包含资源延迟激活、列表缓存预算、会议/任务详情缓存或宿主后台解析。",
+      "tests_passed": 73,
+      "test_log": "/tmp/ui-only-commit-tests.log",
+      "analysis": "7个实现/测试文件无问题",
+      "analysis_log": "/tmp/ui-only-commit-analyze.log",
+      "video_fixture": "显式发送原生初始化/失败事件，独立验证加载前后几何；资源激活测试保留在工作区供后续提交。",
+      "prior_validation_note": "本记录其他全包测试、Android构建及真实字体结果基于此前完整工作区，不能等同于本次独立提交的构建/真机验收。"
+    }
+  },
+  "limits": [
+    "加载动画为不确定进度，不代表下载百分比",
+    "未新增真实网络缓冲或iOS设备验收",
+    "未进行Profile/Release整体帧率验收"
+  ],
+  "block_status": "41种，13/13/1/14保持；无原生桥接、共享属性或依赖变化"
+}

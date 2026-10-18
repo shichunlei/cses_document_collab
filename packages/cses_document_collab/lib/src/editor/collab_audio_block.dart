@@ -181,25 +181,12 @@ class _AudioPlayerState extends State<_AudioPlayer> {
   }
 
   /// Renders progress and direct play/pause in borrowed [context], in both editing
-  /// and preview. Loading or failure status replaces unavailable playback controls.
+  /// and preview. Keeps play/time/track slots mounted while initializing or failing;
+  /// loading only replaces the track with an indeterminate animation.
   @override
   Widget build(BuildContext context) {
     final value = _controller.value;
-    if (_error != null || value.hasError) {
-      return widget.builder(
-        context,
-        Padding(
-          padding: const EdgeInsets.all(12),
-          child: Text(_error ?? '音频加载失败，可在浏览器打开', style: const TextStyle(color: Color(0xFF87909E), fontSize: 12)),
-        ),
-      );
-    }
-    if (!value.isInitialized) {
-      return widget.builder(
-        context,
-        const Padding(padding: EdgeInsets.all(12), child: LinearProgressIndicator(minHeight: 2)),
-      );
-    }
+    final failed = _error != null || value.hasError;
     final progress = Row(
       children: [
         ExcludeFocus(
@@ -207,17 +194,31 @@ class _AudioPlayerState extends State<_AudioPlayer> {
             valueListenable: _controller,
             builder: (context, value, _) => IconButton(
               key: const ValueKey('resource-audio-play'),
-              tooltip: value.isPlaying ? '暂停音频' : '播放音频',
+              tooltip: failed
+                  ? '音频加载失败'
+                  : !value.isInitialized
+                  ? '音频加载中'
+                  : value.isPlaying
+                  ? '暂停音频'
+                  : '播放音频',
               icon: Icon(
                 value.isPlaying ? LucideIcons.circlePause : LucideIcons.circlePlay,
                 color: const Color(0xFF5B5BD6),
               ),
-              onPressed: () => _act(value.isPlaying ? _controller.pause : _controller.play),
+              onPressed: !value.isInitialized || failed
+                  ? null
+                  : () => _act(value.isPlaying ? _controller.pause : _controller.play),
             ),
           ),
         ),
         Expanded(
-          child: CollabMediaTimeline(controller: _controller, mediaKind: 'audio', onSeek: _seek),
+          child: CollabMediaTimeline(
+            controller: _controller,
+            mediaKind: 'audio',
+            onSeek: _seek,
+            loading: !value.isInitialized && !failed,
+            errorLabel: failed ? (_error ?? '音频加载失败') : null,
+          ),
         ),
       ],
     );

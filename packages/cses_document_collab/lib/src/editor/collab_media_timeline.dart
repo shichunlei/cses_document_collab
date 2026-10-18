@@ -19,13 +19,17 @@ class CollabMediaTimeline extends StatefulWidget {
   /// [key]控制状态复用；[controller]由外层拥有，本组件不释放。
   /// [onSeek]在松手时由资源拥有者执行跳转，Future完成前负责延迟播放器释放。
   /// [mediaKind]为audio或video，用于控件身份和错误文案；[overlay]默认false，
-  /// 为true时使用适合深色视频画面的文字和轨道颜色。
+  /// 为true时使用深色视频配色，时间标签放在轨道上方，让轨道保持在画面底部。
+  /// [loading]默认false，初始化时保留时间和轨道的高度，以不确定进度动画代替拖动条。
+  /// [errorLabel]可选失败文案，替换当前时间而不增加行；null无额外错误显示。
   const CollabMediaTimeline({
     super.key,
     required this.controller,
     required this.onSeek,
     required this.mediaKind,
     this.overlay = false,
+    this.loading = false,
+    this.errorLabel,
   });
 
   /// 当前播放器；ValueListenableBuilder持有并自动解绑借用监听。
@@ -37,8 +41,14 @@ class CollabMediaTimeline extends StatefulWidget {
   /// 媒体类别，必填audio或video；决定错误文案和测试/语义身份。
   final String mediaKind;
 
-  /// 是否叠放在深色画面上；默认false使用适合音频卡片的文字与轨道颜色。
+  /// 是否叠放在深色画面上并将时间标签置于轨道上方；默认false保留音频配色及标签在下布局。
   final bool overlay;
+
+  /// 是否正在初始化；默认false。在同一32像素轨道槽内显示不确定加载动画，不能拖动。
+  final bool loading;
+
+  /// 可选失败文案，替换当前时间并禁用拖动；不增加额外行，null显示正常时间。
+  final String? errorLabel;
 
   /// 创建仅持有拖动预览和跳转状态的局部State。
   @override
@@ -107,6 +117,8 @@ class _CollabMediaTimelineState extends State<CollabMediaTimeline> {
   }
 
   /// 借用[context]构建局部进度监听；拖动期间不被播放计时覆盖，零时长不允许跳转。
+  /// 视频轨道靠底，避免大字号时间标签将轨道推向卡片中央；音频仍先显示轨道再显示时间。
+  /// 初始化或音频缓冲仅切换轨道内容，时间行固定行高，错误也不增加卡片高度。
   @override
   Widget build(BuildContext context) => ValueListenableBuilder<VideoPlayerValue>(
     valueListenable: widget.controller,
@@ -114,16 +126,26 @@ class _CollabMediaTimelineState extends State<CollabMediaTimeline> {
       final duration = value.duration.inMilliseconds;
       final max = duration > 0 ? duration.toDouble() : 1.0;
       final position = (_previewMs ?? value.position.inMilliseconds.toDouble()).clamp(0.0, duration > 0 ? max : 0.0);
-      final enabled = value.isInitialized && !value.hasError && duration > 0 && !_seeking;
-      return Padding(
-        padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ExcludeFocus(
-              child: SizedBox(
-                height: 32,
-                child: SliderTheme(
+      final loading =
+          widget.errorLabel == null && (widget.loading || (widget.mediaKind == 'audio' && value.isBuffering));
+      final enabled =
+          !loading && widget.errorLabel == null && value.isInitialized && !value.hasError && duration > 0 && !_seeking;
+      final progress = ExcludeFocus(
+        child: SizedBox(
+          height: 32,
+          child: loading
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Center(
+                    child: LinearProgressIndicator(
+                      key: ValueKey('collab-${widget.mediaKind}-loading-progress'),
+                      minHeight: 3,
+                      color: const Color(0xFF818CF8),
+                      backgroundColor: const Color(0xFFE2E8F0),
+                    ),
+                  ),
+                )
+              : SliderTheme(
                   data: SliderTheme.of(
                     context,
                   ).copyWith(trackHeight: 3, thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 5)),
@@ -139,33 +161,48 @@ class _CollabMediaTimelineState extends State<CollabMediaTimeline> {
                     onChangeEnd: enabled ? _seek : null,
                   ),
                 ),
+        ),
+      );
+      final timeLabels = SizedBox(
+        height: MediaQuery.textScalerOf(context).scale(11) * 1.3,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Flexible(
+              child: Text(
+                widget.errorLabel ?? (widget.loading ? '--:--' : _mediaTime(Duration(milliseconds: position.round()))),
+                key: ValueKey('collab-${widget.mediaKind}-position'),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: widget.overlay ? Colors.white70 : const Color(0xFF64748B),
+                  fontSize: 11,
+                  height: 1.3,
+                ),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  child: Text(
-                    _mediaTime(Duration(milliseconds: position.round())),
-                    key: ValueKey('collab-${widget.mediaKind}-position'),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: widget.overlay ? Colors.white70 : const Color(0xFF64748B), fontSize: 11),
-                  ),
+            const SizedBox(width: 8),
+            Flexible(
+              child: Text(
+                widget.loading || widget.errorLabel != null ? '--:--' : _mediaTime(value.duration),
+                key: ValueKey('collab-${widget.mediaKind}-duration'),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: widget.overlay ? Colors.white70 : const Color(0xFF64748B),
+                  fontSize: 11,
+                  height: 1.3,
                 ),
-                const SizedBox(width: 8),
-                Flexible(
-                  child: Text(
-                    _mediaTime(value.duration),
-                    key: ValueKey('collab-${widget.mediaKind}-duration'),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: widget.overlay ? Colors.white70 : const Color(0xFF64748B), fontSize: 11),
-                  ),
-                ),
-              ],
+              ),
             ),
           ],
+        ),
+      );
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [if (widget.overlay) timeLabels, progress, if (!widget.overlay) timeLabels],
         ),
       );
     },

@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-18",
+  "request": "视频播放按钮位于整个卡片中央",
+  "blockcraft": {
+    "latest": "0.11.21",
+    "desktop_declared": "0.11.21",
+    "desktop_yarn": "0.11.21",
+    "desktop_installed": "0.11.21",
+    "desktop_pnpm": "0.2.78（既有不一致）",
+    "query": "桌面cses-client按配置仓库执行npm view @ccc/blockcraft dist-tags.latest --json",
+    "reviewed": [
+      "ai-skills/SKILL.md",
+      "ai-skills/blockcraft-block.md对象尺寸",
+      "ai-skills/MIGRATIONS.md",
+      "fesm2022/ccc-blockcraft.mjs VideoBlockComponent"
+    ],
+    "upgrade": false
+  },
+  "behavior": [
+    "播放/暂停按钮相对整个16:9外框水平、垂直居中，不扣除底部进度区高度。",
+    "视频时间标签放在轨道上方，轨道保持底部；窄屏/大字时按钮与进度条点击区不重叠。音频仍保留轨道在上、时间在下。",
+    "原视频等比居中留黑、加载/失败同高、播放/跳转/释放及协同属性均保持。"
+  ],
+  "validation": {
+    "tests": {
+      "command": "flutter test --no-pub test/collab_video_update_test.dart test/collab_resource_block_test.dart",
+      "passed": 35,
+      "log": "/tmp/video-center-tests.log",
+      "assertions": [
+        "横屏、竖屏、超宽原视频的按钮中心等于整个卡片中心",
+        "280宽/2倍字下按钮中心、播放点击及进度条不重叠",
+        "视频播放/跳转/换源/删除历史及音频控制器释放"
+      ]
+    },
+    "analysis": {
+      "command": "flutter analyze --no-pub lib/src/editor/collab_video_block.dart lib/src/editor/collab_media_timeline.dart test/collab_video_update_test.dart",
+      "result": "无问题",
+      "log": "/tmp/video-center-analyze.log"
+    },
+    "format": "本轮三个手写Dart文件已格式化",
+    "diff_check": "通过"
+  },
+  "status": "视频部分支持及41块/13/13/1/14统计保持",
+  "limits": [
+    "未更新手机安装包或新增真机/iOS验收",
+    "没有修改原生接口、桌面行为或共享数据"
+  ]
+}
