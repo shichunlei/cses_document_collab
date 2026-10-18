@@ -1,6 +1,7 @@
 import 'package:cses_document_collab/src/model/collab_task_card.dart';
 import 'package:cses_document_collab/src/model/collab_meeting.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
+import 'package:cses_document_collab/src/model/collab_page_divider.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'dart:async';
 
@@ -135,7 +136,7 @@ Future<void> _runBackspaceTransaction(
   }
 }
 
-/// 返回借用的 [editorState] 当前折叠光标是否应删除前置资源；要求偏移 0，且存在前置媒体、分割线或公式。
+/// 返回借用的 [editorState] 当前折叠光标是否应删除前置资源；要求偏移 0，且存在前置媒体、分割线、分页符或公式。
 /// 只读、销毁、无选区/Delta 或其他前项返回 false；不执行删除或拥有资源。
 bool canDeletePreviousUrlBackedBlock(EditorState editorState) {
   if (editorState.isDisposed || !editorState.editable) {
@@ -157,9 +158,9 @@ bool canDeletePreviousUrlBackedBlock(EditorState editorState) {
 
 /// Deletes the resource immediately before a caret at text offset zero.
 ///
-/// [editorState] 为借用的编辑器；仅在前置资源、分割线、公式、会议或任务引用可删除时执行。完成事务返回true，
+/// [editorState] 为借用的编辑器；仅在前置资源、分割线、分页符、公式、会议或任务引用可删除时执行。完成事务返回true，
 /// 不满足条件返回 false；异常通过 Future 传播，资源的组件生命周期由编辑器负责。
-/// 分割线、公式、会议与任务卡片删除单独封闭撤销记录，避免与相邻正文输入合并。
+/// 分割线、分页符、公式、会议与任务卡片删除单独封闭撤销记录，避免与相邻正文输入合并。
 /// The current text block is deliberately retained. Removing its previous
 /// sibling shifts it onto the deleted block's path, so [previousNode.path] is
 /// also the correct post-transaction caret path. This keeps the software
@@ -182,6 +183,7 @@ Future<bool> deletePreviousUrlBackedBlock(EditorState editorState) async {
     ..selectionExtraInfo = {}
     ..customSelectionType = SelectionType.inline;
   if ((previousNode.type == collabDividerType ||
+          previousNode.type == collabPageDividerType ||
           previousNode.type == collabFormulaType ||
           previousNode.type == collabMeetingType ||
           previousNode.type == collabTaskCardType) &&
@@ -192,6 +194,7 @@ Future<bool> deletePreviousUrlBackedBlock(EditorState editorState) async {
     transaction,
     skipHistoryDebounce:
         previousNode.type == collabDividerType ||
+        previousNode.type == collabPageDividerType ||
         previousNode.type == collabFormulaType ||
         previousNode.type == collabMeetingType ||
         previousNode.type == collabTaskCardType,
@@ -199,9 +202,10 @@ Future<bool> deletePreviousUrlBackedBlock(EditorState editorState) async {
   return true;
 }
 
-/// 判断[type]是否属于可通过后置段落行首退格删除的资源、分割线、公式、会议或任务卡片。
+/// 判断[type]是否属于可通过后置段落行首退格删除的资源、分割线、分页符、公式、会议或任务卡片。
 bool _isUrlBackedBlock(String type) =>
     type == collabDividerType ||
+    type == collabPageDividerType ||
     type == collabFormulaType ||
     type == collabMeetingType ||
     type == collabTaskCardType ||

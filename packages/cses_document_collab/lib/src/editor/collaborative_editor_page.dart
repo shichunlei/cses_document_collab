@@ -10,6 +10,8 @@ import 'package:cses_document_collab/src/editor/collab_block_delete.dart';
 import 'package:cses_document_collab/src/editor/collab_callout_block.dart';
 import 'package:cses_document_collab/src/editor/collab_code_block.dart';
 import 'package:cses_document_collab/src/editor/collab_divider_block.dart';
+import 'package:cses_document_collab/src/editor/collab_page_divider_block.dart';
+import 'package:cses_document_collab/src/model/collab_page_divider.dart';
 import 'package:cses_document_collab/src/editor/collab_image_block.dart';
 import 'package:cses_document_collab/src/editor/collab_video_block.dart';
 import 'package:cses_document_collab/src/editor/collab_embed_block.dart';
@@ -431,7 +433,7 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
 }
 
 /// 正式协同块的渲染器工厂；音频、附件和四类网页使用各自独立构建器。
-/// 表格保留行和单元格子树，无正文块及未知占位沿用独立组件。
+/// 表格保留行和单元格子树，分页符等无正文块及未知占位使用独立组件。
 final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders =
     {
       ...standardBlockComponentBuilderMap,
@@ -460,6 +462,7 @@ final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders =
         configuration: standardBlockComponentConfiguration.copyWith(padding: _listBlockPadding),
       ),
       collabDividerType: CollabDividerBlockComponentBuilder(),
+      collabPageDividerType: CollabPageDividerBlockComponentBuilder(),
       collabFormulaType: CollabFormulaBlockComponentBuilder(),
       'mermaid': CollabMermaidBlockComponentBuilder(),
       collabMeetingType: CollabMeetingBlockComponentBuilder(),

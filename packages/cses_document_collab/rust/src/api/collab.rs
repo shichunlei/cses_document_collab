@@ -1318,10 +1318,12 @@ fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(
         }
         if matches!(
             block.block_type.as_str(),
-            "divider" | "formula" | "meeting" | "task"
+            "divider" | "page-divider" | "formula" | "meeting" | "task"
         ) && (!block.text.is_empty() || !block.segments.is_empty())
         {
-            return Err(if block.block_type == "task" {
+            return Err(if block.block_type == "page-divider" {
+                "INVALID_PAGE_DIVIDER: 分页符不能存储正文".into()
+            } else if block.block_type == "task" {
                 "INVALID_TASK: 任务卡片不能存储正文".into()
             } else if block.block_type == "meeting" {
                 "INVALID_MEETING: 会议卡片不能存储正文".into()
@@ -1330,6 +1332,10 @@ fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(
             } else {
                 "INVALID_DIVIDER: 分割线不能存储正文".into()
             });
+        }
+        if block.block_type == "page-divider" && (!allow_placeholders || block.parent_id.is_some())
+        {
+            return Err("INVALID_PAGE_DIVIDER: 分页符仅用于正式文档根节点".into());
         }
         if matches!(
             block.block_type.as_str(),
@@ -1485,6 +1491,7 @@ fn is_supported_block_type(block_type: &str) -> bool {
             | "table-row"
             | "table-cell"
             | "divider"
+            | "page-divider"
             | "formula"
             | "meeting"
             | "task"

@@ -20,6 +20,7 @@ import 'package:cses_document_collab/src/editor/stable_mobile_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
 import 'package:cses_document_collab/src/model/collab_color_palette.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
+import 'package:cses_document_collab/src/model/collab_page_divider.dart';
 import 'package:cses_document_collab/src/model/collab_formula.dart';
 import 'package:cses_document_collab/src/model/collab_mermaid.dart';
 import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
@@ -1553,6 +1554,7 @@ class _EditorModalSession {
 
 /// 在借用 [context]/[editorState] 上展示添加入口并保存稳定书签。
 /// 嵌套宿主选择器退场后才恢复正文；取消不写入，权限或会话失效不恢复旧光标。
+/// 分页符提交与恢复输入均拒绝面板打开期间撤销过的权限；临时监听随会话移除。
 Future<void> showEditorAddBlockSheet(BuildContext context, EditorState editorState) async {
   if (editorState.isDisposed || !editorState.editable) return;
   if (editorState.selection == null) {
@@ -1562,6 +1564,14 @@ Future<void> showEditorAddBlockSheet(BuildContext context, EditorState editorSta
   final services = CollabRuntime.services;
   final session = _EditorModalSession(editorState);
   Selection? appliedSelection;
+  var permissionRevoked = false;
+
+  /// 撤权后即使恢复授权，旧面板也不能向原书签写入。
+  void trackPermission() {
+    if (!editorState.editable) permissionRevoked = true;
+  }
+
+  editorState.editableNotifier.addListener(trackPermission);
 
   try {
     appliedSelection = await showCollabBottomSheet<Selection>(
@@ -1571,13 +1581,14 @@ Future<void> showEditorAddBlockSheet(BuildContext context, EditorState editorSta
         return _AddBlockSheet(
           editorState: editorState,
           bookmark: session.bookmark!,
-          canUseHost: () => identical(CollabRuntime.services, services),
+          canUseHost: () => !permissionRevoked && identical(CollabRuntime.services, services),
         );
       },
     );
   } finally {
+    editorState.editableNotifier.removeListener(trackPermission);
     await session.finish(
-      context.mounted && identical(CollabRuntime.services, services) ? context : null,
+      context.mounted && !permissionRevoked && identical(CollabRuntime.services, services) ? context : null,
       appliedSelection,
     );
   }
@@ -1762,7 +1773,7 @@ class _AddBlockSheet extends StatelessWidget {
   /// 返回面板 Widget，不持有或释放编辑器；未支持的入口继续显示占位提示。
   /// 在借用 [context] 中渲染可用块入口；插入按保存的稳定选区定位并等待事务完成。
   /// 在借用[context]中构建块/行内入口；用户选择调用宿主选择器并复用稳定插入位置。
-  /// 表格直接创建2×2网格；绘图先收集源码草稿再创建容器和子块。
+  /// 表格直接创建2×2网格；绘图先收集源码草稿再创建容器和子块；分页符仅插入根级光标位置。
   /// 插入前重查原始书签，权限/文档失效时不插入。
   @override
   Widget build(BuildContext context) {
@@ -2078,6 +2089,30 @@ class _AddBlockSheet extends StatelessWidget {
                         if (context.mounted) {
                           _showToolbarMessage(context, '插入失败，请重试');
                         }
+                      }
+                    },
+                  ),
+                  _ActionShortcutTile(
+                    key: const ValueKey('editor-shortcut-page-divider'),
+                    icon: LucideIcons.fileDown,
+                    label: '分页符',
+                    onTap: () async {
+                      final selection = bookmark.resolve(editorState);
+                      if (selection == null || !canUseHost()) {
+                        _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
+                        return;
+                      }
+                      try {
+                        final landing = await insertCollabPageDivider(editorState, selection);
+                        if (!context.mounted) return;
+                        if (landing != null) {
+                          Navigator.pop<Selection>(context, landing);
+                        } else {
+                          _showToolbarMessage(context, '分页符只能插入文档顶层，请选择顶层光标位置');
+                        }
+                      } catch (error, stack) {
+                        CollabDiagnostics.report('插入分页符失败', error: error, stackTrace: stack, tag: 'DocCollab');
+                        if (context.mounted) _showToolbarMessage(context, '插入失败，请重试');
                       }
                     },
                   ),

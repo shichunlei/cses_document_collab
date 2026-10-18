@@ -85,6 +85,8 @@ class CollabBlockMoreButton extends StatelessWidget {
   /// defaults to false for leaf cards and is useful for whole-container deletion.
   /// [menuTitle] defaults to 块操作; [menuIcon] defaults to the Lucide ellipsis.
   /// Both customize the sheet header without changing the more button or commands.
+  /// [triggerBuilder] optionally replaces the ellipsis with a custom launch surface;
+  /// it receives a null callback when unavailable, including preview without readonly actions.
   const CollabBlockMoreButton({
     super.key,
     required this.editor,
@@ -95,6 +97,7 @@ class CollabBlockMoreButton extends StatelessWidget {
     this.protectSubtree = false,
     this.menuTitle = '块操作',
     this.menuIcon = LucideIcons.ellipsis,
+    this.triggerBuilder,
   });
 
   /// Required editor, owned by the surrounding document page.
@@ -121,24 +124,38 @@ class CollabBlockMoreButton extends StatelessWidget {
   /// Decorative sheet icon; defaults to the Lucide ellipsis, without changing the launcher icon.
   final IconData menuIcon;
 
-  /// Builds the more button in borrowed [context]; live permissions govern visibility.
+  /// Optional custom launcher; null keeps the ellipsis button. The builder receives
+  /// borrowed context and a nullable activation callback, and must render its own
+  /// disabled/readonly surface when the callback is null. The common menu retains
+  /// permission, identity, failure and reentry protection; it owns no custom resources.
+  final Widget Function(BuildContext context, VoidCallback? onPressed)? triggerBuilder;
+
+  /// Builds the launcher in borrowed [context], reacting to current permissions.
+  /// Custom launchers stay visible with a null callback when unavailable; the
+  /// default ellipsis remains hidden in preview without readonly actions.
   @override
   Widget build(BuildContext context) => ListenableBuilder(
     listenable: editor.editableNotifier,
-    builder: (context, _) =>
-        editor.isDisposed ||
-            (editor.editable ? !const {'page', 'callout'}.contains(node.parent?.type) : readOnlyActions.isEmpty)
-        ? const SizedBox.shrink()
-        : ExcludeFocus(
-            child: IconButton(
-              tooltip: '更多操作',
-              style: const ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-              constraints: const BoxConstraints.tightFor(width: 32, height: 32),
-              padding: EdgeInsets.zero,
-              icon: const Icon(LucideIcons.ellipsis, size: 18),
-              onPressed: enabled ? () => _show(context) : null,
-            ),
-          ),
+    builder: (context, _) {
+      final available =
+          !editor.isDisposed &&
+          (editor.editable ? const {'page', 'callout'}.contains(node.parent?.type) : readOnlyActions.isNotEmpty);
+      final VoidCallback? onPressed = available && enabled ? () => _show(context) : null;
+      if (triggerBuilder != null) {
+        return ExcludeFocus(child: triggerBuilder!(context, onPressed));
+      }
+      if (!available) return const SizedBox.shrink();
+      return ExcludeFocus(
+        child: IconButton(
+          tooltip: '更多操作',
+          style: const ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+          constraints: const BoxConstraints.tightFor(width: 32, height: 32),
+          padding: EdgeInsets.zero,
+          icon: const Icon(LucideIcons.ellipsis, size: 18),
+          onPressed: onPressed,
+        ),
+      );
+    },
   );
 
   /// Opens one sheet in borrowed [context], rejects stale targets and catches failures.

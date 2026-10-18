@@ -1,0 +1,159 @@
+{
+  "date": "2026-10-18",
+  "scope": "分页符第一阶段：正式文档根级page-divider；连续流与编辑/历史/协同链路，状态为部分支持",
+  "blockcraft": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.21",
+    "query": "桌面目录执行 npm view @ccc/blockcraft dist-tags.latest",
+    "desktop": {
+      "declaration": "0.11.21",
+      "yarnLock": "0.11.21",
+      "installed": "0.11.21",
+      "pnpmLock": "0.2.78（与桌面声明不一致，未修改）"
+    },
+    "upgrade": false,
+    "publishedAndInstalledMainSha256": "037b9b0325f164baac79bf0416dc400a4d2787214d0a3a6e4bdc0cf4514fa4b9",
+    "reviewed": [
+      "ai-skills/SKILL.md",
+      "ai-skills/blockcraft.md",
+      "ai-skills/blockcraft-block.md：rootOnly、连续流32/分页0高度",
+      "ai-skills/MIGRATIONS.md：分页符rootOnly与快照展示条目",
+      "PageDividerBlockSchema / PageDividerBlockComponent / snapshot-viewer.scss / isManualBreak",
+      "桌面src/pages/docs/editor/const.ts与template-library/materials/registry.ts、页面task-list注册"
+    ],
+    "inventory": {
+      "explicit": 37,
+      "template": 3,
+      "pageExtra": 1,
+      "total": 41
+    }
+  },
+  "changes": [
+    "独立分页符组件、语义标签、虚线标记；只读隐藏菜单，复用公共块菜单与权限/身份保护",
+    "根级折叠光标插入；空段落替换/非空块保留，后置稳定身份空段落；拒绝嵌套和范围位置",
+    "删除/末块补段落与后置正文行首Backspace；独立Undo/Redo；远端更新按稳定身份处理",
+    "添加面板打开期间撤权后重新授权仍拒绝旧分页符动作，临时监听在结束时注销",
+    "Dart adapter无Delta/无子块投影；Rust生成正式void+Y.Array，拒绝嵌套/正文/资源补丁；旧非法嵌套及异常子块占位保留",
+    "不更改FRB签名/公开API/依赖/原生构建配置，未手工修改生成文件；重建宿主动态库验证真实桥接"
+  ],
+  "fixture": {
+    "generator": "packages/cses_document_collab/tool/generate_page_divider_fixture.mjs",
+    "path": "packages/cses_document_collab/rust/tests/fixtures/blockcraft-page-divider.update",
+    "source": "0.11.21发布产物的PageDividerBlockSchema.createSnapshot；无需加载Angular",
+    "sha256": "f657e6b2785d14e63d98c06244108903638f72e3261592d0f088b800bc21f08a",
+    "cases": [
+      "相邻根级分页符",
+      "未知props/meta",
+      "普通后置正文",
+      "旧高亮嵌套分页符",
+      "带非法子块的分页符"
+    ]
+  },
+  "validation": {
+    "targetRegression": {
+      "command": "在packages/cses_document_collab执行 flutter test --no-pub test/collab_page_divider_test.dart test/page_divider_native_integration_test.dart test/collab_block_delete_test.dart test/collab_block_actions_test.dart test/editor_shortcut_toolbar_test.dart test/appflowy_block_editor_adapter_test.dart --reporter expanded",
+      "passed": 93
+    },
+    "newFlutterTests": {
+      "count": 16,
+      "coverage": [
+        "空/非空正文插入、身份与独立历史",
+        "嵌套/范围/失效/只读/销毁拒绝",
+        "末块删除/补段落与恢复",
+        "远端正文原位更新",
+        "320/390宽和2倍字号的标记/菜单/预览",
+        "菜单撤权恢复/远端删除/重排",
+        "添加面板嵌套/范围/撤权恢复/删除书签拒绝与根级插入恢复光标",
+        "真实FRB/SQLite插入删除与Undo/Redo恢复"
+      ]
+    },
+    "rust": {
+      "targetTests": 3,
+      "allTests": 98,
+      "cargoFmtCheck": "passed",
+      "cargoCheck": "passed",
+      "cargoBuild": "passed",
+      "coverage": [
+        "未知属性与异常旧树保留",
+        "非法写入前原子拒绝",
+        "分页符新增与另一端正文并发收敛",
+        "删除/恢复/SQLite重开保持void/无URL/Y.Array"
+      ],
+      "commands": [
+        "cargo fmt --manifest-path rust/Cargo.toml --check",
+        "cargo check --manifest-path rust/Cargo.toml",
+        "cargo test --manifest-path rust/Cargo.toml",
+        "cargo build --manifest-path rust/Cargo.toml"
+      ]
+    },
+    "targetAnalysis": "Final flutter analyze --no-pub: 8 files, no issues found.",
+    "packageAnalysis": {
+      "errors": 0,
+      "warnings": 0,
+      "existingInfo": "test/collab_controller_native_test.dart:186 close_sinks；未触达，保持原状",
+      "command": "flutter analyze --no-pub (packages/cses_document_collab)",
+      "exitCode": 1,
+      "interpretation": "One pre-existing info; no errors or warnings. Target files have no issues."
+    },
+    "packageTests": {
+      "command": "flutter test --no-pub --reporter expanded (packages/cses_document_collab)",
+      "passed": 1219,
+      "failed": 0,
+      "skipped": 0
+    },
+    "hostTests": {
+      "command": "flutter test --no-pub --reporter expanded (repository root)",
+      "passed": 56,
+      "failed": 0
+    },
+    "generatorSyntax": "node --check passed",
+    "diffCheck": "git diff --check passed; new text files have no trailing whitespace; table counts match 13/13/1/14.",
+    "format": "dart format executed for all 8 changed/new handwritten Dart files. Existing long files retain 120-column style and unrelated historical formatting."
+  },
+  "limitations": [
+    "尚无手机纸张分页布局、打印或PDF导出",
+    "完整分页符剪贴板/HTML或Markdown互操作未适配或验收",
+    "删除撤销恢复投影数据，不保证未投影props/meta/审计字段恢复",
+    "Android/iOS真机、在线真实桌面双向/同时并发/断网重连及服务端持久化ACK未验收；测试模拟平台外观不计设备验收",
+    "仅核对分页符和必要关联链路，不代表BlockCraft0.11.21全部能力已完成兼容",
+    "桌面pnpm-lock.yaml残留0.2.78，需桌面仓库按其规则另行处理",
+    "Native build and ABI verification use the macOS host library. Android/iOS platform builds and device installation were not performed; device and online desktop acceptance remain pending."
+  ],
+  "statusCounts": {
+    "adapted": 13,
+    "partial": 13,
+    "structural": 1,
+    "unadapted": 14,
+    "total": 41
+  },
+  "directTapFollowup": {
+    "date": "2026-10-18",
+    "change": "移除分页符右侧三个点；整条虚线及文字作为公共操作面板触发区域，最小高度48逻辑像素；只读保留标记并禁用点击。",
+    "implementation": "公共块菜单新增可选triggerBuilder，自定义入口复用原权限/身份/防重复/异常保护；其他消费者仍使用原默认三个点入口。",
+    "versionCheck": {
+      "latest": "0.11.21",
+      "declared": "0.11.21",
+      "yarnLock": "0.11.21",
+      "installed": "0.11.21",
+      "pnpmLock": "0.2.78（历史不一致保留）",
+      "query": "桌面配置仓库 npm view @ccc/blockcraft dist-tags.latest；重读L0、块指南rootOnly、MIGRATIONS相关条目及分页符组件；没有升级"
+    },
+    "validation": {
+      "command": "flutter test --no-pub test/collab_page_divider_test.dart test/collab_block_actions_test.dart --reporter expanded",
+      "passed": 43,
+      "failed": 0,
+      "coverage": [
+        "点击虚线左侧空白区域打开菜单，无三个点",
+        "下方插入与删除/撤销",
+        "320/390宽与2倍字号",
+        "只读标记点击不打开面板",
+        "原菜单撤权恢复/删除/重排与会话失效保护",
+        "其他块默认菜单入口回归"
+      ],
+      "analysis": "3个目标文件 flutter analyze --no-pub：No issues found",
+      "format": "已格式化3个修改Dart文件；公共菜单沿用120列",
+      "diffCheck": "passed"
+    },
+    "limits": "本轮仅验证触发入口变更；未重做全包、宿主、Rust、设备或在线桌面联调。第一阶段原验证结果与未完成能力保持。"
+  }
+}

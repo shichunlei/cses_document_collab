@@ -441,6 +441,20 @@ node packages/cses_document_collab/tool/generate_paragraph_oracle.mjs /path/to/e
 
 附件使用浅底边框卡片，左侧显示按文件类型配色的图标，右侧突出文件名（最多两行）和类型/大小。文件名缺失时使用链接中的文件名，仍为空时显示“未命名附件”；大小按B、KB、MB、GB、TB显示，0字节显示0 B，缺失或无效大小显示“大小未知”。窄屏和大字号下允许元信息换行，空间极窄时图标与信息上下排列。打开、修改、删除和下方插入仍统一在更多菜单中，不改共享属性。
 
+## 分页符
+
+正式文档支持根级 `page-divider` 无正文块，连续流展示为虚线与“分页符”标记；添加面板提供插入，根级非空块在其后插入、空段落原位替换，并创建后置空段落。范围选区和嵌套位置拒绝插入，不向上寻找根。直接点击整条分页符弹出操作菜单，提供“在下方插入”和“删除分页符”，不显示右侧三个点；后置正文行首退格同样可以删除，删除末块补空段落；插入与删除均支持独立撤销/重做。只读保留标记并隐藏修改入口，打开面板期间撤权或目标删除时拒绝过期动作。
+
+桌面Schema为rootOnly，旧文档中的嵌套分页符、带非法子块或正文的分页符保持只读占位，原数据不迁移。正常块的未知props/meta在其他正文编辑时保留；删除撤销只恢复已投影数据，未投影扩展与审计字段恢复仍待适配。本阶段不提供纸张分页排版、打印/PDF导出或完整分页符剪贴板。Android/iOS与在线桌面联调另行验收，验证范围见根仓库`docs/verification/page-divider-20261018.json`。
+
+发布Schema夹具可从包目录重新生成：
+
+```sh
+node tool/generate_page_divider_fixture.mjs /path/to/blockcraft-0.11.21/package /path/to/cses-client
+cargo build --manifest-path rust/Cargo.toml
+flutter test --no-pub test/collab_page_divider_test.dart test/page_divider_native_integration_test.dart
+```
+
 ## Mermaid代码绘图
 
 正式文档支持`mermaid`容器与唯一`mermaid-textarea`源码子块；更多插入面板提供“代码绘图”，点击“编辑源码”打开草稿与实时预览。支持根/高亮内插入、更多菜单下方插入与删除、独立撤销/重做、草稿冲突重载及只读/删除保护；取消不写入。源码最多100000 UTF-16单元，写入正式Y.Text，真实FRB与SQLite恢复沿用既有接口，未增加桥接字段。

@@ -596,7 +596,7 @@ fn mobile_type<T: ReadTxn>(block: &MapRef, props: &MapRef, txn: &T) -> Option<St
         "blockquote" => "quote".to_owned(),
         "table" | "table-row" | "table-cell" => flavour,
         "code" | "image" | "video" | "callout" | "mermaid" | "mermaid-textarea" | "divider"
-        | "formula" | "meeting" | "task" => flavour,
+        | "page-divider" | "formula" | "meeting" | "task" => flavour,
         s if is_resource_block_type(s) => flavour,
         _ => return None,
     })
@@ -996,6 +996,11 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
             result.blocks.push(placeholder(id, parent_id));
             continue;
         };
+        // Legacy nested breaks stay opaque; new writes must obey the desktop rootOnly schema.
+        if kind == "page-divider" && parent_id.is_some() {
+            result.blocks.push(placeholder(id, parent_id));
+            continue;
+        }
         if matches!(kind.as_str(), "meeting" | "task")
             && parse_resource_edit(&kind, &resource_properties(&kind, &props, &txn), true).is_err()
         {
@@ -1054,8 +1059,10 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                 }
             }
             Some(Out::YArray(array))
-                if matches!(kind.as_str(), "divider" | "formula" | "meeting" | "task")
-                    && node_type == "void"
+                if matches!(
+                    kind.as_str(),
+                    "divider" | "page-divider" | "formula" | "meeting" | "task"
+                ) && node_type == "void"
                     && array.len(&txn) == 0 => {}
             Some(Out::YArray(array))
                 if is_resource_block_type(&kind) && node_type == "void" && array.len(&txn) == 0 =>
@@ -1080,6 +1087,7 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                     && !is_resource_block_type(&kind)
                     && kind != "callout"
                     && kind != "mermaid"
+                    && kind != "page-divider"
                     && kind != "divider"
                     && kind != "formula"
                     && kind != "meeting"
@@ -1232,6 +1240,7 @@ fn formal_type(kind: &str) -> Option<(&str, bool)> {
         "image" => ("image", true),
         "video" => ("video", true),
         "divider" => ("divider", true),
+        "page-divider" => ("page-divider", true),
         "formula" => ("formula", true),
         "meeting" => ("meeting", true),
         "task" => ("task", true),
@@ -1282,6 +1291,11 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
             && previous.get(block.id.as_str()).copied() == Some(block)
         {
             continue;
+        }
+        if block.block_type == "page-divider"
+            && (block.parent_id.is_some() || !block.text.is_empty() || !block.segments.is_empty())
+        {
+            return Err("INVALID_PAGE_DIVIDER: 分页符必须是根级无正文块".into());
         }
         if block.id == root_id || formal_type(&block.block_type).is_none() {
             return Err("UNSUPPORTED_BLOCK_TYPE: 正式文档不支持该手机块类型".into());
@@ -1789,11 +1803,13 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
                     ArrayPrelim::from(Vec::<String>::new()),
                 );
             }
-            if !matches!(flavour, "divider" | "formula" | "meeting" | "task")
-                && ((!is_resource_block_type(flavour)
-                    && old.is_none_or(|b| b.text != next.text || b.block_type != next.block_type))
-                    || (is_resource_block_type(flavour)
-                        && old.is_none_or(|b| b.block_type != next.block_type)))
+            if !matches!(
+                flavour,
+                "divider" | "page-divider" | "formula" | "meeting" | "task"
+            ) && ((!is_resource_block_type(flavour)
+                && old.is_none_or(|b| b.text != next.text || b.block_type != next.block_type))
+                || (is_resource_block_type(flavour)
+                    && old.is_none_or(|b| b.block_type != next.block_type)))
             {
                 props.try_update(
                     &mut txn,
@@ -5434,6 +5450,134 @@ mod tests {
         left.apply_cses_update(ub.v1_update).unwrap();
         right.apply_cses_update(ua.v1_update).unwrap();
         assert_eq!(left.blocks(), right.blocks());
+    }
+
+    /// 发布分页符保持 void；非法旧嵌套与子块只读保留，正文修改不覆盖扩展属性。
+    #[test]
+    fn page_divider_projection_preserves_opaque_legacy_nodes() {
+        let mut e = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-page-divider.update"
+        ));
+        let before = e.blocks();
+        assert!(project(&e.doc, "fixture-doc").reason.is_none());
+        assert_eq!(
+            before
+                .iter()
+                .filter(|b| b.block_type == "page-divider")
+                .count(),
+            2
+        );
+        for id in ["nested-break", "malformed-break"] {
+            assert_eq!(
+                before.iter().find(|b| b.id == id).unwrap().block_type,
+                UNSUPPORTED_BLOCK_TYPE
+            );
+        }
+        let mut desired = before.clone();
+        let tail = desired.iter_mut().find(|b| b.id == "tail").unwrap();
+        tail.text = "手机编辑正文".into();
+        tail.segments.clear();
+        e.apply_block_snapshot(desired).unwrap();
+        let txn = e.doc.transact();
+        let blocks = txn.get_map(ROOT_NAME).unwrap();
+        let block = map(&blocks, &txn, "break-1").unwrap();
+        let props = map(&block, &txn, "props").unwrap();
+        assert!(props.contains_key(&txn, "futureProp"));
+        assert!(!props.contains_key(&txn, "url") && !props.contains_key(&txn, "src"));
+        assert_eq!(
+            out_string(map(&block, &txn, "meta").unwrap().get(&txn, "audit")).as_deref(),
+            Some("desktop")
+        );
+        assert_eq!(
+            children(&map(&blocks, &txn, "malformed-break").unwrap(), &txn),
+            vec!["hidden"]
+        );
+    }
+
+    /// 非根级、正文、资源补丁和占位删除在事务前拒绝，失败不产生部分写入。
+    #[test]
+    fn page_divider_invalid_snapshots_are_atomic() {
+        let mut e = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-page-divider.update"
+        ));
+        for kind in ["text", "nested", "resource", "remove-opaque"] {
+            let mut desired = e.blocks();
+            let first = desired.iter_mut().find(|b| b.id == "break-1").unwrap();
+            match kind {
+                "text" => first.text = "非法正文".into(),
+                "nested" => {
+                    let mut nested = first.clone();
+                    nested.id = "new-nested".into();
+                    nested.parent_id = Some("box".into());
+                    let index = desired.iter().position(|b| b.id == "box").unwrap() + 1;
+                    desired.insert(index, nested);
+                }
+                "resource" => {
+                    first.resource = Some(CollabResource {
+                        properties: "{}".into(),
+                        property_edits: Some(r#"{"url":{"value":"https://example.test"}}"#.into()),
+                    })
+                }
+                _ => desired.retain(|b| b.id != "malformed-break"),
+            }
+            let before = e
+                .doc
+                .transact()
+                .encode_state_as_update_v1(&StateVector::default());
+            assert!(e.apply_block_snapshot(desired).is_err(), "{kind}");
+            assert_eq!(
+                e.doc
+                    .transact()
+                    .encode_state_as_update_v1(&StateVector::default()),
+                before,
+                "{kind}"
+            );
+        }
+    }
+
+    /// 新增分页符与另一端正文并发收敛；删除恢复和 SQLite 重开保持正式无正文结构。
+    #[test]
+    fn page_divider_creation_delete_restore_and_concurrent_text_converge() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-page-divider.update");
+        let mut left = engine(fixture);
+        let mut right = engine(fixture);
+        let mut desired = left.blocks();
+        let mut new = desired[0].clone();
+        new.id = "mobile-break".into();
+        desired.insert(2, new.clone());
+        let inserted = left.apply_block_snapshot(desired).unwrap();
+        let mut other = right.blocks();
+        let tail = other.iter_mut().find(|b| b.id == "tail").unwrap();
+        tail.text = "桌面编辑😀".into();
+        tail.segments.clear();
+        let edited = right.apply_block_snapshot(other).unwrap();
+        left.apply_cses_update(edited.v1_update).unwrap();
+        right.apply_cses_update(inserted.v1_update).unwrap();
+        assert_eq!(left.blocks(), right.blocks());
+        let mut removed = left.blocks();
+        removed.retain(|b| b.id != new.id);
+        let deletion = left.apply_block_snapshot(removed).unwrap();
+        right.apply_cses_update(deletion.v1_update).unwrap();
+        let mut restored = left.blocks();
+        restored.insert(2, new);
+        let restoration = left.apply_block_snapshot(restored).unwrap();
+        right.apply_cses_update(restoration.v1_update).unwrap();
+        assert_eq!(left.blocks(), right.blocks());
+        let mut reopened = CollabEngine::open(left.document_id.clone(), left.database_path.clone())
+            .unwrap()
+            .0;
+        reopened.blockcraft_root_id = Some("fixture-doc".into());
+        assert_eq!(reopened.blocks(), left.blocks());
+        let txn = reopened.doc.transact();
+        let blocks = txn.get_map(ROOT_NAME).unwrap();
+        let block = map(&blocks, &txn, "mobile-break").unwrap();
+        let props = map(&block, &txn, "props").unwrap();
+        assert_eq!(
+            out_string(block.get(&txn, "nodeType")).as_deref(),
+            Some("void")
+        );
+        assert!(matches!(block.get(&txn, "children"), Some(Out::YArray(a)) if a.len(&txn) == 0));
+        assert!(!props.contains_key(&txn, "url") && !props.contains_key(&txn, "src"));
     }
 
     /// 桌面全部分割线与嵌套结构投影为 void；单字段补丁保留扩展属性及 null/缺失语义。
