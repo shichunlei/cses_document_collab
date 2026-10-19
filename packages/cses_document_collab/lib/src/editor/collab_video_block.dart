@@ -269,10 +269,11 @@ class _VideoBlockState extends CollabMediaBlockState<_VideoBlock> {
   @override
   Widget buildMedia(BuildContext context) => _buildVideoCard(context);
 
-  /// 在借用[context]中创建视频更多菜单；外部打开在预览中可用，删除仅编辑状态显示。
-  /// 删除在面板完整退场并通过菜单身份/权限校验后执行，直接播放仍位于视频画面内。
+  /// 在借用[context]中创建视频更多菜单；外部打开在预览中可用，链接复制和删除仅编辑状态显示。
+  /// 复制链接及删除在面板完整退场并通过菜单身份/权限校验后执行，直接播放仍位于视频画面内。
   @override
   Widget? buildMediaActions(BuildContext context) {
+    final host = collabBlockActionContext(context);
     final editor = context.read<EditorState>();
     final id = node.attributes[AppFlowyBlockEditorAdapter.collabBlockIdAttribute] as String? ?? node.id;
     return buildMediaMore(
@@ -285,6 +286,8 @@ class _VideoBlockState extends CollabMediaBlockState<_VideoBlock> {
         ),
       ],
       actions: [
+        if (url.trim().isNotEmpty)
+          (label: '复制链接', key: ValueKey('media-copy-link-$id'), run: () => copyCollabMediaLink(host, editor, node)),
         (label: '删除视频', key: const ValueKey('collab-video-menu-delete'), run: () => _deleteVideoBlock(editor, id)),
       ],
     );

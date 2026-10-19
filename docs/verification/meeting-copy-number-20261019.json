@@ -1,0 +1,84 @@
+{
+  "date": "2026-10-19",
+  "change": "会议卡片标注会议号，更多操作增加复制会议号及复制图标，复制当前显示业务号至系统剪贴板并成功提示。",
+  "behavior": {
+    "numberSource": "详情number优先；无详情时回退共享快照number；原样复制保留前导零和空格，不复制meetingId。",
+    "emptyOrLoading": "不显示复制会议号，不复制破折号占位。",
+    "guard": "公共菜单退场后复核稳定身份/属性快照/宿主/权限，详情代次及组件失效时拒绝；远端重排导致组件重建会取消旧操作，重开菜单即可操作。",
+    "document": "无共享属性写入、撤销记录或业务请求。",
+    "error": "系统剪贴板错误交公共菜单诊断和操作失败提示。"
+  },
+  "versions": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.21",
+    "declaration": "0.11.21",
+    "yarnLock": "0.11.21",
+    "installed": "0.11.17",
+    "pnpmLock": "0.2.78",
+    "upgraded": false,
+    "checked": "安装/发布包随包技能、MIGRATIONS、发布剪贴板实现；桌面meeting Schema和详情number读取。上游其余差异待同步。"
+  },
+  "verification": {
+    "newTestsPassed": 11,
+    "scenarios": [
+      "详情会议号（001 234）优先",
+      "无详情加载器回退123456",
+      "空号隐藏",
+      "加载隐藏",
+      "引用变化",
+      "共享会议号变化",
+      "重排使旧组件失效",
+      "删除",
+      "撤权后恢复",
+      "取消",
+      "平台剪贴板失败"
+    ],
+    "suite": {
+      "files": [
+        "test/collab_meeting_card_test.dart",
+        "test/collab_meeting_test.dart",
+        "test/collab_block_actions_test.dart"
+      ],
+      "passed": 88,
+      "failed": 4,
+      "command": "flutter test --no-pub test/collab_meeting_card_test.dart test/collab_meeting_test.dart test/collab_block_actions_test.dart --reporter expanded"
+    },
+    "baseline": {
+      "commit": "eef39fc86fd85c10c3bb25b8ca5c726e150468ac",
+      "source": "git archive HEAD的隔离包，无当前工作区修改；同一Flutter和依赖。",
+      "command": "flutter test --no-pub test/collab_meeting_card_test.dart --plain-name 'four rows keep geometry' --reporter expanded",
+      "failed": 4,
+      "failureNames": [
+        "four rows keep geometry across loading at 320.0/1.0",
+        "four rows keep geometry across loading at 320.0/2.2",
+        "four rows keep geometry across loading at 390.0/1.0",
+        "four rows keep geometry across loading at 390.0/2.2"
+      ],
+      "identicalExpectedAndActualRectangles": true,
+      "assertions": [
+        "Expected: Rect:<Rect.fromLTRB(193.0, 174.0, 287.0, 210.0)>\n  Actual: Rect:<Rect.fromLTRB(206.6, 174.0, 287.0, 210.0)>",
+        "Expected: Rect:<Rect.fromLTRB(193.0, 230.0, 287.0, 290.0)>\n  Actual: Rect:<Rect.fromLTRB(139.4, 230.0, 287.0, 290.0)>",
+        "Expected: Rect:<Rect.fromLTRB(263.0, 174.0, 357.0, 210.0)>\n  Actual: Rect:<Rect.fromLTRB(276.6, 174.0, 357.0, 210.0)>",
+        "Expected: Rect:<Rect.fromLTRB(263.0, 230.0, 357.0, 290.0)>\n  Actual: Rect:<Rect.fromLTRB(209.4, 230.0, 357.0, 290.0)>"
+      ],
+      "limitation": "既有加载/详情主按钮宽度不一致，未扩大本次会议号需求去修复。"
+    },
+    "analysis": {
+      "files": 4,
+      "result": "No issues found"
+    },
+    "format": "仅三个触达Dart文件，源文件120列、测试保持原格式；git diff --check通过。",
+    "oldLabelSearch": "包内生产卡片无会议编号；宿主会议选择表单的原标签不属卡片变更范围。"
+  },
+  "notVerified": [
+    "Android/iOS实际系统剪贴板",
+    "在线桌面双向联调"
+  ],
+  "statistics": {
+    "total": 41,
+    "adapted": 13,
+    "partial": 13,
+    "structural": 1,
+    "notAdapted": 14
+  }
+}

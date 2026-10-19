@@ -273,7 +273,7 @@ void main() {
         bounds.topLeft + const Offset(20, 3),
         Offset(bounds.left + 2, bounds.center.dy),
         tester.getCenter(find.text('周会')),
-        tester.getCenter(find.text('会议编号：123456')),
+        tester.getCenter(find.text('会议号：123456')),
       ];
       for (final point in points) {
         // Retain a real text caret while the soft keyboard is hidden, as after Android back.
@@ -548,7 +548,7 @@ void main() {
         );
         await tester.pumpAndSettle();
         expect(find.text('周会'), findsOneWidget);
-        expect(find.text('会议编号：123456'), findsOneWidget);
+        expect(find.text('会议号：123456'), findsOneWidget);
         expect(find.text('编辑引用'), findsNothing);
         await tester.tap(find.byKey(const ValueKey('meeting-open-meeting')));
         await tester.pump();

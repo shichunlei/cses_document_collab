@@ -124,7 +124,8 @@ abstract class CollabResourceBlockState<T extends CollabResourceBlock> extends S
   }
 
   /// 构建音频/附件共用菜单；[openLabel]为外部打开项标题，权限与只读显隐由具体卡片决定。
-  /// 编辑与删除在菜单退场后重新解析稳定块身份，拒绝过期目标；不拥有借用的回调资源。
+  /// 音频菜单提供复制完整链接；编辑、复制与删除在菜单退场后重新解析稳定块身份，拒绝过期目标。
+  /// 不拥有借用的回调资源，附件保留既有命令。
   Widget buildResourceMore({required String openLabel}) {
     final host = collabBlockActionContext(context);
     final id = blockId;
@@ -134,6 +135,12 @@ abstract class CollabResourceBlockState<T extends CollabResourceBlock> extends S
       node: widget.node,
       readOnlyActions: [(label: openLabel, key: ValueKey('resource-open-$id'), run: () => openResource(host))],
       actions: [
+        if (widget.node.type == 'audio' && url.trim().isNotEmpty)
+          (
+            label: '复制链接',
+            key: ValueKey('media-copy-link-$id'),
+            run: () => copyCollabMediaLink(host, editor, widget.node),
+          ),
         (
           label: '修改$resourceLabel',
           key: ValueKey('resource-edit-$id'),

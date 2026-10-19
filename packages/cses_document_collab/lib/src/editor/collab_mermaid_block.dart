@@ -123,7 +123,7 @@ class _MermaidBlockState extends State<_MermaidBlock> with SelectableMixin {
   }
 
   /// 在借用 [context] 内按共享 mode 展示源码、图形或两者，监听远端属性和源码更新。
-  /// 视图入口使用与编号菜单一致的锚点浮层、紧凑列表及当前选项勾选。
+  /// 标题使用与添加入口及操作面板一致的图表网络图标；视图入口使用编号菜单同款浮层、紧凑列表及勾选状态。
   @override
   Widget build(BuildContext context) {
     final editor = context.read<EditorState>();
@@ -136,7 +136,10 @@ class _MermaidBlockState extends State<_MermaidBlock> with SelectableMixin {
         final view = collabMermaidView(node);
         return CollabCardFrame(
           header: CollabCardHeader(
-            leading: const Icon(LucideIcons.network, color: Color(0xFF5755E7)),
+            leading: const Icon(
+              LucideIcons.chartNetwork,
+              color: Color(0xFF5755E7),
+            ),
             title: const Text('代码绘图'),
             readOnly: !editor.editable,
             actions: [

@@ -5,6 +5,7 @@ import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// Resolves stable [id] in borrowed [editor]; disposed/deleted targets return null.
@@ -56,6 +57,48 @@ Future<Node?> insertCollabParagraphBelow(EditorState editor, Node source) async 
     ..afterSelection = null;
   await editor.apply(transaction, skipHistoryDebounce: true);
   return paragraph;
+}
+
+/// 将借用 [editor] 中 [node] 的完整图片/音频/视频链接复制到系统剪贴板。
+/// [context] 用于成功提示，须由公共更多菜单在退场并校验身份/权限/快照后调用。
+/// 本函数仍按稳定身份重新取当前节点；关闭、只读、已删除或类型变化时不执行。
+/// 空链接抛出 [StateError]，平台复制失败沿 Future 交给菜单的诊断与失败提示边界。
+/// 不下载资源、修改正文或创建撤销记录；迟到结果仅在当前节点/链接/宿主仍有效时提示。
+///
+/// ```dart
+/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
+/// import 'package:flutter/widgets.dart';
+/// // 在公共更多菜单的run回调中调用；编辑器、节点和上下文均借自页面。
+/// Future<void> copyMedia(BuildContext context, EditorState editor, Node node) =>
+///     copyCollabMediaLink(context, editor, node);
+/// ```
+Future<void> copyCollabMediaLink(BuildContext context, EditorState editor, Node node) async {
+  if (!context.mounted || editor.isDisposed || !editor.editable) return;
+  final kind = switch (node.type) {
+    'image' => '图片',
+    'video' => '视频',
+    'audio' => '音频',
+    _ => null,
+  };
+  if (kind == null) return;
+  final id = node.attributes['cses_collab_block_id'] as String? ?? node.id;
+  final current = findCollabActionNode(editor, id);
+  if (current == null || current.type != node.type) return;
+  // 手机投影中的三个资源类型统一使用url；不改写桌面原生src/url属性。
+  final url = current.attributes['url'];
+  if (url is! String || url.trim().isEmpty) throw StateError('资源链接为空');
+  final services = CollabRuntime.services;
+  await Clipboard.setData(ClipboardData(text: url));
+  if (context.mounted &&
+      !editor.isDisposed &&
+      identical(CollabRuntime.services, services) &&
+      identical(findCollabActionNode(editor, id), current) &&
+      current.attributes['url'] == url) {
+    ScaffoldMessenger.maybeOf(context)
+      ?..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text('$kind链接已复制')));
+  }
 }
 
 /// Shared card menu; appends an editable paragraph without changing the source.
@@ -161,6 +204,7 @@ class CollabBlockMoreButton extends StatelessWidget {
 
   /// Opens one sheet in borrowed [context], rejects stale targets and catches failures.
   /// Insertion below uses the text-line and downward-return icon to show its destination.
+  /// Commands use semantic download, external-link, palette, copy, delete or edit icons.
   /// Resolves the block-specific header, applying the caller's [menuTitle]/[menuIcon] overrides.
   Future<void> _show(BuildContext context) async {
     if (editor.isDisposed || (!editor.editable && readOnlyActions.isEmpty) || _pending[editor] == true) {
@@ -210,11 +254,7 @@ class CollabBlockMoreButton extends StatelessWidget {
                     ListTile(
                       key: commands[i].key,
                       leading: Icon(
-                        commands[i].label.contains('删除')
-                            ? LucideIcons.trash2
-                            : commands[i].label.contains('复制')
-                            ? LucideIcons.copy
-                            : LucideIcons.pencil,
+                        _blockActionIcon(commands[i].label),
                         color: commands[i].label.contains('删除') ? CollabModalColors.of(sheet).danger : null,
                       ),
                       title: Text(
@@ -281,19 +321,32 @@ final _pending = Expando<bool>('block-more-actions');
 
 /// Resolves borrowed block [type] to the shared menu's default heading and Lucide icon.
 /// Explicit caller overrides take precedence; unknown future types use 内容/file rather
-/// than implying a recognized type. The mapping owns no editor or business resources.
+/// than implying a recognized type. Callouts use a highlighter and page dividers a
+/// horizontal separator. Mermaid shares the chart-network icon with its card and
+/// insertion entry; the mapping owns no editor or business resources.
 (String, IconData) _defaultBlockMenuHeader(String type) => switch (type) {
   'image' => ('图片', LucideIcons.image),
   'video' => ('视频', LucideIcons.film),
   'code' => ('代码块', LucideIcons.codeXml),
-  'callout' => ('高亮块', LucideIcons.squareSplitVertical),
+  'callout' => ('高亮块', LucideIcons.highlighter),
   'audio' => ('音频', LucideIcons.audioLines),
   'attachment' => ('附件', LucideIcons.paperclip),
   'formula' => ('公式', LucideIcons.sigma),
-  'mermaid' => ('代码绘图', LucideIcons.workflow),
+  'mermaid' => ('代码绘图', LucideIcons.chartNetwork),
   'link' => ('链接', LucideIcons.link),
   'meeting' => ('会议', LucideIcons.users),
   'task' => ('任务', LucideIcons.listTodo),
-  'page-divider' => ('分页符', LucideIcons.fileDown),
+  'page-divider' => ('分页符', LucideIcons.separatorHorizontal),
   _ => ('内容', LucideIcons.file),
 };
+
+/// 根据操作文案[label]返回语义图标；下载优先于打开，避免附件复合操作误用外链图标。
+/// 删除、复制、颜色和外部打开分别使用对应Lucide图标，其余编辑命令使用铅笔。
+IconData _blockActionIcon(String label) {
+  if (label.contains('删除')) return LucideIcons.trash2;
+  if (label.contains('复制')) return LucideIcons.copy;
+  if (label.contains('下载')) return LucideIcons.download;
+  if (label.contains('打开')) return LucideIcons.externalLink;
+  if (label.contains('颜色')) return LucideIcons.palette;
+  return LucideIcons.pencil;
+}

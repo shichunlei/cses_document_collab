@@ -13,7 +13,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// 会议状态卡片、按钮命中、键盘和详情请求失效回归，使用公开宿主数据契约。
+/// 验证会议状态卡片、会议号剪贴板、按钮命中、键盘和详情失效，使用公开宿主数据契约。
 void main() {
   setUpAll(() async {
     await _loadPreviewFonts();
@@ -94,6 +94,156 @@ void main() {
     );
   }
 
+  for (final source in ['detail', 'snapshot', 'empty', 'loading']) {
+    testWidgets(
+      'copy meeting number uses displayed $source without document changes',
+      (tester) async {
+        final copied = <String>[];
+        final messenger =
+            TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+        messenger.setMockMethodCallHandler(SystemChannels.platform, (
+          call,
+        ) async {
+          if (call.method == 'Clipboard.setData') {
+            copied.add((call.arguments as Map)['text'] as String);
+          }
+          return null;
+        });
+        addTearDown(
+          () =>
+              messenger.setMockMethodCallHandler(SystemChannels.platform, null),
+        );
+        var changes = 0;
+        final pending = Completer<CollabMeetingCardData?>();
+        final harness = await _mount(
+          tester,
+          settle: source != 'loading',
+          services: CollabHostServices(
+            loadMeetingCard: source == 'snapshot'
+                ? null
+                : (id) => source == 'loading'
+                      ? pending.future
+                      : Future.value(
+                          CollabMeetingCardData(
+                            meetingId: id,
+                            number: source == 'empty' ? '' : '001 234',
+                          ),
+                        ),
+          ),
+          onChanged: (_) => changes++,
+        );
+        if (source != 'loading') {
+          expect(
+            find.text(
+              '会议号：${source == 'empty'
+                  ? '—'
+                  : source == 'snapshot'
+                  ? '123456'
+                  : '001 234'}',
+            ),
+            findsOneWidget,
+          );
+          expect(find.textContaining('会议编号'), findsNothing);
+        }
+        await tester.tap(_more);
+        await tester.pumpAndSettle();
+        if (source == 'empty' || source == 'loading') {
+          expect(find.text('复制会议号'), findsNothing);
+          Navigator.of(tester.element(find.text('会议操作'))).pop();
+          await tester.pumpAndSettle();
+        } else {
+          await tester.tap(find.text('复制会议号'));
+          await tester.pumpAndSettle();
+          expect(copied, [source == 'snapshot' ? '123456' : '001 234']);
+          expect(find.text('会议号已复制'), findsOneWidget);
+        }
+        expect(changes, 0);
+        expect(harness.adapter.editorState.undoManager.undoStack, isEmpty);
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+
+  for (final change in [
+    'reference',
+    'number',
+    'reorder',
+    'delete',
+    'revoke',
+    'cancel',
+    'failure',
+  ]) {
+    testWidgets('copy meeting number rejects $change while menu is open', (
+      tester,
+    ) async {
+      final copied = <String>[];
+      final errors = <Object>[];
+      final messenger =
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      messenger.setMockMethodCallHandler(SystemChannels.platform, (call) async {
+        if (call.method == 'Clipboard.setData') {
+          if (change == 'failure') {
+            throw PlatformException(code: 'clipboard-denied');
+          }
+          copied.add((call.arguments as Map)['text'] as String);
+        }
+        return null;
+      });
+      addTearDown(
+        () => messenger.setMockMethodCallHandler(SystemChannels.platform, null),
+      );
+      var changes = 0;
+      final harness = await _mount(
+        tester,
+        services: CollabHostServices(
+          onError: (_, error, _, _) => errors.add(error),
+        ),
+        onChanged: (_) => changes++,
+      );
+      await tester.tap(_more);
+      await tester.pumpAndSettle();
+      expect(find.text('复制会议号'), findsOneWidget);
+      if (change == 'reference') {
+        await harness.adapter.replaceFromRemote([_meeting('m2'), _tail]);
+      } else if (change == 'number') {
+        await harness.adapter.replaceFromRemote([
+          CollabEditorBlock(
+            id: 'meeting',
+            blockType: 'meeting',
+            text: '',
+            resource: CollabResource.fromValues({
+              'meetingId': 'm1',
+              'title': '共享周会',
+              'number': '999999',
+            }),
+          ),
+          _tail,
+        ]);
+      } else if (change == 'reorder') {
+        await harness.adapter.replaceFromRemote([_tail, _meeting('m1')]);
+      } else if (change == 'delete') {
+        await harness.adapter.replaceFromRemote([_tail]);
+      } else if (change == 'revoke') {
+        harness.adapter.editorState.editable = false;
+        harness.adapter.editorState.editable = true;
+      }
+      await tester.pumpAndSettle();
+      if (change == 'cancel') {
+        Navigator.of(tester.element(find.text('会议操作'))).pop();
+      } else {
+        await tester.tap(find.text('复制会议号'));
+      }
+      await tester.pumpAndSettle();
+      expect(copied, isEmpty);
+      expect(errors, hasLength(change == 'failure' ? 1 : 0));
+      if (change == 'failure') expect(find.text('操作失败，请重试'), findsOneWidget);
+      expect(find.text('会议号已复制'), findsNothing);
+      expect(changes, 0);
+      expect(harness.adapter.editorState.undoManager.undoStack, isEmpty);
+      expect(tester.takeException(), isNull);
+    });
+  }
+
   for (final width in [320.0, 390.0]) {
     for (final scale in [1.0, 2.2]) {
       testWidgets('four rows keep geometry across loading at $width/$scale', (
@@ -163,7 +313,7 @@ void main() {
         }
         expect(
           tester
-              .getRect(find.text('会议编号：123456789012345678901234567890'))
+              .getRect(find.text('会议号：123456789012345678901234567890'))
               .center
               .dy,
           greaterThan(
@@ -212,7 +362,7 @@ void main() {
           );
         }
         expect(find.text(fails ? '● 状态加载失败' : '● 状态未知'), findsOneWidget);
-        expect(find.text(fails ? '会议编号：123456' : '会议编号：—'), findsOneWidget);
+        expect(find.text(fails ? '会议号：123456' : '会议号：—'), findsOneWidget);
         if (fails) {
           expect(find.text('重试'), findsOneWidget);
           expect(tester.widget<FilledButton>(_open).onPressed, isNull);

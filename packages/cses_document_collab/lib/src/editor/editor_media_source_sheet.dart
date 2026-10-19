@@ -272,7 +272,7 @@ class _MediaSourceSheetState extends State<EditorMediaSourcePanel> {
     super.dispose();
   }
 
-  /// 在借用 [context] 中展示来源分类与真实上传/图库内容，固定头尾并统一键盘避让。
+  /// 在借用 [context] 中展示来源分类与真实上传/图库内容，封面使用图片图标，固定头尾并统一键盘避让。
   /// 文件选择和上传保持可取消，销毁时仍由本状态取消令牌并忽略迟到结果。
   @override
   Widget build(BuildContext context) {
@@ -291,7 +291,7 @@ class _MediaSourceSheetState extends State<EditorMediaSourcePanel> {
           ? '一个小图标，让文档更容易找到'
           : '选择$_label来源，丰富文档内容',
       icon: _banner
-          ? LucideIcons.panelsTopLeft
+          ? LucideIcons.image
           : widget.kind == 'document_icon'
           ? LucideIcons.smile
           : switch (widget.kind) {

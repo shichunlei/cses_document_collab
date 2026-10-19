@@ -1,0 +1,46 @@
+{
+  "date": "2026-10-19",
+  "scope": "用户截图标记的添加内容标题、高亮块/分页符入口及代码绘图卡片/菜单图标",
+  "icons": {
+    "添加内容标题": "LucideIcons.blocks",
+    "高亮块添加入口": "LucideIcons.highlighter",
+    "分页符添加入口": "LucideIcons.separatorHorizontal",
+    "代码绘图（卡片、更多菜单、源码面板、添加入口）": "LucideIcons.chartNetwork"
+  },
+  "boundary": "复用已安装lucide_icons_flutter 4.0.0现有图标；不改插入/编辑、源代码或文档Schema、权限、书签、输入和历史/协同链路。",
+  "versions": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.21",
+    "declaration": "0.11.21",
+    "yarnLock": "0.11.21",
+    "installed": "0.11.17",
+    "pnpmLock": "0.2.78",
+    "upgraded": false,
+    "checked": "随包技能L0/工具栏指南、MIGRATIONS、Mermaid/Callout/PageDivider实现和手机相关界面；其余上游差异待同步。"
+  },
+  "verification": {
+    "testCommand": "flutter test --no-pub test/editor_shortcut_toolbar_test.dart test/collab_mermaid_test.dart test/collab_block_actions_test.dart --reporter expanded",
+    "passed": 91,
+    "failed": 0,
+    "analysisCommand": "flutter analyze --no-pub lib/src/editor/editor_shortcut_toolbar.dart lib/src/editor/collab_mermaid_block.dart lib/src/editor/collab_mermaid_sheet.dart lib/src/editor/collab_block_actions.dart",
+    "analysisResult": "No issues found",
+    "format": "仅四个触达手写文件，保留各自80/120列；git diff --check通过。",
+    "newTests": "纯图标调整，复用既有相关回归，不新增镜像测试。"
+  },
+  "limitations": [
+    "未新增Android/iOS真机视觉验收"
+  ],
+  "statistics": {
+    "total": 41,
+    "adapted": 13,
+    "partial": 13,
+    "structural": 1,
+    "notAdapted": 14
+  },
+  "titleFollowup": {
+    "date": "2026-10-19",
+    "change": "添加面板标题由添加内容简化为添加，图标及插入行为保持。",
+    "versionRecheck": "latest 0.11.21，声明/Yarn 0.11.21、安装0.11.17、pnpm锁0.2.78，版本组合未变；复用同版本随包技能/迁移核对。",
+    "validation": "目标文件dart format及flutter analyze --no-pub lib/src/editor/editor_shortcut_toolbar.dart通过；纯文案未新增测试；git diff --check通过。"
+  }
+}

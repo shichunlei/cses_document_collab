@@ -1773,15 +1773,16 @@ class _AddBlockSheet extends StatelessWidget {
   /// 返回面板 Widget，不持有或释放编辑器；未支持的入口继续显示占位提示。
   /// 在借用 [context] 中渲染可用块入口；插入按保存的稳定选区定位并等待事务完成。
   /// 在借用[context]中构建块/行内入口；用户选择调用宿主选择器并复用稳定插入位置。
+  /// 标题显示“添加”及内容块图标，高亮/分页/代码绘图与各自卡片及菜单使用相同语义图标。
   /// 表格直接创建2×2网格；绘图先收集源码草稿再创建容器和子块；分页符仅插入根级光标位置。
   /// 插入前重查原始书签，权限/文档失效时不插入。
   @override
   Widget build(BuildContext context) {
     return CollabBottomSheet(
       key: const ValueKey('editor-add-block-sheet'),
-      title: const Text('添加内容'),
+      title: const Text('添加'),
       subtitle: '在当前光标位置插入',
-      icon: LucideIcons.plus,
+      icon: LucideIcons.blocks,
       expand: true,
       closeKey: const ValueKey('editor-add-block-close'),
       child: Column(
@@ -1931,7 +1932,7 @@ class _AddBlockSheet extends StatelessWidget {
                   ),
                   _ActionShortcutTile(
                     key: const ValueKey('editor-shortcut-callout'),
-                    icon: LucideIcons.squareSplitVertical,
+                    icon: LucideIcons.highlighter,
                     label: '高亮块',
                     accent: const Color(0xFFF97316),
                     tint: const Color(0xFFFFEDD5),
@@ -2006,7 +2007,7 @@ class _AddBlockSheet extends StatelessWidget {
                   ),
                   _ActionShortcutTile(
                     key: const ValueKey('editor-shortcut-mermaid'),
-                    icon: LucideIcons.network,
+                    icon: LucideIcons.chartNetwork,
                     label: '代码绘图',
                     onTap: () async {
                       try {
@@ -2094,7 +2095,7 @@ class _AddBlockSheet extends StatelessWidget {
                   ),
                   _ActionShortcutTile(
                     key: const ValueKey('editor-shortcut-page-divider'),
-                    icon: LucideIcons.fileDown,
+                    icon: LucideIcons.separatorHorizontal,
                     label: '分页符',
                     onTap: () async {
                       final selection = bookmark.resolve(editorState);

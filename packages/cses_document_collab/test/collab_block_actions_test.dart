@@ -119,6 +119,117 @@ void main() {
         );
   });
 
+  for (final (kind, label) in const [
+    ('image', '图片'),
+    ('video', '视频'),
+    ('audio', '音频'),
+  ]) {
+    for (final scenario in const [
+      'reorder',
+      'source',
+      'delete',
+      'revokeRestore',
+      'cancel',
+      'failure',
+    ]) {
+      testWidgets('$kind copies full media URL with $scenario protection', (
+        tester,
+      ) async {
+        const url =
+            'https://example.test/%E4%B8%AD%20media?signature=a%2Bb%2Fc%3D&x=1#frame';
+        final copied = <String>[];
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(SystemChannels.platform, (call) async {
+              if (call.method == 'Clipboard.setData') {
+                if (scenario == 'failure') {
+                  throw PlatformException(code: 'clipboard-denied');
+                }
+                copied.add((call.arguments as Map)['text'] as String);
+              }
+              return null;
+            });
+        addTearDown(
+          () => TestDefaultBinaryMessengerBinding
+              .instance
+              .defaultBinaryMessenger
+              .setMockMethodCallHandler(SystemChannels.platform, null),
+        );
+        var writes = 0;
+        final media = CollabEditorBlock(
+          id: 'card',
+          blockType: kind,
+          text: url,
+          image: kind == 'image' ? const CollabImage(widthRatio: 60) : null,
+          resource: kind == 'audio' ? const CollabResource() : null,
+        );
+        const tail = CollabEditorBlock(
+          id: 'tail',
+          blockType: 'paragraph',
+          text: '后置正文',
+        );
+        final adapter = AppFlowyBlockEditorAdapter(
+          initialBlocks: [media, tail],
+          onLocalBlocksChanged: (_) => writes++,
+        );
+        addTearDown(adapter.dispose);
+        await _mount(tester, adapter);
+        await tester.pumpAndSettle();
+        final more = find.byKey(const ValueKey('block-more-card'));
+        await tester.ensureVisible(more);
+        await tester.tap(more);
+        await tester.pumpAndSettle();
+        final copy = find.byKey(const ValueKey('media-copy-link-card'));
+        expect(find.text('复制链接'), findsOneWidget);
+        final tile = tester.widget<ListTile>(copy);
+        expect((tile.leading as Icon).icon, LucideIcons.copy);
+        final state = adapter.editorState;
+        if (scenario == 'reorder') {
+          await adapter.replaceFromRemote([tail, media]);
+        } else if (scenario == 'source') {
+          await adapter.replaceFromRemote([
+            CollabEditorBlock(
+              id: media.id,
+              blockType: kind,
+              text: '$url-changed',
+              image: media.image,
+              resource: media.resource,
+            ),
+            tail,
+          ]);
+        } else if (scenario == 'delete') {
+          await adapter.replaceFromRemote([tail]);
+        } else if (scenario == 'revokeRestore') {
+          state.editable = false;
+          state.editable = true;
+        }
+        await tester.pumpAndSettle();
+        if (scenario == 'cancel') {
+          await tester.tap(find.byTooltip('关闭'));
+        } else {
+          await tester.ensureVisible(copy);
+          await tester.tap(copy);
+        }
+        await tester.pumpAndSettle();
+        await tester.pump(const Duration(milliseconds: 400));
+        expect(copied, scenario == 'reorder' ? [url] : isEmpty);
+        expect(writes, 0);
+        expect(state.undoManager.undoStack.isEmpty, isTrue);
+        if (scenario == 'reorder') {
+          expect(find.text('$label链接已复制'), findsOneWidget);
+        }
+        if (scenario == 'source' || scenario == 'delete') {
+          expect(find.text('内容已更新，请重新选择'), findsOneWidget);
+        }
+        if (scenario == 'failure') {
+          expect(find.text('操作失败，请重试'), findsOneWidget);
+        }
+        expect(tester.takeException(), isNull);
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pumpAndSettle();
+      });
+    }
+  }
+
   for (final changePermission in [false, true]) {
     testWidgets(
       'preview command validates permission lifetime ($changePermission)',
@@ -209,7 +320,7 @@ void main() {
           'image' => ('图片', LucideIcons.image),
           'video' => ('视频', LucideIcons.film),
           'code' => ('代码块', LucideIcons.codeXml),
-          'callout' => ('高亮块', LucideIcons.squareSplitVertical),
+          'callout' => ('高亮块', LucideIcons.highlighter),
           'audio' => ('音频', LucideIcons.audioLines),
           'attachment' => ('附件', LucideIcons.paperclip),
           'formula' => ('公式', LucideIcons.sigma),

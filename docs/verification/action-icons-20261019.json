@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-19",
+  "scope": "公共块菜单操作图标及修改封面标题图标；不改命令、权限、快照、正文或资源所有权。",
+  "icons": {
+    "在浏览器打开/在外部应用打开": "LucideIcons.externalLink",
+    "下载或打开附件": "LucideIcons.download",
+    "颜色设置": "LucideIcons.palette",
+    "修改封面标题": "LucideIcons.image"
+  },
+  "implementation": "公共菜单按文案分配语义图标，下载优先于打开；其余复制、删除、编辑仍为copy、trash2、pencil。使用已安装lucide_icons_flutter 4.0.0现有声明。",
+  "versions": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.21",
+    "declaration": "0.11.21",
+    "yarnLock": "0.11.21",
+    "installed": "0.11.17",
+    "pnpmLock": "0.2.78",
+    "upgraded": false,
+    "checked": "安装/发布包随包技能与MIGRATIONS、工具栏/附件语义及手机相关实现；0.11.21其余差异待同步。"
+  },
+  "verification": {
+    "testCommand": "flutter test --no-pub test/collab_block_actions_test.dart test/editor_media_source_sheet_test.dart test/document_header_test.dart --reporter expanded",
+    "passed": 92,
+    "failed": 0,
+    "analysisCommand": "flutter analyze --no-pub lib/src/editor/collab_block_actions.dart lib/src/editor/editor_media_source_sheet.dart",
+    "analysisResult": "No issues found",
+    "format": "仅两个触达源文件，沿用120列；git diff --check通过。",
+    "newTests": "纯图标展示调整，复用既有测试，不新增镜像测试。"
+  },
+  "limitations": [
+    "未新增Android/iOS真机视觉验收"
+  ],
+  "statistics": {
+    "total": 41,
+    "adapted": 13,
+    "partial": 13,
+    "structural": 1,
+    "notAdapted": 14
+  }
+}

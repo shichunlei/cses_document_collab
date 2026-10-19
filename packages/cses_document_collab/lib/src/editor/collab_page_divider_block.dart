@@ -54,7 +54,8 @@ class _PageDividerBlockState extends State<_PageDividerBlock>
   /// 内部视觉边界，随本 Widget 释放，不绑定编辑输入。
   final _bodyKey = GlobalKey();
 
-  /// 在借用 [context] 内构建整条可点击的分页符，编辑时弹出公共菜单，预览仅展示标记。
+  /// 在借用 [context] 内构建整条可点击的分页符，标记及菜单共用横向分页分隔图标。
+  /// 编辑时弹出公共菜单，预览仅展示标记。
   @override
   Widget build(BuildContext context) {
     final editor = context.read<EditorState>();
@@ -64,7 +65,7 @@ class _PageDividerBlockState extends State<_PageDividerBlock>
       editor: editor,
       node: node,
       menuTitle: '分页符操作',
-      menuIcon: LucideIcons.fileDown,
+      menuIcon: LucideIcons.separatorHorizontal,
       actions: [
         (
           label: '删除分页符',
@@ -94,7 +95,7 @@ class _PageDividerBlockState extends State<_PageDividerBlock>
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(LucideIcons.fileDown, size: 14),
+                        Icon(LucideIcons.separatorHorizontal, size: 14),
                         SizedBox(width: 4),
                         Text('分页符', style: TextStyle(fontSize: 12)),
                       ],

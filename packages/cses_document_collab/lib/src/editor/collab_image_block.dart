@@ -125,7 +125,7 @@ class _CollabImageBlockState extends CollabMediaBlockState<CollabImageBlock> {
   }
 
   /// 使用 [context] 的正文宽度解析尺寸，更多菜单集中编辑、删除和下方插入。
-  /// 布局计算不写入 wr/ar 或题注；编辑前等待菜单退场并验证当前身份及权限。
+  /// 布局计算不写入 wr/ar 或题注；编辑及复制链接前等待菜单退场并验证当前身份及权限。
   @override
   Widget buildMedia(BuildContext context) {
     final host = collabBlockActionContext(context);
@@ -178,6 +178,12 @@ class _CollabImageBlockState extends CollabMediaBlockState<CollabImageBlock> {
                   editor: editor,
                   node: widget.node,
                   actions: [
+                    if (_url.trim().isNotEmpty)
+                      (
+                        label: '复制链接',
+                        key: ValueKey('media-copy-link-$id'),
+                        run: () => copyCollabMediaLink(host, editor, widget.node),
+                      ),
                     (
                       label: '编辑图片',
                       key: const ValueKey('collab-image-edit'),

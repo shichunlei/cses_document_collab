@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-19",
+  "change": "图片/视频/音频更多菜单复制完整原始资源URL到系统剪贴板，成功提示；不下载或改变共享文档及历史。",
+  "versions": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.21",
+    "desktopDeclaration": "0.11.21",
+    "yarnLock": "0.11.21",
+    "installed": "0.11.17",
+    "pnpmLock": "0.2.78",
+    "upgraded": false
+  },
+  "verification": {
+    "copyMenuFilePassed": 46,
+    "newCopyScenarios": 18,
+    "relatedSuite": {
+      "files": [
+        "collab_block_actions_test.dart",
+        "collab_image_test.dart",
+        "collab_video_update_test.dart",
+        "collab_resource_block_test.dart"
+      ],
+      "passed": 93,
+      "failed": 9
+    },
+    "analysis": {
+      "files": 7,
+      "result": "No issues found"
+    },
+    "baseline": {
+      "source": "git archive HEAD，隔离临时目录，不修改当前工作区",
+      "suite": "test/collab_resource_block_test.dart",
+      "failures": "9项audio loading/ready geometry轨道矩形断言",
+      "comparison": "current及HEAD的轨道预期2px高/实际32px高一致",
+      "passed": 15,
+      "failed": 9,
+      "matchingFailureNames": [
+        "audio loading/ready geometry 280.0/2.2/failure",
+        "audio loading/ready geometry 280.0/2.2/ready",
+        "audio loading/ready geometry 280.0/2.2/zero",
+        "audio loading/ready geometry 320.0/1.5/failure",
+        "audio loading/ready geometry 320.0/1.5/ready",
+        "audio loading/ready geometry 320.0/1.5/zero",
+        "audio loading/ready geometry 390.0/1.0/failure",
+        "audio loading/ready geometry 390.0/1.0/ready",
+        "audio loading/ready geometry 390.0/1.0/zero"
+      ],
+      "commit": "eef39fc86fd85c10c3bb25b8ca5c726e150468ac"
+    },
+    "clipboard": "模拟SystemChannels.platform验证Clipboard.setData原始URL，包含编码路径/签名参数/片段；复制成功、换源/删除/撤权恢复拒绝、取消、原生平台错误提示，正文发布及Undo均为空",
+    "menuLabelFollowup": "菜单文案统一为复制链接；再次核对版本组合未变；46项菜单回归及4文件静态检查通过。剪贴板逻辑与各类型成功提示保持原样。"
+  },
+  "limits": [
+    "未新增Android/iOS真实系统剪贴板验收",
+    "9项音频轨道位置断言属于既有失败，未在本次需求中修改",
+    "未升级桌面安装版或完成其他0.11.21差异兼容"
+  ],
+  "counts": "13/13/1/14，共41块",
+  "menuLabel": "复制链接（图片/视频/音频统一）"
+}

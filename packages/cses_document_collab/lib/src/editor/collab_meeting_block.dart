@@ -9,6 +9,7 @@ import 'package:cses_document_collab/src/model/collab_meeting.dart';
 import 'package:cses_document_collab/src/model/collab_meeting_card_data.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 
@@ -63,9 +64,9 @@ class _MeetingBlockState extends State<_MeetingBlock> with SelectableMixin {
   /// 请求代次，销毁或换引用后拒绝旧响应及错误提示。
   int _detailGeneration = 0;
 
-  /// 在借用 [context] 内构建非交互卡片背景，只为主按钮和删除按钮绑定事件。
-  /// 状态/标题/主持人等只供本地展示；预览隐藏删除，按钮操作不自动弹正文键盘。
-  /// 快捷操作面板使用会议专属标题与Lucide会议图标。
+  /// 在借用 [context] 内构建非交互卡片背景，通过主按钮和更多菜单执行操作。
+  /// 状态/标题/主持人等只供本地展示；预览隐藏更多，按钮操作不自动弹正文键盘。
+  /// 快捷操作面板使用会议专属标题与Lucide会议图标；详情加载完成后可复制当前显示的非空会议号。
   @override
   Widget build(BuildContext context) {
     final editor = context.read<EditorState>();
@@ -83,6 +84,8 @@ class _MeetingBlockState extends State<_MeetingBlock> with SelectableMixin {
         builder: (context, snapshot) {
           final loading = future != null && snapshot.connectionState != ConnectionState.done;
           final data = future == null || loading || snapshot.hasError ? null : snapshot.data;
+          final number = data?.number ?? values.string('number');
+          final generation = _detailGeneration;
           final unavailable = future != null && !loading && !snapshot.hasError && data == null;
           return ListenableBuilder(
             listenable: editor.editableNotifier,
@@ -91,7 +94,7 @@ class _MeetingBlockState extends State<_MeetingBlock> with SelectableMixin {
               blockId: id,
               readOnly: !editor.editable,
               title: data?.title ?? values.string('title'),
-              number: data?.number ?? values.string('number'),
+              number: number,
               data: data,
               loading: loading,
               failed: snapshot.hasError,
@@ -115,6 +118,12 @@ class _MeetingBlockState extends State<_MeetingBlock> with SelectableMixin {
                 menuIcon: LucideIcons.users,
                 enabled: !_busy,
                 actions: [
+                  if (!loading && number.trim().isNotEmpty)
+                    (
+                      label: '复制会议号',
+                      key: ValueKey('meeting-copy-number-$id'),
+                      run: () => _copyMeetingNumber(editor, id, meetingId, services, generation, number),
+                    ),
                   (
                     label: '删除会议',
                     key: ValueKey('meeting-delete-$id'),
@@ -210,6 +219,29 @@ class _MeetingBlockState extends State<_MeetingBlock> with SelectableMixin {
   void dispose() {
     ++_detailGeneration;
     super.dispose();
+  }
+
+  /// 将借用[editor]中稳定块[id]当前显示的[number]原样复制到系统剪贴板。
+  /// [meetingId]和[services]限定会议与宿主身份，[generation]限定详情代次，失效或撤权时不执行。
+  /// 仅由公共更多菜单退场并校验引用快照后调用；空号不复制，不修改正文或撤销记录。
+  /// 平台失败交给公共菜单报告；成功仅在原请求仍有效时显示提示。
+  Future<void> _copyMeetingNumber(
+    EditorState editor,
+    String id,
+    String meetingId,
+    CollabHostServices services,
+    int generation,
+    String number,
+  ) async {
+    if (!editor.editable || number.trim().isEmpty || !_isCurrentRequest(editor, id, meetingId, services, generation)) {
+      return;
+    }
+    await Clipboard.setData(ClipboardData(text: number));
+    if (mounted && editor.editable && _isCurrentRequest(editor, id, meetingId, services, generation)) {
+      ScaffoldMessenger.maybeOf(context)
+        ?..hideCurrentSnackBar()
+        ..showSnackBar(const SnackBar(content: Text('会议号已复制')));
+    }
   }
 
   /// 在借用[editor]中为稳定块[id]的[meetingId]调用宿主[services]；[data]是当前详情，可为空。
@@ -480,7 +512,7 @@ class _MeetingCardView extends StatelessWidget {
                         numberHeight,
                         loading
                             ? _MeetingSkeletonBar(height: scaler.scale(12) * .75, widthFactor: .45)
-                            : _meta('会议编号：${number.trim().isEmpty ? '—' : number}'),
+                            : _meta('会议号：${number.trim().isEmpty ? '—' : number}'),
                       ),
                       const SizedBox(height: 10),
                       _row('action', actionHeight, _actions(context, action, actionHeight)),

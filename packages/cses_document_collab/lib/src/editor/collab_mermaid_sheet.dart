@@ -341,11 +341,11 @@ class _MermaidSheetState extends State<_MermaidSheet> {
 
   /// 按借用 [context] 的可用空间显示源码和真实图形，固定操作区避让键盘。
   /// 类型/模板操作保留，视图分段只改本地草稿，确认时沿用原子保存和冲突校验。
-  /// 类型与模板入口共用紧凑锚点菜单，低可用高度时选项独立滚动。
+  /// 标题与添加入口及卡片共用图表网络图标；类型与模板共用紧凑锚点菜单，低可用高度时选项独立滚动。
   @override
   Widget build(BuildContext context) => CollabBottomSheet(
     title: const Text('代码绘图'),
-    icon: LucideIcons.workflow,
+    icon: LucideIcons.chartNetwork,
     subtitle: '用简洁的语法表达复杂的想法',
     canClose: !_saving,
     header: Padding(

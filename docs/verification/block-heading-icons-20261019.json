@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-19",
+  "scope": "更多菜单标题语义图标核对",
+  "icons": {
+    "callout": "LucideIcons.highlighter（荧光笔）",
+    "page-divider": "LucideIcons.separatorHorizontal（横向分页分隔，含正文标记）"
+  },
+  "otherHeadings": "图片、视频、代码块、音频、附件、公式、代码绘图、链接、会议和任务标题图标已核对，保留当前对应类型语义；命令及权限行为不变。",
+  "versions": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.21",
+    "declaration": "0.11.21",
+    "yarnLock": "0.11.21",
+    "installed": "0.11.17",
+    "pnpmLock": "0.2.78",
+    "upgraded": false,
+    "checked": "发布/安装包随包技能与MIGRATIONS，发布PageDivider的bc_fenyefu标记及手机公共菜单/分页符覆盖；其余上游差异待同步。"
+  },
+  "verification": {
+    "testCommand": "flutter test --no-pub test/collab_block_actions_test.dart test/collab_page_divider_test.dart --reporter expanded",
+    "passed": 61,
+    "failed": 0,
+    "analysisCommand": "flutter analyze --no-pub lib/src/editor/collab_block_actions.dart lib/src/editor/collab_page_divider_block.dart test/collab_block_actions_test.dart",
+    "analysisResult": "No issues found",
+    "format": "只格式化触达的三个手写文件，保留各文件原行宽；git diff --check通过。",
+    "testChange": "更新既有高亮菜单标题图标断言，不新增镜像测试。"
+  },
+  "limitations": [
+    "未新增Android/iOS真机视觉验收"
+  ],
+  "statistics": {
+    "total": 41,
+    "adapted": 13,
+    "partial": 13,
+    "structural": 1,
+    "notAdapted": 14
+  }
+}
