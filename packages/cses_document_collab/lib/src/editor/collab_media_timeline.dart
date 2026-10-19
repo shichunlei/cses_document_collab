@@ -45,6 +45,7 @@ class CollabMediaTimeline extends StatefulWidget {
   final bool overlay;
 
   /// 是否正在初始化；默认false。在同一32像素轨道槽内显示不确定加载动画，不能拖动。
+  /// 播放或跳转引起的缓冲不切换加载动画，保留现有滑块和拖动预览位置。
   final bool loading;
 
   /// 可选失败文案，替换当前时间并禁用拖动；不增加额外行，null显示正常时间。
@@ -118,7 +119,9 @@ class _CollabMediaTimelineState extends State<CollabMediaTimeline> {
 
   /// 借用[context]构建局部进度监听；拖动期间不被播放计时覆盖，零时长不允许跳转。
   /// 视频轨道靠底，避免大字号时间标签将轨道推向卡片中央；音频仍先显示轨道再显示时间。
-  /// 初始化或音频缓冲仅切换轨道内容，时间行固定行高，错误也不增加卡片高度。
+  /// 仅初始化时切换轨道为加载动画；播放/跳转缓冲保留滑块状态及目标位置。
+  /// 时间行固定行高，错误也不增加卡片高度。
+  /// 加载和拖动轨道铺满时间行的可用宽度，仅保留外层卡片边距容纳端点滑块。
   @override
   Widget build(BuildContext context) => ValueListenableBuilder<VideoPlayerValue>(
     valueListenable: widget.controller,
@@ -126,20 +129,18 @@ class _CollabMediaTimelineState extends State<CollabMediaTimeline> {
       final duration = value.duration.inMilliseconds;
       final max = duration > 0 ? duration.toDouble() : 1.0;
       final position = (_previewMs ?? value.position.inMilliseconds.toDouble()).clamp(0.0, duration > 0 ? max : 0.0);
-      final loading =
-          widget.errorLabel == null && (widget.loading || (widget.mediaKind == 'audio' && value.isBuffering));
+      final loading = widget.errorLabel == null && widget.loading;
       final enabled =
           !loading && widget.errorLabel == null && value.isInitialized && !value.hasError && duration > 0 && !_seeking;
       final progress = ExcludeFocus(
         child: SizedBox(
           height: 32,
           child: loading
-              ? Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Center(
+              ? Center(
+                  child: SizedBox(
+                    height: 2,
                     child: LinearProgressIndicator(
                       key: ValueKey('collab-${widget.mediaKind}-loading-progress'),
-                      minHeight: 3,
                       color: const Color(0xFF818CF8),
                       backgroundColor: const Color(0xFFE2E8F0),
                     ),
@@ -148,9 +149,10 @@ class _CollabMediaTimelineState extends State<CollabMediaTimeline> {
               : SliderTheme(
                   data: SliderTheme.of(
                     context,
-                  ).copyWith(trackHeight: 3, thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 5)),
+                  ).copyWith(trackHeight: 2, thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 3)),
                   child: Slider(
                     key: ValueKey('collab-${widget.mediaKind}-progress'),
+                    padding: EdgeInsets.symmetric(horizontal: 5),
                     value: position,
                     max: max,
                     activeColor: const Color(0xFF818CF8),

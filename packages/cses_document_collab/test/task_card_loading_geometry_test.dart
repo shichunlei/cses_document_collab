@@ -12,7 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// 验证真实详情Future完成时骨架/卡片/后续正文的几何保持，覆盖窄屏、大字和空字段。
+/// 验证横排时间槽宽度有限，且详情Future完成时骨架/卡片/后续正文的几何保持。
+/// 覆盖窄屏、大字和空字段。
 void main() {
   setUp(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
@@ -116,6 +117,15 @@ void main() {
                 find.byKey(ValueKey('task-$name-row-geometry')),
               ),
           };
+          final start = rows['start']!;
+          final end = rows['end']!;
+          expect(start.width.isFinite, isTrue);
+          expect(start.width, greaterThan(0));
+          expect(end.width, closeTo(start.width, .01));
+          expect(start.top, closeTo(end.top, .01));
+          expect(end.left - start.right, closeTo(5, .01));
+          expect(start.left, greaterThanOrEqualTo(before.left));
+          expect(end.right, lessThanOrEqualTo(before.right));
           if (mode == 'failure') {
             pending.completeError(StateError('fixture failure'));
           } else if (mode == 'missing') {

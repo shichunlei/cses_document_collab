@@ -42,11 +42,11 @@ dev_dependencies:
     sdk: flutter
   flutter_test:
     sdk: flutter
-  intl_utils: "^2.8.17"
-  mockito: "^5.7.0"
-  network_image_mock: "^2.1.1"
-  path_provider: "^2.1.6"
-  pubspec_dependency_sorter: "^1.0.5"
+  intl_utils: ^2.8.17
+  mockito: ^5.7.0
+  network_image_mock: ^2.1.1
+  path_provider: ^2.1.6
+  pubspec_dependency_sorter: ^1.0.5
 
 platforms:
   android:

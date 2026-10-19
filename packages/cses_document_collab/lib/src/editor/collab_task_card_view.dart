@@ -118,7 +118,8 @@ class CollabTaskCardView extends StatelessWidget {
   }
 
   /// 使用借用[context]的文字缩放计算行槽；行高仅随缩放变化，不随数据有无变化。
-  /// 标题最多两行，起止时间各占一行，空字段保留留白；骨架不构造虚假业务数据。
+  /// 标题最多两行，起止时间在同一行等分可用宽度，空字段保留留白；骨架不构造虚假业务数据。
+  /// 时间槽始终获得有限宽度，供比例骨架与省略文本计算布局。
   Widget _buildBody(BuildContext context) {
     final detail = data;
     final scaler = MediaQuery.textScalerOf(context);
@@ -137,7 +138,7 @@ class CollabTaskCardView extends StatelessWidget {
     return Semantics(
       label: loading ? '任务加载中' : null,
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -170,13 +171,13 @@ class CollabTaskCardView extends StatelessWidget {
                     )
                   else if (detail != null)
                     _TaskLeaders(data: detail),
+                  const SizedBox(width: 10),
                   IconButton(
                     key: ValueKey('task-card-open-$blockId'),
-                    tooltip: '打开任务详情',
-                    constraints: const BoxConstraints.tightFor(width: 44, height: 44),
+                    tooltip: '任务详情',
+                    constraints: const BoxConstraints.tightFor(width: 34, height: 34),
                     style: const ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
                     padding: EdgeInsets.zero,
-                    alignment: Alignment.centerRight,
                     icon: const Icon(LucideIcons.maximize2, size: 16, color: Color(0xFF9CA3AF)),
                     onPressed: loading || busy || onOpen == null
                         ? null
@@ -187,7 +188,6 @@ class CollabTaskCardView extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 6),
             slot(
               'title',
               titleHeight,
@@ -227,32 +227,38 @@ class CollabTaskCardView extends StatelessWidget {
                       ],
                     ),
             ),
-            const SizedBox(height: 8),
-            slot(
-              'start',
-              timeHeight,
-              loading
-                  ? const _TaskSkeletonBar(widthFactor: .62, height: 10)
-                  : detail?.startTime == null
-                  ? const SizedBox.shrink()
-                  : _TaskTime(icon: LucideIcons.calendarDays, time: detail!.startTime!),
-            ),
-            const SizedBox(height: 4),
-            slot(
-              'end',
-              timeHeight,
-              loading
-                  ? const _TaskSkeletonBar(widthFactor: .62, height: 10)
-                  : detail?.endTime == null
-                  ? const SizedBox.shrink()
-                  : _TaskTime(icon: LucideIcons.calendarCheck, time: detail!.endTime!),
+            Row(
+              children: [
+                Expanded(
+                  child: slot(
+                    'start',
+                    timeHeight,
+                    loading
+                        ? const _TaskSkeletonBar(widthFactor: .62, height: 10)
+                        : detail?.startTime == null
+                        ? const SizedBox.shrink()
+                        : _TaskTime(icon: LucideIcons.calendarDays, time: detail!.startTime!),
+                  ),
+                ),
+                const SizedBox(width: 5),
+                Expanded(
+                  child: slot(
+                    'end',
+                    timeHeight,
+                    loading
+                        ? const _TaskSkeletonBar(widthFactor: .62, height: 10)
+                        : detail?.endTime == null
+                        ? const SizedBox.shrink()
+                        : _TaskTime(icon: LucideIcons.calendarCheck, time: detail!.endTime!),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 8),
             if (loading)
               const SizedBox(height: 8, child: _TaskSkeletonBar(height: 2))
             else
               _TaskProgress(blockId: blockId, progress: detail?.progress),
-            const SizedBox(height: 6),
             slot(
               'footer',
               footerHeight,

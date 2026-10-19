@@ -410,7 +410,7 @@ class _MeetingCardView extends StatelessWidget {
     final titleHeight = math.max(22.0, scaler.scale(14) * 1.4).ceilToDouble();
     final metaHeight = math.max(24.0, scaler.scale(12) * 1.4 + 4).ceilToDouble();
     final numberHeight = math.max(20.0, scaler.scale(12) * 1.4).ceilToDouble();
-    final actionHeight = math.max(44.0, scaler.scale(14) * 1.4 + 16).ceilToDouble();
+    final actionHeight = math.max(35.0, scaler.scale(14) * 1.4 + 16).ceilToDouble();
     return ExcludeFocus(
       child: CollabCardFrame(
         surfaceKey: ValueKey('meeting-card-surface-$blockId'),
@@ -564,8 +564,7 @@ class _MeetingCardView extends StatelessWidget {
               foregroundColor: Colors.white,
               disabledBackgroundColor: loading ? const Color(0xFFEDEFF2) : null,
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              minimumSize: Size(math.max(112.0, MediaQuery.textScalerOf(context).scale(14) * 4 + 32), 44),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
               textStyle: Theme.of(
                 context,
               ).textTheme.labelLarge?.copyWith(fontSize: 14, height: 1.4, fontWeight: FontWeight.w500),

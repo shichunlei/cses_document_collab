@@ -70,6 +70,7 @@ CollabEditorBlock _block(
 );
 
 /// Registers resource UI, collaboration, readonly and controller lifecycle checks.
+/// Audio seeks retain the slider and target position across asynchronous buffering.
 void main() {
   for (final sample in [
     (
@@ -492,6 +493,9 @@ void main() {
               fail('loading must not modify the document'),
         );
         addTearDown(() async {
+          if (platform.seekGate?.isCompleted == false) {
+            platform.seekGate!.complete();
+          }
           await tester.pumpWidget(const SizedBox());
           await tester.runAsync(() => Future<void>.delayed(Duration.zero));
           adapter.dispose();
@@ -574,23 +578,44 @@ void main() {
         );
         if (mode == 'ready') {
           expect(tester.widget<Slider>(sliderFinder).onChanged, isNotNull);
-          platform.streams[0]!.add(
-            VideoEvent(eventType: VideoEventType.bufferingStart),
-          );
-          await tester.pump();
-          await tester.pump();
-          expect(loading, findsOneWidget);
-          expect(tester.getRect(find.byType(CollabCardFrame)), before);
-          platform.streams[0]!.add(
-            VideoEvent(eventType: VideoEventType.bufferingEnd),
-          );
-          await tester.pumpAndSettle();
-          expect(loading, findsNothing);
-          final slider = tester.widget<Slider>(sliderFinder);
-          slider.onChanged!(30000);
-          slider.onChangeEnd!(30000);
-          await tester.pumpAndSettle();
-          expect(platform.positions, [const Duration(seconds: 30)]);
+          final sliderState = tester.state(sliderFinder);
+          for (final seconds in [30, 10, 45]) {
+            platform.seekGate = Completer<void>();
+            final target = seconds * 1000.0;
+            final slider = tester.widget<Slider>(sliderFinder);
+            slider.onChangeStart!(target);
+            slider.onChanged!(target);
+            slider.onChangeEnd!(target);
+            await tester.pump();
+            platform.streams[0]!.add(
+              VideoEvent(eventType: VideoEventType.bufferingStart),
+            );
+            await tester.pump();
+            await tester.pump();
+            expect(loading, findsNothing, reason: '跳转缓冲不能替换为从头扫过的加载动画');
+            expect(sliderFinder, findsOneWidget);
+            expect(tester.state(sliderFinder), same(sliderState));
+            expect(tester.widget<Slider>(sliderFinder).value, target);
+            expect(find.text('00:$seconds'), findsOneWidget);
+            expect(tester.getRect(find.byType(CollabCardFrame)), before);
+            expect(tester.getTopLeft(tail).dy, closeTo(tailTop, .01));
+            platform.seekGate!.complete();
+            await tester.pumpAndSettle();
+            expect(tester.widget<Slider>(sliderFinder).value, target);
+            expect(tester.state(sliderFinder), same(sliderState));
+            platform.streams[0]!.add(
+              VideoEvent(eventType: VideoEventType.bufferingEnd),
+            );
+            await tester.pumpAndSettle();
+            expect(loading, findsNothing);
+            expect(tester.state(sliderFinder), same(sliderState));
+            expect(tester.widget<Slider>(sliderFinder).value, target);
+          }
+          expect(platform.positions, [
+            const Duration(seconds: 30),
+            const Duration(seconds: 10),
+            const Duration(seconds: 45),
+          ]);
         } else {
           expect(tester.widget<Slider>(sliderFinder).onChanged, isNull);
         }
