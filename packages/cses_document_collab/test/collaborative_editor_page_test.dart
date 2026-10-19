@@ -8,6 +8,7 @@ import 'package:cses_document_collab/src/model/collab_document_feedback.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/controller/collab_controller.dart';
 import 'package:cses_document_collab/src/editor/collab_block_delete.dart';
+import 'package:cses_document_collab/src/editor/collab_code_editing.dart';
 import 'package:cses_document_collab/src/editor/collab_paragraph_editing.dart';
 import 'package:cses_document_collab/src/editor/collaborative_editor_page.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
@@ -698,6 +699,7 @@ void main() {
     expect(find.byType(AppFlowyEditor), findsOneWidget);
     final editor = tester.widget<AppFlowyEditor>(find.byType(AppFlowyEditor));
     expect(editor.characterShortcutEvents.first, same(collabParagraphEnter));
+    expect(editor.characterShortcutEvents[1], same(collabCodeEnter));
     expect(editor.shrinkWrap, isFalse);
     expect(editor.blockComponentBuilders, contains(csesCodeBlockType));
     // Link and video are custom components; image remains available through

@@ -9,6 +9,7 @@ import 'package:cses_document_collab/src/editor/collab_block_colors.dart';
 import 'package:cses_document_collab/src/editor/collab_block_delete.dart';
 import 'package:cses_document_collab/src/editor/collab_callout_block.dart';
 import 'package:cses_document_collab/src/editor/collab_code_block.dart';
+import 'package:cses_document_collab/src/editor/collab_code_editing.dart';
 import 'package:cses_document_collab/src/editor/collab_divider_block.dart';
 import 'package:cses_document_collab/src/editor/collab_page_divider_block.dart';
 import 'package:cses_document_collab/src/model/collab_page_divider.dart';
@@ -370,6 +371,7 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
   /// 宿主启用文末互动时，正文至少占满当前编辑视口，footer随后滚动且不属于可编辑块树。
   /// 移动端挂载独立于键盘显示的划词菜单，和正文借用同一页面滚动控制器。
   /// 普通文本段的Tab/Shift+Tab先写平面depth，不交给标准命令建立嵌套块。
+  /// 代码块普通回车在原节点内换行，不进入默认的新段落拆分流程。
   /// 绘图容器注册独立源码面板及离线预览，源码子节点不直接承担正文输入。
   Widget _buildEditor() {
     return CollabMobileSelectionMenu(
@@ -406,6 +408,7 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
             },
             characterShortcutEvents: [
               collabParagraphEnter,
+              collabCodeEnter,
               CharacterShortcutEvent(key: 'cses-user-mention', character: '@', handler: _handleUserMention),
               ...standardCharacterShortcutEvents,
             ],

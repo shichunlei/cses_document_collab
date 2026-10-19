@@ -1,0 +1,67 @@
+{
+  "date": "2026-10-19",
+  "scope": "代码块普通Enter在同一代码节点内换行",
+  "blockcraft": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "query": "npm view @ccc/blockcraft@latest version dist.tarball --json --fetch-timeout=10000 --fetch-retries=0",
+    "latest": "0.11.21",
+    "desktop_declaration": "0.11.21",
+    "desktop_yarn_lock": "0.11.21",
+    "desktop_installed": "0.11.17",
+    "desktop_pnpm_lock": "0.2.78",
+    "reviewed": [
+      "两版随包ai-skills/blockcraft.md",
+      "两版ai-skills/MIGRATIONS.md",
+      "两版CodeInlineEditorBinding.handleEnterKey及代码输入技能"
+    ],
+    "conclusion": "两版普通Enter代码规则相同；未升级桌面，其他版本差异不在本轮兼容结论内"
+  },
+  "behavior": [
+    "原代码节点内换行，节点身份及代码元数据保持",
+    "同块正反向范围替换一次事务",
+    "当前行Tab数量延续，空块和连续空行保持code",
+    "容器内代码使用原路径",
+    "独立撤销/重做",
+    "只读及非代码/跨块选区不接管",
+    "Shift沿用原有输入处理"
+  ],
+  "verification": {
+    "new_code_tests": {
+      "file": "packages/cses_document_collab/test/collab_code_enter_test.dart",
+      "passed": 12,
+      "input_platform_variants": [
+        "Android",
+        "iOS",
+        "macOS"
+      ],
+      "input_kind": "Flutter模拟系统输入连接，非真机"
+    },
+    "regression_files": [
+      "collab_code_enter_test.dart",
+      "collab_code_block_test.dart",
+      "collaborative_editor_page_test.dart",
+      "collab_list_enter_test.dart",
+      "collab_list_enter_focus_test.dart",
+      "paragraph_style_test.dart",
+      "paragraph_input_test.dart",
+      "blockcraft_native_integration_test.dart"
+    ],
+    "regression_result": "首轮262通过、1项原生输入测试因缺少Flutter测试绑定失败；补充绑定后，原生8项单独复跑全部通过。共263个不同测试通过，未跳过原生验证。",
+    "native": "真实宿主动态库FRB调用，代码换行、身份、名称/语言经过SQLite关闭/重开后保持",
+    "analyze": "受影响五个Dart文件通过",
+    "format": "对五个修改的手写Dart文件运行dart format，恢复页面中与本次无关的格式差异",
+    "diff_check": "通过"
+  },
+  "limitations": [
+    "未新增真机软/硬键盘验收",
+    "未新增在线桌面双向同步联调",
+    "未在本轮实现或验收桌面Shift+Enter与Tab/Shift+Tab命令完整对齐"
+  ],
+  "statistics": {
+    "adapted": 13,
+    "partial": 13,
+    "structure_only": 1,
+    "unsupported": 14,
+    "total": 41
+  }
+}

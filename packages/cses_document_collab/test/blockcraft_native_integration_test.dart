@@ -3,14 +3,17 @@ import 'dart:io';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/model/collab_code.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
+import 'package:cses_document_collab/src/editor/collab_code_editing.dart';
 import 'package:cses_document_collab/src/native/api/collab.dart' as native;
 import 'package:cses_document_collab/src/native/frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// 使用 cargo build 产出的宿主库验证真实 FRB ABI、正式根/缓存键隔离和 SQLite 恢复。
+/// 初始化 Flutter 测试绑定以共用代码块的键盘输入规则。
 /// 没有宿主原生库时显式跳过；运行前执行 cargo build --manifest-path rust/Cargo.toml。
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   final libraryPath = Platform.isMacOS
       ? 'rust/target/debug/libcses_collab_core.dylib'
       : 'rust/target/debug/libcses_collab_core.so';
@@ -151,7 +154,7 @@ void main() {
   );
 
   test(
-    'code headers cross FRB, survive body edits and SQLite restore',
+    'code headers and Enter cross FRB, survive body edits and SQLite restore',
     () async {
       final directory = await Directory.systemTemp.createTemp(
         'code-header-frb-',
@@ -219,6 +222,14 @@ void main() {
             ..insertText(node, code.text.length, '// mobile'),
         );
         expect(native.currentBlocks().last.text, '${code.text}// mobile');
+        adapter.editorState.selection = Selection.single(
+          path: [0],
+          startOffset: code.text.length + '// mobile'.length,
+        );
+        expect(await collabCodeEnter.handler(adapter.editorState), isTrue);
+        expect(native.currentBlocks(), hasLength(before.length));
+        expect(native.currentBlocks().last.id, code.id);
+        expect(native.currentBlocks().last.text, '${code.text}// mobile\n');
         expect(native.currentBlocks().last.code!.language, 'Dart');
         await changeCollabCodeProperty(
           adapter.editorState,
@@ -254,7 +265,7 @@ void main() {
         expect(restored.blocks.last.code!.name, '手机名称');
         expect(restored.blocks.last.code!.language, 'Python');
         expect(restored.blocks.last.code!.collapsed, isTrue);
-        expect(restored.blocks.last.text, '${code.text}// mobile');
+        expect(restored.blocks.last.text, '${code.text}// mobile\n');
       } finally {
         adapter?.dispose();
         native.closeDocument();
