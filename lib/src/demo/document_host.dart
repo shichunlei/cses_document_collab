@@ -54,7 +54,7 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
 
   /// 初始化存储并注入公开包服务；头像、人员与会议引用页面由宿主创建，会议/任务详情绑定账号会话，草稿不启用业务加载。
   /// 等待原生初始化与宿主连接，关闭期间迟到结果不安装页面监听。
-  /// 文末点赞回调返回演示成员快照，评论回调返回当前数量；不进行业务持久化。
+  /// 文末点赞回调返回演示成员快照，评论回调返回当前数量；图片点击接收链接并演示提示，不进行业务持久化。
   Future<void> _initialize() async {
     // 登录已在 Common 注入；即使本地存储初始化失败，退出也须清理该登录。
     _ownsConnection = !localDraft;
@@ -97,6 +97,10 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
         onMeetingCardTap: (String meetingId, String title, String number) {
           Log.d(meetingId.toString());
           showToast(text: "打开会议页面");
+        },
+        onImageTap: (String url) {
+          Log.d('图片点击：$url');
+          showToast(text: '点击了图片');
         },
         onMentionTap: (CollabMentionTap mention) {
           Log.json(mention.toJson());

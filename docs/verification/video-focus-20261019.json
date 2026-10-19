@@ -1,0 +1,46 @@
+{
+  "date": "2026-10-19",
+  "change": "视频画面、播放、进度及加载/失败占位交互屏蔽正文焦点，按下即清除选区并收起编辑器键盘，不安排自动恢复。",
+  "behavior": {
+    "implementation": "内容使用ExcludeFocus、被动PointerDown监听及画面Tap处理；子控件继续接收播放/拖动，播放及跳转也处理语义操作下的焦点隔离。",
+    "keyboardOwnership": "只关闭并解除当前借用编辑器的输入/焦点，不关闭其他页面资源；之后点击正文仍能输入。",
+    "unchanged": "原16:9布局、播放/暂停、松手单次跳转、更多菜单、播放器源切换/释放流程；不写共享属性或历史。"
+  },
+  "versions": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.21",
+    "desktopDeclaration": "0.11.22",
+    "yarnLock": "0.11.22",
+    "installed": "0.11.17",
+    "pnpmLock": "0.2.78",
+    "upgradedByThisTask": false,
+    "observedChange": "此前桌面声明/Yarn 0.11.21→本轮0.11.22；来源为桌面仓库依赖及锁文件既有变化，本任务未改动。",
+    "metadataQuery": "npm view @ccc/blockcraft@0.11.22 version 返回E404；两次dist-tags查询latest均为0.11.21。",
+    "lockedArtifact": "通过Yarn记录的http://npm.runtongqiuben.com/@ccc/blockcraft/-/blockcraft-0.11.22.tgz成功取得产物，SHA-512与Yarn integrity完全一致。",
+    "checked": "0.11.17实际安装包及0.11.21/0.11.22发布产物的随包技能、MIGRATIONS和视频组件；视频Schema与组件0.11.21→0.11.22一致。",
+    "videoComponentSha256": "f3cbd992c06e74321a27a2c31b6aad0ab06937061c55d7d5d4797446fe50627e",
+    "videoSchemaSha256": "0d2661d4b5da37723b23dc1880e3bd79e336fa0639deae0321cf8363f0bd40c3",
+    "pending": "0.11.22个人交互偏好、s:fontWeight、固定工具栏链接/公式、填写区尺寸/工具栏及其交换、输入、历史和协同路径未在本轮同步或验收，不宣称整体兼容。"
+  },
+  "verification": {
+    "newTests": 8,
+    "platformMatrix": "Android/iOS/macOS模拟平台各编辑/预览，共6项逐项检查画面、播放、拖动、更多、正文重新输入；另2项加载/失败占位。",
+    "command": "flutter test --no-pub test/collab_video_update_test.dart test/collab_block_actions_test.dart test/collab_image_tap_test.dart --reporter expanded",
+    "passed": 88,
+    "failed": 0,
+    "analysisCommand": "flutter analyze --no-pub lib/src/editor/collab_video_block.dart test/collab_video_update_test.dart",
+    "analysisResult": "No issues found",
+    "format": "仅触达的视频源文件120列与测试80列格式化；git diff --check通过。"
+  },
+  "limitations": [
+    "Android/iOS真实系统键盘与播放/拖动待验收",
+    "在线桌面双向联调未新增验收"
+  ],
+  "statistics": {
+    "total": 41,
+    "adapted": 13,
+    "partial": 13,
+    "structural": 1,
+    "notAdapted": 14
+  }
+}

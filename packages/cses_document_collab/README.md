@@ -70,6 +70,19 @@ Widget editor(CollabController controller) =>
 - `localDraft` 是独立模式，保留旧 demo schema 和头部迁移；默认封面由宿主传入。正式模式不经过草稿初始化、不创建业务根/标题/封面。
 - FRB、Rust 原始 API、EditorState 和内部块类型是包内实现，宿主使用公开控制器状态/命令及编辑页。不要从 src 导入。
 
+## 图片点击
+
+正式图片块的图片本体点击调用可选的 `CollabHostServices.onImageTap(url)`，完整传递当前原始链接，包括查询签名和片段。宿主负责预览路由及资源，异步回调应在预览关闭后完成；同一图片回调未结束时忽略重复点击。编辑和预览均可用，题注与更多菜单不触发。
+
+```dart
+import 'package:cses_document_collab/cses_document_collab.dart';
+
+CollabHostServices imageServices(Future<void> Function(String url) openPreview) =>
+    CollabHostServices(onImageTap: openPreview);
+```
+
+点击图片收起正文键盘，回调结束后不自动恢复正文选区或焦点；之后点击正文仍可继续输入。未配置回调或链接为空时不派发事件，但仍屏蔽图片点击的正文焦点。事件不改写协同正文或撤销记录。当前图片/宿主仍有效时，回调异常经 `onError` 报告并显示失败提示；卸载、换源或换会话后的迟到失败忽略。data/blob地址原样交给宿主，由宿主判断是否支持预览；包不提供默认图片预览页面。
+
 ## 原生构建与测试
 
 ### 共用表情目录

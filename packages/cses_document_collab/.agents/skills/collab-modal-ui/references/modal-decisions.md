@@ -28,7 +28,8 @@
 | 添加面板 | `editor_shortcut_toolbar.dart` | 标题显示“添加”并使用内容块 `blocks` 图标；高亮块用 `highlighter`、分页符用 `separatorHorizontal`、代码绘图用 `chartNetwork`，与卡片及菜单保持一致；保留原插入、书签、权限及输入会话 |
 | 分页符 | `collab_page_divider_block.dart`、`collab_block_actions.dart` | 整条虚线与文字标记作为公共菜单触发区，不显示右侧三个点；只读保持标记但不可点击，菜单仍提供下方插入和删除 |
 | 会议/任务卡片快捷操作 | `collab_meeting_block.dart`、`collab_task_card_block.dart` | 通过公共菜单的 `menuTitle/menuIcon` 显式配置“会议操作＋users”或“任务操作＋listTodo”；会议内容标注“会议号”，更多增加copy图标的“复制会议号”，按详情优先、共享快照兜底的当前展示值原样复制；加载或空号不提供复制，不写正文/历史；沿用身份/快照/撤权保护，详情组件重建时旧复制会话失效；其他块保持原默认或按业务配置 |
-| 图片/音频/视频更多 | `collab_image_block.dart`、`collab_video_block.dart`、`collab_resource_block_base.dart`、`collab_block_actions.dart` | 三个菜单项统一显示“复制链接”，完整原始URL写入系统剪贴板，成功提示，不下载资源或修改正文/历史；沿用菜单身份/权限/快照及既有编辑/预览显隐。视频保留“删除视频”；图片编辑弹窗不重复提供整块删除；删除沿用原事务和资源释放 |
+| 图片本体点击 | `collab_image_block.dart` | 可选宿主onImageTap(url)接收完整原始链接，编辑/预览均可用；点击隔离正文输入且不自动恢复焦点，宿主持有预览，等待期间拒绝重复点击；题注及更多菜单独立命中，换源/会话/卸载后忽略迟到失败；空链接或无回调仍屏蔽点击获取正文焦点 |
+| 图片/音频/视频更多 | `collab_image_block.dart`、`collab_video_block.dart`、`collab_resource_block_base.dart`、`collab_block_actions.dart` | 三个菜单项统一显示“复制链接”，完整原始URL写入系统剪贴板，成功提示，不下载资源或修改正文/历史；沿用菜单身份/权限/快照及既有编辑/预览显隐。视频保留“删除视频”；视频画面、播放及进度交互按下时清除正文选区并收起编辑器输入，内容使用ExcludeFocus且画面接收点击，加载/失败也屏蔽焦点；保留子控件手势和滚动，后续点击正文仍可输入。图片编辑弹窗不重复提供整块删除；删除沿用原事务和资源释放 |
 | 链接/网页卡片 | `collab_link_actions.dart` | 头部完整URL单行省略；删除卡片图标及文字红色；资源操作与视图选项之间有浅色分割线；下方插入用 `listEnd` |
 | 文档/会议/任务提及 | `collab_inline_entity_mention.dart` | “删除提及”与块菜单同样使用红色整行操作，保留预览禁用；不删除实体业务数据 |
 | 图标/封面来源 | `document_header.dart`、`editor_media_source_sheet.dart` | 修改封面标题使用 `image` 图片图标；图标的移除在底部左侧，与完成/保存同栏；Tab切换保留草稿，上传取消和权限核对不交给外壳 |
@@ -64,7 +65,7 @@
 | 图标/封面/拖动/业务头部 | `document_header_test.dart`、`editor_media_source_sheet_test.dart` |
 | 高亮颜色/表情及外置移除 | `collab_callout_block_test.dart`、`collab_color_emoji_picker_test.dart` |
 | 链接与提及菜单 | `collab_link_actions_test.dart`、`collab_entity_mention_test.dart` |
-| 图片/音视频复制及删除入口 | `collab_block_actions_test.dart`、`collab_video_update_test.dart`、`collab_image_test.dart`、`collab_resource_block_test.dart` |
+| 图片/音视频复制及删除入口 | `collab_image_tap_test.dart`、`collab_block_actions_test.dart`、`collab_video_update_test.dart`、`collab_image_test.dart`、`collab_resource_block_test.dart` |
 | 编号及绘图下拉/草稿 | `collab_ordered_test.dart`、`collab_mermaid_test.dart` |
 | 表格锚点/底部操作 | `collab_table_test.dart` |
 | 公式/文字链接和划词会话 | `mobile_selection_menu_test.dart` |

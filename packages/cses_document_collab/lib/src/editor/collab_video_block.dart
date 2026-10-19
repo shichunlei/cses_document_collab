@@ -220,10 +220,23 @@ class _VideoBlockState extends CollabMediaBlockState<_VideoBlock> {
     );
   }
 
+  /// 在视频交互开始时清除正文选区并关闭编辑器输入，不改写正文或历史。
+  /// 只解除借用编辑器自身的焦点，不阻止播放、跳转或滚动，也不安排自动恢复焦点。
+  void _suppressVideoFocus() {
+    if (!mounted) return;
+    final editor = context.read<EditorState>();
+    if (editor.isDisposed) return;
+    editor.selection = null;
+    editor.service.keyboardService
+      ?..closeKeyboard()
+      ..disable(disposition: UnfocusDisposition.scope);
+  }
+
   /// 对借用[controller]跳转到[target]；仅当前播放器可开始新任务。
-  /// 返回的Future与资源释放共享，完成前不得销毁该控制器；错误交给进度视图提示。
+  /// 跳转前屏蔽正文焦点；返回的Future与资源释放共享，完成前不得销毁该控制器；错误交给进度视图提示。
   Future<void> _seekVideo(VideoPlayerController controller, Duration target) async {
     if (!mounted || !identical(controller, _videoController)) return;
+    _suppressVideoFocus();
     final operation = controller.seekTo(target);
     _videoSeeks[controller] = operation;
     try {
@@ -236,11 +249,12 @@ class _VideoBlockState extends CollabMediaBlockState<_VideoBlock> {
   }
 
   /// Toggles the current owned player directly; replaced/disposed controllers
-  /// never refresh the view. Playback failures are reported and shown locally.
+  /// never refresh the view. Suppresses body focus before playback; failures are reported and shown locally.
   Future<void> _toggleVideo() async {
     if (!mounted) return;
     final controller = _videoController;
     if (controller == null || !controller.value.isInitialized) return;
+    _suppressVideoFocus();
     try {
       if (controller.value.isPlaying) {
         await controller.pause();
@@ -265,9 +279,20 @@ class _VideoBlockState extends CollabMediaBlockState<_VideoBlock> {
     super.dispose();
   }
 
-  /// 在借用[context]中原样创建视频播放内容，不新增标题栏或改变操作入口。
+  /// 在借用[context]中构建视频及加载/失败占位，阻止画面点击成为正文选区手势。
+  /// 指针按下即收起正文输入，子控件继续处理播放及拖动；不恢复焦点或拦截滚动。
   @override
-  Widget buildMedia(BuildContext context) => _buildVideoCard(context);
+  Widget buildMedia(BuildContext context) => ExcludeFocus(
+    child: Listener(
+      onPointerDown: (_) => _suppressVideoFocus(),
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        excludeFromSemantics: true,
+        onTap: _suppressVideoFocus,
+        child: _buildVideoCard(context),
+      ),
+    ),
+  );
 
   /// 在借用[context]中创建视频更多菜单；外部打开在预览中可用，链接复制和删除仅编辑状态显示。
   /// 复制链接及删除在面板完整退场并通过菜单身份/权限校验后执行，直接播放仍位于视频画面内。

@@ -7,6 +7,7 @@ import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/editor/collab_cached_image.dart';
 import 'package:cses_document_collab/src/editor/collab_image_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_media_block_base.dart';
+import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_image.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/foundation.dart';
@@ -82,6 +83,9 @@ class _CollabImageBlockState extends CollabMediaBlockState<CollabImageBlock> {
   /// 当前解码请求的地址，用于拒绝换源后的迟到结果。
   String _source = '';
 
+  /// 宿主图片回调尚未结束时阻止重复派发；不拥有宿主预览资源。
+  bool _opening = false;
+
   /// 当前data URI的解码结果，只由本State持有。
   Uint8List? _data;
 
@@ -124,7 +128,42 @@ class _CollabImageBlockState extends CollabMediaBlockState<CollabImageBlock> {
     }
   }
 
+  /// 点击图片时隔离正文输入并将当前原始链接交给宿主，结束后不恢复焦点。
+  /// 空链接或未注入回调仍收起键盘，但不派发；重复点击在原回调完成前忽略。
+  /// 换源、删除、卸载或宿主会话变化后拒绝迟到提示，不写入文档或关闭宿主资源。
+  Future<void> _openImage() async {
+    if (_opening || !mounted) return;
+    final editor = context.read<EditorState>();
+    if (editor.isDisposed) return;
+    final services = CollabRuntime.services;
+    final source = _url;
+    final id = widget.node.attributes['cses_collab_block_id'] as String? ?? widget.node.id;
+
+    /// 检查本次点击是否仍属于同一宿主和稳定图片来源。
+    bool isCurrent() {
+      if (!mounted || editor.isDisposed || !identical(services, CollabRuntime.services)) return false;
+      final node = findCollabActionNode(editor, id);
+      return node?.type == ImageBlockKeys.type && node?.attributes[ImageBlockKeys.url] == source;
+    }
+
+    _opening = true;
+    try {
+      await runEditorHeaderAction<void>(context, editor, () async {
+        if (!isCurrent() || source.trim().isEmpty) return;
+        await services.onImageTap?.call(source);
+      }, canRestore: () => false);
+    } catch (error, stack) {
+      if (mounted && isCurrent()) {
+        services.report('打开图片失败', error, stack, 'DocCollab');
+        ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(content: Text('打开图片失败，请重试')));
+      }
+    } finally {
+      _opening = false;
+    }
+  }
+
   /// 使用 [context] 的正文宽度解析尺寸，更多菜单集中编辑、删除和下方插入。
+  /// 图片本体点击仅回调原始链接并屏蔽正文焦点，题注与更多菜单独立命中。
   /// 布局计算不写入 wr/ar 或题注；编辑及复制链接前等待菜单退场并验证当前身份及权限。
   @override
   Widget buildMedia(BuildContext context) {
@@ -152,7 +191,19 @@ class _CollabImageBlockState extends CollabMediaBlockState<CollabImageBlock> {
                     key: const ValueKey('collab-image-box'),
                     width: width,
                     height: height,
-                    child: Transform.rotate(angle: (image.rotation ?? 0) * math.pi / 180, child: _buildImage()),
+                    child: ExcludeFocus(
+                      child: Semantics(
+                        label: '图片',
+                        button: CollabRuntime.services.onImageTap != null && _url.trim().isNotEmpty,
+                        child: GestureDetector(
+                          key: ValueKey('collab-image-tap-$id'),
+                          behavior: HitTestBehavior.opaque,
+                          excludeFromSemantics: CollabRuntime.services.onImageTap == null || _url.trim().isEmpty,
+                          onTap: () => unawaited(_openImage()),
+                          child: Transform.rotate(angle: (image.rotation ?? 0) * math.pi / 180, child: _buildImage()),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
                 for (final caption in image.captions)

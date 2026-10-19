@@ -24,7 +24,9 @@ typedef CollabErrorReporter =
 ///
 /// ```dart
 /// import 'package:cses_document_collab/cses_document_collab.dart';
-/// const services = CollabHostServices();
+/// final services = CollabHostServices(onImageTap: (url) async {
+///   // 用url打开宿主图片预览，等待预览关闭后返回；包不拥有预览资源。
+/// });
 /// // 将services注入由宿主持有的CollabController。
 /// ```
 /// Optional media upload enables the local-file tab; URL editing is always usable.
@@ -40,6 +42,7 @@ class CollabHostServices {
   /// [loadMeetingCard] 加载会议本地详情及状态，null展示引用和未知状态，资源由宿主持有。
   /// [loadTaskCard] 加载任务本地详情，null仅展示共享标题；不拥有宿主网络资源。
   /// [onMeetingCardTap] 由卡片加入/查看按钮打开会议；null禁用该按钮，仍可删除引用。
+  /// [onImageTap] 接收图片原始链接并等待宿主预览关闭；null不派发点击，仍屏蔽图片点击的正文焦点。
   /// [documentMetadata] 提供正式头部的业务读写；草稿不使用该端口。
   /// [showDocumentFeedback] 默认false；true在正文末尾显示点赞和全文评论入口。
   /// [loadDocumentFeedback]加载当前文档的初始互动快照；null使用未点赞、空成员、0条评论。
@@ -58,6 +61,7 @@ class CollabHostServices {
     this.pickMentionUser,
     this.onMentionTap,
     this.onMeetingCardTap,
+    this.onImageTap,
     this.loadMeetingCard,
     this.loadTaskCard,
     this.pickMeetingReference,
@@ -104,6 +108,12 @@ class CollabHostServices {
   /// 点击会关闭正文键盘，回调结束后不自动恢复输入焦点；业务鉴权和会议状态由宿主处理。
   final FutureOr<void> Function(String meetingId, String title, String number)?
   onMeetingCardTap;
+
+  /// 可选图片点击回调；[url]是当前图片完整原始地址，保留查询签名、片段及data/blob来源。
+  /// 仅图片本体触发，编辑及预览均可用；空链接或null回调不派发，题注与更多菜单不触发。
+  /// 点击收起正文键盘且不恢复输入焦点，不写正文或历史；等待返回期间拒绝同一图片重复点击。
+  /// 宿主持有预览路由及资源，Future应在预览关闭后完成；当前会话失败由包报告并提示。
+  final FutureOr<void> Function(String url)? onImageTap;
 
   /// 可选统一提及点击处理，宿主持有其路由/业务资源；预览可调用，异常由编辑器报告。
   /// 用户未配置时不响应；其他提及点击先显示操作面板，只有打开详情调用此回调。

@@ -1,0 +1,78 @@
+{
+  "date": "2026-10-19",
+  "change": "正式图片本体点击通过公开可选CollabHostServices.onImageTap(url)回调完整原始地址；屏蔽正文焦点，回调结束不自动恢复键盘。",
+  "contract": {
+    "url": "原样传递HTTP(S)、data/blob来源，保留查询签名、编码和片段；空链接不派发。",
+    "ownership": "宿主持有预览路由及资源，回调Future应等待预览关闭；包不关闭宿主资源；单图回调未完成期间拒绝重复派发。",
+    "focus": "ExcludeFocus及独立图片命中，复用runEditorHeaderAction(canRestore:false)隔离输入；未配置回调仍屏蔽点击的正文焦点；之后点击正文仍能继续输入。",
+    "modes": "编辑与预览均可点击；题注与更多菜单独立命中，不派发图片点击。",
+    "failure": "当前节点/源/宿主仍有效时报告并提示打开图片失败；换源、换宿主、卸载后的迟到错误忽略。",
+    "sharedState": "不写正文、共享属性或历史，不改变Schema/FRB/原生接口。",
+    "hostConsumer": "DemoDocumentHost通过包公开入口注入链接回调，演示日志和点击提示；README含宿主注入示例，不提供默认图片预览页面。"
+  },
+  "versions": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.21",
+    "desktopDeclaration": "0.11.21",
+    "yarnLock": "0.11.21",
+    "installed": "0.11.17",
+    "pnpmLock": "0.2.78",
+    "upgraded": false,
+    "checked": "发布/安装包随包技能、MIGRATIONS、ImgToolbar点击/预览约定及ImageBlockComponent实现；手机按需求单击回调，未宣称覆盖桌面对象工具栏/布局，其余上游兼容差异待同步。"
+  },
+  "verification": {
+    "newTestsPassed": 15,
+    "platformMatrix": "Android/iOS/macOS模拟平台各编辑/预览；仅Widget测试，不是真机。",
+    "scenarios": [
+      "带编码、签名、片段的完整链接",
+      "已有正文键盘收起",
+      "返回不恢复焦点",
+      "重新点击正文仍可输入",
+      "整块选中时点击",
+      "无回调",
+      "空链接",
+      "题注及更多菜单不触发",
+      "宿主等待期间重复点击",
+      "成功",
+      "当前失败",
+      "换源后的迟到失败",
+      "换宿主后的迟到失败",
+      "卸载后的迟到失败"
+    ],
+    "packageSuite": {
+      "command": "flutter test --no-pub test/collab_image_tap_test.dart test/collab_image_test.dart test/collab_block_actions_test.dart --reporter expanded",
+      "passed": 74,
+      "failed": 0
+    },
+    "hostSuite": {
+      "command": "flutter test --no-pub test/collab_demo_page_test.dart --reporter expanded",
+      "passed": 1,
+      "failed": 0
+    },
+    "packageAnalysis": {
+      "command": "flutter analyze --no-pub lib/src/editor/collab_image_block.dart lib/src/model/collab_host_services.dart test/collab_image_tap_test.dart",
+      "result": "No issues found"
+    },
+    "hostAnalysis": {
+      "command": "flutter analyze --no-pub lib/src/demo/document_host.dart",
+      "infos": 1,
+      "finding": "depend_on_referenced_packages: path_provider不是宿主pubspec的直接依赖。",
+      "baseline": "HEAD的document_host.dart已有相同path_provider导入，pubspec未修改；保留历史问题，未标为静态分析完全通过。",
+      "baselineCommit": "ea2ee581c6b45f242d9b2d857db06d5755b2be29"
+    },
+    "format": "只对三个修改源文件与一个新测试文件执行dart format，沿用80/120列；git diff --check通过。",
+    "consumerBoundary": "新增构造参数可选且默认null；无导出/路径/依赖变更，公共入口已导出CollabHostServices，宿主只通过该入口使用。"
+  },
+  "limitations": [
+    "Android/iOS真实系统键盘与图片预览路由待验收",
+    "在线桌面双向联调未新增验收",
+    "无正式图片投影的旧离线AppFlowy回退沿用原实现"
+  ],
+  "statistics": {
+    "total": 41,
+    "adapted": 13,
+    "partial": 13,
+    "structural": 1,
+    "notAdapted": 14
+  }
+}

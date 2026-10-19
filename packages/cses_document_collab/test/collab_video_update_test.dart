@@ -6,12 +6,250 @@ import 'package:cses_document_collab/src/editor/collab_video_block.dart';
 import 'package:cses_document_collab/src/editor/collab_callout_block.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:video_player/video_player.dart';
 import 'package:video_player_platform_interface/video_player_platform_interface.dart';
 
-/// 隔离真实播放器，验证同一 Node 的源更新及退出时的所有权，不访问网络。
+/// 隔离真实播放器，验证视频交互的焦点屏蔽、同一Node源更新及退出所有权，不访问网络。
 void main() {
+  setUp(() {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockStreamHandler(
+          const EventChannel('keyboardHeightEventChannel'),
+          MockStreamHandler.inline(
+            onListen: (_, events) => events.success(0.0),
+          ),
+        );
+  });
+
+  for (final targetPlatform in [
+    TargetPlatform.android,
+    TargetPlatform.iOS,
+    TargetPlatform.macOS,
+  ]) {
+    for (final editable in [true, false]) {
+      testWidgets(
+        'video gestures suppress body focus on $targetPlatform editable=$editable',
+        (tester) async {
+          await tester.binding.setSurfaceSize(const Size(390, 844));
+          final platform = _MemoryVideoPlatform(
+            pending: false,
+            duration: const Duration(minutes: 1),
+          );
+          final original = VideoPlayerPlatform.instance;
+          VideoPlayerPlatform.instance = platform;
+          final changes = <List<CollabEditorBlock>>[];
+          final adapter = AppFlowyBlockEditorAdapter(
+            initialBlocks: [
+              const CollabEditorBlock(
+                id: 'before',
+                blockType: 'paragraph',
+                text: '前置正文',
+              ),
+              _video('focus'),
+              const CollabEditorBlock(
+                id: 'after',
+                blockType: 'paragraph',
+                text: '后置正文',
+              ),
+            ],
+            onLocalBlocksChanged: changes.add,
+          );
+          final editor = adapter.editorState;
+          editor.editable = editable;
+          addTearDown(() async {
+            await tester.pumpWidget(const SizedBox());
+            await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+            adapter.dispose();
+            await platform.close();
+            VideoPlayerPlatform.instance = original;
+            await tester.binding.setSurfaceSize(null);
+            await tester.pump(const Duration(milliseconds: 500));
+          });
+          await tester.pumpWidget(
+            MaterialApp(
+              localizationsDelegates: const [
+                GlobalMaterialLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                AppFlowyEditorLocalizations.delegate,
+              ],
+              home: Scaffold(
+                body: AppFlowyEditor(
+                  editorState: editor,
+                  editable: editable,
+                  editorStyle: const EditorStyle.mobile(
+                    padding: EdgeInsets.all(16),
+                  ),
+                  blockComponentBuilders: {
+                    ...standardBlockComponentBuilderMap,
+                    csesVideoBlockType: CollabVideoBlockComponentBuilder(),
+                  },
+                ),
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+          for (final action in ['background', 'play', 'seek']) {
+            if (editable) {
+              final update = editor.updateSelectionWithReason(
+                Selection.collapsed(Position(path: [0], offset: 2)),
+                reason: SelectionUpdateReason.uiEvent,
+              );
+              await tester.pumpAndSettle();
+              await update;
+              expect(tester.testTextInput.hasAnyClients, isTrue);
+            }
+            tester.testTextInput.log.clear();
+            if (action == 'background') {
+              final frame = tester.getRect(
+                find.byKey(const ValueKey('collab-video-viewport')),
+              );
+              final gesture = await tester.startGesture(
+                frame.topLeft + const Offset(12, 12),
+              );
+              await tester.pump(const Duration(milliseconds: 150));
+              expect(
+                tester.testTextInput.hasAnyClients,
+                isFalse,
+                reason: '按下视频即关闭已有正文输入',
+              );
+              await gesture.up();
+            } else if (action == 'play') {
+              await tester.tap(
+                find.byKey(const ValueKey('collab-video-block-play')),
+              );
+            } else {
+              final track = tester.getRect(
+                find.byKey(const ValueKey('collab-video-progress')),
+              );
+              await tester.dragFrom(
+                Offset(track.left + 12, track.center.dy),
+                Offset(track.width * .55, 0),
+              );
+            }
+            await tester.pumpAndSettle();
+            await tester.pump(const Duration(milliseconds: 500));
+            expect(editor.selection, isNull, reason: action);
+            expect(tester.testTextInput.hasAnyClients, isFalse, reason: action);
+            expect(
+              tester.testTextInput.log.where(
+                (call) => call.method == 'TextInput.show',
+              ),
+              isEmpty,
+              reason: action,
+            );
+            if (action == 'play') {
+              expect(
+                tester
+                    .widget<VideoPlayer>(find.byType(VideoPlayer))
+                    .controller
+                    .value
+                    .isPlaying,
+                isTrue,
+              );
+            } else if (action == 'seek') {
+              expect(platform.seeks, hasLength(1), reason: '拖动松手仍只提交一次跳转');
+              expect(platform.seeks.single.$2, greaterThan(Duration.zero));
+            }
+          }
+          await tester.tap(find.byKey(const ValueKey('block-more-video')));
+          await tester.pumpAndSettle();
+          expect(find.text('在外部应用打开'), findsOneWidget);
+          Navigator.of(tester.element(find.text('在外部应用打开'))).pop();
+          await tester.pumpAndSettle();
+          await tester.pump(const Duration(milliseconds: 500));
+          expect(tester.testTextInput.hasAnyClients, isFalse);
+          expect(changes, isEmpty);
+          expect(editor.undoManager.undoStack, isEmpty);
+          if (editable) {
+            await tester.tap(find.byKey(editor.document.first!.key));
+            await tester.pumpAndSettle();
+            expect(editor.selection?.start.path, [0]);
+            expect(
+              tester.testTextInput.hasAnyClients,
+              isTrue,
+              reason: '视频交互后仍可点击正文继续输入',
+            );
+          }
+          expect(tester.takeException(), isNull);
+        },
+        variant: TargetPlatformVariant.only(targetPlatform),
+      );
+    }
+  }
+
+  for (final fails in [false, true]) {
+    testWidgets('video placeholder suppresses focus while failed=$fails', (
+      tester,
+    ) async {
+      final platform = _MemoryVideoPlatform(pending: true);
+      final original = VideoPlayerPlatform.instance;
+      VideoPlayerPlatform.instance = platform;
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: [
+          const CollabEditorBlock(
+            id: 'before',
+            blockType: 'paragraph',
+            text: '正文',
+          ),
+          _video('loading'),
+        ],
+        onLocalBlocksChanged: (_) => throw TestFailure('视频点击不得写正文'),
+      );
+      addTearDown(() async {
+        await tester.pumpWidget(const SizedBox());
+        await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+        adapter.dispose();
+        await platform.close();
+        VideoPlayerPlatform.instance = original;
+      });
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: AppFlowyEditor(
+              editorState: adapter.editorState,
+              blockComponentBuilders: {
+                ...standardBlockComponentBuilderMap,
+                csesVideoBlockType: CollabVideoBlockComponentBuilder(),
+              },
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      if (fails) {
+        platform._events[0]!.addError(
+          PlatformException(
+            code: 'fixture-video-failure',
+            message: 'expected initialization failure',
+          ),
+        );
+        await tester.pumpAndSettle();
+      }
+      final update = adapter.editorState.updateSelectionWithReason(
+        Selection.collapsed(Position(path: [0], offset: 1)),
+        reason: SelectionUpdateReason.uiEvent,
+      );
+      await tester.pumpAndSettle();
+      await update;
+      expect(tester.testTextInput.hasAnyClients, isTrue);
+      tester.testTextInput.log.clear();
+      await tester.tap(find.byKey(const ValueKey('collab-video-viewport')));
+      await tester.pumpAndSettle();
+      expect(adapter.editorState.selection, isNull);
+      expect(tester.testTextInput.hasAnyClients, isFalse);
+      expect(
+        tester.testTextInput.log.where(
+          (call) => call.method == 'TextInput.show',
+        ),
+        isEmpty,
+      );
+      expect(tester.takeException(), isNull);
+    });
+  }
+
   for (final (size, fail) in [
     (const Size(1920, 1080), false),
     (const Size(1080, 1920), false),
