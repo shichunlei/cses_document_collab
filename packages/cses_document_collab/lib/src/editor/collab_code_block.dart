@@ -3,6 +3,7 @@ import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.da
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/editor/collab_card_frame.dart';
 import 'package:cses_document_collab/src/editor/collab_code_menu.dart';
+import 'package:cses_document_collab/src/editor/collab_code_line_numbers.dart';
 import 'package:cses_document_collab/src/model/collab_code.dart';
 import 'package:cses_document_collab/src/model/collab_code_languages.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
@@ -289,7 +290,7 @@ class _CodeBlockState extends State<_CodeBlock>
     await _editor.apply(transaction, skipHistoryDebounce: true);
   }
 
-  /// Builds the selectable code and header including sibling insertion in [context].
+  /// 在[context]构建标题栏与可编辑代码；行号为纯展示，折行布局与正文共用字体及行高。
   @override
   Widget build(BuildContext context) {
     final metadata = _metadata;
@@ -387,21 +388,34 @@ class _CodeBlockState extends State<_CodeBlock>
             child: Container(
               constraints: const BoxConstraints(minHeight: 60),
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-              child: AppFlowyRichText(
-                key: forwardKey,
-                node: widget.node,
-                editorState: _editor,
-                delegate: this,
-                textAlign: TextAlign.left,
-                textDirection: TextDirection.ltr,
-                placeholderText: '输入代码',
-                textSpanDecorator: _highlight,
-                placeholderTextSpanDecorator: (span) => span.updateTextStyle(
-                  _codeStyle.copyWith(color: const Color(0xFF9CA3AF)),
+              child: CollabCodeLineNumbers(
+                source: widget.node.delta?.toPlainText() ?? '',
+                style: _codeStyle,
+                textScaler: TextScaler.linear(style.textScaleFactor),
+                textHeightBehavior: TextHeightBehavior(
+                  applyHeightToFirstAscent:
+                      style.textStyleConfiguration.applyHeightToFirstAscent,
+                  applyHeightToLastDescent:
+                      style.textStyleConfiguration.applyHeightToLastDescent,
+                  leadingDistribution:
+                      style.textStyleConfiguration.leadingDistribution,
                 ),
-                cursorColor: style.cursorColor,
-                selectionColor: style.selectionColor,
-                cursorWidth: style.cursorWidth,
+                child: AppFlowyRichText(
+                  key: forwardKey,
+                  node: widget.node,
+                  editorState: _editor,
+                  delegate: this,
+                  textAlign: TextAlign.left,
+                  textDirection: TextDirection.ltr,
+                  placeholderText: '输入代码',
+                  textSpanDecorator: _highlight,
+                  placeholderTextSpanDecorator: (span) => span.updateTextStyle(
+                    _codeStyle.copyWith(color: const Color(0xFF9CA3AF)),
+                  ),
+                  cursorColor: style.cursorColor,
+                  selectionColor: style.selectionColor,
+                  cursorWidth: style.cursorWidth,
+                ),
               ),
             ),
           ),

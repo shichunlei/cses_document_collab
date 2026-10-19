@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-19",
+  "scope": "代码块逻辑行号显示",
+  "versions": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.21",
+    "desktop_declaration": "0.11.21",
+    "yarn_lock": "0.11.21",
+    "installed": "0.11.17",
+    "pnpm_lock": "0.2.78",
+    "reviewed": "两版随包L0技能、MIGRATIONS、代码输入技能及CodeBlockComponent正文/折叠实现。未升级桌面，不表示其余版本差异兼容完成。"
+  },
+  "behavior": [
+    "显示第1行、空行与末尾空行",
+    "软折行不重复编号",
+    "按最大行号位数预留宽度",
+    "与代码使用相同字体、缩放、首尾行高度量及可用宽度",
+    "代码回车、撤销及远端更新后重新绘制；只读折叠隐藏行号",
+    "行号不参与正文、选区、剪贴板或协同",
+    "行号层单独RepaintBoundary避免光标闪烁重复测量"
+  ],
+  "verification": {
+    "command": "flutter test --no-pub test/collab_code_line_numbers_test.dart test/collab_code_block_test.dart test/collab_code_enter_test.dart",
+    "passed": 36,
+    "new_tests": 15,
+    "geometry": "280/320/390逻辑像素×1/1.5/2.2编辑器字号倍率。读取透明行号层实际像素，与真实正文RenderParagraph基线及折行位置比对。另覆盖4类空/尾空行、输入/撤销/远端/只读折叠、三位数宽度。",
+    "existing_regression": "21项代码高亮/菜单/复制原文/元数据/历史/输入连接回归保持",
+    "analyze": "collab_code_block.dart、collab_code_line_numbers.dart、collab_code_line_numbers_test.dart",
+    "format": "仅修改的三份手写Dart文件",
+    "diff_check": "通过"
+  },
+  "limitations": [
+    "Flutter测试默认字体，未新增真实系统字体或真机验收",
+    "未新增在线桌面双向联调"
+  ],
+  "statistics": {
+    "adapted": 13,
+    "partial": 13,
+    "structure_only": 1,
+    "unsupported": 14,
+    "total": 41
+  }
+}
