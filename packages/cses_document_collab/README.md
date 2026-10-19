@@ -72,6 +72,35 @@ Widget editor(CollabController controller) =>
 
 ## 原生构建与测试
 
+### 共用表情目录
+
+文档图标和高亮块复用`CollabEmojiPicker`与手机底部弹窗，包含桌面同源八类1812个默认表情、1350个肤色序列、中英文/拼音/首字母搜索和进程内最近12项。搜索和底部Tab固定，中间始终为一个完整分类列表：点击Tab平滑定位标题，手动滚动同步选中并自动展示对应Tab，“全部”定位顶部当前/最近区域。搜索时展示结果，点击分类退出搜索并定位。既有Unicode、组合表情及自定义前缀保留，不在打开时迁移。
+
+目录缓存按列数、查询、肤色、当前项和最近项失效，固定行高随标题文字缩放调整，列表仅挂载可见行。滚动联动只比较八个分类偏移并更新Tab，不重建整个选择器；两屏以内直接滚动300毫秒，远距离淡出90毫秒后在透明状态定位到目标附近，再滑入300毫秒并淡入180毫秒，避免连续创建/回收整段目录。新点击或用户拖动可接管，关闭后旧动画结果失效，过渡期间不提交表情。每格借用父级Material绘制墨水反馈，保留选中边框、长按名称提示、键盘激活及无障碍语义；独立使用需提供Material祖先。
+
+表情列表与Tab真机性能回归从Demo宿主根目录运行，使用性能构建及随系统出帧的`benchmarkLive`策略，分别记录首次分类浏览、连续双向甩动、重复Tab定位/动画接管、Tab横滑。测试使用实际公共底部路由与选择器、本地保存回调；不进入账号或在线文档，完成性能采集后才转换截图表面。输出为`build/emoji-device/performance.json`及真机PNG，可用`COLLAB_EMOJI_DEVICE_OUTPUT_DIR`指定目录：
+
+```sh
+flutter drive --profile --no-dds \
+  --driver packages/cses_document_collab/test_driver/emoji_performance.dart \
+  --target packages/cses_document_collab/integration_test/emoji_scroll_test.dart \
+  -d ANDROID_DEVICE_ID --no-pub --keep-app-running
+```
+
+必须保留`--keep-app-running`；完成后重新构建普通Demo，并用`adb install -r`覆盖恢复，避免设备停留在测试入口或清除应用数据。帧耗时按实际刷新率评估，不用默认测试出帧节奏或调试构建推断流畅度。
+
+独立排除测试绑定开销时，同一入口可使用`flutter run --profile --no-dds --no-pub --dart-define=EMOJI_MANUAL_PERF=true --target packages/cses_document_collab/integration_test/emoji_scroll_test.dart -d ANDROID_DEVICE_ID`。此模式使用普通`WidgetsFlutterBinding`和系统触摸，`ext.emoji.frames`只向本地VM服务提供最多20000帧的构建/栅格耗时（微秒），传`reset=true`清空；不初始化账号或读取文档，退出进程释放全部采样状态。测量后仍需覆盖恢复普通Demo。
+
+数据与桌面实际使用的`@cses/ui 4.35.6`中`CsEmojiPickerComponent`同源：`@ctrl/ngx-emoji-mart 9.2.0`（Unicode 14目录），以及组件随包提供的CLDR release-48中文名称、拼音和搜索别名。生成文件不可手改，更新时在包目录运行：
+
+```sh
+node tool/sync_desktop_emoji_catalog.mjs /path/to/cses-client
+```
+
+同步工具校验分类/身份/肤色映射并记录源文件SHA-256，同时维护[许可与来源](third_party/emoji/README.md)；选择器将MIT和Unicode完整许可注册到Flutter许可页。目录无需网络或图片包，具体字形由系统字体提供。最近记录和肤色不跨进程持久化，不提供双人混合肤色编辑器。
+
+### 构建与回归
+
 Android 通过本包 android/Cargokit 构建 rust。插件及宿主需使用 compileSdk 36 或更高版本，最终宿主的最低运行版本仍为 API 24。安装对应 Rust Android targets 和 NDK 后，从最终 App 执行 Flutter build。原生库名仍是 cses_collab_core。
 
 iOS 使用 `ios/cses_document_collab/Package.swift` 的本地动态 XCFramework。在 Flutter/Xcode 解析 SPM 之前执行：

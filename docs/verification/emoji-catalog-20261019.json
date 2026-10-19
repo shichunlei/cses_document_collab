@@ -1,0 +1,66 @@
+{
+  "date": "2026-10-19",
+  "change": "文档图标与高亮块共用桌面同源表情目录，继续使用手机底部弹窗，固定搜索/分类/操作栏并惰性滚动目录。",
+  "versions": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.21",
+    "latestQuery": "桌面目录npm view @ccc/blockcraft dist-tags --json，补充复查使用15秒超时、无重试，成功返回latest=0.11.21",
+    "desktopDeclaration": "0.11.21",
+    "yarnLock": "0.11.21",
+    "installed": "0.11.17",
+    "pnpmLock": "0.2.78",
+    "uiDeclaration": "4.36.0",
+    "uiInstalled": "4.35.6",
+    "emojiEngine": "@ctrl/ngx-emoji-mart 9.2.0",
+    "chineseData": "@cses/ui CsEmojiPickerComponent随包CLDR release-48名称、拼音和搜索别名"
+  },
+  "desktopInspection": [
+    "安装版0.11.17及0.11.21发布包随包技能、MIGRATIONS、Callout与文档图标表情选择实现",
+    "实际调用CsEmojiPickerComponent，保持原生Unicode保存，不修改Schema、FRB、原生接口或桌面依赖",
+    "CsEmojiPickerDataService及中文名称/拼音数据块、分类顺序、废弃条目过滤和肤色映射"
+  ],
+  "catalog": {
+    "categories": 8,
+    "baseEmoji": 1812,
+    "skinToneSequences": 1350,
+    "recentLimit": 12,
+    "generatedSha256": "7f70f2cdeff31cf0fc201144b80daf8e486371737402db1b2565eb1f2cfe2794",
+    "reproducible": true,
+    "licenses": ["MIT", "Unicode-3.0"],
+    "generator": "packages/cses_document_collab/tool/sync_desktop_emoji_catalog.mjs"
+  },
+  "checks": {
+    "flutterTests": {
+      "files": [
+        "collab_emoji_catalog_test.dart",
+        "collab_color_emoji_picker_test.dart",
+        "collab_callout_block_test.dart",
+        "document_header_test.dart",
+        "editor_media_source_sheet_test.dart",
+        "collab_modal_test.dart"
+      ],
+      "passed": 101,
+      "finalCatalogRerunPassed": 9,
+      "coverage": [
+        "目录数量/唯一性/八类顺序，中英文/拼音/首字母/中文别名搜索，家庭/旗帜/ZWJ/肤色序列",
+        "惰性挂载、目录滚动时搜索/分类固定，肤色与最近项跨选择器实例共享，浏览不写文档",
+        "保存中互斥、失败提示与重试、关闭后迟到完成，已有前缀及组合表情保留",
+        "图标与高亮实际入口、移除及已有权限保护，链接/上传来源切换",
+        "390x844、320x568双倍字、键盘300像素、568x320横屏布局约束"
+      ]
+    },
+    "flutterAnalyze": "8个目标及关联手写文件，No issues found",
+    "dartFormat": "仅本轮触达的手写Dart文件；保持原文件行宽，未格式化生成文件",
+    "nodeCheck": "同步工具语法检查通过，连续生成两次数据与许可SHA-256相同",
+    "oldNameSearch": "lib/test无collabEmojiGroups及旧分类名自然与生活残留",
+    "diffCheck": "git diff --check通过"
+  },
+  "limits": [
+    "未安装本轮代码或新增Android/iOS真机、在线双端、重连及服务端持久化验收",
+    "无窗口Widget渲染环境不能确认系统彩色表情字形；尝试本机中文/彩色字体的截图仅用于约束排查，不作为真机或字形验收",
+    "最近记录与肤色仅进程内保留；未提供双人混合肤色编辑",
+    "搜索使用同源关键词，未照搬桌面的搜索权重排序及75项结果上限",
+    "目录覆盖已核对桌面版本，不保证后续Unicode版本全部覆盖；系统字体决定具体字形",
+    "41块状态统计仍为13/13/1/14，其余BlockCraft版本差异不在本轮验收范围"
+  ]
+}

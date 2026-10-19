@@ -367,7 +367,7 @@ class _CalloutSettingsState extends State<_CalloutSettings> {
   );
 
   /// 按 [context] 约束展示共用表情或三组颜色，保存时重新核对目标和权限。
-  /// 表情移除固定在左下角，使用共用危险操作红色。
+  /// 表情目录独立惰性滚动，搜索和分类固定；移除仍在底部左侧，使用共用危险操作红色。
   @override
   Widget build(BuildContext context) {
     final enabled = !widget.editor.isDisposed && widget.editor.editable && _node != null;
@@ -379,6 +379,8 @@ class _CalloutSettingsState extends State<_CalloutSettings> {
       subtitle: widget.kind == _CalloutSettingsKind.colors ? '外观修改即时生效' : null,
       icon: widget.kind == _CalloutSettingsKind.emoji ? LucideIcons.smile : LucideIcons.palette,
       canClose: !_savingEmoji,
+      expand: widget.kind == _CalloutSettingsKind.emoji,
+      scrollBody: widget.kind != _CalloutSettingsKind.emoji,
       leadingAction: widget.kind == _CalloutSettingsKind.emoji
           ? TextButton.icon(
               key: const ValueKey('callout-emoji-clear'),
@@ -389,38 +391,44 @@ class _CalloutSettingsState extends State<_CalloutSettings> {
             )
           : null,
       actions: [TextButton(onPressed: _savingEmoji ? null : () => Navigator.pop(context), child: const Text('完成'))],
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (!enabled) const Text('当前高亮块不可编辑'),
-          IgnorePointer(
-            ignoring: !enabled,
-            child: Opacity(
-              opacity: enabled ? 1 : .45,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  if (widget.kind == _CalloutSettingsKind.emoji)
-                    CollabEmojiPicker(
-                      keyPrefix: 'callout-emoji',
-                      current: _node?.attributes[csesCalloutPrefixAttribute] as String?,
-                      enabled: enabled && !_savingEmoji,
-                      onSelected: (value) => _set(csesCalloutPrefixAttribute, value),
-                    )
-                  else ...[
-                    const SizedBox(height: 8),
-                    _colorRow('文字颜色', csesBlockTextColorAttribute, 'text'),
-                    const SizedBox(height: 16),
-                    _colorRow('背景色', csesBlockBackgroundColorAttribute, 'background'),
-                    const SizedBox(height: 16),
-                    _colorRow('边框色', csesBlockBorderColorAttribute, 'border'),
-                  ],
-                ],
-              ),
+      child: widget.kind == _CalloutSettingsKind.emoji
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (!enabled) const Text('当前高亮块不可编辑'),
+                Expanded(
+                  child: CollabEmojiPicker(
+                    keyPrefix: 'callout-emoji',
+                    current: _node?.attributes[csesCalloutPrefixAttribute] as String?,
+                    enabled: enabled && !_savingEmoji,
+                    onSelected: (value) => _set(csesCalloutPrefixAttribute, value),
+                  ),
+                ),
+              ],
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (!enabled) const Text('当前高亮块不可编辑'),
+                IgnorePointer(
+                  ignoring: !enabled,
+                  child: Opacity(
+                    opacity: enabled ? 1 : .45,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const SizedBox(height: 8),
+                        _colorRow('文字颜色', csesBlockTextColorAttribute, 'text'),
+                        const SizedBox(height: 16),
+                        _colorRow('背景色', csesBlockBackgroundColorAttribute, 'background'),
+                        const SizedBox(height: 16),
+                        _colorRow('边框色', csesBlockBorderColorAttribute, 'border'),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
 }

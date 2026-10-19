@@ -517,7 +517,7 @@ class _IconSheet extends StatelessWidget {
   }
 
   /// 用 [context] 构建三Tab面板；移除操作固定在底部左侧，输出emoji/image命令或null移除。
-  /// 文件和链接状态由来源面板持有，红色移除入口仍重新检查权限。
+  /// 文件和链接状态由来源面板持有，红色移除入口仍重新检查权限；表情Tab独立惰性滚动。
   @override
   Widget build(BuildContext context) => EditorMediaSourcePanel(
     kind: 'document_icon',
@@ -533,6 +533,7 @@ class _IconSheet extends StatelessWidget {
       );
     },
     firstTabLabel: '表情符号',
+    firstTabOwnsScroll: true,
     leadingAction: TextButton.icon(
       key: const ValueKey('document-icon-remove'),
       style: TextButton.styleFrom(

@@ -32,7 +32,7 @@
 | 文档/会议/任务提及 | `collab_inline_entity_mention.dart` | “删除提及”与块菜单同样使用红色整行操作，保留预览禁用；不删除实体业务数据 |
 | 图标/封面来源 | `document_header.dart`、`editor_media_source_sheet.dart` | 图标的移除在底部左侧，与完成/保存同栏；Tab切换保留草稿，上传取消和权限核对不交给外壳 |
 | 封面位置 | `document_header.dart` 的 `_BannerPositionSheet` | 图片内上下拖动，提示“按住图片上下拖动，调整封面位置”；无滑条/百分比，保存才提交，取消不写入 |
-| 高亮颜色/表情 | `collab_callout_block.dart`、`collab_color_picker.dart`、`collab_emoji_picker.dart` | 保留完整色板、自定义颜色、搜索/分类/最近表情；表情移除在左下与完成同栏，外置后补齐忙碌/错误边界 |
+| 高亮颜色/表情 | `collab_callout_block.dart`、`collab_color_picker.dart`、`collab_emoji_picker.dart` | 保留完整色板、自定义颜色；表情使用桌面同源八类目录/搜索/肤色/最近，原生Unicode不截断。固定底部Tab与单一完整列表双向联动，点击平滑定位，手动滚动同步且使活动Tab可见；公共外壳用scrollBody=false提供有限正文，固定行高惰性目录由选择器拥有；表情移除在左下与完成同栏，保留忙碌/错误边界 |
 | 编号菜单 | `collab_ordered_marker.dart` | 220宽、列表图标、当前项勾选；使用序号本身作为锚点，不改正文/原生编号规则 |
 | 绘图视图 | `collab_mermaid_block.dart` | 同款220宽浮层、标题和关闭入口，三种模式带图标及当前勾选；仅切换共享mode，不改源码 |
 | 绘图类型/模板 | `collab_mermaid_sheet.dart` | 同款220宽可滚动浮层；类型插入前缀，模板替换本地全文，保存前不写共享源码 |

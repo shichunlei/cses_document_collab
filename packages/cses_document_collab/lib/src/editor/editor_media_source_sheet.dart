@@ -45,6 +45,7 @@ Future<EditorMediaSource?> showEditorMediaSourceSheet(
 /// import 'package:flutter/material.dart';
 /// import 'package:cses_document_collab/src/editor/editor_media_source_sheet.dart';
 /// import 'package:cses_document_collab/src/model/editor_media_upload.dart';
+/// import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 /// Future<EditorMediaSource?> chooseImage(BuildContext context) =>
 ///   showCollabBottomSheet<EditorMediaSource>(context: context,
 ///     builder: (_) => const EditorMediaSourcePanel(kind: 'image', initialValue: ''));
@@ -54,6 +55,7 @@ class EditorMediaSourcePanel extends StatefulWidget {
   /// [key] 标识状态，[kind] 指定资源类型，[initialValue] 为初始URL，可为空。
   /// [allowRemove] 默认false；[service] 借自宿主，null使用运行时端口，未配置时禁用上传。
   /// [firstTab] 与 [firstTabLabel] 必须同时提供或同时为null，否则触发断言；封面默认使用图库。
+  /// [firstTabOwnsScroll] 默认false；true要求[firstTab]非空，首Tab自行滚动，不影响链接/上传Tab。
   /// [leadingAction] 为可选底部左侧操作，选择/上传期间屏蔽点击；[onSelected] 为媒体确认回调，null由Navigator返回资源。
   /// [canEdit] 可选，确认前返回false时留面板提示只读；构造不选择文件或发网络请求。
   const EditorMediaSourcePanel({
@@ -64,10 +66,12 @@ class EditorMediaSourcePanel extends StatefulWidget {
     this.service,
     this.firstTab,
     this.firstTabLabel,
+    this.firstTabOwnsScroll = false,
     this.leadingAction,
     this.onSelected,
     this.canEdit,
-  }) : assert((firstTab == null) == (firstTabLabel == null));
+  }) : assert((firstTab == null) == (firstTabLabel == null)),
+       assert(!firstTabOwnsScroll || firstTab != null);
 
   /// 资源或业务头部类型，决定格式限制、默认Tab及视觉标签；必填，由调用方持有。
   final String kind;
@@ -86,6 +90,9 @@ class EditorMediaSourcePanel extends StatefulWidget {
 
   /// 可选首Tab内容，如emoji列表；null时封面使用默认图库，其他类型无附加页。
   final Widget? firstTab;
+
+  /// 首Tab是否自行滚动，默认false；仅用于自带惰性目录的内容，不改变其他来源的外壳滚动。
+  final bool firstTabOwnsScroll;
 
   /// 附加首Tab标题，必须与 [firstTab] 同时设置；默认null。
   final String? firstTabLabel;
@@ -296,6 +303,7 @@ class _MediaSourceSheetState extends State<EditorMediaSourcePanel> {
       closeKey: const ValueKey('editor-media-source-close'),
       scrollController: _banner ? _bannerScroll : null,
       expand: _hasFirstTab,
+      scrollBody: !(_source == 'first' && widget.firstTabOwnsScroll),
       scrollKey: ValueKey('editor-${widget.kind}-source-sheet'),
       header: Padding(
         key: _banner ? const ValueKey('document-cover-source-header') : null,
@@ -374,15 +382,18 @@ class _MediaSourceSheetState extends State<EditorMediaSourcePanel> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           if (_source == 'first')
-            widget.firstTab ??
-                DocumentCoverGallery(
-                  selectedUrl: widget.initialValue,
-                  onSelected: (image) {
-                    if (!_busy && _checkEditable()) {
-                      _complete(EditorMediaSource(image.url));
-                    }
-                  },
-                )
+            if (widget.firstTabOwnsScroll)
+              Expanded(child: widget.firstTab!)
+            else
+              widget.firstTab ??
+                  DocumentCoverGallery(
+                    selectedUrl: widget.initialValue,
+                    onSelected: (image) {
+                      if (!_busy && _checkEditable()) {
+                        _complete(EditorMediaSource(image.url));
+                      }
+                    },
+                  )
           else if (!_local) ...[
             CollabModalField(
               label: '$_label链接',

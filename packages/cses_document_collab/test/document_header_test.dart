@@ -21,6 +21,21 @@ import 'package:file/memory.dart';
 import 'package:file/file.dart' as files;
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
+/// 在[tester]的图标惰性目录中滚动找到火箭，不假定完整目录的推荐项都已挂载。
+Future<void> _showRocket(WidgetTester tester) async {
+  await tester.scrollUntilVisible(
+    find.byKey(const ValueKey('document-icon-emoji-🚀')),
+    100,
+    scrollable: find
+        .descendant(
+          of: find.byKey(const PageStorageKey('document-icon-emoji-list')),
+          matching: find.byType(Scrollable),
+        )
+        .first,
+  );
+  await tester.pumpAndSettle();
+}
+
 /// 可配置头部详情与ACK延迟的测试服务，不创建网络资源，记录所有业务命令。
 class _Service implements DocumentMetadataService {
   bool editable = true;
@@ -455,7 +470,7 @@ void main() {
   }
 
   svgTestWidgets(
-    'icon emoji tab has no input; tabs preserve link and file and upload an image icon',
+    'icon emoji tab uses the shared catalog; tabs preserve link and file and upload an image icon',
     (tester) async {
       final upload = _IconUpload();
       useUpload(upload);
@@ -481,6 +496,7 @@ void main() {
         findsNothing,
       );
       expect(find.byType(TextFormField), findsNothing);
+      await _showRocket(tester);
       expect(find.text('🚀'), findsOneWidget);
       final remove = find.byKey(const ValueKey('document-icon-remove'));
       final cancel = find.widgetWithText(TextButton, '取消');
@@ -576,7 +592,7 @@ void main() {
             find.byKey(const ValueKey('document-icon-emoji-tab')),
           );
           await tester.pumpAndSettle();
-          await tester.ensureVisible(find.text('🚀'));
+          await _showRocket(tester);
           await tester.pumpAndSettle();
           await tester.tap(find.text('🚀'));
           await tester.pumpAndSettle();
@@ -698,7 +714,7 @@ void main() {
       expect(controller.value!.name, '手机标题');
       await tester.tap(find.byKey(const ValueKey('document-icon-edit')));
       await tester.pumpAndSettle();
-      await tester.ensureVisible(find.text('🚀'));
+      await _showRocket(tester);
       await tester.pumpAndSettle();
       await tester.tap(find.text('🚀'));
       await tester.pumpAndSettle();

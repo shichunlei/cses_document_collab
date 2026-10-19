@@ -387,6 +387,7 @@ class CollabBottomSheet extends StatelessWidget {
   /// [closeKey] 保留关闭入口；[scrollController] 为借用滚动控制器，不会被释放。
   /// [scrollKey] 是可选的滚动视口标识。
   /// [contentPadding] 默认左右20、下18；[expand] 默认 false，true 时正文填满剩余高度、操作区贴底。
+  /// [scrollBody] 默认true，由外壳滚动正文；false时[child]获得有限高度并自行管理滚动。
   const CollabBottomSheet({
     super.key,
     required this.title,
@@ -402,6 +403,7 @@ class CollabBottomSheet extends StatelessWidget {
     this.scrollKey,
     this.contentPadding = const EdgeInsets.fromLTRB(20, 0, 20, 18),
     this.expand = false,
+    this.scrollBody = true,
   });
 
   /// 必需标题。
@@ -413,7 +415,7 @@ class CollabBottomSheet extends StatelessWidget {
   /// 可选标题说明，最多一行，超出显示省略号。
   final String? subtitle;
 
-  /// 内容区域，由外壳提供滚动；不得传入无界 Expanded。
+  /// 内容区域；默认由外壳滚动，scrollBody=false时可在有限高度内使用惰性列表。
   final Widget child;
 
   /// 可选固定附加头部，内容自行管理分类状态。
@@ -442,6 +444,10 @@ class CollabBottomSheet extends StatelessWidget {
 
   /// 是否由滚动正文填满可用高度，适用于图库和添加内容面板；操作区保持在安全区上方。
   final bool expand;
+
+  /// 是否由外壳滚动正文，默认true；false时只应用内容边距，由child拥有目录滚动资源。
+  /// false不使用scrollController，scrollKey仅标识内容容器，不改变路由或固定头尾行为。
+  final bool scrollBody;
 
   /// 基于 [context] 的实际约束限制高度，键盘留白只在本层计算一次。
   /// 展开模式让正文占满剩余空间，底部操作区不随内容长短浮动。
@@ -502,12 +508,18 @@ class CollabBottomSheet extends StatelessWidget {
                         ?header,
                         Flexible(
                           fit: expand ? FlexFit.tight : FlexFit.loose,
-                          child: SingleChildScrollView(
-                            key: scrollKey,
-                            controller: scrollController,
-                            padding: contentPadding,
-                            child: child,
-                          ),
+                          child: scrollBody
+                              ? SingleChildScrollView(
+                                  key: scrollKey,
+                                  controller: scrollController,
+                                  padding: contentPadding,
+                                  child: child,
+                                )
+                              : Padding(
+                                  key: scrollKey,
+                                  padding: contentPadding,
+                                  child: child,
+                                ),
                         ),
                         if (actions.isNotEmpty || leadingAction != null)
                           CollabModalActions(leading: leadingAction, children: actions),

@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-19",
+  "change": "手机底部表情弹窗的Tab与单一完整分类列表双向联动，保留搜索/肤色/最近/保存路径。",
+  "versions": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.21",
+    "latestQuery": "桌面目录npm view @ccc/blockcraft dist-tags --json --fetch-retries=0 --fetch-timeout=15000成功返回",
+    "declaration": "0.11.21",
+    "yarnLock": "0.11.21",
+    "installed": "0.11.17",
+    "pnpmLock": "0.2.78",
+    "inspection": "两版随包L0/工具栏技能、MIGRATIONS、Callout/icon选择调用及桌面@cses/ui的分类实现；未升级依赖，不表示其他版本差异已兼容"
+  },
+  "behavior": [
+    "完整八类连续排列，当前/最近区域置顶，全部Tab定位顶部；点击分类300毫秒平滑定位标题，不筛除其他分类",
+    "手动上下滚动按顶部经过的标题更新Tab，活动Tab自动横向显示；搜索时显示搜索结果，点击分类退出搜索并定位",
+    "点击定位期间锁定目标Tab，快速点击仅最后目标有效；真实拖动立即接管，关闭后旧动画结果失效"
+  ],
+  "performance": [
+    "ListView.builder使用统一itemExtent，按可见区域挂载；行高考虑实际主题字体和文字缩放",
+    "目录按列数/查询/肤色/当前项/最近记录版本缓存，Tab和滚动不重新筛选1812项",
+    "每次滚动最多比较八个缓存分类偏移，仅TabController通知其消费者，不扫描离屏渲染对象或setState整个选择器",
+    "测试断言挂载TextButton少于180个，Tab定位后列表总行数保持；点击与手动滚动后搜索栏Widget实例保持一致"
+  ],
+  "checks": {
+    "tests": {
+      "files": [
+        "collab_emoji_catalog_test.dart",
+        "collab_color_emoji_picker_test.dart",
+        "collab_callout_block_test.dart",
+        "document_header_test.dart",
+        "editor_media_source_sheet_test.dart",
+        "collab_modal_test.dart"
+      ],
+      "passed": 104,
+      "newCases": "三个双向联动/拖动打断与关闭/快速切换和退出搜索场景，另同步只读控件及图标入口的实际惰性滚动查找",
+      "layouts": "390x844、320x568双倍字、390x844键盘300像素、568x320横屏；既有搜索/肤色/组合Unicode/失败重试/关闭后完成/图标及高亮保存权限回归"
+    },
+    "analysis": "九个目标及必要关联手写文件flutter analyze --no-pub：No issues found",
+    "format": "仅修改的四个手写Dart文件dart format通过",
+    "diffCheck": "git diff --check通过"
+  },
+  "limits": [
+    "未新增Android/iOS真机帧率、系统字形及在线双端验收；自动化验证惰性挂载/局部更新和交互，不宣称具体设备帧率",
+    "屏幕或键盘导致正文极低时仍沿用紧凑布局规则隐藏分类栏",
+    "表情目录与原生Unicode保存协议未变；最近记录及肤色仍仅进程内保留",
+    "41块状态统计仍为13/13/1/14，未修改Schema、FRB或协同接口"
+  ],
+  "followUpDeviceVerification": "emoji-tab-scroll-android-20261019.json"
+}

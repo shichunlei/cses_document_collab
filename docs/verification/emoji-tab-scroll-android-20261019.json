@@ -1,0 +1,144 @@
+{
+  "date": "2026-10-19",
+  "device": {
+    "model": "HONOR X70 / MTN-AN00",
+    "android": "16 / API 36",
+    "pixels": "1200x2640",
+    "devicePixelRatio": 3.25,
+    "renderRateHz": 60,
+    "mode": "profile"
+  },
+  "versions": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.21",
+    "desktopDeclaration": "0.11.21",
+    "yarnLock": "0.11.21",
+    "installed": "0.11.17",
+    "pnpmLock": "0.2.78",
+    "inspection": "本轮重新查询配置仓库latest并复核声明/锁定/安装，读取两版随包技能/迁移与Callout选择实现；无Schema、依赖或原生接口升级"
+  },
+  "measurement": {
+    "binding": "普通WidgetsFlutterBinding，EMOJI_MANUAL_PERF=true",
+    "input": "Android系统input触摸，14次向上和14次向下甩动、4轮全部↔旗帜远距切换、4轮Tab横向往返",
+    "timing": "真实FrameTiming微秒；每段开始/结束均等待2.1秒刷新引擎批量报告；截图不在采样窗口内",
+    "budgetDefinition": "UI构建或栅格任一阶段超过1000/60毫秒的帧；两个阶段并行，不累加。此比例不等同于SurfaceFlinger实际丢帧率",
+    "coldCache": "未清系统字体/着色器缓存；不是严格物理冷启动基准"
+  },
+  "changes": [
+    "表情格改为借用父级Material的InkResponse，保留点击/焦点/语义/选中边框/长按名称，减少独立按钮状态及Material开销",
+    "远距超过两屏时淡出90毫秒，在透明状态布局目标附近，再滑入300毫秒及淡入180毫秒；短距直接300毫秒滚动，同一完整列表不筛类目",
+    "新点击/拖动/搜索/关闭使旧任务失效，中断恢复不透明度；过渡中忽略表情提交，滚动接管仍可用"
+  ],
+  "beforeTransition": {
+    "native_touch_scroll": {
+      "frames": 1310,
+      "meanBuildMs": 1.92,
+      "p90BuildMs": 5.001,
+      "p99BuildMs": 9.15,
+      "maxBuildMs": 11.099,
+      "meanRasterMs": 3.685,
+      "p99RasterMs": 12.706,
+      "maxRasterMs": 47.927,
+      "overBudgetFrames": 5,
+      "overBudgetPercent": 0.382
+    },
+    "native_touch_distant_tabs": {
+      "frames": 685,
+      "meanBuildMs": 9.472,
+      "p90BuildMs": 28.08,
+      "p99BuildMs": 66.405,
+      "maxBuildMs": 84.813,
+      "meanRasterMs": 2.954,
+      "p99RasterMs": 18.915,
+      "maxRasterMs": 37.07,
+      "overBudgetFrames": 96,
+      "overBudgetPercent": 14.015
+    },
+    "native_touch_tab_bar": {
+      "frames": 97,
+      "meanBuildMs": 0.733,
+      "p90BuildMs": 1.103,
+      "p99BuildMs": 2.895,
+      "maxBuildMs": 3.137,
+      "meanRasterMs": 2.946,
+      "p99RasterMs": 5.433,
+      "maxRasterMs": 6.163,
+      "overBudgetFrames": 0,
+      "overBudgetPercent": 0.0
+    }
+  },
+  "afterTransition": {
+    "native_touch_scroll": {
+      "frames": 1307,
+      "meanBuildMs": 1.883,
+      "p90BuildMs": 4.89,
+      "p99BuildMs": 9.37,
+      "maxBuildMs": 10.981,
+      "meanRasterMs": 3.689,
+      "p99RasterMs": 13.351,
+      "maxRasterMs": 45.792,
+      "overBudgetFrames": 4,
+      "overBudgetPercent": 0.306
+    },
+    "native_touch_distant_tabs": {
+      "frames": 595,
+      "meanBuildMs": 2.134,
+      "p90BuildMs": 2.593,
+      "p99BuildMs": 42.123,
+      "maxBuildMs": 63.776,
+      "meanRasterMs": 4.21,
+      "p99RasterMs": 7.95,
+      "maxRasterMs": 25.545,
+      "overBudgetFrames": 8,
+      "overBudgetPercent": 1.345
+    },
+    "native_touch_tab_bar": {
+      "frames": 100,
+      "meanBuildMs": 0.602,
+      "p90BuildMs": 0.936,
+      "p99BuildMs": 1.314,
+      "maxBuildMs": 1.442,
+      "meanRasterMs": 3.251,
+      "p99RasterMs": 6.191,
+      "maxRasterMs": 7.351,
+      "overBudgetFrames": 0,
+      "overBudgetPercent": 0.0
+    }
+  },
+  "diagnosis": {
+    "sampling": "最初默认fadePointers出帧不适合测流畅度，未用于本结论；benchmarkLive自动化仍保留工具开销，最终结论以独立系统触摸采样为准",
+    "cpu": "原生远距切换4521个CPU采样中，RenderSliverFixedExtentBoxAdaptor.performLayout约1459个包含样本；包含分配、挂载和卸载，支持限制连续行创建的修正",
+    "remaining": "远距8次跳转仍有8个超预算帧，一次性目标布局长帧未完全消除；布局安排在淡出期间，不宣称零长帧"
+  },
+  "verification": {
+    "widgetTests": {
+      "files": 6,
+      "passed": 105,
+      "coverage": "原有保存/只读/迟到结果、搜索/肤色/组合Unicode、布局，以及联动/快速切换/拖动接管/关闭；新增过渡中点击不保存及结束后完全可见"
+    },
+    "analysis": "4个本轮目标文件flutter analyze：No issues found",
+    "builds": "最终profile组件启动、正常Demo debug APK构建及覆盖安装通过",
+    "scope": "实际共用底部弹窗和选择器，隔离本地回调；不登录、不进入在线文档，不验证头部业务接口或完整在线编辑器背景负载"
+  },
+  "limits": [
+    "仅此Android设备与60Hz，iOS/其他刷新率未验收",
+    "首次显示新表情字体或远距目标布局仍可能出现单次长帧",
+    "不改变41块及13/13/1/14统计或宣称其他BlockCraft版本差异已完成适配"
+  ],
+  "artifacts": {
+    "frames": "emoji-tab-scroll-android-20261019-frames.json",
+    "screenshot": "screenshots/emoji-tabs-android-20261019.png"
+  },
+  "applicationRestore": {
+    "beforeFiles": 9,
+    "afterFiles": 9,
+    "unchangedDataFiles": 8,
+    "missingDataFiles": 0,
+    "changedDataFiles": 0,
+    "excludedInstallationMarker": "files/profileInstalled",
+    "markerSource": "androidx.profileinstaller 1.4.0 ProfileVerifier.class",
+    "restoreInstall": "adb install -r",
+    "normalTarget": "lib/main.dart",
+    "normalApplicationRestored": true
+  }
+}

@@ -270,11 +270,16 @@ void main() {
           .enabled,
       isFalse,
     );
+    final tabBar = find.byKey(const ValueKey('emoji-categories'));
     expect(
       tester
-          .widget<ChoiceChip>(find.widgetWithText(ChoiceChip, '自然与生活'))
-          .onSelected,
-      isNull,
+          .widget<IgnorePointer>(
+            find
+                .ancestor(of: tabBar, matching: find.byType(IgnorePointer))
+                .first,
+          )
+          .ignoring,
+      isTrue,
     );
     expect(writes, 0);
     await tester.pumpWidget(
@@ -291,7 +296,11 @@ void main() {
         ),
       ),
     );
-    await tester.tap(find.widgetWithText(ChoiceChip, '自然与生活'));
+    final nature = find.byKey(const ValueKey('emoji-category-nature'));
+    await tester.ensureVisible(nature);
+    await tester.tap(nature);
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const ValueKey('emoji-search')), '幼苗');
     await tester.pumpAndSettle();
     expect(find.byKey(const ValueKey('emoji-🌱')), findsOneWidget);
     expect(writes, 0);
