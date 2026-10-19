@@ -9,11 +9,7 @@ import 'package:flutter/widgets.dart';
 final class CollabMeetingReference {
   /// [meetingId] 为业务会议稳定身份，[title] 为共享标题，[number] 为共享编号。
   /// 标题与编号默认空；包在插入前校验ID最多512 UTF-8字节、标题2000/编号256 UTF-16单元。
-  const CollabMeetingReference({
-    required this.meetingId,
-    this.title = '',
-    this.number = '',
-  });
+  const CollabMeetingReference({required this.meetingId, this.title = '', this.number = ''});
 
   /// 必填业务身份；不能用标题或编号代替。
   final String meetingId;
@@ -37,7 +33,4 @@ final class CollabMeetingReference {
 /// // 将null替换为宿主页面选择或创建成功后的CollabMeetingReference。
 /// ```
 typedef CollabMeetingReferencePicker =
-    Future<CollabMeetingReference?> Function(
-      BuildContext context, {
-      required ValueListenable<bool> canEdit,
-    });
+    Future<CollabMeetingReference?> Function(BuildContext context, {required ValueListenable<bool> canEdit});

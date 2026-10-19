@@ -22,10 +22,7 @@ final class CollabImageCaption {
 
   /// 从节点属性 [json] 恢复强类型；id/text 缺失或类型错误抛出 TypeError。
   factory CollabImageCaption.fromJson(Map<String, dynamic> json) =>
-      CollabImageCaption(
-        id: json['id'] as String,
-        text: json['text'] as String,
-      );
+      CollabImageCaption(id: json['id'] as String, text: json['text'] as String);
 
   /// 输出节点属性所需 Map，不包含原始富文本或任何凭证。
   Map<String, dynamic> toJson() => {'id': id, 'text': text};
@@ -36,8 +33,7 @@ final class CollabImageCaption {
 
   /// 与 [other] 比较题注投影，用于检测本地事务和远端属性变化。
   @override
-  bool operator ==(Object other) =>
-      other is CollabImageCaption && other.id == id && other.text == text;
+  bool operator ==(Object other) => other is CollabImageCaption && other.id == id && other.text == text;
 }
 
 /// 正式图片的布局与有序题注投影；图片 URL 和对齐由所属块持有。
@@ -91,9 +87,7 @@ final class CollabImage {
     rotation: (json['rotation'] as num?)?.toDouble(),
     captions: List.unmodifiable(
       (json['captions'] as List? ?? const []).map(
-        (value) => CollabImageCaption.fromJson(
-          Map<String, dynamic>.from(value as Map),
-        ),
+        (value) => CollabImageCaption.fromJson(Map<String, dynamic>.from(value as Map)),
       ),
     ),
   );
@@ -111,9 +105,7 @@ final class CollabImage {
   /// 根据 [availableWidth]（逻辑像素）返回显示宽高，遵循比例优先、旧像素尺寸兼容规则。
   /// 宽度百分比显示限制为 0.1～100，旧尺寸按比例缩小；不会修改投影或触发网络。
   (double, double) resolveSize(double availableWidth) {
-    final available = availableWidth.isFinite && availableWidth > 0
-        ? availableWidth
-        : 1.0;
+    final available = availableWidth.isFinite && availableWidth > 0 ? availableWidth : 1.0;
     final ratio = _positive(aspectRatio) ?? 4 / 3;
     final wr = _positive(widthRatio);
     final oldWidth = _positive(width);
@@ -127,19 +119,11 @@ final class CollabImage {
   }
 
   /// [value] 为有限正数时返回原值，否则返回 null，供显示安全回退使用。
-  static double? _positive(double? value) =>
-      value != null && value.isFinite && value > 0 ? value : null;
+  static double? _positive(double? value) => value != null && value.isFinite && value > 0 ? value : null;
 
   /// 按全部布局属性和有序题注计算值哈希。
   @override
-  int get hashCode => Object.hash(
-    widthRatio,
-    aspectRatio,
-    width,
-    height,
-    rotation,
-    Object.hashAll(captions),
-  );
+  int get hashCode => Object.hash(widthRatio, aspectRatio, width, height, rotation, Object.hashAll(captions));
 
   /// 与 [other] 比较完整图片投影，确保仅尺寸或题注变化也会触发远端刷新。
   @override
@@ -151,8 +135,5 @@ final class CollabImage {
       height == other.height &&
       rotation == other.rotation &&
       captions.length == other.captions.length &&
-      List.generate(
-        captions.length,
-        (i) => captions[i] == other.captions[i],
-      ).every((v) => v);
+      List.generate(captions.length, (i) => captions[i] == other.captions[i]).every((v) => v);
 }

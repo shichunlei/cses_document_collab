@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
-import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/model/collab_mermaid_options.dart';
+import 'package:cses_document_collab/src/model/collab_resource.dart';
 
 /// 桌面绘图容器；源码由唯一 mermaid-textarea 子节点持有。
 const collabMermaidType = 'mermaid';
@@ -21,14 +21,9 @@ const collabMermaidModeAttribute = 'cses_mermaid_mode';
 
 /// 从 [attributes] 读取原始 mode；[edited] 表示本次明确修改此字段。
 /// 未知值保留于投影，只有用户主动选择模式时才写入新的有效值。
-CollabResource readCollabMermaidProperties(
-  Map<String, dynamic> attributes, {
-  bool edited = false,
-}) {
+CollabResource readCollabMermaidProperties(Map<String, dynamic> attributes, {bool edited = false}) {
   final raw = attributes[collabResourceAttribute];
-  final base = raw is Map
-      ? CollabResource.fromJson(Map<String, dynamic>.from(raw))
-      : const CollabResource();
+  final base = raw is Map ? CollabResource.fromJson(Map<String, dynamic>.from(raw)) : const CollabResource();
   final field = attributes[collabMermaidModeAttribute];
   if (field is! String) return base;
   final wrapper = jsonDecode(field) as Map<String, dynamic>;
@@ -38,10 +33,7 @@ CollabResource readCollabMermaidProperties(
   } else {
     values.remove('mode');
   }
-  return CollabResource.fromValues(
-    values,
-    edits: edited ? jsonEncode({'mode': wrapper}) : null,
-  );
+  return CollabResource.fromValues(values, edits: edited ? jsonEncode({'mode': wrapper}) : null);
 }
 
 /// 将借用的 [resource] 投影为原始快照及可撤销的 mode 字段。
@@ -51,17 +43,12 @@ Map<String, dynamic> collabMermaidNodeAttributes(CollabResource resource) => {
 };
 
 /// 解析借用 [node] 的共享视图，未知或缺失只作展示回落。
-CollabMermaidView collabMermaidView(Node node) => CollabMermaidView.parse(
-  readCollabMermaidProperties(node.attributes).values['mode'],
-);
+CollabMermaidView collabMermaidView(Node node) =>
+    CollabMermaidView.parse(readCollabMermaidProperties(node.attributes).values['mode']);
 
 /// 对借用 [editor] 中稳定 [id] 的绘图切换 [view]，不修改源码或未知属性。
 /// 只读、关闭、删除、无变化返回 false；独立事务可撤销，失败透传。
-Future<bool> changeCollabMermaidView(
-  EditorState editor,
-  String id,
-  CollabMermaidView view,
-) async {
+Future<bool> changeCollabMermaidView(EditorState editor, String id, CollabMermaidView view) async {
   if (editor.isDisposed || !editor.editable) return false;
   final node = findCollabMermaid(editor, id);
   if (collabMermaidSource(node) == null) return false;
@@ -84,8 +71,7 @@ Node? findCollabMermaid(EditorState editor, String id) {
 
   /// 在借用 [node] 子树递归查找，不保留路径引用。
   Node? visit(Node node) {
-    if (node.type == collabMermaidType &&
-        (node.attributes['cses_collab_block_id'] ?? node.id) == id) {
+    if (node.type == collabMermaidType && (node.attributes['cses_collab_block_id'] ?? node.id) == id) {
       return node;
     }
     for (final child in node.children) {
@@ -121,9 +107,7 @@ Future<bool> changeCollabMermaid(
   CollabMermaidView? view,
   String? expectedModeField,
 }) async {
-  if (editor.isDisposed ||
-      !editor.editable ||
-      source.length > collabMermaidMaxLength) {
+  if (editor.isDisposed || !editor.editable || source.length > collabMermaidMaxLength) {
     return false;
   }
   final container = findCollabMermaid(editor, id);
@@ -131,16 +115,12 @@ Future<bool> changeCollabMermaid(
   if (node == null ||
       node.id != expectedSourceId ||
       jsonEncode(node.delta!.toJson()) != expectedDelta ||
-      (expectedModeField != null &&
-          container!.attributes[collabMermaidModeAttribute] !=
-              expectedModeField)) {
+      (expectedModeField != null && container!.attributes[collabMermaidModeAttribute] != expectedModeField)) {
     return false;
   }
   final modeField = view == null ? null : jsonEncode({'value': view.value});
   final textChanged = node.delta!.toPlainText() != source;
-  final modeChanged =
-      modeField != null &&
-      container!.attributes[collabMermaidModeAttribute] != modeField;
+  final modeChanged = modeField != null && container!.attributes[collabMermaidModeAttribute] != modeField;
   if (!textChanged && !modeChanged) return false;
   if (editor.undoManager.undoStack.isNonEmpty) {
     editor.undoManager.undoStack.last.seal();
@@ -149,18 +129,12 @@ Future<bool> changeCollabMermaid(
   final patch = before.diff(Delta()..insert(source));
   final transaction = editor.transaction;
   if (textChanged) {
-    transaction.add(
-      UpdateTextOperation(node.path, patch, patch.invert(before)),
-    );
+    transaction.add(UpdateTextOperation(node.path, patch, patch.invert(before)));
   }
   if (modeChanged) {
     transaction.updateNode(container, {collabMermaidModeAttribute: modeField});
   }
-  await editor.apply(
-    transaction,
-    withUpdateSelection: false,
-    skipHistoryDebounce: true,
-  );
+  await editor.apply(transaction, withUpdateSelection: false, skipHistoryDebounce: true);
   return true;
 }
 
@@ -174,16 +148,11 @@ Future<Selection?> insertCollabMermaid(
   String source, {
   CollabMermaidView view = CollabMermaidView.graph,
 }) async {
-  if (editor.isDisposed ||
-      !editor.editable ||
-      source.length > collabMermaidMaxLength ||
-      selection.start.path.isEmpty) {
+  if (editor.isDisposed || !editor.editable || source.length > collabMermaidMaxLength || selection.start.path.isEmpty) {
     return null;
   }
   final anchor = editor.getNodeAtPath(selection.start.path);
-  if (anchor == null ||
-      anchor.delta == null ||
-      !const {'page', 'callout'}.contains(anchor.parent?.type)) {
+  if (anchor == null || anchor.delta == null || !const {'page', 'callout'}.contains(anchor.parent?.type)) {
     return null;
   }
   final text = Node(
@@ -194,16 +163,13 @@ Future<Selection?> insertCollabMermaid(
   final diagram = Node(type: collabMermaidType, children: [text]);
   diagram.updateAttributes({
     'cses_collab_block_id': diagram.id,
-    ...collabMermaidNodeAttributes(
-      CollabResource.fromValues({'mode': view.value}),
-    ),
+    ...collabMermaidNodeAttributes(CollabResource.fromValues({'mode': view.value})),
   });
   final empty = anchor.delta!.toPlainText().isEmpty;
   final path = empty ? anchor.path : anchor.path.next;
   final landing = paragraphNode();
   landing.updateAttributes({'cses_collab_block_id': landing.id});
-  final transaction = editor.transaction
-    ..insertNodes(path, [diagram, landing], deepCopy: false);
+  final transaction = editor.transaction..insertNodes(path, [diagram, landing], deepCopy: false);
   if (empty) transaction.deleteNode(anchor);
   if (editor.undoManager.undoStack.isNonEmpty) {
     editor.undoManager.undoStack.last.seal();
@@ -217,8 +183,7 @@ Future<Selection?> insertCollabMermaid(
 Future<void> deleteCollabMermaid(EditorState editor, String id) async {
   if (editor.isDisposed || !editor.editable) return;
   final node = findCollabMermaid(editor, id);
-  if (collabMermaidSource(node) == null ||
-      !const {'page', 'callout'}.contains(node?.parent?.type)) {
+  if (collabMermaidSource(node) == null || !const {'page', 'callout'}.contains(node?.parent?.type)) {
     return;
   }
   final path = node!.path;
@@ -233,9 +198,5 @@ Future<void> deleteCollabMermaid(EditorState editor, String id) async {
   if (editor.undoManager.undoStack.isNonEmpty) {
     editor.undoManager.undoStack.last.seal();
   }
-  await editor.apply(
-    transaction,
-    withUpdateSelection: false,
-    skipHistoryDebounce: true,
-  );
+  await editor.apply(transaction, withUpdateSelection: false, skipHistoryDebounce: true);
 }

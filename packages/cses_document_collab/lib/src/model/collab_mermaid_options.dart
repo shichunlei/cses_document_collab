@@ -19,8 +19,7 @@ enum CollabMermaidView {
   final String label;
 
   /// 解析 [value]；缺失或未知值只在展示时回落为组合视图，不改写原字段。
-  static CollabMermaidView parse(Object? value) =>
-      values.where((item) => item.value == value).firstOrNull ?? both;
+  static CollabMermaidView parse(Object? value) => values.where((item) => item.value == value).firstOrNull ?? both;
 }
 
 /// 随桌面发布的源码示例；仅保存纯文本，不持有编辑器。
@@ -80,12 +79,7 @@ const collabMermaidExamples = [
         '\tBankAccount : +deposit(amount)\n'
         '\tBankAccount : +withdrawal(amount)',
   ),
-  CollabMermaidExample(
-    'mindmap',
-    '思维导图',
-    'mindmap\n',
-    'Root\n\tA[A]\n\t:::urgent large\n\tB(B)\n\tC',
-  ),
+  CollabMermaidExample('mindmap', '思维导图', 'mindmap\n', 'Root\n\tA[A]\n\t:::urgent large\n\tB(B)\n\tC'),
   CollabMermaidExample(
     'timeline',
     '时间线图',

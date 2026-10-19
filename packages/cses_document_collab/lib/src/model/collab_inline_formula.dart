@@ -49,9 +49,7 @@ final class CollabInlineFormulaTarget {
   /// 在借用 [state] 中重新定位；关闭、删除、文本位置变化或对象已消失返回 null。
   Node? resolve(EditorState state) {
     final node = findCollabInlineTextNode(state, blockId);
-    return node?.delta?.toPlainText() == plainText &&
-            node != null &&
-            collabInlineLatexAt(node, offset) != null
+    return node?.delta?.toPlainText() == plainText && node != null && collabInlineLatexAt(node, offset) != null
         ? node
         : null;
   }
@@ -80,15 +78,11 @@ Node? findCollabInlineTextNode(EditorState state, String id) {
 String? collabInlineLatexAt(Node node, int offset) {
   if (offset < 0) return null;
   var cursor = 0;
-  for (final operation
-      in node.delta?.whereType<TextInsert>() ?? <TextInsert>[]) {
+  for (final operation in node.delta?.whereType<TextInsert>() ?? <TextInsert>[]) {
     final relative = offset - cursor;
     final latex = operation.attributes?[collabInlineLatexAttribute];
     if (relative >= 0 && relative < operation.length) {
-      return operation.text[relative] == collabInlineFormulaCharacter &&
-              latex is String
-          ? latex
-          : null;
+      return operation.text[relative] == collabInlineFormulaCharacter && latex is String ? latex : null;
     }
     cursor += operation.length;
   }
@@ -98,11 +92,7 @@ String? collabInlineLatexAt(Node node, int offset) {
 /// 在借用 [state] 的同块 [selection] 位置插入 [latex]，范围选区被原子对象替换。
 /// 空/超长原文、跨块、代码块、只读或失效位置返回 null；返回公式后的光标，不恢复焦点。
 /// 命令独立记录历史，执行前按稳定块身份核对定位文字与被替换片段。
-Future<Selection?> insertCollabInlineFormula(
-  EditorState state,
-  Selection selection,
-  String latex,
-) async {
+Future<Selection?> insertCollabInlineFormula(EditorState state, Selection selection, String latex) async {
   if (state.isDisposed ||
       !state.editable ||
       latex.isEmpty ||
@@ -117,18 +107,8 @@ Future<Selection?> insertCollabInlineFormula(
   final start = normalized.start.offset;
   final end = normalized.end.offset;
   if (start < 0 || end < start || end > delta.length) return null;
-  final after = Delta()
-    ..insert(
-      collabInlineFormulaCharacter,
-      attributes: {collabInlineLatexAttribute: latex},
-    );
-  await applyCollabInlineCommand(
-    state,
-    node,
-    start,
-    delta.slice(start, end),
-    after,
-  );
+  final after = Delta()..insert(collabInlineFormulaCharacter, attributes: {collabInlineLatexAttribute: latex});
+  await applyCollabInlineCommand(state, node, start, delta.slice(start, end), after);
   return Selection.single(path: node.path, startOffset: start + 1);
 }
 
@@ -141,9 +121,7 @@ Future<bool> changeCollabInlineFormula(
   String latex, {
   required String expectedLatex,
 }) async {
-  if (state.isDisposed ||
-      !state.editable ||
-      latex.length > collabFormulaMaxLength) {
+  if (state.isDisposed || !state.editable || latex.length > collabFormulaMaxLength) {
     return false;
   }
   final node = target.resolve(state);
@@ -184,13 +162,7 @@ Future<bool> changeCollabInlineFormula(
 ///   }
 /// }
 /// ```
-Future<void> applyCollabInlineCommand(
-  EditorState state,
-  Node node,
-  int offset,
-  Delta before,
-  Delta after,
-) async {
+Future<void> applyCollabInlineCommand(EditorState state, Node node, int offset, Delta before, Delta after) async {
   final base = node.delta!;
   final next = base.compose(
     Delta()
@@ -201,13 +173,8 @@ Future<void> applyCollabInlineCommand(
   final id = node.attributes['cses_collab_block_id'] as String? ?? node.id;
 
   /// 编码 [text] 对应定位文本以及 [from]/[to] 的局部正反操作。
-  String command(String text, Delta from, Delta to) => jsonEncode({
-    'id': id,
-    'offset': offset,
-    'text': text,
-    'from': from.toJson(),
-    'to': to.toJson(),
-  });
+  String command(String text, Delta from, Delta to) =>
+      jsonEncode({'id': id, 'offset': offset, 'text': text, 'from': from.toJson(), 'to': to.toJson()});
 
   if (state.undoManager.undoStack.isNonEmpty) {
     state.undoManager.undoStack.last.seal();
@@ -216,20 +183,8 @@ Future<void> applyCollabInlineCommand(
     state.transaction..add(
       UpdateOperation(
         node.path,
-        {
-          collabInlineFormulaCommandAttribute: command(
-            base.toPlainText(),
-            before,
-            after,
-          ),
-        },
-        {
-          collabInlineFormulaCommandAttribute: command(
-            next.toPlainText(),
-            after,
-            before,
-          ),
-        },
+        {collabInlineFormulaCommandAttribute: command(base.toPlainText(), before, after)},
+        {collabInlineFormulaCommandAttribute: command(next.toPlainText(), after, before)},
       ),
     ),
     withUpdateSelection: false,
@@ -240,17 +195,11 @@ Future<void> applyCollabInlineCommand(
 /// 在借用 [state] 的 [transaction] 执行前解析公式及四类提及对象命令及撤销/重做。
 /// 按稳定块 ID 重定位；文本或目标内容被远端改动、权限撤销时丢弃陈旧操作，保留其他历史。
 /// 仅替换局部区间并保留当前其他格式，不执行事务、不拥有编辑器。
-void resolveCollabInlineFormulaCommands(
-  EditorState state,
-  Transaction transaction,
-) {
+void resolveCollabInlineFormulaCommands(EditorState state, Transaction transaction) {
   final result = <Operation>[];
   var hasCommand = false;
   for (final operation in transaction.operations) {
-    if (operation is! UpdateOperation ||
-        !operation.attributes.containsKey(
-          collabInlineFormulaCommandAttribute,
-        )) {
+    if (operation is! UpdateOperation || !operation.attributes.containsKey(collabInlineFormulaCommandAttribute)) {
       result.add(operation);
       continue;
     }
@@ -283,8 +232,7 @@ void resolveCollabInlineFormulaCommands(
         node.path,
         {collabInlineFormulaCommandAttribute: raw, 'delta': next.toJson()},
         {
-          collabInlineFormulaCommandAttribute:
-              operation.oldAttributes[collabInlineFormulaCommandAttribute],
+          collabInlineFormulaCommandAttribute: operation.oldAttributes[collabInlineFormulaCommandAttribute],
           'delta': base.toJson(),
         },
       ),

@@ -92,5 +92,4 @@ final class CollabMeetingCardData {
 /// final services = CollabHostServices(loadMeetingCard: (meetingId) async =>
 ///   CollabMeetingCardData(meetingId: meetingId, state: CollabMeetingCardState.completed));
 /// ```
-typedef CollabMeetingCardLoader =
-    Future<CollabMeetingCardData?> Function(String meetingId);
+typedef CollabMeetingCardLoader = Future<CollabMeetingCardData?> Function(String meetingId);

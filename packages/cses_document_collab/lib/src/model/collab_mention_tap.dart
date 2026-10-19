@@ -35,12 +35,8 @@ final class CollabMentionTap {
   /// 不含移动端私有投影键，不从业务详情接口拼装。
   /// 属性仅允许JSON值；空ID、非字符串Map键或非JSON值抛ArgumentError。
   /// 构造时深复制并冻结属性，不持有调用方可变集合。
-  CollabMentionTap({
-    required this.type,
-    required this.id,
-    required this.name,
-    required Map<String, Object?> attributes,
-  }) : attributes = _freezeAttribute(attributes) as Map<String, Object?> {
+  CollabMentionTap({required this.type, required this.id, required this.name, required Map<String, Object?> attributes})
+    : attributes = _freezeAttribute(attributes) as Map<String, Object?> {
     if (id.isEmpty) throw ArgumentError.value(id, 'id', '提及身份不可为空');
   }
 
@@ -58,20 +54,14 @@ final class CollabMentionTap {
 
   /// 返回可直接JSON编码的type/id/name/attributes对象，type使用user/meeting/task/doc字符串。
   /// 每次返回独立可变的顶层Map；attributes复用已深冻结的原始快照，保留空名、历史键及嵌套值。
-  Map<String, Object?> toJson() => {
-    'type': type.name,
-    'id': id,
-    'name': name,
-    'attributes': attributes,
-  };
+  Map<String, Object?> toJson() => {'type': type.name, 'id': id, 'name': name, 'attributes': attributes};
 }
 
 /// 宿主接管提及点击；[mention] 为独立、深只读的原始快照。
 /// 同步返回或等待Future均可；详情跳转应返回直到详情关闭的Future，期间暂停正文输入。
 /// 配置后替代内置面板，预览也会调用；异常由编辑器报告并提示，不再补开内置面板。
 /// 业务跳转、路由生命周期、权限及跨账号异步失效由宿主处理；编辑器不释放宿主资源。
-typedef CollabMentionTapCallback =
-    FutureOr<void> Function(CollabMentionTap mention);
+typedef CollabMentionTapCallback = FutureOr<void> Function(CollabMentionTap mention);
 
 /// 深复制JSON属性 [value]；[ancestors] 用于递归检测环，调用方省略以创建独立遍历。
 /// 嵌套集合冻结，循环集合、非法键、非有限数及其他对象抛ArgumentError。
@@ -85,9 +75,7 @@ Object? _freezeAttribute(Object? value, {Set<Object>? ancestors}) {
   if (!active.add(value)) throw ArgumentError('提及属性不可包含循环集合');
   try {
     if (value is List) {
-      return List<Object?>.unmodifiable(
-        value.map((child) => _freezeAttribute(child, ancestors: active)),
-      );
+      return List<Object?>.unmodifiable(value.map((child) => _freezeAttribute(child, ancestors: active)));
     }
     return Map<String, Object?>.unmodifiable(
       (value as Map).map((key, child) {

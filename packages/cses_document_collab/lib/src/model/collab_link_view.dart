@@ -30,12 +30,7 @@ const collabLinkViewCommand = 'cses_link_view_command';
 /// mixed body text is excluded so conversion cannot silently discard it.
 String? collabLinkUrl(Node node) {
   if (node.children.isNotEmpty) return null;
-  if (const {
-    'bookmark',
-    'embed',
-    'figma-embed',
-    'juejin-embed',
-  }.contains(node.type)) {
+  if (const {'bookmark', 'embed', 'figma-embed', 'juejin-embed'}.contains(node.type)) {
     final url = node.attributes['url'];
     return url is String && isCollabResourceUrl(node.type, url) ? url : null;
   }
@@ -44,9 +39,7 @@ String? collabLinkUrl(Node node) {
   for (final op in node.delta!) {
     if (op is! TextInsert || op.text.isEmpty) return null;
     final href = op.attributes?[AppFlowyRichTextKeys.href];
-    if (href is! String ||
-        !isCollabResourceUrl('bookmark', href) ||
-        (url != null && href != url)) {
+    if (href is! String || !isCollabResourceUrl('bookmark', href) || (url != null && href != url)) {
       return null;
     }
     url = href;
@@ -91,12 +84,7 @@ Node? findCollabLinkNode(EditorState state, String id) {
 /// callout leaf children convert; readonly/disposed, detached or unchanged targets
 /// return false. URL and native extensions survive through the adapter's existing
 /// replacement identity chain. Errors propagate after the apply future completes.
-Future<bool> changeCollabLinkView(
-  EditorState state,
-  Node source,
-  CollabLinkView view, {
-  String? fingerprint,
-}) async {
+Future<bool> changeCollabLinkView(EditorState state, Node source, CollabLinkView view, {String? fingerprint}) async {
   if (state.isDisposed ||
       !state.editable ||
       !const {'page', 'callout'}.contains(source.parent?.type) ||
@@ -117,18 +105,12 @@ Future<bool> changeCollabLinkView(
     CollabLinkView.embed => 'embed',
   };
   if (view == CollabLinkView.inline) {
-    attributes['delta'] =
-        (Delta()..insert(url, attributes: {AppFlowyRichTextKeys.href: url}))
-            .toJson();
+    attributes['delta'] = (Delta()..insert(url, attributes: {AppFlowyRichTextKeys.href: url})).toJson();
   } else {
     attributes['url'] = url;
   }
   final target = source.copyWith(type: type, attributes: attributes);
-  final command = {
-    'id': id,
-    'before': collabLinkFingerprint(source),
-    'after': collabLinkFingerprint(target),
-  };
+  final command = {'id': id, 'before': collabLinkFingerprint(source), 'after': collabLinkFingerprint(target)};
   if (state.undoManager.undoStack.isNonEmpty) {
     state.undoManager.undoStack.last.seal();
   }
@@ -160,18 +142,13 @@ Future<bool> changeCollabLinkView(
 /// [resolveId] follows the adapter-owned replacement identity chain. Deleted,
 /// modified or readonly targets atomically discard the history operation; remote
 /// reorders are resolved by current identity rather than an old document path.
-void resolveCollabLinkViewCommand(
-  EditorState state,
-  Transaction transaction,
-  String Function(String id) resolveId,
-) {
+void resolveCollabLinkViewCommand(EditorState state, Transaction transaction, String Function(String id) resolveId) {
   final marker = transaction.operations
       .whereType<UpdateOperation>()
       .where((op) => op.attributes[collabLinkViewCommand] is String)
       .firstOrNull;
   if (marker == null) return;
-  final command =
-      jsonDecode(marker.attributes[collabLinkViewCommand] as String) as Map;
+  final command = jsonDecode(marker.attributes[collabLinkViewCommand] as String) as Map;
   final node = findCollabLinkNode(state, resolveId(command['id'] as String));
   final expected = command[command['forward'] == true ? 'before' : 'after'];
   if (!state.editable ||
@@ -186,18 +163,12 @@ void resolveCollabLinkViewCommand(
     if (op is DeleteOperation) return DeleteOperation(node.path, [node]);
     if (op is InsertOperation) {
       return InsertOperation(node.path, [
-        for (final target in op.nodes)
-          target.copyWith(
-            attributes: {...target.attributes, 'cses_collab_block_id': id},
-          ),
+        for (final target in op.nodes) target.copyWith(attributes: {...target.attributes, 'cses_collab_block_id': id}),
       ]);
     }
     if (op is UpdateOperation) return op.copyWith(path: node.path);
     return op;
   }).toList();
   transaction.beforeSelection = state.selection;
-  transaction.afterSelection = Selection.single(
-    path: node.path,
-    startOffset: 0,
-  );
+  transaction.afterSelection = Selection.single(path: node.path, startOffset: 0);
 }

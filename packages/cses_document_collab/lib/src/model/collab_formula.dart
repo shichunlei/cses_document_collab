@@ -14,14 +14,9 @@ const collabFormulaMaxLength = 20000;
 
 /// 从借用 [attributes] 读取公式属性；[edited] 为 true 时只生成 latex 补丁。
 /// 展示回落不写权威数据，缺失与显式 null 在撤销时保持区分。
-CollabResource readCollabFormula(
-  Map<String, dynamic> attributes, {
-  bool edited = false,
-}) {
+CollabResource readCollabFormula(Map<String, dynamic> attributes, {bool edited = false}) {
   final raw = attributes[collabResourceAttribute];
-  final resource = raw is Map
-      ? CollabResource.fromJson(Map<String, dynamic>.from(raw))
-      : const CollabResource();
+  final resource = raw is Map ? CollabResource.fromJson(Map<String, dynamic>.from(raw)) : const CollabResource();
   final field = attributes[collabFormulaAttribute];
   if (field is! String) return resource;
   final wrapper = jsonDecode(field) as Map<String, dynamic>;
@@ -31,10 +26,7 @@ CollabResource readCollabFormula(
   } else {
     values.remove('latex');
   }
-  return CollabResource.fromValues(
-    values,
-    edits: edited ? jsonEncode({'latex': wrapper}) : null,
-  );
+  return CollabResource.fromValues(values, edits: edited ? jsonEncode({'latex': wrapper}) : null);
 }
 
 /// 将 [resource] 的原始公式属性投影为独立可撤销的编辑器字段。
@@ -49,8 +41,7 @@ Node? findCollabFormula(EditorState state, String id) {
 
   /// 递归读取借用 [node]，不保存可能随远端投影失效的引用。
   Node? visit(Node node) {
-    if ((node.attributes['cses_collab_block_id'] ?? node.id) == id &&
-        node.type == collabFormulaType) {
+    if ((node.attributes['cses_collab_block_id'] ?? node.id) == id && node.type == collabFormulaType) {
       return node;
     }
     for (final child in node.children) {
@@ -67,21 +58,12 @@ Node? findCollabFormula(EditorState state, String id) {
 /// [expectedField] 非 null 时拒绝覆盖已经变化的远端属性 wrapper。
 /// 只读、关闭、删除、超过 20000 UTF-16 单元或内容相同返回 false。
 /// 不校验 TeX 方言语法，以便保留桌面可渲染但本地不支持的表达式；事务异常透传。
-Future<bool> changeCollabFormula(
-  EditorState state,
-  String id,
-  String latex, {
-  String? expectedField,
-}) async {
-  if (state.isDisposed ||
-      !state.editable ||
-      latex.length > collabFormulaMaxLength) {
+Future<bool> changeCollabFormula(EditorState state, String id, String latex, {String? expectedField}) async {
+  if (state.isDisposed || !state.editable || latex.length > collabFormulaMaxLength) {
     return false;
   }
   final node = findCollabFormula(state, id);
-  if (node == null ||
-      (expectedField != null &&
-          node.attributes[collabFormulaAttribute] != expectedField)) {
+  if (node == null || (expectedField != null && node.attributes[collabFormulaAttribute] != expectedField)) {
     return false;
   }
   final next = jsonEncode({'value': latex});
@@ -114,33 +96,22 @@ Future<bool> changeCollabFormula(
 /// 在借用 [state] 的保存 [selection] 起点插入 [latex]，返回后置段落光标。
 /// 空正文被替换，非空正文保留；支持根与高亮容器，公式使用独立身份。
 /// 只读、关闭、无效位置或超长表达式返回 null；焦点由面板退场后的调用方恢复。
-Future<Selection?> insertCollabFormula(
-  EditorState state,
-  Selection selection,
-  String latex,
-) async {
-  if (state.isDisposed ||
-      !state.editable ||
-      selection.start.path.isEmpty ||
-      latex.length > collabFormulaMaxLength) {
+Future<Selection?> insertCollabFormula(EditorState state, Selection selection, String latex) async {
+  if (state.isDisposed || !state.editable || selection.start.path.isEmpty || latex.length > collabFormulaMaxLength) {
     return null;
   }
   final source = state.getNodeAtPath(selection.start.path);
-  if (source == null ||
-      !const {'page', 'callout'}.contains(source.parent?.type)) {
+  if (source == null || !const {'page', 'callout'}.contains(source.parent?.type)) {
     return null;
   }
   final formula = Node(
     type: collabFormulaType,
-    attributes: collabFormulaNodeAttributes(
-      CollabResource.fromValues({'latex': latex}),
-    ),
+    attributes: collabFormulaNodeAttributes(CollabResource.fromValues({'latex': latex})),
   );
   formula.updateAttributes({'cses_collab_block_id': formula.id});
   final empty = source.delta?.toPlainText().isEmpty == true;
   final path = empty ? source.path : source.path.next;
-  final transaction = state.transaction
-    ..insertNodes(path, [formula, paragraphNode()], deepCopy: false);
+  final transaction = state.transaction..insertNodes(path, [formula, paragraphNode()], deepCopy: false);
   if (empty) transaction.deleteNode(source);
   if (state.undoManager.undoStack.isNonEmpty) {
     state.undoManager.undoStack.last.seal();

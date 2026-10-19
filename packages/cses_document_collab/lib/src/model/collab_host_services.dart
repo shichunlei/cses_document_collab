@@ -1,24 +1,19 @@
-import 'collab_document_feedback.dart';
-import 'collab_task_card_data.dart';
-import 'collab_meeting_card_data.dart';
-import 'collab_meeting_reference.dart';
 import 'dart:async';
 import 'dart:math';
-import 'collab_mention_tap.dart';
-import 'collab_mention_ui.dart';
-import 'document_metadata.dart';
 
 import 'package:cses_document_collab/src/model/editor_media_upload.dart';
 import 'package:flutter/foundation.dart';
 
+import 'collab_document_feedback.dart';
+import 'collab_meeting_card_data.dart';
+import 'collab_meeting_reference.dart';
+import 'collab_mention_tap.dart';
+import 'collab_mention_ui.dart';
+import 'collab_task_card_data.dart';
+import 'document_metadata.dart';
+
 /// Reports an unexpected failure with its original error and stack trace.
-typedef CollabErrorReporter =
-    void Function(
-      String message,
-      Object error,
-      StackTrace stackTrace,
-      String? tag,
-    );
+typedef CollabErrorReporter = void Function(String message, Object error, StackTrace stackTrace, String? tag);
 
 /// Host integrations used by the single active document, without session globals.
 ///
@@ -73,23 +68,17 @@ class CollabHostServices {
 
   /// 加载[documentId]的初始点赞/评论快照；null使用空状态，不进行网络请求。
   /// 由宿主持有认证与请求，失败可重试；编辑器不释放宿主资源。
-  final FutureOr<CollabDocumentFeedback> Function(String documentId)?
-  loadDocumentFeedback;
+  final FutureOr<CollabDocumentFeedback> Function(String documentId)? loadDocumentFeedback;
 
   /// 点赞入口回调，[documentId]为稳定文档ID，[likes]包含点击前的完整成员和当前用户点赞状态。
   /// 宿主根据likes.isLiked执行点赞/取消，返回确认后的完整快照；返回null表示取消并保留原状态。
   /// 等待期间禁止重复操作，失败保留旧值并报告；业务鉴权、计数和持久化均由宿主负责。
-  final FutureOr<CollabDocumentLikes?> Function(
-    String documentId,
-    CollabDocumentLikes likes,
-  )?
-  onDocumentLike;
+  final FutureOr<CollabDocumentLikes?> Function(String documentId, CollabDocumentLikes likes)? onDocumentLike;
 
   /// 全文评论入口回调，[documentId]为稳定文档ID，[commentCount]为当前非负评论数。
   /// 宿主等待评论页面关闭后返回最新非负数量；null保留原数量，负数作为失败处理。
   /// 点击收起正文键盘且不自动恢复；包不创建评论输入框或写入正文。
-  final FutureOr<int?> Function(String documentId, int commentCount)?
-  onDocumentComment;
+  final FutureOr<int?> Function(String documentId, int commentCount)? onDocumentComment;
 
   /// 借用宿主会议引用流程；宿主持有表单、选择/创建会议页面及业务资源。
   /// null不提供新增会议入口；包不构建默认会议表单，不创建业务会议。
@@ -106,8 +95,7 @@ class CollabHostServices {
   /// 可选会议卡片导航；[meetingId] 为稳定会议ID，[title] 为共享标题，[number] 为共享编号；后两者可为空。
   /// 仅加入/查看会议按钮触发，卡片其他区域不派发；返回直到详情关闭的Future，预览也可打开。
   /// 点击会关闭正文键盘，回调结束后不自动恢复输入焦点；业务鉴权和会议状态由宿主处理。
-  final FutureOr<void> Function(String meetingId, String title, String number)?
-  onMeetingCardTap;
+  final FutureOr<void> Function(String meetingId, String title, String number)? onMeetingCardTap;
 
   /// 可选图片点击回调；[url]是当前图片完整原始地址，保留查询签名、片段及data/blob来源。
   /// 仅图片本体触发，编辑及预览均可用；空链接或null回调不派发，题注与更多菜单不触发。
@@ -143,19 +131,11 @@ class CollabHostServices {
   /// Generate a unique ID; the host is responsible for custom factory uniqueness.
   String newId() =>
       createId?.call() ??
-      List.generate(
-        12,
-        (_) => Random.secure().nextInt(256).toRadixString(16).padLeft(2, '0'),
-      ).join();
+      List.generate(12, (_) => Random.secure().nextInt(256).toRadixString(16).padLeft(2, '0')).join();
 
   /// Forward [message], [error], [stackTrace] and [tag] to the host logger.
   /// Without a logger, retain the full failure in Flutter diagnostic output.
-  void report(
-    String message,
-    Object error,
-    StackTrace stackTrace,
-    String? tag,
-  ) {
+  void report(String message, Object error, StackTrace stackTrace, String? tag) {
     if (onError case final report?) {
       report(message, error, stackTrace, tag);
     } else {
