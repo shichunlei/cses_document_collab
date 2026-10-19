@@ -1281,7 +1281,7 @@ fn schema_attribute(key: &str, formal: bool) -> &str {
 }
 
 /// 在事务之前验证投影身份、父子顺序和块专属约束，失败不会修改共享状态。
-/// Mermaid 使用唯一的纯文本源码子块，容器及源码仅用于正式文档。
+/// Mermaid 使用唯一的纯文本源码子块，容器及源码仅用于正式文档；KR引用同样仅用于正式文档且无正文。
 fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(), String> {
     let by_id: HashMap<_, _> = blocks.iter().map(|b| (b.id.as_str(), b)).collect();
     let mut by_parent = HashMap::<&str, Vec<&CollabBlock>>::new();
@@ -1318,11 +1318,13 @@ fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(
         }
         if matches!(
             block.block_type.as_str(),
-            "divider" | "page-divider" | "formula" | "meeting" | "task"
+            "divider" | "page-divider" | "formula" | "meeting" | "task" | "kr-list"
         ) && (!block.text.is_empty() || !block.segments.is_empty())
         {
             return Err(if block.block_type == "page-divider" {
                 "INVALID_PAGE_DIVIDER: 分页符不能存储正文".into()
+            } else if block.block_type == "kr-list" {
+                "INVALID_KR_LIST: KR引用不能存储正文".into()
             } else if block.block_type == "task" {
                 "INVALID_TASK: 任务卡片不能存储正文".into()
             } else if block.block_type == "meeting" {
@@ -1339,7 +1341,7 @@ fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(
         }
         if matches!(
             block.block_type.as_str(),
-            "table" | "table-row" | "table-cell" | "mermaid" | "mermaid-textarea"
+            "table" | "table-row" | "table-cell" | "mermaid" | "mermaid-textarea" | "kr-list"
         ) && !allow_placeholders
         {
             return Err("UNSUPPORTED_BLOCK_TYPE: 表格和代码绘图仅用于正式文档".into());
@@ -1495,6 +1497,7 @@ fn is_supported_block_type(block_type: &str) -> bool {
             | "formula"
             | "meeting"
             | "task"
+            | "kr-list"
             // URL-backed blocks reuse the existing per-block Y.Text payload:
             // their `text` contains the resource URL rather than editable
             // paragraph content. This preserves convergence without a schema

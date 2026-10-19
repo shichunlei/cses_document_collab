@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/model/collab_kr.dart';
 import 'package:cses_document_collab/src/model/collab_task_card.dart';
 import 'package:cses_document_collab/src/model/collab_meeting.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
@@ -186,7 +187,8 @@ Future<bool> deletePreviousUrlBackedBlock(EditorState editorState) async {
           previousNode.type == collabPageDividerType ||
           previousNode.type == collabFormulaType ||
           previousNode.type == collabMeetingType ||
-          previousNode.type == collabTaskCardType) &&
+          (previousNode.type == collabTaskCardType ||
+              previousNode.type == collabKrType)) &&
       editorState.undoManager.undoStack.isNonEmpty) {
     editorState.undoManager.undoStack.last.seal();
   }
@@ -197,7 +199,8 @@ Future<bool> deletePreviousUrlBackedBlock(EditorState editorState) async {
         previousNode.type == collabPageDividerType ||
         previousNode.type == collabFormulaType ||
         previousNode.type == collabMeetingType ||
-        previousNode.type == collabTaskCardType,
+        (previousNode.type == collabTaskCardType ||
+            previousNode.type == collabKrType),
   );
   return true;
 }
@@ -209,6 +212,7 @@ bool _isUrlBackedBlock(String type) =>
     type == collabFormulaType ||
     type == collabMeetingType ||
     type == collabTaskCardType ||
+    type == collabKrType ||
     isCollabResourceType(type) ||
     type == csesLinkBlockType ||
     type == ImageBlockKeys.type ||

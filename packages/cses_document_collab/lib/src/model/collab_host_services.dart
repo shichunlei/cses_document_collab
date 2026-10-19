@@ -2,9 +2,10 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:cses_document_collab/src/model/editor_media_upload.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 
 import 'collab_document_feedback.dart';
+import 'collab_kr.dart';
 import 'collab_meeting_card_data.dart';
 import 'collab_meeting_reference.dart';
 import 'collab_mention_tap.dart';
@@ -35,6 +36,8 @@ class CollabHostServices {
   /// 等待宿主详情关闭；行内提及恢复原输入，卡片不恢复正文键盘，包不创建用户资料界面。
   /// [pickMeetingReference] 由宿主选择或创建业务会议后返回引用；null时不提供新增入口。
   /// [loadMeetingCard] 加载会议本地详情及状态，null展示引用和未知状态，资源由宿主持有。
+  /// [kr]借用宿主KR查询端口；null显示未配置提示，不拥有请求资源。
+  /// [krRankIcons]可选三个名次Widget；null使用金银铜色加粗数字，宿主持有图标资源。
   /// [loadTaskCard] 加载任务本地详情，null仅展示共享标题；不拥有宿主网络资源。
   /// [onMeetingCardTap] 由卡片加入/查看按钮打开会议；null禁用该按钮，仍可删除引用。
   /// [onImageTap] 接收图片原始链接并等待宿主预览关闭；null不派发点击，仍屏蔽图片点击的正文焦点。
@@ -59,6 +62,8 @@ class CollabHostServices {
     this.onImageTap,
     this.loadMeetingCard,
     this.loadTaskCard,
+    this.kr,
+    this.krRankIcons,
     this.pickMeetingReference,
   });
 
@@ -87,6 +92,22 @@ class CollabHostServices {
   /// 可选任务卡片详情，业务标题/标签/人员/时间/统计仅本地展示。
   /// null保留共享标题且隐藏未知数据；明确缺失/失败禁用详情，失败可重试。
   final CollabTaskCardLoader? loadTaskCard;
+
+  /// 可选KR查询端口；业务鉴权及资源由宿主负责，列表和分页不写共享文档。
+  final CollabKrService? kr;
+
+  /// 可选前三名图标，first/second/third分别对应金银铜名次，三项须同时提供。
+  /// null默认显示金银铜色加粗1/2/3；第四名起始终显示普通数字。
+  /// 图标限制在20×20逻辑像素内，图标自身的State按Flutter生命周期释放；
+  /// 外部控制器/订阅仍归宿主持有。不写协同文档，不应使用需跨条目唯一的GlobalKey。
+  /// ```dart
+  /// import 'package:flutter/widgets.dart';
+  /// import 'package:cses_document_collab/cses_document_collab.dart';
+  /// final services = CollabHostServices(krRankIcons: (
+  ///   first: Text('🥇'), second: Text('🥈'), third: Text('🥉'),
+  /// ));
+  /// ```
+  final ({Widget first, Widget second, Widget third})? krRankIcons;
 
   /// 可选会议详情加载器；宿主持有认证和请求，包只借用，不写协同文档。
   /// null展示共享引用及未知状态；不存在/失败禁用主按钮，失败可重试。

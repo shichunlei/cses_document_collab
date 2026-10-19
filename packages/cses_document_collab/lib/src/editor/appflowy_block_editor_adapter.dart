@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/src/model/collab_kr.dart';
 import 'package:cses_document_collab/src/editor/collab_paragraph_typing.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
 import 'package:cses_document_collab/src/model/collab_code.dart';
@@ -582,7 +583,7 @@ final class AppFlowyBlockEditorAdapter {
                   currentNodes[index].type == collabPageDividerType ||
                   currentNodes[index].type == collabFormulaType ||
                   currentNodes[index].type == collabMeetingType ||
-                  currentNodes[index].type == collabTaskCardType ||
+                  (currentNodes[index].type == collabTaskCardType || currentNodes[index].type == collabKrType) ||
                   currentNodes[index].delta != null ||
                   _isUrlBackedBlock(targetBlocks[index].blockType)),
         ).every((matches) => matches);
@@ -600,7 +601,7 @@ final class AppFlowyBlockEditorAdapter {
             target.blockType == collabPageDividerType ||
             target.blockType == collabFormulaType ||
             target.blockType == collabMeetingType ||
-            target.blockType == collabTaskCardType) {
+            (target.blockType == collabTaskCardType || target.blockType == collabKrType)) {
           if (currentBlocks[index] != target) {
             // 统一复用创建节点时的协议映射，避免 URL/布局/题注形成两套编码。
             // updateNode 合并属性，故可选图片投影缺失时需要显式 null 删除旧值。
@@ -1184,7 +1185,7 @@ final class AppFlowyBlockEditorAdapter {
 
   /// 将权威 [block] 转为 AppFlowy 节点，图片保存强类型专属数据的 Map 投影。
   /// 题注留在资源属性而非 AppFlowy children；实际父子关系由 Rust 的共享类型持有。
-  /// Mermaid 保留容器及独立源码 Delta；表格布局及任务卡片属性只读投影；其他无正文块保留各自白名单属性，均不生成Delta。
+  /// KR只投影会议引用，不缓存业务列表；Mermaid 保留容器及独立源码 Delta；表格布局及任务卡片属性只读投影；其他无正文块保留各自白名单属性，均不生成Delta。
   /// 段落格式及其历史目标标记仅用于段落族；代码块沿用自身属性和正文历史。
   /// 分页符使用无 Delta、无子块的独立类型；仅构建内存节点，不写入原生文档或取得资源所有权。
   static Node _nodeFromBlock(CollabEditorBlock block) {
@@ -1203,9 +1204,9 @@ final class AppFlowyBlockEditorAdapter {
     if (block.blockType == csesUnsupportedBlockType) {
       return Node(type: csesUnsupportedBlockType, id: block.id, attributes: {collabBlockIdAttribute: block.id});
     }
-    if (block.blockType == collabTaskCardType) {
+    if (block.blockType == collabTaskCardType || block.blockType == collabKrType) {
       return Node(
-        type: collabTaskCardType,
+        type: block.blockType,
         id: block.id,
         attributes: {
           collabBlockIdAttribute: block.id,
@@ -1424,6 +1425,8 @@ final class AppFlowyBlockEditorAdapter {
             ? readCollabMermaidProperties(node.attributes, edited: resourceEdits[node]?.contains('mode') == true)
             : collabTableTypes.contains(node.type)
             ? readCollabTable(node.attributes, before?.resource)
+            : node.type == collabKrType
+            ? readCollabKr(node.attributes)
             : node.type == collabTaskCardType
             ? CollabTaskCard.read(node.attributes)
             : node.type == collabMeetingType
@@ -1496,7 +1499,7 @@ final class AppFlowyBlockEditorAdapter {
         node.type == collabPageDividerType ||
         node.type == collabFormulaType ||
         node.type == collabMeetingType ||
-        node.type == collabTaskCardType) {
+        (node.type == collabTaskCardType || node.type == collabKrType)) {
       return node.type;
     }
     if (node.type == csesUnsupportedBlockType) return csesUnsupportedBlockType;
@@ -1600,14 +1603,14 @@ final class AppFlowyBlockEditorAdapter {
       blockType == NumberedListBlockKeys.type ||
       blockType == TodoListBlockKeys.type;
 
-  /// 读取借用[node]的正文或资源地址，容器、分割线、分页符、公式、会议和任务卡片不提供文字。
+  /// 读取借用[node]的正文或资源地址，容器、分割线、分页符、公式、会议、KR和任务卡片不提供文字。
   static String _readNodePlainText(Node node) {
     if (isCollabContainerType(node.type) ||
         node.type == collabDividerType ||
         node.type == collabPageDividerType ||
         node.type == collabFormulaType ||
         node.type == collabMeetingType ||
-        node.type == collabTaskCardType) {
+        (node.type == collabTaskCardType || node.type == collabKrType)) {
       return "";
     }
     // Media/embed nodes intentionally have no Delta. Their URL is serialized

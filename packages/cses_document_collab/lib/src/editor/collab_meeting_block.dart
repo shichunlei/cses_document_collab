@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/src/model/collab_kr.dart';
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/editor/collab_card_frame.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
@@ -118,6 +119,14 @@ class _MeetingBlockState extends State<_MeetingBlock> with SelectableMixin {
                 menuIcon: LucideIcons.users,
                 enabled: !_busy,
                 actions: [
+                  if (!loading && !unavailable && services.kr != null)
+                    (
+                      label: '收集 KR',
+                      key: ValueKey('meeting-collect-kr-$id'),
+                      run: () async {
+                        await collectCollabKr(editor, node, meetingId);
+                      },
+                    ),
                   if (!loading && number.trim().isNotEmpty)
                     (
                       label: '复制会议号',

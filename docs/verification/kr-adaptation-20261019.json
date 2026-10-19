@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-19",
+  "scope": "KR first phase",
+  "versions": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.21",
+    "desktopDeclaration": "0.11.22",
+    "yarnLock": "0.11.22",
+    "installed": "0.11.17",
+    "pnpmLock": "0.2.78",
+    "desktopUpgradedByTask": false
+  },
+  "schema": {
+    "flavour": "kr-list",
+    "nodeType": "void",
+    "props": [
+      "meetingId",
+      "estimatedHeight (preserved, not written)"
+    ],
+    "source": "cses-client/packages/docs/src/editor/embedded-references/kr-list"
+  },
+  "validated": {
+    "rust": "99/99; cargo fmt --check, cargo check, cargo build passed",
+    "flutterRegression": "87 passed across KR, block delete/actions, adapter and native integration; later KR additions separately rerun",
+    "krNative": "1/1 real FRB + SQLite; desktop Schema factory fixture; malformed/missing identity remains opaque",
+    "android": "flutter build apk --debug --no-pub passed with native targets rebuilt",
+    "hostAnalysis": "new CsesKrService passed; document_host has pre-existing path_provider direct-dependency diagnostic",
+    "krWidget": "12/12; includes public menu deletion undo, changed reference, paging error/empty/duplicates, readonly, narrow large text, conversion and collection history",
+    "packageAnalysis": "11 touched Dart files and public entry passed"
+  },
+  "limits": [
+    "Real authenticated KR endpoints not exercised",
+    "Android/iOS interactive device and desktop online bidirectional checks pending",
+    "Meeting title, realtime business refresh pending",
+    "Long paginated list virtualization pending",
+    "Unprojected properties/audit deletion undo restoration not guaranteed",
+    "Rich clipboard/export and reconnect/persistence ACK pending"
+  ],
+  "commands": [
+    "node tool/generate_kr_fixture.mjs <desktop-root>",
+    "cargo test --manifest-path rust/Cargo.toml",
+    "flutter test --no-pub test/collab_kr_test.dart test/collab_kr_native_test.dart",
+    "flutter build apk --debug --no-pub"
+  ],
+  "layoutUpdate": {
+    "date": "2026-10-19",
+    "change": "Convert to todo button at far right; remaining width used by rank/body/author/votes; readonly returns full width",
+    "versionRecheck": "latest 0.11.21; declaration/Yarn 0.11.22; installed 0.11.17; pnpm 0.2.78",
+    "verification": "15 KR regressions including 320/390 widths with 1.5 text scale and selection/conversion; target analysis",
+    "selection": "Only selected KR shows trailing button; repeat tap deselects, other item switches, successful conversion clears selection; hidden in readonly"
+  },
+  "selectedBackgroundUpdate": {
+    "date": "2026-10-19",
+    "background": "0x0F4A7AFE (~6% blue), radius 6, no border; unselected/readonly transparent",
+    "source": "desktop kr-list.block.scss rgba(74,122,254,0.06)",
+    "versionRecheck": "latest 0.11.21, declaration/Yarn 0.11.22, installed 0.11.17, pnpm 0.2.78",
+    "validation": "target dart format, flutter analyze and git diff --check; decoration only, no new mirror tests; no device visual acceptance"
+  },
+  "medalUpdate": {
+    "date": "2026-10-19",
+    "source": "cses-client/src/assets/month-orient-img/{first,second,third}.png",
+    "display": "20x20 logical pixels, gold/silver/bronze, rank 4+ plain numbers, semantic rank labels",
+    "versions": {
+      "latest": "0.11.22",
+      "previousLatest": "0.11.21",
+      "declarationYarn": "0.11.22",
+      "installed": "0.11.17",
+      "pnpmLock": "0.2.78"
+    },
+    "sha256": {
+      "first": "1fcf4e5b6bc63f924abd148fe298ae14eaeae9a981d1c32d339a99948ec22873",
+      "second": "283c11e2a85c0415c90e330d1d603c7c03d81fb4f8d951032f32a00ac3f963dc",
+      "third": "e3c994e140605a46d7127b88fe9542c0aa5011269a7a538e21d25479898d86af"
+    },
+    "scope": "Static rank imagery only; desktop dependencies unchanged; framework 0.11.22 broader migration pending",
+    "validation": "16/16 KR regressions passed, including all three real asset loads/semantic rank labels and rank 4 numeric fallback; target static analysis passed; package and host offline dependency resolution passed without lock changes; git diff --check passed. Existing geometry assertion updated for current vertical layout. No device visual acceptance.",
+    "superseded": "User requested no images: PNG assets and manifest entry removed; use optional three host Widgets or bold colored numbers"
+  },
+  "hostRankIconsUpdate": {
+    "date": "2026-10-19",
+    "api": "CollabHostServices.krRankIcons: ({Widget first, Widget second, Widget third})?",
+    "fallback": "gold #C8A65A, silver #9AA4B2, bronze #CD8B73; bold 1/2/3; ordinary 4+",
+    "resources": "No bundled rank images; host widgets constrained to 20x20, host retains external resources",
+    "versionRecheck": "latest 0.11.22; declaration/Yarn 0.11.22; installed 0.11.17; pnpm 0.2.78",
+    "validation": "17/17 KR regressions passed, including no-image colored bold fallback and three injected Widgets; target package static analysis passed; package/host offline dependency resolution and removed-image reference search completed. Host document_host retains pre-existing path_provider direct-dependency diagnostic."
+  }
+}

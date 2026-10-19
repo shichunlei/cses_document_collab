@@ -336,6 +336,7 @@ final _pending = Expando<bool>('block-more-actions');
   'link' => ('链接', LucideIcons.link),
   'meeting' => ('会议', LucideIcons.users),
   'task' => ('任务', LucideIcons.listTodo),
+  'kr-list' => ('会议 KR', LucideIcons.listTodo),
   'page-divider' => ('分页符', LucideIcons.separatorHorizontal),
   _ => ('内容', LucideIcons.file),
 };

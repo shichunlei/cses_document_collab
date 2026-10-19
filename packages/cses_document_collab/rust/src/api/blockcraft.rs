@@ -596,7 +596,7 @@ fn mobile_type<T: ReadTxn>(block: &MapRef, props: &MapRef, txn: &T) -> Option<St
         "blockquote" => "quote".to_owned(),
         "table" | "table-row" | "table-cell" => flavour,
         "code" | "image" | "video" | "callout" | "mermaid" | "mermaid-textarea" | "divider"
-        | "page-divider" | "formula" | "meeting" | "task" => flavour,
+        | "page-divider" | "formula" | "meeting" | "task" | "kr-list" => flavour,
         s if is_resource_block_type(s) => flavour,
         _ => return None,
     })
@@ -660,6 +660,7 @@ fn resource_keys(kind: &str) -> &'static [&'static str] {
         "formula" => &["latex"],
         "mermaid" => &["mode"],
         "meeting" => &["meetingId", "title", "number"],
+        "kr-list" => &["meetingId"],
         "task" => &["taskId", "title"],
         "table" => &["colWidths"],
         "table-row" => &["height"],
@@ -733,9 +734,9 @@ fn parse_resource_edit(
     let Any::Map(values) = Any::from_json(input).map_err(|_| fail())? else {
         return Err(fail());
     };
-    if matches!(kind, "meeting" | "task")
+    if matches!(kind, "meeting" | "task" | "kr-list")
         && initial
-        && !matches!(values.get(if kind == "meeting" { "meetingId" } else { "taskId" }), Some(Any::String(id)) if !id.trim().is_empty() && id.len() <= 512)
+        && !matches!(values.get(if kind == "task" { "taskId" } else { "meetingId" }), Some(Any::String(id)) if !id.trim().is_empty() && id.len() <= 512)
     {
         return Err(fail());
     }
@@ -744,7 +745,10 @@ fn parse_resource_edit(
         if !resource_keys(kind).contains(&key.as_str())
             && (initial
                 || key != "url"
-                || matches!(kind, "divider" | "formula" | "meeting" | "task" | "mermaid"))
+                || matches!(
+                    kind,
+                    "divider" | "formula" | "meeting" | "task" | "kr-list" | "mermaid"
+                ))
         {
             return Err(fail());
         }
@@ -761,7 +765,7 @@ fn parse_resource_edit(
         };
         if matches!(
             (kind, key.as_str()),
-            ("meeting", "meetingId") | ("task", "taskId")
+            ("meeting", "meetingId") | ("kr-list", "meetingId") | ("task", "taskId")
         ) && value.is_none()
         {
             return Err(fail());
@@ -781,6 +785,14 @@ fn parse_resource_edit(
                     _ => false,
                 };
                 if !valid {
+                    return Err(fail());
+                }
+                result.insert(key.clone(), value);
+                continue;
+            }
+            if kind == "kr-list" {
+                if !matches!((key.as_str(), v), ("meetingId", Any::String(id)) if !id.trim().is_empty() && id.len() <= 512)
+                {
                     return Err(fail());
                 }
                 result.insert(key.clone(), value);
@@ -1001,7 +1013,7 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
             result.blocks.push(placeholder(id, parent_id));
             continue;
         }
-        if matches!(kind.as_str(), "meeting" | "task")
+        if matches!(kind.as_str(), "meeting" | "task" | "kr-list")
             && parse_resource_edit(&kind, &resource_properties(&kind, &props, &txn), true).is_err()
         {
             result.blocks.push(placeholder(id, parent_id));
@@ -1061,7 +1073,7 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
             Some(Out::YArray(array))
                 if matches!(
                     kind.as_str(),
-                    "divider" | "page-divider" | "formula" | "meeting" | "task"
+                    "divider" | "page-divider" | "formula" | "meeting" | "task" | "kr-list"
                 ) && node_type == "void"
                     && array.len(&txn) == 0 => {}
             Some(Out::YArray(array))
@@ -1090,6 +1102,7 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                     && kind != "page-divider"
                     && kind != "divider"
                     && kind != "formula"
+                    && kind != "kr-list"
                     && kind != "meeting"
                     && kind != "task" =>
             {
@@ -1183,7 +1196,7 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                 || is_table_container(&kind)
                 || matches!(
                     kind.as_str(),
-                    "divider" | "formula" | "meeting" | "task" | "mermaid"
+                    "divider" | "formula" | "meeting" | "task" | "kr-list" | "mermaid"
                 ))
             .then(|| CollabResource {
                 properties: resource_properties(&kind, &props, &txn),
@@ -1243,6 +1256,7 @@ fn formal_type(kind: &str) -> Option<(&str, bool)> {
         "page-divider" => ("page-divider", true),
         "formula" => ("formula", true),
         "meeting" => ("meeting", true),
+        "kr-list" => ("kr-list", true),
         "task" => ("task", true),
         "attachment" => ("attachment", true),
         "audio" => ("audio", true),
@@ -1369,7 +1383,9 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
                 paragraph_edits.insert(block.id.clone(), paragraph_style::parse(input, initial)?);
             }
         }
-        if matches!(block.block_type.as_str(), "meeting" | "task") && block.resource.is_none() {
+        if matches!(block.block_type.as_str(), "meeting" | "task" | "kr-list")
+            && block.resource.is_none()
+        {
             return Err("INVALID_RESOURCE: 实体卡片引用缺少属性".into());
         }
         if is_table_container(&block.block_type) {
@@ -1394,7 +1410,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
             if !is_resource_block_type(&block.block_type)
                 && !matches!(
                     block.block_type.as_str(),
-                    "divider" | "formula" | "meeting" | "task" | "mermaid"
+                    "divider" | "formula" | "meeting" | "task" | "kr-list" | "mermaid"
                 )
             {
                 return Err("INVALID_RESOURCE: 资源属性与块类型不符".into());
@@ -1805,7 +1821,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
             }
             if !matches!(
                 flavour,
-                "divider" | "page-divider" | "formula" | "meeting" | "task"
+                "divider" | "page-divider" | "formula" | "meeting" | "task" | "kr-list"
             ) && ((!is_resource_block_type(flavour)
                 && old.is_none_or(|b| b.text != next.text || b.block_type != next.block_type))
                 || (is_resource_block_type(flavour)
@@ -5186,6 +5202,79 @@ mod tests {
         drop(txn);
         let restored = engine(&update);
         assert_eq!(phone.blocks(), restored.blocks());
+    }
+
+    /// KR只投影会议引用；插入、删除恢复与并发收敛，业务快照/布局事实不被重放。
+    #[test]
+    fn kr_list_reference_roundtrip_and_validation() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-meeting.update");
+        let mut phone = engine(fixture);
+        let mut peer = engine(fixture);
+        let before = phone.blocks();
+        let mut kr = before.iter().find(|b| b.id == "meeting-1").unwrap().clone();
+        kr.id = "kr-list-1".into();
+        kr.block_type = "kr-list".into();
+        kr.resource = Some(CollabResource {
+            properties: r#"{"meetingId":"m1"}"#.into(),
+            property_edits: None,
+        });
+        let mut desired = before.clone();
+        desired.push(kr.clone());
+        let update = phone.apply_block_snapshot(desired).unwrap().v1_update;
+        peer.apply_cses_update(update).unwrap();
+        assert_eq!(phone.blocks(), peer.blocks());
+        let projected = phone.blocks();
+        assert_eq!(
+            projected
+                .iter()
+                .find(|b| b.id == kr.id)
+                .unwrap()
+                .resource
+                .as_ref()
+                .unwrap()
+                .properties,
+            r#"{"meetingId":"m1"}"#
+        );
+        {
+            let blocks = phone.doc.get_or_insert_map(ROOT_NAME);
+            let mut txn = phone.doc.transact_mut();
+            let props = map(&blocks, &txn, &kr.id)
+                .and_then(|b| map(&b, &txn, "props"))
+                .unwrap();
+            props.insert(&mut txn, "estimatedHeight", 999);
+            props.insert(&mut txn, "future", "keep");
+        }
+        let current = phone.blocks();
+        phone.apply_block_snapshot(current.clone()).unwrap();
+        {
+            let blocks = phone.doc.get_or_insert_map(ROOT_NAME);
+            let txn = phone.doc.transact();
+            let props = map(&blocks, &txn, &kr.id)
+                .and_then(|b| map(&b, &txn, "props"))
+                .unwrap();
+            assert_eq!(
+                out_string(props.get(&txn, "future")).as_deref(),
+                Some("keep")
+            );
+            assert_eq!(out_u32(props.get(&txn, "estimatedHeight")), Some(999));
+        }
+        phone.apply_block_snapshot(before).unwrap();
+        assert!(!phone.blocks().iter().any(|b| b.id == kr.id));
+        phone.apply_block_snapshot(current).unwrap();
+        assert!(phone.blocks().iter().any(|b| b.id == kr.id));
+        for invalid in [
+            r#"{}"#,
+            r#"{"meetingId":""}"#,
+            r#"{"meetingId":12}"#,
+            r#"{"meetingId":"m1","items":[]}"#,
+        ] {
+            assert!(parse_resource_edit("kr-list", invalid, true).is_err());
+        }
+        assert!(parse_resource_edit("kr-list", r#"{"meetingId":{}}"#, false).is_err());
+        let txn = phone.doc.transact();
+        let update = txn.encode_state_as_update_v1(&StateVector::default());
+        drop(txn);
+        assert_eq!(phone.blocks(), engine(&update).blocks());
     }
 
     /// 会议引用的正式结构、精确补丁、并发与未知数据保护。

@@ -1,3 +1,5 @@
+import 'package:cses_document_collab/src/editor/collab_kr_block.dart';
+import 'package:cses_document_collab/src/model/collab_kr.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
@@ -470,6 +472,7 @@ final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders =
       'mermaid': CollabMermaidBlockComponentBuilder(),
       collabMeetingType: CollabMeetingBlockComponentBuilder(),
       collabTaskCardType: CollabTaskCardBlockComponentBuilder(),
+      collabKrType: CollabKrBlockComponentBuilder(),
       csesCodeBlockType: CollabCodeBlockComponentBuilder(),
       csesCalloutBlockType: CollabCalloutBlockComponentBuilder(),
       'table': CollabTableBlockComponentBuilder(),

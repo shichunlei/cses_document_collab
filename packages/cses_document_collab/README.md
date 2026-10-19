@@ -508,3 +508,27 @@ flutter test --no-pub test/collab_page_divider_test.dart test/page_divider_nativ
 共享mode沿用`props.mode=text/graph/default`，由现有CollabResource单字段补丁承载，没有新增FRB签名。缺失/null/未知mode仅在展示时回落为组合视图，普通源码编辑不归一化；旧调用未指定插入视图时仍默认graph。远端mode变化也会使打开的草稿冲突并清除过期历史；重新加载同时更新源码和模式。2026-10-17已完成真实桌面与Android现有时序图三种mode的双向在线联调，共6项通过；最终恢复原text模式，完整源码Delta/属性及树结构保持，仅绘图修改时间更新，见根仓库`docs/verification/mermaid-view-sync-20261017.json`。不代表真实断网、同时并发、iOS或服务端持久化ACK通过。
 
 本阶段仍部分支持：不提供可视化节点/标签编辑、全屏缩放、SVG导出或Markdown导入。远端源码/格式/mode或含绘图文档的结构变化清空编辑器路径历史与选区；普通非结构正文属性更新保持历史。删除撤销恢复投影内容/身份和有效mode，不保证未投影属性、未知/非法模式或审计数据恢复。异常结构保持整棵占位。完整验证见根仓库`docs/verification/mermaid-options-20261017.json`及`docs/block-adaptation.md`。
+
+## 会议 KR 列表
+
+正式 `kr-list` 只保存会议引用，列表通过可选 `CollabHostServices.kr` 查询端口加载。宿主实现 `CollabKrService.loadTopics(meetingId)` 和 `loadMore(meetingId, topicId, offset)`，负责认证、会议权限及请求资源；未配置时显示提示，不请求业务接口。Demo使用桌面同源的已完成KR主题和每页十条结果，真实接口仍需联调验收。
+
+```dart
+import 'package:cses_document_collab/cses_document_collab.dart';
+
+CollabHostServices krServices(CollabKrService service) =>
+    CollabHostServices(kr: service);
+```
+
+会议卡片更多菜单提供“收集 KR”，在其后插入列表引用；列表可分页、重试及转为未勾选待办。转换有完整作者身份时插入用户提及，否则仅插入KR文字。引用与待办支持独立撤销重做，业务KR不随引用删除。加载结果、分页及作者头像不写入共享文档，换会议/宿主、卸载后迟到结果失效；端口由宿主持有，编辑器不释放它。实时刷新、会议标题、长列表虚拟化、专用富文本剪贴板/导出、iOS及在线双端仍待同步或验收。
+
+KR前三名图标可由宿主一次提供三个Widget；未配置时显示金银铜色加粗数字1/2/3，不加载图片，第四名起保持普通数字。图标显示在20×20逻辑像素内，外部资源由宿主负责。
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:cses_document_collab/cses_document_collab.dart';
+
+const rankServices = CollabHostServices(krRankIcons: (
+  first: Text('🥇'), second: Text('🥈'), third: Text('🥉'),
+));
+```

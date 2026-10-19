@@ -14,6 +14,7 @@ import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'cses_document_metadata_service.dart';
+import 'cses_kr_service.dart';
 import 'cses_meeting_card_service.dart';
 import 'cses_mention_directory.dart';
 import 'cses_task_card_service.dart';
@@ -94,6 +95,8 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
         pickMeetingReference: showDemoMeetingReferencePicker,
         loadMeetingCard: localDraft ? null : CsesMeetingCardService().load,
         loadTaskCard: localDraft ? null : CsesTaskCardService().load,
+        kr: localDraft ? null : CsesKrService(),
+        krRankIcons: (first: Text('🥇'), second: Text('🥈'), third: Text('🥉')),
         onMeetingCardTap: (String meetingId, String title, String number) {
           Log.d(meetingId.toString());
           showToast(text: "打开会议页面");

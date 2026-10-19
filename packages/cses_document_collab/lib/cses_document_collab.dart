@@ -41,3 +41,5 @@ export 'src/model/collab_task_card_data.dart'
 export 'src/model/collab_document_feedback.dart';
 export 'src/controller/document_feedback_controller.dart'
     show DocumentFeedbackController;
+
+export 'src/model/collab_kr.dart' show CollabKrItem, CollabKrTopic, CollabKrService;
