@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-19",
+  "change": "公共块操作头部按块类型显示名称与Lucide图标，保留显式覆盖与原三个点入口。",
+  "versions": {
+    "latest": "0.11.21",
+    "desktopDeclaration": "0.11.21",
+    "yarnLock": "0.11.21",
+    "installed": "0.11.17",
+    "pnpmLock": "0.2.78",
+    "registry": "http://npm.runtongqiuben.com/"
+  },
+  "checks": {
+    "flutterTests": {
+      "files": [
+        "collab_block_actions_test.dart",
+        "collab_mermaid_test.dart",
+        "collab_page_divider_test.dart"
+      ],
+      "passed": 61
+    },
+    "analysis": "目标及必要消费者静态分析",
+    "format": "collab_block_actions.dart沿用120列；collab_block_actions_test.dart沿用默认列宽",
+    "uiSearch": "无title/menuTitle使用默认块操作或ellipsis头部；保留日志诊断块操作失败"
+  },
+  "limits": [
+    "未升级桌面安装版",
+    "不表示0.11.21其他差异已兼容",
+    "未新增Android/iOS真机及在线桌面联调验收"
+  ]
+}

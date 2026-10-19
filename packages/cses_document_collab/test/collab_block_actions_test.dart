@@ -10,6 +10,8 @@ import 'package:cses_document_collab/src/editor/collab_meeting_block.dart';
 import 'package:cses_document_collab/src/editor/collab_audio_block.dart';
 import 'package:cses_document_collab/src/editor/collab_attachment_block.dart';
 import 'package:cses_document_collab/src/editor/collab_task_card_block.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:cses_document_collab/src/model/collab_image.dart';
 import 'package:cses_document_collab/src/model/collab_host_services.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
@@ -203,6 +205,24 @@ void main() {
         await tester.ensureVisible(more);
         await tester.tap(more);
         await tester.pumpAndSettle();
+        final expectedHeader = switch (kind) {
+          'image' => ('图片', LucideIcons.image),
+          'video' => ('视频', LucideIcons.film),
+          'code' => ('代码块', LucideIcons.codeXml),
+          'callout' => ('高亮块', LucideIcons.squareSplitVertical),
+          'audio' => ('音频', LucideIcons.audioLines),
+          'attachment' => ('附件', LucideIcons.paperclip),
+          'formula' => ('公式', LucideIcons.sigma),
+          'meeting' => ('会议操作', LucideIcons.users),
+          'task' => ('任务操作', LucideIcons.listTodo),
+          _ => throw StateError('missing production header expectation: $kind'),
+        };
+        final sheet = tester.widget<CollabBottomSheet>(
+          find.byType(CollabBottomSheet),
+        );
+        expect((sheet.title as Text).data, expectedHeader.$1);
+        expect(sheet.icon, expectedHeader.$2);
+        expect(find.text('块操作'), findsNothing);
         await tester.tap(find.byKey(const ValueKey('block-insert-below-card')));
         await tester.pumpAndSettle();
         await tester.pump(const Duration(milliseconds: 400));

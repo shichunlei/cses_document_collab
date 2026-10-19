@@ -62,7 +62,7 @@ Future<Node?> insertCollabParagraphBelow(EditorState editor, Node source) async 
 /// Waits for menu dismissal before restoring the new caret and keyboard. The
 /// editor/node and extra callbacks are borrowed. A temporary permission listener
 /// is removed when the menu and any selected action finish.
-/// Callers can supply a business-specific menu heading and decorative icon.
+/// The heading and decorative icon follow the block type unless callers override them.
 ///
 /// ```dart
 /// import 'package:appflowy_editor/appflowy_editor.dart';
@@ -83,8 +83,9 @@ class CollabBlockMoreButton extends StatelessWidget {
   /// preview; empty by default. Permission changes invalidate an open menu.
   /// [protectSubtree] also rejects child content changes while the menu is open;
   /// defaults to false for leaf cards and is useful for whole-container deletion.
-  /// [menuTitle] defaults to 块操作; [menuIcon] defaults to the Lucide ellipsis.
-  /// Both customize the sheet header without changing the more button or commands.
+  /// [menuTitle]/[menuIcon] override the sheet heading and decorative icon independently;
+  /// null resolves the corresponding value from [node] type. Unknown types use 内容/file.
+  /// These affect only the sheet header; the more button and commands keep their behavior.
   /// [triggerBuilder] optionally replaces the ellipsis with a custom launch surface;
   /// it receives a null callback when unavailable, including preview without readonly actions.
   const CollabBlockMoreButton({
@@ -95,8 +96,8 @@ class CollabBlockMoreButton extends StatelessWidget {
     this.actions = const [],
     this.readOnlyActions = const [],
     this.protectSubtree = false,
-    this.menuTitle = '块操作',
-    this.menuIcon = LucideIcons.ellipsis,
+    this.menuTitle,
+    this.menuIcon,
     this.triggerBuilder,
   });
 
@@ -118,11 +119,11 @@ class CollabBlockMoreButton extends StatelessWidget {
   /// Whether child content changes invalidate the open menu; defaults to false.
   final bool protectSubtree;
 
-  /// Sheet heading shown above commands; defaults to 块操作 and is supplied by the caller.
-  final String menuTitle;
+  /// Optional heading override; null uses the block type name (unknown types use 内容).
+  final String? menuTitle;
 
-  /// Decorative sheet icon; defaults to the Lucide ellipsis, without changing the launcher icon.
-  final IconData menuIcon;
+  /// Optional decorative icon override; null uses the block type icon, preserving the launcher.
+  final IconData? menuIcon;
 
   /// Optional custom launcher; null keeps the ellipsis button. The builder receives
   /// borrowed context and a nullable activation callback, and must render its own
@@ -160,7 +161,7 @@ class CollabBlockMoreButton extends StatelessWidget {
 
   /// Opens one sheet in borrowed [context], rejects stale targets and catches failures.
   /// Insertion below uses the text-line and downward-return icon to show its destination.
-  /// Uses the caller's [menuTitle] and [menuIcon] in the shared sheet header.
+  /// Resolves the block-specific header, applying the caller's [menuTitle]/[menuIcon] overrides.
   Future<void> _show(BuildContext context) async {
     if (editor.isDisposed || (!editor.editable && readOnlyActions.isEmpty) || _pending[editor] == true) {
       return;
@@ -171,6 +172,7 @@ class CollabBlockMoreButton extends StatelessWidget {
     final services = CollabRuntime.services;
     final id = node.attributes['cses_collab_block_id'] as String? ?? node.id;
     final type = node.type;
+    final heading = _defaultBlockMenuHeader(type);
     final snapshot = jsonEncode(protectSubtree ? node.toJson() : node.attributes);
     String? insertedId;
     int? choice;
@@ -191,8 +193,8 @@ class CollabBlockMoreButton extends StatelessWidget {
           choice = await showCollabBottomSheet<int>(
             context: host,
             builder: (sheet) => CollabBottomSheet(
-              title: Text(menuTitle),
-              icon: menuIcon,
+              title: Text(menuTitle ?? heading.$1),
+              icon: menuIcon ?? heading.$2,
               contentPadding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -276,3 +278,22 @@ class CollabBlockMoreButton extends StatelessWidget {
 
 /// Prevents repeated menus while keeping editor lifetimes externally owned.
 final _pending = Expando<bool>('block-more-actions');
+
+/// Resolves borrowed block [type] to the shared menu's default heading and Lucide icon.
+/// Explicit caller overrides take precedence; unknown future types use 内容/file rather
+/// than implying a recognized type. The mapping owns no editor or business resources.
+(String, IconData) _defaultBlockMenuHeader(String type) => switch (type) {
+  'image' => ('图片', LucideIcons.image),
+  'video' => ('视频', LucideIcons.film),
+  'code' => ('代码块', LucideIcons.codeXml),
+  'callout' => ('高亮块', LucideIcons.squareSplitVertical),
+  'audio' => ('音频', LucideIcons.audioLines),
+  'attachment' => ('附件', LucideIcons.paperclip),
+  'formula' => ('公式', LucideIcons.sigma),
+  'mermaid' => ('代码绘图', LucideIcons.workflow),
+  'link' => ('链接', LucideIcons.link),
+  'meeting' => ('会议', LucideIcons.users),
+  'task' => ('任务', LucideIcons.listTodo),
+  'page-divider' => ('分页符', LucideIcons.fileDown),
+  _ => ('内容', LucideIcons.file),
+};
