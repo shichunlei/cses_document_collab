@@ -18,6 +18,8 @@ dependencies:
     path: ../cses/cses.common
 
 dev_dependencies:
+  appflowy_editor:
+    path: packages/appflowy_editor
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0

@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:async';
 
 import 'package:appflowy_editor/src/core/location/selection.dart';
 import 'package:appflowy_editor/src/core/transform/operation.dart';
@@ -85,6 +86,14 @@ class FixedSizeStack {
   bool get isNonEmpty => _list.isNotEmpty;
 }
 
+/// Editor-owned undo/redo stacks. A rejected host write policy never pops an item.
+///
+/// ```dart
+/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// final editor = EditorState.blank();
+/// editor.undoManager.undo();
+/// editor.dispose();
+/// ```
 class UndoManager {
   final FixedSizeStack undoStack;
   final FixedSizeStack redoStack;
@@ -119,45 +128,50 @@ class UndoManager {
     return last;
   }
 
+  /// Replay the latest local change only after the borrowed editor authorizes it.
+  /// A rejected, readonly or disposed target leaves both history stacks untouched.
   void undo() {
-    AppFlowyEditorLog.editor.debug('undo');
     final s = state;
-    if (s == null) {
-      return;
-    }
-    final historyItem = undoStack.pop();
-    if (historyItem == null) {
-      return;
-    }
-    final transaction = historyItem.toTransaction(s);
-    s.apply(
-      transaction,
-      options: const ApplyOptions(recordUndo: false, recordRedo: true),
+    if (s == null || undoStack.isEmpty) return;
+    final transaction = undoStack.last.toTransaction(s);
+    if (!s.canApplyTransaction(transaction)) return;
+    undoStack.pop();
+    unawaited(
+      s
+          .apply(
+            transaction,
+            options: const ApplyOptions(recordUndo: false, recordRedo: true),
+          )
+          .catchError((Object error, StackTrace stack) {
+            Zone.current.handleUncaughtError(error, stack);
+          }),
     );
   }
 
   /// Replays the latest undone command through the attached editor state.
   /// Preserves other redo entries and records this command separately so a
-  /// subsequent undo reverses only this replay. No attached state or no redo
+  /// subsequent undo reverses only this replay. Host policy rejection keeps the
+  /// item on its original stack. No attached state or no redo
   /// entry is a no-op; transaction failures follow EditorState.apply semantics.
   void redo() {
-    AppFlowyEditorLog.editor.debug('redo');
     final s = state;
-    if (s == null) {
-      return;
-    }
-    final historyItem = redoStack.pop();
-    if (historyItem == null) {
-      return;
-    }
-    final transaction = historyItem.toTransaction(s);
-    s.apply(
-      transaction,
-      options: const ApplyOptions(
-        recordUndo: true,
-        recordRedo: false,
-        isRedo: true,
-      ),
+    if (s == null || redoStack.isEmpty) return;
+    final transaction = redoStack.last.toTransaction(s);
+    if (!s.canApplyTransaction(transaction)) return;
+    redoStack.pop();
+    unawaited(
+      s
+          .apply(
+            transaction,
+            options: const ApplyOptions(
+              recordUndo: true,
+              recordRedo: false,
+              isRedo: true,
+            ),
+          )
+          .catchError((Object error, StackTrace stack) {
+            Zone.current.handleUncaughtError(error, stack);
+          }),
     );
   }
 

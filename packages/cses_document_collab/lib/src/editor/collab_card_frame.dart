@@ -1,4 +1,6 @@
+import 'package:cses_document_collab/src/editor/collab_block_lock_scope.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// 编辑器卡片的公共外框；只借用内容，不创建控制器或处理文档事务。
 ///
@@ -43,28 +45,50 @@ class CollabCardFrame extends StatelessWidget {
   /// 是否显示标题栏与正文间的细线，默认true。
   final bool showDivider;
 
-  /// 在借用的[context]中绘制12像素圆角外框并裁切内容，不截获输入事件。
+  /// 在借用的[context]中绘制圆角卡片；正文继续裁切，锁标独立覆盖在外框右上角。
+  /// [margin]位于整层外侧，使标记始终跟随实际卡片边缘，不受标题高度或外边距影响。
   @override
-  Widget build(BuildContext context) => Container(
-    key: surfaceKey,
-    margin: margin,
-    decoration: BoxDecoration(
-      color: Colors.white,
-      border: Border.all(color: const Color(0xFFE5E7EB)),
-      borderRadius: BorderRadius.circular(12),
-    ),
-    clipBehavior: Clip.antiAlias,
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        header,
-        if (showDivider)
-          const Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
-        child,
-      ],
-    ),
-  );
+  Widget build(BuildContext context) {
+    final lock = CollabBlockLockScope.maybeOf(context);
+    return Padding(
+      padding: margin,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            key: surfaceKey,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: const Color(0xFFE5E7EB)),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                header,
+                if (showDivider) const Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
+                child,
+              ],
+            ),
+          ),
+          if (lock?.showBadge == true)
+            Positioned(
+              top: -5,
+              right: -5,
+              child: IgnorePointer(
+                child: Tooltip(
+                  key: ValueKey('block-lock-badge-${lock!.blockId}'),
+                  message: '内容已锁定',
+                  child: const Icon(LucideIcons.lockKeyhole, size: 14, color: Color(0xFF87909E)),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
 }
 
 /// 固定操作区的公共标题栏，长标题或网址不会挤压右侧按钮。
@@ -124,7 +148,7 @@ class CollabCardHeader extends StatelessWidget {
   /// 可选标题栏边距；null使用左右12/4、上下4像素。
   final EdgeInsetsGeometry? padding;
 
-  /// 在借用[context]中保留右侧操作宽度；正文点击不经过标题栏。
+  /// 在借用[context]中为右侧操作预留宽度并省略长标题；锁标由卡片外框独立绘制。
   @override
   Widget build(BuildContext context) => ColoredBox(
     color: tinted ? const Color(0xFFF6F8FA) : Colors.white,
@@ -145,11 +169,7 @@ class CollabCardHeader extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   DefaultTextStyle.merge(
-                    style: const TextStyle(
-                      color: Color(0xFF1F2329),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: const TextStyle(color: Color(0xFF1F2329), fontSize: 14, fontWeight: FontWeight.w500),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     child: title,
@@ -160,18 +180,14 @@ class CollabCardHeader extends StatelessWidget {
                       subtitle!,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 11,
-                        color: Color(0xFF87909E),
-                      ),
+                      style: const TextStyle(fontSize: 11, color: Color(0xFF87909E)),
                     ),
                   ],
                 ],
               ),
             ),
             ...actions,
-            if (!readOnly && more != null)
-              SizedBox(width: 44, height: 44, child: more),
+            if (!readOnly && more != null) SizedBox(width: 44, height: 44, child: more),
           ],
         ),
       ),

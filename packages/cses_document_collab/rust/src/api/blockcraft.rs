@@ -885,7 +885,7 @@ fn number<T: ReadTxn>(props: &MapRef, txn: &T, key: &str) -> Option<f64> {
 }
 
 /// 读取图片自己的布局及 caption 子块，不把题注加入根顺序。
-/// 缺失/重复/锁定/内嵌内容仍使整篇只读；不支持的子块交给外层继续预览。
+/// 缺失/重复/内嵌内容仍使整篇只读；题注锁由完整锁图保护，不支持的子块交给外层预览。
 fn image_projection<T: ReadTxn>(
     block: &MapRef,
     props: &MapRef,
@@ -905,12 +905,6 @@ fn image_projection<T: ReadTxn>(
         {
             *reason = Some("图片包含不支持或重复的子块，当前仅可预览".into());
             continue;
-        }
-        if map(&caption, txn, "meta")
-            .and_then(|m| out_string(m.get(txn, "lock")))
-            .is_some_and(|s| !s.trim().is_empty())
-        {
-            *reason = Some("图片题注已锁定，当前仅可预览".into());
         }
         if let Some(Out::YText(text)) = caption.get(txn, "children") {
             if text
@@ -995,14 +989,6 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
         let Some(props) = map(&block, &txn, "props") else {
             continue;
         };
-        let meta = map(&block, &txn, "meta");
-        if meta
-            .as_ref()
-            .and_then(|m| out_string(m.get(&txn, "lock")))
-            .is_some_and(|s| !s.trim().is_empty())
-        {
-            result.reason = Some("文档含锁定块，当前仅可预览".into());
-        }
         let node_type = out_string(block.get(&txn, "nodeType")).unwrap_or_default();
         let Some(kind) = mobile_type(&block, &props, &txn) else {
             result.blocks.push(placeholder(id, parent_id));
@@ -1280,6 +1266,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
     if let Some(reason) = current.reason {
         return Err(format!("READ_ONLY_DOCUMENT: {reason}"));
     }
+    super::block_locks::preflight(doc, root_id, &current.blocks, desired)?;
     // 占位必须原样保留；删除父容器、转换或伪造占位也在任何写入前拒绝。
     let previous: HashMap<_, _> = current.blocks.iter().map(|b| (b.id.as_str(), b)).collect();
     let desired_by_id: HashMap<_, _> = desired.iter().map(|b| (b.id.as_str(), b)).collect();
@@ -3929,37 +3916,286 @@ mod tests {
         }
     }
 
-    /// 锁仍然保护整个文档，不能因行内对象局部降级而绕过锁定语义。
+    /// 锁只保护有效子树；拒绝写入时Doc和SQLite均保持不变。
     #[test]
     fn locked_content_is_preserved_and_read_only() {
-        for bytes in [include_bytes!("../../tests/fixtures/blockcraft-locked.update").as_slice()] {
-            let mut engine = engine(bytes);
-            let before = engine
-                .doc
+        let mut e = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-locked.update"
+        ));
+        assert!(project(&e.doc, "fixture-doc").reason.is_none());
+        let states = crate::api::block_locks::scan(&e.doc, "fixture-doc");
+        let mut desired = e.blocks();
+        let index = desired
+            .iter()
+            .position(|b| {
+                states
+                    .iter()
+                    .any(|s| s.block_id == b.id && s.source_id.is_some())
+            })
+            .unwrap();
+        let before = e
+            .doc
+            .transact()
+            .encode_state_as_update_v1(&StateVector::default());
+        let count = load_updates(&e.connection, &e.document_id).unwrap().len();
+        desired[index].text.push_str("禁止写入");
+        desired[index].segments.clear();
+        assert!(e
+            .apply_block_snapshot(desired)
+            .unwrap_err()
+            .contains("READ_ONLY_BLOCK"));
+        assert_eq!(
+            before,
+            e.doc
                 .transact()
-                .encode_state_as_update_v1(&StateVector::default());
-            let count = load_updates(&engine.connection, &engine.document_id)
-                .unwrap()
-                .len();
-            assert!(project(&engine.doc, "fixture-doc").reason.is_some());
-            assert!(engine
-                .apply_block_snapshot(engine.blocks())
-                .unwrap_err()
-                .contains("READ_ONLY_DOCUMENT"));
-            assert_eq!(
-                before,
-                engine
-                    .doc
-                    .transact()
-                    .encode_state_as_update_v1(&StateVector::default())
-            );
-            assert_eq!(
-                count,
-                load_updates(&engine.connection, &engine.document_id)
-                    .unwrap()
-                    .len()
-            );
+                .encode_state_as_update_v1(&StateVector::default())
+        );
+        assert_eq!(
+            count,
+            load_updates(&e.connection, &e.document_id).unwrap().len()
+        );
+    }
+
+    /// 普通锁、模板锁和陈旧命令遵循桌面权限，并通过V1更新双向传播及SQLite恢复。
+    #[test]
+    fn block_lock_owner_permissions_sync_and_reopen() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-basic.update");
+        let mut phone = engine(fixture);
+        let mut desktop = engine(fixture);
+        let id = phone.blocks()[0].id.clone();
+        let update = phone
+            .set_block_lock(id.clone(), true, "alice".into(), false, None, false)
+            .unwrap()
+            .v1_update;
+        desktop.apply_cses_update(update).unwrap();
+        assert_eq!(
+            crate::api::block_locks::scan(&phone.doc, "fixture-doc"),
+            crate::api::block_locks::scan(&desktop.doc, "fixture-doc")
+        );
+        let count = load_updates(&phone.connection, &phone.document_id)
+            .unwrap()
+            .len();
+        for (user, grant, owner) in [
+            ("bob", false, Some("alice")),
+            ("alice", false, Some("old")),
+            ("", true, Some("alice")),
+        ] {
+            assert!(phone
+                .set_block_lock(
+                    id.clone(),
+                    false,
+                    user.into(),
+                    grant,
+                    owner.map(str::to_owned),
+                    false
+                )
+                .is_err());
         }
+        assert_eq!(
+            count,
+            load_updates(&phone.connection, &phone.document_id)
+                .unwrap()
+                .len()
+        );
+        // Unlocked blocks remain editable while the first block is locked.
+        let mut desired = phone.blocks();
+        desired[1].text.push_str("可编辑");
+        desired[1].segments.clear();
+        let result = phone.apply_block_snapshot(desired).unwrap();
+        desktop.apply_cses_update(result.v1_update).unwrap();
+        let update = desktop
+            .set_block_lock(
+                id.clone(),
+                false,
+                "bob".into(),
+                true,
+                Some("alice".into()),
+                false,
+            )
+            .unwrap()
+            .v1_update;
+        phone.apply_cses_update(update).unwrap();
+        assert!(!crate::api::block_locks::scan(&phone.doc, "fixture-doc")
+            .iter()
+            .any(|s| s.source_id.is_some()));
+        phone
+            .set_block_lock(id.clone(), true, "alice".into(), false, None, false)
+            .unwrap();
+        let path = phone.database_path.clone();
+        drop(phone);
+        let mut reopened = CollabEngine::open("fixture-doc".into(), path).unwrap().0;
+        reopened.blockcraft_root_id = Some("fixture-doc".into());
+        assert!(crate::api::block_locks::scan(&reopened.doc, "fixture-doc")
+            .iter()
+            .any(|s| s.block_id == id && s.owner_id.as_deref() == Some("alice")));
+        reopened
+            .set_block_lock(
+                id,
+                false,
+                "alice".into(),
+                false,
+                Some("alice".into()),
+                false,
+            )
+            .unwrap();
+    }
+
+    /// 容器锁继承、父级删除和混合快照全部在写入前拒绝；外侧插入不误判成移动锁块。
+    #[test]
+    fn inherited_locks_guard_structure_and_atomic_snapshots() {
+        let mut e = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-callout.update"
+        ));
+        let parent = e
+            .blocks()
+            .iter()
+            .find(|b| b.block_type == "callout")
+            .unwrap()
+            .id
+            .clone();
+        e.set_block_lock(parent.clone(), true, "alice".into(), false, None, false)
+            .unwrap();
+        let previous = e.blocks();
+        let child = previous
+            .iter()
+            .find(|b| b.parent_id.as_deref() == Some(&parent))
+            .unwrap()
+            .id
+            .clone();
+        assert!(e
+            .set_block_lock(child.clone(), false, "alice".into(), true, None, false)
+            .is_err());
+        let vector = e.doc.transact().state_vector();
+        for case in 0..5 {
+            let mut desired = previous.clone();
+            match case {
+                0 => {
+                    let b = desired.iter_mut().find(|b| b.id == child).unwrap();
+                    b.text.push('X');
+                    b.segments.clear();
+                }
+                1 => desired.retain(|b| b.id != parent && b.parent_id.as_deref() != Some(&parent)),
+                2 => {
+                    let mut b = previous.iter().find(|b| b.id == child).unwrap().clone();
+                    b.id = "new-child".into();
+                    desired.push(b);
+                }
+                3 => {
+                    desired
+                        .iter_mut()
+                        .find(|b| b.id == child)
+                        .unwrap()
+                        .parent_id = None
+                }
+                _ => {
+                    desired
+                        .iter_mut()
+                        .find(|b| b.id == parent)
+                        .unwrap()
+                        .callout_prefix = Some("X".into());
+                }
+            }
+            assert!(e.apply_block_snapshot(desired).is_err(), "case {case}");
+            assert_eq!(vector, e.doc.transact().state_vector());
+        }
+        let mut desired = previous.clone();
+        let mut outside = previous
+            .iter()
+            .find(|b| b.parent_id.is_none() && b.block_type == "paragraph")
+            .unwrap()
+            .clone();
+        outside.id = "outside".into();
+        desired.insert(0, outside);
+        e.apply_block_snapshot(desired).unwrap();
+        e.set_block_lock(
+            parent,
+            false,
+            "alice".into(),
+            false,
+            Some("alice".into()),
+            false,
+        )
+        .unwrap();
+    }
+
+    /// 表格隐藏结构与图片题注也参与完整锁图，不能经父级删除绕过保护。
+    #[test]
+    fn table_and_caption_locks_protect_hidden_and_visible_descendants() {
+        let mut table = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-table.update"
+        ));
+        let original = table.blocks();
+        let cell = original
+            .iter()
+            .find(|b| b.block_type == "table-cell")
+            .unwrap()
+            .id
+            .clone();
+        let inner = original
+            .iter()
+            .find(|b| b.parent_id.as_deref() == Some(&cell) && b.block_type == "paragraph")
+            .unwrap()
+            .id
+            .clone();
+        table
+            .set_block_lock(cell.clone(), true, "alice".into(), false, None, false)
+            .unwrap();
+        assert!(crate::api::block_locks::scan(&table.doc, "fixture-doc")
+            .iter()
+            .any(|s| s.block_id == inner && s.source_id.as_deref() == Some(&cell)));
+        let mut desired = table.blocks();
+        let target = desired.iter_mut().find(|b| b.id == inner).unwrap();
+        target.text.push('X');
+        target.segments.clear();
+        assert!(table
+            .apply_block_snapshot(desired)
+            .unwrap_err()
+            .contains("READ_ONLY_BLOCK"));
+        let mut desired = table.blocks();
+        if let Some(other) = desired.iter_mut().find(|b| {
+            b.block_type == "paragraph" && b.id != inner && b.parent_id.as_deref() != Some(&cell)
+        }) {
+            other.text.push('Y');
+            other.segments.clear();
+            table.apply_block_snapshot(desired).unwrap();
+        }
+        let mut image = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-image.update"
+        ));
+        let original = image.blocks();
+        let source = original
+            .iter()
+            .find(|b| b.image.as_ref().is_some_and(|v| !v.captions.is_empty()))
+            .unwrap();
+        let caption = source.image.as_ref().unwrap().captions[0].id.clone();
+        let image_id = source.id.clone();
+        image
+            .set_block_lock(caption, true, "alice".into(), false, None, false)
+            .unwrap();
+        assert!(crate::api::block_locks::scan(&image.doc, "fixture-doc")
+            .iter()
+            .any(|s| s.block_id == image_id && s.source_id.is_none() && s.contains_lock));
+        let mut desired = image.blocks();
+        desired
+            .iter_mut()
+            .find(|b| b.id == image_id)
+            .unwrap()
+            .image
+            .as_mut()
+            .unwrap()
+            .captions[0]
+            .text
+            .push('X');
+        assert!(image
+            .apply_block_snapshot(desired)
+            .unwrap_err()
+            .contains("READ_ONLY_BLOCK"));
+        let mut desired = image.blocks();
+        desired.retain(|b| b.id != image_id);
+        assert!(image
+            .apply_block_snapshot(desired)
+            .unwrap_err()
+            .contains("READ_ONLY_BLOCK"));
     }
 
     #[test]
@@ -4473,11 +4709,14 @@ mod tests {
         engine
             .apply_cses_update(remote.transact().encode_state_as_update_v1(&before))
             .unwrap();
-        assert!(project(&engine.doc, "fixture-doc").reason.is_some());
+        assert!(project(&engine.doc, "fixture-doc").reason.is_none());
+        desired[3].image.as_mut().unwrap().captions[0]
+            .text
+            .push('X');
         assert!(engine
             .apply_block_snapshot(desired)
             .unwrap_err()
-            .contains("READ_ONLY_DOCUMENT"));
+            .contains("READ_ONLY_BLOCK"));
     }
 
     /// 旧版像素尺寸只参与展示，改 URL 不自动补 wr/ar 或丢掉原 width/height。

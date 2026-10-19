@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'dart:convert';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
@@ -68,7 +69,7 @@ final class CollabTextRange {
       );
     }
     return CollabTextRange._(
-      nodes.map(_TextRangeNode.new).toList(),
+      nodes.map((node) => _TextRangeNode(node, state)).toList(),
       selection.start.offset,
       selection.end.offset,
       text.join('\n'),
@@ -85,6 +86,8 @@ final class CollabTextRange {
       final node = findCollabInlineTextNode(state, saved.id);
       if (node == null ||
           !_isText(node) ||
+          (CollabBlockLocks.of(state)?.epoch(saved.id) ?? 0) !=
+              saved.lockEpoch ||
           (node.parent?.attributes['cses_collab_block_id'] ??
                   node.parent?.id) !=
               saved.parentId ||
@@ -127,15 +130,20 @@ final class CollabTextRange {
 
 /// 一个块的不可变定位快照，完整 Delta 用于拒绝陈旧的链接和替换操作。
 final class _TextRangeNode {
-  /// 从借用 [node] 复制身份、类型及正文，不保留可变节点引用。
-  _TextRangeNode(Node node)
-    : id = node.attributes['cses_collab_block_id'] as String? ?? node.id,
+  /// 从借用[node]、[state]复制身份、权限代次、类型及正文，不持有资源。
+  _TextRangeNode(Node node, EditorState state)
+    : lockEpoch =
+          CollabBlockLocks.of(state)?.epoch(CollabBlockLocks.idOf(node)) ?? 0,
+      id = node.attributes['cses_collab_block_id'] as String? ?? node.id,
       type = node.type,
       text = node.delta!.toPlainText(),
       delta = jsonEncode(node.delta!.toJson()),
       parentId =
           node.parent?.attributes['cses_collab_block_id'] as String? ??
           node.parent?.id;
+
+  /// 捕获时的权限代次，锁后解锁仍拒绝旧范围。
+  final int lockEpoch;
 
   final String id;
   final String type;

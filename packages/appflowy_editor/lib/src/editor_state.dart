@@ -98,6 +98,14 @@ enum TransactionTime { before, after }
 /// all the mutations should be applied through [Transaction].
 ///
 /// Mutating the document with document's API is not recommended.
+///
+/// ```dart
+/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// final editor = EditorState.blank();
+/// editor.transactionGuard = (transaction) => true;
+/// // A host may also set selectionInputGuard and blockDecorator.
+/// editor.dispose();
+/// ```
 class EditorState {
   EditorState({
     required this.document,
@@ -130,6 +138,33 @@ class EditorState {
     }
     editableNotifier.value = value;
   }
+
+  /// Optional host-owned block decoration. The borrowed context, node and child
+  /// must retain their editing/selection identity; null renders the child directly.
+  Widget Function(BuildContext context, Node node, Widget child)?
+  blockDecorator;
+
+  /// Optional synchronous local-write policy, owned by the host. Null allows all
+  /// otherwise editable transactions. The borrowed transaction is inspected before
+  /// mutation and history recording; remote projection bypasses this policy.
+  bool Function(Transaction transaction)? transactionGuard;
+
+  /// Optional per-selection input policy. Null uses document editability; false
+  /// keeps selection/copy available while preventing a text-input connection.
+  bool Function(Selection selection)? selectionInputGuard;
+
+  /// Check borrowed [transaction] before local mutation or popping a history item.
+  /// Policies must be synchronous and must not mutate the document or history.
+  bool canApplyTransaction(Transaction transaction) =>
+      !isDisposed && editable && (transactionGuard?.call(transaction) ?? true);
+
+  /// Whether borrowed [selection] may attach an input connection. A null selection
+  /// has no editable target; the host retains ownership of both policy callbacks.
+  bool canInputAt(Selection? selection) =>
+      !isDisposed &&
+      editable &&
+      selection != null &&
+      (selectionInputGuard?.call(selection) ?? true);
 
   /// Whether the editor should disable auto scroll.
   bool disableAutoScroll = false;
@@ -396,6 +431,11 @@ class EditorState {
   ///
   /// The withUpdateSelection is used to determine whether the editor
   /// should update the selection after applying the transaction.
+  /// Apply borrowed [transaction] locally or as authoritative [isRemote] projection.
+  /// [options] controls history recording, [withUpdateSelection] controls the final
+  /// selection update, and [skipHistoryDebounce] seals this change independently.
+  /// Local host-policy rejection performs no mutation or history recording; remote
+  /// projection bypasses the local guard. The Future completes after processing.
   Future<void> apply(
     Transaction transaction, {
     bool isRemote = false,
@@ -403,7 +443,9 @@ class EditorState {
     bool withUpdateSelection = true,
     bool skipHistoryDebounce = false,
   }) async {
-    if (!editable || isDisposed) {
+    if (!editable ||
+        isDisposed ||
+        (!isRemote && !canApplyTransaction(transaction))) {
       return;
     }
 
@@ -427,6 +469,9 @@ class EditorState {
         _asyncObserver.add((TransactionTime.before, transaction, options));
       }
 
+      if (transaction.operations.isEmpty || !canApplyTransaction(transaction)) {
+        return;
+      }
       _applyTransactionInLocal(transaction);
 
       // broadcast to other users here, after applying the transaction

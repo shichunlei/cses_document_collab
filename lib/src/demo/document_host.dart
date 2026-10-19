@@ -66,7 +66,9 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
       if (_disposed) return;
       final path = '${directory.path}/cses_mobile_collab_demo/updates.sqlite3';
       final mentionDirectory = localDraft ? null : CsesMentionDirectory();
+      final metadata = localDraft ? null : CsesDocumentMetadataService();
       final services = CollabHostServices(
+        canUnlockBlock: metadata?.canUnlockBlock,
         buildParagraphLink: localDraft
             ? null
             : (documentId, blockId) => Uri(
@@ -96,7 +98,7 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
         createId: () => ObjectId().toString(),
         onError: (message, error, stack, tag) => Log.e(message, error: error, stackTrace: stack, tag: tag),
         mediaUpload: const CsesEditorMediaUploadService(),
-        documentMetadata: localDraft ? null : CsesDocumentMetadataService(),
+        documentMetadata: metadata,
         mentionAvatarBuilder: buildDemoMentionAvatar,
         pickMentionUser: mentionDirectory == null
             ? null

@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'dart:async';
 import 'dart:math' as math;
 
@@ -141,6 +142,7 @@ class _EditorShortcutToolbarState extends State<EditorShortcutToolbar> {
     if (defaultTargetPlatform != TargetPlatform.android ||
         selection == null ||
         !selection.isCollapsed ||
+        !widget.editorState.canInputAt(selection) ||
         widget.editorState.selectionExtraInfo?[selectionExtraInfoDoNotAttachTextService] == true ||
         widget.editorState.selectionUpdateReason != SelectionUpdateReason.uiEvent) {
       return;
@@ -1468,11 +1470,18 @@ void _showToolbarMessage(BuildContext context, String message) {
 /// The saved selection is independent of focus and survives block reordering.
 /// Both endpoints are retained so cancellation also restores expanded ranges.
 class _EditorSelectionBookmark {
+  /// 捕获借用[state]中[selection]两端的稳定身份、偏移及权限代次。
   _EditorSelectionBookmark(EditorState state, Selection selection)
-    : startId = _idAt(state, selection.start),
+    : startEpoch = CollabBlockLocks.of(state)?.epoch(_idAt(state, selection.start) ?? '') ?? 0,
+      endEpoch = CollabBlockLocks.of(state)?.epoch(_idAt(state, selection.end) ?? '') ?? 0,
+      startId = _idAt(state, selection.start),
       endId = _idAt(state, selection.end),
       startOffset = selection.start.offset,
       endOffset = selection.end.offset;
+
+  /// 捕获时两端权限代次，锁定后重新解锁不复用旧书签。
+  final int startEpoch;
+  final int endEpoch;
 
   final String? startId;
   final String? endId;
@@ -1490,8 +1499,14 @@ class _EditorSelectionBookmark {
     return Position(path: node.path, offset: offset.clamp(0, node.delta?.length ?? 0));
   }
 
+  /// 在借用[state]中重定位；锁定或权限代次变化后不恢复旧书签。
   Selection? resolve(EditorState state) {
-    if (state.isDisposed || !state.editable) return null;
+    if (state.isDisposed ||
+        !state.editable ||
+        (CollabBlockLocks.of(state)?.epoch(startId ?? '') ?? 0) != startEpoch ||
+        (CollabBlockLocks.of(state)?.epoch(endId ?? '') ?? 0) != endEpoch) {
+      return null;
+    }
     final start = _resolvePoint(state, startId, startOffset);
     final end = _resolvePoint(state, endId, endOffset);
     if (start == null || end == null) return null;
@@ -1538,7 +1553,7 @@ class _EditorModalSession {
     if (context == null || !_canRestoreEditorFocus(context, state)) return;
     final selection = appliedSelection ?? bookmark?.resolve(state);
     // A deleted anchor must not silently resolve to a different block.
-    if (selection == null) return;
+    if (selection == null || !state.canInputAt(selection)) return;
     final restorationInfo = <Object?, Object?>{...?previousExtraInfo, selectionExtraInfoDisableFloatingToolbar: true};
     await _restoreEditorCaretAndKeyboard(context, state, selection, extraInfo: restorationInfo);
     if (!state.isDisposed && identical(state.selectionExtraInfo, restorationInfo)) {
@@ -1659,14 +1674,20 @@ Future<T?> runEditorHeaderAction<T>(
   Selection? Function()? selectionAfterAction,
 }) async {
   if (editorState.isDisposed) return null;
+  final locks = CollabBlockLocks.of(editorState);
+  final lease = locks?.beginLease();
   final session = _EditorModalSession(editorState);
   try {
     return await action();
   } finally {
-    await session.finish(
-      context.mounted && (canRestore?.call() ?? true) ? context : null,
-      editorState.isDisposed ? null : selectionAfterAction?.call(),
-    );
+    try {
+      await session.finish(
+        context.mounted && (canRestore?.call() ?? true) ? context : null,
+        editorState.isDisposed ? null : selectionAfterAction?.call(),
+      );
+    } finally {
+      if (lease != null) locks?.endLease(lease);
+    }
   }
 }
 

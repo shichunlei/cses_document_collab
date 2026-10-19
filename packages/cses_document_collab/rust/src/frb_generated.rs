@@ -39,7 +39,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.13.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1647568854;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -2072767205;
 
 // Section: executor
 
@@ -253,6 +253,35 @@ fn wire__crate__api__collab__create_sync_step1_impl(
             deserializer.end();
             transform_result_sse::<_, String>((move || {
                 let output_ok = crate::api::collab::create_sync_step1()?;
+                std::result::Result::Ok(output_ok)
+            })())
+        },
+    )
+}
+fn wire__crate__api__collab__current_block_locks_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "current_block_locks",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            transform_result_sse::<_, String>((move || {
+                let output_ok = crate::api::collab::current_block_locks()?;
                 std::result::Result::Ok(output_ok)
             })())
         },
@@ -572,6 +601,48 @@ fn wire__crate__api__collab__reset_local_document_impl(
         },
     )
 }
+fn wire__crate__api__collab__set_block_lock_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "set_block_lock",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_block_id = <String>::sse_decode(&mut deserializer);
+            let api_locked = <bool>::sse_decode(&mut deserializer);
+            let api_user_id = <String>::sse_decode(&mut deserializer);
+            let api_grant = <bool>::sse_decode(&mut deserializer);
+            let api_expected_owner = <Option<String>>::sse_decode(&mut deserializer);
+            let api_expected_template = <bool>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse::<_, String>((move || {
+                let output_ok = crate::api::collab::set_block_lock(
+                    api_block_id,
+                    api_locked,
+                    api_user_id,
+                    api_grant,
+                    api_expected_owner,
+                    api_expected_template,
+                )?;
+                std::result::Result::Ok(output_ok)
+            })())
+        },
+    )
+}
 
 // Section: dart2rust
 
@@ -647,6 +718,24 @@ impl SseDecode for crate::api::collab::CollabBlock {
             parent_id: var_parentId,
             callout_prefix: var_calloutPrefix,
             block_text_color: var_blockTextColor,
+        };
+    }
+}
+
+impl SseDecode for crate::api::block_locks::CollabBlockLock {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_blockId = <String>::sse_decode(deserializer);
+        let mut var_sourceId = <Option<String>>::sse_decode(deserializer);
+        let mut var_ownerId = <Option<String>>::sse_decode(deserializer);
+        let mut var_template = <bool>::sse_decode(deserializer);
+        let mut var_containsLock = <bool>::sse_decode(deserializer);
+        return crate::api::block_locks::CollabBlockLock {
+            block_id: var_blockId,
+            source_id: var_sourceId,
+            owner_id: var_ownerId,
+            template: var_template,
+            contains_lock: var_containsLock,
         };
     }
 }
@@ -792,6 +881,20 @@ impl SseDecode for Vec<crate::api::collab::CollabBlock> {
         let mut ans_ = Vec::with_capacity(len_ as usize);
         for idx_ in 0..len_ {
             ans_.push(<crate::api::collab::CollabBlock>::sse_decode(deserializer));
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for Vec<crate::api::block_locks::CollabBlockLock> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = Vec::with_capacity(len_ as usize);
+        for idx_ in 0..len_ {
+            ans_.push(<crate::api::block_locks::CollabBlockLock>::sse_decode(
+                deserializer,
+            ));
         }
         return ans_;
     }
@@ -984,7 +1087,7 @@ fn pde_ffi_dispatcher_primary_impl(
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
         6 => wire__crate__api__collab__collab_image_default_impl(port, ptr, rust_vec_len, data_len),
-        14 => wire__crate__api__init__init_app_impl(port, ptr, rust_vec_len, data_len),
+        15 => wire__crate__api__init__init_app_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -1003,15 +1106,17 @@ fn pde_ffi_dispatcher_sync_impl(
         4 => wire__crate__api__collab__clear_remote_awareness_impl(ptr, rust_vec_len, data_len),
         5 => wire__crate__api__collab__close_document_impl(ptr, rust_vec_len, data_len),
         7 => wire__crate__api__collab__create_sync_step1_impl(ptr, rust_vec_len, data_len),
-        8 => wire__crate__api__collab__current_blocks_impl(ptr, rust_vec_len, data_len),
-        9 => wire__crate__api__collab__document_read_only_reason_impl(ptr, rust_vec_len, data_len),
-        10 => wire__crate__api__collab__encode_document_diff_impl(ptr, rust_vec_len, data_len),
-        11 => wire__crate__api__collab__encode_local_awareness_impl(ptr, rust_vec_len, data_len),
-        12 => wire__crate__api__collab__encode_state_vector_impl(ptr, rust_vec_len, data_len),
-        13 => wire__crate__api__collab__handle_wire_message_impl(ptr, rust_vec_len, data_len),
-        15 => wire__crate__api__collab__open_cses_document_impl(ptr, rust_vec_len, data_len),
-        16 => wire__crate__api__collab__open_document_impl(ptr, rust_vec_len, data_len),
-        17 => wire__crate__api__collab__reset_local_document_impl(ptr, rust_vec_len, data_len),
+        8 => wire__crate__api__collab__current_block_locks_impl(ptr, rust_vec_len, data_len),
+        9 => wire__crate__api__collab__current_blocks_impl(ptr, rust_vec_len, data_len),
+        10 => wire__crate__api__collab__document_read_only_reason_impl(ptr, rust_vec_len, data_len),
+        11 => wire__crate__api__collab__encode_document_diff_impl(ptr, rust_vec_len, data_len),
+        12 => wire__crate__api__collab__encode_local_awareness_impl(ptr, rust_vec_len, data_len),
+        13 => wire__crate__api__collab__encode_state_vector_impl(ptr, rust_vec_len, data_len),
+        14 => wire__crate__api__collab__handle_wire_message_impl(ptr, rust_vec_len, data_len),
+        16 => wire__crate__api__collab__open_cses_document_impl(ptr, rust_vec_len, data_len),
+        17 => wire__crate__api__collab__open_document_impl(ptr, rust_vec_len, data_len),
+        18 => wire__crate__api__collab__reset_local_document_impl(ptr, rust_vec_len, data_len),
+        19 => wire__crate__api__collab__set_block_lock_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -1074,6 +1179,30 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::collab::CollabBlock>
     for crate::api::collab::CollabBlock
 {
     fn into_into_dart(self) -> crate::api::collab::CollabBlock {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::block_locks::CollabBlockLock {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.block_id.into_into_dart().into_dart(),
+            self.source_id.into_into_dart().into_dart(),
+            self.owner_id.into_into_dart().into_dart(),
+            self.template.into_into_dart().into_dart(),
+            self.contains_lock.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::block_locks::CollabBlockLock
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::block_locks::CollabBlockLock>
+    for crate::api::block_locks::CollabBlockLock
+{
+    fn into_into_dart(self) -> crate::api::block_locks::CollabBlockLock {
         self
     }
 }
@@ -1323,6 +1452,17 @@ impl SseEncode for crate::api::collab::CollabBlock {
     }
 }
 
+impl SseEncode for crate::api::block_locks::CollabBlockLock {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.block_id, serializer);
+        <Option<String>>::sse_encode(self.source_id, serializer);
+        <Option<String>>::sse_encode(self.owner_id, serializer);
+        <bool>::sse_encode(self.template, serializer);
+        <bool>::sse_encode(self.contains_lock, serializer);
+    }
+}
+
 impl SseEncode for crate::api::collab::CollabCode {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -1411,6 +1551,16 @@ impl SseEncode for Vec<crate::api::collab::CollabBlock> {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
             <crate::api::collab::CollabBlock>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Vec<crate::api::block_locks::CollabBlockLock> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::api::block_locks::CollabBlockLock>::sse_encode(item, serializer);
         }
     }
 }

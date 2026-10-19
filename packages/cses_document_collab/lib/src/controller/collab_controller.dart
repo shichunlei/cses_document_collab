@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
+import 'package:cses_document_collab/src/model/collab_block_lock.dart';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
@@ -23,9 +25,14 @@ enum ConnectionStatus { starting, connecting, online, offline, error }
 
 /// Owns one native document, local cache and editor; borrows the host gateway.
 ///
-/// Example: `final collab = CollabController.cses(config: config, gateway: gateway);
-/// await collab.initialize();` Present `CollaborativeEditorPage(collab: collab)`,
-/// then `await collab.close()` before opening another native document.
+/// ```dart
+/// import 'package:cses_document_collab/cses_document_collab.dart';
+/// final collab = CollabController.localDraft(databasePath: '/host/updates.sqlite');
+/// await collab.initialize();
+/// final page = CollaborativeEditorPage(collab: collab);
+/// // After removing page, close before opening another native document.
+/// await collab.close();
+/// ```
 class CollabController extends ChangeNotifier {
   /// Create a formal document with [config], a borrowed [gateway] and [services].
   /// Initialization performs no login and never creates or closes a socket.
@@ -61,10 +68,83 @@ class CollabController extends ChangeNotifier {
     _paragraphLinks = config.isFormal && linkBuilder != null
         ? CollabParagraphLinks(editor: editorState, documentId: config.documentId, buildLink: linkBuilder)
         : null;
+    _blockLocks = CollabBlockLocks(
+      editor: editorState,
+      userId: config.userId,
+      canUnlock: _canUnlockBlock,
+      commit: _commitBlockLock,
+    );
   }
 
   /// 控制器拥有的正式文档链接绑定；未配置宿主构造器或草稿时为null。
   late final CollabParagraphLinks? _paragraphLinks;
+
+  /// 本控制器拥有的块权限投影；页面借用，close时早于编辑器释放。
+  late final CollabBlockLocks _blockLocks;
+
+  /// 读取[blockId]当前锁状态；未投影的新块暂按未锁处理，写入仍经过原生预检。
+  CollabBlockLockState blockLock(String blockId) => _blockLocks.state(blockId);
+
+  /// 将[blockId]设为[locked]；仅正式文档、有编辑权限且有效身份可操作。
+  /// Future在锁字段落盘、安装投影和提交本地同步增量后完成，不代表服务端ACK。
+  Future<void> setBlockLocked(String blockId, bool locked) =>
+      _commitBlockLock(blockId, locked, _blockLocks.state(blockId));
+
+  /// 查询宿主是否额外允许解开借用[state]；异常拒绝并记录，不默认提升权限。
+  bool _canUnlockBlock(CollabBlockLockState state) {
+    if (state.ownerId == null) return false;
+    try {
+      return _services.canUnlockBlock?.call(
+            CollabBlockUnlockContext(
+              documentId: documentId,
+              blockId: state.blockId,
+              currentUserId: config.userId,
+              ownerId: state.ownerId!,
+              template: state.template,
+            ),
+          ) ??
+          false;
+    } catch (error, stack) {
+      _services.report('块解锁授权失败', error, stack, 'DocCollab');
+      return false;
+    }
+  }
+
+  /// 用最新原生状态核对[id]、[expected]及[locked]，只写锁字段；失败不改正文。
+  Future<void> _commitBlockLock(String id, bool locked, CollabBlockLockState expected) async {
+    if (!config.isFormal || !canEdit || !editorState.editable) throw StateError('当前文档不可操作锁');
+    _syncBlockLocks();
+    final current = _blockLocks.state(id);
+    if (current != expected || !_blockLocks.canToggle(id)) throw StateError('锁状态或权限已更新，请重新选择');
+    final result = rust.setBlockLock(
+      blockId: id,
+      locked: locked,
+      userId: config.userId,
+      grant: _canUnlockBlock(current),
+      expectedOwner: current.explicit ? current.ownerId : null,
+      expectedTemplate: current.explicit && current.template,
+    );
+    _lastBlocks = List.unmodifiable(result.blocks);
+    _syncBlockLocks();
+    _session?.sendLocalUpdate(result.v1Update);
+    await _queueProjection();
+    if (!_disposed) _notify();
+  }
+
+  /// 即使正文快照相等也从完整块图刷新权限，确保远端仅改锁时立即生效。
+  void _syncBlockLocks() {
+    _blockLocks.update(
+      rust.currentBlockLocks().map(
+        (value) => CollabBlockLockState(
+          blockId: value.blockId,
+          sourceId: value.sourceId,
+          ownerId: value.ownerId,
+          template: value.template,
+          containsLock: value.containsLock,
+        ),
+      ),
+    );
+  }
 
   /// Immutable host identity and storage contract; contains no login credentials.
   final CollabDocumentConfig config;
@@ -113,7 +193,7 @@ class CollabController extends ChangeNotifier {
   /// 当前模型根名称；本地草稿为 Demo 块顺序，CSES 正式文档为 blocks。
   String get sharedTypeName => _sharedTypeName;
 
-  /// Rust 根据当前根、行内对象、锁和修订计算的只读原因；null 表示结构可编辑。
+  /// Rust 根据当前根、未支持结构和修订计算的整篇只读原因；null 表示结构可编辑。
   /// 此值不代表服务端业务权限，网络断开后仍保留已加载模型的编辑能力。
   String? get readOnlyReason => !_editable ? '宿主权限为只读' : _readOnlyReason;
 
@@ -227,7 +307,7 @@ class CollabController extends ChangeNotifier {
   /// [formalDocumentId] 非 null 时指定正式根 ID，使用 BlockCraft 引擎且禁止插入 Demo 头部。
   /// null 仅用于独立本地草稿；正式根 ID 与缓存哈希键必须分开传递。
   /// Future 在 AppFlowy 投影完成后结束，调用者负责确保旧会话已释放。
-  /// 同时清除旧文档的身份映射与本地撤销历史，禁止历史操作跨缓存或账号恢复。
+  /// 同时清除旧文档的身份映射与本地撤销历史，并刷新块权限；禁止历史操作跨缓存或账号恢复。
   Future<void> _openLocal(String cacheId, {String? formalDocumentId}) async {
     final result = formalDocumentId == null
         ? rust.openDocument(documentId: cacheId, databasePath: config.databasePath)
@@ -239,6 +319,7 @@ class CollabController extends ChangeNotifier {
     _lastBlocks = List.unmodifiable(result.blocks);
     _editorAdapter.resetDocumentHistory();
     _readOnlyReason = rust.documentReadOnlyReason();
+    _syncBlockLocks();
     _sharedTypeName = result.sharedTypeName;
     _persistedUpdateCount = result.persistedUpdateCount;
     await _queueProjection();
@@ -290,7 +371,7 @@ class CollabController extends ChangeNotifier {
 
   /// 持久化编辑器 [nextBlocks] 的规范化快照；仅本地事务产生上行 update。
   /// 离线/握手期间不发消息，下一轮状态向量会补齐。失败由唯一日志及展示边界处理。
-  /// 显式编号设置与后续派生序号共用原生事务；非法设置或表格结构/布局不改权威文档并恢复 UI。
+  /// 显式编号设置与后续派生序号共用原生事务；锁定区域、非法设置或表格结构/布局在写前拒绝，失败恢复UI。
   void _applyEditorBlocks(List<CollabEditorBlock> nextBlocks) {
     if (!_initialized || _disposed || _busy) return;
     if (!canEdit) {
@@ -304,6 +385,7 @@ class CollabController extends ChangeNotifier {
       _error = null;
       _lastBlocks = List.unmodifiable(result.blocks);
       _lastProtocolEvent = 'local-block-update';
+      _syncBlockLocks();
       _session?.sendLocalUpdate(result.v1Update);
       if (!_editorBlocksEqual(_toEditorBlocks(result.blocks), nextBlocks)) {
         unawaited(_queueProjection());
@@ -313,6 +395,7 @@ class CollabController extends ChangeNotifier {
       final message = error.toString();
       if (message.contains('UNSUPPORTED_BLOCK_TYPE') ||
           message.contains('READ_ONLY_DOCUMENT') ||
+          message.contains('READ_ONLY_BLOCK') ||
           message.contains('INVALID_IMAGE_PROPERTIES') ||
           message.contains('INVALID_TABLE') ||
           message.contains('INVALID_ORDERED_PROPERTIES') ||
@@ -330,12 +413,13 @@ class CollabController extends ChangeNotifier {
   }
 
   /// 应用未包帧的远端 V1 [bytes]；Rust 验证正式结构，再更新 Doc/SQLite，不回发。
-  /// 未知块和未适配容器仅投影为只读占位，其他块仍可编辑；行内对象、锁和修订继续保护整篇文档。
+  /// 未知块和未适配容器仅投影为只读占位，其他块仍可编辑；未适配行内对象保护所在段落，块锁按子树生效，修订仍保护整篇文档。
   /// 协同处理异常向上交给会话统一边界；AppFlowy 投影使用串行任务避免交错覆盖。
   void _applyRemoteUpdate(Uint8List bytes) {
     if (_disposed) return;
     final result = rust.applyDocumentUpdate(bytes: bytes);
     _readOnlyReason = rust.documentReadOnlyReason();
+    _syncBlockLocks();
     if (result.changed && !_rustBlocksEqual(result.blocks, _lastBlocks)) {
       _lastBlocks = List.unmodifiable(result.blocks);
       unawaited(_queueProjection());
@@ -419,9 +503,7 @@ class CollabController extends ChangeNotifier {
 
   /// 将 Rust [blocks] 映射为编辑器快照，保留块身份、链接地址与格式；公式/用户/业务实体按单字符及身份字段传递，业务实体携带原始属性以恢复历史。
   /// 同时投影段落默认字符格式、下一段设置与字体分段；不持有原生资源，不在边界写入共享内容。
-  static List<CollabEditorBlock> _toEditorBlocks(
-    List<rust.CollabBlock> blocks,
-  ) {
+  static List<CollabEditorBlock> _toEditorBlocks(List<rust.CollabBlock> blocks) {
     return blocks
         .map(
           (block) => CollabEditorBlock(
@@ -464,9 +546,7 @@ class CollabController extends ChangeNotifier {
             image: _toEditorImage(block.image),
             ordered: _toEditorOrdered(block.ordered),
             code: _toEditorCode(block.code),
-            resource: block.resource == null
-                ? null
-                : CollabResource(properties: block.resource!.properties),
+            resource: block.resource == null ? null : CollabResource(properties: block.resource!.properties),
             paragraphStyle: block.paragraphStyle == null
                 ? null
                 : CollabResource(
@@ -613,10 +693,7 @@ class CollabController extends ChangeNotifier {
 
   /// 比较 [left] 与 [right] 的全部块投影和字段补丁；相同才可跳过写入或投影。
   /// 段落样式及显式补丁不能只依赖正文变化触发，否则单独修改设置会被丢弃。
-  static bool _rustBlocksEqual(
-    List<rust.CollabBlock> left,
-    List<rust.CollabBlock> right,
-  ) {
+  static bool _rustBlocksEqual(List<rust.CollabBlock> left, List<rust.CollabBlock> right) {
     if (left.length != right.length) {
       return false;
     }
@@ -635,8 +712,7 @@ class CollabController extends ChangeNotifier {
           leftBlock.alignment != rightBlock.alignment ||
           leftBlock.indent != rightBlock.indent ||
           leftBlock.replacesId != rightBlock.replacesId ||
-          _toEditorOrdered(leftBlock.ordered) !=
-              _toEditorOrdered(rightBlock.ordered) ||
+          _toEditorOrdered(leftBlock.ordered) != _toEditorOrdered(rightBlock.ordered) ||
           _toEditorCode(leftBlock.code) != _toEditorCode(rightBlock.code) ||
           leftBlock.paragraphStyle != rightBlock.paragraphStyle ||
           leftBlock.resource != rightBlock.resource ||
@@ -650,10 +726,7 @@ class CollabController extends ChangeNotifier {
 
   /// 按桥接分段的完整值相等比较 [left] 与 [right]，包含字体、链接和对象身份。
   /// 长度或任一字段不同返回false，不修改分段或持有原生资源。
-  static bool _rustSegmentsEqual(
-    List<rust.CollabTextSegment> left,
-    List<rust.CollabTextSegment> right,
-  ) {
+  static bool _rustSegmentsEqual(List<rust.CollabTextSegment> left, List<rust.CollabTextSegment> right) {
     if (left.length != right.length) {
       return false;
     }
@@ -715,6 +788,7 @@ class CollabController extends ChangeNotifier {
       if (CollabRuntime.owns(this) && CollabRuntime.nativeReady) {
         rust.closeDocument();
       }
+      _blockLocks.dispose();
       _editorAdapter.dispose();
       CollabRuntime.release(this);
     }

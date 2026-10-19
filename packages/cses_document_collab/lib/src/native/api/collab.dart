@@ -4,9 +4,10 @@
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
 import '../frb_generated.dart';
+import 'block_locks.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-// These functions are ignored because they are not marked as `pub`: `apply_block_snapshot`, `apply_cses_update`, `apply_remote_update`, `apply_text_segments_for_schema`, `apply_text_segments`, `attribute_enabled`, `attribute_string`, `attributes`, `block_text_name`, `blocks`, `canonical_mention_value`, `compute_text_delta`, `create_compatible_doc`, `embed_value`, `handle_wire_message`, `ignored_message`, `inline_embed`, `inline_latex_value`, `inline_mention_identity`, `is_indentable_block_type`, `is_resource_block_type`, `is_styled`, `is_supported_alignment`, `is_supported_block_type`, `load_updates`, `migrate_legacy_text`, `open_result`, `open`, `out_bool`, `out_string`, `out_u32`, `persist_update`, `projected_inline_text`, `raw_block_ids`, `reconcile_order`, `remove_legacy_headers`, `restored_mention_attributes`, `schema_attribute`, `segment_embed`, `serialized_mention_attributes`, `sync_step1`, `text_segments_for_schema`, `text_segments`, `utf16_len`, `valid_entity_attributes`, `validate_blocks`, `with_engine_mut`, `with_engine`
+// These functions are ignored because they are not marked as `pub`: `apply_block_snapshot`, `apply_cses_update`, `apply_remote_update`, `apply_text_segments_for_schema`, `apply_text_segments`, `attribute_enabled`, `attribute_string`, `attributes`, `block_text_name`, `blocks`, `canonical_mention_value`, `compute_text_delta`, `create_compatible_doc`, `embed_value`, `handle_wire_message`, `ignored_message`, `inline_embed`, `inline_latex_value`, `inline_mention_identity`, `is_indentable_block_type`, `is_resource_block_type`, `is_styled`, `is_supported_alignment`, `is_supported_block_type`, `load_updates`, `migrate_legacy_text`, `open_result`, `open`, `out_bool`, `out_string`, `out_u32`, `persist_and_apply_update`, `persist_update`, `projected_inline_text`, `raw_block_ids`, `reconcile_order`, `remove_legacy_headers`, `restored_mention_attributes`, `schema_attribute`, `segment_embed`, `serialized_mention_attributes`, `set_block_lock`, `staged_document`, `sync_step1`, `text_segments_for_schema`, `text_segments`, `utf16_len`, `valid_entity_attributes`, `validate_blocks`, `with_engine_mut`, `with_engine`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `CollabEngine`, `InlineEmbed`, `TextDelta`
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `assert_fields_are_eq`, `assert_fields_are_eq`, `assert_fields_are_eq`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`
 
@@ -95,6 +96,28 @@ WireMessageResult handleWireMessage({required List<int> bytes}) =>
 
 OpenDocumentResult resetLocalDocument() =>
     RustLib.instance.api.crateApiCollabResetLocalDocument();
+
+/// Read effective locks for the entire reachable graph without changing shared data.
+List<CollabBlockLock> currentBlockLocks() =>
+    RustLib.instance.api.crateApiCollabCurrentBlockLocks();
+
+/// Persist one desktop-compatible user lock. Identity and extra authorization are
+/// supplied by the trusted host; expected metadata prevents stale menu actions.
+BlockChangeResult setBlockLock({
+  required String blockId,
+  required bool locked,
+  required String userId,
+  required bool grant,
+  String? expectedOwner,
+  required bool expectedTemplate,
+}) => RustLib.instance.api.crateApiCollabSetBlockLock(
+  blockId: blockId,
+  locked: locked,
+  userId: userId,
+  grant: grant,
+  expectedOwner: expectedOwner,
+  expectedTemplate: expectedTemplate,
+);
 
 class BlockChangeResult {
   final List<CollabBlock> blocks;

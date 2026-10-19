@@ -1,0 +1,100 @@
+{
+  "date": "2026-10-19",
+  "request": "锁图标位于卡片右上角外沿，完整显示且保留内容圆角裁切",
+  "implementation": {
+    "card": "CollabCardFrame外层Stack不裁切；内部Container保留antiAlias圆角裁切；锁作为兄弟层定位top=-5/right=-5，margin置于整层外",
+    "editor": "卡片块装饰层clipBehavior=Clip.none；普通正文保持原裁剪",
+    "interaction": "锁图标忽略指针，不拦截更多操作；权限和协同数据保持原有协议"
+  },
+  "versions": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.23",
+    "desktopDeclaration": "0.11.22",
+    "desktopYarnLock": "0.11.22",
+    "desktopInstalled": "0.11.17",
+    "desktopPnpmLegacyLock": "0.2.78",
+    "checked": "安装版/.22/.23随包技能、迁移说明与锁管理/样式；三版锁管理实现相同",
+    "lockManagerSliceSha256": "2ea33ae40b9317568cdc9fb9370d8af67be8833d0915bd73b3b9bf180a36003c",
+    "desktopPeerImplementationSha256": "a00e5fc1b4279f409a53a0cdf932a41e99762596c20002fc77613a99a7efd54e",
+    "remaining": "未升级桌面；.23其他Schema、行内、输入、剪贴板、菜单、历史、协同差异仍待同步"
+  },
+  "validation": [
+    {
+      "scope": "布局6项+锁定8项",
+      "result": "14 passed",
+      "log": "/private/tmp/block-lock-corner-tests.log",
+      "details": "320/1、280/2.2、390/1.5；真实会议、长标题、外边距；遍历每层RenderObject绘制裁剪边界检查完整图标"
+    },
+    {
+      "scope": "真实字体布局PNG",
+      "result": "6 passed",
+      "log": "/private/tmp/block-lock-corner-preview.log"
+    },
+    {
+      "scope": "Dart目标4文件静态检查",
+      "result": "No issues found",
+      "log": "/private/tmp/block-lock-corner-analyze.log"
+    },
+    {
+      "scope": "原生控制器及发布桌面.23双向Yjs/SQLite交换",
+      "result": "2 passed",
+      "log": "/private/tmp/block-lock-corner-native.log"
+    },
+    {
+      "scope": "块操作/链接菜单",
+      "result": "100 passed",
+      "log": "/private/tmp/block-lock-corner-cards.log",
+      "note": "同次命令额外误填不存在的collab_meeting_block_test.dart，加载失败；正确会议用例另跑，见下一项"
+    },
+    {
+      "scope": "公共卡片框及会议卡片",
+      "result": "35 passed, 4 failed",
+      "log": "/private/tmp/block-lock-corner-frame.log",
+      "baseline": "隔离HEAD同样35 passed, 4 failed；/private/tmp/block-lock-corner-frame-baseline.log",
+      "failure": "four rows keep geometry across loading在320/390及1/2.2四组加载按钮宽度断言；未改写无关测试"
+    },
+    {
+      "scope": "Android debug构建/覆盖安装",
+      "result": "passed",
+      "log": "/private/tmp/block-lock-corner-build.log"
+    },
+    {
+      "scope": "HONOR X70 Android16在线实际会议卡片",
+      "result": "完整锁标显示在卡片右上角外沿；重启/登录后锁状态保留",
+      "documentId": "6ad06c992a6b14f42c256937",
+      "screenshots": [
+        "phone-before.png",
+        "phone-after.png"
+      ]
+    }
+  ],
+  "priorLockImplementationValidation": {
+    "rust": "102 passed",
+    "appflowyHistory": "9 passed",
+    "controllerHistorySelectionModal": "46 passed",
+    "host": "12 passed",
+    "androidIsolatedIntegration": "1 passed（本轮角标改动前）",
+    "audioRegression": "111 passed / 9 failed；9个audio轨道尺寸断言在隔离HEAD复现",
+    "online": "用户桌面加锁、解锁均已在手机观察；手机再次加锁后保留。手机到桌面真实窗口观察尚未确认；实际发布桌面与原生双向交换已自动验证。远端解锁时手机菜单被外部交互关闭，在线旧菜单竞态不计通过"
+  },
+  "limitations": [
+    "iOS未运行",
+    "未验证服务端持久化ACK、真实断网重连及同时并发",
+    "当前线上正文中额外会议号段落未删除，保留用户操作",
+    "各版本其余功能未宣称全量兼容"
+  ],
+  "artifacts": {
+    "phone-after.png": "571c3aaf013d0c9719caf9c72b8c952fad49856fcfecceb42a7adebf30e48838",
+    "phone-before.png": "ee890ce143a49b12f0ada9250fdc7f58a0d5ba6403f05afc340b6149ea340ee7",
+    "meeting-lock-320.0-1.0.png": "6e0bb5d0f78c6f98b97adb2a2d94b63de4052e91920578d0c6f2d6fe74328831",
+    "online-desktop-lock-phone.png": "fa7707d2907287725b131f79c634f346706a92cab236cca3eaf57ccd3639934d",
+    "online-desktop-unlock-phone-menu.png": "0c3edd9b034354a6af95c2bcf1955bd3a0faa8bee726a7b511c122bffbb1c4c8",
+    "meeting-lock-390.0-1.5.png": "0161ef9374c57c6e33dab7b7640f06c22bc09470ffd3544bc16f3d8ff48e6ae1",
+    "meeting-lock-280.0-2.2.png": "dbaa7314fa1e61e8492d01e6a7db0ca9a8fdb65465a9483c87320984ddfccb88"
+  },
+  "commitChecks": {
+    "rust": "cargo fmt --check、cargo check通过",
+    "integrationDependency": "宿主dev_dependencies显式声明本地appflowy_editor，flutter pub get及真机测试文件静态分析无问题",
+    "diff": "git diff --cached --check通过"
+  }
+}

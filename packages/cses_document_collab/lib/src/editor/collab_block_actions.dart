@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'package:cses_document_collab/src/editor/collab_paragraph_links.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
@@ -182,11 +183,12 @@ class CollabBlockMoreButton extends StatelessWidget {
   /// default ellipsis remains hidden in preview without readonly actions.
   @override
   Widget build(BuildContext context) => ListenableBuilder(
-    listenable: editor.editableNotifier,
+    listenable: Listenable.merge([editor.editableNotifier, CollabBlockLocks.of(editor)]),
     builder: (context, _) {
       final available =
           !editor.isDisposed &&
-          (editor.editable ? const {'page', 'callout'}.contains(node.parent?.type) : readOnlyActions.isNotEmpty);
+          (CollabBlockLocks.of(editor)?.userId.isNotEmpty == true ||
+              (editor.editable ? const {'page', 'callout'}.contains(node.parent?.type) : readOnlyActions.isNotEmpty));
       final VoidCallback? onPressed = available && enabled ? () => _show(context) : null;
       if (triggerBuilder != null) {
         return ExcludeFocus(child: triggerBuilder!(context, onPressed));
@@ -194,6 +196,7 @@ class CollabBlockMoreButton extends StatelessWidget {
       if (!available) return const SizedBox.shrink();
       return ExcludeFocus(
         child: IconButton(
+          key: ValueKey('block-lock-menu-trigger-${CollabBlockLocks.idOf(node)}'),
           tooltip: '更多操作',
           style: const ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
           constraints: const BoxConstraints.tightFor(width: 32, height: 32),
@@ -206,18 +209,29 @@ class CollabBlockMoreButton extends StatelessWidget {
   );
 
   /// Opens one sheet in borrowed [context], rejects stale targets and catches failures.
+  /// Block locks preserve copy/unlock while suppressing mutation commands; inherited
+  /// locks expose their source. Permission transitions invalidate the whole old menu.
   /// Insertion below uses the text-line and downward-return icon to show its destination.
   /// 段落链接按正式文档和稳定块ID构造，复制后不修改正文/历史或恢复输入。
   /// Commands use semantic download, external-link, palette, copy, delete or edit icons.
   /// Resolves the block-specific header, applying the caller's [menuTitle]/[menuIcon] overrides.
   Future<void> _show(BuildContext context) async {
-    if (editor.isDisposed || (!editor.editable && readOnlyActions.isEmpty) || _pending[editor] == true) {
+    final locks = CollabBlockLocks.of(editor);
+    if (editor.isDisposed ||
+        (!editor.editable && readOnlyActions.isEmpty && locks == null) ||
+        _pending[editor] == true) {
       return;
     }
     final paragraphLinks = CollabParagraphLinks.of(editor);
     final canCopyParagraphLink = paragraphLinks?.supports(node) == true;
     final wasEditable = editor.editable;
-    final commands = [...readOnlyActions, if (wasEditable) ...actions];
+    final blockId = CollabBlockLocks.idOf(node);
+    final lock = locks?.state(blockId);
+    final protected = lock?.locked == true || lock?.containsLock == true;
+    final commands = [
+      ...readOnlyActions,
+      if (wasEditable) ...actions.where((action) => !protected || action.label.startsWith('复制')),
+    ];
     final host = collabBlockActionContext(context);
     final services = CollabRuntime.services;
     final id = node.attributes['cses_collab_block_id'] as String? ?? node.id;
@@ -230,10 +244,11 @@ class CollabBlockMoreButton extends StatelessWidget {
 
     /// Remembers revocation so restoring permissions cannot revive an old menu.
     void trackPermission() {
-      if (editor.editable != wasEditable) permissionRevoked = true;
+      if (editor.editable != wasEditable || locks?.state(blockId) != lock) permissionRevoked = true;
     }
 
     editor.editableNotifier.addListener(trackPermission);
+    locks?.addListener(trackPermission);
     _pending[editor] = true;
     try {
       await runEditorHeaderAction<void>(
@@ -242,43 +257,80 @@ class CollabBlockMoreButton extends StatelessWidget {
         () async {
           choice = await showCollabBottomSheet<int>(
             context: host,
-            builder: (sheet) => CollabBottomSheet(
-              title: Text(menuTitle ?? heading.$1),
-              icon: menuIcon ?? heading.$2,
-              contentPadding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (canCopyParagraphLink)
-                    ListTile(
-                      key: ValueKey('block-copy-paragraph-link-$id'),
-                      leading: const Icon(LucideIcons.link),
-                      title: const Text('复制段落链接'),
-                      onTap: () => Navigator.pop(sheet, -5),
-                    ),
-                  if (wasEditable)
-                    ListTile(
-                      key: ValueKey('block-insert-below-$id'),
-                      leading: const Icon(LucideIcons.listEnd),
-                      title: const Text('在下方插入'),
-                      onTap: () => Navigator.pop(sheet, -1),
-                    ),
-                  for (var i = 0; i < commands.length; i++)
-                    ListTile(
-                      key: commands[i].key,
-                      leading: Icon(
-                        _blockActionIcon(commands[i].label),
-                        color: commands[i].label.contains('删除') ? CollabModalColors.of(sheet).danger : null,
+            builder: (sheet) => ListenableBuilder(
+              listenable: Listenable.merge([editor.editableNotifier, locks]),
+              builder: (sheet, _) => CollabBottomSheet(
+                title: Text(menuTitle ?? heading.$1),
+                icon: menuIcon ?? heading.$2,
+                contentPadding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (locks != null && locks.userId.isNotEmpty) ...[
+                      SwitchListTile(
+                        key: ValueKey('block-lock-$id'),
+                        secondary: const Icon(LucideIcons.lockKeyhole),
+                        title: const Text('锁定内容块'),
+                        subtitle: Text(
+                          permissionRevoked
+                              ? '锁状态或权限已更新，请重新打开'
+                              : lock?.locked == true && lock?.explicit != true
+                              ? '由上级内容块锁定'
+                              : lock?.template == true
+                              ? '模板内容已锁定'
+                              : lock?.locked == true && lock?.ownerId != locks.userId
+                              ? '由其他用户锁定'
+                              : lock?.locked == true
+                              ? '解锁后可以编辑'
+                              : '锁定后保护此块及全部子块',
+                        ),
+                        value: lock?.locked ?? false,
+                        onChanged: !permissionRevoked && locks.canToggle(id) ? (_) => Navigator.pop(sheet, -2) : null,
                       ),
-                      title: Text(
-                        commands[i].label,
-                        style: commands[i].label.contains('删除')
-                            ? TextStyle(color: CollabModalColors.of(sheet).danger)
-                            : null,
+                      if (lock?.locked == true && lock?.explicit != true)
+                        ListTile(
+                          leading: const Icon(LucideIcons.cornerUpLeft),
+                          title: const Text('定位上级锁定块'),
+                          onTap: () => Navigator.pop(sheet, -3),
+                        ),
+                      ListTile(
+                        key: ValueKey('block-copy-$id'),
+                        leading: const Icon(LucideIcons.copy),
+                        title: const Text('复制内容'),
+                        onTap: () => Navigator.pop(sheet, -4),
                       ),
-                      onTap: () => Navigator.pop(sheet, i),
-                    ),
-                ],
+                    ],
+                    if (canCopyParagraphLink)
+                      ListTile(
+                        key: ValueKey('block-copy-paragraph-link-$id'),
+                        leading: const Icon(LucideIcons.link),
+                        title: const Text('复制段落链接'),
+                        onTap: () => Navigator.pop(sheet, -5),
+                      ),
+                    if (wasEditable && !protected && const {'page', 'callout'}.contains(node.parent?.type))
+                      ListTile(
+                        key: ValueKey('block-insert-below-$id'),
+                        leading: const Icon(LucideIcons.listEnd),
+                        title: const Text('在下方插入'),
+                        onTap: () => Navigator.pop(sheet, -1),
+                      ),
+                    for (var i = 0; i < commands.length; i++)
+                      ListTile(
+                        key: commands[i].key,
+                        leading: Icon(
+                          _blockActionIcon(commands[i].label),
+                          color: commands[i].label.contains('删除') ? CollabModalColors.of(sheet).danger : null,
+                        ),
+                        title: Text(
+                          commands[i].label,
+                          style: commands[i].label.contains('删除')
+                              ? TextStyle(color: CollabModalColors.of(sheet).danger)
+                              : null,
+                        ),
+                        onTap: () => Navigator.pop(sheet, i),
+                      ),
+                  ],
+                ),
               ),
             ),
           );
@@ -302,6 +354,26 @@ class CollabBlockMoreButton extends StatelessWidget {
             if (identical(CollabParagraphLinks.of(editor), paragraphLinks)) {
               await paragraphLinks?.copy(host, source, isCurrent: () => !permissionRevoked);
             }
+            return;
+          }
+          if (choice == -2 && locks != null && lock != null) {
+            await locks.commit(id, !lock.explicit, lock);
+            return;
+          }
+          if (choice == -3 && lock?.sourceId != null) {
+            final ancestor = findCollabActionNode(editor, lock!.sourceId!);
+            final target = ancestor?.key.currentContext;
+            if (target != null && target.mounted) {
+              await Scrollable.ensureVisible(target, duration: const Duration(milliseconds: 250));
+            }
+            return;
+          }
+          if (choice == -4) {
+            String text(Node value) => [
+              value.delta?.toPlainText() ?? value.attributes['url'] as String? ?? '',
+              ...value.children.map(text),
+            ].where((v) => v.isNotEmpty).join('\n');
+            await Clipboard.setData(ClipboardData(text: text(source)));
             return;
           }
           if (choice! >= 0) {
@@ -330,6 +402,7 @@ class CollabBlockMoreButton extends StatelessWidget {
       }
     } finally {
       editor.editableNotifier.removeListener(trackPermission);
+      locks?.removeListener(trackPermission);
       _pending[editor] = null;
     }
   }

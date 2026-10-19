@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
@@ -134,6 +135,7 @@ class _FormulaSheetState extends State<_FormulaSheet> {
       !widget.editor.isDisposed &&
       widget.editor.editable &&
       (!_editing || _target != null) &&
+      (_target == null || canEditCollabNode(widget.editor, _target!)) &&
       !_saving;
 
   /// 草稿是否基于过期的远端字段，独立于其他扩展属性变化。

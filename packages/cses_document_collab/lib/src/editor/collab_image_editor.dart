@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'package:cses_document_collab/src/editor/collab_cached_image.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -64,7 +65,9 @@ Future<bool> applyCollabImageEdit(
   }
   if (!editorState.editable) return false;
   final node = _findImage(editorState, original.id);
-  if (node == null || node.attributes[collabImageAttribute] is! Map) {
+  if (node == null ||
+      !canEditCollabNode(editorState, node) ||
+      node.attributes[collabImageAttribute] is! Map) {
     return false;
   }
   final current = _snapshot(node);
@@ -150,8 +153,22 @@ Future<void> showCollabImageEditor(
   try {
     final result = await showCollabDialog<CollabEditorBlock>(
       context: context,
-      builder: (_) =>
-          _CollabImageEditDialog(original: original, captionOnly: captionOnly),
+      builder: (_) => ListenableBuilder(
+        listenable: Listenable.merge([
+          editorState.editableNotifier,
+          CollabBlockLocks.of(editorState),
+        ]),
+        builder: (_, _) => _CollabImageEditDialog(
+          original: original,
+          captionOnly: captionOnly,
+          canSave: () =>
+              canEditCollabNode(editorState, node) &&
+              !(CollabBlockLocks.of(
+                    editorState,
+                  )?.state(original.id).containsLock ??
+                  false),
+        ),
+      ),
     );
     if (result == null || !context.mounted) return;
     final applied = await applyCollabImageEdit(editorState, original, result);
@@ -182,11 +199,15 @@ Future<void> showCollabImageEditor(
 /// 图片编辑表单；持有打开时的原始投影，提交后由外层检查远端竞态。
 class _CollabImageEditDialog extends StatefulWidget {
   /// [original] 为打开表单时的图片投影，借用且不修改；资源由 State 持有。
-  /// [captionOnly] 决定仅编辑题注或仅编辑链接与布局，两种模式都保留未编辑字段。
+  /// [captionOnly] 决定仅编辑题注或仅编辑链接与布局；[canSave]同步核对块锁及会话代次。
   const _CollabImageEditDialog({
     required this.original,
     required this.captionOnly,
+    this.canSave,
   });
+
+  /// 可选即时保存权限；null保留独立表单默认行为，失败时保留草稿。
+  final bool Function()? canSave;
 
   /// 弹窗打开时的不可变图片投影，用于检测并发字段冲突。
   final CollabEditorBlock original;
@@ -314,6 +335,8 @@ class _CollabImageEditDialogState extends State<_CollabImageEditDialog> {
                 decoration: InputDecoration(),
               ),
             ),
+        if (!(widget.canSave?.call() ?? true))
+          const Text('内容已锁定或权限已变化，请关闭后重新打开'),
         if (errorText != null)
           Text(errorText!, style: const TextStyle(color: Colors.red)),
       ],
@@ -325,62 +348,70 @@ class _CollabImageEditDialogState extends State<_CollabImageEditDialog> {
       ),
       FilledButton(
         key: const ValueKey('collab-image-save'),
-        onPressed: () {
-          final uri = Uri.tryParse(url.text.trim());
-          final width = wr.text.trim().isEmpty
-              ? null
-              : double.tryParse(wr.text.trim());
-          final ratio = ar.text.trim().isEmpty
-              ? null
-              : double.tryParse(ar.text.trim());
-          // 已有 data:/blob: 原值可保留；主动替换只接受可被其他端访问的 HTTP(S) URL。
-          if (!widget.captionOnly &&
-              url.text.trim() != original.text &&
-              (uri == null ||
-                  !['http', 'https'].contains(uri.scheme) ||
-                  uri.host.isEmpty)) {
-            setState(() => errorText = '请输入完整的 http:// 或 https:// 图片链接');
-            return;
-          }
-          if (!widget.captionOnly &&
-              ((wr.text.trim().isNotEmpty &&
-                      (width == null ||
-                          !width.isFinite ||
-                          width < 0.1 ||
-                          width > 100)) ||
-                  (ar.text.trim().isNotEmpty &&
-                      (ratio == null || !ratio.isFinite || ratio <= 0)))) {
-            setState(() => errorText = '请填写有效的宽度比例和正数宽高比');
-            return;
-          }
-          Navigator.pop(
-            context,
-            CollabEditorBlock(
-              id: original.id,
-              blockType: ImageBlockKeys.type,
-              text: widget.captionOnly ? original.text : url.text.trim(),
-              alignment: widget.captionOnly ? original.alignment : alignment,
-              image: CollabImage(
-                widthRatio: widget.captionOnly ? image.widthRatio : width,
-                aspectRatio: widget.captionOnly ? image.aspectRatio : ratio,
-                width: image.width,
-                height: image.height,
-                rotation: image.rotation,
-                captions: !widget.captionOnly
-                    ? image.captions
-                    : List.unmodifiable([
-                        for (var i = 0; i < captions.length; i++)
-                          if (image.captions.isNotEmpty ||
-                              texts[i].text.isNotEmpty)
-                            CollabImageCaption(
-                              id: captions[i].id,
-                              text: texts[i].text,
-                            ),
-                      ]),
-              ),
-            ),
-          );
-        },
+        onPressed: !(widget.canSave?.call() ?? true)
+            ? null
+            : () {
+                final uri = Uri.tryParse(url.text.trim());
+                final width = wr.text.trim().isEmpty
+                    ? null
+                    : double.tryParse(wr.text.trim());
+                final ratio = ar.text.trim().isEmpty
+                    ? null
+                    : double.tryParse(ar.text.trim());
+                // 已有 data:/blob: 原值可保留；主动替换只接受可被其他端访问的 HTTP(S) URL。
+                if (!widget.captionOnly &&
+                    url.text.trim() != original.text &&
+                    (uri == null ||
+                        !['http', 'https'].contains(uri.scheme) ||
+                        uri.host.isEmpty)) {
+                  setState(() => errorText = '请输入完整的 http:// 或 https:// 图片链接');
+                  return;
+                }
+                if (!widget.captionOnly &&
+                    ((wr.text.trim().isNotEmpty &&
+                            (width == null ||
+                                !width.isFinite ||
+                                width < 0.1 ||
+                                width > 100)) ||
+                        (ar.text.trim().isNotEmpty &&
+                            (ratio == null ||
+                                !ratio.isFinite ||
+                                ratio <= 0)))) {
+                  setState(() => errorText = '请填写有效的宽度比例和正数宽高比');
+                  return;
+                }
+                Navigator.pop(
+                  context,
+                  CollabEditorBlock(
+                    id: original.id,
+                    blockType: ImageBlockKeys.type,
+                    text: widget.captionOnly ? original.text : url.text.trim(),
+                    alignment: widget.captionOnly
+                        ? original.alignment
+                        : alignment,
+                    image: CollabImage(
+                      widthRatio: widget.captionOnly ? image.widthRatio : width,
+                      aspectRatio: widget.captionOnly
+                          ? image.aspectRatio
+                          : ratio,
+                      width: image.width,
+                      height: image.height,
+                      rotation: image.rotation,
+                      captions: !widget.captionOnly
+                          ? image.captions
+                          : List.unmodifiable([
+                              for (var i = 0; i < captions.length; i++)
+                                if (image.captions.isNotEmpty ||
+                                    texts[i].text.isNotEmpty)
+                                  CollabImageCaption(
+                                    id: captions[i].id,
+                                    text: texts[i].text,
+                                  ),
+                            ]),
+                    ),
+                  ),
+                );
+              },
         child: const Text('保存'),
       ),
     ],

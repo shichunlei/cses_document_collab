@@ -68,6 +68,31 @@ void main() {
     },
   );
   test(
+    'block unlock grants match desktop manager role and revoke after failed reload',
+    () async {
+      const lock = CollabBlockUnlockContext(
+        documentId: 'doc',
+        blockId: 'block',
+        currentUserId: 'server-user',
+        ownerId: 'another-user',
+        template: true,
+      );
+      expect(service.canUnlockBlock(lock), isFalse);
+      detail['localUser'] = {'role': 800};
+      await service.load('doc');
+      expect(service.canUnlockBlock(lock), isTrue);
+      detail['localUser'] = {'role': 600};
+      await service.load('doc');
+      expect(service.canUnlockBlock(lock), isFalse);
+      detail['localUser'] = {'role': 1000};
+      await service.load('doc');
+      expect(service.canUnlockBlock(lock), isTrue);
+      permission = {'isSuccess': false};
+      await expectLater(service.load('doc'), throwsA(isA<FormatException>()));
+      expect(service.canUnlockBlock(lock), isFalse);
+    },
+  );
+  test(
     'single-field updates and dedicated remove routes match desktop contract',
     () async {
       await service.update('doc', const DocumentMetadataPatch.rename('新标题'));

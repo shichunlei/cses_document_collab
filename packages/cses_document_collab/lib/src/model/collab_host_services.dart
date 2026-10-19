@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:cses_document_collab/src/model/collab_block_lock.dart';
+
 import 'package:cses_document_collab/src/model/editor_media_upload.dart';
 import 'package:flutter/widgets.dart';
 
@@ -51,7 +53,10 @@ class CollabHostServices {
   /// [onDocumentLike]接收文档ID和当前点赞快照，返回宿主确认的最新点赞快照；null禁用。
   /// [onDocumentComment]接收文档ID和当前评论数量，返回最新评论数量；null禁用。
   /// [buildParagraphLink]同步构造正式文档段落链接；null隐藏复制段落链接入口。
+  /// [canUnlockBlock]同步提供当前用户的额外解锁授权；null仅允许普通锁本人解锁。
+  /// 模板锁始终需要显式授权；身份、角色与授权变更由宿主负责，不拥有认证资源。
   const CollabHostServices({
+    this.canUnlockBlock,
     this.buildParagraphLink,
     this.showDocumentFeedback = false,
     this.loadDocumentFeedback,
@@ -77,6 +82,9 @@ class CollabHostServices {
   /// 宿主负责环境域名、路由及编码，须同步返回完整非空链接；失败抛出异常由菜单报告。
   /// null隐藏入口，草稿不启用；复制不修改正文/历史，宿主资源所有权保持不变。
   final String Function(String documentId, String blockId)? buildParagraphLink;
+
+  /// 额外解锁策略，执行时读取宿主当前权限；异常按拒绝处理。
+  final bool Function(CollabBlockUnlockContext lock)? canUnlockBlock;
 
   /// 是否显示整个文末点赞/全文评论区域，默认false；编辑和预览均适用。
   /// 配置随控制器生命周期固定；变更时由宿主重建控制器，不写入协同文档。

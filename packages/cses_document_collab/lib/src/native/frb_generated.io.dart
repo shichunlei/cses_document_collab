@@ -3,6 +3,7 @@
 
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
+import 'api/block_locks.dart';
 import 'api/collab.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -49,6 +50,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   CollabBlock dco_decode_collab_block(dynamic raw);
 
   @protected
+  CollabBlockLock dco_decode_collab_block_lock(dynamic raw);
+
+  @protected
   CollabCode dco_decode_collab_code(dynamic raw);
 
   @protected
@@ -71,6 +75,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<CollabBlock> dco_decode_list_collab_block(dynamic raw);
+
+  @protected
+  List<CollabBlockLock> dco_decode_list_collab_block_lock(dynamic raw);
 
   @protected
   List<CollabImageCaption> dco_decode_list_collab_image_caption(dynamic raw);
@@ -157,6 +164,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   CollabBlock sse_decode_collab_block(SseDeserializer deserializer);
 
   @protected
+  CollabBlockLock sse_decode_collab_block_lock(SseDeserializer deserializer);
+
+  @protected
   CollabCode sse_decode_collab_code(SseDeserializer deserializer);
 
   @protected
@@ -183,6 +193,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<CollabBlock> sse_decode_list_collab_block(SseDeserializer deserializer);
+
+  @protected
+  List<CollabBlockLock> sse_decode_list_collab_block_lock(
+    SseDeserializer deserializer,
+  );
 
   @protected
   List<CollabImageCaption> sse_decode_list_collab_image_caption(
@@ -297,6 +312,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_collab_block(CollabBlock self, SseSerializer serializer);
 
   @protected
+  void sse_encode_collab_block_lock(
+    CollabBlockLock self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_collab_code(CollabCode self, SseSerializer serializer);
 
   @protected
@@ -329,6 +350,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_list_collab_block(
     List<CollabBlock> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_list_collab_block_lock(
+    List<CollabBlockLock> self,
     SseSerializer serializer,
   );
 

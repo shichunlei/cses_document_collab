@@ -1,7 +1,9 @@
+import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
-import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart' show csesEmbedUrlAttribute;
+import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart'
+    show csesEmbedUrlAttribute;
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:flutter/material.dart';
 
@@ -19,13 +21,20 @@ Future<void> showCollabResourceSettings(
   await showCollabDialog<void>(
     context: context,
     useRootNavigator: false,
-    builder: (_) => _ResourceSettings(
-      editor: editor,
-      id: node.attributes['cses_collab_block_id'] as String? ?? node.id,
-      kind: node.type,
-      url: node.attributes[csesEmbedUrlAttribute] as String? ?? '',
-      props: CollabResource.fromAttributes(node.attributes),
-      label: label,
+    builder: (_) => ListenableBuilder(
+      listenable: Listenable.merge([
+        editor.editableNotifier,
+        CollabBlockLocks.of(editor),
+      ]),
+      builder: (_, _) => _ResourceSettings(
+        canSave: () => canEditCollabNode(editor, node),
+        editor: editor,
+        id: node.attributes['cses_collab_block_id'] as String? ?? node.id,
+        kind: node.type,
+        url: node.attributes[csesEmbedUrlAttribute] as String? ?? '',
+        props: CollabResource.fromAttributes(node.attributes),
+        label: label,
+      ),
     ),
   );
 }
@@ -33,7 +42,7 @@ Future<void> showCollabResourceSettings(
 /// 共用资源设置视图；只借用编辑器与属性快照，字段控制器由其State持有。
 class _ResourceSettings extends StatefulWidget {
   /// [editor]为借用编辑器，[id]为稳定块身份，[kind]为原资源类型；
-  /// [url]及[props]用于检查保存时的远端冲突，[label]为弹窗显示名称。
+  /// [url]及[props]用于检查保存时的远端冲突，[label]为弹窗显示名称，[canSave]同步核对锁与会话。
   const _ResourceSettings({
     required this.label,
     required this.editor,
@@ -41,7 +50,11 @@ class _ResourceSettings extends StatefulWidget {
     required this.kind,
     required this.url,
     required this.props,
+    required this.canSave,
   });
+
+  /// 同步权限与会话查询；false时保留草稿并禁止保存。
+  final bool Function() canSave;
 
   /// 借用编辑器，由页面持有并释放。
   final EditorState editor;
@@ -88,11 +101,17 @@ class _ResourceSettingsState extends State<_ResourceSettings> {
         'name': TextEditingController(text: widget.props.string('name')),
       if (widget.kind == 'bookmark') ...{
         'title': TextEditingController(text: widget.props.string('title')),
-        'description': TextEditingController(text: widget.props.string('description')),
+        'description': TextEditingController(
+          text: widget.props.string('description'),
+        ),
       },
       if ({'embed', 'figma-embed', 'juejin-embed'}.contains(widget.kind)) ...{
-        'wr': TextEditingController(text: (widget.props.number('wr') ?? 100).toString()),
-        'ar': TextEditingController(text: (widget.props.number('ar') ?? 16 / 9).toStringAsFixed(3)),
+        'wr': TextEditingController(
+          text: (widget.props.number('wr') ?? 100).toString(),
+        ),
+        'ar': TextEditingController(
+          text: (widget.props.number('ar') ?? 16 / 9).toStringAsFixed(3),
+        ),
       },
     };
   }
@@ -111,6 +130,7 @@ class _ResourceSettingsState extends State<_ResourceSettings> {
   /// conflicting remote edits or failures keep the dialog open with feedback.
   /// Does not mutate a disposed/read-only editor or overwrite unrelated fields.
   Future<void> _save() async {
+    if (!widget.canSave()) return;
     final url = _fields['url']!.text.trim();
     if (!isCollabResourceUrl(widget.kind, url)) {
       setState(
@@ -135,7 +155,10 @@ class _ResourceSettingsState extends State<_ResourceSettings> {
             : (widget.props.number('ar') ?? 16 / 9).toStringAsFixed(3);
         if (text == initial) continue;
         final number = double.tryParse(text);
-        if (number == null || !number.isFinite || number <= 0 || (entry.key == 'wr' && (number < 1 || number > 100))) {
+        if (number == null ||
+            !number.isFinite ||
+            number <= 0 ||
+            (entry.key == 'wr' && (number < 1 || number > 100))) {
           setState(() => _error = '宽度应为 1–100，宽高比应为正数');
           return;
         }
@@ -148,7 +171,8 @@ class _ResourceSettingsState extends State<_ResourceSettings> {
 
     /// 在借用子树[n]中按稳定身份与原类型查找目标。
     Node? find(Node n) {
-      if ((n.attributes['cses_collab_block_id'] ?? n.id) == widget.id && n.type == widget.kind) {
+      if ((n.attributes['cses_collab_block_id'] ?? n.id) == widget.id &&
+          n.type == widget.kind) {
         return n;
       }
       for (final c in n.children) {
@@ -165,7 +189,9 @@ class _ResourceSettingsState extends State<_ResourceSettings> {
     }
     final latest = CollabResource.fromAttributes(node.attributes);
     if (changes.keys.any(
-      (key) => key == 'url' ? node.attributes['url'] != widget.url : latest.field(key) != widget.props.field(key),
+      (key) => key == 'url'
+          ? node.attributes['url'] != widget.url
+          : latest.field(key) != widget.props.field(key),
     )) {
       setState(() => _error = '内容已被更新，请重新打开设置');
       return;
@@ -173,7 +199,12 @@ class _ResourceSettingsState extends State<_ResourceSettings> {
     setState(() => _saving = true);
     try {
       for (final entry in changes.entries) {
-        await changeCollabResourceProperty(widget.editor, widget.id, entry.key, entry.value);
+        await changeCollabResourceProperty(
+          widget.editor,
+          widget.id,
+          entry.key,
+          entry.value,
+        );
       }
       if (mounted) Navigator.pop(context);
     } catch (_) {
@@ -220,12 +251,22 @@ class _ResourceSettingsState extends State<_ResourceSettings> {
               ),
             ),
           ),
-        if (_error != null) Text(_error!, style: const TextStyle(color: Colors.red, fontSize: 12)),
+        if (_error != null)
+          Text(
+            _error!,
+            style: const TextStyle(color: Colors.red, fontSize: 12),
+          ),
       ],
     ),
     actions: [
-      TextButton(onPressed: _saving ? null : () => Navigator.pop(context), child: const Text('取消')),
-      FilledButton(onPressed: _saving ? null : _save, child: const Text('保存')),
+      TextButton(
+        onPressed: _saving ? null : () => Navigator.pop(context),
+        child: const Text('取消'),
+      ),
+      FilledButton(
+        onPressed: _saving || !widget.canSave() ? null : _save,
+        child: const Text('保存'),
+      ),
     ],
   );
 }

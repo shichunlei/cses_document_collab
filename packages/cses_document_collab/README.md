@@ -483,6 +483,28 @@ node packages/cses_document_collab/tool/generate_paragraph_oracle.mjs /path/to/e
 
 附件使用浅底边框卡片，左侧显示按文件类型配色的图标，右侧突出文件名（最多两行）和类型/大小。文件名缺失时使用链接中的文件名，仍为空时显示“未命名附件”；大小按B、KB、MB、GB、TB显示，0字节显示0 B，缺失或无效大小显示“大小未知”。窄屏和大字号下允许元信息换行，空间极窄时图标与信息上下排列。打开、修改、删除和下方插入仍统一在更多菜单中，不改共享属性。
 
+## 内容块锁定
+
+正式文档通过公共更多面板加锁/解锁，锁定内容仍可查看、选择与复制，其他未锁块可继续编辑。锁使用桌面同源`meta.lock`用户ID及可选`lockKind: template`，由整棵原生块图派生祖先继承与子树保护；正文、属性、结构和历史事务整体预检，包含隐藏题注或表格子块。菜单/编辑草稿在锁变化后失效，即使随后解锁也不能提交旧草稿。锁切换使用独立原生命令先写SQLite再推进Doc与同步，不进入正文撤销栈。
+
+普通锁本人可解锁，其他用户及模板锁需要宿主同步授权；缺省拒绝额外授权。Demo按桌面同源文档角色`role >= 800`授权，业务角色由宿主加载并持有。普通锁显示锁标，模板锁与继承锁不重复装饰；公共卡片锁在右上角外沿独立绘制，正文仍保持圆角裁切。
+
+```dart
+import 'package:cses_document_collab/cses_document_collab.dart';
+
+CollabHostServices lockServices(Map<String, int> rolesByDocument) =>
+    CollabHostServices(
+      canUnlockBlock: (lock) => (rolesByDocument[lock.documentId] ?? 0) >= 800,
+    );
+
+Future<void> lockBlock(CollabController controller, String blockId) async {
+  await controller.setBlockLocked(blockId, true);
+  assert(controller.blockLock(blockId).locked);
+}
+```
+
+调用方提供当前会话的可信角色映射并维护账号/文档隔离；控制器借用授权函数，不释放宿主资源。接口Future完成表示本机落盘、投影与提交待发送增量，不代表服务端ACK。此策略与桌面一样由可信客户端执行，原始远端增量仍会应用；不替代服务端权限。快照写入对跨锁节点的重排采取保守拒绝，完整拖拽及富文本剪贴板另行适配。Android与实际发布桌面增量/SQLite交换已验证，在线手机到桌面窗口观察、iOS、同时并发及服务端ACK仍待验收；详见仓库`docs/verification/block-lock-20261019.json`。
+
 ## 分页符
 
 正式文档支持根级 `page-divider` 无正文块，连续流展示为虚线与“分页符”标记；添加面板提供插入，根级非空块在其后插入、空段落原位替换，并创建后置空段落。范围选区和嵌套位置拒绝插入，不向上寻找根。直接点击整条分页符弹出操作菜单，提供“在下方插入”和“删除分页符”，不显示右侧三个点；后置正文行首退格同样可以删除，删除末块补空段落；插入与删除均支持独立撤销/重做。只读保留标记并隐藏修改入口，打开面板期间撤权或目标删除时拒绝过期动作。

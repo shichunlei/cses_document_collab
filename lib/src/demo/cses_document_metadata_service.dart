@@ -2,7 +2,7 @@ import 'package:cses_common/network/http/client/http_manager.dart';
 import 'package:cses_common/runtime/context/context.dart';
 import 'package:cses_common/runtime/session/user.dart';
 import 'package:cses_document_collab/cses_document_collab.dart'
-    show DocumentMetadata, DocumentMetadataPatch, DocumentMetadataService;
+    show DocumentMetadata, DocumentMetadataPatch, DocumentMetadataService, CollabBlockUnlockContext;
 
 /// 复用Common HTTP的鉴权、域名、拦截器，对齐桌面头部读写与权限。
 /// 实例绑定创建时的账号、企业与cookie；不拥有HTTP客户端，登录切换前由宿主等待请求结束。
@@ -28,6 +28,19 @@ class CsesDocumentMetadataService implements DocumentMetadataService {
 
   /// 创建时的会话标识；只在本服务检查，不进入协同数据。
   final String? _cookie;
+
+  /// 最近成功加载的文档角色；失败重读、账号变化不沿用旧授权。
+  final Map<String, num> _roles = {};
+
+  /// 每份文档的读取代次，迟到业务响应不能恢复已撤销的额外解锁权。
+  final Map<String, int> _permissionReads = {};
+
+  /// 同步核对[lock]所属文档、当前账号及最近业务角色；与桌面manager=800一致。
+  /// 未加载或非管理角色拒绝额外解锁；会话变化抛FormatException，由协同包按拒绝处理。
+  bool canUnlockBlock(CollabBlockUnlockContext lock) {
+    _checkSession();
+    return lock.currentUserId == _userId && (_roles[lock.documentId] ?? 0) >= 800;
+  }
 
   /// 请求前后确认登录身份；缺少登录或上下文变化时抛FormatException，阻止旧会话响应写回。
   void _checkSession() {
@@ -58,6 +71,9 @@ class CsesDocumentMetadataService implements DocumentMetadataService {
   /// Future等待两次Common请求；权限兼容rename缺失，身份变更/格式失败或网络错误向调用方抛出。
   @override
   Future<DocumentMetadata> load(String documentId) async {
+    _roles.remove(documentId);
+    final revision = (_permissionReads[documentId] ?? 0) + 1;
+    _permissionReads[documentId] = revision;
     final detail = await _post('/doc/document/view', {'id': documentId});
     if (detail['id'] != documentId || detail['name'] is! String) {
       throw const FormatException('文档详情格式错误');
@@ -70,6 +86,7 @@ class CsesDocumentMetadataService implements DocumentMetadataService {
     // 桌面 canRenameDocument 仅在 rename 明确为 false 时禁止改名；
     // 旧响应缺少 abilities/rename 时仍允许所有者，不能强制要求 true。
     final role = localUser is Map ? localUser['role'] : null;
+    if (role is num && _permissionReads[documentId] == revision) _roles[documentId] = role;
     return DocumentMetadata(
       id: documentId,
       name: detail['name'] as String,

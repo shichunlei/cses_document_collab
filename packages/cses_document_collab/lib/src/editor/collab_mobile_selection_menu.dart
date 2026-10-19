@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
@@ -55,7 +56,11 @@ class _CollabMobileSelectionMenuState extends State<CollabMobileSelectionMenu> {
   /// 在借用 [context] 中挂载浮栏；编辑器更换时用身份 key 完整迁移上游选区/滚动监听。
   @override
   Widget build(BuildContext context) {
-    if (!widget.enabled || !const {TargetPlatform.android, TargetPlatform.iOS}.contains(defaultTargetPlatform)) {
+    if (!widget.enabled ||
+        !const {
+          TargetPlatform.android,
+          TargetPlatform.iOS,
+        }.contains(defaultTargetPlatform)) {
       return widget.child;
     }
     return MobileFloatingToolbar(
@@ -70,38 +75,75 @@ class _CollabMobileSelectionMenuState extends State<CollabMobileSelectionMenu> {
 
   /// 使用 [overlayContext] 和全局 [anchor] 构建系统样式菜单；[close] 归还上游浮层。
   /// 仅捕获受支持正文，跨单元格、容器、未知占位及代码选区不显示菜单。
-  Widget _buildMenu(BuildContext overlayContext, Offset anchor, VoidCallback close) {
+  Widget _buildMenu(
+    BuildContext overlayContext,
+    Offset anchor,
+    VoidCallback close,
+  ) {
     final state = widget.editorState;
     final range = CollabTextRange.capture(state, allowCollapsed: true);
     if (range == null || _busy) return const SizedBox.shrink();
     final expanded = state.selection?.isCollapsed == false;
-    return ValueListenableBuilder<bool>(
-      valueListenable: state.editableNotifier,
-      builder: (context, editable, _) => AdaptiveTextSelectionToolbar.buttonItems(
-        key: const ValueKey('editor-selection-menu'),
-        anchors: TextSelectionToolbarAnchors(primaryAnchor: anchor),
-        buttonItems: [
-          if (expanded) _button('复制', () => _copy(state, range), close),
-          if (editable && expanded) _button('剪切', () => _copy(state, range, cut: true), close),
-          if (editable) _button('粘贴', () => _paste(state, range), close),
-          _button('全选', () => _selectAll(state), close),
-          if (editable && expanded && range.hasText)
-            _button('格式', () => _withRange(state, range, () => showEditorSelectionFormats(this.context, state)), close),
-          if (editable && range.canConvert) ...[
-            _button('链接', () => _withRange(state, range, () => showEditorTextLink(this.context, state)), close),
-            _button(
-              '转行内公式',
-              () => _withRange(state, range, () => showEditorSelectionFormula(this.context, state)),
-              close,
-            ),
+    return ListenableBuilder(
+      listenable: Listenable.merge([
+        state.editableNotifier,
+        CollabBlockLocks.of(state),
+      ]),
+      builder: (context, _) {
+        final editable =
+            state.editable &&
+            (state.selection == null || state.canInputAt(state.selection));
+        return AdaptiveTextSelectionToolbar.buttonItems(
+          key: const ValueKey('editor-selection-menu'),
+          anchors: TextSelectionToolbarAnchors(primaryAnchor: anchor),
+          buttonItems: [
+            if (expanded) _button('复制', () => _copy(state, range), close),
+            if (editable && expanded)
+              _button('剪切', () => _copy(state, range, cut: true), close),
+            if (editable) _button('粘贴', () => _paste(state, range), close),
+            _button('全选', () => _selectAll(state), close),
+            if (editable && expanded && range.hasText)
+              _button(
+                '格式',
+                () => _withRange(
+                  state,
+                  range,
+                  () => showEditorSelectionFormats(this.context, state),
+                ),
+                close,
+              ),
+            if (editable && range.canConvert) ...[
+              _button(
+                '链接',
+                () => _withRange(
+                  state,
+                  range,
+                  () => showEditorTextLink(this.context, state),
+                ),
+                close,
+              ),
+              _button(
+                '转行内公式',
+                () => _withRange(
+                  state,
+                  range,
+                  () => showEditorSelectionFormula(this.context, state),
+                ),
+                close,
+              ),
+            ],
           ],
-        ],
-      ),
+        );
+      },
     );
   }
 
   /// 在借用 [state] 的 [range] 仍有效且可编辑时等待 [action]；旧浮栏不得改写远端更新后的文字。
-  Future<void> _withRange(EditorState state, CollabTextRange range, Future<void> Function() action) async {
+  Future<void> _withRange(
+    EditorState state,
+    CollabTextRange range,
+    Future<void> Function() action,
+  ) async {
     if (!mounted ||
         !identical(state, widget.editorState) ||
         state.isDisposed ||
@@ -113,15 +155,18 @@ class _CollabMobileSelectionMenuState extends State<CollabMobileSelectionMenu> {
   }
 
   /// 用 [label] 标注动作，[action] 必须等待全部异步工作，[close] 在动作开始前移除浮栏。
-  ContextMenuButtonItem _button(String label, Future<void> Function() action, VoidCallback close) =>
-      ContextMenuButtonItem(
-        label: label,
-        onPressed: () {
-          if (_busy) return;
-          close();
-          unawaited(_run(action));
-        },
-      );
+  ContextMenuButtonItem _button(
+    String label,
+    Future<void> Function() action,
+    VoidCallback close,
+  ) => ContextMenuButtonItem(
+    label: label,
+    onPressed: () {
+      if (_busy) return;
+      close();
+      unawaited(_run(action));
+    },
+  );
 
   /// 串行等待借用 [action]，处理异常并检查组件存活；迟到动作不重新打开浮层。
   Future<void> _run(Future<void> Function() action) async {
@@ -129,9 +174,16 @@ class _CollabMobileSelectionMenuState extends State<CollabMobileSelectionMenu> {
     try {
       await action();
     } catch (error, stack) {
-      CollabDiagnostics.report('划词操作失败', error: error, stackTrace: stack, tag: 'DocCollab');
+      CollabDiagnostics.report(
+        '划词操作失败',
+        error: error,
+        stackTrace: stack,
+        tag: 'DocCollab',
+      );
       if (mounted) {
-        ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(content: Text('操作失败，请重试')));
+        ScaffoldMessenger.maybeOf(
+          context,
+        )?.showSnackBar(const SnackBar(content: Text('操作失败，请重试')));
       }
     } finally {
       _busy = false;
@@ -140,10 +192,18 @@ class _CollabMobileSelectionMenuState extends State<CollabMobileSelectionMenu> {
 
   /// 复制借用 [state] 中稳定 [range] 的纯文本；[cut] 默认 false，为 true 时复制成功才删除。
   /// 剪贴板失败不删除；异步期间原文、格式、权限或组件身份变化均取消删除。
-  Future<void> _copy(EditorState state, CollabTextRange range, {bool cut = false}) async {
+  Future<void> _copy(
+    EditorState state,
+    CollabTextRange range, {
+    bool cut = false,
+  }) async {
     if (range.resolve(state) == null || (cut && !state.editable)) return;
     await AppFlowyClipboard.setData(text: range.text);
-    if (!cut || !mounted || !identical(widget.editorState, state) || state.isDisposed || !state.editable) {
+    if (!cut ||
+        !mounted ||
+        !identical(widget.editorState, state) ||
+        state.isDisposed ||
+        !state.editable) {
       return;
     }
     final selection = range.resolve(state);
@@ -172,7 +232,10 @@ class _CollabMobileSelectionMenuState extends State<CollabMobileSelectionMenu> {
       state.undoManager.undoStack.last.seal();
     }
     final targets = state.getNodesInSelection(selection);
-    final lines = data.text!.replaceAll('\r\n', '\n').replaceAll('\r', '\n').split('\n');
+    final lines = data.text!
+        .replaceAll('\r\n', '\n')
+        .replaceAll('\r', '\n')
+        .split('\n');
     final prefix = targets.first.delta!.slice(0, selection.start.offset);
     final suffix = targets.last.delta!.slice(selection.end.offset);
     final first = Delta()
@@ -185,7 +248,8 @@ class _CollabMobileSelectionMenuState extends State<CollabMobileSelectionMenu> {
       if (i == lines.length - 1) delta.addAll(suffix);
       inserted.add(paragraphNode(delta: delta));
     }
-    final transaction = state.transaction..updateNode(targets.first, {'delta': first.toJson()});
+    final transaction = state.transaction
+      ..updateNode(targets.first, {'delta': first.toJson()});
     if (targets.length > 1) transaction.deleteNodes(targets.skip(1).toList());
     if (inserted.isNotEmpty) {
       transaction.insertNodes(targets.first.path.next, inserted);
@@ -194,7 +258,9 @@ class _CollabMobileSelectionMenuState extends State<CollabMobileSelectionMenu> {
     landingPath[landingPath.length - 1] += inserted.length;
     transaction.afterSelection = Selection.single(
       path: landingPath,
-      startOffset: lines.length == 1 ? prefix.length + lines.single.length : lines.last.length,
+      startOffset: lines.length == 1
+          ? prefix.length + lines.single.length
+          : lines.last.length,
     );
     await state.apply(transaction, skipHistoryDebounce: true);
   }

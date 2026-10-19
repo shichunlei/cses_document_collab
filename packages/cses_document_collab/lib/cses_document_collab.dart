@@ -43,3 +43,6 @@ export 'src/controller/document_feedback_controller.dart'
     show DocumentFeedbackController;
 
 export 'src/model/collab_kr.dart' show CollabKrItem, CollabKrTopic, CollabKrService;
+
+export 'src/model/collab_block_lock.dart'
+    show CollabBlockLockState, CollabBlockUnlockContext;

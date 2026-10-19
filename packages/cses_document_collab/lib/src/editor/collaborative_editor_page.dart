@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/editor/collab_block_lock_chrome.dart';
 import 'package:cses_document_collab/src/editor/collab_kr_block.dart';
 import 'package:cses_document_collab/src/model/collab_kr.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
@@ -100,11 +101,13 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
   /// 用户预览和模型只读约束任意一个生效时都使用只读展示。
   bool get _previewOnly => _isPreview || !collab.canEdit;
 
-  /// 创建共用滚动控制器并注册能力监听，使远端锁定或修订到达后立即关闭本地输入。
+  /// 创建共用滚动控制器，安装块内锁标记并注册整篇能力监听；块锁由独立权限投影处理。
   @override
   void initState() {
     super.initState();
     _editorScrollController = EditorScrollController(editorState: collab.editorState);
+    collab.editorState.blockDecorator = (context, node, child) =>
+        decorateCollabBlockLock(context, collab.editorState, node, child);
     collab.addListener(_syncEditorMode);
     _syncEditorMode();
   }
@@ -125,18 +128,22 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
       _editorScrollController.dispose();
       _editorScrollController = EditorScrollController(editorState: collab.editorState);
       oldWidget.collab.removeListener(_syncEditorMode);
+      oldWidget.collab.editorState.blockDecorator = null;
       oldWidget.collab.editorState.editable = oldWidget.collab.canEdit;
       _isPreview = false;
+      collab.editorState.blockDecorator = (context, node, child) =>
+          decorateCollabBlockLock(context, collab.editorState, node, child);
       collab.addListener(_syncEditorMode);
       _syncEditorMode();
     }
   }
 
-  /// 注销页面监听并释放自有滚动资源，恢复宿主能力约束下的模式；不释放借用文档控制器。
+  /// 注销页面监听与块装饰，释放自有滚动资源，恢复宿主模式；不释放借用文档控制器。
   @override
   void dispose() {
     collab.removeListener(_syncEditorMode);
     _editorScrollController.dispose();
+    collab.editorState.blockDecorator = null;
     collab.editorState.editable = collab.canEdit;
     super.dispose();
   }

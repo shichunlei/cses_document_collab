@@ -14,6 +14,7 @@ use yrs::{
 
 #[path = "blockcraft.rs"]
 mod blockcraft;
+use super::block_locks;
 #[path = "paragraph_style.rs"]
 mod paragraph_style;
 
@@ -352,6 +353,45 @@ impl CollabEngine {
                 })
             })
             .collect()
+    }
+
+    /// Stage a metadata-only lock command, persist it, then advance the authoritative Doc.
+    fn set_block_lock(
+        &mut self,
+        block_id: String,
+        locked: bool,
+        user_id: String,
+        grant: bool,
+        expected_owner: Option<String>,
+        expected_template: bool,
+    ) -> Result<BlockChangeResult, String> {
+        let root = self
+            .blockcraft_root_id
+            .as_deref()
+            .ok_or("BLOCK_LOCK_DENIED: 草稿不支持共享锁")?;
+        blockcraft::validate(&self.doc, root)?;
+        if let Some(reason) = blockcraft::project(&self.doc, root).reason {
+            return Err(format!("READ_ONLY_DOCUMENT: {reason}"));
+        }
+        let before = self.doc.transact().state_vector();
+        let staged = self.staged_document()?;
+        block_locks::set(
+            &staged,
+            root,
+            &block_id,
+            locked,
+            &user_id,
+            grant,
+            expected_owner.as_deref(),
+            expected_template,
+        )?;
+        let update = staged.transact().encode_state_as_update_v1(&before);
+        self.persist_and_apply_update(&update)?;
+        Ok(BlockChangeResult {
+            blocks: self.blocks(),
+            v1_update: update.clone(),
+            outbound_message: Message::Sync(SyncMessage::Update(update)).encode_v1(),
+        })
     }
 
     fn raw_block_ids(&self) -> Vec<String> {
@@ -2624,4 +2664,38 @@ mod tests {
             }
         );
     }
+}
+
+/// Read effective locks for the entire reachable graph without changing shared data.
+#[flutter_rust_bridge::frb(sync)]
+pub fn current_block_locks() -> Result<Vec<block_locks::CollabBlockLock>, String> {
+    with_engine(|engine| {
+        Ok(engine
+            .blockcraft_root_id
+            .as_deref()
+            .map_or_else(Vec::new, |root| block_locks::scan(&engine.doc, root)))
+    })
+}
+
+/// Persist one desktop-compatible user lock. Identity and extra authorization are
+/// supplied by the trusted host; expected metadata prevents stale menu actions.
+#[flutter_rust_bridge::frb(sync)]
+pub fn set_block_lock(
+    block_id: String,
+    locked: bool,
+    user_id: String,
+    grant: bool,
+    expected_owner: Option<String>,
+    expected_template: bool,
+) -> Result<BlockChangeResult, String> {
+    with_engine_mut(|engine| {
+        engine.set_block_lock(
+            block_id,
+            locked,
+            user_id,
+            grant,
+            expected_owner,
+            expected_template,
+        )
+    })
 }

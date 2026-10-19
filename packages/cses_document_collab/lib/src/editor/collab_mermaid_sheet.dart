@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'dart:convert';
 
 import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
@@ -125,6 +126,7 @@ class _MermaidSheetState extends State<_MermaidSheet> {
       !widget.editor.isDisposed &&
       widget.editor.editable &&
       !_revoked &&
+      (_source == null || canEditCollabNode(widget.editor, _source!)) &&
       (widget.id == null || _source != null);
 
   /// 加载权威源码并注册权限、文档树与草稿监听。
@@ -182,7 +184,11 @@ class _MermaidSheetState extends State<_MermaidSheet> {
   /// 权限、删除或远端变化刷新状态；不覆盖未保存草稿。
   void _onTree() {
     if (!mounted) return;
-    if (!widget.editor.editable || widget.editor.isDisposed) _revoked = true;
+    if (!widget.editor.editable ||
+        widget.editor.isDisposed ||
+        (_source != null && !canEditCollabNode(widget.editor, _source!))) {
+      _revoked = true;
+    }
     if (!widget.editor.isDisposed) _syncNodes();
     setState(() {});
   }
