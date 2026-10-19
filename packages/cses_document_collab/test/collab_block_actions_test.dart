@@ -1,6 +1,7 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
+import 'package:cses_document_collab/src/editor/collab_paragraph_links.dart';
 import 'package:cses_document_collab/src/editor/collab_callout_block.dart';
 import 'package:cses_document_collab/src/editor/collab_code_block.dart';
 import 'package:cses_document_collab/src/editor/collab_image_block.dart';
@@ -297,6 +298,58 @@ void main() {
     'formula',
     'code',
   ]) {
+    testWidgets('$kind production menu copies its paragraph reference', (
+      tester,
+    ) async {
+      final copied = <String>[];
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        (call) async {
+          if (call.method == 'Clipboard.setData') {
+            copied.add((call.arguments as Map)['text'] as String);
+          }
+          return null;
+        },
+      );
+      addTearDown(
+        () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          SystemChannels.platform,
+          null,
+        ),
+      );
+      final adapter = AppFlowyBlockEditorAdapter(
+        initialBlocks: _blocks(kind),
+        onLocalBlocksChanged: (_) => fail('copy wrote content'),
+      );
+      addTearDown(adapter.dispose);
+      final links = CollabParagraphLinks(
+        editor: adapter.editorState,
+        documentId: 'formal-doc',
+        buildLink: (doc, block) => Uri.http('doc-pre.cses7.com', '/doc/$doc', {
+          'blockId': block,
+        }).toString(),
+      );
+      addTearDown(links.dispose);
+      await _mount(tester, adapter);
+      await tester.pumpAndSettle();
+      final more = find.byKey(
+        ValueKey(kind == 'task' ? 'task-card-more-card' : 'block-more-card'),
+      );
+      await tester.ensureVisible(more);
+      await tester.tap(more);
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const ValueKey('block-copy-paragraph-link-card')),
+      );
+      await tester.pumpAndSettle();
+      expect(copied, ['http://doc-pre.cses7.com/doc/formal-doc?blockId=card']);
+      expect(find.text('段落链接已复制'), findsOneWidget);
+      expect(adapter.editorState.undoManager.undoStack, isEmpty);
+      expect(adapter.editorState.selection, isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+      expect(tester.takeException(), isNull);
+    });
+
     testWidgets(
       '$kind production more menu inserts an editable final sibling',
       (tester) async {

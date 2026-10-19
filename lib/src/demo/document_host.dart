@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cses_common/core/collections/objectid.dart';
 import 'package:cses_common/flutter/feedback/toast_util.dart';
 import 'package:cses_common/observability/api/log.dart';
+import 'package:cses_common/runtime/config/config.dart';
 import 'package:cses_common/runtime/context/context.dart';
 import 'package:cses_common/runtime/session/user.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';
@@ -55,6 +56,7 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
 
   /// 初始化存储并注入公开包服务；头像、人员与会议引用页面由宿主创建，会议/任务详情绑定账号会话，草稿不启用业务加载。
   /// 等待原生初始化与宿主连接，关闭期间迟到结果不安装页面监听。
+  /// 段落链接按Common环境选择桌面同源文档域名，并携带正式文档ID及blockId。
   /// 文末点赞回调返回演示成员快照，评论回调返回当前数量；图片点击接收链接并演示提示，不进行业务持久化。
   Future<void> _initialize() async {
     // 登录已在 Common 注入；即使本地存储初始化失败，退出也须清理该登录。
@@ -65,6 +67,14 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
       final path = '${directory.path}/cses_mobile_collab_demo/updates.sqlite3';
       final mentionDirectory = localDraft ? null : CsesMentionDirectory();
       final services = CollabHostServices(
+        buildParagraphLink: localDraft
+            ? null
+            : (documentId, blockId) => Uri(
+                scheme: 'http',
+                host: Config().envType.docHost ?? (throw StateError('当前环境未配置文档域名')),
+                pathSegments: ['doc', documentId],
+                queryParameters: {'blockId': blockId},
+              ).toString(),
         showDocumentFeedback: true,
         onDocumentLike: (documentId, likes) {
           final user = User();

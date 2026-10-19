@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-19",
+  "feature": "各卡片更多菜单复制段落链接",
+  "blockcraft": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "query": "在桌面cses-client运行npm view @ccc/blockcraft dist-tags --json",
+    "latest": "0.11.23",
+    "desktopRootDeclaration": "0.11.22",
+    "desktopYarnLock": "0.11.22",
+    "desktopInstalled": "0.11.17",
+    "desktopDocsDeclaration": "^0.11.0-alpha",
+    "historicalPnpmLock": "0.2.78",
+    "reviewed": [
+      "安装0.11.17、声明0.11.22及latest0.11.23随包技能/MIGRATIONS",
+      "三版发布物的BlockLinkNavigator.createBlockLink",
+      "桌面packages/docs/src/editor/core/blockcraft-editor.ts的copyBlockLink",
+      "桌面src/app/docs-host/docs-link-host.util.ts的createDocsLinkHost"
+    ],
+    "createBlockLinkSha256": "0fd4e5d30e1a38c175036e32db46e24cf9c74eb5c1170e5b2615f351980e73b7",
+    "difference": "三版createBlockLink片段一致，均携带blockId。0.11.23的MIGRATIONS顶部仍标0.11.22个人交互配置及其他未发布条目；本轮按发布产物核对相关能力，未升级桌面或宣称全量兼容。",
+    "desktopLinkContract": "http://{环境文档域名}/doc/{正式文档ID}?blockId={稳定块ID}"
+  },
+  "implementation": [
+    "CollabHostServices.buildParagraphLink由宿主提供域名与编码；Demo使用Common当前环境docHost",
+    "正式CollabController按editor绑定文档ID与构造器，同步dispose使旧菜单失效；草稿不创建绑定",
+    "公共更多及网页独立菜单均添加link图标的复制段落链接，保留资源复制入口、原预览显隐和权限/快照校验",
+    "系统剪贴板完成后提示段落链接已复制，不改正文/历史、不恢复输入；关闭/撤权后迟到完成不提示"
+  ],
+  "validation": {
+    "format": "定向dart format，源文件沿用120行宽、测试沿用既有格式",
+    "packageAnalyze": {
+      "result": "通过，无问题",
+      "files": [
+        "lib/src/editor/collab_paragraph_links.dart",
+        "lib/src/editor/collab_block_actions.dart",
+        "lib/src/editor/collab_link_actions.dart",
+        "lib/src/controller/collab_controller.dart",
+        "lib/src/model/collab_host_services.dart",
+        "test/collab_paragraph_links_test.dart",
+        "test/collab_block_actions_test.dart",
+        "test/collab_link_actions_test.dart"
+      ]
+    },
+    "packageTests": {
+      "result": "提交版本114项通过；开发时含并行块锁定工作区的115项亦通过",
+      "command": "flutter test --no-pub test/collab_paragraph_links_test.dart test/collab_block_actions_test.dart test/collab_link_actions_test.dart --reporter expanded",
+      "runs": [
+        "三文件初轮113项通过",
+        "追加2项迟到剪贴板回归后单独复跑lifetime文件15项通过，目标静态检查通过",
+        "独立提交目录重新运行三文件114项全部通过，8文件静态检查无问题；块锁定场景不随本提交引入其独立功能依赖"
+      ],
+      "coverage": [
+        "九类实际卡片菜单入口",
+        "网页/嵌入/Figma/掘金/整段链接独立菜单",
+        "正式控制器绑定、关闭失效、草稿无链接",
+        "稳定ID及远端重排、删除、改值",
+        "撤权再授权、取消、剪贴板平台失败",
+        "关闭及撤权后的迟到剪贴板完成无成功提示",
+        "原资源复制、插入/删除及历史回归",
+        "高亮内嵌套、已有只读操作菜单、未配置宿主；块锁集成在组合工作区验证"
+      ]
+    },
+    "consumer": {
+      "test": "flutter test --no-pub test/collab_demo_page_test.dart --reporter expanded",
+      "result": "1项通过",
+      "analyze": "flutter analyze --no-pub lib/src/demo/document_host.dart",
+      "analyzeResult": "既有1条depend_on_referenced_packages信息：path_provider未在宿主pubspec直接声明；本轮未改该依赖",
+      "isolatedResult": "隔离提交目录宿主1项回归通过"
+    },
+    "diffCheck": "git diff --check通过；全局检索新API及两个菜单接入点",
+    "isolatedCommit": "HEAD与本功能片段组成的独立目录：包内114项测试、8文件静态检查及宿主1项回归通过；不包含工作区块锁定开发及其依赖。"
+  },
+  "adaptationCounts": {
+    "adapted": 13,
+    "partial": 14,
+    "structural": 1,
+    "unadapted": 13,
+    "total": 41
+  },
+  "limits": [
+    "未新增Android/iOS真机验收",
+    "未新增在线桌面点击链接后的跳转验收",
+    "手机接收外部段落链接并定位不在本次复制入口范围",
+    "其他上游Schema/属性、行内对象、选区/菜单、剪贴板、输入、历史及协同升级差异仍待同步",
+    "未修改原生接口或桥接，本轮未运行原生重建"
+  ]
+}

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
+import 'package:cses_document_collab/src/editor/collab_paragraph_links.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_link_view.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
@@ -20,6 +21,9 @@ final _pending = Expando<bool>('link-view-actions');
 enum _LinkAction {
   /// Copies the original URL without changing the document or its history.
   copyLink,
+
+  /// Copies the containing document and stable block reference without changing content.
+  copyParagraphLink,
 
   /// Creates an editable paragraph immediately after the current link block.
   insertBelow,
@@ -44,6 +48,7 @@ enum _LinkAction {
 /// borrowed and must await their own dialogs, including closing animations.
 /// View choices are separated from resource actions by a divider; the header
 /// shows the URL on one ellipsized line while actions retain the original URL.
+/// 正式文档已配置链接绑定时另提供复制段落链接，保留资源地址复制。
 /// Insertion below shares the block menu's text-line and downward-return icon.
 Future<void> showCollabLinkActions(
   BuildContext context,
@@ -59,6 +64,7 @@ Future<void> showCollabLinkActions(
   final fingerprint = collabLinkFingerprint(node);
   final currentView = collabLinkView(node);
   final services = CollabRuntime.services;
+  final paragraphLinks = CollabParagraphLinks.of(state);
   _pending[state] = true;
   String? insertedId;
   Object? action;
@@ -108,6 +114,13 @@ Future<void> showCollabLinkActions(
                   title: const Text('复制链接'),
                   onTap: () => Navigator.pop(sheetContext, _LinkAction.copyLink),
                 ),
+                if (paragraphLinks?.supports(node) == true)
+                  ListTile(
+                    key: ValueKey('block-copy-paragraph-link-$id'),
+                    leading: const Icon(LucideIcons.link),
+                    title: const Text('复制段落链接'),
+                    onTap: () => Navigator.pop(sheetContext, _LinkAction.copyParagraphLink),
+                  ),
                 if (state.editable && onEdit != null)
                   ListTile(
                     key: ValueKey('resource-edit-$id'),
@@ -162,6 +175,12 @@ Future<void> showCollabLinkActions(
         final source = findCollabLinkNode(state, id);
         if (source == null || collabLinkFingerprint(source) != fingerprint) {
           ScaffoldMessenger.maybeOf(hostContext)?.showSnackBar(const SnackBar(content: Text('内容已更新，请重新选择')));
+          return;
+        }
+        if (action == _LinkAction.copyParagraphLink) {
+          if (!permissionRevoked && identical(CollabParagraphLinks.of(state), paragraphLinks)) {
+            await paragraphLinks?.copy(hostContext, source, isCurrent: () => !permissionRevoked);
+          }
           return;
         }
         if (action == _LinkAction.copyLink) {

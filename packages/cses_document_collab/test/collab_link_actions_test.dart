@@ -3,6 +3,7 @@ import 'package:cses_document_collab/src/editor/collab_embedded_page.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_link_actions.dart';
+import 'package:cses_document_collab/src/editor/collab_paragraph_links.dart';
 import 'package:cses_document_collab/src/editor/collab_callout_block.dart';
 import 'package:cses_document_collab/src/editor/collab_audio_block.dart';
 import 'package:cses_document_collab/src/editor/collab_attachment_block.dart';
@@ -146,6 +147,54 @@ void main() {
     'juejin-embed',
     'paragraph',
   ]) {
+    testWidgets(
+      '$kind copies a paragraph reference separately from its resource URL',
+      (tester) async {
+        final adapter = _adapter(kind);
+        addTearDown(adapter.dispose);
+        final links = CollabParagraphLinks(
+          editor: adapter.editorState,
+          documentId: 'doc-1',
+          buildLink: (doc, block) => Uri.http(
+            'doc-pre.cses7.com',
+            '/doc/$doc',
+            {'blockId': block},
+          ).toString(),
+        );
+        addTearDown(links.dispose);
+        final copied = <String>[];
+        tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          SystemChannels.platform,
+          (call) async {
+            if (call.method == 'Clipboard.setData') {
+              copied.add((call.arguments as Map)['text'] as String);
+            }
+            return null;
+          },
+        );
+        addTearDown(
+          () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+            SystemChannels.platform,
+            null,
+          ),
+        );
+        await tester.pumpWidget(_app(adapter));
+        await tester.pumpAndSettle();
+        await _open(tester, adapter);
+        expect(find.byKey(const ValueKey('link-copy')), findsOneWidget);
+        await tester.tap(
+          find.byKey(const ValueKey('block-copy-paragraph-link-resource')),
+        );
+        await tester.pumpAndSettle();
+        expect(copied, ['http://doc-pre.cses7.com/doc/doc-1?blockId=resource']);
+        expect(adapter.blocks.single.text, contains('https://'));
+        expect(adapter.editorState.undoManager.undoStack, isEmpty);
+        expect(find.text('段落链接已复制'), findsOneWidget);
+        await tester.pumpWidget(const SizedBox.shrink());
+        expect(tester.takeException(), isNull);
+      },
+    );
+
     testWidgets(
       '$kind copies the original URL without document/history edits',
       (tester) async {

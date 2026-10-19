@@ -20,9 +20,13 @@ typedef CollabErrorReporter = void Function(String message, Object error, StackT
 ///
 /// ```dart
 /// import 'package:cses_document_collab/cses_document_collab.dart';
-/// final services = CollabHostServices(onImageTap: (url) async {
-///   // 用url打开宿主图片预览，等待预览关闭后返回；包不拥有预览资源。
-/// });
+/// final services = CollabHostServices(
+///   buildParagraphLink: (documentId, blockId) => Uri.https(
+///     'example.com', '/doc/$documentId', {'blockId': blockId}).toString(),
+///   onImageTap: (url) async {
+///     // 用url打开宿主图片预览，等待预览关闭后返回；包不拥有预览资源。
+///   },
+/// );
 /// // 将services注入由宿主持有的CollabController。
 /// ```
 /// Optional media upload enables the local-file tab; URL editing is always usable.
@@ -46,7 +50,9 @@ class CollabHostServices {
   /// [loadDocumentFeedback]加载当前文档的初始互动快照；null使用未点赞、空成员、0条评论。
   /// [onDocumentLike]接收文档ID和当前点赞快照，返回宿主确认的最新点赞快照；null禁用。
   /// [onDocumentComment]接收文档ID和当前评论数量，返回最新评论数量；null禁用。
+  /// [buildParagraphLink]同步构造正式文档段落链接；null隐藏复制段落链接入口。
   const CollabHostServices({
+    this.buildParagraphLink,
     this.showDocumentFeedback = false,
     this.loadDocumentFeedback,
     this.onDocumentLike,
@@ -66,6 +72,11 @@ class CollabHostServices {
     this.krRankIcons,
     this.pickMeetingReference,
   });
+
+  /// 可选段落链接构造器；接收正式文档[documentId]和稳定协同[blockId]。
+  /// 宿主负责环境域名、路由及编码，须同步返回完整非空链接；失败抛出异常由菜单报告。
+  /// null隐藏入口，草稿不启用；复制不修改正文/历史，宿主资源所有权保持不变。
+  final String Function(String documentId, String blockId)? buildParagraphLink;
 
   /// 是否显示整个文末点赞/全文评论区域，默认false；编辑和预览均适用。
   /// 配置随控制器生命周期固定；变更时由宿主重建控制器，不写入协同文档。

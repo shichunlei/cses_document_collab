@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/src/editor/collab_paragraph_links.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
@@ -105,6 +106,8 @@ Future<void> copyCollabMediaLink(BuildContext context, EditorState editor, Node 
 /// Waits for menu dismissal before restoring the new caret and keyboard. The
 /// editor/node and extra callbacks are borrowed. A temporary permission listener
 /// is removed when the menu and any selected action finish.
+/// 正式文档配置链接绑定时统一提供“复制段落链接”，锁定块仍可复制；
+/// 未配置或草稿保持原菜单入口显隐。
 /// The heading and decorative icon follow the block type unless callers override them.
 ///
 /// ```dart
@@ -204,12 +207,15 @@ class CollabBlockMoreButton extends StatelessWidget {
 
   /// Opens one sheet in borrowed [context], rejects stale targets and catches failures.
   /// Insertion below uses the text-line and downward-return icon to show its destination.
+  /// 段落链接按正式文档和稳定块ID构造，复制后不修改正文/历史或恢复输入。
   /// Commands use semantic download, external-link, palette, copy, delete or edit icons.
   /// Resolves the block-specific header, applying the caller's [menuTitle]/[menuIcon] overrides.
   Future<void> _show(BuildContext context) async {
     if (editor.isDisposed || (!editor.editable && readOnlyActions.isEmpty) || _pending[editor] == true) {
       return;
     }
+    final paragraphLinks = CollabParagraphLinks.of(editor);
+    final canCopyParagraphLink = paragraphLinks?.supports(node) == true;
     final wasEditable = editor.editable;
     final commands = [...readOnlyActions, if (wasEditable) ...actions];
     final host = collabBlockActionContext(context);
@@ -243,6 +249,13 @@ class CollabBlockMoreButton extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  if (canCopyParagraphLink)
+                    ListTile(
+                      key: ValueKey('block-copy-paragraph-link-$id'),
+                      leading: const Icon(LucideIcons.link),
+                      title: const Text('复制段落链接'),
+                      onTap: () => Navigator.pop(sheet, -5),
+                    ),
                   if (wasEditable)
                     ListTile(
                       key: ValueKey('block-insert-below-$id'),
@@ -283,6 +296,12 @@ class CollabBlockMoreButton extends StatelessWidget {
               source.type != type ||
               jsonEncode(protectSubtree ? source.toJson() : source.attributes) != snapshot) {
             ScaffoldMessenger.maybeOf(host)?.showSnackBar(const SnackBar(content: Text('内容已更新，请重新选择')));
+            return;
+          }
+          if (choice == -5) {
+            if (identical(CollabParagraphLinks.of(editor), paragraphLinks)) {
+              await paragraphLinks?.copy(host, source, isCurrent: () => !permissionRevoked);
+            }
             return;
           }
           if (choice! >= 0) {

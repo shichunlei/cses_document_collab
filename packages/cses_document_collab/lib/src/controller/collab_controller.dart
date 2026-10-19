@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
+import 'package:cses_document_collab/src/editor/collab_paragraph_links.dart';
 import 'package:cses_document_collab/src/model/collab_code.dart';
 import 'package:cses_document_collab/src/model/collab_document_config.dart';
 import 'package:cses_document_collab/src/model/collab_host_services.dart';
@@ -43,6 +44,7 @@ class CollabController extends ChangeNotifier {
   }) : this._(CollabDocumentConfig.localDraft(databasePath: databasePath, documentId: documentId), null, services);
 
   /// Store [config], [gateway] and [services]; native ownership begins on initialize.
+  /// 正式文档按宿主配置绑定段落链接，绑定先于编辑器释放；草稿不创建可分享链接。
   CollabController._(this.config, this._gateway, this._services) : _editable = config.editable {
     header = config.isFormal && _services.documentMetadata != null
         ? DocumentMetadataController(
@@ -55,7 +57,14 @@ class CollabController extends ChangeNotifier {
     header?.addListener(_notify);
     feedback = DocumentFeedbackController(documentId: config.documentId, services: _services);
     _editorAdapter = AppFlowyBlockEditorAdapter(onLocalBlocksChanged: _applyEditorBlocks);
+    final linkBuilder = _services.buildParagraphLink;
+    _paragraphLinks = config.isFormal && linkBuilder != null
+        ? CollabParagraphLinks(editor: editorState, documentId: config.documentId, buildLink: linkBuilder)
+        : null;
   }
+
+  /// 控制器拥有的正式文档链接绑定；未配置宿主构造器或草稿时为null。
+  late final CollabParagraphLinks? _paragraphLinks;
 
   /// Immutable host identity and storage contract; contains no login credentials.
   final CollabDocumentConfig config;
@@ -670,17 +679,19 @@ class CollabController extends ChangeNotifier {
 
   /// Wait for header/feedback business requests, document subscriptions, projection and native shutdown.
   /// Borrowed host services and the physical socket are not closed.
+  /// 结束前移除段落链接绑定，使仍在退场的菜单不能引用已关闭文档。
   Future<void> close() {
     dispose();
     return _shutdownTask ?? Future<void>.value();
   }
 
   /// Invalidate synchronously; release document listeners and native resources asynchronously.
-  /// Flutter dispose 不能等待 Future，资源释放任务自行拥有统一异常边界。
+  /// 同步移除段落链接绑定；Flutter dispose不能等待Future，资源释放任务自行拥有统一异常边界。
   @override
   void dispose() {
     if (_disposed) return;
     _disposed = true;
+    _paragraphLinks?.dispose();
     header?.removeListener(_notify);
     header?.dispose();
     feedback.dispose();
