@@ -152,16 +152,8 @@ class CollabModalTheme extends StatelessWidget {
           error: c.danger,
         ),
         textTheme: text.copyWith(
-          bodyMedium: (text.bodyMedium ?? const TextStyle()).copyWith(
-            fontSize: 14,
-            height: 1.55,
-            color: c.text,
-          ),
-          bodySmall: (text.bodySmall ?? const TextStyle()).copyWith(
-            fontSize: 11,
-            height: 1.55,
-            color: c.muted,
-          ),
+          bodyMedium: (text.bodyMedium ?? const TextStyle()).copyWith(fontSize: 14, height: 1.55, color: c.text),
+          bodySmall: (text.bodySmall ?? const TextStyle()).copyWith(fontSize: 11, height: 1.55, color: c.muted),
           titleSmall: (text.titleSmall ?? const TextStyle()).copyWith(
             fontSize: 12,
             height: 1.55,
@@ -189,11 +181,7 @@ class CollabModalTheme extends StatelessWidget {
             minimumSize: const Size(0, 42),
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             padding: const EdgeInsets.symmetric(horizontal: 19, vertical: 10),
-            textStyle: TextStyle(
-              fontFamily: text.labelLarge?.fontFamily,
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-            ),
+            textStyle: TextStyle(fontFamily: text.labelLarge?.fontFamily, fontSize: 13, fontWeight: FontWeight.w500),
             shape: rounded,
             elevation: 0,
           ),
@@ -204,11 +192,7 @@ class CollabModalTheme extends StatelessWidget {
             minimumSize: const Size(0, 42),
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             padding: const EdgeInsets.symmetric(horizontal: 19, vertical: 10),
-            textStyle: TextStyle(
-              fontFamily: text.labelLarge?.fontFamily,
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-            ),
+            textStyle: TextStyle(fontFamily: text.labelLarge?.fontFamily, fontSize: 13, fontWeight: FontWeight.w500),
             shape: rounded,
           ),
         ),
@@ -220,11 +204,7 @@ class CollabModalTheme extends StatelessWidget {
             minimumSize: const Size(0, 42),
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             shape: rounded,
-            textStyle: TextStyle(
-              fontFamily: text.labelLarge?.fontFamily,
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-            ),
+            textStyle: TextStyle(fontFamily: text.labelLarge?.fontFamily, fontSize: 13, fontWeight: FontWeight.w500),
           ),
         ),
         listTileTheme: ListTileThemeData(
@@ -236,16 +216,8 @@ class CollabModalTheme extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           iconColor: c.muted,
           textColor: c.text,
-          titleTextStyle: (text.bodyMedium ?? const TextStyle()).copyWith(
-            fontSize: 13,
-            height: 1.55,
-            color: c.text,
-          ),
-          subtitleTextStyle: (text.bodySmall ?? const TextStyle()).copyWith(
-            fontSize: 11,
-            height: 1.55,
-            color: c.muted,
-          ),
+          titleTextStyle: (text.bodyMedium ?? const TextStyle()).copyWith(fontSize: 13, height: 1.55, color: c.text),
+          subtitleTextStyle: (text.bodySmall ?? const TextStyle()).copyWith(fontSize: 11, height: 1.55, color: c.muted),
         ),
         sliderTheme: base.sliderTheme.copyWith(activeTrackColor: c.accent, thumbColor: c.accent),
       ),
@@ -313,9 +285,7 @@ class CollabModalHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = CollabModalColors.of(context);
     return Padding(
-      padding: compact
-          ? const EdgeInsets.fromLTRB(16, 4, 16, 6)
-          : const EdgeInsets.fromLTRB(20, 14, 20, 16),
+      padding: compact ? const EdgeInsets.fromLTRB(16, 4, 16, 6) : const EdgeInsets.fromLTRB(20, 14, 20, 16),
       child: Row(
         children: [
           Container(
@@ -465,10 +435,7 @@ class CollabBottomSheet extends StatelessWidget {
             builder: (context, constraints) {
               final height = math.max(
                 0.0,
-                math.min(
-                  637.0,
-                  math.min(constraints.maxHeight, media.size.height * .9 - media.viewInsets.bottom),
-                ),
+                math.min(637.0, math.min(constraints.maxHeight, media.size.height * .9 - media.viewInsets.bottom)),
               );
               final compact = height < 360;
               return ConstrainedBox(
@@ -478,9 +445,7 @@ class CollabBottomSheet extends StatelessWidget {
                   clipBehavior: Clip.antiAlias,
                   borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
                   child: Padding(
-                    padding: EdgeInsets.only(
-                      bottom: math.max(compact ? 12 : 22, media.padding.bottom),
-                    ),
+                    padding: EdgeInsets.only(bottom: math.max(compact ? 12 : 22, media.padding.bottom)),
                     child: Column(
                       mainAxisSize: expand ? MainAxisSize.max : MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -491,10 +456,7 @@ class CollabBottomSheet extends StatelessWidget {
                               width: 34,
                               height: 4,
                               margin: const EdgeInsets.only(top: 10, bottom: 5),
-                              decoration: BoxDecoration(
-                                color: c.line,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
+                              decoration: BoxDecoration(color: c.line, borderRadius: BorderRadius.circular(8)),
                             ),
                           ),
                         CollabModalHeader(
@@ -515,11 +477,7 @@ class CollabBottomSheet extends StatelessWidget {
                                   padding: contentPadding,
                                   child: child,
                                 )
-                              : Padding(
-                                  key: scrollKey,
-                                  padding: contentPadding,
-                                  child: child,
-                                ),
+                              : Padding(key: scrollKey, padding: contentPadding, child: child),
                         ),
                         if (actions.isNotEmpty || leadingAction != null)
                           CollabModalActions(leading: leadingAction, children: actions),
@@ -594,10 +552,7 @@ class CollabDialog extends StatelessWidget {
               maxWidth: 420,
               maxHeight: math.min(
                 630,
-                math.max(
-                  0,
-                  MediaQuery.sizeOf(context).height - MediaQuery.viewInsetsOf(context).bottom - 72,
-                ),
+                math.max(0, MediaQuery.sizeOf(context).height - MediaQuery.viewInsetsOf(context).bottom - 72),
               ),
             ),
             child: Column(
@@ -606,19 +561,11 @@ class CollabDialog extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 6),
-                  child: CollabModalHeader(
-                    title: title,
-                    icon: icon,
-                    canClose: canClose,
-                    titleSize: 17,
-                  ),
+                  child: CollabModalHeader(title: title, icon: icon, canClose: canClose, titleSize: 17),
                 ),
                 if (content != null)
                   Flexible(
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-                      child: content,
-                    ),
+                    child: SingleChildScrollView(padding: const EdgeInsets.fromLTRB(20, 0, 20, 16), child: content),
                   ),
                 if (actions.isNotEmpty || leadingAction != null)
                   CollabModalActions(leading: leadingAction, bottom: 20, children: actions),
@@ -720,11 +667,7 @@ class CollabModalField extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-            color: CollabModalColors.of(context).text,
-          ),
+          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: CollabModalColors.of(context).text),
         ),
         const SizedBox(height: 8),
         child,
@@ -790,23 +733,13 @@ class CollabModalSegments<T> extends StatelessWidget {
                         ? BoxDecoration(
                             color: c.surface,
                             borderRadius: BorderRadius.circular(8),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0x1F1C1834),
-                                blurRadius: 7,
-                                offset: Offset(0, 2),
-                              ),
-                            ],
+                            boxShadow: const [BoxShadow(color: Color(0x1F1C1834), blurRadius: 7, offset: Offset(0, 2))],
                           )
                         : null,
                     child: Text(
                       entry.value,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 12,
-                        height: 1.55,
-                        color: selected == entry.key ? c.accent : c.muted,
-                      ),
+                      style: TextStyle(fontSize: 12, height: 1.55, color: selected == entry.key ? c.accent : c.muted),
                     ),
                   ),
                 ),
@@ -865,10 +798,7 @@ class CollabPopover extends StatelessWidget {
                   children: [
                     const SizedBox(width: 8),
                     Expanded(
-                      child: Text(
-                        title,
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-                      ),
+                      child: Text(title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
                     ),
                     IconButton(
                       tooltip: '关闭',
@@ -955,10 +885,7 @@ class _CollabPopoverLayout extends SingleChildLayoutDelegate {
   /// 按借用的父 [constraints] 给出不超过可视区域的松约束。
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) => BoxConstraints.loose(
-    Size(
-      math.max(0, constraints.maxWidth - insets.horizontal),
-      math.max(0, constraints.maxHeight - insets.vertical),
-    ),
+    Size(math.max(0, constraints.maxWidth - insets.horizontal), math.max(0, constraints.maxHeight - insets.vertical)),
   );
 
   /// 根据父 [size] 与实际 [childSize] 翻转和限幅，不缓存过期布局。
@@ -977,7 +904,5 @@ class _CollabPopoverLayout extends SingleChildLayoutDelegate {
   /// 比较借用的 [oldDelegate]，锚点、方向或安全区域变化时重新定位。
   @override
   bool shouldRelayout(_CollabPopoverLayout oldDelegate) =>
-      anchor != oldDelegate.anchor ||
-      direction != oldDelegate.direction ||
-      insets != oldDelegate.insets;
+      anchor != oldDelegate.anchor || direction != oldDelegate.direction || insets != oldDelegate.insets;
 }
