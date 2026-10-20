@@ -246,12 +246,17 @@ Node? findCollabDivider(EditorState state, String id) {
 
 /// 在借用 [state] 的保存 [selection] 起点插入正式分割线并返回后置段落光标。
 /// 空正文被替换，非空正文保留；新块使用独立身份，可插在根或高亮容器内。
+/// [values] 为确认后的分割线属性，默认空以沿用桌面默认外观；复制属性值后与插入合为一次历史。
 /// 只读/已失效位置返回 null；不恢复输入焦点，调用方须等待添加面板退出。
 Future<Selection?> insertCollabDivider(
   EditorState state,
-  Selection selection,
-) async {
-  if (state.isDisposed || !state.editable || selection.start.path.isEmpty) {
+  Selection selection, {
+  Map<String, dynamic> values = const {},
+}) async {
+  if (state.isDisposed ||
+      !state.editable ||
+      selection.start.path.isEmpty ||
+      !state.canInputAt(selection)) {
     return null;
   }
   final source = state.getNodeAtPath(selection.start.path);
@@ -261,7 +266,9 @@ Future<Selection?> insertCollabDivider(
   }
   final divider = Node(
     type: collabDividerType,
-    attributes: CollabDivider.nodeAttributes(const CollabResource()),
+    attributes: CollabDivider.nodeAttributes(
+      CollabResource.fromValues(Map<String, dynamic>.from(values)),
+    ),
   );
   divider.updateAttributes({'cses_collab_block_id': divider.id});
   final empty = source.delta?.toPlainText().isEmpty == true;

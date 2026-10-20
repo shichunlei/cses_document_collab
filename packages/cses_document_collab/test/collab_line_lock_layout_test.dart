@@ -37,15 +37,29 @@ void main() {
         expect(find.byKey(const ValueKey('block-lock-line')), findsOneWidget);
         expect(find.text('在下方插入'), findsNothing);
         expect(find.text('删除分页符'), findsNothing);
-        expect(find.byKey(const ValueKey('divider-opacity')), findsNothing);
-        await tester.tap(
-          find.descendant(of: find.byKey(const ValueKey('block-lock-line')), matching: find.byType(Switch)),
+        expect(find.byKey(const ValueKey('divider-opacity')), kind == 'divider' ? findsOneWidget : findsNothing);
+        if (kind == 'divider') {
+          expect(tester.widget<Slider>(find.byKey(const ValueKey('divider-opacity'))).onChanged, isNull);
+          expect(find.byKey(const ValueKey('divider-delete')), findsNothing);
+          expect(find.byKey(const ValueKey('divider-insert-below')), findsNothing);
+        }
+        final switchFinder = find.descendant(
+          of: find.byKey(const ValueKey('block-lock-line')),
+          matching: find.byType(Switch),
         );
+        await tester.ensureVisible(switchFinder);
+        await tester.pumpAndSettle();
+        await tester.tap(switchFinder);
         await tester.pumpAndSettle();
         expect(card, findsNothing);
         expect(fixture.locks.state('line').locked, isFalse);
         expect(fixture.adapter.editorState.document.toJson(), before);
         expect(fixture.adapter.editorState.undoManager.undoStack.isEmpty, isTrue);
+        if (kind == 'divider') {
+          expect(tester.widget<Slider>(find.byKey(const ValueKey('divider-opacity'))).onChanged, isNotNull);
+          await tester.tap(find.text('完成'));
+          await tester.pumpAndSettle();
+        }
         await tester.tap(find.byKey(ValueKey('collab-$kind-line')));
         await tester.pumpAndSettle();
         if (kind == 'divider') {

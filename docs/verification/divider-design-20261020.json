@@ -1,0 +1,71 @@
+{
+  "date": "2026-10-20",
+  "scope": "用户明确要求先提供UI设计；仅设计提案与交互预览，不实施Flutter或编辑器命令。",
+  "design": {
+    "creation": "添加分割线底部面板，实时预览21种现有样式与线色、长度、粗细、透明度；取消/关闭不插入，完成后才插入。",
+    "editing": "保留样式修改即时生效；样式设置下方直接罗列锁定、复制块链接、下方插入，不使用编辑分区标签。删除分割线固定左下角原位置，完成固定右下角。",
+    "actions": [
+      "锁定（仅开关本体切换）",
+      "复制块链接",
+      "下方插入",
+      "删除分割线（危险色，删除后可撤销）"
+    ],
+    "locked": "可查看样式但不能修改；保留解锁开关与复制块链接；隐藏下方插入和删除分割线，解锁后恢复，删除恢复到固定左下角。",
+    "visual": "沿用现有紫色、24px底部圆角、38px标题图标、固定头尾及637px最大高度；窄屏设置区独立滚动。"
+  },
+  "preview": {
+    "path": "/Users/cses-1/.codex/visualizations/2026/10/14/01a139c6-eccb-7310-9168-a5030a080190/divider-panel-stacked-design.html",
+    "sha256": "fb89cbb82c83e275dd216bd14a3d28bae3a5a74b336666b7872ef96ae2018659",
+    "firstState": "编辑，默认滚动至下方操作；可切换创建、编辑及已锁定场景。",
+    "kind": "conversation visualization HTML fragment"
+  },
+  "versions": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.23",
+    "desktopDeclaration": "0.11.22",
+    "yarnLock": "0.11.22",
+    "installed": "0.11.17",
+    "pnpmLock": "0.2.78",
+    "upgraded": false,
+    "checked": "0.11.23 npm发布产物随包技能/MIGRATIONS及DividerBlockSchema/组件，0.11.17安装包文档；现有手机样式模型/面板、公共弹窗及锁菜单语义。",
+    "pending": "仅本轮设计范围核对；不宣称0.11.23新增能力已兼容。",
+    "rechecked": "2026-10-20本次隐藏操作设计修订再次从桌面配置仓库查询latest=0.11.23；声明/Yarn=0.11.22，安装=0.11.17，未升级。"
+  },
+  "verification": {
+    "javascriptSyntax": "node --check通过",
+    "browser": "真实浏览器中的设计预览，非Flutter运行截图",
+    "creationDone": "既有实线保留，完成后才新增波浪分割线。",
+    "cancel": "取消前后文档分割线数量相同",
+    "lockRowTextDoesNotToggle": true,
+    "lockedCopyEnabled": true,
+    "insertBelow": "文档中出现新正文位置",
+    "deleteAndUndo": {
+      "afterDeleteDividerCount": 1,
+      "afterUndoDividerCount": 2
+    },
+    "copy": "检查模拟成功提示；未调用真实剪贴板或生成真实块链接。",
+    "responsive": "默认宽度及320px视口复核；窄屏根宽与scrollWidth均273px，无横向溢出，底栏在手机范围内；测试后重置视口。",
+    "diffCheck": "通过；保留当前其他公式相关工作区改动。",
+    "creationDividerCounts": {
+      "before": 1,
+      "duringDraft": 1,
+      "afterCancel": 1,
+      "afterDone": 2
+    },
+    "layout": "无编辑分区标签；操作行位于样式控件之后，删除仍在固定底栏左侧。",
+    "lockedInsertAndDeleteVisible": false,
+    "unlockedInsertAndDeleteVisible": true,
+    "lockVisibilityRevision": "浏览器验证锁定时下方插入节点不存在、删除按钮不可见、复制可用；解锁后两项恢复，再次锁定重新隐藏。"
+  },
+  "implementationPending": [
+    "创建前暂存与点击完成的原子插入",
+    "编辑操作接入真实锁、稳定块链接、下方插入与删除历史",
+    "权限/远端变更、焦点、协同及持久化边界",
+    "Android/iOS实际UI验收"
+  ],
+  "statistics": {
+    "total": 41,
+    "change": "设计稿不计为适配完成，保持当前文档的现有功能状态及统计。"
+  },
+  "revision": 3
+}

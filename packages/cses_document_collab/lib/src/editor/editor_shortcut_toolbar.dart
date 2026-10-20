@@ -6,6 +6,7 @@ import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.da
 import 'package:cses_document_collab/src/editor/collab_block_delete.dart';
 import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'package:cses_document_collab/src/editor/collab_callout_block.dart';
+import 'package:cses_document_collab/src/editor/collab_divider_settings.dart';
 import 'package:cses_document_collab/src/editor/collab_formula_sheet.dart';
 import 'package:cses_document_collab/src/editor/collab_host_meeting_ui.dart';
 import 'package:cses_document_collab/src/editor/collab_host_mention_ui.dart';
@@ -1668,16 +1669,19 @@ Node? _findMediaTarget(EditorState state, String id) {
 /// [canRestore] 可在异步结束时拒绝恢复已失效会话的焦点；null沿用页面与编辑器存活检查。
 /// [selectionAfterAction] 在操作完成后解析目标选区，供新插入正文恢复光标与键盘；
 /// 未提供或返回null时恢复原稳定选区，回调不得修改编辑器。
+/// [protectBlockLocks] 默认true，自动持有不可续期的块锁租约；false仅供自行跟踪
+/// 权限代次并明确处理面板内加锁/解锁的业务会话使用，不绕过事务守卫。
 Future<T?> runEditorHeaderAction<T>(
   BuildContext context,
   EditorState editorState,
   Future<T?> Function() action, {
   bool Function()? canRestore,
   Selection? Function()? selectionAfterAction,
+  bool protectBlockLocks = true,
 }) async {
   if (editorState.isDisposed) return null;
   final locks = CollabBlockLocks.of(editorState);
-  final lease = locks?.beginLease();
+  final lease = protectBlockLocks ? locks?.beginLease() : null;
   final session = _EditorModalSession(editorState);
   try {
     return await action();
@@ -2098,13 +2102,19 @@ class _AddBlockSheet extends StatelessWidget {
                     accent: const Color(0xFF6366F1),
                     tint: const Color(0xFFE0E7FF),
                     onTap: () async {
-                      final selection = bookmark.resolve(editorState);
-                      if (selection == null) {
-                        _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
-                        return;
-                      }
                       try {
-                        final landing = await insertCollabDivider(editorState, selection);
+                        final draft = await showCollabDividerInput(
+                          context,
+                          editorState,
+                          canCreate: () => canUseHost() && bookmark.resolve(editorState) != null,
+                        );
+                        if (!context.mounted || draft == null || !canUseHost()) return;
+                        final selection = bookmark.resolve(editorState);
+                        if (selection == null) {
+                          _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
+                          return;
+                        }
+                        final landing = await insertCollabDivider(editorState, selection, values: draft.values);
                         if (context.mounted && landing != null) {
                           Navigator.pop<Selection>(context, landing);
                         }

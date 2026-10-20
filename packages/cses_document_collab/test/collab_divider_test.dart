@@ -402,7 +402,7 @@ void main() {
       expectSelection(false, true, enabled: false);
       adapter.editorState.editable = true;
       await tester.pumpAndSettle();
-      expectSelection(false, true);
+      expectSelection(false, true, enabled: false);
       expect(tester.takeException(), isNull);
     },
   );
@@ -610,6 +610,20 @@ void main() {
     await tester.ensureVisible(entry);
     await tester.tap(entry);
     await tester.pumpAndSettle();
+    expect(find.text('添加分割线'), findsOneWidget);
+    expect(adapter.blocks, hasLength(1));
+    expect(adapter.editorState.undoManager.undoStack.isEmpty, isTrue);
+    expect(find.byKey(const ValueKey('divider-delete')), findsNothing);
+    expect(find.byKey(const ValueKey('divider-insert-below')), findsNothing);
+    await tester.tap(find.byKey(const ValueKey('divider-style-wave')));
+    await tester.pumpAndSettle();
+    expect(adapter.blocks, hasLength(1));
+    final complete = tester
+        .widget<FilledButton>(find.byKey(const ValueKey('divider-done')))
+        .onPressed!;
+    complete();
+    complete();
+    await tester.pumpAndSettle();
     for (var i = 0; i < 8 && !completed; i++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
@@ -621,7 +635,14 @@ void main() {
       'paragraph',
     ]);
     expect(adapter.blocks.first.text, '保留正文');
+    expect(CollabDivider(adapter.blocks[1].resource!.values).style, 'wave');
     expect(adapter.editorState.selection!.start.path, [2]);
+    adapter.editorState.undoManager.undo();
+    await tester.pumpAndSettle();
+    expect(adapter.blocks, hasLength(1));
+    adapter.editorState.undoManager.redo();
+    await tester.pumpAndSettle();
+    expect(CollabDivider(adapter.blocks[1].resource!.values).style, 'wave');
     expect(tester.takeException(), isNull);
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump(const Duration(milliseconds: 150));
