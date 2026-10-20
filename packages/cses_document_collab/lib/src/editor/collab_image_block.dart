@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart' show csesEmbedUrlAttribute;
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
+import 'package:cses_document_collab/src/editor/collab_card_frame.dart';
 import 'package:cses_document_collab/src/editor/collab_cached_image.dart';
 import 'package:cses_document_collab/src/editor/collab_image_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_media_block_base.dart';
@@ -165,6 +166,7 @@ class _CollabImageBlockState extends CollabMediaBlockState<CollabImageBlock> {
   /// 使用 [context] 的正文宽度解析尺寸，更多菜单集中编辑、删除和下方插入。
   /// 图片本体点击仅回调原始链接并屏蔽正文焦点，题注与更多菜单独立命中。
   /// 布局计算不写入 wr/ar 或题注；编辑及复制链接前等待菜单退场并验证当前身份及权限。
+  /// 锁标跟随解析尺寸和对齐后的图片本体右上角，不以题注或整行空白为定位边界。
   @override
   Widget buildMedia(BuildContext context) {
     final host = collabBlockActionContext(context);
@@ -181,26 +183,29 @@ class _CollabImageBlockState extends CollabMediaBlockState<CollabImageBlock> {
       builder: (context, constraints) {
         final (width, height) = image.resolveSize(constraints.maxWidth);
         return Stack(
+          clipBehavior: Clip.none,
           children: [
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Align(
                   alignment: alignment,
-                  child: SizedBox(
-                    key: const ValueKey('collab-image-box'),
-                    width: width,
-                    height: height,
-                    child: ExcludeFocus(
-                      child: Semantics(
-                        label: '图片',
-                        button: CollabRuntime.services.onImageTap != null && _url.trim().isNotEmpty,
-                        child: GestureDetector(
-                          key: ValueKey('collab-image-tap-$id'),
-                          behavior: HitTestBehavior.opaque,
-                          excludeFromSemantics: CollabRuntime.services.onImageTap == null || _url.trim().isEmpty,
-                          onTap: () => unawaited(_openImage()),
-                          child: Transform.rotate(angle: (image.rotation ?? 0) * math.pi / 180, child: _buildImage()),
+                  child: CollabCardLockOverlay(
+                    child: SizedBox(
+                      key: const ValueKey('collab-image-box'),
+                      width: width,
+                      height: height,
+                      child: ExcludeFocus(
+                        child: Semantics(
+                          label: '图片',
+                          button: CollabRuntime.services.onImageTap != null && _url.trim().isNotEmpty,
+                          child: GestureDetector(
+                            key: ValueKey('collab-image-tap-$id'),
+                            behavior: HitTestBehavior.opaque,
+                            excludeFromSemantics: CollabRuntime.services.onImageTap == null || _url.trim().isEmpty,
+                            onTap: () => unawaited(_openImage()),
+                            child: Transform.rotate(angle: (image.rotation ?? 0) * math.pi / 180, child: _buildImage()),
+                          ),
                         ),
                       ),
                     ),

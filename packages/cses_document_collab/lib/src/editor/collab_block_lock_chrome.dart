@@ -41,6 +41,9 @@ Widget decorateCollabBlockLock(
         'mermaid',
         'formula',
         'code',
+        'callout',
+        'image',
+        'video',
       }.contains(node.type);
       return CollabBlockLockScope(
         blockId: value.blockId,

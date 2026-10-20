@@ -4,6 +4,7 @@ import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart'
     show AppFlowyBlockEditorAdapter, csesEmbedUrlAttribute, csesVideoBlockType;
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
+import 'package:cses_document_collab/src/editor/collab_card_frame.dart';
 import 'package:cses_document_collab/src/editor/collab_media_block_base.dart';
 import 'package:cses_document_collab/src/editor/collab_media_timeline.dart';
 import 'package:cses_document_collab/src/editor/collab_unsupported_block.dart';
@@ -281,6 +282,7 @@ class _VideoBlockState extends CollabMediaBlockState<_VideoBlock> {
 
   /// 在借用[context]中构建视频及加载/失败占位，阻止画面点击成为正文选区手势。
   /// 指针按下即收起正文输入，子控件继续处理播放及拖动；不恢复焦点或拦截滚动。
+  /// 锁标独立覆盖在16:9画面右上角，加载和失败状态保持相同定位且不受内容圆角裁剪。
   @override
   Widget buildMedia(BuildContext context) => ExcludeFocus(
     child: Listener(
@@ -289,7 +291,7 @@ class _VideoBlockState extends CollabMediaBlockState<_VideoBlock> {
         behavior: HitTestBehavior.opaque,
         excludeFromSemantics: true,
         onTap: _suppressVideoFocus,
-        child: _buildVideoCard(context),
+        child: CollabCardLockOverlay(child: _buildVideoCard(context)),
       ),
     ),
   );
@@ -354,6 +356,7 @@ class _VideoPlaceholder extends StatelessWidget {
   final bool hasError;
 
   /// 使用借用的[context]构建固定16:9状态外框，加载或失败均保持后续正文位置。
+  /// 窄屏大字下仅在说明超出可用高度时等比缩小占位内容，避免溢出画面。
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
@@ -361,25 +364,35 @@ class _VideoPlaceholder extends StatelessWidget {
       aspectRatio: 16 / 9,
       child: DecoratedBox(
         decoration: BoxDecoration(color: const Color(0xFF111827), borderRadius: BorderRadius.circular(14)),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(hasError ? LucideIcons.imageOff : LucideIcons.film, color: Colors.white, size: 42),
-            const SizedBox(height: 10),
-            Text(hasError ? '视频加载失败' : '正在加载视频…', style: const TextStyle(color: Colors.white)),
-            if (hasError) ...[
-              const SizedBox(height: 6),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Text(
-                  url,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 11),
+        child: LayoutBuilder(
+          builder: (context, constraints) => Center(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: SizedBox(
+                width: constraints.maxWidth,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(hasError ? LucideIcons.imageOff : LucideIcons.film, color: Colors.white, size: 42),
+                    const SizedBox(height: 10),
+                    Text(hasError ? '视频加载失败' : '正在加载视频…', style: const TextStyle(color: Colors.white)),
+                    if (hasError) ...[
+                      const SizedBox(height: 6),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: Text(
+                          url,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 11),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ),
-            ],
-          ],
+            ),
+          ),
         ),
       ),
     );

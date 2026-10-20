@@ -1,6 +1,7 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart' show csesEmbedUrlAttribute;
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
+import 'package:cses_document_collab/src/editor/collab_block_lock_scope.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -86,15 +87,19 @@ abstract class CollabMediaBlockState<T extends CollabMediaBlock> extends State<T
   );
 
   /// 使用借用[context]的编辑器渲染原外壳；不增加标题栏、背景或新的业务操作。
+  /// 叠放层允许媒体自身的右上角锁标越过边缘，保留内容组件内部的圆角裁切。
+  /// 带锁的首个根级媒体额外预留6像素顶部空间，避免锁标被编辑器滚动视口裁掉。
   @override
   Widget build(BuildContext context) {
     final editorState = context.read<EditorState>();
     final child = buildMedia(context);
     final actions = buildMediaActions(context);
+    final firstLockedMedia =
+        node.path.length == 1 && node.path.single == 0 && CollabBlockLockScope.maybeOf(context)?.showBadge == true;
     Widget selectableChild = Padding(
       key: _contentKey,
-      padding: padding,
-      child: Stack(children: [child, ?actions]),
+      padding: padding + (firstLockedMedia ? const EdgeInsets.only(top: 6) : EdgeInsets.zero),
+      child: Stack(clipBehavior: Clip.none, children: [child, ?actions]),
     );
     selectableChild = BlockSelectionContainer(
       node: node,

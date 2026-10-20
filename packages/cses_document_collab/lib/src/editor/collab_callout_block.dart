@@ -3,6 +3,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
+import 'package:cses_document_collab/src/editor/collab_card_frame.dart';
 import 'package:cses_document_collab/src/editor/collab_color_picker.dart';
 import 'package:cses_document_collab/src/editor/collab_emoji_picker.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
@@ -34,7 +35,7 @@ class _CalloutBlockState extends State<_CalloutBlock> with SelectableMixin {
   late final _editor = context.read<EditorState>();
 
   /// 在 [context] 中渲染子块，背景按桌面82%不透明度混合，不改变原始颜色属性。
-  /// 保留输入、选区、只读展示和安全容器删除。
+  /// 锁标相对整个卡片外框的右上角定位，位于内边距外；保留输入、选区、只读展示和安全容器删除。
   @override
   Widget build(BuildContext context) {
     final node = widget.node;
@@ -43,88 +44,91 @@ class _CalloutBlockState extends State<_CalloutBlock> with SelectableMixin {
     final color = parseCollabBlockColor(node.attributes[csesBlockTextColorAttribute] as String?);
     final child = Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
-      child: Container(
-        key: _bodyKey,
-        decoration: BoxDecoration(
-          color: _calloutBackground(node.attributes[csesBlockBackgroundColorAttribute] as String?),
-          border: Border.all(
-            color:
-                parseCollabBlockColor(node.attributes[csesBlockBorderColorAttribute] as String?) ?? Colors.transparent,
+      child: CollabCardLockOverlay(
+        child: Container(
+          key: _bodyKey,
+          decoration: BoxDecoration(
+            color: _calloutBackground(node.attributes[csesBlockBackgroundColorAttribute] as String?),
+            border: Border.all(
+              color:
+                  parseCollabBlockColor(node.attributes[csesBlockBorderColorAttribute] as String?) ??
+                  Colors.transparent,
+            ),
+            borderRadius: BorderRadius.circular(4),
           ),
-          borderRadius: BorderRadius.circular(4),
-        ),
-        padding: const EdgeInsets.fromLTRB(12, 12, 8, 12),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (prefix.isNotEmpty || _editor.editable)
-              ExcludeFocus(
-                child: InkWell(
-                  key: const ValueKey('collab-callout-prefix'),
-                  onTap: _editor.editable ? () => showCollabCalloutEmojiPicker(context, _editor, node) : null,
-                  borderRadius: BorderRadius.circular(4),
-                  child: Tooltip(
-                    message: _editor.editable ? '更换表情' : prefix,
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 12, top: 2, bottom: 2),
-                      child: prefix.isEmpty
-                          ? const Icon(LucideIcons.smilePlus, size: 20)
-                          : Text(prefix, style: TextStyle(fontSize: 18, height: 1.5, color: color)),
+          padding: const EdgeInsets.fromLTRB(12, 12, 8, 12),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (prefix.isNotEmpty || _editor.editable)
+                ExcludeFocus(
+                  child: InkWell(
+                    key: const ValueKey('collab-callout-prefix'),
+                    onTap: _editor.editable ? () => showCollabCalloutEmojiPicker(context, _editor, node) : null,
+                    borderRadius: BorderRadius.circular(4),
+                    child: Tooltip(
+                      message: _editor.editable ? '更换表情' : prefix,
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 12, top: 2, bottom: 2),
+                        child: prefix.isEmpty
+                            ? const Icon(LucideIcons.smilePlus, size: 20)
+                            : Text(prefix, style: TextStyle(fontSize: 18, height: 1.5, color: color)),
+                      ),
                     ),
                   ),
                 ),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (final child in node.children) _editor.renderer.build(context, child),
+                    if (node.children.isEmpty && _editor.editable)
+                      TextButton(
+                        key: const ValueKey('collab-callout-add-body'),
+                        onPressed: () async {
+                          if (!_editor.editable || _editor.isDisposed) return;
+                          final transaction = _editor.transaction
+                            ..insertNode(node.path + [0], paragraphNode())
+                            ..afterSelection = Selection.single(path: node.path + [0], startOffset: 0);
+                          await _editor.apply(transaction);
+                        },
+                        child: const Text('添加正文'),
+                      ),
+                  ],
+                ),
               ),
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  for (final child in node.children) _editor.renderer.build(context, child),
-                  if (node.children.isEmpty && _editor.editable)
-                    TextButton(
-                      key: const ValueKey('collab-callout-add-body'),
-                      onPressed: () async {
-                        if (!_editor.editable || _editor.isDisposed) return;
-                        final transaction = _editor.transaction
-                          ..insertNode(node.path + [0], paragraphNode())
-                          ..afterSelection = Selection.single(path: node.path + [0], startOffset: 0);
-                        await _editor.apply(transaction);
+              CollabBlockMoreButton(
+                key: ValueKey('block-more-${node.attributes['cses_collab_block_id'] ?? node.id}'),
+                editor: _editor,
+                node: node,
+                protectSubtree: true,
+                actions: [
+                  (
+                    label: '颜色设置',
+                    key: const ValueKey('collab-callout-settings'),
+                    run: () async {
+                      final current = findCollabActionNode(
+                        _editor,
+                        node.attributes['cses_collab_block_id'] as String? ?? node.id,
+                      );
+                      if (host.mounted && current != null) {
+                        await showCollabCalloutSettings(host, _editor, current);
+                      }
+                    },
+                  ),
+                  if (!_containsUnsupportedCalloutContent(node))
+                    (
+                      label: '删除高亮块',
+                      key: ValueKey('callout-delete-${node.attributes['cses_collab_block_id'] ?? node.id}'),
+                      run: () async {
+                        await _deleteCallout(_editor, node.attributes['cses_collab_block_id'] as String? ?? node.id);
                       },
-                      child: const Text('添加正文'),
                     ),
                 ],
               ),
-            ),
-            CollabBlockMoreButton(
-              key: ValueKey('block-more-${node.attributes['cses_collab_block_id'] ?? node.id}'),
-              editor: _editor,
-              node: node,
-              protectSubtree: true,
-              actions: [
-                (
-                  label: '颜色设置',
-                  key: const ValueKey('collab-callout-settings'),
-                  run: () async {
-                    final current = findCollabActionNode(
-                      _editor,
-                      node.attributes['cses_collab_block_id'] as String? ?? node.id,
-                    );
-                    if (host.mounted && current != null) {
-                      await showCollabCalloutSettings(host, _editor, current);
-                    }
-                  },
-                ),
-                if (!_containsUnsupportedCalloutContent(node))
-                  (
-                    label: '删除高亮块',
-                    key: ValueKey('callout-delete-${node.attributes['cses_collab_block_id'] ?? node.id}'),
-                    run: () async {
-                      await _deleteCallout(_editor, node.attributes['cses_collab_block_id'] as String? ?? node.id);
-                    },
-                  ),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-20",
+  "request": "将高亮块、图片、视频的锁标放到整个卡片或画面右上角",
+  "blockcraft": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.23",
+    "desktopDeclaration": "0.11.22",
+    "desktopYarnLock": "0.11.22",
+    "desktopInstalled": "0.11.17",
+    "docsPeer": "^0.11.0-alpha",
+    "pnpmLegacy": "0.2.78",
+    "checked": "读取安装版、声明版和latest随包L0/主题/块技能、MIGRATIONS及受影响高亮和锁标样式；未升级桌面",
+    "calloutComponentSha256": "040d993321ed0dfab1fb00513e759bfcd759207bfece0b09a7ae27766e4febb8",
+    "difference": "三版高亮组件片段相同；其他版本Schema/行内、菜单、剪贴板、输入、历史与协同差异待同步"
+  },
+  "changes": [
+    "高亮块使用CollabCardLockOverlay包裹实际背景外框，外边距在覆盖层外；不再使用right42/top12通用标记",
+    "图片按实际尺寸/对齐后的collab-image-box定位，题注不影响锁标坐标",
+    "视频按固定16:9画面定位，原有圆角裁切保留在锁标内层；加载/就绪/失败保持同一坐标",
+    "图片、视频和高亮装饰层不重复绘制锁标；外层允许角标越界；锁定的首根级媒体增加6px顶部安全空间",
+    "窄屏大字视频失败说明过高时仅等比缩小占位内容，保持16:9外框和后续正文位置",
+    "无Schema、FRB、原生、业务引用或协同协议变化"
+  ],
+  "validation": {
+    "reproduction": "修改前3组高亮布局用例均失败，原标记距卡片顶边12px、右边42px；新断言要求实际边缘top/right=-5px",
+    "newCases": "3组高亮长正文/图片/嵌套、3组图片60%宽及左中右对齐/题注、9组视频320/280/390与1/2.2/1.5倍字×加载/就绪/失败；遍历每层绘制裁剪检查完整角标，保留菜单命中与内容/历史不变",
+    "flutterTests": {
+      "command": "flutter test --no-pub test/collab_callout_lock_layout_test.dart test/collab_image_lock_layout_test.dart test/collab_video_update_test.dart test/collab_image_test.dart test/collab_image_tap_test.dart test/collab_block_lock_layout_test.dart --reporter expanded",
+      "result": "76 passed",
+      "log": "/private/tmp/media-callout-lock-corner-tests-verified.log"
+    },
+    "calloutAndResources": "高亮/卡片/资源锁43项通过（媒体补充前）",
+    "analyze": {
+      "result": "8个目标文件无问题",
+      "log": "/private/tmp/media-callout-lock-corner-analyze-verified.log"
+    },
+    "format": "仅格式化本次修改的手写Dart文件，沿用源文件及测试既有行宽",
+    "androidBuild": {
+      "result": "passed",
+      "log": "/private/tmp/media-callout-lock-corner-build-verified.log"
+    },
+    "phone": {
+      "device": "HONOR X70 MTN-AN00 / Android16",
+      "install": "adb install -r成功，正常Demo已更新",
+      "documentId": "6ad06c992a6b14f42c256937",
+      "result": "实际同一高亮块（含冰棍图片）、二维码图片及两张视频卡片的锁标均在整个外框/画面右上角完整显示",
+      "operations": "只进入既有文档并滚动查看，未加解锁或改正文",
+      "screenshots": {
+        "docs/verification/callout-media-lock-corner-20261020/phone-callout.png": "f657e9a14242421fd5150057c579adc30303ac74a6601bf57b271a240d06252b",
+        "docs/verification/callout-media-lock-corner-20261020/phone-video.png": "f4109bc3e04ed4d92aa29c9443c31440c2ffe15c3162166b67dba6671fea9f2a",
+        "docs/verification/callout-media-lock-corner-20261020/phone-image.png": "3c5ed603c3af755f27670de33a5834d4b47ed986b31655eed4a964ce5566f9d2",
+        "docs/verification/callout-media-lock-corner-20261020/phone-requested-video.png": "5911b8c967e43badd0a4c4a0f630e336317dca0aac6a8ba8afffcadb58676532"
+      }
+    },
+    "diffCheck": "git diff --check通过"
+  },
+  "limits": [
+    "iOS未新增验收",
+    "未新增在线双端锁状态或服务端ACK验证；本轮只改锁标显示",
+    "保留同工作区并行的公式卡片改动，不作为本次新增能力"
+  ],
+  "adaptationCounts": {
+    "adapted": 13,
+    "partial": 14,
+    "structural": 1,
+    "unadapted": 13,
+    "total": 41
+  }
+}

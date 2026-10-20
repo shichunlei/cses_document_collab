@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
+import 'package:cses_document_collab/src/editor/collab_block_lock_chrome.dart';
+import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
+import 'package:cses_document_collab/src/model/collab_block_lock.dart';
 import 'package:cses_document_collab/src/editor/collab_video_block.dart';
 import 'package:cses_document_collab/src/editor/collab_callout_block.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +25,117 @@ void main() {
           ),
         );
   });
+
+  for (final (width, scale) in [(320.0, 1.0), (280.0, 2.2), (390.0, 1.5)]) {
+    for (final mode in ['ready', 'loading', 'failed']) {
+      testWidgets('video corner lock remains visible at $width/$scale $mode', (
+        tester,
+      ) async {
+        await tester.binding.setSurfaceSize(Size(width, 900));
+        final platform = _MemoryVideoPlatform(pending: mode != 'ready');
+        final original = VideoPlayerPlatform.instance;
+        VideoPlayerPlatform.instance = platform;
+        final adapter = AppFlowyBlockEditorAdapter(
+          initialBlocks: [_video('lock')],
+          onLocalBlocksChanged: (_) {},
+        );
+        final editor = adapter.editorState;
+        final locks = CollabBlockLocks(
+          editor: editor,
+          userId: 'u1',
+          canUnlock: (_) => false,
+          commit: (_, _, _) async {},
+        );
+        editor.blockDecorator = (context, node, child) =>
+            decorateCollabBlockLock(context, editor, node, child);
+        locks.update([
+          const CollabBlockLockState(
+            blockId: 'video',
+            sourceId: 'video',
+            ownerId: 'u1',
+          ),
+        ]);
+        addTearDown(() async {
+          await tester.pumpWidget(const SizedBox());
+          await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+          locks.dispose();
+          adapter.dispose();
+          await platform.close();
+          VideoPlayerPlatform.instance = original;
+          await tester.binding.setSurfaceSize(null);
+        });
+        await tester.pumpWidget(
+          MaterialApp(
+            home: MediaQuery(
+              data: MediaQueryData(textScaler: TextScaler.linear(scale)),
+              child: Scaffold(
+                body: AppFlowyEditor(
+                  editorState: editor,
+                  disableKeyboardService: true,
+                  editorStyle: const EditorStyle.mobile(),
+                  blockComponentBuilders: {
+                    ...standardBlockComponentBuilderMap,
+                    csesVideoBlockType: CollabVideoBlockComponentBuilder(),
+                  },
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        if (mode == 'failed') {
+          platform._events.values.single.addError(
+            PlatformException(
+              code: 'fixture',
+              message: 'expected decoder failure',
+            ),
+          );
+          await tester.pumpAndSettle();
+          expect(find.text('视频加载失败'), findsOneWidget);
+        }
+        final frame = tester.getRect(
+          find.byKey(const ValueKey('collab-video-viewport')),
+        );
+        final badge = find.byKey(const ValueKey('block-lock-badge-video'));
+        final rect = tester.getRect(badge);
+        expect(rect.top, closeTo(frame.top - 5, 0.01));
+        expect(rect.right, closeTo(frame.right + 5, 0.01));
+        RenderObject child = tester.renderObject(badge);
+        while (child.parent != null) {
+          final parent = child.parent!;
+          final clip = parent.describeApproximatePaintClip(child);
+          if (clip != null) {
+            final visible = MatrixUtils.transformRect(
+              parent.getTransformTo(null),
+              clip,
+            ).inflate(0.01);
+            expect(
+              visible.contains(rect.topLeft),
+              isTrue,
+              reason: '$parent clips lock',
+            );
+            expect(
+              visible.contains(rect.bottomRight),
+              isTrue,
+              reason: '$parent clips lock',
+            );
+          }
+          child = parent;
+        }
+        await tester.tap(
+          find.byKey(const ValueKey('block-lock-menu-trigger-video')),
+        );
+        await tester.pumpAndSettle();
+        expect(find.byKey(const ValueKey('block-lock-video')), findsOneWidget);
+        expect(
+          find.byKey(const ValueKey('collab-video-menu-delete')),
+          findsNothing,
+        );
+        expect(editor.undoManager.undoStack, isEmpty);
+        expect(tester.takeException(), isNull);
+      });
+    }
+  }
 
   for (final targetPlatform in [
     TargetPlatform.android,
