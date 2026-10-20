@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_attachment_block.dart';
@@ -148,7 +149,14 @@ void main() {
       await tester.tap(find.byTooltip('更多操作'));
       await tester.pumpAndSettle();
       expect(find.text('锁定内容块'), findsOneWidget);
-      await tester.tap(find.byKey(const ValueKey('block-lock-resource')));
+      await tester.tap(find.text('锁定内容块'));
+      await tester.tapAt(tester.getTopLeft(find.byKey(const ValueKey('block-lock-resource'))) + const Offset(3, 3));
+      await tester.pumpAndSettle();
+      expect(fixture.commits, isEmpty);
+      expect(find.byKey(const ValueKey('block-lock-resource')), findsOneWidget);
+      await tester.tap(
+        find.descendant(of: find.byKey(const ValueKey('block-lock-resource')), matching: find.byType(Switch)),
+      );
       await tester.pumpAndSettle();
       expect(fixture.commits, [true]);
       expect(find.byKey(const ValueKey('block-lock-badge-resource')), findsOneWidget);
@@ -158,7 +166,9 @@ void main() {
       expect(find.byKey(const ValueKey('resource-delete-resource')), findsNothing);
       expect(find.byKey(const ValueKey('link-view-card')), findsNothing);
       if (kind != 'attachment') expect(find.byKey(const ValueKey('link-copy')), findsOneWidget);
-      await tester.tap(find.byKey(const ValueKey('block-lock-resource')));
+      await tester.tap(
+        find.descendant(of: find.byKey(const ValueKey('block-lock-resource')), matching: find.byType(Switch)),
+      );
       await tester.pumpAndSettle();
       expect(fixture.commits, [true, false]);
       expect(find.byKey(const ValueKey('block-lock-badge-resource')), findsNothing);
@@ -177,7 +187,7 @@ void main() {
     fixture.update(true);
     fixture.update(false);
     await tester.pump();
-    expect(tester.widget<SwitchListTile>(find.byKey(const ValueKey('block-lock-resource'))).onChanged, isNull);
+    expect(tester.widget<CollabSwitchRow>(find.byKey(const ValueKey('block-lock-resource'))).onChanged, isNull);
     await tester.tap(find.byKey(const ValueKey('link-view-card')));
     await tester.pumpAndSettle();
     expect(fixture.adapter.blocks.single.blockType, 'embed');
@@ -205,7 +215,7 @@ void main() {
       await _mount(tester, fixture.adapter);
       await tester.tap(find.byTooltip('更多操作'));
       await tester.pumpAndSettle();
-      expect(tester.widget<SwitchListTile>(find.byKey(const ValueKey('block-lock-resource'))).onChanged, isNull);
+      expect(tester.widget<CollabSwitchRow>(find.byKey(const ValueKey('block-lock-resource'))).onChanged, isNull);
       expect(find.byKey(const ValueKey('resource-edit-resource')), findsNothing);
       expect(find.byKey(const ValueKey('link-copy')), findsOneWidget);
       expect(find.text('定位上级锁定块'), scenario == 'inherited' ? findsOneWidget : findsNothing);
@@ -219,7 +229,9 @@ void main() {
     await _mount(tester, fixture.adapter);
     await tester.tap(find.byTooltip('更多操作'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey('block-lock-resource')));
+    await tester.tap(
+      find.descendant(of: find.byKey(const ValueKey('block-lock-resource')), matching: find.byType(Switch)),
+    );
     await fixture.adapter.replaceFromRemote(const [
       CollabEditorBlock(
         id: 'resource',

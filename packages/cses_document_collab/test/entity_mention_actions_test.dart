@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'dart:convert';
@@ -155,7 +156,7 @@ void main() {
       if (change == 'permission') {
         expect(
           tester
-              .widget<ListTile>(
+              .widget<CollabMenuRow>(
                 find.byKey(const ValueKey('entity-mention-switch-view')),
               )
               .enabled,

@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_table_block.dart';
@@ -468,7 +469,9 @@ void main() {
       await tester.pumpAndSettle();
       final label = axis == 'row' ? '删除行' : '删除列';
       expect(
-        tester.widget<ListTile>(find.widgetWithText(ListTile, label)).enabled,
+        tester
+            .widget<CollabMenuRow>(find.widgetWithText(CollabMenuRow, label))
+            .enabled,
         isFalse,
       );
       Navigator.of(tester.element(find.text(label))).pop();
@@ -577,7 +580,9 @@ void main() {
         }
         await tester.pumpAndSettle();
         expect(
-          tester.widget<ListTile>(find.widgetWithText(ListTile, '删除列')).enabled,
+          tester
+              .widget<CollabMenuRow>(find.widgetWithText(CollabMenuRow, '删除列'))
+              .enabled,
           isFalse,
         );
         Navigator.of(tester.element(find.text('删除列'))).pop();

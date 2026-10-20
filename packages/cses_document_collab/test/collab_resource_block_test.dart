@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
@@ -659,8 +660,8 @@ void main() {
           await tester.pumpAndSettle();
           await tester.tap(find.byKey(const ValueKey('block-more-resource')));
           await tester.pumpAndSettle();
-          expect(find.widgetWithText(ListTile, '播放音频'), findsNothing);
-          expect(find.widgetWithText(ListTile, '暂停音频'), findsNothing);
+          expect(find.widgetWithText(CollabMenuRow, '播放音频'), findsNothing);
+          expect(find.widgetWithText(CollabMenuRow, '暂停音频'), findsNothing);
           await tester.tapAt(const Offset(5, 5));
           await tester.pumpAndSettle();
           final progress = find.byKey(const ValueKey('collab-audio-progress'));

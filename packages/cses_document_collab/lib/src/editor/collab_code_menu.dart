@@ -128,17 +128,15 @@ class _CodeLanguagePickerState extends State<_CodeLanguagePicker> {
                     itemBuilder: (context, index) {
                       final language = languages[index];
                       final selected = language == widget.language;
-                      return Semantics(
+                      return CollabMenuRow(
                         selected: selected,
-                        child: ListTile(
-                          key: ValueKey('collab-code-language-$language'),
-                          leading: const Icon(LucideIcons.codeXml, size: 19),
-                          title: Text(language == 'PlainText' ? '纯文本' : language),
-                          trailing: selected
-                              ? Icon(LucideIcons.check, size: 16, color: CollabModalColors.of(context).accent)
-                              : null,
-                          onTap: () => Navigator.pop(context, language),
-                        ),
+                        key: ValueKey('collab-code-language-$language'),
+                        leading: const Icon(LucideIcons.codeXml, size: 19),
+                        title: Text(language == 'PlainText' ? '纯文本' : language),
+                        trailing: selected
+                            ? Icon(LucideIcons.check, size: 16, color: CollabModalColors.of(context).accent)
+                            : null,
+                        onTap: () => Navigator.pop(context, language),
                       );
                     },
                   ),

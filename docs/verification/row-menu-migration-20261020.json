@@ -1,0 +1,101 @@
+{
+  "date": "2026-10-20",
+  "request": "包内禁用全部ListTile系列，改用Row自定义组件；CollabSwitchRow不支持整行切换",
+  "versions": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.23",
+    "query": "桌面目录npm view @ccc/blockcraft dist-tags --json（本轮实时查询）",
+    "desktopDeclaration": "0.11.22",
+    "desktopYarnLock": "0.11.22",
+    "desktopInstalled": "0.11.17",
+    "docsPeer": "^0.11.0-alpha",
+    "legacyPnpm": "0.2.78",
+    "review": "读取三版随包技能/MIGRATIONS及浮层说明，核对BlockReadonlyManager权限与锁来源实现；未升级桌面。新版浮层只读与个人交互配置等差异不属于本次Row展示替换，其他兼容项保留待同步状态。",
+    "blockReadonlyManagerSha256": "2ea33ae40b9317568cdc9fb9370d8af67be8833d0915bd73b3b9bf180a36003c",
+    "hashVersions": [
+      "0.11.17",
+      "0.11.22",
+      "0.11.23"
+    ]
+  },
+  "implementation": {
+    "businessConstructors": {
+      "ListTile": 21,
+      "SwitchListTile": 2
+    },
+    "testFixtureConstructors": 2,
+    "components": [
+      "CollabMenuRow",
+      "CollabSwitchRow"
+    ],
+    "layout": "Row和Expanded控制文字宽度，常规/紧凑最小高度51/42，文字换行自然增高；局部继承密度替代ListTileThemeData",
+    "interaction": "普通菜单保持整行激活；开关只由Switch本体处理，不提供行级onTap，文字/图标/空白不可切换；保留业务回调、Key、菜单顺序、锁代次/权限/快照及事务守卫",
+    "accessibility": "菜单统一按钮、禁用及可选selected语义，开关合并文字与开关状态语义，保留键盘激活",
+    "rules": [
+      "packages/cses_document_collab/AGENTS.md",
+      "packages/cses_document_collab/.agents/skills/collab-modal-ui/SKILL.md",
+      "packages/cses_document_collab/.agents/skills/collab-modal-ui/references/modal-decisions.md"
+    ],
+    "publicExportsChanged": false,
+    "dependenciesChanged": false,
+    "nativeChanged": false
+  },
+  "validation": {
+    "newComponentTests": 17,
+    "coverage": [
+      "普通行空白和键盘激活",
+      "回调为空/显式禁用不激活",
+      "开关行标题/说明/图标/空白不切换，开关点击一次仅回调一次",
+      "开关键盘与禁用语义",
+      "亮暗主题危险配色及选中语义",
+      "常规/紧凑密度及动态变化",
+      "220/280/320/390宽与1/1.5/2.2倍文字",
+      "实际资源菜单锁定/解锁及标题/空白不触发；原菜单/复制/删除/提及/表格/编号/绘图/语言选择回归"
+    ],
+    "regression": {
+      "result": "329 passed, 0 failed",
+      "files": [
+        "collab_menu_row_test.dart",
+        "collab_modal_test.dart",
+        "collab_block_actions_test.dart",
+        "collab_block_lock_test.dart",
+        "collab_line_lock_layout_test.dart",
+        "collab_resource_lock_test.dart",
+        "collab_link_actions_test.dart",
+        "collab_entity_mention_test.dart",
+        "collab_mention_tap_test.dart",
+        "entity_mention_actions_test.dart",
+        "collab_resource_block_test.dart",
+        "collab_video_update_test.dart",
+        "collab_table_test.dart",
+        "collab_ordered_test.dart",
+        "collab_mermaid_test.dart",
+        "collab_code_block_test.dart"
+      ],
+      "command": "flutter test --no-pub test/collab_menu_row_test.dart test/collab_modal_test.dart test/collab_block_actions_test.dart test/collab_block_lock_test.dart test/collab_line_lock_layout_test.dart test/collab_resource_lock_test.dart test/collab_link_actions_test.dart test/collab_entity_mention_test.dart test/collab_mention_tap_test.dart test/entity_mention_actions_test.dart test/collab_resource_block_test.dart test/collab_video_update_test.dart test/collab_table_test.dart test/collab_ordered_test.dart test/collab_mermaid_test.dart test/collab_code_block_test.dart --reporter expanded",
+      "log": "/tmp/collab-row-regression-final.log"
+    },
+    "analyze": {
+      "result": "21 items, No issues found",
+      "log": "/tmp/collab-row-analyze.log"
+    },
+    "format": "已对本次修改手写Dart文件定向运行dart format，保留原文件行宽并回退无关格式变化",
+    "sourceScan": "全包Dart文件不含ListTile系列名称及listTile主题引用；文档仅保留禁用说明",
+    "diffCheck": "git diff --check通过",
+    "notes": [
+      "视频手势回归输出3次正文ParagraphBlockComponentWidget点击命中警告（collab_video_update_test.dart:282），不涉及本次菜单行；测试断言均通过。播放器离线/失败日志来自测试夹具。"
+    ]
+  },
+  "counts": {
+    "adapted": 13,
+    "partial": 14,
+    "structural": 1,
+    "unadapted": 13,
+    "total": 41
+  },
+  "limits": [
+    "本轮未做Android/iOS真机验证",
+    "未新增在线桌面双端/输入法/重连验收",
+    "其他上游版本差异未在本次UI迁移中同步"
+  ]
+}

@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
@@ -520,8 +521,8 @@ void main() {
           findsNothing,
         );
         expect(find.text('在外部应用打开'), findsOneWidget);
-        expect(find.widgetWithText(ListTile, '播放视频'), findsNothing);
-        expect(find.widgetWithText(ListTile, '暂停视频'), findsNothing);
+        expect(find.widgetWithText(CollabMenuRow, '播放视频'), findsNothing);
+        expect(find.widgetWithText(CollabMenuRow, '暂停视频'), findsNothing);
         await tester.tapAt(const Offset(5, 5));
         await tester.pumpAndSettle();
         state.editable = true;
@@ -610,7 +611,7 @@ void main() {
           final deletion = find.byKey(
             const ValueKey('collab-video-menu-delete'),
           );
-          expect(tester.widget<ListTile>(deletion).enabled, isTrue);
+          expect(tester.widget<CollabMenuRow>(deletion).enabled, isTrue);
           expect(find.text('删除视频'), findsOneWidget);
           expect(find.text('在外部应用打开'), findsOneWidget);
           await tester.tap(deletion);

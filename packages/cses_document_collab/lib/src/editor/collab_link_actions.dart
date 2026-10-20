@@ -112,9 +112,9 @@ Future<void> showCollabLinkActions(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   if (canManageLock) ...[
-                    SwitchListTile(
+                    CollabSwitchRow(
                       key: ValueKey('block-lock-$id'),
-                      secondary: const Icon(LucideIcons.lockKeyhole),
+                      leading: const Icon(LucideIcons.lockKeyhole),
                       title: const Text('锁定内容块'),
                       subtitle: Text(
                         permissionRevoked
@@ -135,13 +135,13 @@ Future<void> showCollabLinkActions(
                           : null,
                     ),
                     if (lock?.locked == true && lock?.explicit != true)
-                      ListTile(
+                      CollabMenuRow(
                         leading: const Icon(LucideIcons.cornerUpLeft),
                         title: const Text('定位上级锁定块'),
                         onTap: () => Navigator.pop(sheetContext, _LinkAction.locateLock),
                       ),
                   ],
-                  ListTile(
+                  CollabMenuRow(
                     leading: const Icon(LucideIcons.externalLink),
                     title: const Text('在浏览器打开'),
                     onTap: () async {
@@ -160,28 +160,28 @@ Future<void> showCollabLinkActions(
                       }
                     },
                   ),
-                  ListTile(
+                  CollabMenuRow(
                     key: const ValueKey('link-copy'),
                     leading: const Icon(LucideIcons.copy),
                     title: const Text('复制链接'),
                     onTap: () => Navigator.pop(sheetContext, _LinkAction.copyLink),
                   ),
                   if (paragraphLinks?.supports(node) == true)
-                    ListTile(
+                    CollabMenuRow(
                       key: ValueKey('block-copy-paragraph-link-$id'),
                       leading: const Icon(LucideIcons.link),
                       title: const Text('复制段落链接'),
                       onTap: () => Navigator.pop(sheetContext, _LinkAction.copyParagraphLink),
                     ),
                   if (state.editable && !protected && onEdit != null)
-                    ListTile(
+                    CollabMenuRow(
                       key: ValueKey('resource-edit-$id'),
                       leading: const Icon(LucideIcons.pencil),
                       title: const Text('修改'),
                       onTap: () => Navigator.pop(sheetContext, _LinkAction.edit),
                     ),
                   if (state.editable && !protected && onDelete != null)
-                    ListTile(
+                    CollabMenuRow(
                       key: ValueKey('resource-delete-$id'),
                       iconColor: CollabModalColors.of(sheetContext).danger,
                       textColor: CollabModalColors.of(sheetContext).danger,
@@ -190,7 +190,7 @@ Future<void> showCollabLinkActions(
                       onTap: () => Navigator.pop(sheetContext, _LinkAction.delete),
                     ),
                   if (state.editable && !protected && const {'page', 'callout'}.contains(node.parent?.type))
-                    ListTile(
+                    CollabMenuRow(
                       key: const ValueKey('link-insert-below'),
                       leading: const Icon(LucideIcons.listEnd),
                       title: const Text('在下方插入'),
@@ -205,8 +205,9 @@ Future<void> showCollabLinkActions(
                       color: CollabModalColors.of(sheetContext).line,
                     ),
                     for (final view in CollabLinkView.values)
-                      ListTile(
+                      CollabMenuRow(
                         key: ValueKey('link-view-${view.name}'),
+                        selected: view == currentView,
                         title: Text(view.label),
                         trailing: view == currentView ? const Icon(LucideIcons.check) : null,
                         onTap: () => Navigator.pop(sheetContext, view),

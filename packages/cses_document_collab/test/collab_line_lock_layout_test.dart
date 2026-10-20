@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_block_lock_chrome.dart';
@@ -37,7 +38,9 @@ void main() {
         expect(find.text('在下方插入'), findsNothing);
         expect(find.text('删除分页符'), findsNothing);
         expect(find.byKey(const ValueKey('divider-opacity')), findsNothing);
-        await tester.tap(find.byKey(const ValueKey('block-lock-line')));
+        await tester.tap(
+          find.descendant(of: find.byKey(const ValueKey('block-lock-line')), matching: find.byType(Switch)),
+        );
         await tester.pumpAndSettle();
         expect(card, findsNothing);
         expect(fixture.locks.state('line').locked, isFalse);
@@ -66,7 +69,7 @@ void main() {
         expect(find.byIcon(LucideIcons.ellipsis), findsNothing);
         await tester.tap(find.byKey(ValueKey('collab-$kind-line')));
         await tester.pumpAndSettle();
-        expect(tester.widget<SwitchListTile>(find.byKey(const ValueKey('block-lock-line'))).onChanged, isNull);
+        expect(tester.widget<CollabSwitchRow>(find.byKey(const ValueKey('block-lock-line'))).onChanged, isNull);
         if (!template) expect(find.text('定位上级锁定块'), findsOneWidget);
         await tester.tap(find.byTooltip('关闭').last);
         await tester.pumpAndSettle();

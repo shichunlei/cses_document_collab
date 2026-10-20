@@ -4,7 +4,7 @@
 
 ## 公共组件与设计基线
 
-公共实现：`lib/src/ui/modal/collab_modal.dart`。当前设计值如下，新增调用方复用组件即可，不复制这些数值另建主题。
+公共实现：`lib/src/ui/modal/collab_modal.dart`。菜单操作使用基于 `Row` 的 `CollabMenuRow`，开关设置使用 `CollabSwitchRow`；禁止使用或包装 SDK 的 ListTile 系列。开关只有本体接收切换事件，点击文字、图标和空白区域不切换。当前设计值如下，新增调用方复用组件即可，不复制这些数值另建主题。
 
 | 项目 | 已确认基线 |
 |---|---|
@@ -15,7 +15,7 @@
 | 标题图标 | 38像素槽、19像素图标；不额外重复无障碍名称 |
 | 标题/说明 | 底部18、居中17、说明11；主标题可换行，说明单行省略 |
 | 操作区 | 水平20、按钮间距10、按钮最小高度42；左侧自然宽度，右侧贴右 |
-| 常规/紧凑菜单行 | 最小高度51 / 42；锚点使用紧凑主题 |
+| 常规/紧凑菜单行 | 最小高度51 / 42；锚点使用紧凑主题，文字换行时自然增高 |
 | 锚点宽度 | 共用默认265；编号、绘图视图/类型/模板指定220 |
 
 底部外壳当前最大高度637并受屏幕90%、键盘及父约束限制；高度小于360进入紧凑模式、隐藏说明和拖动条。`expand` 默认 false；展开模式只让正文占满剩余高度。底部正常留白与系统安全区取最大值，不累加；不要把某次机型截图的绝对像素硬编码进去。
@@ -68,6 +68,7 @@
 | 影响范围 | 优先读取/运行的测试（均在 `test/`） |
 |---|---|
 | 共用外壳、头尾、路由、键盘与宽度 | `collab_modal_test.dart` |
+| 自定义菜单行、开关命中及无障碍 | `collab_menu_row_test.dart`；锁测试点击行内 `Switch` |
 | 图标/封面/拖动/业务头部 | `document_header_test.dart`、`editor_media_source_sheet_test.dart` |
 | 高亮颜色/表情及外置移除 | `collab_callout_block_test.dart`、`collab_color_emoji_picker_test.dart` |
 | 链接与提及菜单 | `collab_link_actions_test.dart`、`collab_entity_mention_test.dart` |

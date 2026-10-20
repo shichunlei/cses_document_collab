@@ -172,12 +172,12 @@ void main() {
       builder: (context) => Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          ListTile(
+          CollabMenuRow(
             leading: const Icon(LucideIcons.panelLeftOpen),
             title: const Text('在左侧插入列'),
             onTap: () => Navigator.pop(context, 'before'),
           ),
-          ListTile(
+          CollabMenuRow(
             leading: const Icon(LucideIcons.panelRightOpen),
             title: const Text('在右侧插入列'),
             onTap: () => Navigator.pop(context, 'after'),

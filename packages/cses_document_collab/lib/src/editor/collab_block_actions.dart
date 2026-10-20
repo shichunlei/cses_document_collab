@@ -269,9 +269,9 @@ class CollabBlockMoreButton extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     if (locks != null && locks.userId.isNotEmpty) ...[
-                      SwitchListTile(
+                      CollabSwitchRow(
                         key: ValueKey('block-lock-$id'),
-                        secondary: const Icon(LucideIcons.lockKeyhole),
+                        leading: const Icon(LucideIcons.lockKeyhole),
                         title: const Text('锁定内容块'),
                         subtitle: Text(
                           permissionRevoked
@@ -290,35 +290,35 @@ class CollabBlockMoreButton extends StatelessWidget {
                         onChanged: !permissionRevoked && locks.canToggle(id) ? (_) => Navigator.pop(sheet, -2) : null,
                       ),
                       if (lock?.locked == true && lock?.explicit != true)
-                        ListTile(
+                        CollabMenuRow(
                           leading: const Icon(LucideIcons.cornerUpLeft),
                           title: const Text('定位上级锁定块'),
                           onTap: () => Navigator.pop(sheet, -3),
                         ),
                     ],
                     if (type == 'callout' || type == 'mermaid')
-                      ListTile(
+                      CollabMenuRow(
                         key: ValueKey('block-copy-$id'),
                         leading: const Icon(LucideIcons.copy),
                         title: Text(type == 'mermaid' ? '复制代码' : '复制内容'),
                         onTap: () => Navigator.pop(sheet, -4),
                       ),
                     if (canCopyParagraphLink)
-                      ListTile(
+                      CollabMenuRow(
                         key: ValueKey('block-copy-paragraph-link-$id'),
                         leading: const Icon(LucideIcons.link),
                         title: const Text('复制段落链接'),
                         onTap: () => Navigator.pop(sheet, -5),
                       ),
                     if (wasEditable && !protected && const {'page', 'callout'}.contains(node.parent?.type))
-                      ListTile(
+                      CollabMenuRow(
                         key: ValueKey('block-insert-below-$id'),
                         leading: const Icon(LucideIcons.listEnd),
                         title: const Text('在下方插入'),
                         onTap: () => Navigator.pop(sheet, -1),
                       ),
                     for (var i = 0; i < commands.length; i++)
-                      ListTile(
+                      CollabMenuRow(
                         key: commands[i].key,
                         leading: Icon(
                           _blockActionIcon(commands[i].label),

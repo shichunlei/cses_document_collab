@@ -153,19 +153,16 @@ class _NumberingMenu extends StatelessWidget {
     required String label,
     required bool restart,
     required bool selected,
-  }) => Semantics(
-    button: true,
+  }) => CollabMenuRow(
     selected: selected,
-    child: ListTile(
-      key: ValueKey('collab-numbering-${restart ? 'restart' : 'continue'}'),
-      leading: Icon(
-        restart ? LucideIcons.listRestart : LucideIcons.listOrdered,
-        size: 19,
-      ),
-      title: Text(label),
-      trailing: selected ? const Icon(LucideIcons.check, size: 16) : null,
-      onTap: () => Navigator.pop(context, restart),
+    key: ValueKey('collab-numbering-${restart ? 'restart' : 'continue'}'),
+    leading: Icon(
+      restart ? LucideIcons.listRestart : LucideIcons.listOrdered,
+      size: 19,
     ),
+    title: Text(label),
+    trailing: selected ? const Icon(LucideIcons.check, size: 16) : null,
+    onTap: () => Navigator.pop(context, restart),
   );
 }
 

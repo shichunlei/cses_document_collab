@@ -279,7 +279,7 @@ class _MermaidSheetState extends State<_MermaidSheet> {
             mainAxisSize: MainAxisSize.min,
             children: [
               for (final example in collabMermaidExamples)
-                ListTile(
+                CollabMenuRow(
                   key: ValueKey(
                     'mermaid-${replace ? 'template' : 'type'}-${example.id}',
                   ),

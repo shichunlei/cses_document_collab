@@ -120,7 +120,7 @@ Future<T?> showCollabDialog<T>({
 /// ```
 class CollabModalTheme extends StatelessWidget {
   /// [key] 控制组件身份与状态复用；[child] 为借用的弹窗内容。
-  /// [compactList] 默认false，锚点菜单设为true使用42像素行高。
+  /// [compactList] 默认false，锚点菜单设为true使用42逻辑像素最小行高，内容可随文字增长。
   const CollabModalTheme({super.key, required this.child, this.compactList = false});
 
   /// 应用局部主题的必需子树，不接管其业务资源。
@@ -207,18 +207,6 @@ class CollabModalTheme extends StatelessWidget {
             textStyle: TextStyle(fontFamily: text.labelLarge?.fontFamily, fontSize: 13, fontWeight: FontWeight.w500),
           ),
         ),
-        listTileTheme: ListTileThemeData(
-          contentPadding: EdgeInsets.symmetric(horizontal: compactList ? 10 : 12),
-          minTileHeight: compactList ? 42 : 51,
-          minVerticalPadding: compactList ? 9 : 4,
-          minLeadingWidth: 19,
-          horizontalTitleGap: 12,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          iconColor: c.muted,
-          textColor: c.text,
-          titleTextStyle: (text.bodyMedium ?? const TextStyle()).copyWith(fontSize: 13, height: 1.55, color: c.text),
-          subtitleTextStyle: (text.bodySmall ?? const TextStyle()).copyWith(fontSize: 11, height: 1.55, color: c.muted),
-        ),
         sliderTheme: base.sliderTheme.copyWith(activeTrackColor: c.accent, thumbColor: c.accent),
       ),
       child: DefaultTextStyle(
@@ -229,7 +217,247 @@ class CollabModalTheme extends StatelessWidget {
           height: 1.55,
           color: c.text,
         ),
-        child: child,
+        child: _CollabMenuDensity(compact: compactList, child: child),
+      ),
+    );
+  }
+}
+
+/// 在弹窗子树传递菜单密度，嵌套弹窗可独立覆盖，不影响宿主主题。
+class _CollabMenuDensity extends InheritedWidget {
+  /// [compact] 控制紧凑间距；[child] 为借用的菜单子树。
+  const _CollabMenuDensity({required this.compact, required super.child});
+
+  /// true 使用锚点菜单间距，false 使用常规底部菜单间距。
+  final bool compact;
+
+  /// 从借用 [context] 订阅最近的菜单密度；独立使用时默认常规间距。
+  static bool compactOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<_CollabMenuDensity>()?.compact ?? false;
+
+  /// [oldWidget] 的密度变化时通知菜单行重新布局。
+  @override
+  bool updateShouldNotify(_CollabMenuDensity oldWidget) => compact != oldWidget.compact;
+}
+
+/// 基于 Row 的整行菜单操作，支持键盘激活与合并的按钮语义。
+/// 需要 Material 祖先绘制点击反馈；不拥有业务状态或资源。
+///
+/// ```dart
+/// import 'package:flutter/material.dart';
+/// import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+/// Widget menu(VoidCallback open) => Material(
+///   child: CollabModalTheme(
+///     child: CollabMenuRow(title: const Text('打开'), onTap: open),
+///   ),
+/// );
+/// ```
+class CollabMenuRow extends StatelessWidget {
+  /// [key] 控制组件身份与状态复用；[title] 为必需且允许换行的名称。
+  /// [leading]、[subtitle]、[trailing] 默认不显示，分别为前置装饰、说明和尾部标记。
+  /// [enabled] 默认 true；false 或 [onTap] 为 null 时禁止整行点击及键盘激活。
+  /// [selected] 为可选的持久选中状态；null 表示普通动作，不声明选中语义。
+  /// [onTap] 在整行激活时调用，业务异步错误由调用方处理。
+  /// [iconColor]、[textColor] 为可选的可用态颜色，默认沿用弹窗主题；禁用态使用宿主禁用色。
+  const CollabMenuRow({
+    super.key,
+    required this.title,
+    this.leading,
+    this.subtitle,
+    this.trailing,
+    this.enabled = true,
+    this.selected,
+    this.onTap,
+    this.iconColor,
+    this.textColor,
+  });
+
+  /// 必需名称，随系统文字缩放换行。
+  final Widget title;
+
+  /// 可选前置装饰，默认不显示；不应包含独立交互。
+  final Widget? leading;
+
+  /// 可选说明，默认不显示，允许多行。
+  final Widget? subtitle;
+
+  /// 可选尾部状态标记，默认不显示；整行统一接收激活事件。
+  final Widget? trailing;
+
+  /// 调用方控制的可用状态，默认 true；仍须提供 onTap 才可激活。
+  final bool enabled;
+
+  /// 可选的持久选中状态，由调用方持有；null 时不声明选中语义。
+  final bool? selected;
+
+  /// 整行激活回调；null 时禁用，回调及其业务资源由调用方持有。
+  final VoidCallback? onTap;
+
+  /// 可用态图标颜色，null 时使用弹窗默认色。
+  final Color? iconColor;
+
+  /// 可用态标题颜色，null 时使用弹窗默认色。
+  final Color? textColor;
+
+  /// 按借用 [context] 的密度和主题构建整行点击区，禁用时移除焦点与激活能力。
+  @override
+  Widget build(BuildContext context) {
+    final active = enabled && onTap != null;
+    return MergeSemantics(
+      child: Semantics(
+        button: true,
+        enabled: active,
+        selected: selected,
+        child: InkWell(
+          onTap: active ? onTap : null,
+          canRequestFocus: active,
+          borderRadius: BorderRadius.circular(10),
+          child: _CollabRowContent(
+            title: title,
+            leading: leading,
+            subtitle: subtitle,
+            trailing: trailing,
+            enabled: active,
+            iconColor: iconColor,
+            textColor: textColor,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// 基于 Row 的开关设置行；仅 Switch 本身处理点击、拖动及键盘切换。
+/// 标题和空白区域无点击事件；状态由调用方持有，组件不拥有资源。
+///
+/// ```dart
+/// import 'package:flutter/material.dart';
+/// import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+/// Widget setting(bool value, ValueChanged<bool> update) => CollabModalTheme(
+///   child: CollabSwitchRow(
+///     title: const Text('锁定'), value: value, onChanged: update,
+///   ),
+/// );
+/// ```
+class CollabSwitchRow extends StatelessWidget {
+  /// [key] 控制组件身份与状态复用；[title] 为必需名称。
+  /// [leading] 和 [subtitle] 为可选装饰和多行说明，默认不显示。
+  /// [value] 为调用方持有的当前状态；[onChanged] 仅在开关本体激活时接收新值。
+  /// [onChanged] 为 null 时禁用开关；业务异步完成及错误由调用方负责。
+  const CollabSwitchRow({
+    super.key,
+    required this.title,
+    required this.value,
+    required this.onChanged,
+    this.leading,
+    this.subtitle,
+  });
+
+  /// 必需名称，作为开关的合并无障碍标签，文字本身不可点击。
+  final Widget title;
+
+  /// 必需当前状态，组件不自行更新，由调用方重建同步。
+  final bool value;
+
+  /// 必需的可空开关回调；null 禁用，整行不提供切换回调。
+  final ValueChanged<bool>? onChanged;
+
+  /// 可选前置装饰，默认不显示。
+  final Widget? leading;
+
+  /// 可选多行说明，默认不显示，文字本身不可点击。
+  final Widget? subtitle;
+
+  /// 在借用 [context] 中布局说明与独立 Switch，合并语义而不添加行级手势。
+  @override
+  Widget build(BuildContext context) => MergeSemantics(
+    child: _CollabRowContent(
+      title: title,
+      leading: leading,
+      subtitle: subtitle,
+      trailing: Switch(value: value, onChanged: onChanged),
+      enabled: onChanged != null,
+    ),
+  );
+}
+
+/// 菜单行与开关行共用的纯展示布局，不注册手势或持有状态。
+class _CollabRowContent extends StatelessWidget {
+  /// [title] 为名称；[leading]、[subtitle]、[trailing] 为可选装饰、说明和尾部控件。
+  /// [enabled] 控制默认配色；[iconColor] 和 [textColor] 仅覆盖可用态颜色。
+  const _CollabRowContent({
+    required this.title,
+    required this.enabled,
+    this.leading,
+    this.subtitle,
+    this.trailing,
+    this.iconColor,
+    this.textColor,
+  });
+
+  /// 允许换行的名称，由调用方创建。
+  final Widget title;
+
+  /// 默认颜色是否使用可用态。
+  final bool enabled;
+
+  /// 可选前置装饰。
+  final Widget? leading;
+
+  /// 可选多行说明。
+  final Widget? subtitle;
+
+  /// 可选尾部控件，其手势由控件自身处理。
+  final Widget? trailing;
+
+  /// 可选的可用态图标色。
+  final Color? iconColor;
+
+  /// 可选的可用态标题色。
+  final Color? textColor;
+
+  /// 在借用 [context] 中将文字限制在剩余宽度，高度随文字增长而非固定裁剪。
+  @override
+  Widget build(BuildContext context) {
+    final compact = _CollabMenuDensity.compactOf(context);
+    final c = CollabModalColors.of(context);
+    final theme = Theme.of(context);
+    final titleStyle = (theme.textTheme.bodyMedium ?? const TextStyle()).copyWith(
+      fontSize: 13,
+      height: 1.55,
+      color: enabled ? textColor ?? c.text : theme.disabledColor,
+    );
+    final subtitleStyle = (theme.textTheme.bodySmall ?? const TextStyle()).copyWith(
+      fontSize: 11,
+      height: 1.55,
+      color: enabled ? c.muted : theme.disabledColor,
+    );
+    return IconTheme.merge(
+      data: IconThemeData(size: 19, color: enabled ? iconColor ?? c.muted : theme.disabledColor),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minHeight: compact ? 42 : 51),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: compact ? 10 : 12, vertical: compact ? 9 : 4),
+          child: Row(
+            children: [
+              if (leading != null) ...[
+                ConstrainedBox(constraints: const BoxConstraints(minWidth: 19), child: leading),
+                const SizedBox(width: 12),
+              ],
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    DefaultTextStyle(style: titleStyle, child: title),
+                    if (subtitle != null) DefaultTextStyle(style: subtitleStyle, child: subtitle!),
+                  ],
+                ),
+              ),
+              if (trailing != null) ...[const SizedBox(width: 12), trailing!],
+            ],
+          ),
+        ),
       ),
     );
   }

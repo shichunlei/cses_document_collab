@@ -21,13 +21,15 @@ description: 在 cses_document_collab 包内新增、迁移或调整底部弹窗
 
 复用 `CollabModalHeader`、`CollabModalActions`、`CollabModalField`、`CollabModalSegments<T>`；不要为了某个新菜单再造圆角、标题、按钮或定位系统。现有组件不足时，优先加保持旧默认值的可选配置，例如 `showCollabPopover(width: 220)`，并检查消费者。
 
+菜单行复用 `CollabMenuRow`，开关行复用 `CollabSwitchRow`，均由 `Row` 自定义布局；本包源码、测试夹具和示例禁止使用或包装 Flutter `ListTile`、`SwitchListTile`、`CheckboxListTile`、`RadioListTile` 等系列组件及其 SDK 主题配置。`CollabSwitchRow` 只有开关本体可切换，标题、说明、图标与空白区域没有行级点击事件，也不提供整行回调。菜单密度由 `CollabModalTheme.compactList` 传递，保留51/42逻辑像素最小高度并允许大字换行增长；禁用态、键盘和无障碍语义由共用行处理。
+
 内部跨目录使用精确 `package:cses_document_collab/src/...` import。当前公共弹窗是包内实现；宿主仍只能使用包的公开入口，不为宿主直接使用这些内部 Widget 扩大导出。
 
 ## 已确认的展示规则
 
 - 从 `CollabModalColors.of(context)` 取色；主色、背景、文字、边线和危险色均支持亮/暗主题。细节默认值见实现，必要时查 [场景与决策参考](references/modal-decisions.md)。
 - 表单的主要确认操作放在右侧 `actions`；需要左侧删除/移除时使用 `leadingAction`。图标与高亮表情的移除在底部左侧，与右侧完成/保存同一操作栏；窄屏大字允许公共按钮组换行。
-- 删除/移除的可用文字与图标都用 `danger`，禁用态沿用主题。操作菜单中的删除是整行 `ListTile`；不要把所有删除动作都强行改为底部按钮。
+- 删除/移除的可用文字与图标都用 `danger`，禁用态沿用主题。操作菜单中的删除使用基于 `Row` 的整行 `CollabMenuRow`；不要把所有删除动作都强行改为底部按钮。
 - 标题栏说明由 `CollabModalHeader.subtitle` 统一单行、省略号、禁止软换行；传入完整链接，不截短原始业务值。不把副标题规则擅自套到允许换行的主标题。
 - 链接操作里的链接/卡片/嵌入视图选项与上方资源操作之间加浅色分割线；只有视图选项存在时才显示该分隔。
 - 分页符通过点击整条虚线/文字标记打开公共块操作面板，不在右侧显示三个点；只读保留标记并禁用点击，沿用公共菜单的身份、权限及失败保护。分页符和分割线在块锁生效时显示公共无标题卡片，不添加右侧更多按钮；整条点击提供允许的锁操作，分割线解锁后恢复原样式设置入口。

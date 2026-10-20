@@ -545,19 +545,15 @@ class _AxisMenuState extends State<_AxisMenu> {
     String label,
     _AxisAction action,
     IconData icon,
-  ) => ListTile(
-    leading: Icon(
-      icon,
-      color: action == _AxisAction.delete
-          ? CollabModalColors.of(context).danger
-          : null,
-    ),
-    title: Text(
-      label,
-      style: action == _AxisAction.delete
-          ? TextStyle(color: CollabModalColors.of(context).danger)
-          : null,
-    ),
+  ) => CollabMenuRow(
+    leading: Icon(icon),
+    title: Text(label),
+    iconColor: action == _AxisAction.delete
+        ? CollabModalColors.of(context).danger
+        : null,
+    textColor: action == _AxisAction.delete
+        ? CollabModalColors.of(context).danger
+        : null,
     enabled:
         widget.valid.value &&
         (action != _AxisAction.delete || widget.canDelete),

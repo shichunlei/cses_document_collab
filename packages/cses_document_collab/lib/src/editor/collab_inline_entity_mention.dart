@@ -154,7 +154,7 @@ class _EntityMentionState extends State<CollabInlineEntityMention> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ListTile(
+              CollabMenuRow(
                 key: const ValueKey('entity-mention-open-detail'),
                 leading: const Icon(LucideIcons.externalLink),
                 title: Text('打开$kind详情'),
@@ -167,7 +167,7 @@ class _EntityMentionState extends State<CollabInlineEntityMention> {
                 builder: (context, _) => Column(
                   children: [
                     if (const {'meeting', 'task'}.contains(target.entityType))
-                      ListTile(
+                      CollabMenuRow(
                         key: const ValueKey('entity-mention-switch-view'),
                         leading: const Icon(LucideIcons.panelTop),
                         title: const Text('切换为卡片视图'),
@@ -177,7 +177,7 @@ class _EntityMentionState extends State<CollabInlineEntityMention> {
                           sheetContext,
                         ).pop(_EntityAction.switchView),
                       ),
-                    ListTile(
+                    CollabMenuRow(
                       key: const ValueKey('entity-mention-delete'),
                       enabled: state.editable,
                       leading: Icon(

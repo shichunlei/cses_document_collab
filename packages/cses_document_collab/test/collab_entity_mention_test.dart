@@ -292,11 +292,11 @@ void main() {
           kind == 'doc' ? findsNothing : findsOneWidget,
         );
         final deletion = find.byKey(const ValueKey('entity-mention-delete'));
-        final deleteTile = tester.widget<ListTile>(deletion);
+        final deleteTile = tester.widget<CollabMenuRow>(deletion);
         final colors = CollabModalColors.of(tester.element(deletion));
         expect((deleteTile.leading! as Icon).icon, LucideIcons.trash2);
         expect((deleteTile.leading! as Icon).color, colors.danger);
-        expect((deleteTile.title! as Text).style!.color, colors.danger);
+        expect((deleteTile.title as Text).style!.color, colors.danger);
         final open = find.byKey(const ValueKey('entity-mention-open-detail'));
         expect(tester.getRect(deletion).left, tester.getRect(open).left);
         expect(tester.getRect(deletion).width, tester.getRect(open).width);
@@ -313,7 +313,7 @@ void main() {
         await tester.pumpAndSettle();
         expect(
           tester
-              .widget<ListTile>(
+              .widget<CollabMenuRow>(
                 find.byKey(const ValueKey('entity-mention-delete')),
               )
               .enabled,
@@ -325,7 +325,7 @@ void main() {
         if (kind == 'doc') {
           expect(switchView, findsNothing);
         } else {
-          expect(tester.widget<ListTile>(switchView).enabled, isFalse);
+          expect(tester.widget<CollabMenuRow>(switchView).enabled, isFalse);
         }
         expect(tester.takeException(), isNull);
       },

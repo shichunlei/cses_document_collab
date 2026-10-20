@@ -80,21 +80,19 @@ class _MermaidBlockState extends State<_MermaidBlock> with SelectableMixin {
           mainAxisSize: MainAxisSize.min,
           children: [
             for (final mode in CollabMermaidView.values)
-              Semantics(
+              CollabMenuRow(
                 selected: mode == currentView,
-                child: ListTile(
-                  key: ValueKey('mermaid-view-option-${mode.name}'),
-                  leading: Icon(switch (mode) {
-                    CollabMermaidView.text => LucideIcons.code,
-                    CollabMermaidView.graph => LucideIcons.panelTop,
-                    CollabMermaidView.both => LucideIcons.panelsTopLeft,
-                  }, size: 19),
-                  title: Text(mode.label),
-                  trailing: mode == currentView
-                      ? const Icon(LucideIcons.check, size: 16)
-                      : null,
-                  onTap: () => Navigator.pop(menuContext, mode),
-                ),
+                key: ValueKey('mermaid-view-option-${mode.name}'),
+                leading: Icon(switch (mode) {
+                  CollabMermaidView.text => LucideIcons.code,
+                  CollabMermaidView.graph => LucideIcons.panelTop,
+                  CollabMermaidView.both => LucideIcons.panelsTopLeft,
+                }, size: 19),
+                title: Text(mode.label),
+                trailing: mode == currentView
+                    ? const Icon(LucideIcons.check, size: 16)
+                    : null,
+                onTap: () => Navigator.pop(menuContext, mode),
               ),
           ],
         ),

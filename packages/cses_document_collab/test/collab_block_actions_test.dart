@@ -181,7 +181,7 @@ void main() {
         await tester.pumpAndSettle();
         final copy = find.byKey(const ValueKey('media-copy-link-card'));
         expect(find.text('复制链接'), findsOneWidget);
-        final tile = tester.widget<ListTile>(copy);
+        final tile = tester.widget<CollabMenuRow>(copy);
         expect((tile.leading as Icon).icon, LucideIcons.copy);
         final state = adapter.editorState;
         if (scenario == 'reorder') {

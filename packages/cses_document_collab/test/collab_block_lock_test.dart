@@ -184,7 +184,9 @@ void main() {
         expect(find.text('锁定内容块'), findsOneWidget);
         expect(find.text('删除内容'), locked ? findsNothing : findsOneWidget);
         expect(find.text('复制内容'), findsNothing);
-        await tester.tap(find.byKey(const ValueKey('block-lock-a')));
+        await tester.tap(
+          find.descendant(of: find.byKey(const ValueKey('block-lock-a')), matching: find.byType(Switch)),
+        );
         await tester.pumpAndSettle();
         expect(commits, 1);
         expect(locks.state('a').locked, !locked);

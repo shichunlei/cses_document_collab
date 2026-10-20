@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -389,7 +390,7 @@ void main() {
     expect(find.text('打开会议详情'), findsOneWidget);
     expect(
       tester
-          .widget<ListTile>(
+          .widget<CollabMenuRow>(
             find.byKey(const ValueKey('entity-mention-open-detail')),
           )
           .enabled,
