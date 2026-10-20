@@ -9,16 +9,24 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 /// 段落、标题、列表、引用及表格等普通正文不显示锁标，也不预留提示空间；
 /// 锁定权限仍由[editor]的守卫保护。卡片保留锁标，更多按钮由卡片自身提供，
 /// 模板锁不画额外标记。
-Widget decorateCollabBlockLock(BuildContext context, EditorState editor, Node node, Widget child) {
+Widget decorateCollabBlockLock(
+  BuildContext context,
+  EditorState editor,
+  Node node,
+  Widget child,
+) {
   final locks = CollabBlockLocks.of(editor);
-  if (locks == null || locks.userId.isEmpty || node.parent == null) return child;
+  if (locks == null || locks.userId.isEmpty || node.parent == null) {
+    return child;
+  }
   return ListenableBuilder(
     listenable: locks,
     child: child,
     builder: (context, body) {
       final value = locks.state(CollabBlockLocks.idOf(node));
       final ordinary =
-          node.delta != null && node.type != 'code' || const {'table', 'table-cell', 'unsupported'}.contains(node.type);
+          node.delta != null && node.type != 'code' ||
+          const {'table', 'table-cell', 'unsupported'}.contains(node.type);
       final badge = !ordinary && value.explicit && !value.template;
       final headerCard = const {
         'meeting',
@@ -31,6 +39,7 @@ Widget decorateCollabBlockLock(BuildContext context, EditorState editor, Node no
         'figma-embed',
         'juejin-embed',
         'mermaid',
+        'formula',
         'code',
       }.contains(node.type);
       return CollabBlockLockScope(
@@ -47,7 +56,11 @@ Widget decorateCollabBlockLock(BuildContext context, EditorState editor, Node no
                 child: Tooltip(
                   key: ValueKey('block-lock-badge-${value.blockId}'),
                   message: '内容已锁定',
-                  child: const Icon(LucideIcons.lockKeyhole, size: 13, color: Color(0xFF8A8F9C)),
+                  child: const Icon(
+                    LucideIcons.lockKeyhole,
+                    size: 13,
+                    color: Color(0xFF8A8F9C),
+                  ),
                 ),
               ),
           ],

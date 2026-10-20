@@ -1,4 +1,5 @@
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
+import 'package:cses_document_collab/src/editor/collab_card_frame.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_formula_sheet.dart';
 import 'package:cses_document_collab/src/editor/collab_formula_visual.dart';
@@ -49,14 +50,15 @@ class _FormulaBlockState extends State<_FormulaBlock> with SelectableMixin {
   /// 内部视觉边界，随本 Widget 释放，不绑定编辑输入。
   final _bodyKey = GlobalKey();
 
-  /// 在借用 [context] 内构建公式与更多插入入口，预览时隐藏修改操作。
+  /// 在借用 [context] 内复用无标题卡片外框，居中公式并为右上角更多操作留出两侧等宽空间。
+  /// 预览时保留卡片和公式，沿用更多入口及编辑面板的现有权限规则。
   @override
   Widget build(BuildContext context) {
     final editor = context.read<EditorState>();
     final node = widget.node;
     final id = node.attributes['cses_collab_block_id'] as String? ?? node.id;
     final visual = Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 44),
       child: CollabFormulaVisual(
         key: ValueKey('collab-formula-visual-$id'),
         latex: readCollabFormula(node.attributes).string('latex'),
@@ -89,19 +91,27 @@ class _FormulaBlockState extends State<_FormulaBlock> with SelectableMixin {
       selectionAboveBlock: true,
       child: KeyedSubtree(
         key: _bodyKey,
-        child: Stack(
-          children: [
-            child,
-            Positioned(
-              top: 0,
-              right: 0,
-              child: CollabBlockMoreButton(
-                key: ValueKey('block-more-$id'),
-                editor: editor,
-                node: node,
-              ),
+        child: CollabCardFrame(
+          surfaceKey: ValueKey('collab-formula-card-$id'),
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 52),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                child,
+                Positioned(
+                  top: 4,
+                  right: 4,
+                  child: CollabBlockMoreButton(
+                    key: ValueKey('block-more-$id'),
+                    editor: editor,
+                    node: node,
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
