@@ -1,0 +1,66 @@
+{
+  "date": "2026-10-20",
+  "request": "高亮块锁定时禁用前缀表情更换",
+  "versions": {
+    "latest": "0.11.23",
+    "registry": "http://npm.runtongqiuben.com/",
+    "desktopDeclaration": "0.11.22",
+    "desktopYarnLock": "0.11.22",
+    "desktopInstalled": "0.11.17",
+    "docsPeer": "^0.11.0-alpha",
+    "legacyPnpm": "0.2.78",
+    "review": "版本组合未变；沿用并复核本会话已读的安装/声明/latest随包技能、MIGRATIONS及CalloutBlockComponent.onPickEmoji的isReadonly检查。未升级桌面，其他上游差异待同步"
+  },
+  "implementation": [
+    "前缀InkWell订阅编辑权限与块锁，使用canEditCollabNode决定onTap；自身普通/模板锁和继承锁均禁用，原表情继续展示",
+    "打开外观面板和直接updateCollabCalloutAppearance写入均检查块锁，拒绝时不写正文或历史",
+    "外观面板捕获打开时锁代次，订阅锁/权限变更；选择、移除和颜色保存实时禁用，锁后解锁也拒绝旧回调，关闭重开才可继续",
+    "不更改锁元数据、权限授权、Schema、原生桥接及协同协议"
+  ],
+  "validation": {
+    "newTests": "5项：普通/继承/模板锁禁用入口与直接调用拒绝；锁后解锁旧面板/旧回调失效、重开后编辑独立撤销；挂载入口实时禁用/恢复",
+    "regression": {
+      "command": "flutter test --no-pub test/collab_callout_lock_test.dart test/collab_callout_block_test.dart test/collab_color_emoji_picker_test.dart --reporter expanded",
+      "result": "34 passed",
+      "log": "/private/tmp/callout-emoji-lock-tests-final.log"
+    },
+    "analyze": {
+      "files": 2,
+      "result": "No issues found",
+      "log": "/private/tmp/callout-emoji-lock-analyze.log"
+    },
+    "format": "目标两个手写Dart文件定向dart format",
+    "androidBuild": {
+      "result": "passed",
+      "log": "/private/tmp/callout-emoji-lock-build.log"
+    },
+    "phone": {
+      "device": "HONOR X70 MTN-AN00 / Android16",
+      "install": "正常Demo覆盖安装成功，登录并进入原测试文档",
+      "documentId": "6ad06c992a6b14f42c256937",
+      "result": "同一已锁定高亮块的猫表情点击后不打开表情面板、不能更换；原表情和内容保留。父级允许正文选择，未写正文或改锁。",
+      "tapPhysicalPixels": [
+        142,
+        1133
+      ],
+      "screenSize": [
+        1200,
+        2640
+      ],
+      "screenshot": "docs/verification/callout-emoji-lock-20261020/phone-locked-prefix-tapped.png",
+      "sha256": "88c1d2b836ed3a370c41190bd32e55250dee957446cb454b26e15bd175cb8b03"
+    },
+    "diffCheck": "git diff --check通过"
+  },
+  "adaptationCounts": {
+    "adapted": 13,
+    "partial": 14,
+    "structural": 1,
+    "unadapted": 13,
+    "total": 41
+  },
+  "limitations": [
+    "未新增iOS验收",
+    "远端锁变化使用实际权限投影事件测试；未新增真实桌面并发联调及服务端ACK验收"
+  ]
+}

@@ -3,6 +3,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
+import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'package:cses_document_collab/src/editor/collab_card_frame.dart';
 import 'package:cses_document_collab/src/editor/collab_color_picker.dart';
 import 'package:cses_document_collab/src/editor/collab_emoji_picker.dart';
@@ -35,7 +36,7 @@ class _CalloutBlockState extends State<_CalloutBlock> with SelectableMixin {
   late final _editor = context.read<EditorState>();
 
   /// 在 [context] 中渲染子块，背景按桌面82%不透明度混合，不改变原始颜色属性。
-  /// 锁标相对整个卡片外框的右上角定位，位于内边距外；保留输入、选区、只读展示和安全容器删除。
+  /// 锁标相对整个卡片外框的右上角定位，位于内边距外；显式/继承锁禁用表情入口，保留原表情显示。
   @override
   Widget build(BuildContext context) {
     final node = widget.node;
@@ -62,19 +63,25 @@ class _CalloutBlockState extends State<_CalloutBlock> with SelectableMixin {
             children: [
               if (prefix.isNotEmpty || _editor.editable)
                 ExcludeFocus(
-                  child: InkWell(
-                    key: const ValueKey('collab-callout-prefix'),
-                    onTap: _editor.editable ? () => showCollabCalloutEmojiPicker(context, _editor, node) : null,
-                    borderRadius: BorderRadius.circular(4),
-                    child: Tooltip(
-                      message: _editor.editable ? '更换表情' : prefix,
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 12, top: 2, bottom: 2),
-                        child: prefix.isEmpty
-                            ? const Icon(LucideIcons.smilePlus, size: 20)
-                            : Text(prefix, style: TextStyle(fontSize: 18, height: 1.5, color: color)),
-                      ),
-                    ),
+                  child: ListenableBuilder(
+                    listenable: Listenable.merge([_editor.editableNotifier, CollabBlockLocks.of(_editor)]),
+                    builder: (context, _) {
+                      final editable = canEditCollabNode(_editor, node);
+                      return InkWell(
+                        key: const ValueKey('collab-callout-prefix'),
+                        onTap: editable ? () => showCollabCalloutEmojiPicker(context, _editor, node) : null,
+                        borderRadius: BorderRadius.circular(4),
+                        child: Tooltip(
+                          message: editable ? '更换表情' : '当前不可更换表情',
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 12, top: 2, bottom: 2),
+                            child: prefix.isEmpty
+                                ? const Icon(LucideIcons.smilePlus, size: 20)
+                                : Text(prefix, style: TextStyle(fontSize: 18, height: 1.5, color: color)),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
               Expanded(
@@ -239,7 +246,9 @@ Node? _findCallout(EditorState editor, String id) {
   return visit(editor.document.root);
 }
 
-/// One field per transaction so undo never restores stale body text or other colors.
+/// 在借用[editor]中按稳定[id]设置允许的外观[attribute]为[value]。
+/// [attribute]仅支持前缀、文字/背景/边框色；[value]为原始字符串，null沿用删除属性语义。
+/// 关闭、只读、锁定、目标消失或值相同均忽略；每字段独立事务，不恢复陈旧正文或其他外观。
 Future<void> updateCollabCalloutAppearance(EditorState editor, String id, String attribute, String? value) async {
   if (editor.isDisposed ||
       !editor.editable ||
@@ -252,7 +261,7 @@ Future<void> updateCollabCalloutAppearance(EditorState editor, String id, String
     return;
   }
   final node = _findCallout(editor, id);
-  if (node == null || node.attributes[attribute] == value) return;
+  if (node == null || !canEditCollabNode(editor, node) || node.attributes[attribute] == value) return;
   if (editor.undoManager.undoStack.isNonEmpty) {
     editor.undoManager.undoStack.last.seal();
   }
@@ -277,25 +286,31 @@ Future<void> showCollabCalloutEmojiPicker(BuildContext context, EditorState edit
 
 enum _CalloutSettingsKind { emoji, colors }
 
-/// 根据 [kind] 展示借用 [context]/[editor] 中稳定 [node] 的外观设置，不接管编辑器资源。
+/// 根据[kind]展示借用[context]/[editor]中稳定[node]的外观设置；打开与保存均检查块锁，锁变化使旧面板失效。
 Future<void> _showCalloutSettings(
   BuildContext context,
   EditorState editor,
   Node node,
   _CalloutSettingsKind kind,
 ) async {
-  if (!editor.editable || editor.isDisposed) return;
+  if (!context.mounted || !canEditCollabNode(editor, node)) return;
   final id = node.attributes[AppFlowyBlockEditorAdapter.collabBlockIdAttribute] as String? ?? node.id;
+  final locks = CollabBlockLocks.of(editor);
+  final lockEpoch = locks?.epoch(id);
   await showCollabBottomSheet<void>(
     context: context,
-    builder: (_) => _CalloutSettings(editor: editor, id: id, kind: kind),
+    builder: (_) => ListenableBuilder(
+      listenable: Listenable.merge([editor.editableNotifier, locks]),
+      builder: (_, _) => _CalloutSettings(editor: editor, id: id, kind: kind, lockEpoch: lockEpoch),
+    ),
   );
 }
 
 /// 借用编辑器和稳定块身份的外观面板，不拥有编辑器资源。
 class _CalloutSettings extends StatefulWidget {
-  /// [editor] 由宿主持有，[id] 为稳定块身份，[kind] 决定颜色或表情面板。
-  const _CalloutSettings({required this.editor, required this.id, required this.kind});
+  /// [editor]由宿主持有，[id]为稳定块身份，[kind]决定颜色或表情面板。
+  /// [lockEpoch]为打开时的锁代次；null表示独立编辑器没有锁服务，锁变更后旧面板永久失效。
+  const _CalloutSettings({required this.editor, required this.id, required this.kind, required this.lockEpoch});
 
   /// 借用的编辑器，保存前检查存活及编辑权限。
   final EditorState editor;
@@ -305,6 +320,9 @@ class _CalloutSettings extends StatefulWidget {
 
   /// 必填面板类型。
   final _CalloutSettingsKind kind;
+
+  /// 打开时的锁代次，不在重建时刷新，防止锁后解锁恢复旧操作。
+  final int? lockEpoch;
 
   /// 创建仅管理面板回显的状态，不接管文档资源。
   @override
@@ -319,10 +337,18 @@ class _CalloutSettingsState extends State<_CalloutSettings> {
   /// 每次保存重新查找稳定目标，不持有可能被远端删除的旧节点。
   Node? get _node => widget.editor.isDisposed ? null : _findCallout(widget.editor, widget.id);
 
+  /// 查询当前可写性及打开时的锁代次；锁变更后必须关闭并重新打开。
+  bool get _enabled {
+    final node = _node;
+    return node != null &&
+        canEditCollabNode(widget.editor, node) &&
+        CollabBlockLocks.of(widget.editor)?.epoch(widget.id) == widget.lockEpoch;
+  }
+
   /// 保存 [attribute] 对应的 [value]；只提交一个字段，空值语义由所属属性决定。
   /// 表情保存后关闭面板，颜色保存后继续选择；失败向调用方传播以显示提示。
   Future<void> _set(String attribute, String? value) async {
-    if (_savingEmoji || widget.editor.isDisposed || !widget.editor.editable || _node == null) {
+    if (!mounted || _savingEmoji || !_enabled) {
       return;
     }
     final savingEmoji = widget.kind == _CalloutSettingsKind.emoji && attribute == csesCalloutPrefixAttribute;
@@ -362,7 +388,7 @@ class _CalloutSettingsState extends State<_CalloutSettings> {
       CollabColorPicker(
         circular: true,
         keyPrefix: 'callout-$key',
-        enabled: !widget.editor.isDisposed && widget.editor.editable && _node != null,
+        enabled: _enabled,
         textColors: attribute == csesBlockTextColorAttribute,
         selection: CollabColorSelection(_node?.attributes[attribute] as String?),
         onSelected: (value) => _set(attribute, value),
@@ -374,7 +400,7 @@ class _CalloutSettingsState extends State<_CalloutSettings> {
   /// 表情目录独立惰性滚动，搜索和分类固定；移除仍在底部左侧，使用共用危险操作红色。
   @override
   Widget build(BuildContext context) {
-    final enabled = !widget.editor.isDisposed && widget.editor.editable && _node != null;
+    final enabled = _enabled;
     return CollabBottomSheet(
       key: ValueKey(
         widget.kind == _CalloutSettingsKind.emoji ? 'callout-emoji-settings-panel' : 'callout-color-settings-panel',
