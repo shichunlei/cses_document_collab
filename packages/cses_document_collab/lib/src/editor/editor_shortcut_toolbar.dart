@@ -1801,6 +1801,7 @@ class _AddBlockSheet extends StatelessWidget {
   /// 在借用 [context] 中渲染可用块入口；插入按保存的稳定选区定位并等待事务完成。
   /// 在借用[context]中构建块/行内入口；用户选择调用宿主选择器并复用稳定插入位置。
   /// 标题显示“添加”及内容块图标，高亮/分页/代码绘图与各自卡片及菜单使用相同语义图标。
+  /// 行内公式入口使用Ω图标，与独立公式块的Σ图标区分。
   /// 表格直接创建2×2网格；绘图先收集源码草稿再创建容器和子块；分页符仅插入根级光标位置。
   /// 插入前重查原始书签，权限/文档失效时不插入。
   @override
@@ -2070,7 +2071,7 @@ class _AddBlockSheet extends StatelessWidget {
                   ),
                   _ActionShortcutTile(
                     key: const ValueKey('editor-shortcut-inline-formula'),
-                    icon: LucideIcons.sigma,
+                    icon: LucideIcons.omega,
                     label: '行内公式',
                     onTap: () async {
                       try {

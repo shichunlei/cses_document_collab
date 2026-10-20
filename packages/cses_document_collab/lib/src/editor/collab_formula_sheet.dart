@@ -592,7 +592,8 @@ class _FormulaSheetState extends State<_FormulaSheet> {
   }
 
   /// 在借用 [context] 中显示独立滚动的公式草稿/预览，操作区始终可达。
-  /// 删除图标与文字固定在左下；保存期间禁止关闭，失效、冲突和长度限制保持原有提交门禁。
+  /// 行内公式使用Ω图标，独立块使用Σ；删除图标与文字固定在左下。
+  /// 保存期间禁止关闭，失效、冲突和长度限制保持原有提交门禁。
   @override
   Widget build(BuildContext context) {
     final tooLong = _input.text.length > collabFormulaMaxLength;
@@ -609,7 +610,9 @@ class _FormulaSheetState extends State<_FormulaSheet> {
             : '数学公式',
       ),
       subtitle: '编辑 LaTeX，实时预览',
-      icon: LucideIcons.sigma,
+      icon: widget.creatingBlock || widget.id != null
+          ? LucideIcons.sigma
+          : LucideIcons.omega,
       canClose: !_saving && !_choosing,
       closeKey: const ValueKey('formula-close'),
       leadingAction: _editing && _session?.lock.locked != true
