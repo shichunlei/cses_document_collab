@@ -1,8 +1,12 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
+import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
+import 'package:cses_document_collab/src/editor/collab_card_frame.dart';
 import 'package:cses_document_collab/src/editor/collab_divider_settings.dart';
 import 'package:cses_document_collab/src/editor/collab_divider_visual.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 
 /// 为正式 divider 注册可选中的无正文组件；点击打开持续编辑面板。
@@ -42,11 +46,13 @@ class _DividerBlockState extends State<_DividerBlock> with SelectableMixin {
   final _bodyKey = GlobalKey();
 
   /// 在借用 [context] 内构建分割线，点击打开样式设置，预览时隐藏修改操作。
+  /// 有效块锁生效时改用无标题卡片，整条打开锁定菜单而非编辑面板，不显示右侧更多按钮。
   @override
   Widget build(BuildContext context) {
     final editor = context.read<EditorState>();
     final node = widget.node;
     final id = node.attributes['cses_collab_block_id'] as String? ?? node.id;
+    final locked = CollabBlockLocks.of(editor)?.state(id).locked ?? false;
     final visual = Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: CollabDividerVisual(
@@ -54,7 +60,7 @@ class _DividerBlockState extends State<_DividerBlock> with SelectableMixin {
         divider: CollabDivider(CollabDivider.readAttributes(node.attributes).values),
       ),
     );
-    final child = Semantics(
+    Widget child = Semantics(
       label: '分割线',
       button: editor.editable,
       readOnly: !editor.editable,
@@ -71,6 +77,34 @@ class _DividerBlockState extends State<_DividerBlock> with SelectableMixin {
         ),
       ),
     );
+    if (locked) {
+      child = CollabCardFrame(
+        surfaceKey: ValueKey('line-lock-card-$id'),
+        margin: const EdgeInsets.symmetric(vertical: 6),
+        child: CollabBlockMoreButton(
+          editor: editor,
+          node: node,
+          menuTitle: '分割线操作',
+          menuIcon: LucideIcons.minus,
+          triggerBuilder: (context, onPressed) => Semantics(
+            label: '已锁定的分割线',
+            button: onPressed != null,
+            readOnly: true,
+            child: ExcludeFocus(
+              child: GestureDetector(
+                key: ValueKey('collab-divider-$id'),
+                behavior: HitTestBehavior.opaque,
+                onTap: onPressed,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(minHeight: 48),
+                  child: Padding(padding: const EdgeInsets.symmetric(horizontal: 12), child: visual),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
     return BlockSelectionContainer(
       node: node,
       delegate: this,

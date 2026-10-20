@@ -1,5 +1,7 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
+import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
+import 'package:cses_document_collab/src/editor/collab_card_frame.dart';
 import 'package:cses_document_collab/src/model/collab_page_divider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:flutter/material.dart';
@@ -55,12 +57,14 @@ class _PageDividerBlockState extends State<_PageDividerBlock>
   final _bodyKey = GlobalKey();
 
   /// 在借用 [context] 内构建整条可点击的分页符，标记及菜单共用横向分页分隔图标。
-  /// 编辑时弹出公共菜单，预览仅展示标记。
+  /// 整条点击沿用公共菜单及当前文档权限，锁定时保留查看和允许的解锁操作。
+  /// 有效块锁生效时使用无标题卡片外框，保留整条菜单入口，不添加右侧更多按钮。
   @override
   Widget build(BuildContext context) {
     final editor = context.read<EditorState>();
     final node = widget.node;
     final id = node.attributes['cses_collab_block_id'] as String? ?? node.id;
+    final locked = CollabBlockLocks.of(editor)?.state(id).locked ?? false;
     final child = CollabBlockMoreButton(
       editor: editor,
       node: node,
@@ -78,7 +82,7 @@ class _PageDividerBlockState extends State<_PageDividerBlock>
       triggerBuilder: (context, onPressed) => Semantics(
         label: '分页符，分页布局中从下一页开始',
         button: onPressed != null,
-        readOnly: !editor.editable,
+        readOnly: locked || !editor.editable,
         child: GestureDetector(
           key: ValueKey('collab-page-divider-$id'),
           behavior: HitTestBehavior.opaque,
@@ -117,7 +121,19 @@ class _PageDividerBlockState extends State<_PageDividerBlock>
       blockColor: editor.editorStyle.selectionColor,
       supportTypes: const [BlockSelectionType.block],
       selectionAboveBlock: true,
-      child: KeyedSubtree(key: _bodyKey, child: child),
+      child: KeyedSubtree(
+        key: _bodyKey,
+        child: locked
+            ? CollabCardFrame(
+                surfaceKey: ValueKey('line-lock-card-$id'),
+                margin: const EdgeInsets.symmetric(vertical: 6),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: child,
+                ),
+              )
+            : child,
+      ),
     );
   }
 

@@ -1,0 +1,64 @@
+{
+  "date": "2026-10-20",
+  "request": "分页符、分隔符锁定时显示无标题卡片，不带右侧更多按钮",
+  "versions": {
+    "latest": "0.11.23",
+    "registry": "http://npm.runtongqiuben.com/",
+    "desktopDeclaration": "0.11.22",
+    "desktopYarnLock": "0.11.22",
+    "desktopInstalled": "0.11.17",
+    "docsPeer": "^0.11.0-alpha",
+    "legacyPnpm": "0.2.78",
+    "review": "对应版本随包技能/MIGRATIONS、锁标主题、分页符及分割线实现；三版对应组件片段一致，未升级桌面",
+    "componentHashes": {
+      "DividerBlockComponent": "5b51e7713b936f51527470245f885d916154828c0dc792ea7162fd2f0865ffdd",
+      "PageDividerBlockComponent": "0c7a55f6877ee529ad3ce65be23b065733bfa0cac14ba95ee9f20fb9f4c80513"
+    }
+  },
+  "implementation": [
+    "有效锁生效时复用CollabCardFrame的header=null布局和外边距；未锁时保持原展示",
+    "无右侧省略号按钮；分页符保留整条公共菜单，分割线锁定时整条点击提供锁菜单、解锁后恢复原设置面板",
+    "原分页符虚线/文字标记及divider样式、颜色、长度等数据不变",
+    "普通显式锁复用卡片右上角覆盖层；模板和继承锁不重复展示角标，外层装饰不额外画锁",
+    "不改Schema、原生、FRB或协同接口"
+  ],
+  "validation": {
+    "newTests": 10,
+    "regression": {
+      "result": "34 passed",
+      "command": "flutter test --no-pub test/collab_line_lock_layout_test.dart test/collab_page_divider_test.dart test/collab_divider_test.dart --reporter expanded",
+      "log": "/private/tmp/line-lock-card-tests.log"
+    },
+    "coverage": [
+      "320/280/390宽及1/2.2/1.5倍字",
+      "无标题及右侧更多按钮",
+      "遍历每层绘制裁剪检查完整角标",
+      "整条菜单命中、锁定隐藏写入、解锁还原布局与入口",
+      "模板/继承锁禁用无权开关，继承锁提供定位入口",
+      "正文/资源属性和历史不变"
+    ],
+    "analyze": "最终4目标文件无问题；/private/tmp/line-lock-card-analyze-final.log",
+    "format": "仅修改的手写Dart文件定向格式化",
+    "android": {
+      "build": "passed",
+      "log": "/private/tmp/line-lock-card-build-final.log",
+      "installation": "passed；覆盖安装并启动成功",
+      "observation": "重新登录并进入在线测试文档6ad06c992a6b14f42c256937；现有粉色花边锁定分隔符显示无标题圆角卡片，无右侧更多按钮，右上角锁完整可见。未修改文档内容或锁状态。",
+      "screenshot": "docs/verification/line-lock-card-20261020/phone-locked-divider.png",
+      "wholeLineMenu": "passed；点击锁定分隔符本体显示分割线操作，包含已开启的锁定开关及复制段落链接，无写入菜单。已关闭弹窗，未改变锁状态。",
+      "menuScreenshot": "docs/verification/line-lock-card-20261020/phone-locked-divider-menu.png"
+    },
+    "diffCheck": "git diff --check通过"
+  },
+  "counts": {
+    "adapted": 13,
+    "partial": 14,
+    "structural": 1,
+    "unadapted": 13,
+    "total": 41
+  },
+  "limits": [
+    "iOS未新增验收",
+    "真实在线双端并发、服务端ACK和其他上游能力未新增验收"
+  ]
+}

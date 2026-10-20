@@ -44,6 +44,8 @@ Widget decorateCollabBlockLock(
         'callout',
         'image',
         'video',
+        'divider',
+        'page-divider',
       }.contains(node.type);
       return CollabBlockLockScope(
         blockId: value.blockId,
