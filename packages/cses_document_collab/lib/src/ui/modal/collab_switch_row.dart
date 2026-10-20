@@ -1,4 +1,5 @@
 import 'package:cses_document_collab/src/ui/modal/collab_row_content.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// 基于 Row 的开关设置行；仅 Switch 本身处理点击、拖动及键盘切换。
@@ -50,7 +51,20 @@ class CollabSwitchRow extends StatelessWidget {
       title: title,
       leading: leading,
       subtitle: subtitle,
-      trailing: Switch(value: value, onChanged: onChanged),
+      trailing: SizedBox(
+        width: 50,
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: CupertinoSwitch(
+            value: value,
+            onChanged: onChanged,
+            // 开启轨道与滑块成对配色；关闭时保留原白色滑块。
+            activeTrackColor: Theme.of(context).colorScheme.primary,
+            thumbColor: Theme.of(context).colorScheme.onPrimary,
+            inactiveThumbColor: Colors.white,
+          ),
+        ),
+      ),
       enabled: onChanged != null,
     ),
   );

@@ -39,7 +39,7 @@ class CollabBottomSheet extends StatelessWidget {
     this.closeKey,
     this.scrollController,
     this.scrollKey,
-    this.contentPadding = const EdgeInsets.fromLTRB(20, 0, 20, 18),
+    this.contentPadding = const EdgeInsets.fromLTRB(20, 0, 20, 5),
     this.expand = false,
     this.scrollBody = true,
   });
