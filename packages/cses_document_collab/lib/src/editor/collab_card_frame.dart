@@ -49,44 +49,69 @@ class CollabCardFrame extends StatelessWidget {
   /// [margin]位于整层外侧，使标记始终跟随实际卡片边缘，不受标题高度或外边距影响。
   @override
   Widget build(BuildContext context) {
-    final lock = CollabBlockLockScope.maybeOf(context);
     return Padding(
       padding: margin,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Container(
-            key: surfaceKey,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: const Color(0xFFE5E7EB)),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            clipBehavior: Clip.antiAlias,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                header,
-                if (showDivider) const Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
-                child,
-              ],
-            ),
+      child: CollabCardLockOverlay(
+        child: Container(
+          key: surfaceKey,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: const Color(0xFFE5E7EB)),
+            borderRadius: BorderRadius.circular(12),
           ),
-          if (lock?.showBadge == true)
-            Positioned(
-              top: -5,
-              right: -5,
-              child: IgnorePointer(
-                child: Tooltip(
-                  key: ValueKey('block-lock-badge-${lock!.blockId}'),
-                  message: '内容已锁定',
-                  child: const Icon(LucideIcons.lockKeyhole, size: 14, color: Color(0xFF87909E)),
-                ),
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              header,
+              if (showDivider) const Divider(height: 1, thickness: 1, color: Color(0xFFE5E7EB)),
+              child,
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// 为标准卡片和自定义外框共用右上角锁标，不接管内容或编辑器资源。
+/// 外边距应放在本组件外，内容圆角裁切应保留在[child]内。
+///
+/// ```dart
+/// import 'package:flutter/material.dart';
+/// import 'package:cses_document_collab/src/editor/collab_card_frame.dart';
+/// const card = CollabCardLockOverlay(child: SizedBox(width: 200, height: 80));
+/// // 在编辑器的CollabBlockLockScope下使用，未锁定时不显示标记。
+/// ```
+class CollabCardLockOverlay extends StatelessWidget {
+  /// [key]控制组件身份与状态复用；[child]是借用的实际卡片外框，不由本组件裁切。
+  const CollabCardLockOverlay({super.key, required this.child});
+
+  /// 必填实际外框；其内容、布局及资源始终由调用方持有。
+  final Widget child;
+
+  /// 从借用的[context]读取锁作用域；标记越过卡片右上角5逻辑像素且不拦截点击。
+  @override
+  Widget build(BuildContext context) {
+    final lock = CollabBlockLockScope.maybeOf(context);
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        child,
+        if (lock?.showBadge == true)
+          Positioned(
+            top: -5,
+            right: -5,
+            child: IgnorePointer(
+              child: Tooltip(
+                key: ValueKey('block-lock-badge-${lock!.blockId}'),
+                message: '内容已锁定',
+                child: const Icon(LucideIcons.lockKeyhole, size: 14, color: Color(0xFF87909E)),
               ),
             ),
-        ],
-      ),
+          ),
+      ],
     );
   }
 }

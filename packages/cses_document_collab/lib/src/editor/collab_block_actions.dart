@@ -211,6 +211,8 @@ class CollabBlockMoreButton extends StatelessWidget {
   /// Opens one sheet in borrowed [context], rejects stale targets and catches failures.
   /// Block locks preserve copy/unlock while suppressing mutation commands; inherited
   /// locks expose their source. Permission transitions invalidate the whole old menu.
+  /// “复制内容”仅供高亮块使用，其他块保留各自的资源和段落链接复制操作。
+  /// 代码绘图保留同一复制命令，菜单文案显示为“复制代码”。
   /// Insertion below uses the text-line and downward-return icon to show its destination.
   /// 段落链接按正式文档和稳定块ID构造，复制后不修改正文/历史或恢复输入。
   /// Commands use semantic download, external-link, palette, copy, delete or edit icons.
@@ -293,13 +295,14 @@ class CollabBlockMoreButton extends StatelessWidget {
                           title: const Text('定位上级锁定块'),
                           onTap: () => Navigator.pop(sheet, -3),
                         ),
+                    ],
+                    if (type == 'callout' || type == 'mermaid')
                       ListTile(
                         key: ValueKey('block-copy-$id'),
                         leading: const Icon(LucideIcons.copy),
-                        title: const Text('复制内容'),
+                        title: Text(type == 'mermaid' ? '复制代码' : '复制内容'),
                         onTap: () => Navigator.pop(sheet, -4),
                       ),
-                    ],
                     if (canCopyParagraphLink)
                       ListTile(
                         key: ValueKey('block-copy-paragraph-link-$id'),
@@ -369,6 +372,7 @@ class CollabBlockMoreButton extends StatelessWidget {
             return;
           }
           if (choice == -4) {
+            /// 从借用的 [value] 递归提取非空正文，以换行分隔子块。
             String text(Node value) => [
               value.delta?.toPlainText() ?? value.attributes['url'] as String? ?? '',
               ...value.children.map(text),

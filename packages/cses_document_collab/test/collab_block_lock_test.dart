@@ -17,6 +17,8 @@ void main() {
   final copied = <String>[];
 
   /// Install authority-derived lock states, retaining an editable sibling.
+  /// [locked] controls protection; [owner] identifies the locking user and
+  /// [template] enables the template-specific unlock permission.
   void update({bool locked = true, String owner = 'alice', bool template = false}) {
     locks.update([
       CollabBlockLockState(
@@ -54,7 +56,9 @@ void main() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
       SystemChannels.platform,
       (call) async {
-        if (call.method == 'Clipboard.setData') copied.add((call.arguments as Map)['text'] as String);
+        if (call.method == 'Clipboard.setData') {
+          copied.add((call.arguments as Map)['text'] as String);
+        }
         return null;
       },
     );
@@ -155,51 +159,72 @@ void main() {
     expect(locks.canToggle('a'), isFalse);
   });
 
-  for (final locked in [false, true]) {
-    testWidgets('production menu lock=$locked toggles and preserves copy', (tester) async {
-      update(locked: locked);
+  for (final kind in ['paragraph', 'code']) {
+    for (final locked in [false, true]) {
+      testWidgets('$kind menu lock=$locked toggles without copy content', (tester) async {
+        await adapter.replaceFromRemote([
+          CollabEditorBlock(id: 'a', blockType: kind, text: '定稿'),
+          const CollabEditorBlock(id: 'b', blockType: 'paragraph', text: '可编辑'),
+        ]);
+        update(locked: locked);
+        final editor = adapter.editorState;
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: CollabBlockMoreButton(
+                editor: editor,
+                node: editor.getNodeAtPath([0])!,
+                actions: [(label: '删除内容', key: null, run: () async {})],
+              ),
+            ),
+          ),
+        );
+        await tester.tap(find.byTooltip('更多操作'));
+        await tester.pumpAndSettle();
+        expect(find.text('锁定内容块'), findsOneWidget);
+        expect(find.text('删除内容'), locked ? findsNothing : findsOneWidget);
+        expect(find.text('复制内容'), findsNothing);
+        await tester.tap(find.byKey(const ValueKey('block-lock-a')));
+        await tester.pumpAndSettle();
+        expect(commits, 1);
+        expect(locks.state('a').locked, !locked);
+        await tester.pumpWidget(const SizedBox());
+      });
+    }
+  }
+
+  for (final kind in ['callout', 'mermaid']) {
+    testWidgets('copy locked $kind writes only the system clipboard', (tester) async {
+      final isDiagram = kind == 'mermaid';
+      final source = isDiagram ? 'flowchart LR\nA-->B' : '定稿\n高亮正文';
+      await adapter.replaceFromRemote([
+        CollabEditorBlock(id: 'a', blockType: kind, text: ''),
+        if (isDiagram)
+          CollabEditorBlock(id: 'source', parentId: 'a', blockType: 'mermaid-textarea', text: source)
+        else ...[
+          const CollabEditorBlock(id: 'first', parentId: 'a', blockType: 'paragraph', text: '定稿'),
+          const CollabEditorBlock(id: 'second', parentId: 'a', blockType: 'paragraph', text: '高亮正文'),
+        ],
+        const CollabEditorBlock(id: 'b', blockType: 'paragraph', text: '可编辑'),
+      ]);
+      update();
       final editor = adapter.editorState;
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: CollabBlockMoreButton(
-              editor: editor,
-              node: editor.getNodeAtPath([0])!,
-              actions: [(label: '删除内容', key: null, run: () async {})],
-            ),
+            body: CollabBlockMoreButton(editor: editor, node: editor.getNodeAtPath([0])!, protectSubtree: true),
           ),
         ),
       );
       await tester.tap(find.byTooltip('更多操作'));
       await tester.pumpAndSettle();
-      expect(find.text('锁定内容块'), findsOneWidget);
-      expect(find.text('删除内容'), locked ? findsNothing : findsOneWidget);
-      expect(find.text('复制内容'), findsOneWidget);
-      await tester.tap(find.byKey(const ValueKey('block-lock-a')));
+      expect(find.text(isDiagram ? '复制内容' : '复制代码'), findsNothing);
+      await tester.tap(find.text(isDiagram ? '复制代码' : '复制内容'));
       await tester.pumpAndSettle();
-      expect(commits, 1);
-      expect(locks.state('a').locked, !locked);
+      expect(copied, [source]);
+      expect(commits, 0);
+      expect(editor.undoManager.undoStack.isEmpty, isTrue);
       await tester.pumpWidget(const SizedBox());
     });
   }
-
-  testWidgets('copy locked content writes only the system clipboard', (tester) async {
-    update();
-    final editor = adapter.editorState;
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: CollabBlockMoreButton(editor: editor, node: editor.getNodeAtPath([0])!),
-        ),
-      ),
-    );
-    await tester.tap(find.byTooltip('更多操作'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('复制内容'));
-    await tester.pumpAndSettle();
-    expect(copied, ['定稿']);
-    expect(commits, 0);
-    expect(editor.undoManager.undoStack.isEmpty, isTrue);
-    await tester.pumpWidget(const SizedBox());
-  });
 }

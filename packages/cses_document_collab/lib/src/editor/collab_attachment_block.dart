@@ -1,5 +1,6 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart' show csesEmbedUrlAttribute;
+import 'package:cses_document_collab/src/editor/collab_card_frame.dart';
 import 'package:cses_document_collab/src/editor/collab_resource_block_base.dart';
 import 'package:cses_document_collab/src/editor/collab_unsupported_block.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
@@ -49,6 +50,7 @@ class _AttachmentBlockState extends CollabResourceBlockState<_AttachmentBlock> {
   String get resourceLabel => '附件';
 
   /// 在借用[context]中维持原附件卡片样式，文件名为空时从已校验URL中回退。
+  /// 外边距包住公共锁标覆盖层，内容保留圆角裁切，锁标不占用更多按钮位置。
   @override
   Widget buildResourceCard(BuildContext context) {
     final props = resource;
@@ -56,24 +58,28 @@ class _AttachmentBlockState extends CollabResourceBlockState<_AttachmentBlock> {
     final name = title.isNotEmpty
         ? title
         : Uri.parse(url).pathSegments.where((part) => part.trim().isNotEmpty).lastOrNull ?? '未命名附件';
-    return Container(
-      key: bodyKey,
-      margin: const EdgeInsets.symmetric(vertical: 6),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF8FAFC),
-        border: Border.all(color: const Color(0xFFE5E7EB)),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(14, 14, 8, 14),
-        child: Row(
-          children: [
-            Expanded(
-              child: _AttachmentInfo(name: name, props: props),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: CollabCardLockOverlay(
+        child: Container(
+          key: bodyKey,
+          decoration: BoxDecoration(
+            color: const Color(0xFFF8FAFC),
+            border: Border.all(color: const Color(0xFFE5E7EB)),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(14, 14, 8, 14),
+            child: Row(
+              children: [
+                Expanded(
+                  child: _AttachmentInfo(name: name, props: props),
+                ),
+                buildResourceMore(openLabel: '下载或打开附件'),
+              ],
             ),
-            buildResourceMore(openLabel: '下载或打开附件'),
-          ],
+          ),
         ),
       ),
     );

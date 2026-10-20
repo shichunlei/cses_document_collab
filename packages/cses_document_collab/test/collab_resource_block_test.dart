@@ -541,8 +541,9 @@ void main() {
         );
         expect(find.text('--:--'), findsNWidgets(2));
         final before = tester.getRect(find.byType(CollabCardFrame));
+        // 两种状态共用进度槽的焦点边界，加载轨道另有更小的内层SizedBox。
         final slot = tester.getRect(
-          find.ancestor(of: loading, matching: find.byType(SizedBox)).first,
+          find.ancestor(of: loading, matching: find.byType(ExcludeFocus)).first,
         );
         final tail = find.text('音频后正文', findRichText: true);
         final tailTop = tester.getTopLeft(tail).dy;
@@ -571,7 +572,7 @@ void main() {
         expect(
           tester.getRect(
             find
-                .ancestor(of: sliderFinder, matching: find.byType(SizedBox))
+                .ancestor(of: sliderFinder, matching: find.byType(ExcludeFocus))
                 .first,
           ),
           slot,

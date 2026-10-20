@@ -1,0 +1,136 @@
+{
+  "date": "2026-10-20",
+  "scope": "网页独立链接菜单锁操作与附件右上角锁标",
+  "blockcraft": {
+    "latest": "0.11.23",
+    "desktop_declared": "0.11.21",
+    "desktop_yarn": "0.11.21",
+    "desktop_installed": "0.11.21",
+    "desktop_pnpm_historical": "0.2.78",
+    "source": "cses-client配置仓库npm view @ccc/blockcraft dist-tags --json",
+    "reviewed": [
+      "两版随包技能/MIGRATIONS",
+      "0.11.23主题锁样式契约",
+      "两版BlockReadonlyManager"
+    ],
+    "readonly_manager_sha256": "6646470acf6d7d62161c6d85d5d813ae2a81f26da9de1a20190e1389edf530bc",
+    "desktop_upgrade": false
+  },
+  "changes": [
+    "bookmark/embed/figma-embed/juejin-embed独立菜单接入CollabBlockLocks开关、继承锁定位与授权限制",
+    "锁定时保留打开/复制，隐藏修改/删除/插入/视图切换；锁或编辑权限变化使旧菜单失效",
+    "切换锁前复核源URL/属性指纹、稳定身份、宿主与权限，拒绝关闭动画期间换源",
+    "附件及标准卡片共用CollabCardLockOverlay：外边距在外、圆角裁切在内，锁标top/right=-5且不改变按钮位置"
+  ],
+  "verification": {
+    "format": "4个本轮手写Dart文件dart format --line-length 120，完成",
+    "analyze": {
+      "files": [
+        "lib/src/editor/collab_card_frame.dart",
+        "lib/src/editor/collab_attachment_block.dart",
+        "lib/src/editor/collab_link_actions.dart",
+        "test/collab_resource_lock_test.dart"
+      ],
+      "result": "No issues found"
+    },
+    "new_regressions_before_fix": {
+      "total": 11,
+      "passed": 5,
+      "failed": 6,
+      "observed": "附件无角标；网页四类无锁定开关。网页接入有效锁投影后的原有角标检查已通过。"
+    },
+    "new_regressions_final": {
+      "command": "flutter test --no-pub test/collab_resource_lock_test.dart --reporter expanded",
+      "total": 15,
+      "passed": 15,
+      "failed": 0,
+      "coverage": [
+        "320px/1.5倍文字下附件与四类网页卡片角标几何及祖先裁切",
+        "五种资源加锁/解锁不改变正文或历史",
+        "锁后写入菜单隐藏且复制入口保留",
+        "他人锁/模板锁/继承锁禁止未授权解锁",
+        "远端加锁后解锁使旧菜单失效",
+        "菜单退场期间换源拒绝锁提交"
+      ]
+    },
+    "related_suite": {
+      "command": "flutter test --no-pub test/collab_resource_lock_test.dart test/collab_block_lock_layout_test.dart test/collab_link_actions_test.dart test/collab_resource_block_test.dart test/collab_block_lock_test.dart test/collab_card_frame_test.dart --reporter expanded",
+      "passed": 91,
+      "failed": 9,
+      "note": "此轮新增回归为11项，后续补4项并独立跑通最终15项；9项失败全部为既有音频几何断言。"
+    },
+    "audio_baseline": {
+      "method": "在临时独立包复制当前源码和测试，将card_frame/attachment/link_actions三个文件替换为本轮开始时未修改的HEAD版本；保留其余工作区和依赖状态，原工作区未回退。",
+      "command": "flutter test --no-pub test/collab_resource_block_test.dart --plain-name 'audio loading/ready geometry' --reporter expanded",
+      "failed": 9,
+      "expected_actual_rects_match_current": true,
+      "assertion": "collab_resource_block_test.dart:571；加载轨道与Slider几何不一致，非本轮引入"
+    },
+    "diff_check": "git diff --check通过"
+  },
+  "status_counts": {
+    "adapted": 13,
+    "partial": 14,
+    "structural": 1,
+    "unadapted": 13,
+    "total": 41
+  },
+  "remaining": [
+    "未新增Android/iOS真机或在线桌面双向验收",
+    "WebView及元数据使用测试替身，真实平台视图另行验收",
+    "其余上游Schema/行内/选区/菜单/剪贴板/输入/历史/协同差异未全量同步"
+  ],
+  "review": {
+    "date": "2026-10-20",
+    "scope": "本轮网页独立菜单锁权限/过期保护和附件锁标覆盖层；不重复此前非卡片菜单范围遗留项",
+    "confirmed_new_findings": 0,
+    "checked": [
+      "锁/编辑权限变化后不可恢复旧菜单写入",
+      "提交前稳定ID、URL/属性指纹和宿主身份复核",
+      "canToggle与控制器原生期望状态复核",
+      "模板锁/他人锁/继承锁限制及锁后只读命令",
+      "附件/标准卡片角标坐标、裁切与更多按钮位置"
+    ],
+    "version_recheck": {
+      "latest": "0.11.23",
+      "declared_yarn_installed": "0.11.21",
+      "pnpm_historical": "0.2.78",
+      "changed": false
+    },
+    "analyze": "4个目标文件No issues found",
+    "tests": {
+      "command": "flutter test --no-pub test/collab_resource_lock_test.dart test/collab_block_lock_layout_test.dart test/collab_link_actions_test.dart test/collab_card_frame_test.dart --reporter expanded",
+      "total": 69,
+      "passed": 69,
+      "failed": 0
+    },
+    "limitations": [
+      "未新增真机/iOS/真实WebView或在线桌面验收",
+      "审查时未重跑的9项音频几何断言，后续已通过audio_geometry_resolution修正测试定位并全部通过"
+    ],
+    "production_changes_during_review": false
+  },
+  "audio_geometry_resolution": {
+    "date": "2026-10-20",
+    "requested_scope": "仅修复第2项：音频9项几何断言失败",
+    "root_cause": "加载态最近的SizedBox是2像素轨道容器，就绪/零时长/失败态最近的SizedBox是32像素交互槽，测试将不同层级的矩形比较。",
+    "change": "两个状态统一定位进度槽外层ExcludeFocus，保留卡片整体、正文位置、滑块状态/拖动目标和资源释放断言。",
+    "production_changes": false,
+    "analyze": "flutter analyze --no-pub test/collab_resource_block_test.dart：No issues found",
+    "resource_tests": {
+      "command": "flutter test --no-pub test/collab_resource_block_test.dart --reporter expanded",
+      "passed": 24,
+      "failed": 0,
+      "includes_previous_geometry_failures": 9
+    },
+    "related_suite": {
+      "command": "flutter test --no-pub test/collab_resource_lock_test.dart test/collab_block_lock_layout_test.dart test/collab_link_actions_test.dart test/collab_resource_block_test.dart test/collab_block_lock_test.dart test/collab_card_frame_test.dart --reporter expanded",
+      "passed": 104,
+      "failed": 0,
+      "files": 6
+    },
+    "format": "dart format test/collab_resource_block_test.dart完成，未改动其他Dart文件",
+    "diff_check": "git diff --check通过",
+    "remaining": "第1项非卡片独立更多入口范围问题仍未处理；未新增真机验收"
+  }
+}
