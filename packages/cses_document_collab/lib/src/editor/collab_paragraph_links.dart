@@ -52,7 +52,8 @@ final class CollabParagraphLinks {
 
   /// 使用借用[context]提示复制借用[node]的段落链接；只读及块锁不禁止复制。
   /// [isCurrent]可选检查菜单权限/快照是否仍有效，默认仅检查绑定、节点和宿主。
-  /// 调用方须等待菜单退场并校验权限/快照；无效绑定或节点直接返回。
+  /// 调用方须隔离正文输入并校验权限/快照；合并编辑面板可保留草稿且不关闭，普通菜单可在退场后调用。
+  /// 无效绑定或节点直接返回。
   /// Future在系统剪贴板完成后结束；空链接抛出[StateError]，平台及构造失败向菜单传播。
   /// 迟到结果在关闭、权限或宿主变化、节点替换后不显示提示；不恢复正文键盘。
   Future<void> copy(BuildContext context, Node node, {bool Function()? isCurrent}) async {

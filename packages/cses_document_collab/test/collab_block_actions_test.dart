@@ -334,13 +334,25 @@ void main() {
       await _mount(tester, adapter);
       await tester.pumpAndSettle();
       final more = find.byKey(
-        ValueKey(kind == 'task' ? 'task-card-more-card' : 'block-more-card'),
+        ValueKey(
+          kind == 'formula'
+              ? 'collab-formula-card'
+              : kind == 'task'
+              ? 'task-card-more-card'
+              : 'block-more-card',
+        ),
       );
       await tester.ensureVisible(more);
       await tester.tap(more);
       await tester.pumpAndSettle();
       await tester.tap(
-        find.byKey(const ValueKey('block-copy-paragraph-link-card')),
+        find.byKey(
+          ValueKey(
+            kind == 'formula'
+                ? 'formula-copy-link'
+                : 'block-copy-paragraph-link-card',
+          ),
+        ),
       );
       await tester.pumpAndSettle();
       expect(copied, ['http://doc-pre.cses7.com/doc/formal-doc?blockId=card']);
@@ -365,7 +377,13 @@ void main() {
         await tester.pumpAndSettle();
         final snapshot = state.document.first!.toJson();
         final more = find.byKey(
-          ValueKey(kind == 'task' ? 'task-card-more-card' : 'block-more-card'),
+          ValueKey(
+            kind == 'formula'
+                ? 'collab-formula-card'
+                : kind == 'task'
+                ? 'task-card-more-card'
+                : 'block-more-card',
+          ),
         );
         await tester.ensureVisible(more);
         await tester.tap(more);
@@ -377,7 +395,7 @@ void main() {
           'callout' => ('高亮块', LucideIcons.highlighter),
           'audio' => ('音频', LucideIcons.audioLines),
           'attachment' => ('附件', LucideIcons.paperclip),
-          'formula' => ('公式', LucideIcons.sigma),
+          'formula' => ('编辑公式', LucideIcons.sigma),
           'meeting' => ('会议操作', LucideIcons.users),
           'task' => ('任务操作', LucideIcons.listTodo),
           _ => throw StateError('missing production header expectation: $kind'),
@@ -388,7 +406,15 @@ void main() {
         expect((sheet.title as Text).data, expectedHeader.$1);
         expect(sheet.icon, expectedHeader.$2);
         expect(find.text('块操作'), findsNothing);
-        await tester.tap(find.byKey(const ValueKey('block-insert-below-card')));
+        await tester.tap(
+          find.byKey(
+            ValueKey(
+              kind == 'formula'
+                  ? 'formula-insert-below'
+                  : 'block-insert-below-card',
+            ),
+          ),
+        );
         await tester.pumpAndSettle();
         await tester.pump(const Duration(milliseconds: 400));
         expect(adapter.blocks.length, original.length + 1);

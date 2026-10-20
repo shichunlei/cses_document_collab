@@ -2009,7 +2009,7 @@ class _AddBlockSheet extends StatelessWidget {
                     label: '公式',
                     onTap: () async {
                       try {
-                        final latex = await showCollabFormulaInput(context, editorState);
+                        final latex = await showCollabFormulaInput(context, editorState, creatingBlock: true);
                         if (!context.mounted || latex == null) return;
                         final selection = bookmark.resolve(editorState);
                         if (selection == null) {

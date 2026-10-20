@@ -1,0 +1,98 @@
+{
+  "date": "2026-10-20",
+  "scope": "独立公式整卡统一创建/编辑与块操作；删除固定底部左侧并带图标。仅提交公式相关内容，保留其他分割线及公共样式工作区改动。",
+  "versions": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.23",
+    "desktopDeclaration": "0.11.22",
+    "yarnLock": "0.11.22",
+    "installed": "0.11.17",
+    "docsDeclaration": "^0.11.0-alpha",
+    "pnpmHistoricalLock": "0.2.78",
+    "upgraded": false,
+    "read": "三版随包技能、MIGRATIONS及FormulaBlockComponent、void/latex Schema、公式主题；对应实现一致，其他上游差异仍待同步。"
+  },
+  "behavior": {
+    "card": "移除三个点及两侧操作占位；整卡点击统一面板，普通显式锁标和无标题卡片保持。",
+    "creation": "仅源码、实时预览、取消/创建；确认后沿用稳定书签插入，不提供锁/链接/插入/删除。",
+    "editing": "预览下方直接列锁定、复制段落链接、下方插入；删除公式为底部左侧trash2图标加文字，图标与文字共用danger色，取消/保存固定右侧；正文独立滚动。",
+    "locked": "输入禁用，隐藏保存/下方插入/删除；保留正式链接复制、授权解锁及继承锁定位。锁或权限变化使旧会话失效，须关闭重开。",
+    "draft": "复制保留草稿和面板；带草稿执行锁或下方插入先保存并继续、放弃修改或取消；删除丢弃草稿。远端改值保留草稿、禁用写入并允许重新加载。",
+    "session": "面板完整退场后核对稳定ID、原文/属性快照、宿主身份及不可续期权限/锁代次执行命令；目标删除后同ID重建不复活旧会话。复制、锁定、删除、定位不恢复正文键盘；插入恢复新段落光标；重复打开受编辑器会话保护。",
+    "history": "保留独立公式保存/插入/删除撤销单元及末块空段落保护；锁及复制不写正文历史。",
+    "inline": "行内公式沿用原编辑/空值删除/冲突与历史交互。"
+  },
+  "verification": {
+    "tests": {
+      "passed": 140,
+      "files": [
+        "test/collab_formula_test.dart",
+        "test/collab_inline_formula_test.dart",
+        "test/collab_paragraph_links_test.dart",
+        "test/collab_block_actions_test.dart",
+        "test/editor_modal_focus_test.dart",
+        "test/mobile_selection_menu_test.dart"
+      ],
+      "log": "/tmp/formula-unified-regression-final.log"
+    },
+    "layout": "390×844、320×568/1.5倍文字/键盘240、780×390/键盘130；滚动插入操作后标题、保存及删除保持固定位置，删除位于保存左侧、按钮不重叠且在键盘上方。",
+    "analysis": "包内6个目标及关联文件flutter analyze通过，无问题；/tmp/formula-unified-analyze-final.log。",
+    "format": "仅触达手写文件，既有80/120行宽保留。",
+    "screenshots": [
+      {
+        "path": "formula-unified-20261020/create.png",
+        "sha256": "a1af6a55d7d81282b824099fff6b0bd11ad088729daa7ac6937a4d3d9be35d65"
+      },
+      {
+        "path": "formula-unified-20261020/edit.png",
+        "sha256": "696f9e695de278a4120f58b7794c1acc41ab6087ca1a9b5ce9dc371817fd126a"
+      }
+    ],
+    "screenshotsScope": "真实Flutter Widget渲染；提交前从隔离索引副本重新生成，使用已提交的公共外壳/开关，不依赖工作区其他样式改动。中文及KaTeX字体已加载，背景样本正文仍用测试字体；非真机验收。",
+    "android": {
+      "status": "Android debug构建通过，包含最终删除左下布局；未据此声明真机交互通过。",
+      "log": "/tmp/formula-unified-android-final.log",
+      "installed": "HONOR X70 / MTN AN00 Android16，adb install -r成功；更新并启动，未进行新面板真机交互验收。"
+    },
+    "diffCheck": "git diff --check通过，保留分割线并行工作区改动。",
+    "deleteIconFollowup": {
+      "date": "2026-10-20",
+      "registryLatest": "0.11.23（本轮桌面配置仓库默认查询及10秒有界查询均成功）",
+      "desktop": "根声明/Yarn0.11.22，安装0.11.17，版本组合未变",
+      "read": "复核三版随包技能/MIGRATIONS与公式渲染；仅按钮展示调整，不改公式模型/命令/历史/协同接口。",
+      "testPassed": 4,
+      "testScope": "复用新建与390/320大字键盘/横屏固定头尾用例，未新增镜像测试；/tmp/formula-delete-icon-test.log。",
+      "analysis": "目标公式面板flutter analyze --no-pub通过；/tmp/formula-delete-icon-analyze.log。",
+      "androidBuild": "debug构建通过；/tmp/formula-delete-icon-android.log。",
+      "deviceInteraction": "未新增真机交互或在线同步验收。",
+      "androidInstalled": "HONOR X70 / MTN AN00 Android16，更新安装成功；未新增真机交互验收。"
+    },
+    "commitSnapshot": {
+      "date": "2026-10-20",
+      "versions": "本轮桌面配置仓库重新查询latest=0.11.23，声明/Yarn0.11.22、安装0.11.17未变；复核对应技能/迁移与公式实现，无依赖升级。",
+      "scope": "使用git索引导出独立副本；不包含分割线、公共底部留白与Cupertino开关等其他未提交改动。",
+      "tests": {
+        "passed": 140,
+        "log": "/tmp/formula-commit-test.log",
+        "files": [
+          "test/collab_formula_test.dart",
+          "test/collab_inline_formula_test.dart",
+          "test/collab_paragraph_links_test.dart",
+          "test/collab_block_actions_test.dart",
+          "test/editor_modal_focus_test.dart",
+          "test/mobile_selection_menu_test.dart"
+        ]
+      },
+      "analysis": "隔离副本6个目标/关联文件flutter analyze --no-pub无问题，/tmp/formula-commit-analyze.log。",
+      "screenshots": "隔离副本140项回归期间重新生成创建/编辑截图，已替换本记录对应图片及SHA-256。",
+      "android": "此前Android构建/安装为完整工作区版本；本次仅提交，未重新构建隔离提交版本。",
+      "diffCheck": "暂存及工作区git diff --check通过，其他改动保留。"
+    }
+  },
+  "remaining": [
+    "新面板Android/iOS真实键盘与触摸交互人工验收",
+    "在线桌面双向协同、锁并发、重连及服务端持久化ACK",
+    "完整KaTeX语法兼容与其他上游版本差异"
+  ],
+  "statistics": "最后核对2026-10-20；41块，13已适配/14部分支持/1结构支持/13未适配，公式仍已适配。"
+}

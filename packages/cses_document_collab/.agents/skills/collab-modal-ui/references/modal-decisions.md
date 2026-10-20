@@ -38,7 +38,8 @@
 | 编号菜单 | `collab_ordered_marker.dart` | 220宽、列表图标、当前项勾选；使用序号本身作为锚点，不改正文/原生编号规则 |
 | 绘图视图 | `collab_mermaid_block.dart` | 同款220宽浮层、标题和关闭入口，三种模式带图标及当前勾选；仅切换共享mode，不改源码 |
 | 绘图类型/模板 | `collab_mermaid_sheet.dart` | 同款220宽可滚动浮层；类型插入前缀，模板替换本地全文，保存前不写共享源码 |
-| 公式/分割线 | `collab_formula_sheet.dart`、`collab_divider_settings.dart` | 删除红色；公式草稿确认与分割线外观即时生效是不同契约，不因外壳相同而合并 |
+| 公式 | `collab_formula_sheet.dart` | 独立公式整卡点击打开统一面板，不保留三个点；新建仅源码/预览/取消/创建，编辑预览下方直接排列锁定、复制段落链接、下方插入；删除使用红色trash2图标加文字固定底部左侧，取消/保存在右侧。锁定隐藏插入/删除/保存且输入只读，保留授权解锁、复制和继承锁定位；锁变化/撤权须重开。复制不关闭且保留草稿，带草稿执行锁/下方插入先保存并继续、放弃或取消；退场后验证身份、快照及权限执行命令。行内公式及原冲突/历史契约保持 |
+| 分割线 | `collab_divider_settings.dart` | 删除红色；分割线外观即时生效，不因外壳相同而与公式草稿确认契约合并 |
 | 表格行列/单元格 | `collab_table_controls.dart`、`collab_table_sheet.dart` | 行列用公共锚点菜单，单元格操作用底部面板；保留最后行/列禁删及稳定范围保护 |
 | 代码名称/语言 | `collab_code_menu.dart` | 复用公共锚点菜单；语言列表保持滚动，不随编号菜单一起全局收窄 |
 | 文字链接/资源/图片属性 | `editor_selection_actions.dart`、`collab_resource_settings.dart`、`collab_image_editor.dart` | 居中弹窗；文字链接移除红色，取消不写入；图片/资源沿用字段验证和冲突机制 |
