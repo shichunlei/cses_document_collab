@@ -1,11 +1,14 @@
-import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/model/collab_table.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_menu_row.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal_colors.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_table_grid.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'collab_table_grid.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+
 import 'editor_shortcut_toolbar.dart';
 
 /// 表格边缘操作条：整行/列选中、浮动插入/删除菜单及拖动列边界。

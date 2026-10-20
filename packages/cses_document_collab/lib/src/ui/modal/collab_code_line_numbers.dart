@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 /// 给代码正文添加不参与选区、复制或协同的行号栏；自动折行只在逻辑行首显示编号。
 /// 借用正文组件，不持有编辑器资源；行号栏单独隔离重绘，避免光标闪烁重复测量代码。
 /// ```dart
+/// import 'package:cses_document_collab/src/ui/modal/collab_code_line_numbers.dart';
 /// import 'package:flutter/material.dart';
-/// import 'package:cses_document_collab/src/editor/collab_code_line_numbers.dart';
 /// const style = TextStyle(fontFamily: 'monospace', fontSize: 13);
 /// final body = CollabCodeLineNumbers(
 ///   source: 'print(1);', style: style,

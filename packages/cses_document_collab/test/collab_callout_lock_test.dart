@@ -2,10 +2,10 @@ import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'package:cses_document_collab/src/editor/collab_callout_block.dart';
-import 'package:cses_document_collab/src/editor/collab_emoji_picker.dart';
 import 'package:cses_document_collab/src/model/collab_block_lock.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_emoji_picker.dart';
 
 /// Exercise prefix hit targets and open picker invalidation with real block guards.
 void main() {

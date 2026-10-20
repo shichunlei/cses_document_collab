@@ -1,6 +1,4 @@
-import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'dart:async';
-
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
@@ -10,7 +8,6 @@ import 'package:cses_document_collab/src/editor/collab_bookmark_block.dart';
 import 'package:cses_document_collab/src/editor/collab_web_embed_block.dart';
 import 'package:cses_document_collab/src/editor/collab_juejin_embed_block.dart';
 import 'package:cses_document_collab/src/editor/collab_figma_embed_block.dart';
-import 'package:cses_document_collab/src/editor/collab_card_frame.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -18,7 +15,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:video_player_platform_interface/video_player_platform_interface.dart';
 import 'package:metalink/metalink.dart';
-import 'package:cses_document_collab/src/editor/collab_link_preview.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_card_frame.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_link_preview.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_menu_row.dart';
 
 /// Returns a localized editor harness borrowing [state] and [loadPreview].
 /// Null [loadPreview] uses fixture HTML; no real network request is required.

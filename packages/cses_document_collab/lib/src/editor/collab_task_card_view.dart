@@ -1,10 +1,11 @@
 import 'dart:math' as math;
 
-import 'package:cses_document_collab/src/editor/collab_card_frame.dart';
 import 'package:cses_document_collab/src/editor/collab_host_mention_ui.dart';
 import 'package:cses_document_collab/src/model/collab_task_card_data.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
-import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_card_frame.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_card_header.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 

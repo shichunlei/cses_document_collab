@@ -1,10 +1,9 @@
 import 'dart:async';
-import 'support/fake_link_web_platform.dart';
-
-import 'package:cses_document_collab/src/editor/collab_embedded_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_embedded_page.dart';
+import 'support/fake_link_web_platform.dart';
 
 /// Bounded frame harness for original [url]; platform state is supplied by the test.
 Widget _app(String url) => MaterialApp(

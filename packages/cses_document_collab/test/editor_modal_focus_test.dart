@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:cses_document_collab/src/editor/editor_media_source_sheet.dart';
-
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/model/editor_media_upload.dart';

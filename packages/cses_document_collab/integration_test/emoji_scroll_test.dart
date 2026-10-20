@@ -2,14 +2,14 @@ import 'dart:convert';
 import 'dart:developer' as developer;
 import 'dart:io';
 import 'dart:ui' show FrameTiming;
-
-import 'package:cses_document_collab/src/editor/collab_emoji_picker.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_bottom_sheet.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_emoji_picker.dart';
 
 /// 在Android性能模式验证实际共用底部弹窗、表情目录及Tab，采集真实引擎帧耗时。
 /// 仅使用隔离回调，不初始化账号、业务服务、原生协同或网络；完成后需覆盖恢复普通Demo。

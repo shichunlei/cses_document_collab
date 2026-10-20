@@ -4,11 +4,11 @@ import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart'
     show AppFlowyBlockEditorAdapter, csesEmbedUrlAttribute, csesVideoBlockType;
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
-import 'package:cses_document_collab/src/editor/collab_card_frame.dart';
 import 'package:cses_document_collab/src/editor/collab_media_block_base.dart';
-import 'package:cses_document_collab/src/editor/collab_media_timeline.dart';
 import 'package:cses_document_collab/src/editor/collab_unsupported_block.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_card_lock_overlay.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_media_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';

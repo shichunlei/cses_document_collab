@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 
 /// 原生可变行高网格；按单元格正文自然高度计算跨度区域，不裁剪长正文。
 /// ```dart
-/// import 'package:cses_document_collab/src/editor/collab_table_grid.dart';
+/// import 'package:cses_document_collab/src/ui/modal/collab_table_grid.dart';
 /// import 'package:cses_document_collab/src/model/collab_table.dart';
 /// import 'package:flutter/widgets.dart';
 /// final regions = collabTableRegions(createCollabTable(2, 2));

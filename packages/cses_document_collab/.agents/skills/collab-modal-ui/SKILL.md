@@ -11,7 +11,7 @@ description: 在 cses_document_collab 包内新增、迁移或调整底部弹窗
 
 ## 先定位职责，再选择公共入口
 
-先读 [公共组件实现](../../../lib/src/ui/modal/collab_modal.dart) 中相关声明及已有调用方。梳理当前入口、取消/确认结果、权限、焦点、保存时机和控制器所有权，再决定需要修改的展示层。不要在统一样式时移动或重写业务事务。
+先读 [公共展示入口](../../../lib/src/ui/modal/collab_modal.dart) 及 `lib/src/ui/modal/` 中所涉组件的独立实现和已有调用方。梳理当前入口、取消/确认结果、权限、焦点、保存时机和控制器所有权，再决定需要修改的展示层。不要在统一样式时移动或重写业务事务。
 
 | 展示形式 | 展示入口 | 内容外壳 | 适用情形 |
 |---|---|---|---|
@@ -22,6 +22,8 @@ description: 在 cses_document_collab 包内新增、迁移或调整底部弹窗
 复用 `CollabModalHeader`、`CollabModalActions`、`CollabModalField`、`CollabModalSegments<T>`；不要为了某个新菜单再造圆角、标题、按钮或定位系统。现有组件不足时，优先加保持旧默认值的可选配置，例如 `showCollabPopover(width: 220)`，并检查消费者。
 
 菜单行复用 `CollabMenuRow`，开关行复用 `CollabSwitchRow`，均由 `Row` 自定义布局；本包源码、测试夹具和示例禁止使用或包装 Flutter `ListTile`、`SwitchListTile`、`CheckboxListTile`、`RadioListTile` 等系列组件及其 SDK 主题配置。`CollabSwitchRow` 只有开关本体可切换，标题、说明、图标与空白区域没有行级点击事件，也不提供整行回调。菜单密度由 `CollabModalTheme.compactList` 传递，保留51/42逻辑像素最小高度并允许大字换行增长；禁用态、键盘和无障碍语义由共用行处理。
+
+公共组件每个 Widget 独立成文件，私有 State/Painter 等专属实现随所属组件维护；`collab_modal.dart` 只保留三类展示函数及私有定位，不增加组件聚合导出。菜单行、主题、颜色、头部、操作区、字段、分段选择器和三类外壳分别导入对应 `collab_*.dart`。卡片外框/标题栏/锁标、颜色/表情选择器、缓存图片、媒体来源面板与进度、公式/绘图/分割线和链接/网页预览等共用展示也放在同目录；只借用业务模型和回调，不导入 `editor/`。编辑器命令、选区、权限、操作会话及专属块适配器仍在业务模块。
 
 内部跨目录使用精确 `package:cses_document_collab/src/...` import。当前公共弹窗是包内实现；宿主仍只能使用包的公开入口，不为宿主直接使用这些内部 Widget 扩大导出。
 

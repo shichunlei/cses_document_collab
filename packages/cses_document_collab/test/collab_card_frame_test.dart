@@ -1,6 +1,7 @@
-import 'package:cses_document_collab/src/editor/collab_card_frame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_card_frame.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_card_header.dart';
 
 /// 验证窄屏大字标题不覆盖操作、只读移除占位和音频使用标准标题栏。
 void main() {

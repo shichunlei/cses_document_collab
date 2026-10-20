@@ -1,4 +1,3 @@
-import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_table_block.dart';
@@ -11,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_menu_row.dart';
 
 /// 验证表格真实父子结构、正文历史、远端重排与窄屏滚动。
 void main() {

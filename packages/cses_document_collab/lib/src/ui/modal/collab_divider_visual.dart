@@ -1,15 +1,15 @@
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
-import 'package:cses_document_collab/src/editor/collab_divider_artwork.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
+import 'package:cses_document_collab/src/model/collab_divider_artwork.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 /// 按桌面尺寸与矢量图案绘制分割线，供正文和设置缩略图共用。
 /// ```dart
-/// import 'package:cses_document_collab/src/editor/collab_divider_visual.dart';
+/// import 'package:cses_document_collab/src/ui/modal/collab_divider_visual.dart';
 /// import 'package:cses_document_collab/src/model/collab_divider.dart';
 /// final preview = CollabDividerVisual(divider: CollabDivider({'style': 'edge-vine'}));
 /// ```

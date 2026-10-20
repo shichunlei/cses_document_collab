@@ -1,9 +1,9 @@
-import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
-import 'package:cses_document_collab/src/editor/collab_card_frame.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/editor/collab_formula_sheet.dart';
-import 'package:cses_document_collab/src/editor/collab_formula_visual.dart';
 import 'package:cses_document_collab/src/model/collab_formula.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_card_frame.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_formula_visual.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

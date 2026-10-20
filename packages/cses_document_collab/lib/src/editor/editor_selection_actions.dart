@@ -1,12 +1,15 @@
-import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_formula_sheet.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
 import 'package:cses_document_collab/src/model/collab_text_range.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_dialog.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal_colors.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal_field.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// 在借用 [context]/[editor] 中编辑单段文字链接；取消不写入。
 /// 仅修改 href，保留原文和其他格式；弹窗完整退场后重新核对稳定身份、原文及权限。

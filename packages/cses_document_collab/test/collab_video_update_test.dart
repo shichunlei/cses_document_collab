@@ -1,6 +1,4 @@
-import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'dart:async';
-
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_block_lock_chrome.dart';
@@ -14,6 +12,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:video_player/video_player.dart';
 import 'package:video_player_platform_interface/video_player_platform_interface.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_menu_row.dart';
 
 /// 隔离真实播放器，验证视频交互的焦点屏蔽、同一Node源更新及退出所有权，不访问网络。
 void main() {

@@ -1,12 +1,17 @@
-import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
-import 'package:flutter/material.dart';
-import 'package:cses_document_collab/src/editor/collab_cached_image.dart';
-import 'package:cses_document_collab/src/editor/collab_emoji_picker.dart';
 import 'package:cses_document_collab/src/controller/document_metadata_controller.dart';
+import 'package:cses_document_collab/src/editor/editor_media_source_sheet.dart';
 import 'package:cses_document_collab/src/model/document_metadata.dart';
-import 'editor_media_source_sheet.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_bottom_sheet.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_cached_image.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_emoji_picker.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal_colors.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal_field.dart';
+import 'package:cses_document_collab/src/ui/modal/editor_media_source_panel.dart';
+import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+
 import 'editor_shortcut_toolbar.dart';
 
 /// 正式业务头部作为编辑器header滚动，始终独立于正文节点和正文撤销历史。

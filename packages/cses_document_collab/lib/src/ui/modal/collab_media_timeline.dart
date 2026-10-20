@@ -5,7 +5,7 @@ import 'package:video_player/video_player.dart';
 /// 音视频共用的局部播放进度；借用控制器，不修改编辑器选区或文档内容。
 ///
 /// ```dart
-/// import 'package:cses_document_collab/src/editor/collab_media_timeline.dart';
+/// import 'package:cses_document_collab/src/ui/modal/collab_media_timeline.dart';
 /// import 'package:video_player/video_player.dart';
 /// import 'package:flutter/widgets.dart';
 /// Widget progress(VideoPlayerController controller) => CollabMediaTimeline(

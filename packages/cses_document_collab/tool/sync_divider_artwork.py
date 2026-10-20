@@ -1,7 +1,7 @@
 """Extract existing BlockCraft SVG masks and tape gradients for Flutter.
 
 Run: python3 tool/sync_divider_artwork.py /path/to/@ccc/blockcraft
-The tool writes only divider artwork; it does not modify dependencies or schemas.
+The tool writes model/collab_divider_artwork.dart; it does not modify dependencies or schemas.
 Source shapes and gradients remain attributable to @ccc/blockcraft 0.11.14.
 """
 import json
@@ -11,7 +11,7 @@ from pathlib import Path
 from urllib.parse import unquote
 
 source = Path(sys.argv[1]) / 'themes' / 'blocks'
-output = Path(__file__).resolve().parents[1] / 'lib' / 'src' / 'editor' / 'collab_divider_artwork.dart'
+output = Path(__file__).resolve().parents[1] / 'lib' / 'src' / 'model' / 'collab_divider_artwork.dart'
 svg = dict((name, unquote(value)) for name, value in re.findall(
     r'\$_(\w+): url\("data:image/svg\+xml,([^"\n]+)"\);',
     (source / '_divider-patterns.scss').read_text()))

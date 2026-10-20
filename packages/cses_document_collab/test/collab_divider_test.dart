@@ -1,12 +1,9 @@
 import 'dart:io';
 import 'dart:ui' as ui;
-
-import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/controller/collab_controller.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_block_delete.dart';
-import 'package:cses_document_collab/src/editor/collab_divider_visual.dart';
 import 'package:cses_document_collab/src/editor/collaborative_editor_page.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
@@ -15,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_divider_visual.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal_segments.dart';
 
 /// 验证桌面展示回落、独立补丁/稳定身份、面板交互和原生绘图。
 void main() {

@@ -1,6 +1,6 @@
-import 'package:cses_document_collab/src/editor/collab_block_lock_scope.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_block_lock_scope.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 

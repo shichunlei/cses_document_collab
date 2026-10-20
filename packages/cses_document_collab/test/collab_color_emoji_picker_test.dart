@@ -1,11 +1,10 @@
 import 'dart:async';
-
-import 'package:cses_document_collab/src/editor/collab_color_picker.dart';
-import 'package:cses_document_collab/src/editor/collab_emoji_picker.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
 import 'package:cses_document_collab/src/model/collab_color_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_color_picker.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_emoji_picker.dart';
 
 /// 验证共用选择器的协议边界、只读回显、保存生命周期及原生Unicode完整性。
 void main() {

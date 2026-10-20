@@ -1,13 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:cses_document_collab/src/editor/collab_mermaid_visual.dart';
 import 'package:cses_document_collab/src/model/collab_mermaid_options.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-
+import 'package:cses_document_collab/src/ui/modal/collab_mermaid_visual.dart';
 import '../test/collab_mermaid_test.dart' as editor_tests;
 
 /// 在Android真机验证正式页面交互和随包离线引擎；只使用隔离测试正文。

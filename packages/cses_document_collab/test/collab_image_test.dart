@@ -1,4 +1,3 @@
-import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
@@ -8,6 +7,7 @@ import 'package:cses_document_collab/src/editor/collab_image_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_dialog.dart';
 
 /// 创建独立图片投影；[image] 为专属布局，[url] 默认其他端 blob，用于无网络 Widget 测试。
 CollabEditorBlock _block(

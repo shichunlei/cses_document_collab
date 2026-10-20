@@ -1,16 +1,18 @@
-import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
-import 'package:cses_document_collab/src/editor/collab_card_frame.dart';
-import 'package:cses_document_collab/src/editor/collab_color_picker.dart';
-import 'package:cses_document_collab/src/editor/collab_emoji_picker.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
 import 'package:cses_document_collab/src/model/collab_color_palette.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_bottom_sheet.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_card_lock_overlay.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_color_picker.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_emoji_picker.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 
 /// A real container: child paragraphs retain their own input and selection delegates.

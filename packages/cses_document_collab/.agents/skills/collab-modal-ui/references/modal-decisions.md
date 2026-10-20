@@ -4,7 +4,7 @@
 
 ## 公共组件与设计基线
 
-公共实现：`lib/src/ui/modal/collab_modal.dart`。菜单操作使用基于 `Row` 的 `CollabMenuRow`，开关设置使用 `CollabSwitchRow`；禁止使用或包装 SDK 的 ListTile 系列。开关只有本体接收切换事件，点击文字、图标和空白区域不切换。当前设计值如下，新增调用方复用组件即可，不复制这些数值另建主题。
+公共实现目录：`lib/src/ui/modal/`。`collab_modal.dart` 仅提供展示函数与私有锚点定位，各组件在独立文件中定义，调用方精确导入，不通过聚合导出引用。菜单操作使用基于 `Row` 的 `CollabMenuRow`，开关设置使用 `CollabSwitchRow`；禁止使用或包装 SDK 的 ListTile 系列。开关只有本体接收切换事件，点击文字、图标和空白区域不切换。当前设计值如下，新增调用方复用组件即可，不复制这些数值另建主题。
 
 | 项目 | 已确认基线 |
 |---|---|
@@ -22,7 +22,7 @@
 
 ## 业务位置与最终要求
 
-| 场景 | 入口/内容实现（均在 `lib/src/editor/`） | 已确认规则 |
+| 场景 | 入口/内容实现（默认位于 `lib/src/editor/`，`ui/modal/` 前缀表示共用展示） | 已确认规则 |
 |---|---|---|
 | 块更多操作 | `collab_block_actions.dart` | 头部按块类型显示名称和图标，高亮块用 `highlighter`，分页符用 `separatorHorizontal`（正文标记与菜单一致），代码绘图用 `chartNetwork`（卡片、更多菜单、源码面板和添加入口一致）；不使用“块操作＋ellipsis”；未知新类型回退“内容＋file”；保留调用方独立覆盖和卡片三个点入口；下方插入用 `listEnd`，外部应用/浏览器打开用 `externalLink`，下载或打开附件用 `download`，颜色设置用 `palette`；复制用 `copy`，其余编辑用 `pencil`，删除整行红色，保留稳定身份、远端快照和权限失效保护 |
 | 添加面板 | `editor_shortcut_toolbar.dart` | 标题显示“添加”并使用内容块 `blocks` 图标；高亮块用 `highlighter`、分页符用 `separatorHorizontal`、代码绘图用 `chartNetwork`，与卡片及菜单保持一致；保留原插入、书签、权限及输入会话 |
@@ -34,7 +34,7 @@
 | 文档/会议/任务提及 | `collab_inline_entity_mention.dart` | “删除提及”与块菜单同样使用红色整行操作，保留预览禁用；不删除实体业务数据 |
 | 图标/封面来源 | `document_header.dart`、`editor_media_source_sheet.dart` | 修改封面标题使用 `image` 图片图标；图标的移除在底部左侧，与完成/保存同栏；Tab切换保留草稿，上传取消和权限核对不交给外壳 |
 | 封面位置 | `document_header.dart` 的 `_BannerPositionSheet` | 图片内上下拖动，提示“按住图片上下拖动，调整封面位置”；无滑条/百分比，保存才提交，取消不写入 |
-| 高亮颜色/表情 | `collab_callout_block.dart`、`collab_color_picker.dart`、`collab_emoji_picker.dart` | 保留完整色板、自定义颜色；表情使用桌面同源八类目录/搜索/肤色/最近，原生Unicode不截断。固定底部Tab与单一完整列表双向联动，点击平滑定位，手动滚动同步且使活动Tab可见；公共外壳用scrollBody=false提供有限正文，固定行高惰性目录由选择器拥有；表情移除在左下与完成同栏，保留忙碌/错误边界；块自身或祖先锁定时禁用表情入口及选择/移除，打开时捕获锁代次，锁后解锁须重开面板 |
+| 高亮颜色/表情 | `collab_callout_block.dart`、`ui/modal/collab_color_picker.dart`、`ui/modal/collab_emoji_picker.dart` | 保留完整色板、自定义颜色；表情使用桌面同源八类目录/搜索/肤色/最近，原生Unicode不截断。固定底部Tab与单一完整列表双向联动，点击平滑定位，手动滚动同步且使活动Tab可见；公共外壳用scrollBody=false提供有限正文，固定行高惰性目录由选择器拥有；表情移除在左下与完成同栏，保留忙碌/错误边界；块自身或祖先锁定时禁用表情入口及选择/移除，打开时捕获锁代次，锁后解锁须重开面板 |
 | 编号菜单 | `collab_ordered_marker.dart` | 220宽、列表图标、当前项勾选；使用序号本身作为锚点，不改正文/原生编号规则 |
 | 绘图视图 | `collab_mermaid_block.dart` | 同款220宽浮层、标题和关闭入口，三种模式带图标及当前勾选；仅切换共享mode，不改源码 |
 | 绘图类型/模板 | `collab_mermaid_sheet.dart` | 同款220宽可滚动浮层；类型插入前缀，模板替换本地全文，保存前不写共享源码 |
@@ -42,6 +42,8 @@
 | 表格行列/单元格 | `collab_table_controls.dart`、`collab_table_sheet.dart` | 行列用公共锚点菜单，单元格操作用底部面板；保留最后行/列禁删及稳定范围保护 |
 | 代码名称/语言 | `collab_code_menu.dart` | 复用公共锚点菜单；语言列表保持滚动，不随编号菜单一起全局收窄 |
 | 文字链接/资源/图片属性 | `editor_selection_actions.dart`、`collab_resource_settings.dart`、`collab_image_editor.dart` | 居中弹窗；文字链接移除红色，取消不写入；图片/资源沿用字段验证和冲突机制 |
+
+共用 `EditorMediaSourcePanel` 位于 `ui/modal/editor_media_source_panel.dart`，编辑器入口 `editor_media_source_sheet.dart` 负责注入上传服务。卡片外框、头部与锁覆盖层分别位于 `ui/modal/collab_card_frame.dart`、`collab_card_header.dart` 与 `collab_card_lock_overlay.dart`，锁显示作用域位于 `collab_block_lock_scope.dart`；其余共用预览、选择器和布局在同目录按组件名查找。
 
 其他消费者可按公共展示函数检索，不根据本表遗漏就新建另一套外壳。
 

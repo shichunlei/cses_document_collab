@@ -1,16 +1,21 @@
-import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'dart:convert';
 
-import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
-import 'package:cses_document_collab/src/editor/collab_mermaid_visual.dart';
+import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_mermaid.dart';
 import 'package:cses_document_collab/src/model/collab_mermaid_options.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_bottom_sheet.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_menu_row.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_mermaid_visual.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal_colors.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal_field.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal_segments.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// 源码面板确认结果；source 为草稿全文，view 为用户选择的共享显示模式。
 typedef CollabMermaidDraft = ({String source, CollabMermaidView view});

@@ -1,10 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:cses_document_collab/src/editor/collab_mermaid_visual.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_mermaid_visual.dart';
 
 /// 验证离线来源、注入边界、去抖、重试及关闭后的异步失效。
 void main() {

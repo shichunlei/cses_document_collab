@@ -6,8 +6,8 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 /// 父组件提供滚动区域，本视图只按宽度排三列/四列，不拥有业务控制器。
 ///
 /// ```dart
+/// import 'package:cses_document_collab/src/ui/modal/document_cover_gallery.dart';
 /// import 'package:flutter/material.dart';
-/// import 'package:cses_document_collab/src/editor/document_cover_gallery.dart';
 /// Widget gallery() => SingleChildScrollView(
 ///   child: DocumentCoverGallery(selectedUrl: '', onSelected: (image) => debugPrint(image.url)),
 /// );

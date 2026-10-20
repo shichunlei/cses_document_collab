@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:ui' as ui;
-
 import 'package:cses_document_collab/src/editor/editor_media_source_sheet.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:cses_document_collab/src/model/editor_media_upload.dart';
@@ -10,6 +9,13 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_bottom_sheet.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_dialog.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_menu_row.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal_colors.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal_field.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal_segments.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_popover.dart';
 
 /// 验证共用弹窗的路由生命周期、窄屏/键盘布局与真实来源面板。
 void main() {

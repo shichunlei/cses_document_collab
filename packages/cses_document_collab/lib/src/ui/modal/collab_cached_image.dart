@@ -10,7 +10,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 /// 无后缀SVG仅在位图失败后检查已有缓存，不重复下载；旧源完成不覆盖新源。
 ///
 /// ```dart
-/// import 'package:cses_document_collab/src/editor/collab_cached_image.dart';
+/// import 'package:cses_document_collab/src/ui/modal/collab_cached_image.dart';
 /// import 'package:flutter/widgets.dart';
 /// const image = CollabCachedImage(
 ///   url: 'https://example.com/cover.png',

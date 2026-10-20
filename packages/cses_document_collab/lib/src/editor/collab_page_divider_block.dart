@@ -1,10 +1,10 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
-import 'package:cses_document_collab/src/editor/collab_card_frame.dart';
 import 'package:cses_document_collab/src/model/collab_page_divider.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_card_frame.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
 
 /// 为正式 page-divider 注册可选中的无正文组件；点击整条标记打开公共操作菜单。

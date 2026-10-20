@@ -1,13 +1,16 @@
-import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
-import 'package:cses_document_collab/src/editor/collab_cached_image.dart';
-import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
+import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'package:cses_document_collab/src/model/collab_image.dart';
+import 'package:cses_document_collab/src/native/collab_runtime.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_cached_image.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_dialog.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal_field.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal_segments.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// 按稳定 [blockId] 查找 [editorState] 中当前图片，避免弹窗期间远端移动后使用旧 path。
 /// 返回借用节点；已删除或类型变化时返回 null，不修改编辑器。

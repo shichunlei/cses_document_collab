@@ -1,11 +1,13 @@
-import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
-import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart'
     show csesEmbedUrlAttribute;
+import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_dialog.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal_field.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// 为借用[context]中的资源[node]打开设置，等待弹窗完全退场。
 /// [editor]由调用方持有，[label]为具体块的显示名称；节点和属性只取快照。

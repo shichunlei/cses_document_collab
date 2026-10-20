@@ -22,7 +22,7 @@ Uri collabFrameUrl(String url) {
 /// the platform view; WebViewController has no public dispose operation.
 ///
 /// ```dart
-/// import 'package:cses_document_collab/src/editor/collab_embedded_page.dart';
+/// import 'package:cses_document_collab/src/ui/modal/collab_embedded_page.dart';
 /// import 'package:flutter/material.dart';
 /// Widget frame() => const SizedBox(height: 240,
 ///   child: CollabEmbeddedPage(url: 'https://example.com'));

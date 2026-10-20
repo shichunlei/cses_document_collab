@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/controller/collab_controller.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
@@ -8,11 +7,12 @@ import 'package:cses_document_collab/src/editor/collaborative_editor_page.dart';
 import 'package:cses_document_collab/src/model/collab_entity_mention.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/model/collab_user_mention.dart';
-import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_menu_row.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal_colors.dart';
 
 /// 业务实体原子展示、完整属性历史和远端冲突回归；测试不访问业务服务。
 void main() {

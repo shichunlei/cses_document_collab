@@ -5,7 +5,7 @@ import 'package:flutter_math_fork/flutter_math.dart';
 /// 展示独立 LaTeX 公式；空值显示添加提示，解析失败显示原文。
 /// 长公式居中并可横向滚动，不写协同数据，也不创建持久资源。
 /// ```dart
-/// import 'package:cses_document_collab/src/editor/collab_formula_visual.dart';
+/// import 'package:cses_document_collab/src/ui/modal/collab_formula_visual.dart';
 /// const preview = CollabFormulaVisual(latex: r'\frac{a}{b}');
 /// ```
 class CollabFormulaVisual extends StatelessWidget {

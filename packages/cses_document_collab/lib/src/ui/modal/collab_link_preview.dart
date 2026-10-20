@@ -26,7 +26,7 @@ Future<ExtractionResult<LinkMetadata>> _extractPreview(String url) => MetaLink.e
 /// retry; opening the URL is delegated to the host.
 ///
 /// ```dart
-/// import 'package:cses_document_collab/src/editor/collab_link_preview.dart';
+/// import 'package:cses_document_collab/src/ui/modal/collab_link_preview.dart';
 /// import 'package:cses_document_collab/src/model/collab_resource.dart';
 /// import 'package:flutter/material.dart';
 ///

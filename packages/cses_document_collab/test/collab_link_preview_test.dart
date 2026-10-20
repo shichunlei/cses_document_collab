@@ -1,10 +1,9 @@
 import 'dart:async';
-
-import 'package:cses_document_collab/src/editor/collab_link_preview.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metalink/metalink.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_link_preview.dart';
 
 const _url = 'https://example.test/article';
 

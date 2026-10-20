@@ -4,10 +4,10 @@ import 'dart:math' as math;
 
 import 'package:cses_document_collab/src/model/collab_emoji_catalog.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
-import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
-import 'package:flutter/material.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal_colors.dart';
 import 'package:flutter/foundation.dart'
     show LicenseRegistry, LicenseEntryWithLineBreaks;
+import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// 惰性目录的一行，标题与表情行共用列表，避免一次挂载整个数据集。
@@ -30,8 +30,8 @@ const _emojiStyle = TextStyle(
 /// 父级需提供Material供表情点击反馈绘制，公共底部弹窗或Scaffold已满足。
 ///
 /// ```dart
+/// import 'package:cses_document_collab/src/ui/modal/collab_emoji_picker.dart';
 /// import 'package:flutter/material.dart';
-/// import 'package:cses_document_collab/src/editor/collab_emoji_picker.dart';
 /// final picker = Material(child: SizedBox(height: 400, child: CollabEmojiPicker(
 ///   keyPrefix: 'icon-emoji', current: '💡',
 ///   onSelected: (value) async { /* 保存原生表情 */ },

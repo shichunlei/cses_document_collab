@@ -6,7 +6,8 @@
 
 新增、迁移、还原或修复本包底部弹窗、居中弹窗及下拉/锚点菜单时，先读取并应用 [collab-modal-ui skill](.agents/skills/collab-modal-ui/SKILL.md)，再按所涉场景读取其参考文件。
 
-- 复用 `lib/src/ui/modal/collab_modal.dart`，保持业务会话、权限、草稿和资源所有权边界。
+- 公共展示组件统一放在 `lib/src/ui/modal/`，每个可复用 Widget 独立成文件；其私有 State、Painter 等专属实现可随所属组件维护。`collab_modal.dart` 仅承载三类展示函数及私有锚点定位，不再聚合或转导出组件。调用方精确导入所需文件，保持业务会话、权限、草稿和资源所有权边界。
+- 颜色/表情选择器、缓存图片、卡片外框/标题栏/锁标、媒体进度、公式/绘图/分割线与链接/网页预览等共用展示均归上述目录；编辑器专属块、工具栏服务、选区、权限和事务适配器留在 `editor/`。UI组件不得反向导入 `editor/`；共享模型及生成资源放在 `model/`，生成文件须同步生成入口。
 - 用户最新的明确要求优先于 skill 里的默认产品规则；不要把历史中间方案重新当作目标。
 - 本 skill 存放于包内，包目录是单独工作区时也可使用；无需安装到用户全局目录。显式调用名称为 `$collab-modal-ui`，未被会话技能目录发现时按上面的路径直接读取。
 - 普通页面、网页设计预览和不涉及弹窗的协同/原生逻辑不因本约定强制加载该 skill。
@@ -18,6 +19,6 @@
 ## 列表行与开关行
 
 - 本包全目录（含源码、测试夹具与示例）禁止使用 Flutter `ListTile` 系列组件，包括 `ListTile`、`SwitchListTile`、`CheckboxListTile`、`RadioListTile` 等；不得通过包装、别名或继承间接使用，也不新增相关 SDK 主题配置。
-- 列表行以 `Row` 自定义布局；菜单操作复用 `lib/src/ui/modal/collab_modal.dart` 的 `CollabMenuRow`，开关设置复用 `CollabSwitchRow`。继续使用原生 `Switch`、`Checkbox`、`Radio` 等基础控件。
+- 列表行以 `Row` 自定义布局；菜单操作复用 `lib/src/ui/modal/collab_menu_row.dart` 的 `CollabMenuRow`，开关设置复用 `collab_switch_row.dart` 的 `CollabSwitchRow`。继续使用原生 `Switch`、`Checkbox`、`Radio` 等基础控件。
 - `CollabSwitchRow` 仅允许开关本体切换，不提供整行点击或切换回调；点击标题、副标题、图标及空白区域不得触发切换。状态及业务回调由调用方持有。
 - 自定义行须保留禁用态、选中态、危险操作配色、键盘与无障碍语义，并适配窄屏及系统大字；测试通过稳定 Key 或实际行为验证，开关操作定位行内的 `Switch`。

@@ -3,8 +3,8 @@ import 'package:flutter/widgets.dart';
 /// 向当前块的卡片外框传递本地锁标记；嵌套块会建立自己的作用域。
 ///
 /// ```dart
+/// import 'package:cses_document_collab/src/ui/modal/collab_block_lock_scope.dart';
 /// import 'package:flutter/widgets.dart';
-/// import 'package:cses_document_collab/src/editor/collab_block_lock_scope.dart';
 /// const scope = CollabBlockLockScope(blockId: 'card', showBadge: true, child: SizedBox());
 /// ```
 class CollabBlockLockScope extends InheritedWidget {

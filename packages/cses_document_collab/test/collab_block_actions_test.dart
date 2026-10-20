@@ -11,7 +11,6 @@ import 'package:cses_document_collab/src/editor/collab_meeting_block.dart';
 import 'package:cses_document_collab/src/editor/collab_audio_block.dart';
 import 'package:cses_document_collab/src/editor/collab_attachment_block.dart';
 import 'package:cses_document_collab/src/editor/collab_task_card_block.dart';
-import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:cses_document_collab/src/model/collab_image.dart';
 import 'package:cses_document_collab/src/model/collab_host_services.dart';
@@ -22,6 +21,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:video_player_platform_interface/video_player_platform_interface.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_bottom_sheet.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_menu_row.dart';
 
 /// Fails media initialization locally, exercising menus even when media is unavailable.
 class _UnavailableVideo extends VideoPlayerPlatform {

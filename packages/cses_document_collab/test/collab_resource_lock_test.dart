@@ -1,4 +1,3 @@
-import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_attachment_block.dart';
@@ -14,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metalink/metalink.dart';
 import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
-
+import 'package:cses_document_collab/src/ui/modal/collab_switch_row.dart';
 import 'support/fake_link_web_platform.dart';
 
 /// Creates a real [kind] resource and authority projection, initially [locked].

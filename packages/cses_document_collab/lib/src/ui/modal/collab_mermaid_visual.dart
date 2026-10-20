@@ -8,7 +8,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 /// 组件拥有平台视图和去抖定时器；Flutter 移除视图时释放原生资源，Controller 无 dispose API。
 ///
 /// ```dart
-/// import 'package:cses_document_collab/src/editor/collab_mermaid_visual.dart';
+/// import 'package:cses_document_collab/src/ui/modal/collab_mermaid_visual.dart';
 /// import 'package:flutter/material.dart';
 /// Widget preview() => const CollabMermaidVisual(source: 'flowchart LR\nA-->B');
 /// ```

@@ -1,16 +1,16 @@
-import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
 import 'package:cses_document_collab/src/model/collab_color_palette.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// 正文、块背景、边框与线条共用的色板；只在点击时回调，不修改借用的颜色。
 /// 父级持有权威选区和权限；本组件串行等待保存，捕获失败并显示提示。
 ///
 /// ```dart
+/// import 'package:cses_document_collab/src/ui/modal/collab_color_picker.dart';
 /// import 'package:flutter/material.dart';
-/// import 'package:cses_document_collab/src/editor/collab_color_picker.dart';
 /// import 'package:cses_document_collab/src/model/collab_color_palette.dart';
 /// final picker = CollabColorPicker(
 ///   keyPrefix: 'example-color', selection: const CollabColorSelection('#123456'),

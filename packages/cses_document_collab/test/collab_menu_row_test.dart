@@ -1,10 +1,12 @@
 import 'dart:ui' show SemanticsAction, Tristate;
-
-import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_menu_row.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal_colors.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal_theme.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_switch_row.dart';
 
 /// 验证 Row 菜单的输入、可用性、主题和开关独立命中契约。
 void main() {

@@ -1,8 +1,6 @@
-import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'dart:convert';
-
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
@@ -11,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_menu_row.dart';
 
 /// 真实正文面板、会议/任务共享转换及文档仅保留行内形式的交互回归。
 void main() {

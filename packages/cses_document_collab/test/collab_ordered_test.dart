@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
@@ -9,6 +7,7 @@ import 'package:cses_document_collab/src/editor/collab_ordered_marker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_popover.dart';
 
 /// 验证正式编号投影、桌面预设和 AppFlowy 标记扩展，不连接真实服务或写业务文档。
 void main() {

@@ -1,5 +1,3 @@
-import 'package:cses_document_collab/src/editor/collab_link_preview.dart';
-import 'package:cses_document_collab/src/editor/collab_embedded_page.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_link_actions.dart';
@@ -21,6 +19,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metalink/metalink.dart';
 import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_embedded_page.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_link_preview.dart';
 import 'support/fake_link_web_platform.dart';
 
 /// Returns metadata from fixture HTML for original [url], without external requests.

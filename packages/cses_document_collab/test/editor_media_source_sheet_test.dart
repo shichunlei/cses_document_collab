@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/model/editor_media_upload.dart';
@@ -11,6 +9,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal_field.dart';
 
 const _image = EditorLocalFile(
   path: '/tmp/photo.png',

@@ -1,15 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui' as ui;
-
-import 'package:cses_document_collab/src/editor/collab_emoji_picker.dart';
 import 'package:cses_document_collab/src/model/collab_emoji_catalog.dart';
-import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_bottom_sheet.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_emoji_picker.dart';
 
 /// 验证桌面同源目录、中文/英文搜索、完整肤色序列、惰性浏览与底部弹窗约束。
 void main() {
