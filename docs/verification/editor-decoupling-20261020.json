@@ -1,0 +1,106 @@
+{
+  "date": "2026-10-20",
+  "scope": "编辑会话与同步适配解耦；离线制图复用原移动编辑操作",
+  "versions": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.23",
+    "desktop_declared": "0.11.22",
+    "desktop_yarn_locked": "0.11.22",
+    "desktop_installed": "0.11.17",
+    "historical_pnpm_lock": "0.2.78",
+    "desktop_upgraded": false,
+    "review": "对应随包技能、MIGRATIONS、格式/事务实现；版本组合未变，不宣称其余上游差异已适配"
+  },
+  "architecture": {
+    "editor_core": "DocumentEditorController拥有EditorState/CollabParagraphTyping/事务订阅与历史，不创建Rust文档、SQLite或网关。",
+    "synchronization": "AppFlowyBlockEditorAdapter可借用编辑会话；身份准备→默认格式→模型保护→输入继承→发布顺序保持。远端project跳过本地输入/回送，保留原有远端历史失效策略。",
+    "ownership": "默认旧适配器自建会话仍由适配器释放；借用会话解绑后继续可编辑。CollabController先等投影、卸载绑定再等待editor.close。",
+    "services": "新的会话显式绑定实例端口；本地制图不继承活动协同文档服务，关闭后保留自身终态上下文。裸EditorState/旧适配器保留未公开导出的兼容解析器。",
+    "view": "DocumentEditorView借用EditorState及可选滚动控制器，两个页面共用正文、T/Aa/布局/添加与划词菜单；既有覆盖editorState的页面消费者继续兼容。",
+    "image": "移除原独立格式栏。保留局部字号并入Aa，尺寸/模板/完整picture预览与PNG入口保持。字号面板使用稳定父上下文并拒绝撤权后重新授权的旧会话。"
+  },
+  "image_capabilities": {
+    "enabled": [
+      "正文/H1-H4",
+      "引用/有序/无序/待办",
+      "加粗/斜体/下划线/删除线/行内代码",
+      "局部字号/字色/文字背景",
+      "左/中/右/两端对齐",
+      "下一段样式",
+      "本地撤销/重做",
+      "复制/剪切/纯文本粘贴/全选",
+      "模板预览与PNG"
+    ],
+    "hidden_and_guarded": [
+      "复杂块和嵌入对象",
+      "上下标",
+      "缩进",
+      "块背景/边框",
+      "分散对齐"
+    ],
+    "limits": "沿用100000 UTF16/500平面块、PNG宽256-2160/高8192/1200万像素；未扩展复杂块导出。"
+  },
+  "validation": {
+    "full_package": {
+      "passed": 1461,
+      "failed": 43,
+      "status": "未全量通过；失败集合与此前HEAD隔离基线相同，无新增失败",
+      "comparison": "editor-decoupling-20261020/baseline-comparison.json",
+      "log": "/tmp/editor-decoupling-latest-full.jsonl"
+    },
+    "terminal_regression": {
+      "passed": 11,
+      "scope": "独立编辑/解绑/防回送、关闭后服务隔离、本地剪贴板、共用菜单与字号撤权后恢复仍拒绝旧面板",
+      "log": "/tmp/editor-decoupling-terminal-tests.log"
+    },
+    "package_analyze": {
+      "items": 19,
+      "status": "No issues found",
+      "log": "/tmp/editor-decoupling-latest-analyze.log"
+    },
+    "consumer_tests": {
+      "passed": 58,
+      "log": "/tmp/editor-decoupling-consumer-tests.log"
+    },
+    "consumer_analyze": {
+      "items": 2,
+      "status": "No issues found",
+      "log": "/tmp/editor-decoupling-consumer-analyze.log"
+    },
+    "png_preview": {
+      "tests_passed": 2,
+      "font": "Arial Unicode.ttf (local test only)",
+      "files": [
+        "editor-decoupling-20261020/preview.png",
+        "editor-decoupling-20261020/generated.png"
+      ],
+      "log": "/tmp/editor-decoupling-preview-test.log"
+    },
+    "android_debug_build": {
+      "status": "通过，包含最终字号权限保护补丁",
+      "log": "/tmp/editor-decoupling-delivery-build.log"
+    },
+    "diff_check": "passed",
+    "terminal_analyze": {
+      "items": 2,
+      "status": "No issues found",
+      "log": "/tmp/editor-decoupling-terminal-analyze.log"
+    }
+  },
+  "limitations": [
+    "未在本轮执行Android/iOS真机、真实输入法或在线桌面双向验收",
+    "复杂块的业务展示与部分旧服务组件继续沿用单原生文档兼容路径，本轮未迁移其全部宿主业务",
+    "全包43项既有开关/锁操作/几何测试失败保留，未借架构改动清理无关问题",
+    "PNG保存相册/分享和跨启动本地草稿持久化未新增；本地制图仍为本次内存会话"
+  ],
+  "artifacts": {
+    "apk": {
+      "path": "build/app/outputs/flutter-apk/app-debug.apk",
+      "sha256": "229336c5ce9a892df2b255fc1f888cb1ac84f8ca8631e38199b5d9439a00b479"
+    },
+    "generated_png": {
+      "path": "docs/verification/editor-decoupling-20261020/generated.png",
+      "sha256": "42975b8af4fbe71ca6225e05e7a860937cde75cbff872aaedd344f7eacefbb0f"
+    }
+  }
+}

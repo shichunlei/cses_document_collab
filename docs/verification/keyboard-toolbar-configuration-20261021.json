@@ -1,0 +1,131 @@
+{
+  "date": "2026-10-21",
+  "scope": "键盘工具栏全部入口按实例可配置，复用更多→常用动作，不扩大块适配状态。",
+  "api": {
+    "configuration": "EditorConfiguration.keyboardToolbarItems",
+    "type": "Iterable<EditorKeyboardToolbarItem>构造参数，复制为不可变有序List字段。",
+    "items": [
+      "addBlock",
+      "blockType",
+      "textStyle",
+      "blockLayout",
+      "image",
+      "mention",
+      "closeKeyboard",
+      "link",
+      "video",
+      "attachment",
+      "audio",
+      "bookmark",
+      "embed",
+      "juejin",
+      "figma",
+      "table",
+      "callout",
+      "meeting",
+      "formula",
+      "mermaid",
+      "inlineFormula",
+      "divider",
+      "pageDivider",
+      "spreadsheet",
+      "multiTable",
+      "mindMap"
+    ],
+    "defaults": [
+      "addBlock",
+      "blockType",
+      "textStyle",
+      "blockLayout",
+      "image",
+      "mention",
+      "closeKeyboard"
+    ],
+    "empty_list": "隐藏整条工具栏，不留高度或分隔线。",
+    "ordering": "普通入口按传入顺序，closeKeyboard固定右侧；重复项抛ArgumentError。",
+    "removed": [
+      "showAddBlockButton"
+    ],
+    "compatibility": "旧布尔参数、字段及调用已移除，不保留兼容。",
+    "capability_intersection": "展示仍受blocks/inlineFormats/layout能力限制，业务服务由实例宿主注入。",
+    "placeholders": [
+      "spreadsheet",
+      "multiTable",
+      "mindMap"
+    ]
+  },
+  "implementation": [
+    "键盘直达和更多常用共享动作目录、模态流程及插入命令。",
+    "媒体、表格、高亮、会议、公式、Mermaid、提及、分割线及分页符复用原操作。",
+    "异步结果检查上下文、稳定书签、权限撤销、宿主身份及块锁；等待事务与焦点恢复，失效会话不向新宿主报错。",
+    "回归覆盖空工具栏、单入口、顺序、切换文档、直达插入/取消/撤销及会议回调撤权。",
+    "协同默认保持原七项；本地能力、预览及无同步/导出/块锁保持。"
+  ],
+  "blockcraft": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "desktop_project": "/System/Volumes/Data/workspace/cses-client",
+    "latest_query": "npm view @ccc/blockcraft dist-tags.latest --fetch-retries=0 --fetch-timeout=10000",
+    "latest": "0.11.23",
+    "declared": "0.11.24",
+    "yarn_locked": "0.11.24",
+    "installed": "0.11.17",
+    "historical_pnpm_locked": "0.2.78",
+    "reviewed": "复用本轮已读.17/.23/.24随包技能、MIGRATIONS及实现，复读.24工具栏个人偏好契约和迁移。",
+    "upgrade": false,
+    "remaining": "版本不一致保留，.24只读链接单击导航尚未同步；本地模板预览继续屏蔽交互，其他差异沿既有记录。"
+  },
+  "validation": {
+    "package_targeted": {
+      "passed": 124,
+      "failed": 0,
+      "files": [
+        "editor_toolbar_configuration_test.dart",
+        "editor_shortcut_toolbar_test.dart",
+        "offline_all_blocks_test.dart",
+        "image_composer_operations_test.dart",
+        "image_composer_page_test.dart",
+        "mobile_selection_menu_test.dart",
+        "editor_configuration_test.dart"
+      ],
+      "log": "keyboard-toolbar-configuration-20261021/keyboard-toolbar-config-final-tests.log"
+    },
+    "host_consumer": {
+      "passed": 2,
+      "failed": 0,
+      "file": "test/collab_demo_page_test.dart",
+      "log": "keyboard-toolbar-configuration-20261021/keyboard-toolbar-config-consumer-tests.log"
+    },
+    "static_analysis": {
+      "package_targeted": "No issues found",
+      "consumer_targeted": "No issues found",
+      "logs": [
+        "keyboard-toolbar-configuration-20261021/keyboard-toolbar-config-final-analyze.log",
+        "keyboard-toolbar-configuration-20261021/keyboard-toolbar-config-consumer-analyze.log"
+      ]
+    },
+    "common_action_regression": {
+      "passed": 97,
+      "failed": 10,
+      "new_failures": 0,
+      "files": [
+        "editor_modal_focus_test.dart",
+        "collab_page_divider_test.dart",
+        "collab_formula_test.dart",
+        "collab_callout_block_test.dart",
+        "collab_meeting_test.dart",
+        "collab_divider_test.dart",
+        "collab_mermaid_test.dart"
+      ],
+      "comparison": "keyboard-toolbar-configuration-20261021/common-regression-comparison.json",
+      "note": "10项公式锁失败全部匹配既有基线，该扩展组没有全部通过。"
+    },
+    "format": "仅本次修改的手写Dart文件。",
+    "old_api_search": "全仓Dart和README无旧参数/helper残留，历史记录保留。",
+    "diff_check": "passed"
+  },
+  "limits": [
+    "未重跑全包、原生构建、手机/iOS或在线桌面双端；此前手机仅验收旧加号配置，不代表本轮全部直达入口。",
+    "电子表格、多维表格、思维导图仍只提示暂未支持，不创建数据。",
+    "41块统计仍为13已适配/14部分支持/1结构支持/13未适配。"
+  ]
+}

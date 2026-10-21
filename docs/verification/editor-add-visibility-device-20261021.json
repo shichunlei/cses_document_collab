@@ -1,0 +1,57 @@
+{
+  "date": "2026-10-21",
+  "device": {
+    "model": "V2353A",
+    "android": "14",
+    "display": "1080x2408",
+    "control": "ADB实际点击/输入，原生截图与UIAutomator层级核对"
+  },
+  "procedure": [
+    "临时在Demo首页调用showCollabImageComposer时显式注入EditorConfiguration(showAddBlockButton: true)，构建/安装并运行手机",
+    "显式true新建离线会话，调起系统键盘并输入样本文字；点击加号打开添加块面板",
+    "临时改为false，热重载宿主后关闭原会话，从首页重新创建离线会话；不对冻结的旧会话热替换配置",
+    "false下核对按钮排列、普通输入、T菜单切换H1、Aa菜单、布局菜单及图片添加面板",
+    "移除临时注入恢复原调用，热重载并重新创建默认会话；确认默认加号重新显示"
+  ],
+  "results": {
+    "explicit_true": "passed，加号显示且可打开添加面板",
+    "explicit_false": "passed，加号及其无障碍入口消失，其余按钮左移，无占位",
+    "remaining_buttons": "块类型、文字样式、对齐与缩进、插入图片、@用户和收起键盘均保留；人员选择业务未验收",
+    "hidden_operations": "H1实际生效；Aa、布局和图片面板可打开；未验收所有格式选项或实际图片上传/加载",
+    "default_restored": "passed，新建默认会话加号重新显示",
+    "existing_session_isolation": "宿主热重载false后原true会话仍显示加号，符合配置按会话冻结"
+  },
+  "checks": {
+    "device_cases": "全部上述范围通过",
+    "package_tests_passed": 2,
+    "package_test_file": "packages/cses_document_collab/test/editor_toolbar_configuration_test.dart",
+    "consumer_analyze": "No issues found",
+    "android_debug_build": "passed，81.0s",
+    "installed": true,
+    "format": "临时涉及宿主文件已运行dart format，输出0changed",
+    "git_diff_check": "passed"
+  },
+  "artifacts": {
+    "shown": "editor-add-visibility-device-20261021/shown-toolbar.png",
+    "hidden": "editor-add-visibility-device-20261021/hidden-toolbar.png",
+    "default": "editor-add-visibility-device-20261021/restored-toolbar.png",
+    "apk": "build/app/outputs/flutter-apk/app-debug.apk",
+    "apk_sha256": "bfbd1c69569745430985b6c125aee5b0ba1358f0cf5e0fbbbd7b7ec5e90f26a2",
+    "note": "安装APK为显式true构建；false及恢复默认的场景通过Flutter热重载后重新创建会话验证，未分别生成三个发布包"
+  },
+  "blockcraft": {
+    "latest": "0.11.23",
+    "desktop_declared": "0.11.24",
+    "yarn_locked": "0.11.24",
+    "installed": "0.11.17",
+    "pnpm_historical": "0.2.78",
+    "registry": "http://npm.runtongqiuben.com/",
+    "checked": "本轮在桌面项目配置仓库实时查询；沿用已读取.23/.24随包L0/迁移及实现，复读.24工具栏技能和MIGRATIONS；版本差异见前轮记录，未升级依赖"
+  },
+  "limitations": [
+    "仅Android手机、键盘加号展示和相关入口冒烟，不是全部块/属性或iOS验收",
+    "未重新运行全包回归或线上桌面双向联调",
+    "协同首页用于进入离线路由，未修改已有协同文档正文",
+    "生产Dart源码未保留测试用true/false覆盖，手机最后为默认显示加号状态"
+  ]
+}

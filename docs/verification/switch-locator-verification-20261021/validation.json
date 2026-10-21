@@ -1,0 +1,371 @@
+{
+  "target": {
+    "counts": {
+      "success": 134,
+      "error": 6
+    },
+    "skipped": 0,
+    "failures": [
+      {
+        "file": "collab_task_card_test.dart",
+        "test": "desktop layout with labels, avatars, times and stats at 390.0/1.0",
+        "result": "error",
+        "skipped": false
+      },
+      {
+        "file": "collab_task_card_test.dart",
+        "test": "desktop layout with labels, avatars, times and stats at 320.0/1.5",
+        "result": "error",
+        "skipped": false
+      },
+      {
+        "file": "collab_meeting_card_test.dart",
+        "test": "four rows keep geometry across loading at 320.0/1.0",
+        "result": "error",
+        "skipped": false
+      },
+      {
+        "file": "collab_meeting_card_test.dart",
+        "test": "four rows keep geometry across loading at 320.0/2.2",
+        "result": "error",
+        "skipped": false
+      },
+      {
+        "file": "collab_meeting_card_test.dart",
+        "test": "four rows keep geometry across loading at 390.0/1.0",
+        "result": "error",
+        "skipped": false
+      },
+      {
+        "file": "collab_meeting_card_test.dart",
+        "test": "four rows keep geometry across loading at 390.0/2.2",
+        "result": "error",
+        "skipped": false
+      }
+    ],
+    "completion": [
+      {
+        "success": false,
+        "type": "done",
+        "time": 11887
+      }
+    ],
+    "raw_log": "/tmp/switch-locator-target-20261021.jsonl"
+  },
+  "full": {
+    "counts": {
+      "success": 1585,
+      "error": 6
+    },
+    "skipped": 0,
+    "failures": [
+      {
+        "file": "collab_task_card_test.dart",
+        "test": "desktop layout with labels, avatars, times and stats at 390.0/1.0",
+        "result": "error",
+        "skipped": false
+      },
+      {
+        "file": "collab_task_card_test.dart",
+        "test": "desktop layout with labels, avatars, times and stats at 320.0/1.5",
+        "result": "error",
+        "skipped": false
+      },
+      {
+        "file": "collab_meeting_card_test.dart",
+        "test": "four rows keep geometry across loading at 320.0/1.0",
+        "result": "error",
+        "skipped": false
+      },
+      {
+        "file": "collab_meeting_card_test.dart",
+        "test": "four rows keep geometry across loading at 320.0/2.2",
+        "result": "error",
+        "skipped": false
+      },
+      {
+        "file": "collab_meeting_card_test.dart",
+        "test": "four rows keep geometry across loading at 390.0/1.0",
+        "result": "error",
+        "skipped": false
+      },
+      {
+        "file": "collab_meeting_card_test.dart",
+        "test": "four rows keep geometry across loading at 390.0/2.2",
+        "result": "error",
+        "skipped": false
+      }
+    ],
+    "completion": [
+      {
+        "success": false,
+        "type": "done",
+        "time": 55464
+      }
+    ],
+    "raw_log": "/tmp/switch-locator-full-20261021.jsonl"
+  },
+  "previous_37_results": [
+    {
+      "file": "collab_resource_lock_test.dart",
+      "test": "attachment menu toggles lock and preserves content/history",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_resource_lock_test.dart",
+      "test": "bookmark menu toggles lock and preserves content/history",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_divider_panel_test.dart",
+      "test": "lock switch alone toggles, hides actions, and unlock restores live editing",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_resource_lock_test.dart",
+      "test": "embed menu toggles lock and preserves content/history",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_resource_lock_test.dart",
+      "test": "figma-embed menu toggles lock and preserves content/history",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_resource_lock_test.dart",
+      "test": "juejin-embed menu toggles lock and preserves content/history",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_resource_lock_test.dart",
+      "test": "web lock choice rejects a changed source before dismissal",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_line_lock_layout_test.dart",
+      "test": "divider uses a titleless lock card at 320.0/1.0 and restores on unlock",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_line_lock_layout_test.dart",
+      "test": "divider uses a titleless lock card at 280.0/2.2 and restores on unlock",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_line_lock_layout_test.dart",
+      "test": "divider uses a titleless lock card at 390.0/1.5 and restores on unlock",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_line_lock_layout_test.dart",
+      "test": "page-divider uses a titleless lock card at 320.0/1.0 and restores on unlock",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_line_lock_layout_test.dart",
+      "test": "page-divider uses a titleless lock card at 280.0/2.2 and restores on unlock",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_line_lock_layout_test.dart",
+      "test": "page-divider uses a titleless lock card at 390.0/1.5 and restores on unlock",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_menu_row_test.dart",
+      "test": "only the switch toggles; labels, icon and row padding do nothing",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_menu_row_test.dart",
+      "test": "disabled switch keeps its value and has no activation action",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_menu_row_test.dart",
+      "test": "menu and switch wrap without overflow: false/220.0/1.0",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_menu_row_test.dart",
+      "test": "menu and switch wrap without overflow: false/280.0/2.2",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_menu_row_test.dart",
+      "test": "menu and switch wrap without overflow: false/320.0/2.2",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_menu_row_test.dart",
+      "test": "menu and switch wrap without overflow: false/390.0/1.5",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_menu_row_test.dart",
+      "test": "menu and switch wrap without overflow: true/220.0/1.0",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_menu_row_test.dart",
+      "test": "menu and switch wrap without overflow: true/280.0/2.2",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_menu_row_test.dart",
+      "test": "menu and switch wrap without overflow: true/320.0/2.2",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_menu_row_test.dart",
+      "test": "menu and switch wrap without overflow: true/390.0/1.5",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_block_lock_test.dart",
+      "test": "paragraph menu lock=false toggles without copy content",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_block_lock_test.dart",
+      "test": "paragraph menu lock=true toggles without copy content",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_block_lock_test.dart",
+      "test": "code menu lock=false toggles without copy content",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_block_lock_test.dart",
+      "test": "code menu lock=true toggles without copy content",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "locked formula view and unlock permissions alice/false/false/false",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "locked formula view and unlock permissions bob/false/false/false",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "locked formula view and unlock permissions alice/true/false/false",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "locked formula view and unlock permissions bob/false/true/false",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "locked formula view and unlock permissions alice/false/false/true",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "locked formula view and unlock permissions alice/false/true/true",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "lock after dirty confirmation invalidates old session even after unlock",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "dirty lock choice saves=true failure=false executes after dismissal",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "dirty lock choice saves=false failure=false executes after dismissal",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "dirty lock choice saves=true failure=true executes after dismissal",
+      "result": "success",
+      "skipped": false
+    }
+  ],
+  "previous_37_all_passed": true,
+  "unexpected_new_failures": [],
+  "checks": {
+    "target_analysis": "No issues found",
+    "diff_check": "passed",
+    "remaining_material_switch_finders_in_package_tests": 0,
+    "production_code_modified": false,
+    "test_assertions_removed_or_skipped": false,
+    "version_latest": "0.11.23",
+    "desktop_declared_yarn": "0.11.24",
+    "desktop_installed": "0.11.17",
+    "desktop_pnpm_historical": "0.2.78"
+  },
+  "remaining_layout_observations": {
+    "task": {
+      "cases": 2,
+      "expected_actual_right_edges": [
+        [
+          363,
+          354
+        ],
+        [
+          293,
+          284
+        ]
+      ],
+      "code": "34px IconButton centers a 16px icon; 9px inset matches the failures"
+    },
+    "meeting": {
+      "cases": 4,
+      "cause": "loading child fixed at 70px wide; loaded text width changes with label and text scale; button full Rect differs",
+      "card_size_assertion_before_failure": "passed",
+      "other_assertions_after_failure": "not reached; not claimed as passed"
+    }
+  },
+  "limits": [
+    "Widget tests with fixture host data; no physical device/server validation",
+    "Six geometry tests remain failing; no UI implementation or geometry expectations altered"
+  ]
+}

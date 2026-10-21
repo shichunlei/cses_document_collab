@@ -1,0 +1,117 @@
+{
+  "date": "2026-10-20",
+  "scope": "cses_document_collab包内纯本地文字制图首版",
+  "entry": "package:cses_document_collab/cses_document_collab.dart → showCollabImageComposer",
+  "versions": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.23",
+    "desktop_declared": "0.11.22",
+    "desktop_yarn_locked": "0.11.22",
+    "desktop_installed": "0.11.17",
+    "historical_pnpm_lock": "0.2.78",
+    "review": "复读此前本轮三版随包技能/MIGRATIONS及.23排版实现；未升级桌面或声明全量兼容"
+  },
+  "features": [
+    "独立内存EditorState与输入/格式历史",
+    "段落/标题/引用/有序无序待办",
+    "局部字号、加粗斜体下划线、字色与对齐",
+    "复制/剪切/纯文本粘贴/全选；剪贴板迟到保护",
+    "五种程序生成离线渐变模板",
+    "固定宽度/方向/locale/主题字体快照",
+    "预览和PNG共用完整ui.Picture，不截取视口",
+    "PNG字节返回；路由完整退场及图像/编辑器释放后Future完成"
+  ],
+  "isolation": {
+    "native_initialization": false,
+    "database": false,
+    "network_session": false,
+    "active_native_document_test": "现有CollabController.localDraft活动原生文档的身份/正文/服务绑定保持，生成关闭后仍可编辑；正式控制器行为由既有原生回归覆盖",
+    "compiled_native_plugin": "包的既有原生插件仍随宿主构建"
+  },
+  "bounds": {
+    "text_utf16": 100000,
+    "flat_blocks": 500,
+    "logical_preview_height": 12000,
+    "png_width_px": [
+      256,
+      2160
+    ],
+    "png_max_height_px": 8192,
+    "png_max_pixels": 12000000
+  },
+  "validation": {
+    "targeted_tests": {
+      "passed": 139,
+      "new_tests": 14,
+      "existing_related_tests": 125,
+      "files": [
+        "local_editor_controller_test.dart",
+        "local_editor_input_test.dart",
+        "image_composer_export_test.dart",
+        "image_composer_page_test.dart",
+        "image_composer_native_isolation_test.dart",
+        "paragraph_style_test.dart",
+        "paragraph_input_test.dart",
+        "heading_typography_test.dart",
+        "collab_controller_native_test.dart"
+      ],
+      "command": "flutter test --no-pub <以上文件> --reporter expanded",
+      "notes": "中文输入连接分别按Android/iOS外观运行；真实PNG解码与长图末段红色像素验证；最后局部加粗切换/返回定位调整重跑页面2项、粘贴早期大小检查重跑控制器6项，均通过"
+    },
+    "package_target_analyze": {
+      "items": 18,
+      "status": "No issues found",
+      "notes": "所有新增lib目录、必要关联手写文件与测试；新制图目录启用unawaited_futures/discarded_futures，继承已有生命周期规则"
+    },
+    "full_package": {
+      "passed": 1457,
+      "failed": 43,
+      "baseline_passed": 1443,
+      "baseline_failed": 43,
+      "failure_sets_identical": true,
+      "comparison": "image-composer-20261020/baseline-comparison.json",
+      "notes": "全包未通过；43项失败逐项在隔离HEAD快照复现，涉及既有开关/资源锁/卡片几何等。其后纯本地小调整单独复验页面和控制器。"
+    },
+    "consumer_tests": {
+      "passed": 57,
+      "command": "flutter test --no-pub --reporter expanded（仓库根目录）"
+    },
+    "consumer_analyze": {
+      "status": "8 existing depend_on_referenced_packages infos",
+      "files_unchanged": true,
+      "packages": [
+        "bot_toast",
+        "dio",
+        "file_picker",
+        "mime",
+        "path_provider"
+      ],
+      "notes": "均位于未改动的宿主lib/test，未为本需求批量修复直接依赖声明"
+    },
+    "android_debug_build": {
+      "status": "passed",
+      "command": "flutter build apk --debug --no-pub",
+      "artifact": "build/app/outputs/flutter-apk/app-debug.apk",
+      "notes": "宿主APK编译验证，不代表已新增宿主菜单入口或真机人工验收"
+    },
+    "format": "所有修改手写Dart文件已定向format；历史120列文件按既有列宽处理并保留无关格式",
+    "diff_check": "git diff --check passed"
+  },
+  "visual_evidence": {
+    "preview": "image-composer-20261020/preview.png",
+    "png": "image-composer-20261020/generated.png",
+    "source": "公开入口Widget回归真实渲染和实际PNG返回；仅可视检查测试通过可选环境变量加载本机Arial Unicode字体，不随应用分发",
+    "sha256": {
+      "preview.png": "11a2d0d7c2979f5fff98827e4000e23733cf367a7405fa45ef801f91e49bb1e9",
+      "generated.png": "42975b8af4fbe71ca6225e05e7a860937cde75cbff872aaedd344f7eacefbb0f"
+    }
+  },
+  "remaining": [
+    "真实Android/iOS输入法人工验收",
+    "iOS平台构建和真机验证",
+    "自定义字体目录、字距/行距设置入口、格式刷",
+    "富文本剪贴板、复杂块/行内对象、嵌套容器",
+    "跨启动草稿、相册保存/分享/消息发送由后续需求或宿主提供",
+    "本轮未做线上桌面双端/重连/持久化ACK验收，不改变41块及13/14/1/13统计"
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "target": {
+    "counts": {
+      "success": 54
+    },
+    "failures": [],
+    "skipped": 0,
+    "completion": [
+      {
+        "success": true,
+        "type": "done",
+        "time": 7013
+      }
+    ],
+    "raw_log": "/tmp/layout-test-update-target-20261021.jsonl"
+  },
+  "full": {
+    "counts": {
+      "success": 1591
+    },
+    "failures": [],
+    "skipped": 0,
+    "completion": [
+      {
+        "success": true,
+        "type": "done",
+        "time": 57482
+      }
+    ],
+    "raw_log": "/tmp/layout-test-update-full-20261021.jsonl"
+  },
+  "previous_six_results": [
+    {
+      "file": "collab_task_card_test.dart",
+      "test": "desktop layout with labels, avatars, times and stats at 390.0/1.0",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_task_card_test.dart",
+      "test": "desktop layout with labels, avatars, times and stats at 320.0/1.5",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_meeting_card_test.dart",
+      "test": "four rows keep geometry across loading at 320.0/1.0",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_meeting_card_test.dart",
+      "test": "four rows keep geometry across loading at 320.0/2.2",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_meeting_card_test.dart",
+      "test": "four rows keep geometry across loading at 390.0/1.0",
+      "result": "success",
+      "skipped": false
+    },
+    {
+      "file": "collab_meeting_card_test.dart",
+      "test": "four rows keep geometry across loading at 390.0/2.2",
+      "result": "success",
+      "skipped": false
+    }
+  ],
+  "previous_six_all_passed": true,
+  "scope": {
+    "test_files": 2,
+    "production_change": "DartDoc correction only; no rendering, hit testing or business logic changed",
+    "task_expectation": "34px button aligned to content; 16px icon centered within it",
+    "meeting_expectation": "fixed row/card geometry and right/top/bottom anchors; width adapts to label/text scale with minimum size, slot containment and no label clipping"
+  },
+  "checks": {
+    "target_analysis": "No issues found",
+    "dart_format": "two test files formatted; existing production file format verified unchanged",
+    "diff_check": "passed"
+  },
+  "versions": {
+    "latest": "0.11.23",
+    "desktop_declared_yarn": "0.11.24",
+    "desktop_installed": "0.11.17",
+    "historical_pnpm": "0.2.78",
+    "upgraded": false
+  },
+  "limits": [
+    "Widget/full package tests, no new physical device, Android/iOS build or actual server collaboration validation"
+  ],
+  "files": [
+    {
+      "path": "packages/cses_document_collab/test/collab_task_card_test.dart",
+      "sha256": "a3d01d8a7e0b857b0cfd04026786f31fc4b0871be0f7d40c29d2588e6f7410d7"
+    },
+    {
+      "path": "packages/cses_document_collab/test/collab_meeting_card_test.dart",
+      "sha256": "a2e4952c31869f3ef8ab13827f044311ffded085844dea6f006da09cee7a086d"
+    },
+    {
+      "path": "packages/cses_document_collab/lib/src/editor/collab_meeting_block.dart",
+      "sha256": "9c4105f42445dec8a337de4385ca23ad964592f4cd12b9c1cb6ba8212bcbf123"
+    }
+  ]
+}

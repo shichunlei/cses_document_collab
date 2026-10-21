@@ -1,0 +1,3 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/service/shortcuts/command_shortcut_events/legacy_html_paste_regression_test.dart
+00:00 +0: consecutive HTML paste advances caret and preserves suffix and formatting
+00:00 +1: All tests passed!

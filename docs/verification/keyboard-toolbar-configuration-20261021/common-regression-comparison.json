@@ -1,0 +1,51 @@
+{
+  "visible_counts": {
+    "success": 97,
+    "error": 10
+  },
+  "failures": [
+    {
+      "file": "collab_formula_test.dart",
+      "test": "locked formula view and unlock permissions alice/false/false/false"
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "locked formula view and unlock permissions bob/false/false/false"
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "locked formula view and unlock permissions alice/true/false/false"
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "locked formula view and unlock permissions bob/false/true/false"
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "locked formula view and unlock permissions alice/false/false/true"
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "locked formula view and unlock permissions alice/false/true/true"
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "lock after dirty confirmation invalidates old session even after unlock"
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "dirty lock choice saves=true failure=false executes after dismissal"
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "dirty lock choice saves=false failure=false executes after dismissal"
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "dirty lock choice saves=true failure=true executes after dismissal"
+    }
+  ],
+  "baseline": "../offline-all-blocks-20261020/baseline-comparison.json",
+  "new_failures": [],
+  "scope": "Only the seven targeted common-action regression files; not a full package run."
+}

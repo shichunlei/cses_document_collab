@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-20",
+  "change": "EditorConfiguration.showAddBlockButton默认true；false仅隐藏键盘顶部加号，不修改块目录/命令/其他插入入口",
+  "configuration": "showCollabImageComposer(context: context, editorConfig: EditorConfiguration(showAddBlockButton: false))",
+  "tests": {
+    "package_target": {
+      "passed": 38,
+      "failed": 0,
+      "files": [
+        "editor_toolbar_configuration_test.dart",
+        "editor_configuration_test.dart",
+        "image_composer_operations_test.dart",
+        "editor_shortcut_toolbar_test.dart",
+        "image_composer_page_test.dart"
+      ],
+      "log": "editor-add-visibility-20261020/package-tests.log"
+    },
+    "consumer": {
+      "passed": 2,
+      "failed": 0,
+      "file": "test/collab_demo_page_test.dart",
+      "log": "/tmp/editor-add-visibility-consumer-tests.log"
+    },
+    "static_analysis": "包内6项目标范围与宿主2项目标范围均No issues found",
+    "format": "修改手写文件已格式化",
+    "diff_check": "passed"
+  },
+  "blockcraft": {
+    "latest": "0.11.23",
+    "declared": "0.11.24",
+    "yarn": "0.11.24",
+    "installed": "0.11.17",
+    "pnpm_historical": "0.2.78",
+    "registry": "http://npm.runtongqiuben.com/",
+    "upgraded": false,
+    "review": "沿用同日离线真机验收已读.23/.24技能、MIGRATIONS及源码，补读.24工具栏个人展示偏好契约，版本差异见offline-all-blocks-device-20261020.json"
+  },
+  "limitations": [
+    "实例配置在会话创建后冻结，不支持运行中热替换",
+    "本轮未重新构建/安装手机或运行全包回归；纯展示配置不改变默认手机行为",
+    "正式块统计41及13/14/1/13保持，未扩大块适配范围"
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "date": "2026-10-21",
+  "device": {
+    "model": "V2353A",
+    "android": "14",
+    "screen": "1080x2408",
+    "method": "真实Android设备运行IntegrationTest，使用实际视口及平台，检查最终RenderParagraph字符颜色并保存截图"
+  },
+  "scope": "仅验收已修复的协同正文默认黑色及局部颜色；不实施页面背景或根默认字色同步",
+  "procedure": [
+    "构建正常Demo debug APK并保存独立副本，ADB覆盖安装成功",
+    "停止应用后为协同SQLite及Flutter偏好共4个文件保存私有备份与SHA-256，备份仅留在本机临时目录",
+    "从宿主使用flutter drive --keep-app-running运行包内设备入口，正文仅在内存中建立，复用生产协同适配器和DocumentEditorView，不登录、不访问线上文档",
+    "逐一检查左对齐编辑、左对齐预览、分散对齐编辑、分散对齐预览，并分别保存PNG",
+    "结束后以保存的正常APK再次adb install -r覆盖恢复；校验设备已安装APK的SHA-256与正常构建一致，启动普通Demo入口"
+  ],
+  "results": {
+    "device_cases_passed": 4,
+    "device_cases_failed": 0,
+    "default_black": "普通正文、标题、引用、无序/有序/待办文字均为黑色",
+    "local_colors": "CSS红色、ARGB蓝色、显式白色、链接蓝色均保留；白字的测试字符背景为深灰以便截图辨认",
+    "container_inheritance": "高亮块子文字继承绿色，局部红色覆盖仍有效",
+    "data_projection": "四组均确认正文JSON不变且没有本地同步回调",
+    "screenshots": "已目视核对普通编辑和分散预览的真实设备截图，四组PNG全部保存",
+    "first_attempt": "颜色断言均通过，但后三组截图失败：框架在每组tearDown还原截图表面。修正测试入口为每组重新转换后，完整重跑四组全部通过；未改生产颜色代码。"
+  },
+  "checks": {
+    "android_debug_build": "passed，57.9秒，普通入口lib/main.dart",
+    "installed_and_restored": true,
+    "installed_apk_sha256": "5dc3e293b9822357e3b137dd308a5e63ce7cff82c0eeac2ed29c2863f50369fe",
+    "local_data": "验收后及普通APK覆盖恢复后，原4个SQLite/偏好文件的SHA-256均与验收前完全一致；未卸载或清除应用数据",
+    "widget_regressions": "修改可复用测试注册入口后，原8项Android/iOS平台变体全部通过",
+    "analysis": "包内对测试、设备入口与截图驱动执行flutter analyze --no-pub，No issues found",
+    "format": "3个手写Dart文件运行dart format --page-width=120",
+    "diff_check": "git diff --check通过"
+  },
+  "reproduce": {
+    "working_directory": "仓库根目录",
+    "command": "TEXT_COLOR_SCREENSHOTS=build/document-text-color-screenshots flutter drive --driver packages/cses_document_collab/test_driver/document_text_color_driver.dart --target packages/cses_document_collab/integration_test/document_text_color_test.dart -d ANDROID_DEVICE_ID --no-pub --keep-app-running",
+    "restore": "使用普通Demo APK执行adb install -r覆盖恢复，禁止卸载或清除数据"
+  },
+  "artifacts": {
+    "apk": "build/app/outputs/flutter-apk/app-debug.apk",
+    "build_log": "default-text-color-device-20261021/build.log",
+    "device_log": "default-text-color-device-20261021/device.log",
+    "left_edit": "default-text-color-device-20261021/left-edit.png",
+    "left_preview": "default-text-color-device-20261021/left-preview.png",
+    "distributed_edit": "default-text-color-device-20261021/distributed-edit.png",
+    "distributed_preview": "default-text-color-device-20261021/distributed-preview.png"
+  },
+  "blockcraft": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.23",
+    "declared_and_yarn": "0.11.24",
+    "installed": "0.11.17",
+    "pnpm_historical": "0.2.78",
+    "review": "本轮实时查询配置仓库并核对声明/锁/安装版；复读对应随包L0、主题技能及MIGRATIONS，安装版与.23/.24发布产物root颜色绑定SHA-256一致；未升级桌面依赖，其余差异仍按前轮待办"
+  },
+  "limitations": [
+    "只验证Android手机及所列颜色场景，不覆盖iOS或全部块/属性",
+    "测试正文模拟既有字符格式，未登录或读取用户的在线文档，未进行线上桌面双向联调",
+    "本轮无生产Dart、Rust或桥接接口改动；未重跑全包测试，先前161项包内及2项宿主结果见default-text-color-20261021.json",
+    "页面背景同步仍暂不做；41块及13/14/1/13统计保持，其他工作区改动保留"
+  ]
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "file": "collab_task_card_test.dart",
+    "test": "desktop layout with labels, avatars, times and stats at 390.0/1.0",
+    "result": "error",
+    "skipped": false
+  },
+  {
+    "file": "collab_task_card_test.dart",
+    "test": "desktop layout with labels, avatars, times and stats at 320.0/1.5",
+    "result": "error",
+    "skipped": false
+  },
+  {
+    "file": "collab_meeting_card_test.dart",
+    "test": "four rows keep geometry across loading at 320.0/1.0",
+    "result": "error",
+    "skipped": false
+  },
+  {
+    "file": "collab_meeting_card_test.dart",
+    "test": "four rows keep geometry across loading at 320.0/2.2",
+    "result": "error",
+    "skipped": false
+  },
+  {
+    "file": "collab_meeting_card_test.dart",
+    "test": "four rows keep geometry across loading at 390.0/1.0",
+    "result": "error",
+    "skipped": false
+  },
+  {
+    "file": "collab_meeting_card_test.dart",
+    "test": "four rows keep geometry across loading at 390.0/2.2",
+    "result": "error",
+    "skipped": false
+  }
+]

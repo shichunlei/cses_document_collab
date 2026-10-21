@@ -1,0 +1,188 @@
+{
+  "counts": {
+    "success": 1659,
+    "error": 43
+  },
+  "visible_counts": {
+    "success": 1465,
+    "error": 43
+  },
+  "failures": [
+    {
+      "file": "collab_resource_lock_test.dart",
+      "test": "attachment menu toggles lock and preserves content/history"
+    },
+    {
+      "file": "collab_resource_lock_test.dart",
+      "test": "bookmark menu toggles lock and preserves content/history"
+    },
+    {
+      "file": "collab_resource_lock_test.dart",
+      "test": "embed menu toggles lock and preserves content/history"
+    },
+    {
+      "file": "collab_divider_panel_test.dart",
+      "test": "lock switch alone toggles, hides actions, and unlock restores live editing"
+    },
+    {
+      "file": "collab_resource_lock_test.dart",
+      "test": "figma-embed menu toggles lock and preserves content/history"
+    },
+    {
+      "file": "collab_resource_lock_test.dart",
+      "test": "juejin-embed menu toggles lock and preserves content/history"
+    },
+    {
+      "file": "collab_resource_lock_test.dart",
+      "test": "web lock choice rejects a changed source before dismissal"
+    },
+    {
+      "file": "collab_line_lock_layout_test.dart",
+      "test": "divider uses a titleless lock card at 320.0/1.0 and restores on unlock"
+    },
+    {
+      "file": "collab_line_lock_layout_test.dart",
+      "test": "divider uses a titleless lock card at 280.0/2.2 and restores on unlock"
+    },
+    {
+      "file": "collab_task_card_test.dart",
+      "test": "desktop layout with labels, avatars, times and stats at 390.0/1.0"
+    },
+    {
+      "file": "collab_line_lock_layout_test.dart",
+      "test": "divider uses a titleless lock card at 390.0/1.5 and restores on unlock"
+    },
+    {
+      "file": "collab_task_card_test.dart",
+      "test": "desktop layout with labels, avatars, times and stats at 320.0/1.5"
+    },
+    {
+      "file": "collab_line_lock_layout_test.dart",
+      "test": "page-divider uses a titleless lock card at 320.0/1.0 and restores on unlock"
+    },
+    {
+      "file": "collab_line_lock_layout_test.dart",
+      "test": "page-divider uses a titleless lock card at 280.0/2.2 and restores on unlock"
+    },
+    {
+      "file": "collab_line_lock_layout_test.dart",
+      "test": "page-divider uses a titleless lock card at 390.0/1.5 and restores on unlock"
+    },
+    {
+      "file": "collab_menu_row_test.dart",
+      "test": "only the switch toggles; labels, icon and row padding do nothing"
+    },
+    {
+      "file": "collab_menu_row_test.dart",
+      "test": "disabled switch keeps its value and has no activation action"
+    },
+    {
+      "file": "collab_menu_row_test.dart",
+      "test": "menu and switch wrap without overflow: false/220.0/1.0"
+    },
+    {
+      "file": "collab_menu_row_test.dart",
+      "test": "menu and switch wrap without overflow: false/280.0/2.2"
+    },
+    {
+      "file": "collab_menu_row_test.dart",
+      "test": "menu and switch wrap without overflow: false/320.0/2.2"
+    },
+    {
+      "file": "collab_menu_row_test.dart",
+      "test": "menu and switch wrap without overflow: false/390.0/1.5"
+    },
+    {
+      "file": "collab_menu_row_test.dart",
+      "test": "menu and switch wrap without overflow: true/220.0/1.0"
+    },
+    {
+      "file": "collab_menu_row_test.dart",
+      "test": "menu and switch wrap without overflow: true/280.0/2.2"
+    },
+    {
+      "file": "collab_menu_row_test.dart",
+      "test": "menu and switch wrap without overflow: true/320.0/2.2"
+    },
+    {
+      "file": "collab_menu_row_test.dart",
+      "test": "menu and switch wrap without overflow: true/390.0/1.5"
+    },
+    {
+      "file": "collab_meeting_card_test.dart",
+      "test": "four rows keep geometry across loading at 320.0/1.0"
+    },
+    {
+      "file": "collab_meeting_card_test.dart",
+      "test": "four rows keep geometry across loading at 320.0/2.2"
+    },
+    {
+      "file": "collab_meeting_card_test.dart",
+      "test": "four rows keep geometry across loading at 390.0/1.0"
+    },
+    {
+      "file": "collab_meeting_card_test.dart",
+      "test": "four rows keep geometry across loading at 390.0/2.2"
+    },
+    {
+      "file": "collab_block_lock_test.dart",
+      "test": "paragraph menu lock=false toggles without copy content"
+    },
+    {
+      "file": "collab_block_lock_test.dart",
+      "test": "paragraph menu lock=true toggles without copy content"
+    },
+    {
+      "file": "collab_block_lock_test.dart",
+      "test": "code menu lock=false toggles without copy content"
+    },
+    {
+      "file": "collab_block_lock_test.dart",
+      "test": "code menu lock=true toggles without copy content"
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "locked formula view and unlock permissions alice/false/false/false"
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "locked formula view and unlock permissions bob/false/false/false"
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "locked formula view and unlock permissions alice/true/false/false"
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "locked formula view and unlock permissions bob/false/true/false"
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "locked formula view and unlock permissions alice/false/false/true"
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "locked formula view and unlock permissions alice/false/true/true"
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "lock after dirty confirmation invalidates old session even after unlock"
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "dirty lock choice saves=true failure=false executes after dismissal"
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "dirty lock choice saves=false failure=false executes after dismissal"
+    },
+    {
+      "file": "collab_formula_test.dart",
+      "test": "dirty lock choice saves=true failure=true executes after dismissal"
+    }
+  ],
+  "baseline": "../editor-decoupling-20261020/baseline-comparison.json",
+  "failure_sets_identical": true,
+  "new_failures": [],
+  "missing_baseline": []
+}

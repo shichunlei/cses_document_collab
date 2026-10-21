@@ -1,0 +1,71 @@
+{
+  "date": "2026-10-20",
+  "scope": [
+    "按实例冻结EditorConfiguration，公开本地块/字符格式目录，保留原协同预设",
+    "块、非连续标题级别、字号值、字符格式、对齐、下一段样式、行高写入与容量可配置；菜单、快捷输入、命令及事务使用同一配置",
+    "移除PNG编码、结果模型、输出尺寸与首页结果路由；保留编辑和模板预览",
+    "预览深复制正文，关闭输入、选区与块交互；保留滚动，不创建块锁服务",
+    "投影隔离限于同步改树阶段，修复同步回放后立即本地输入漏发"
+  ],
+  "blockcraft": {
+    "latest": "0.11.23",
+    "declared": "0.11.22",
+    "yarn": "0.11.22",
+    "installed": "0.11.17",
+    "pnpm": "0.2.78",
+    "registry": "http://npm.runtongqiuben.com/",
+    "upgraded": false
+  },
+  "tests": {
+    "local_features": {
+      "passed": 22,
+      "failed": 0,
+      "files": {
+        "editor_configuration_test.dart": 4,
+        "local_editor_controller_test.dart": 6,
+        "local_editor_input_test.dart": 2,
+        "document_editor_controller_test.dart": 4,
+        "image_composer_page_test.dart": 3,
+        "image_composer_operations_test.dart": 2,
+        "image_composer_native_isolation_test.dart": 1
+      }
+    },
+    "package_full": {
+      "passed": 1465,
+      "failed": 43,
+      "new_failures": [],
+      "baseline_comparison": "editor-configuration-20261020/baseline-comparison.json",
+      "command": "flutter test --no-pub --reporter json",
+      "log": "/tmp/editor-config-final-full-tests.jsonl",
+      "sha256": "384a6125886c28fa55e01dd52e73a91bc8957c8dd201a14b9eba50079c2217ba"
+    },
+    "consumer": {
+      "passed": 58,
+      "failed": 0,
+      "log": "/tmp/editor-config-final-consumer-tests.log"
+    },
+    "checks": [
+      "package targeted flutter analyze: No issues found",
+      "consumer targeted flutter analyze: No issues found",
+      "Dart format touched handwritten files",
+      "git diff --check",
+      "global search: removed API/renderer paths have no live Dart references"
+    ]
+  },
+  "android": {
+    "debug_apk": "/System/Volumes/Data/workspace/mobile-collab-demo/build/app/outputs/flutter-apk/app-debug.apk",
+    "sha256": "f01a73c3737baf2e1ece9f1ec333922d4fa869e577dcd672a9cd202c47abd0e2",
+    "build_passed": true
+  },
+  "limitations": [
+    "本地可选目录目前仅六类扁平文字块；配置不会自动实现图片、表格或其他业务块",
+    "预览是可滚动正文组件，未接入完整长图截图或任何图片导出",
+    "草稿仅在页面会话内存中保留，无持久化、协同或服务端",
+    "未新增真机/iOS或线上双端验收；保留43项既有失败，不把全包测试报告为全通过"
+  ],
+  "logs": {
+    "package_analyze": "editor-configuration-20261020/package_analyze.log",
+    "consumer_analyze": "editor-configuration-20261020/consumer_analyze.log",
+    "android_build": "editor-configuration-20261020/android_build.log"
+  }
+}

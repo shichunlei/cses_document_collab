@@ -1,0 +1,792 @@
+{
+  "package": {
+    "counts_excluding_hidden_hooks_and_loaders": {
+      "success": 1534,
+      "error": 45
+    },
+    "done": [
+      {
+        "success": false,
+        "type": "done",
+        "time": 66438
+      }
+    ],
+    "failures": [
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "attachment menu toggles lock and preserves content/history",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 94,
+            "error": "Test failed. See exception logs above.\nThe test description was: attachment menu toggles lock and preserves content/history",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 9856
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "bookmark menu toggles lock and preserves content/history",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 123,
+            "error": "Test failed. See exception logs above.\nThe test description was: bookmark menu toggles lock and preserves content/history",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 10767
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "embed menu toggles lock and preserves content/history",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 133,
+            "error": "Test failed. See exception logs above.\nThe test description was: embed menu toggles lock and preserves content/history",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 11405
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "lock switch alone toggles, hides actions, and unlock restores live editing",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 71,
+            "error": "Test failed. See exception logs above.\nThe test description was: lock switch alone toggles, hides actions, and unlock restores live editing",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 11494
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "figma-embed menu toggles lock and preserves content/history",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 148,
+            "error": "Test failed. See exception logs above.\nThe test description was: figma-embed menu toggles lock and preserves content/history",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 12016
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "juejin-embed menu toggles lock and preserves content/history",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 189,
+            "error": "Test failed. See exception logs above.\nThe test description was: juejin-embed menu toggles lock and preserves content/history",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 12578
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "web lock choice rejects a changed source before dismissal",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 338,
+            "error": "Test failed. See exception logs above.\nThe test description was: web lock choice rejects a changed source before dismissal",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 14146
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "image editor uses original menus and isolates host services",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 415,
+            "error": "Test failed. See exception logs above.\nThe test description was: image editor uses original menus and isolates host services",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 20090
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "instance configuration filters original menus and shortcuts",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 501,
+            "error": "Test failed. See exception logs above.\nThe test description was: instance configuration filters original menus and shortcuts",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 20870
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "divider uses a titleless lock card at 320.0/1.0 and restores on unlock",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 497,
+            "error": "Test failed. See exception logs above.\nThe test description was: divider uses a titleless lock card at 320.0/1.0 and restores on unlock",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 23409
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "divider uses a titleless lock card at 280.0/2.2 and restores on unlock",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 629,
+            "error": "Test failed. See exception logs above.\nThe test description was: divider uses a titleless lock card at 280.0/2.2 and restores on unlock",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 24631
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "desktop layout with labels, avatars, times and stats at 390.0/1.0",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 617,
+            "error": "Test failed. See exception logs above.\nThe test description was: desktop layout with labels, avatars, times and stats at 390.0/1.0",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 25011
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "desktop layout with labels, avatars, times and stats at 320.0/1.5",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 661,
+            "error": "Test failed. See exception logs above.\nThe test description was: desktop layout with labels, avatars, times and stats at 320.0/1.5",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 25656
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "divider uses a titleless lock card at 390.0/1.5 and restores on unlock",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 649,
+            "error": "Test failed. See exception logs above.\nThe test description was: divider uses a titleless lock card at 390.0/1.5 and restores on unlock",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 25778
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "page-divider uses a titleless lock card at 320.0/1.0 and restores on unlock",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 696,
+            "error": "Test failed. See exception logs above.\nThe test description was: page-divider uses a titleless lock card at 320.0/1.0 and restores on unlock",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 26846
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "page-divider uses a titleless lock card at 280.0/2.2 and restores on unlock",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 708,
+            "error": "Test failed. See exception logs above.\nThe test description was: page-divider uses a titleless lock card at 280.0/2.2 and restores on unlock",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 27079
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "page-divider uses a titleless lock card at 390.0/1.5 and restores on unlock",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 711,
+            "error": "Test failed. See exception logs above.\nThe test description was: page-divider uses a titleless lock card at 390.0/1.5 and restores on unlock",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 27329
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "only the switch toggles; labels, icon and row padding do nothing",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1121,
+            "error": "Test failed. See exception logs above.\nThe test description was: only the switch toggles; labels, icon and row padding do nothing",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 39827
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "disabled switch keeps its value and has no activation action",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1139,
+            "error": "Test failed. See exception logs above.\nThe test description was: disabled switch keeps its value and has no activation action",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 39945
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "menu and switch wrap without overflow: false/220.0/1.0",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1153,
+            "error": "Test failed. See exception logs above.\nThe test description was: menu and switch wrap without overflow: false/220.0/1.0",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 40402
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "menu and switch wrap without overflow: false/280.0/2.2",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1158,
+            "error": "Test failed. See exception logs above.\nThe test description was: menu and switch wrap without overflow: false/280.0/2.2",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 40564
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "menu and switch wrap without overflow: false/320.0/2.2",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1165,
+            "error": "Test failed. See exception logs above.\nThe test description was: menu and switch wrap without overflow: false/320.0/2.2",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 40715
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "menu and switch wrap without overflow: false/390.0/1.5",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1168,
+            "error": "Test failed. See exception logs above.\nThe test description was: menu and switch wrap without overflow: false/390.0/1.5",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 40862
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "menu and switch wrap without overflow: true/220.0/1.0",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1175,
+            "error": "Test failed. See exception logs above.\nThe test description was: menu and switch wrap without overflow: true/220.0/1.0",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 41053
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "menu and switch wrap without overflow: true/280.0/2.2",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1178,
+            "error": "Test failed. See exception logs above.\nThe test description was: menu and switch wrap without overflow: true/280.0/2.2",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 41222
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "menu and switch wrap without overflow: true/320.0/2.2",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1184,
+            "error": "Test failed. See exception logs above.\nThe test description was: menu and switch wrap without overflow: true/320.0/2.2",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 41355
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "menu and switch wrap without overflow: true/390.0/1.5",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1189,
+            "error": "Test failed. See exception logs above.\nThe test description was: menu and switch wrap without overflow: true/390.0/1.5",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 41524
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "four rows keep geometry across loading at 320.0/1.0",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1693,
+            "error": "Test failed. See exception logs above.\nThe test description was: four rows keep geometry across loading at 320.0/1.0",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 55619
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "four rows keep geometry across loading at 320.0/2.2",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1704,
+            "error": "Test failed. See exception logs above.\nThe test description was: four rows keep geometry across loading at 320.0/2.2",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 55890
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "four rows keep geometry across loading at 390.0/1.0",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1712,
+            "error": "Test failed. See exception logs above.\nThe test description was: four rows keep geometry across loading at 390.0/1.0",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 56109
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "four rows keep geometry across loading at 390.0/2.2",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1715,
+            "error": "Test failed. See exception logs above.\nThe test description was: four rows keep geometry across loading at 390.0/2.2",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 56317
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "paragraph menu lock=false toggles without copy content",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1698,
+            "error": "Test failed. See exception logs above.\nThe test description was: paragraph menu lock=false toggles without copy content",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 56904
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "paragraph menu lock=true toggles without copy content",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1727,
+            "error": "Test failed. See exception logs above.\nThe test description was: paragraph menu lock=true toggles without copy content",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 57210
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "code menu lock=false toggles without copy content",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1735,
+            "error": "Test failed. See exception logs above.\nThe test description was: code menu lock=false toggles without copy content",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 57496
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "code menu lock=true toggles without copy content",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1748,
+            "error": "Test failed. See exception logs above.\nThe test description was: code menu lock=true toggles without copy content",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 57808
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "locked formula view and unlock permissions alice/false/false/false",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1949,
+            "error": "Test failed. See exception logs above.\nThe test description was: locked formula view and unlock permissions alice/false/false/false",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 62975
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "locked formula view and unlock permissions bob/false/false/false",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1959,
+            "error": "Test failed. See exception logs above.\nThe test description was: locked formula view and unlock permissions bob/false/false/false",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 63495
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "locked formula view and unlock permissions alice/true/false/false",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1963,
+            "error": "Test failed. See exception logs above.\nThe test description was: locked formula view and unlock permissions alice/true/false/false",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 63801
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "locked formula view and unlock permissions bob/false/true/false",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1967,
+            "error": "Test failed. See exception logs above.\nThe test description was: locked formula view and unlock permissions bob/false/true/false",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 64158
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "locked formula view and unlock permissions alice/false/false/true",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1969,
+            "error": "Test failed. See exception logs above.\nThe test description was: locked formula view and unlock permissions alice/false/false/true",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 64401
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "locked formula view and unlock permissions alice/false/true/true",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1971,
+            "error": "Test failed. See exception logs above.\nThe test description was: locked formula view and unlock permissions alice/false/true/true",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 64668
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "lock after dirty confirmation invalidates old session even after unlock",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1975,
+            "error": "Test failed. See exception logs above.\nThe test description was: lock after dirty confirmation invalidates old session even after unlock",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 65041
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "dirty lock choice saves=true failure=false executes after dismissal",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1985,
+            "error": "Test failed. See exception logs above.\nThe test description was: dirty lock choice saves=true failure=false executes after dismissal",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 65599
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "dirty lock choice saves=false failure=false executes after dismissal",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1987,
+            "error": "Test failed. See exception logs above.\nThe test description was: dirty lock choice saves=false failure=false executes after dismissal",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 65832
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "dirty lock choice saves=true failure=true executes after dismissal",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1988,
+            "error": "Test failed. See exception logs above.\nThe test description was: dirty lock choice saves=true failure=true executes after dismissal",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 66046
+          }
+        ]
+      }
+    ],
+    "raw_log": "/tmp/decoupling-full-review-package-tests.jsonl"
+  },
+  "host": {
+    "counts_excluding_hidden_hooks_and_loaders": {
+      "success": 58
+    },
+    "done": [
+      {
+        "success": true,
+        "type": "done",
+        "time": 13372
+      }
+    ],
+    "failures": [],
+    "raw_log": "/tmp/decoupling-full-review-host-tests.jsonl"
+  },
+  "appflowy": {
+    "counts_excluding_hidden_hooks_and_loaders": {
+      "failure": 1,
+      "success": 913,
+      "error": 1
+    },
+    "done": [
+      {
+        "success": false,
+        "type": "done",
+        "time": 77885
+      }
+    ],
+    "failures": [
+      {
+        "file": "file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/command/text_commands_test.dart",
+        "name": "insertNewLine insert new line preserve direction",
+        "result": "failure",
+        "errors": [
+          {
+            "testID": 1033,
+            "error": "Expected: 'rtl'\n  Actual: <null>\n   Which: not an <Instance of 'String'>\n",
+            "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 473:18  expect\ntest/new/command/text_commands_test.dart 188:7      main.<fn>.<fn>\n",
+            "isFailure": true,
+            "type": "error",
+            "time": 45521
+          }
+        ]
+      },
+      {
+        "file": "package:flutter_test/src/widget_tester.dart",
+        "name": "Copy + paste Presses Command + A in small document and copy text and paste text multiple times",
+        "result": "error",
+        "errors": [
+          {
+            "testID": 1276,
+            "error": "Test failed. See exception logs above.\nThe test description was: Presses Command + A in small document and copy text and paste text multiple times",
+            "stackTrace": "",
+            "isFailure": false,
+            "type": "error",
+            "time": 56461
+          }
+        ]
+      }
+    ],
+    "raw_log": "/tmp/decoupling-full-review-appflowy-tests.jsonl"
+  },
+  "native-regression": {
+    "counts_excluding_hidden_hooks_and_loaders": {
+      "success": 18
+    },
+    "done": [
+      {
+        "success": true,
+        "type": "done",
+        "time": 5129
+      }
+    ],
+    "failures": [],
+    "raw_log": "/tmp/decoupling-full-review-native-regression.jsonl"
+  },
+  "package_baseline_comparison": {
+    "matched_prior_failures": 43,
+    "additional_failures": [
+      {
+        "file": "image_composer_operations_test.dart",
+        "test": "image editor uses original menus and isolates host services",
+        "id": 415
+      },
+      {
+        "file": "image_composer_operations_test.dart",
+        "test": "instance configuration filters original menus and shortcuts",
+        "id": 501
+      }
+    ],
+    "prior_baseline": "docs/verification/offline-all-blocks-20261020/baseline-comparison.json",
+    "warning": "Matching old failure names does not establish that those behaviors are correct."
+  },
+  "review_reproductions": {
+    "expected_safety_assertions_passed": 0,
+    "failed_exposing_defect": 5,
+    "final_log": "probes-final.log",
+    "note": "Intentional failing safety assertions; archived as .dart.txt, not installed in normal test discovery."
+  },
+  "final_diff_check": "passed"
+}

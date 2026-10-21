@@ -1,0 +1,46 @@
+{
+  "date": "2026-10-22",
+  "status": "ready_for_local_commit_with_complete_file_selection",
+  "scope": "entire current worktree; no staging or commit performed",
+  "source_validation": {
+    "method": "SHA-256 comparison with merged latest review/fix/test snapshots",
+    "files_compared": 991,
+    "changed_or_missing": [],
+    "tests_reused_from": "2026-10-21; no test rerun because source/test hashes match"
+  },
+  "validated_tests": {
+    "collab_package": 1591,
+    "appflowy": 919,
+    "host": 58,
+    "rust": 102,
+    "failed": 0
+  },
+  "checks": {
+    "unmerged_entries": false,
+    "diff_check": "passed",
+    "staged_changes": false,
+    "removed_api_symbol_residue_in_active_code": false,
+    "text_credential_pattern_candidates": 0
+  },
+  "documentation_fix": {
+    "ignored_markdown_references_fixed": 8,
+    "log_copies_added": 4,
+    "strategy": "Preserve original ignored logs; link trackable .txt copies with trailing whitespace removed; keep .gitignore unchanged"
+  },
+  "commit_scope_notes": [
+    "Include all new library/test/config files; committing only previously tracked changes produces incomplete imports/exports",
+    "Worktree includes related feature, fork fixes, regressions and verification evidence; do not omit required core/config files when splitting",
+    "Use Chinese commit subject/body; no commit was requested or created"
+  ],
+  "versions": {
+    "registry_latest": "0.11.23",
+    "desktop_declared_yarn": "0.11.24",
+    "desktop_installed": "0.11.17",
+    "historical_pnpm": "0.2.78",
+    "dependency_upgrade": false
+  },
+  "limits": [
+    "Readiness for local Git commit, not new device/online/server/platform-release acceptance",
+    "Host lib/test has 8 existing dependency infos; collab full analysis has one existing close_sinks info; no new issues from the latest changed-file analysis"
+  ]
+}

@@ -1,0 +1,44 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/review_decoupling_probe_test.dart
+00:00 +0: disabled alignment must not disable heading conversion
+00:00 +0 -1: disabled alignment must not disable heading conversion [E]
+  Expected: 'heading'
+    Actual: 'paragraph'
+     Which: is different.
+            Expected: heading
+              Actual: paragraph
+                      ^
+             Differ at offset 0
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/review_decoupling_probe_test.dart 24:7         main.<fn>
+
+00:00 +0 -1: pasting multiline text in code must preserve a single code block
+00:00 +0 -2: pasting multiline text in code must preserve a single code block [E]
+  Expected: an object with length of <1>
+    Actual: [
+              Node:Node(id: fb69B3, type: code, attributes: {delta: [{insert: one}], align: left, cses_collab_indent: 0, bgColor: 0xfff3f4f6}, children: []),
+              Node:Node(id: 1NobXL, type: paragraph, attributes: {delta: [{insert: two}], align: left, cses_collab_indent: 0, bgColor: 0xfff3f4f6}, children: [])
+            ]
+     Which: has length of <2>
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/review_decoupling_probe_test.dart 39:9         main.<fn>
+
+00:00 +0 -2: converting a container must not discard its child content
+00:00 +0 -3: converting a container must not discard its child content [E]
+  Expected: contains 'KEEP'
+    Actual: '{document: {type: page, children: [{type: paragraph, data: {delta: [{insert: Anchor}]}}, {type: paragraph, data: {cses_table_layout: {properties: {"colWidths":[120,120]}}}}]}}'
+     Which: does not contain 'KEEP'
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/review_decoupling_probe_test.dart 64:7         main.<fn>
+
+00:00 +0 -3: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/review_decoupling_probe_test.dart: converting a container must not discard its child content
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/review_decoupling_probe_test.dart: disabled alignment must not disable heading conversion
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/review_decoupling_probe_test.dart: pasting multiline text in code must preserve a single code block

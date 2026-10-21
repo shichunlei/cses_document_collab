@@ -1,0 +1,76 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/review_native_ownership_probe_test.dart
+00:00 +0: (setUpAll)
+00:00 +0: failed controller retry must not send the next owner document
+DocCollab: 编辑器操作失败: Bad state: fixture registration failure
+#0      _ProbeGateway.register (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/review_native_ownership_probe_test.dart:150:28)
+#1      CsesDocCollaborationSession.start (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:167:19)
+#2      CollabController._startSession (package:cses_document_collab/src/controller/collab_controller.dart:373:19)
+#3      CollabController._initialize (package:cses_document_collab/src/controller/collab_controller.dart:256:15)
+<asynchronous suspension>
+#4      Throws._matchFuture (package:matcher/src/expect/throws_matcher.dart:103:19)
+<asynchronous suspension>
+#5      _expect.<anonymous closure> (package:matcher/src/expect/expect.dart:153:17)
+<asynchronous suspension>
+#6      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#7      expectLater.<anonymous closure> (package:flutter_test/src/widget_tester.dart:508:19)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/review_native_ownership_probe_test.dart:41:7)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#11     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:00 +0 -1: failed controller retry must not send the next owner document [E]
+  Expected: empty
+    Actual: [
+              'AQaeleWoCwAIARdjc2VzX21vYmlsZV9ibG9ja19vcmRlcgF3Bmc1R25OLSgBFmNzZXNfbW9iaWxlX2Jsb2NrX21ldGEGZzVHbk4tAXcJcGFyYWdyYXBoKAEZY3Nlc19tb2JpbGVfYmxvY2tfY2hlY2tlZAZnNUduTi0BeSgBF2NzZXNfbW9iaWxlX2Jsb2NrX2FsaWduBmc1R25OLQF3BGxlZnQoARhjc2VzX21vYmlsZV9ibG9ja19pbmRlbnQGZzVHbk4tAX0ABAEdY3Nlc19tb2JpbGVfYmxvY2tfdGV4dDpnNUduTi0SUFJJVkFURV9ORVhUX09XTkVSAA=='
+            ]
+  A controller whose initialization released ownership cannot publish another owner state; the observed payload equals next owner: true
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/review_native_ownership_probe_test.dart 55:7   main.<fn>
+
+00:00 +0 -1: permission registration failure must not poison transitions or cleanup
+DocCollab: Demo 协同资源释放失败: Bad state: fixture registration failure
+#0      _ProbeGateway.register (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/review_native_ownership_probe_test.dart:150:28)
+#1      CsesDocCollaborationSession.start (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:167:19)
+#2      CollabController._startSession (package:cses_document_collab/src/controller/collab_controller.dart:373:19)
+#3      CollabController.setEditable.<anonymous closure> (package:cses_document_collab/src/controller/collab_controller.dart:293:63)
+<asynchronous suspension>
+#4      Throws._matchFuture (package:matcher/src/expect/throws_matcher.dart:103:19)
+<asynchronous suspension>
+#5      _expect.<anonymous closure> (package:matcher/src/expect/expect.dart:153:17)
+<asynchronous suspension>
+#6      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#7      expectLater.<anonymous closure> (package:flutter_test/src/widget_tester.dart:508:19)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/review_native_ownership_probe_test.dart:89:9)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#11     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:00 +0 -2: permission registration failure must not poison transitions or cleanup [E]
+  Expected: {'restored': true, 'registrations': 3, 'listenerAfterClose': false}
+    Actual: {'restored': false, 'registrations': 2, 'listenerAfterClose': true}
+     Which: at location ['restored'] is <false> instead of <true>
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/review_native_ownership_probe_test.dart 99:9   main.<fn>
+
+00:00 +0 -2: (tearDownAll)
+00:00 +0 -2: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/review_native_ownership_probe_test.dart: failed controller retry must not send the next owner document
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/review_native_ownership_probe_test.dart: permission registration failure must not poison transitions or cleanup

@@ -1,0 +1,69 @@
+import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/cses_document_collab.dart';
+import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
+import 'package:cses_document_collab/src/model/collab_table.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+/// 审查专用安全期望复现；失败表示当前实现破坏对应契约，不修改生产代码。
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  test('disabled alignment must not disable heading conversion', () async {
+    final local = LocalEditorController(
+      configuration: EditorConfiguration(alignments: const []),
+    );
+    try {
+      final state = local.editorState;
+      state.selection = Selection.collapsed(Position(path: [0]));
+      await applyBlockShortcut(
+        state,
+        state.selection!,
+        'heading',
+        headingLevel: 2,
+      );
+      expect(state.document.first!.type, 'heading');
+    } finally {
+      await local.close();
+    }
+  });
+
+  test(
+    'pasting multiline text in code must preserve a single code block',
+    () async {
+      final local = LocalEditorController();
+      try {
+        final state = local.editorState;
+        state.selection = Selection.collapsed(Position(path: [0]));
+        await applyBlockShortcut(state, state.selection!, 'code');
+        await local.pasteText('one\ntwo');
+        expect(state.document.root.children, hasLength(1));
+        expect(state.document.first!.type, 'code');
+        expect(state.document.first!.delta!.toPlainText(), 'one\ntwo');
+      } finally {
+        await local.close();
+      }
+    },
+  );
+
+  test('converting a container must not discard its child content', () async {
+    final local = LocalEditorController(initialText: 'Anchor');
+    try {
+      final state = local.editorState;
+      final cell = await insertCollabTable(
+        state,
+        Selection.collapsed(Position(path: [0])),
+      );
+      state.selection = cell;
+      final leaf = state.getNodeAtPath(cell!.start.path)!;
+      await state.apply(state.transaction..insertText(leaf, 0, 'KEEP'));
+      final table = state.document.root.children.firstWhere(
+        (node) => node.type == 'table',
+      );
+      state.selection = Selection.collapsed(Position(path: table.path));
+      await local.convert('paragraph');
+      expect(state.document.toJson().toString(), contains('KEEP'));
+    } finally {
+      await local.close();
+    }
+  });
+}

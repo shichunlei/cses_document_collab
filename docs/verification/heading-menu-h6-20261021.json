@@ -1,0 +1,67 @@
+{
+  "date": "2026-10-21",
+  "change": "移动端添加面板和T类型菜单统一仅提供H1～H6，T仍从H1～H3渐进披露至H6。",
+  "implementation": [
+    "两处菜单共用配置集合与1～6的交集，并按级别排序。",
+    "H6不继续披露H7；进入历史H7～H9同样只提供至H6。",
+    "Schema、正文存储、历史数据渲染与程序化能力保持1～9；没有降级已有文档，headingLevels配置文档明确区分菜单范围。"
+  ],
+  "blockcraft": {
+    "latest": "0.11.23",
+    "declared": "0.11.24",
+    "yarn_locked": "0.11.24",
+    "installed": "0.11.17",
+    "pnpm_historical": "0.2.78",
+    "registry": "http://npm.runtongqiuben.com/",
+    "checked": "在桌面配置仓库实时查询latest，读取声明/锁/安装；复读对应随包迁移、工具栏技能和受影响实现。未升级依赖。",
+    "remaining": "版本不一致及.24只读正文链接单击导航等待同步项保持。"
+  },
+  "verification": {
+    "package_tests": {
+      "passed": 158,
+      "failed": 0,
+      "files": [
+        "editor_toolbar_configuration_test.dart",
+        "editor_shortcut_toolbar_test.dart",
+        "editor_configuration_test.dart",
+        "mobile_selection_menu_test.dart",
+        "offline_all_blocks_test.dart",
+        "image_composer_operations_test.dart",
+        "heading_typography_test.dart"
+      ],
+      "scope": "H6实际插入/转换、渐进菜单、受限配置、本地/共用工具栏、历史H9原样保留、标题最终渲染及原菜单回归。",
+      "log": "heading-menu-h6-20261021/heading-menu-h6-tests.log"
+    },
+    "analyze": "四个目标手写文件No issues found。",
+    "format": "已格式化修改的手写Dart文件。",
+    "diff_check": "passed",
+    "device": {
+      "model": "V2353A",
+      "android": "14",
+      "mode": "现有Debug会话Flutter热更新，未重新构建APK。",
+      "add_menu": "横向滑至末尾后以H6结束，UI层级及截图核对无H7/H8/H9。",
+      "type_menu": "从H3渐进至H6，实际选择H6后下一项为有序列表，未出现H7～H9。",
+      "add_labels": [
+        "H1\n标题 1",
+        "H2\n标题 2",
+        "H3\n标题 3",
+        "H4\n标题 4",
+        "H5\n标题 5",
+        "H6\n标题 6"
+      ],
+      "type_visible_labels": [
+        "6 级标题"
+      ],
+      "screenshots": [
+        "heading-menu-h6-20261021/add-menu.png",
+        "heading-menu-h6-20261021/add-end.png",
+        "heading-menu-h6-20261021/type-menu.png"
+      ]
+    }
+  },
+  "limits": [
+    "未重跑全包、原生构建、iOS或在线桌面双端。",
+    "仅移动菜单展示上限调整，现有1～9数据兼容与程序化能力保留。",
+    "41块状态仍为13已适配/14部分支持/1结构支持/13未适配。"
+  ]
+}

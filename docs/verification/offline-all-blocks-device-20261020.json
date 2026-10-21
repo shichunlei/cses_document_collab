@@ -1,0 +1,143 @@
+{
+  "date": "2026-10-20",
+  "device": {
+    "model": "FIN AL60a",
+    "android": "12",
+    "api": 31,
+    "display": "1084x2412",
+    "interaction": "ADB实际点击/滑动/长按与系统键盘输入，截图和UIAutomator层级核对"
+  },
+  "build": {
+    "apk": "build/app/outputs/flutter-apk/app-debug.apk",
+    "sha256": "2787817175b4c49221e303976dc90c6312569d5ed72aa6bdc629c98256a98aea",
+    "installed": true,
+    "started": true
+  },
+  "passed": [
+    {
+      "case": "离线入口和输入",
+      "evidence": [
+        "offline-no-network.png",
+        "patched-preview-no-keyboard.png"
+      ],
+      "notes": "登录后关闭手机Wi-Fi和移动数据，离线入口仍可进入；普通文字编辑与预览成功，完成后恢复两项网络开关"
+    },
+    {
+      "case": "原菜单与标题历史",
+      "evidence": [
+        "headings-h9.png",
+        "heading.png",
+        "undo-heading.png",
+        "redo-heading.png"
+      ],
+      "notes": "H1标题显示/撤销回正文/重做恢复，横向菜单可见H9；未逐一设置所有标题"
+    },
+    {
+      "case": "表格",
+      "evidence": [
+        "patched-table-edited.png",
+        "patched-cell-menu.png",
+        "final-table-preview.png"
+      ],
+      "notes": "默认2×2插入，单元格文字编辑，打开关闭单元格设置，预览保留正文且无单元格操作按钮；未实际执行合并拆分"
+    },
+    {
+      "case": "公式",
+      "evidence": [
+        "formula-created.png"
+      ],
+      "notes": "原新建面板输入x+y并创建显示；安装修复前验证，公式实现本轮未修改"
+    },
+    {
+      "case": "代码",
+      "evidence": [
+        "code-multiline.png",
+        "code-more-no-lock.png"
+      ],
+      "notes": "创建代码块，实际点击手机键盘回车产生两行和逻辑行号；更多菜单提供下方插入、复制、删除，没有锁定入口；下方插入已执行"
+    },
+    {
+      "case": "高亮和划词格式",
+      "evidence": [
+        "callout-edited.png",
+        "selection-menu.png",
+        "selection-format.png",
+        "formatted-callout.png"
+      ],
+      "notes": "高亮块插入与正文编辑，长按选中文字，原格式面板加粗并设置紫色，预览保持"
+    },
+    {
+      "case": "待办只读边界",
+      "evidence": [
+        "preview-todo-inert.png",
+        "todo-toggled-edit.png"
+      ],
+      "notes": "编辑态可勾选，预览态点击不修改勾选状态"
+    },
+    {
+      "case": "Mermaid与滚动",
+      "evidence": [
+        "mermaid-create-sheet.png",
+        "preview-complex-top.png",
+        "preview-complex-scrolled.png"
+      ],
+      "notes": "断网时创建默认flowchart，面板与正文显示开始→完成图形；预览可滚动到后续高亮/代码/待办，操作按钮隐藏"
+    },
+    {
+      "case": "模板和预览",
+      "evidence": [
+        "final-warm-preview.png",
+        "preview-inert.png",
+        "final-keyboard-state.txt"
+      ],
+      "notes": "切换暖阳模板，预览无光标/选区/编辑工具栏/更多/锁标/图片导出；点击内容并发送文字不修改文档；表格菜单关闭再预览确认系统键盘收起"
+    },
+    {
+      "case": "媒体能力边界",
+      "evidence": [
+        "image-link-only.png"
+      ],
+      "notes": "默认空服务时图片面板仅显示网络链接，不显示上传入口；取消不会插入图片"
+    }
+  ],
+  "issue_fixed": {
+    "symptom": "从表格单元格菜单回到正文再切换预览后，系统键盘仍显示，模板选择条因viewInsets被隐藏",
+    "change": "源编辑视图卸载完成后显式等待TextInput.hide，保留页面/会话失效检查；未改变原协同编辑器",
+    "files": [
+      "packages/cses_document_collab/lib/src/image_composer/image_composer_page.dart",
+      "packages/cses_document_collab/test/image_composer_page_test.dart"
+    ],
+    "retested_on_device": true
+  },
+  "checks": {
+    "target_tests_passed": 25,
+    "target_tests_failed": 0,
+    "target_analyze": "No issues found",
+    "android_build": "passed",
+    "git_diff_check": "passed",
+    "full_package_rerun": false,
+    "previous_full_suite": "offline-all-blocks-20261020.json，1485通过/43既有失败；本轮键盘补丁仅跑25项目标回归，不重新宣称全包通过"
+  },
+  "blockcraft": {
+    "registry_latest": "0.11.23",
+    "desktop_declared": "0.11.24",
+    "yarn_locked": "0.11.24",
+    "installed": "0.11.17",
+    "pnpm_historical": "0.2.78",
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest_query_succeeded": true,
+    "version_metadata_0_11_24": "npm view返回404；锁定tarball可获取且SHA-512与yarn.lock一致",
+    "reviewed": "读取0.11.23/0.11.24随包L0、MIGRATIONS、测试指南及受影响格式/只读链接实现；安装版沿用此前已读迁移/实现核对",
+    "upgrade_performed": false,
+    "remaining_difference": "0.11.24只读链接单击导航未移植；本地模板预览继续按用户要求屏蔽正文交互"
+  },
+  "limitations": [
+    "本轮为现有离线能力的代表性手机冒烟验证，未逐一验证全部25种块的每个属性/动作，也未验收所有标题级别",
+    "会议、任务、KR、人员选择/详情需要显式业务服务，本轮未注入，不视为业务流程验收通过",
+    "图片/音视频/附件的实际加载、播放、上传、网页嵌入和外部跳转未在本轮手机验证",
+    "表格合并拆分、跨容器粘贴、全部快捷输入、所有格式组合未逐项真机验证",
+    "离线页面仍是会话内存草稿，无持久化；宿主登录后的首页有离线入口，未实现登录前入口",
+    "未做iOS、在线协同桌面双向或服务端持久化验收；统计41及13/14/1/13保持"
+  ],
+  "final_state": "网络已恢复（Wi-Fi=1，移动数据=1），手机停留在暖阳模板预览，无系统键盘"
+}

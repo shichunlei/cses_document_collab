@@ -1,0 +1,182 @@
+{
+  "date": "2026-10-21",
+  "scope": "收起键盘退出配置，并在Android手机验收键盘菜单配置、排序、隐藏及表格/公式/Mermaid直达。",
+  "supersedes": "keyboard-toolbar-configuration-20261021.json中将closeKeyboard纳入配置的规则；此前记录保留为历史。",
+  "api": {
+    "configuration": "EditorConfiguration.keyboardToolbarItems",
+    "items": [
+      "addBlock",
+      "blockType",
+      "textStyle",
+      "blockLayout",
+      "image",
+      "mention",
+      "link",
+      "video",
+      "attachment",
+      "audio",
+      "bookmark",
+      "embed",
+      "juejin",
+      "figma",
+      "table",
+      "callout",
+      "meeting",
+      "formula",
+      "mermaid",
+      "inlineFormula",
+      "divider",
+      "pageDivider",
+      "spreadsheet",
+      "multiTable",
+      "mindMap"
+    ],
+    "removed": [
+      "EditorKeyboardToolbarItem.closeKeyboard",
+      "StableMobileToolbar.showCloseKeyboardButton"
+    ],
+    "automatic_dismiss": "有实际可显示的菜单时自动显示收起键盘，始终固定最右侧，不属于横向滚动菜单；[]或全部被能力过滤则隐藏整条。",
+    "defaults": [
+      "addBlock",
+      "blockType",
+      "textStyle",
+      "blockLayout",
+      "image",
+      "mention"
+    ],
+    "default_ui": "原六个菜单及自动附加的收起按钮，视觉默认保持七个按钮。",
+    "legacy_showAddBlockButton": "继续移除，无兼容。"
+  },
+  "device": {
+    "model": "V2353A",
+    "android": "14",
+    "serial": "10AF5304SJ0062L",
+    "display": "1080x2408",
+    "control": "ADB实际点击、输入及截图，UIAutomator层级辅助核对。"
+  },
+  "procedure": [
+    "临时在Demo离线入口注入[formula, table, mermaid, textStyle]，构建并覆盖安装运行。",
+    "新建离线会话，输入MenuTest，核对自选顺序及未注入入口隐藏。",
+    "不经更多面板，直接新建2×2表格并在首格输入Cell1；打开公式输入x+y、实时预览并创建；打开Mermaid预设流程，选择仅图形后保存并显示。",
+    "点击固定右侧收起按钮，实际键盘及整条菜单退出。",
+    "热重载宿主，退出旧会话再新建会话，注入[mermaid, table, formula]核对新顺序及Aa隐藏。",
+    "改为[]，新建会话输入EmptyMenuStillTypes，核对键盘仍可输入且无工具栏、收起入口或占位高度。",
+    "移除全部临时注入，重新构建/覆盖安装普通Demo；新建默认离线会话输入DefaultRestored，核对六菜单及自动右侧收起。"
+  ],
+  "results": {
+    "configuration": "passed，按实例注入只显示所选菜单，无加号或未选择的原菜单。",
+    "ordering": "passed，formula/table/mermaid/textStyle与mermaid/table/formula两组顺序一致。",
+    "hide": "passed，移除Aa后无入口；[]隐藏整行但正常输入。",
+    "automatic_dismiss": "passed，两组自选菜单与默认菜单均自动固定最右；未配置任何收起项，点击后系统键盘退出。",
+    "table": "passed，直达2×2及单元格实际输入。",
+    "formula": "passed，直达新建、x+y源码、实时渲染及插入。",
+    "mermaid": "passed，直达源码/预览、仅图形模式及实际插入开始→完成流程。",
+    "default_restored": "passed，代码移除临时注入，最终普通APK及默认菜单截图已核对。",
+    "long_menu_fixed_edge": "仅Widget回归通过横向滚动前后收起按钮坐标一致及点击收起，未计入本轮手机通过项。"
+  },
+  "validation": {
+    "package_targeted": {
+      "passed": 124,
+      "failed": 0,
+      "toolbar_configuration_tests": 41,
+      "log": "keyboard-toolbar-device-20261021/keyboard-toolbar-auto-close-tests.log"
+    },
+    "consumer_tests": {
+      "passed": 2,
+      "failed": 0,
+      "log": "keyboard-toolbar-device-20261021/keyboard-toolbar-device-host-test.log"
+    },
+    "analyze": {
+      "package": "No issues found",
+      "consumer": "No issues found"
+    },
+    "android_build": "passed，首次45.5s，默认恢复35.2s；均覆盖安装，无卸载或清数据。",
+    "format": "修改的手写Dart及临时宿主文件均已格式化，默认宿主与测试前快照完全一致。",
+    "old_api_search": "Dart和README无showAddBlockButton、EditorKeyboardToolbarItem.closeKeyboard或showCloseKeyboardButton残留。",
+    "diff_check": "passed"
+  },
+  "artifacts": {
+    "directory": "keyboard-toolbar-device-20261021/",
+    "screenshots": [
+      "configured-order.png",
+      "default-restored.png",
+      "empty-toolbar.png",
+      "formula-created.png",
+      "formula-preview.png",
+      "keyboard-closed.png",
+      "mermaid-created.png",
+      "mermaid-preview.png",
+      "reordered-toolbar.png",
+      "table-created.png"
+    ],
+    "reordered_accessibility": [
+      [
+        "代码绘图",
+        "[0,1402][144,1552]"
+      ],
+      [
+        "表格",
+        "[144,1402][288,1552]"
+      ],
+      [
+        "公式",
+        "[288,1402][432,1552]"
+      ],
+      [
+        "收起键盘",
+        "[924,1405][1068,1549]"
+      ]
+    ],
+    "empty_accessibility": [],
+    "default_accessibility": [
+      [
+        "添加块",
+        "[0,1402][144,1552]"
+      ],
+      [
+        "块类型",
+        "[144,1402][288,1552]"
+      ],
+      [
+        "文字样式",
+        "[288,1402][432,1552]"
+      ],
+      [
+        "对齐与缩进",
+        "[432,1402][576,1552]"
+      ],
+      [
+        "插入图片",
+        "[576,1402][720,1552]"
+      ],
+      [
+        "@用户",
+        "[720,1402][864,1552]"
+      ],
+      [
+        "收起键盘",
+        "[924,1405][1068,1549]"
+      ]
+    ],
+    "final_apk": "build/app/outputs/flutter-apk/app-debug.apk",
+    "final_apk_sha256": "f322011d84c80a82c0db4d488934b4720dd4d96f8f9682faf96f73ae7e41b4bd",
+    "build_note": "首次APK注入四个直达菜单，改顺序/空菜单经热重载后新建会话验证；最终APK已重新构建为无临时注入的普通Demo。",
+    "debug_recovery": "额外长菜单手机尝试期间前台离开应用且热重载未完成，未记为通过；重新安装普通Demo完成恢复，长菜单固定位置以Widget测试为依据。"
+  },
+  "blockcraft": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.23",
+    "declared": "0.11.24",
+    "yarn_locked": "0.11.24",
+    "installed": "0.11.17",
+    "pnpm_historical": "0.2.78",
+    "query": "在桌面配置仓库重新查询latest并读取声明、锁定与安装；复读对应迁移、工具栏技能及受影响发布实现；未升级依赖。",
+    "remaining": "版本不一致、.24只读正文链接导航及其他待同步项沿原记录。"
+  },
+  "limits": [
+    "仅Android14，未验收iOS、线上桌面双向或全部块属性。",
+    "本轮包内目标124项与宿主2项通过，未重跑全包；既有扩展组公式锁失败见上一轮记录，本轮不宣称全包通过。",
+    "手机操作离线本地会话，不修改已有协同正文；登录首页可能按既有逻辑连接协同服务。",
+    "电子表格/多维表格/思维导图仍暂未支持；41块统计13已适配/14部分支持/1结构支持/13未适配保持。"
+  ]
+}

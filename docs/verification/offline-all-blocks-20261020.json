@@ -1,0 +1,70 @@
+{
+  "date": "2026-10-20",
+  "scope": [
+    "离线默认启用包内25种已注册块、H1～H9及已有丰富字符格式，仍允许实例配置和六类文字预设",
+    "复杂块复用原组件/菜单，事务递归校验结构、块依赖与容量，修正表格单元格内多行粘贴路径",
+    "业务端口按实例借用；默认空端口，不借用全局协同文档的业务加载、选择、上传和ID服务",
+    "预览隐藏卡片头操作与更多；保持无块锁、无图片导出、无协同和服务端"
+  ],
+  "blockcraft": {
+    "latest": "0.11.23",
+    "declared": "0.11.22",
+    "yarn": "0.11.22",
+    "installed": "0.11.17",
+    "pnpm": "0.2.78",
+    "registry": "http://npm.runtongqiuben.com/",
+    "upgraded": false,
+    "review": "复核最新版随包技能、MIGRATIONS、块注册与受影响格式/事务实现；桌面版本组合未变，未新增桌面块兼容完成声明"
+  },
+  "tests": {
+    "local_features": {
+      "passed": 42,
+      "failed": 0,
+      "log": "/tmp/offline-all-target-tests.log"
+    },
+    "original_editor_compatibility": {
+      "passed": 74,
+      "failed": 0,
+      "log": "/tmp/offline-all-compat-tests.log"
+    },
+    "package_full": {
+      "passed": 1485,
+      "failed": 43,
+      "new_failures": [],
+      "baseline_comparison": "offline-all-blocks-20261020/baseline-comparison.json",
+      "command": "flutter test --no-pub --reporter json",
+      "log": "/tmp/offline-all-final-full-tests.jsonl",
+      "sha256": "15ed4a11ef567bf1d63f129405445096a0771e4085d691c3e3222a3d218872b1"
+    },
+    "consumer": {
+      "passed": 58,
+      "failed": 0,
+      "log": "/tmp/offline-all-consumer-tests.log"
+    },
+    "checks": [
+      "包内编辑器、制图、受影响UI及测试目标静态检查：No issues found",
+      "宿主目标静态检查：No issues found",
+      "修改手写文件格式化",
+      "检索全局服务残留及旧导出路径",
+      "git diff --check"
+    ]
+  },
+  "android": {
+    "debug_apk": "/System/Volumes/Data/workspace/mobile-collab-demo/build/app/outputs/flutter-apk/app-debug.apk",
+    "sha256": "b398fb4bb9b47310ecacb594dd62a04881a79b8797ddfb3243ae06b23c187cb0",
+    "build_passed": true,
+    "installed": false
+  },
+  "limitations": [
+    "25种指包内现有移动端注册类型，不等于桌面41种块全部完成适配，正式统计13/14/1/13保持",
+    "任务、会议、KR、提及等业务引用的选择、加载与动作需显式注入宿主服务；缺省不虚构业务数据",
+    "媒体可使用资源链接；上传需显式服务，外部资源的访问仍取决于网络及平台能力",
+    "草稿仅存页面会话内存；未新增持久化、同步、截图或PNG导出",
+    "本轮未新增真机安装、iOS或线上双端验收；全包43项既有失败仍未解决"
+  ],
+  "logs": {
+    "package_analyze": "offline-all-blocks-20261020/package_analyze.log",
+    "consumer_analyze": "offline-all-blocks-20261020/consumer_analyze.log",
+    "android_build": "offline-all-blocks-20261020/android_build.log"
+  }
+}

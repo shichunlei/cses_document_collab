@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-21",
+  "change": "更多/添加面板H1～H6文字标记替换为与T菜单相同的Lucide heading1～heading6图标。",
+  "implementation": "两处共用_headingMenuIcons映射，图标均27逻辑像素；添加面板保留紫色、标题说明、卡片和插入操作。",
+  "blockcraft": {
+    "latest": "0.11.23",
+    "desktop_declared": "0.11.24",
+    "yarn_locked": "0.11.24",
+    "installed": "0.11.17",
+    "pnpm_historical": "0.2.78",
+    "checked": "桌面配置仓库实时查询并核对依赖/锁/安装；复用已读对应随包技能、迁移及实现，复读.23迁移/工具栏相关文档；未升级依赖。"
+  },
+  "validation": {
+    "package_tests": 70,
+    "failures": 0,
+    "files": [
+      "editor_shortcut_toolbar_test.dart",
+      "editor_toolbar_configuration_test.dart"
+    ],
+    "analyze": "No issues found",
+    "format": "已格式化目标手写文件",
+    "diff_check": "passed",
+    "device": "V2353A/Android14已有Debug会话热更新，实际添加面板及横滑至H6截图确认；未新建/转换正文。"
+  },
+  "artifacts": [
+    "heading-menu-icons-20261021/add-icons.png",
+    "heading-menu-icons-20261021/add-end-icons.png",
+    "heading-menu-icons-20261021/heading-menu-icons-tests.log",
+    "heading-menu-icons-20261021/heading-menu-icons-analyze.log"
+  ],
+  "limits": [
+    "纯展示调整，41块及13/14/1/13统计保持；未重新构建APK、全包测试、iOS或在线双端。",
+    "标题数据、菜单上限H6和既有协同能力不变，版本差异沿前轮待办。"
+  ]
+}

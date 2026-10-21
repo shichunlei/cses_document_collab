@@ -1,0 +1,15 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/command/text_commands_test.dart
+00:00 +0: insertNewLine insert new line preserve direction
+00:00 +0 -1: insertNewLine insert new line preserve direction [E]
+  Expected: 'rtl'
+    Actual: <null>
+     Which: not an <Instance of 'String'>
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/new/command/text_commands_test.dart 188:7      main.<fn>.<fn>
+
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/command/text_commands_test.dart: insertNewLine insert new line preserve direction
