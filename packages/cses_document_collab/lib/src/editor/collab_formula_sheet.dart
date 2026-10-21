@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'dart:convert';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
@@ -9,7 +10,6 @@ import 'package:cses_document_collab/src/model/collab_host_services.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_formula.dart';
 import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_bottom_sheet.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_dialog.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_menu_row.dart';
@@ -65,7 +65,8 @@ Future<void> showCollabFormulaEditor(
       },
     );
   } catch (error, stack) {
-    CollabDiagnostics.report(
+    EditorCommandContext.report(
+      editor,
       '公式操作失败',
       error: error,
       stackTrace: stack,
@@ -340,7 +341,8 @@ class _FormulaSheetState extends State<_FormulaSheet> {
       _loadedLatex = latex;
       return true;
     } catch (error, stack) {
-      CollabDiagnostics.report(
+      EditorCommandContext.report(
+        widget.editor,
         '保存公式失败',
         error: error,
         stackTrace: stack,
@@ -366,7 +368,8 @@ class _FormulaSheetState extends State<_FormulaSheet> {
     try {
       await _chooseActionChecked(action);
     } catch (error, stack) {
-      CollabDiagnostics.report(
+      EditorCommandContext.report(
+        widget.editor,
         '公式操作失败',
         error: error,
         stackTrace: stack,
@@ -460,7 +463,8 @@ class _FormulaSheetState extends State<_FormulaSheet> {
         isCurrent: () => mounted && session.current,
       );
     } catch (error, stack) {
-      CollabDiagnostics.report(
+      EditorCommandContext.report(
+        widget.editor,
         '复制段落链接失败',
         error: error,
         stackTrace: stack,
@@ -501,7 +505,8 @@ class _FormulaSheetState extends State<_FormulaSheet> {
       }
       if (mounted) Navigator.pop(context);
     } catch (error, stack) {
-      CollabDiagnostics.report(
+      EditorCommandContext.report(
+        widget.editor,
         '删除公式失败',
         error: error,
         stackTrace: stack,
@@ -741,7 +746,7 @@ class _FormulaSession extends ChangeNotifier {
   _FormulaSession(this.editor, this.id)
     : locks = CollabBlockLocks.of(editor),
       links = CollabParagraphLinks.of(editor),
-      _services = CollabRuntime.services,
+      _services = EditorCommandContext.of(editor).services,
       _editable = editor.editable {
     lock = locks?.state(id) ?? CollabBlockLockState(blockId: id);
     _epoch = locks?.epoch(id);
@@ -786,7 +791,8 @@ class _FormulaSession extends ChangeNotifier {
   Node? get target => findCollabFormula(editor, id);
 
   /// 宿主服务仍是打开时对象。
-  bool get sameHost => identical(CollabRuntime.services, _services);
+  bool get sameHost =>
+      identical(EditorCommandContext.of(editor).services, _services);
 
   /// 当前目标属性JSON，命令退出后验证它未变化。
   String? get snapshot =>

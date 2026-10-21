@@ -1,9 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cses_document_collab/src/editor/editor_text_attributes.dart';
+
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/model/collab_kr.dart';
-import 'package:cses_document_collab/src/editor/collab_paragraph_typing.dart';
+import 'package:cses_document_collab/src/editor/core/document_editor_controller.dart';
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
 import 'package:cses_document_collab/src/model/collab_code.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
@@ -171,14 +174,7 @@ const csesReplacementSourceAttribute = 'cses_replacement_source';
 /// subscript text follows the same path as its built-in rich-text styles.
 /// Desktop typography keys also participate in caret inheritance and IME slicing.
 void registerCsesRichTextAttributes() {
-  for (final attribute in [csesSuperscriptAttribute, csesSubscriptAttribute, ...collabTypographyKeys]) {
-    if (!AppFlowyRichTextKeys.supportToggled.contains(attribute)) {
-      AppFlowyRichTextKeys.supportToggled.add(attribute);
-    }
-    if (!AppFlowyRichTextKeys.supportSliced.contains(attribute)) {
-      AppFlowyRichTextKeys.supportSliced.add(attribute);
-    }
-  }
+  registerEditorTextAttributes([csesSuperscriptAttribute, csesSubscriptAttribute, ...collabTypographyKeys]);
 }
 
 /// 不可变富文本片段，行内公式/用户/会议/任务/文档提及仅占一个 U+FFFC，使用属性投影恢复原生对象。
@@ -502,26 +498,46 @@ final class CollabEditorBlock {
 /// adapter.dispose();
 /// ```
 final class AppFlowyBlockEditorAdapter {
-  /// [onLocalBlocksChanged] 在本地事务完成后接收完整投影；远端回放不调用它。
-  /// [initialBlocks] 默认空，由适配器创建可落光标的正文。适配器拥有 EditorState 和事务订阅，
-  /// 调用方必须在不再使用编辑器时 dispose，不另行关闭借用的 editorState。
-  AppFlowyBlockEditorAdapter({required this.onLocalBlocksChanged, List<CollabEditorBlock> initialBlocks = const []})
-    : editorState = _createEditorState(initialBlocks) {
+  /// [onLocalBlocksChanged] 在本地事务完成后接收完整同步投影，远端回放不调用。
+  /// [editing] 为外部借用的编辑会话；null按旧契约自建并拥有会话。
+  /// [initialBlocks] 仅用于自建会话，传入editing时须为空。
+  /// dispose卸载同步绑定，只有自建会话才同时释放正文。
+  AppFlowyBlockEditorAdapter({
+    required this.onLocalBlocksChanged,
+    List<CollabEditorBlock> initialBlocks = const [],
+    DocumentEditorController? editing,
+  }) : editing =
+           editing ??
+           DocumentEditorController(
+             document: _createDocument(initialBlocks),
+             commandContext: const EditorCommandContext.legacy(),
+           ),
+       _ownsEditing = editing == null {
+    if (editing != null && initialBlocks.isNotEmpty) throw ArgumentError('借用编辑会话时不能提供初始同步块');
     registerCsesRichTextAttributes();
-    _paragraphTyping = CollabParagraphTyping(editorState);
     _lastPublishedBlocks = _readBlocks(editorState, const []);
-    _transactionSubscription = editorState.transactionStream.listen(_handleTransaction);
+    _binding = EditorSynchronizationBinding(
+      prepare: _prepareTransaction,
+      validate: (event) => _protectUnsupportedBlocks(event.$2),
+      didApply: _handleTransaction,
+    );
+    this.editing.attachSynchronization(_binding);
   }
 
+  /// 编辑器内用于同步投影的稳定块身份属性。
   static const collabBlockIdAttribute = 'cses_collab_block_id';
 
+  /// 本地事务完成后的同步回调，由数据层持有。
   final LocalEditorBlocksChanged onLocalBlocksChanged;
-  final EditorState editorState;
 
-  /// 适配器持有的输入格式监听，先于 EditorState 释放。
-  late final CollabParagraphTyping _paragraphTyping;
+  /// 绑定的独立编辑会话，默认自建时归本适配器释放。
+  final DocumentEditorController editing;
+  final bool _ownsEditing;
+  late final EditorSynchronizationBinding _binding;
 
-  late final StreamSubscription<EditorTransactionValue> _transactionSubscription;
+  /// 适配器借用的正文，不单独释放外部会话的状态。
+  EditorState get editorState => editing.editorState;
+
   late List<CollabEditorBlock> _lastPublishedBlocks;
   bool _applyingRemote = false;
   bool _disposed = false;
@@ -552,6 +568,12 @@ final class AppFlowyBlockEditorAdapter {
   /// 普通正文、格式或结构变化会移除未受稳定身份/指纹保护的历史项，不自动转换旧文字撤销。
   /// 正式编号及原始设置更新内存投影，不进入历史；成功转换后清除 replacesId。
   Future<void> replaceFromRemote(List<CollabEditorBlock> nextBlocks) async {
+    if (_disposed) return;
+    await editing.project(() => _replaceFromRemote(nextBlocks));
+  }
+
+  /// 在隔离本地输入与同步的范围中回放 [nextBlocks]，沿用原投影与历史失效策略。
+  Future<void> _replaceFromRemote(List<CollabEditorBlock> nextBlocks) async {
     if (_disposed) {
       return;
     }
@@ -717,17 +739,12 @@ final class AppFlowyBlockEditorAdapter {
   }
 
   /// 比较 [before] 和 [after] 的块顺序、身份、类型及父结构，判断路径字段历史是否过期。
-  static bool _historyStructureChanged(
-    List<CollabEditorBlock> before,
-    List<CollabEditorBlock> after,
-  ) {
+  static bool _historyStructureChanged(List<CollabEditorBlock> before, List<CollabEditorBlock> after) {
     if (before.length != after.length) return true;
     for (var i = 0; i < before.length; i++) {
       final old = before[i];
       final next = after[i];
-      if (old.id != next.id ||
-          old.parentId != next.parentId ||
-          old.blockType != next.blockType) {
+      if (old.id != next.id || old.parentId != next.parentId || old.blockType != next.blockType) {
         return true;
       }
     }
@@ -736,10 +753,7 @@ final class AppFlowyBlockEditorAdapter {
 
   /// 比较同结构的 [before] 和 [after] 的完整正文，忽略等价分段。
   /// 调用方先排除结构变化；普通正文、代码和行内格式的旧全文历史不能跨越内容变化。
-  static bool _historyContentChanged(
-    List<CollabEditorBlock> before,
-    List<CollabEditorBlock> after,
-  ) {
+  static bool _historyContentChanged(List<CollabEditorBlock> before, List<CollabEditorBlock> after) {
     for (var i = 0; i < before.length; i++) {
       final old = before[i];
       final next = after[i];
@@ -757,17 +771,10 @@ final class AppFlowyBlockEditorAdapter {
   /// [structureChanged]为false时允许原路径上的独立字段补丁，true时要求稳定身份保护。
   /// 逐栈恢复保留项的原顺序；不执行事务、恢复旧选区或发布协同更新。
   void _discardUnsafeHistory({required bool structureChanged}) {
-    for (final stack in [
-      editorState.undoManager.undoStack,
-      editorState.undoManager.redoStack,
-    ]) {
+    for (final stack in [editorState.undoManager.undoStack, editorState.undoManager.redoStack]) {
       final retained = [
         for (var item = stack.pop(); item != null; item = stack.pop())
-          if (_stableHistory(
-            item.operations,
-            structureChanged: structureChanged,
-          ))
-            item,
+          if (_stableHistory(item.operations, structureChanged: structureChanged)) item,
       ];
       for (final item in retained.reversed) {
         stack.push(item);
@@ -779,10 +786,7 @@ final class AppFlowyBlockEditorAdapter {
   /// 原子公式、卡片及链接转换命令独立封闭历史并在before阶段校验整组；
   /// [structureChanged]区分仅改正文和路径变化；前者保留独立字段补丁，后者要求稳定目标。
   /// 混入全文Delta或普通结构操作的非原子命令不保留。
-  static bool _stableHistory(
-    List<Operation> operations, {
-    required bool structureChanged,
-  }) {
+  static bool _stableHistory(List<Operation> operations, {required bool structureChanged}) {
     if (operations.isEmpty) return false;
     if (operations.whereType<UpdateOperation>().any(
       (op) =>
@@ -866,7 +870,22 @@ final class AppFlowyBlockEditorAdapter {
     return false;
   }
 
-  /// 在本地 [value] 的 before 阶段按稳定 ID 重定位编号历史，after 阶段发布快照；
+  /// 在本地 [value] 的默认格式处理前重定位稳定身份与历史，不负责输入状态。
+  void _prepareTransaction(EditorTransactionValue value) {
+    if (_disposed || _applyingRemote) return;
+    resolveCollabLinkViewCommand(editorState, value.$2, (id) {
+      final seen = <String>{};
+      while (_replacementIds.containsKey(id) && seen.add(id)) {
+        id = _replacementIds[id]!;
+      }
+      return id;
+    });
+    resolveCollabMentionCardCommand(editorState, value.$2);
+    resolveCollabInlineFormulaCommands(editorState, value.$2);
+    _resolveNumberingTargets(value.$2);
+  }
+
+  /// 在本地[value]完成输入历史维护后发布同步快照，准备阶段已重定位稳定身份；
   /// 类型转换生成新身份并记录来源供Rust保留扩展数据；提及卡片及链接视图转换历史在写入前整组预检，并按身份链重定位。
   /// 远端回放及销毁后不发布；Undo/Redo 的历史身份经文档内映射恢复为当前可替换来源。
   /// 仅明确修改编号设置属性的 UpdateOperation 生成编号写入意图；普通文字/结构快照
@@ -876,25 +895,6 @@ final class AppFlowyBlockEditorAdapter {
     if (_disposed || _applyingRemote) {
       return;
     }
-    if (value.$1 == TransactionTime.before) {
-      resolveCollabLinkViewCommand(editorState, value.$2, (id) {
-        final seen = <String>{};
-        while (_replacementIds.containsKey(id) && seen.add(id)) {
-          id = _replacementIds[id]!;
-        }
-        return id;
-      });
-      resolveCollabMentionCardCommand(editorState, value.$2);
-      resolveCollabInlineFormulaCommands(editorState, value.$2);
-      _resolveNumberingTargets(value.$2);
-      if (value.$3.recordUndo && !value.$3.isRedo) {
-        synchronizeParagraphDefaults(editorState, value.$2);
-      }
-      _protectUnsupportedBlocks(value.$2);
-      _paragraphTyping.before(value.$2, value.$3);
-      return;
-    }
-    _paragraphTyping.after(value.$2, value.$3);
     final numberingNodes = <Node>{};
     final codeEdits = <Node, Set<String>>{};
     final resourceEdits = <Node, Set<String>>{};
@@ -1106,27 +1106,25 @@ final class AppFlowyBlockEditorAdapter {
   /// 将借用的 [operation] 重定位到 [path] 并保留本地输入历史，返回新的操作对象。
   Operation _relocateParagraphHistory(UpdateOperation operation, Path path) {
     final relocated = operation.copyWith(path: path) as UpdateOperation;
-    _paragraphTyping.transferHistory(operation, relocated);
+    editing.transferHistory(operation, relocated);
     return relocated;
   }
 
-  /// 先注销输入监听和事务订阅，再释放自有编辑器；可重复调用，不关闭宿主网络服务。
+  /// 卸载同步事务绑定并释放自建会话；外部编辑会话保持有效，重复调用安全。
   void dispose() {
     if (_disposed) {
       return;
     }
     _disposed = true;
-    _paragraphTyping.dispose();
-    unawaited(_transactionSubscription.cancel());
-    editorState.dispose();
+    editing.detachSynchronization(_binding);
+    if (_ownsEditing) editing.dispose();
   }
 
-  static EditorState _createEditorState(List<CollabEditorBlock> blocks) {
+  /// 将初始 [blocks] 转为自建编辑会话拥有的文档，空列表创建可输入段落。
+  static Document _createDocument(List<CollabEditorBlock> blocks) {
     final nodes = blocks.isEmpty ? [_newEmptyParagraphNode()] : _nodesFromBlocks(blocks);
-    return EditorState(
-      document: Document(
-        root: Node(type: 'page', id: 'cses-demo-page', children: nodes),
-      ),
+    return Document(
+      root: Node(type: 'page', id: 'cses-demo-page', children: nodes),
     );
   }
 

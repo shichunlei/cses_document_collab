@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:cses_document_collab/src/editor/core/document_editor_controller.dart';
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'package:cses_document_collab/src/model/collab_block_lock.dart';
 
@@ -63,7 +65,8 @@ class CollabController extends ChangeNotifier {
         : null;
     header?.addListener(_notify);
     feedback = DocumentFeedbackController(documentId: config.documentId, services: _services);
-    _editorAdapter = AppFlowyBlockEditorAdapter(onLocalBlocksChanged: _applyEditorBlocks);
+    editor = DocumentEditorController(commandContext: EditorCommandContext(services: _services));
+    _editorAdapter = AppFlowyBlockEditorAdapter(editing: editor, onLocalBlocksChanged: _applyEditorBlocks);
     final linkBuilder = _services.buildParagraphLink;
     _paragraphLinks = config.isFormal && linkBuilder != null
         ? CollabParagraphLinks(editor: editorState, documentId: config.documentId, buildLink: linkBuilder)
@@ -75,6 +78,9 @@ class CollabController extends ChangeNotifier {
       commit: _commitBlockLock,
     );
   }
+
+  /// 本控制器拥有的独立编辑会话，数据绑定和页面只借用；投影结束后释放。
+  late final DocumentEditorController editor;
 
   /// 控制器拥有的正式文档链接绑定；未配置宿主构造器或草稿时为null。
   late final CollabParagraphLinks? _paragraphLinks;
@@ -197,9 +203,15 @@ class CollabController extends ChangeNotifier {
   /// 此值不代表服务端业务权限，网络断开后仍保留已加载模型的编辑能力。
   String? get readOnlyReason => !_editable ? '宿主权限为只读' : _readOnlyReason;
 
-  /// 当前可提交本地编辑；未加载、切换中、模型只读或发生协同错误时返回 false。
+  /// 当前可提交本地编辑；还须持有原生文档，未加载、切换、只读或协同错误时返回false。
   bool get canEdit =>
-      !_disposed && initialized && !busy && _editable && _readOnlyReason == null && _status != ConnectionStatus.error;
+      !_disposed &&
+      initialized &&
+      CollabRuntime.owns(this) &&
+      !busy &&
+      _editable &&
+      _readOnlyReason == null &&
+      _status != ConnectionStatus.error;
 
   /// 当前文档打开时恢复的 SQLite update 数量。
   int get persistedUpdateCount => _persistedUpdateCount;
@@ -222,11 +234,23 @@ class CollabController extends ChangeNotifier {
   /// 借用编辑器状态；释放由本控制器负责。
   EditorState get editorState => _editorAdapter.editorState;
 
-  /// Initialize native bindings, restore local data and register online callbacks.
-  /// Completion means local projection and registration finished, not server ACK.
-  /// Concurrent calls share one task. Another controller fails before touching
-  /// the process-global Doc; failures remain visible and propagate to the host.
-  Future<void> initialize() => _initializationTask ??= _initialize();
+  /// 初始化原生绑定、恢复本地正文并注册会话，完成不表示服务端ACK。
+  /// 并发调用共享任务；失败完成清理后允许重试，其他控制器占用时在访问文档前失败。
+  /// 关闭后返回失败Future，不重新创建编辑或原生资源。
+  Future<void> initialize() {
+    if (_disposed) return Future<void>.error(StateError('COLLAB_CONTROLLER_CLOSED'));
+    return _initializationTask ??= _initializeRecoverably();
+  }
+
+  /// 等待初始化及失败清理完成后清除失败任务，使下一次调用重新取得文档所有权。
+  Future<void> _initializeRecoverably() async {
+    try {
+      await _initialize();
+    } catch (_) {
+      _initializationTask = null;
+      rethrow;
+    }
+  }
 
   /// Acquire the single Doc before any asynchronous work; close waits for this
   /// task so an initialization finishing late cannot reopen a disposed controller.
@@ -253,6 +277,7 @@ class CollabController extends ChangeNotifier {
         if (!_disposed) unawaited(header?.refresh() ?? Future<void>.value());
       }
     } catch (error, stackTrace) {
+      _initialized = false;
       _setError(error, stackTrace);
       if (CollabRuntime.owns(this)) {
         try {
@@ -275,27 +300,40 @@ class CollabController extends ChangeNotifier {
   /// Apply the host's [editable] permission immediately. Revocation stops local
   /// writes and submission of upload results, and pauses sync before any cached diff is sent.
   /// Restoring permission starts a new vector handshake with the borrowed socket.
+  /// Future报告本轮注册失败；内部队列在记录失败后恢复，后续切换和关闭仍可继续。
   Future<void> setEditable(bool editable) {
     if (_disposed || editable == _editable) return _accessTransition;
     _editable = editable;
     header?.permissionsChanged();
     editorState.editable = canEdit;
     _notify();
-    _accessTransition = _accessTransition.then((_) async {
+    final transition = _accessTransition.then((_) async {
       if (_disposed) return;
       if (_session != null) await _releaseSession();
       if (!_disposed && initialized && config.isFormal) await _startSession();
     });
-    return _accessTransition;
+    _accessTransition = transition.then<void>(
+      (_) {},
+      onError: (Object error, StackTrace stackTrace) {
+        _setError(error, stackTrace);
+      },
+    );
+    return transition;
   }
 
   /// Request a fresh join after host connection recovery; terminal errors remain.
   void resync() => _session?.resync();
 
-  /// Explicitly retry a failed handshake, or re-register after a cache reset.
-  /// Does not change authentication or reconnect the physical WebSocket.
+  /// 重试握手或缓存重置后的注册；初始化失败时先重新取得并打开所属文档。
+  /// 其他控制器仍占用引擎时Future失败，不访问或发送其正文，不重连宿主物理连接。
   Future<void> retry() async {
-    if (_disposed || !initialized || busy || !config.isFormal) return;
+    if (_disposed || busy || !config.isFormal) return;
+    await _accessTransition;
+    if (_disposed || busy) return;
+    if (!initialized) {
+      await initialize();
+      return;
+    }
     if (_session == null) {
       await _startSession();
     } else {
@@ -325,18 +363,24 @@ class CollabController extends ChangeNotifier {
     await _queueProjection();
   }
 
-  /// Assemble a document-only session. Read-only hosts receive updates but send
-  /// only an empty handshake diff, preserving cached edits until authorized.
+  /// 为已持有的文档注册会话；每个回调同时核对原生所有权和当前会话身份。
+  /// 只读仅发空握手增量；失效回调不访问后继文档，注册异常向装配方传播。
   Future<void> _startSession() async {
     if (_disposed || _gateway == null) return;
+    if (!initialized || !CollabRuntime.owns(this)) throw StateError('COLLAB_DOCUMENT_NOT_OWNED');
     _status = ConnectionStatus.connecting;
     _error = null;
-    final session = CsesDocCollaborationSession(
+    late final CsesDocCollaborationSession session;
+    session = CsesDocCollaborationSession(
       gateway: _gateway,
       documentId: config.documentId,
-      instanceId: CollabRuntime.services.newId(),
-      stateVectorFactory: rust.encodeStateVector,
+      instanceId: _services.newId(),
+      stateVectorFactory: () {
+        _requireCurrentSession(session);
+        return rust.encodeStateVector();
+      },
       onSync: (update, vector) {
+        _requireCurrentSession(session);
         _applyRemoteUpdate(update);
         // 完整向量握手后再修复结构派生编号，避免把不完整远端增量误当成完整列表。
         // 只读/预览不写入；同一编号已正确时不产生事务或持久化记录。
@@ -347,26 +391,60 @@ class CollabController extends ChangeNotifier {
         }
         return _editable ? rust.encodeDocumentDiff(stateVector: vector) : Uint8List.fromList([0, 0]);
       },
-      onUpdate: _applyRemoteUpdate,
-      awarenessFactory: (present) => rust.encodeLocalAwareness(
-        userId: config.userId,
-        userName: config.userName.isEmpty ? config.userId : config.userName,
-        present: present,
-      ),
+      onUpdate: (bytes) {
+        _requireCurrentSession(session);
+        _applyRemoteUpdate(bytes);
+      },
+      awarenessFactory: (present) {
+        if (present) _requireCurrentSession(session);
+        // 退出时会话已摘除，但只有原所有者可以写自己的离开状态。
+        if (!CollabRuntime.owns(this)) throw StateError('COLLAB_DOCUMENT_NOT_OWNED');
+        return rust.encodeLocalAwareness(
+          userId: config.userId,
+          userName: config.userName.isEmpty ? config.userId : config.userName,
+          present: present,
+        );
+      },
       onAwareness: (bytes) {
+        _requireCurrentSession(session);
         _remoteEditorCount = rust.applyAwarenessUpdate(bytes: bytes);
         _notify();
       },
       onDisconnected: () {
+        if (!_isCurrentSession(session)) return;
         rust.clearRemoteAwareness();
         _remoteEditorCount = 0;
       },
-      onStateChanged: _handleSessionState,
+      onStateChanged: (state, event, error) {
+        if (_isCurrentSession(session)) _handleSessionState(state, event, error);
+      },
     );
     _session = session;
-    await session.start();
-    if (_disposed) return;
+    try {
+      await session.start();
+    } catch (error, stackTrace) {
+      try {
+        if (identical(_session, session)) {
+          await _releaseSession();
+        } else {
+          await session.dispose();
+        }
+      } catch (cleanupError, cleanupStack) {
+        _services.report('会话注册失败后的监听清理失败', cleanupError, cleanupStack, 'DocCollab');
+      }
+      Error.throwWithStackTrace(error, stackTrace);
+    }
+    if (!_isCurrentSession(session)) return;
     _notify();
+  }
+
+  /// 判断借用的[session]是否仍属于本控制器及当前原生文档，关闭或替换后失效。
+  bool _isCurrentSession(CsesDocCollaborationSession session) =>
+      !_disposed && CollabRuntime.owns(this) && identical(_session, session);
+
+  /// 在访问原生文档前核对[session]；过期会话抛出StateError交由协议异常边界停止发送。
+  void _requireCurrentSession(CsesDocCollaborationSession session) {
+    if (!_isCurrentSession(session)) throw StateError('COLLAB_SESSION_STALE');
   }
 
   /// 持久化编辑器 [nextBlocks] 的规范化快照；仅本地事务产生上行 update。
@@ -479,12 +557,17 @@ class CollabController extends ChangeNotifier {
     }
   }
 
-  /// Release only document callbacks and timers; the borrowed socket stays open.
+  /// 注销所属会话与计时器，清除自身文档的远端成员；借用物理连接保持打开。
+  /// 先摘除会话令迟到回调失效，注销失败也清理本地成员展示，不触碰其他所有者文档。
   Future<void> _releaseSession() async {
     final session = _session;
     _session = null;
-    await session?.dispose();
-    _remoteEditorCount = 0;
+    try {
+      await session?.dispose();
+    } finally {
+      if (session != null && CollabRuntime.owns(this) && CollabRuntime.nativeReady) rust.clearRemoteAwareness();
+      _remoteEditorCount = 0;
+    }
   }
 
   /// 记录原始 [error]/[stackTrace] 并显示固定失败文案，避免输出登录配置。
@@ -773,24 +856,37 @@ class CollabController extends ChangeNotifier {
     super.dispose();
   }
 
-  /// 等待业务头部/文末互动读写、会话释放及已排队投影，再关闭所属全局Rust引擎；宿主端口不释放。
+  /// 依次等待初始化、业务请求、权限切换、会话及投影，再关闭所属原生和编辑资源。
+  /// 单项失败记录到本实例端口并继续清理；不释放宿主端口或其他控制器的原生文档。
   Future<void> _shutdown() async {
     try {
-      await _initializationTask?.then<void>((_) {}, onError: (Object _, StackTrace _) {});
-      await header?.close();
-      await feedback.close();
-      await _accessTransition;
-      await _releaseSession();
-      await _projection;
-    } catch (error, stackTrace) {
-      CollabDiagnostics.report('Demo 协同资源释放失败', error: error, stackTrace: stackTrace, tag: 'DocCollab');
+      await _finishShutdownStep(() async {
+        await _initializationTask?.then<void>((_) {}, onError: (Object _, StackTrace _) {});
+      });
+      await _finishShutdownStep(() async {
+        await header?.close();
+      });
+      await _finishShutdownStep(feedback.close);
+      await _finishShutdownStep(() => _accessTransition);
+      await _finishShutdownStep(_releaseSession);
+      await _finishShutdownStep(() => _projection);
     } finally {
       if (CollabRuntime.owns(this) && CollabRuntime.nativeReady) {
         rust.closeDocument();
       }
       _blockLocks.dispose();
       _editorAdapter.dispose();
+      await editor.close();
       CollabRuntime.release(this);
+    }
+  }
+
+  /// 等待[operation]释放一项自有资源，失败记录后允许后续关闭步骤继续。
+  Future<void> _finishShutdownStep(Future<void> Function() operation) async {
+    try {
+      await operation();
+    } catch (error, stackTrace) {
+      _services.report('协同资源释放失败', error, stackTrace, 'DocCollab');
     }
   }
 }

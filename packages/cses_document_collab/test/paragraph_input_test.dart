@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/editor/collab_paragraph_text_style.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_paragraph_editing.dart';

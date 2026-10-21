@@ -5,7 +5,7 @@ import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/editor_selection_actions.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_text_range.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -102,7 +102,12 @@ class _CollabMobileSelectionMenuState extends State<CollabMobileSelectionMenu> {
               _button('剪切', () => _copy(state, range, cut: true), close),
             if (editable) _button('粘贴', () => _paste(state, range), close),
             _button('全选', () => _selectAll(state), close),
-            if (editable && expanded && range.hasText)
+            if (editable &&
+                expanded &&
+                range.hasText &&
+                EditorCommandContext.of(
+                  state,
+                ).configuration.inlineFormats.isNotEmpty)
               _button(
                 '格式',
                 () => _withRange(
@@ -112,7 +117,11 @@ class _CollabMobileSelectionMenuState extends State<CollabMobileSelectionMenu> {
                 ),
                 close,
               ),
-            if (editable && range.canConvert) ...[
+            if (editable &&
+                range.canConvert &&
+                EditorCommandContext.of(
+                  state,
+                ).configuration.allowsFormat(AppFlowyRichTextKeys.href))
               _button(
                 '链接',
                 () => _withRange(
@@ -122,6 +131,11 @@ class _CollabMobileSelectionMenuState extends State<CollabMobileSelectionMenu> {
                 ),
                 close,
               ),
+            if (editable &&
+                range.canConvert &&
+                EditorCommandContext.of(
+                  state,
+                ).configuration.allowsFormat('cses_inline_latex'))
               _button(
                 '转行内公式',
                 () => _withRange(
@@ -131,7 +145,6 @@ class _CollabMobileSelectionMenuState extends State<CollabMobileSelectionMenu> {
                 ),
                 close,
               ),
-            ],
           ],
         );
       },
@@ -174,12 +187,9 @@ class _CollabMobileSelectionMenuState extends State<CollabMobileSelectionMenu> {
     try {
       await action();
     } catch (error, stack) {
-      CollabDiagnostics.report(
-        '划词操作失败',
-        error: error,
-        stackTrace: stack,
-        tag: 'DocCollab',
-      );
+      EditorCommandContext.of(
+        widget.editorState,
+      ).services.report('划词操作失败', error, stack, 'DocCollab');
       if (mounted) {
         ScaffoldMessenger.maybeOf(
           context,
@@ -217,6 +227,15 @@ class _CollabMobileSelectionMenuState extends State<CollabMobileSelectionMenu> {
   /// 在借用 [state] 的稳定 [range] 上粘贴系统纯文本；读取剪贴板后重新校验权限和目标。
   /// 同级叶子正文以单个事务替换，保留前后原格式并按换行新建段落；一次撤销恢复整个范围。
   Future<void> _paste(EditorState state, CollabTextRange range) async {
+    final paste = EditorCommandContext.of(state).pastePlainText;
+    if (paste != null) {
+      final selection = range.resolve(state);
+      if (selection != null) {
+        state.selection = selection;
+        await paste();
+      }
+      return;
+    }
     final data = await AppFlowyClipboard.getData();
     if (!mounted ||
         !identical(widget.editorState, state) ||

@@ -1,7 +1,7 @@
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'collab_host_mention_ui.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'collab_mention_tap_handler.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -47,7 +47,7 @@ class CollabInlineMention extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.read<EditorState>();
-    final canTap = CollabRuntime.services.onMentionTap != null;
+    final canTap = EditorCommandContext.of(state).services.onMentionTap != null;
     final avatar = buildHostMentionAvatarSlot(
       context,
       userId: userId,

@@ -7,9 +7,18 @@ import 'package:flutter/material.dart';
 
 import 'markdown_file_picker.dart';
 
-/// 登录后的文档入口，拥有编辑器控制器并装配 CSES 状态面板。
+/// 登录后的文档入口，拥有协同控制器并提供独立的离线本地编辑入口。
+///
+/// ```dart
+/// import 'package:cses_mobile_collab_demo/src/demo/collab_demo_page.dart';
+/// import 'package:flutter/material.dart';
+/// const app = MaterialApp(home: CollabDemoPage(localDraft: true));
+/// // 页面卸载时释放协同资源，离线制图会话由包的路由入口释放。
+/// ```
 class CollabDemoPage extends StatefulWidget {
   /// 创建文档状态页；控制器随此页生命周期创建与释放。
+  /// [key] 控制组件身份与状态复用，[localDraft] 默认为false，true使用本地协同草稿。
+  /// [onLogout] 在退出并释放协同资源后调用，null隐藏退出按钮。
   const CollabDemoPage({super.key, this.localDraft = false, this.onLogout});
 
   /// 离线预览和测试可显式打开本地草稿；正式文档直接使用 Common 上下文。
@@ -26,6 +35,9 @@ class CollabDemoPage extends StatefulWidget {
 /// 持有唯一协同控制器，进入正文页时借用同一实例。
 class _CollabDemoPageState extends State<CollabDemoPage> {
   late final DemoDocumentHost _host;
+
+  /// 从打开制图到关闭结果页期间锁定入口，避免快速点击创建多个本地会话。
+  bool _openingImageComposer = false;
 
   /// Controller borrowed from the demo composition root.
   CollabController get _collab => _host.controller!;
@@ -46,7 +58,7 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
   }
 
   @override
-  /// 使用 [context] 渲染当前状态，无网络或缓存副作用。
+  /// 使用 [context] 渲染协同状态；离线入口不依赖协同文档是否加载成功。
   Widget build(BuildContext context) {
     return ListenableBuilder(
       listenable: _host,
@@ -57,6 +69,7 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
             body: SingleChildScrollView(
               padding: const EdgeInsets.all(20),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(_host.error ?? '正在加载文档…'),
                   const FilledButton(
@@ -64,6 +77,8 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
                     key: ValueKey('open-collaborative-editor'),
                     child: Text('正在加载文档'),
                   ),
+                  const SizedBox(height: 16),
+                  _OfflineImageComposerCard(busy: _openingImageComposer, onOpen: _openOfflineImageComposer),
                 ],
               ),
             ),
@@ -124,6 +139,8 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 16),
+                  _OfflineImageComposerCard(busy: _openingImageComposer, onOpen: _openOfflineImageComposer),
                 ],
               ),
             ),
@@ -131,6 +148,24 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
         );
       },
     );
+  }
+
+  /// 打开包内本地编辑与模板预览；返回首页不导出图片，失败在首页提示。
+  /// 等待每个路由退出后再解锁入口，页面卸载后忽略迟到的结果。
+  Future<void> _openOfflineImageComposer() async {
+    if (_openingImageComposer) return;
+    setState(() => _openingImageComposer = true);
+    FocusManager.instance.primaryFocus?.unfocus();
+    try {
+      await showCollabImageComposer(context: context);
+    } catch (error, stack) {
+      debugPrint('离线本地编辑失败：$error\n$stack');
+      if (mounted && ModalRoute.of(context)?.isCurrent == true) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('本地编辑失败，请重试')));
+      }
+    } finally {
+      if (mounted) setState(() => _openingImageComposer = false);
+    }
   }
 
   /// 先完成资源释放再返回登录页，避免下一账号登录后被旧宿主清理。
@@ -165,6 +200,46 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
     if (mounted && confirmed == true) {
       await _collab.resetLocalCache();
     }
+  }
+}
+
+/// 首页的本地制图卡片，加载失败和正常协同状态共用同一交互。
+class _OfflineImageComposerCard extends StatelessWidget {
+  /// [busy] 控制重复打开，[onOpen] 在点击入口时启动独立本地会话。
+  const _OfflineImageComposerCard({required this.busy, required this.onOpen});
+
+  /// 当前首页是否已有制图或结果路由，由首页持有。
+  final bool busy;
+
+  /// 点击“开始离线编辑”时调用，协同连接状态不影响可用性。
+  final VoidCallback onOpen;
+
+  /// 使用 [context] 的主题展示入口与本地处理说明。
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      elevation: 0,
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('离线本地编辑', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+            const SizedBox(height: 4),
+            Text('本地编辑文字并预览模板，无需连接服务端。', style: Theme.of(context).textTheme.bodySmall),
+            const Divider(height: 28),
+            FilledButton.icon(
+              key: const ValueKey('open-offline-image-composer'),
+              onPressed: busy ? null : onOpen,
+              icon: const Icon(Icons.image_outlined),
+              label: const Text('开始离线编辑'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 

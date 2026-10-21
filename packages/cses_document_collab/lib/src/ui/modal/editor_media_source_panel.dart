@@ -27,6 +27,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 class EditorMediaSourcePanel extends StatefulWidget {
   /// [key] 标识状态，[kind] 指定资源类型，[initialValue] 为初始URL，可为空。
   /// [allowRemove] 默认false；[service] 借自宿主，null使用运行时端口，未配置时禁用上传。
+  /// [useRuntimeService]默认true；实例调用传false，null服务就保持禁用上传。
   /// [firstTab] 与 [firstTabLabel] 必须同时提供或同时为null，否则触发断言；封面默认使用图库。
   /// [firstTabOwnsScroll] 默认false；true要求[firstTab]非空，首Tab自行滚动，不影响链接/上传Tab。
   /// [leadingAction] 为可选底部左侧操作，选择/上传期间屏蔽点击；[onSelected] 为媒体确认回调，null由Navigator返回资源。
@@ -37,6 +38,7 @@ class EditorMediaSourcePanel extends StatefulWidget {
     required this.initialValue,
     this.allowRemove = false,
     this.service,
+    this.useRuntimeService = true,
     this.firstTab,
     this.firstTabLabel,
     this.firstTabOwnsScroll = false,
@@ -58,7 +60,10 @@ class EditorMediaSourcePanel extends StatefulWidget {
   /// 借用的确认时权限回调；null表示不增加门禁，false阻止提交。
   final bool Function()? canEdit;
 
-  /// 借用的上传端口；null使用运行时服务，面板不关闭服务或持有登录身份。
+  /// 是否允许null上传端口回退到全局服务；默认true保留历史独立调用。
+  final bool useRuntimeService;
+
+  /// 借用的上传端口；null仅在useRuntimeService开启时回退运行时，面板不关闭服务。
   final EditorMediaUploadService? service;
 
   /// 可选首Tab内容，如emoji列表；null时封面使用默认图库，其他类型无附加页。
@@ -97,7 +102,7 @@ class _MediaSourceSheetState extends State<EditorMediaSourcePanel> {
 
   /// 当前来源是否为本地文件；链接与首Tab不触发文件上传。
   bool get _local => _source == 'upload';
-  late final _service = widget.service ?? CollabRuntime.services.mediaUpload;
+  late final _service = widget.service ?? (widget.useRuntimeService ? CollabRuntime.services.mediaUpload : null);
 
   /// 将获准的媒体 [source] 同步交给回调或Navigator；不执行业务保存，回调异常由调用边界处理。
   void _complete(EditorMediaSource source) {

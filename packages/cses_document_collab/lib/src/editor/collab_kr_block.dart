@@ -1,10 +1,10 @@
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/model/collab_host_services.dart';
 import 'package:cses_document_collab/src/model/collab_kr.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_card_frame.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_card_header.dart';
 import 'package:flutter/material.dart';
@@ -84,7 +84,7 @@ class _KrBlockState extends State<_KrBlock> with SelectableMixin {
   @override
   Widget build(BuildContext context) {
     final editor = context.read<EditorState>();
-    final services = CollabRuntime.services;
+    final services = EditorCommandContext.of(editor).services;
     final meeting = readCollabKr(widget.node.attributes).string('meetingId');
     if (_meeting != meeting || !identical(_services, services)) {
       _selectedKr = null;
@@ -288,7 +288,7 @@ class _KrBlockState extends State<_KrBlock> with SelectableMixin {
       mounted &&
       !editor.isDisposed &&
       generation == _generation &&
-      identical(CollabRuntime.services, services) &&
+      identical(EditorCommandContext.of(editor).services, services) &&
       identical(editor.getNodeAtPath(widget.node.path), widget.node) &&
       readCollabKr(widget.node.attributes).string('meetingId') == _meeting;
 

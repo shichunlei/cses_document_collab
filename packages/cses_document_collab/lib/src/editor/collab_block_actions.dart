@@ -1,10 +1,11 @@
+import 'package:cses_document_collab/src/ui/modal/collab_editor_display_scope.dart';
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'dart:convert';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'package:cses_document_collab/src/editor/collab_paragraph_links.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_bottom_sheet.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_menu_row.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
@@ -94,11 +95,11 @@ Future<void> copyCollabMediaLink(BuildContext context, EditorState editor, Node 
   // 手机投影中的三个资源类型统一使用url；不改写桌面原生src/url属性。
   final url = current.attributes['url'];
   if (url is! String || url.trim().isEmpty) throw StateError('资源链接为空');
-  final services = CollabRuntime.services;
+  final services = EditorCommandContext.of(editor).services;
   await Clipboard.setData(ClipboardData(text: url));
   if (context.mounted &&
       !editor.isDisposed &&
-      identical(CollabRuntime.services, services) &&
+      identical(EditorCommandContext.of(editor).services, services) &&
       identical(findCollabActionNode(editor, id), current) &&
       current.attributes['url'] == url) {
     ScaffoldMessenger.maybeOf(context)
@@ -186,31 +187,35 @@ class CollabBlockMoreButton extends StatelessWidget {
   /// Custom launchers stay visible with a null callback when unavailable; the
   /// default ellipsis remains hidden in preview without readonly actions.
   @override
-  Widget build(BuildContext context) => ListenableBuilder(
-    listenable: Listenable.merge([editor.editableNotifier, CollabBlockLocks.of(editor)]),
-    builder: (context, _) {
-      final available =
-          !editor.isDisposed &&
-          (CollabBlockLocks.of(editor)?.userId.isNotEmpty == true ||
-              (editor.editable ? const {'page', 'callout'}.contains(node.parent?.type) : readOnlyActions.isNotEmpty));
-      final VoidCallback? onPressed = available && enabled ? () => _show(context) : null;
-      if (triggerBuilder != null) {
-        return ExcludeFocus(child: triggerBuilder!(context, onPressed));
-      }
-      if (!available) return const SizedBox.shrink();
-      return ExcludeFocus(
-        child: IconButton(
-          key: ValueKey('block-lock-menu-trigger-${CollabBlockLocks.idOf(node)}'),
-          tooltip: '更多操作',
-          style: const ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-          constraints: const BoxConstraints.tightFor(width: 32, height: 32),
-          padding: EdgeInsets.zero,
-          icon: const Icon(LucideIcons.ellipsis, size: 18),
-          onPressed: onPressed,
-        ),
-      );
-    },
-  );
+  Widget build(BuildContext context) => CollabEditorDisplayScope.maybeOf(context)?.preview == true
+      ? const SizedBox.shrink()
+      : ListenableBuilder(
+          listenable: Listenable.merge([editor.editableNotifier, CollabBlockLocks.of(editor)]),
+          builder: (context, _) {
+            final available =
+                !editor.isDisposed &&
+                (CollabBlockLocks.of(editor)?.userId.isNotEmpty == true ||
+                    (editor.editable
+                        ? const {'page', 'callout'}.contains(node.parent?.type)
+                        : readOnlyActions.isNotEmpty));
+            final VoidCallback? onPressed = available && enabled ? () => _show(context) : null;
+            if (triggerBuilder != null) {
+              return ExcludeFocus(child: triggerBuilder!(context, onPressed));
+            }
+            if (!available) return const SizedBox.shrink();
+            return ExcludeFocus(
+              child: IconButton(
+                key: ValueKey('block-lock-menu-trigger-${CollabBlockLocks.idOf(node)}'),
+                tooltip: '更多操作',
+                style: const ButtonStyle(tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+                constraints: const BoxConstraints.tightFor(width: 32, height: 32),
+                padding: EdgeInsets.zero,
+                icon: const Icon(LucideIcons.ellipsis, size: 18),
+                onPressed: onPressed,
+              ),
+            );
+          },
+        );
 
   /// Opens one sheet in borrowed [context], rejects stale targets and catches failures.
   /// Block locks preserve copy/unlock while suppressing mutation commands; inherited
@@ -239,7 +244,7 @@ class CollabBlockMoreButton extends StatelessWidget {
       if (wasEditable) ...actions.where((action) => !protected || action.label.startsWith('复制')),
     ];
     final host = collabBlockActionContext(context);
-    final services = CollabRuntime.services;
+    final services = EditorCommandContext.of(editor).services;
     final id = node.attributes['cses_collab_block_id'] as String? ?? node.id;
     final type = node.type;
     final heading = _defaultBlockMenuHeader(type);
@@ -347,7 +352,7 @@ class CollabBlockMoreButton extends StatelessWidget {
               !host.mounted ||
               editor.isDisposed ||
               editor.editable != wasEditable ||
-              !identical(CollabRuntime.services, services)) {
+              !identical(EditorCommandContext.of(editor).services, services)) {
             return;
           }
           final source = findCollabActionNode(editor, id);
@@ -396,7 +401,7 @@ class CollabBlockMoreButton extends StatelessWidget {
         canRestore: () =>
             !permissionRevoked &&
             (choice == null || choice == -1) &&
-            identical(CollabRuntime.services, services) &&
+            identical(EditorCommandContext.of(editor).services, services) &&
             (insertedId == null || findCollabActionNode(editor, insertedId!) != null),
         selectionAfterAction: () {
           final target = insertedId == null ? null : findCollabActionNode(editor, insertedId!);
@@ -405,7 +410,7 @@ class CollabBlockMoreButton extends StatelessWidget {
       );
     } catch (error, stack) {
       services.report('块操作失败', error, stack, 'DocCollab');
-      if (host.mounted && !editor.isDisposed && identical(CollabRuntime.services, services)) {
+      if (host.mounted && !editor.isDisposed && identical(EditorCommandContext.of(editor).services, services)) {
         ScaffoldMessenger.maybeOf(host)?.showSnackBar(const SnackBar(content: Text('操作失败，请重试')));
       }
     } finally {

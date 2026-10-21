@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/ui/modal/collab_editor_display_scope.dart';
 import 'dart:math' as math;
 
 import 'package:cses_document_collab/src/editor/collab_host_mention_ui.dart';
@@ -401,7 +402,8 @@ class _TaskLeaders extends StatelessWidget {
   /// 在借用[context]中构建固定尺寸头像组；未注入宿主头像时隐藏。
   @override
   Widget build(BuildContext context) {
-    if (CollabRuntime.services.mentionAvatarBuilder == null || data.leaders.isEmpty) {
+    if ((CollabEditorDisplayScope.maybeOf(context)?.services ?? CollabRuntime.services).mentionAvatarBuilder == null ||
+        data.leaders.isEmpty) {
       return const SizedBox.shrink();
     }
     final visible = data.leaders.take(3).toList();

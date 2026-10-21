@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -6,7 +7,6 @@ import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.da
 import 'package:cses_document_collab/src/editor/collab_list_editing.dart';
 import 'package:cses_document_collab/src/model/collab_paragraph_style.dart';
 import 'package:cses_document_collab/src/model/collab_table.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart' show KeyEventResult;
 
@@ -122,7 +122,12 @@ Future<void> _applyTab(EditorState state, int delta) async {
   try {
     await changeCollabBlockIndent(state, delta);
   } catch (error, stack) {
-    CollabDiagnostics.report('文本段缩进失败', error: error, stackTrace: stack);
+    EditorCommandContext.report(
+      state,
+      '文本段缩进失败',
+      error: error,
+      stackTrace: stack,
+    );
     FlutterError.reportError(
       FlutterErrorDetails(exception: error, stack: stack, library: 'DocCollab'),
     );

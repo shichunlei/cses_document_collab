@@ -1,9 +1,9 @@
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_formula_sheet.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_formula.dart';
 import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:provider/provider.dart';
@@ -78,7 +78,7 @@ class CollabInlineFormula extends StatelessWidget {
                       await showCollabFormulaInput(context, editor, inlineTarget: target);
                     });
                   } catch (error, stack) {
-                    CollabDiagnostics.report('行内公式编辑失败', error: error, stackTrace: stack, tag: 'DocCollab');
+                    EditorCommandContext.report(editor, '行内公式编辑失败', error: error, stackTrace: stack, tag: 'DocCollab');
                     if (context.mounted) {
                       ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(content: Text('公式编辑失败，请重试')));
                     }

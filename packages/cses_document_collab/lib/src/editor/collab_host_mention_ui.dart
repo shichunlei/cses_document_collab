@@ -1,6 +1,8 @@
+import 'package:cses_document_collab/src/ui/modal/collab_editor_display_scope.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/model/collab_user_mention.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:flutter/material.dart';
 
 /// 在借用 [context] 中构建宿主头像槽；[userId]/[name] 为当前位置的人员，
@@ -12,7 +14,10 @@ Widget? buildHostMentionAvatarSlot(
   required double size,
   String? avatarUrl,
 }) {
-  final builder = CollabRuntime.services.mentionAvatarBuilder;
+  final builder =
+      (CollabEditorDisplayScope.maybeOf(context)?.services ??
+              CollabRuntime.services)
+          .mentionAvatarBuilder;
   if (builder == null) return null;
   return ExcludeSemantics(
     child: SizedBox.square(
@@ -39,7 +44,7 @@ Future<CollabMentionUser?> pickHostMentionUser(
   EditorState editor, {
   String keyword = '',
 }) async {
-  final services = CollabRuntime.services;
+  final services = EditorCommandContext.of(editor).services;
   final picker = services.pickMentionUser;
   if (picker == null ||
       !context.mounted ||
@@ -64,7 +69,7 @@ Future<CollabMentionUser?> pickHostMentionUser(
         editor.isDisposed ||
         !editor.editable ||
         !canEdit.value ||
-        !identical(CollabRuntime.services, services)) {
+        !identical(EditorCommandContext.of(editor).services, services)) {
       return null;
     }
     return user;

@@ -1,10 +1,10 @@
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
 import 'package:cses_document_collab/src/model/collab_color_palette.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_bottom_sheet.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_card_lock_overlay.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_color_picker.dart';
@@ -373,7 +373,7 @@ class _CalloutSettingsState extends State<_CalloutSettings> {
     try {
       await _set(csesCalloutPrefixAttribute, '');
     } catch (error, stack) {
-      CollabDiagnostics.report('表情设置失败', error: error, stackTrace: stack, tag: 'DocCollab');
+      EditorCommandContext.report(widget.editor, '表情设置失败', error: error, stackTrace: stack, tag: 'DocCollab');
       if (mounted) {
         ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(content: Text('表情设置失败，请重试')));
       }

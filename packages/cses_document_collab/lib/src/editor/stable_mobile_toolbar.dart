@@ -7,7 +7,24 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 /// AppFlowy's built-in V2 toolbar replaces the keyboard with the H/Aa menu.
 /// The product interaction used here instead displays a compact secondary bar
 /// immediately above the keyboard toolbar without touching the IME.
+///
+/// ```dart
+/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:cses_document_collab/src/editor/stable_mobile_toolbar.dart';
+/// final state = EditorState.blank();
+/// final toolbar = StableMobileToolbar(
+///   editorState: state,
+///   toolbarItems: const [],
+///   child: AppFlowyEditor(editorState: state),
+/// );
+/// // 从树中移除toolbar后由创建方state.dispose()。
+/// ```
 class StableMobileToolbar extends StatefulWidget {
+  /// [key]控制身份与状态复用，[editorState]为借用的正文状态，[child]为必填正文。
+  /// [toolbarItems]是按展示顺序提供的入口，本组件不拥有其业务资源。
+  /// [toolbarHeight]为主工具栏逻辑像素高度，默认52；[buttonHeight]为按钮高度，默认42。
+  /// [buttonSpacing]为主题按钮间距，默认6逻辑像素；[itemOutlineColor]为边线颜色。
+  /// [primaryColor]为工具栏主题主色；没有入口时仅展示正文，存在入口时自动附加右侧收起按钮。
   const StableMobileToolbar({
     super.key,
     required this.editorState,
@@ -20,13 +37,28 @@ class StableMobileToolbar extends StatefulWidget {
     this.primaryColor = const Color(0xFF2563EB),
   });
 
+  /// 借用的编辑器，本组件不释放它。
   final EditorState editorState;
+
+  /// 调用方提供的菜单入口，空列表不产生菜单按钮。
   final List<MobileToolbarItem> toolbarItems;
+
+  /// 必填正文，不受菜单展示配置影响。
   final Widget child;
+
+  /// 主工具栏逻辑像素高度，默认52。
   final double toolbarHeight;
+
+  /// 主题按钮逻辑像素高度，默认42。
   final double buttonHeight;
+
+  /// 主题按钮间距，单位逻辑像素，默认6。
   final double buttonSpacing;
+
+  /// 工具栏边线的主题颜色。
   final Color itemOutlineColor;
+
+  /// 工具栏的主题主色。
   final Color primaryColor;
 
   @override
@@ -86,6 +118,7 @@ class _StableMobileToolbarState extends State<StableMobileToolbar>
     });
   }
 
+  /// 使用[context]构建正文；有可用入口且键盘可见时才占用工具栏高度。
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<Selection?>(
@@ -97,7 +130,10 @@ class _StableMobileToolbarState extends State<StableMobileToolbar>
                 .selectionExtraInfo?[selectionExtraInfoDisableMobileToolbarKey] ==
             true;
         final showToolbar =
-            selection != null && !toolbarDisabled && _keyboardVisible;
+            selection != null &&
+            !toolbarDisabled &&
+            _keyboardVisible &&
+            widget.toolbarItems.isNotEmpty;
 
         return Column(
           children: [
@@ -132,7 +168,7 @@ class _StableMobileToolbarState extends State<StableMobileToolbar>
     );
   }
 
-  /// 在借用 [context] 中构建原有点击区域和选中背景，收起键盘使用Lucide图标。
+  /// 在借用 [context] 中构建非空菜单行及选中背景，收起键盘始终固定在滚动入口右侧。
   Widget _buildToolbarRow(BuildContext context) {
     final style = MobileToolbarTheme.of(context);
     return Container(

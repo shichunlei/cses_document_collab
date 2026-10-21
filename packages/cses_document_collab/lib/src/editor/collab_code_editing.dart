@@ -47,11 +47,52 @@ Future<bool> handleCollabCodeEnter(EditorState state) async {
   if (state.undoManager.undoStack.isNonEmpty) {
     state.undoManager.undoStack.last.seal();
   }
-  final transaction = state.transaction
-    ..deleteText(node, offset, selection.end.offset - offset)
-    ..insertText(node, offset, newline, attributes: {})
-    ..selectionExtraInfo = {}
-    ..customSelectionType = SelectionType.inline;
+  final transaction = buildCollabCodeTextReplacement(state, selection, newline);
+  if (transaction == null) return false;
   await state.apply(transaction, skipHistoryDebounce: true);
   return true;
+}
+
+/// 为借用的[state]在[selection]处替换纯文本[text]，代码换行与粘贴共用此原位事务。
+/// 仅接受可编辑代码叶子的有效单节点选区，失效、块选区或对象占位返回null。
+/// 不应用事务或修改历史；调用方先核对容量/策略，再apply并拥有独立历史边界。
+/// 保留节点身份和全部代码属性，光标落在插入文本末尾，空文本可删除所选内容。
+///
+/// ```dart
+/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:cses_document_collab/src/editor/collab_code_editing.dart';
+/// final state = EditorState(document: Document(root: pageNode(children: [
+///   Node(type: 'code', attributes: {blockComponentDelta: Delta().toJson()}),
+/// ])));
+/// final selection = Selection.collapsed(Position(path: [0]));
+/// state.selection = selection;
+/// final transaction = buildCollabCodeTextReplacement(state, selection, 'a\nb');
+/// if (transaction != null) await state.apply(transaction);
+/// state.dispose();
+/// ```
+Transaction? buildCollabCodeTextReplacement(EditorState state, Selection selection, String text) {
+  if (state.isDisposed ||
+      !state.editable ||
+      state.selectionType == SelectionType.block ||
+      !selection.isSingle ||
+      text.contains('\uFFFC')) {
+    return null;
+  }
+  final range = selection.normalized;
+  final node = state.getNodeAtPath(range.start.path);
+  final delta = node?.delta;
+  if (node == null ||
+      node.type != csesCodeBlockType ||
+      node.children.isNotEmpty ||
+      delta == null ||
+      range.start.offset < 0 ||
+      range.end.offset > delta.length) {
+    return null;
+  }
+  return state.transaction
+    ..deleteText(node, range.start.offset, range.end.offset - range.start.offset)
+    ..insertText(node, range.start.offset, text, attributes: {})
+    ..afterSelection = Selection.collapsed(Position(path: node.path, offset: range.start.offset + text.length))
+    ..selectionExtraInfo = {}
+    ..customSelectionType = SelectionType.inline;
 }

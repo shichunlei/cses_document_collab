@@ -1,12 +1,12 @@
+import 'package:provider/provider.dart';
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
-import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart'
-    show csesEmbedUrlAttribute;
+import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart' show csesEmbedUrlAttribute;
 import 'package:cses_document_collab/src/editor/collab_resource_block_base.dart';
 import 'package:cses_document_collab/src/editor/collab_unsupported_block.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_card_frame.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_card_header.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_media_timeline.dart';
@@ -165,12 +165,24 @@ class _AudioPlayerState extends State<_AudioPlayer> {
     try {
       await _pendingSeek;
     } catch (error, stackTrace) {
-      CollabDiagnostics.report('音频关闭前跳转失败', error: error, stackTrace: stackTrace, tag: 'DocCollab');
+      EditorCommandContext.report(
+        mounted ? context.read<EditorState>() : null,
+        '音频关闭前跳转失败',
+        error: error,
+        stackTrace: stackTrace,
+        tag: 'DocCollab',
+      );
     }
     try {
       await _controller.dispose();
     } catch (error, stackTrace) {
-      CollabDiagnostics.report('音频资源释放失败', error: error, stackTrace: stackTrace, tag: 'DocCollab');
+      EditorCommandContext.report(
+        mounted ? context.read<EditorState>() : null,
+        '音频资源释放失败',
+        error: error,
+        stackTrace: stackTrace,
+        tag: 'DocCollab',
+      );
     }
   }
 

@@ -1,3 +1,5 @@
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
+import 'package:cses_document_collab/src/model/collab_host_services.dart';
 import 'dart:convert';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
@@ -7,7 +9,6 @@ import 'package:cses_document_collab/src/editor/collab_paragraph_links.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_color_palette.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_bottom_sheet.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_color_picker.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_divider_visual.dart';
@@ -50,7 +51,7 @@ Future<void> showCollabDividerSettings(BuildContext context, EditorState editor,
       },
     );
   } catch (error, stack) {
-    CollabDiagnostics.report('分割线操作失败', error: error, stackTrace: stack, tag: 'DocCollab');
+    EditorCommandContext.report(editor, '分割线操作失败', error: error, stackTrace: stack, tag: 'DocCollab');
     if (host.mounted && session.sameHost) {
       ScaffoldMessenger.maybeOf(host)?.showSnackBar(const SnackBar(content: Text('操作失败，请重试')));
     }
@@ -82,20 +83,20 @@ Future<CollabDivider?> showCollabDividerInput(
 }) async {
   if (editor.isDisposed || !editor.editable || _open[editor] == true) return null;
   _open[editor] = true;
-  final services = CollabRuntime.services;
+  final services = EditorCommandContext.of(editor).services;
   try {
     final result = await showCollabBottomSheet<_DividerResult>(
       context: context,
       useRootNavigator: false,
       builder: (_) => _DividerSettings(
         editor: editor,
-        canCreate: () => identical(CollabRuntime.services, services) && (canCreate?.call() ?? true),
+        canCreate: () => identical(EditorCommandContext.of(editor).services, services) && (canCreate?.call() ?? true),
       ),
     );
     if (!context.mounted ||
         editor.isDisposed ||
         !editor.editable ||
-        !identical(CollabRuntime.services, services) ||
+        !identical(EditorCommandContext.of(editor).services, services) ||
         !(canCreate?.call() ?? true)) {
       return null;
     }
@@ -260,7 +261,7 @@ class _DividerSettingsState extends State<_DividerSettings> {
       }
       await changeCollabDividerProperty(widget.editor, widget.session!.id, property, value);
     } catch (error, stack) {
-      CollabDiagnostics.report('修改分割线失败', error: error, stackTrace: stack, tag: 'DocCollab');
+      EditorCommandContext.report(widget.editor, '修改分割线失败', error: error, stackTrace: stack, tag: 'DocCollab');
       if (mounted) {
         setState(() => _error = '修改失败，请重试');
       }
@@ -284,7 +285,7 @@ class _DividerSettingsState extends State<_DividerSettings> {
     try {
       await widget.session!.toggle(value);
     } catch (error, stack) {
-      CollabDiagnostics.report('分割线锁操作失败', error: error, stackTrace: stack, tag: 'DocCollab');
+      EditorCommandContext.report(widget.editor, '分割线锁操作失败', error: error, stackTrace: stack, tag: 'DocCollab');
       if (mounted) setState(() => _error = '锁操作失败，请重新打开后重试');
     } finally {
       if (mounted) {
@@ -575,7 +576,8 @@ class _DividerSession extends ChangeNotifier {
   _DividerSession(this.editor, this.id)
     : locks = CollabBlockLocks.of(editor),
       links = CollabParagraphLinks.of(editor),
-      _target = findCollabDivider(editor, id) {
+      _target = findCollabDivider(editor, id),
+      _services = EditorCommandContext.of(editor).services {
     _epoch = locks?.epoch(id) ?? 0;
     editor.editableNotifier.addListener(_observe);
     locks?.addListener(_observe);
@@ -597,7 +599,7 @@ class _DividerSession extends ChangeNotifier {
   final Node? _target;
 
   /// 捕获宿主服务身份，拒绝跨账号/文档会话的迟到结果。
-  final _services = CollabRuntime.services;
+  final CollabHostServices _services;
 
   /// 最近一次明确接受的锁代次，仅成功的自身加解锁可推进。
   int _epoch = 0;
@@ -623,7 +625,7 @@ class _DividerSession extends ChangeNotifier {
   /// 宿主与锁绑定仍属原编辑器；不判断节点是否仍存在。
   bool get sameHost =>
       !editor.isDisposed &&
-      identical(CollabRuntime.services, _services) &&
+      identical(EditorCommandContext.of(editor).services, _services) &&
       identical(CollabBlockLocks.of(editor), locks);
 
   /// 当前未失效且节点、权限和锁代次仍有效；自身提交中只展示当前投影，不开放新操作。

@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'dart:convert';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
@@ -5,7 +6,6 @@ import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_mermaid.dart';
 import 'package:cses_document_collab/src/model/collab_mermaid_options.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_bottom_sheet.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_menu_row.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_mermaid_visual.dart';
@@ -33,7 +33,8 @@ Future<void> showCollabMermaidEditor(
       await showCollabMermaidInput(context, editor, id: id);
     });
   } catch (error, stack) {
-    CollabDiagnostics.report(
+    EditorCommandContext.report(
+      editor,
       '绘图编辑失败',
       error: error,
       stackTrace: stack,
@@ -226,7 +227,8 @@ class _MermaidSheetState extends State<_MermaidSheet> {
       }
       if (mounted) Navigator.pop(context, (source: source, view: _view));
     } catch (error, stack) {
-      CollabDiagnostics.report(
+      EditorCommandContext.report(
+        widget.editor,
         '保存绘图失败',
         error: error,
         stackTrace: stack,
@@ -301,7 +303,8 @@ class _MermaidSheetState extends State<_MermaidSheet> {
       );
       if (mounted && example != null) _applyExample(example, replace: replace);
     } catch (error, stack) {
-      CollabDiagnostics.report(
+      EditorCommandContext.report(
+        widget.editor,
         '打开绘图选项失败',
         error: error,
         stackTrace: stack,

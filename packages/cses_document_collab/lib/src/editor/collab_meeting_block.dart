@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'dart:math' as math;
 
 import 'package:appflowy_editor/appflowy_editor.dart';
@@ -7,7 +8,6 @@ import 'package:cses_document_collab/src/model/collab_host_services.dart';
 import 'package:cses_document_collab/src/model/collab_kr.dart';
 import 'package:cses_document_collab/src/model/collab_meeting.dart';
 import 'package:cses_document_collab/src/model/collab_meeting_card_data.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_card_frame.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_card_header.dart';
 import 'package:flutter/material.dart';
@@ -75,7 +75,7 @@ class _MeetingBlockState extends State<_MeetingBlock> with SelectableMixin {
     final node = widget.node;
     final id = node.attributes['cses_collab_block_id'] as String? ?? node.id;
     final values = CollabMeeting.readAttributes(node.attributes);
-    final services = CollabRuntime.services;
+    final services = EditorCommandContext.of(editor).services;
     final meetingId = values.string('meetingId');
     final future = _detailsFor(editor, id, meetingId, services);
     final child = Padding(
@@ -184,7 +184,7 @@ class _MeetingBlockState extends State<_MeetingBlock> with SelectableMixin {
     if (!mounted ||
         editor.isDisposed ||
         generation != _detailGeneration ||
-        !identical(services, CollabRuntime.services)) {
+        !identical(services, EditorCommandContext.of(editor).services)) {
       return false;
     }
     final node = findCollabMeeting(editor, id);
@@ -263,7 +263,7 @@ class _MeetingBlockState extends State<_MeetingBlock> with SelectableMixin {
     CollabHostServices services,
     CollabMeetingCardData? data,
   ) async {
-    if (_busy || !mounted || editor.isDisposed || !identical(services, CollabRuntime.services)) {
+    if (_busy || !mounted || editor.isDisposed || !identical(services, EditorCommandContext.of(editor).services)) {
       return;
     }
     final current = findCollabMeeting(editor, id);
@@ -278,14 +278,14 @@ class _MeetingBlockState extends State<_MeetingBlock> with SelectableMixin {
     setState(() => _busy = true);
     try {
       await runEditorHeaderAction<void>(context, editor, () async {
-        if (!mounted || editor.isDisposed || !identical(services, CollabRuntime.services)) {
+        if (!mounted || editor.isDisposed || !identical(services, EditorCommandContext.of(editor).services)) {
           return;
         }
         await callback(meetingId, data?.title ?? values.string('title'), data?.number ?? values.string('number'));
       }, canRestore: () => false);
     } catch (error, stack) {
       services.report('打开会议失败', error, stack, 'DocCollab');
-      if (mounted && identical(services, CollabRuntime.services)) {
+      if (mounted && identical(services, EditorCommandContext.of(editor).services)) {
         ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(content: Text('打开会议失败，请重试')));
       }
     } finally {
@@ -296,7 +296,11 @@ class _MeetingBlockState extends State<_MeetingBlock> with SelectableMixin {
   /// 在借用[editor]中删除稳定[id]的会议引用，[expected]为按钮展示时的完整属性JSON。
   /// [services]是原宿主，失效/撤权不执行；成功直接移除块，可撤销，不调用详情回调或打开键盘。
   Future<void> _deleteReference(EditorState editor, String id, String expected, CollabHostServices services) async {
-    if (_busy || !mounted || editor.isDisposed || !editor.editable || !identical(services, CollabRuntime.services)) {
+    if (_busy ||
+        !mounted ||
+        editor.isDisposed ||
+        !editor.editable ||
+        !identical(services, EditorCommandContext.of(editor).services)) {
       return;
     }
     setState(() => _busy = true);
@@ -307,12 +311,12 @@ class _MeetingBlockState extends State<_MeetingBlock> with SelectableMixin {
         () => deleteCollabMeeting(editor, id, expected: expected),
         canRestore: () => false,
       );
-      if (deleted == false && mounted && identical(services, CollabRuntime.services)) {
+      if (deleted == false && mounted && identical(services, EditorCommandContext.of(editor).services)) {
         ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(content: Text('引用已变化或不可编辑，请重试')));
       }
     } catch (error, stack) {
       services.report('删除会议引用失败', error, stack, 'DocCollab');
-      if (mounted && identical(services, CollabRuntime.services)) {
+      if (mounted && identical(services, EditorCommandContext.of(editor).services)) {
         ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(content: Text('删除失败，请重试')));
       }
     } finally {
@@ -577,7 +581,7 @@ class _MeetingCardView extends StatelessWidget {
   }
 
   /// 在借用[context]中于[height]逻辑像素行内显示原主操作[action]；重试共用此行。
-  /// 加载时按钮呈骨架且禁用，主题字体及最小宽度使加载前后的按钮尺寸保持一致。
+  /// 加载时按钮呈骨架且禁用；按钮宽度随骨架、文案和字号变化，右边界及上下位置保持。
   /// 回调仍由调用方持有，busy只替换按钮内容，不改变行高或触发额外详情请求。
   Widget _actions(BuildContext context, String action, double height) => Row(
     mainAxisAlignment: MainAxisAlignment.end,

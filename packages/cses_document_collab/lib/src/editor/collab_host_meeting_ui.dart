@@ -1,6 +1,6 @@
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/model/collab_meeting_reference.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/material.dart';
 
 /// 防止同编辑器同时打开多个宿主会议页面；不强持有已释放编辑器。
@@ -13,7 +13,7 @@ Future<CollabMeetingReference?> pickHostMeetingReference(
   BuildContext context,
   EditorState editor,
 ) async {
-  final services = CollabRuntime.services;
+  final services = EditorCommandContext.of(editor).services;
   final picker = services.pickMeetingReference;
   if (picker == null ||
       !context.mounted ||
@@ -38,7 +38,7 @@ Future<CollabMeetingReference?> pickHostMeetingReference(
         editor.isDisposed ||
         !editor.editable ||
         !canEdit.value ||
-        !identical(CollabRuntime.services, services)) {
+        !identical(EditorCommandContext.of(editor).services, services)) {
       return null;
     }
     return reference;

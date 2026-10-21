@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
@@ -6,7 +7,6 @@ import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'package:cses_document_collab/src/editor/collab_paragraph_links.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_link_view.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_bottom_sheet.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_menu_row.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
@@ -76,7 +76,7 @@ Future<void> showCollabLinkActions(
   final id = node.attributes['cses_collab_block_id'] as String? ?? node.id;
   final fingerprint = collabLinkFingerprint(node);
   final currentView = collabLinkView(node);
-  final services = CollabRuntime.services;
+  final services = EditorCommandContext.of(state).services;
   final paragraphLinks = CollabParagraphLinks.of(state);
   final locks = CollabBlockLocks.of(state);
   final lock = locks?.state(id);
@@ -227,7 +227,7 @@ Future<void> showCollabLinkActions(
             action == currentView ||
             !hostContext.mounted ||
             state.isDisposed ||
-            !identical(CollabRuntime.services, services)) {
+            !identical(EditorCommandContext.of(state).services, services)) {
           return;
         }
         final source = findCollabLinkNode(state, id);
@@ -255,7 +255,9 @@ Future<void> showCollabLinkActions(
         }
         if (action == _LinkAction.copyLink) {
           await Clipboard.setData(ClipboardData(text: url));
-          if (hostContext.mounted && !state.isDisposed && identical(CollabRuntime.services, services)) {
+          if (hostContext.mounted &&
+              !state.isDisposed &&
+              identical(EditorCommandContext.of(state).services, services)) {
             ScaffoldMessenger.maybeOf(hostContext)
               ?..hideCurrentSnackBar()
               ..showSnackBar(const SnackBar(content: Text('链接已复制')));
@@ -291,7 +293,7 @@ Future<void> showCollabLinkActions(
           action != _LinkAction.toggleLock &&
           action != _LinkAction.locateLock &&
           !permissionRevoked &&
-          identical(CollabRuntime.services, services) &&
+          identical(EditorCommandContext.of(state).services, services) &&
           (insertedId == null || findCollabLinkNode(state, insertedId!) != null),
       selectionAfterAction: () {
         final target = insertedId == null ? null : findCollabLinkNode(state, insertedId!);
@@ -300,7 +302,7 @@ Future<void> showCollabLinkActions(
     );
   } catch (error, stack) {
     services.onError?.call('链接操作失败', error, stack, 'DocCollab');
-    if (hostContext.mounted && !state.isDisposed && identical(CollabRuntime.services, services)) {
+    if (hostContext.mounted && !state.isDisposed && identical(EditorCommandContext.of(state).services, services)) {
       ScaffoldMessenger.maybeOf(hostContext)?.showSnackBar(const SnackBar(content: Text('操作失败，请重试')));
     }
   } finally {

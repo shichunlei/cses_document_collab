@@ -70,6 +70,90 @@ Widget editor(CollabController controller) =>
 - `localDraft` 是独立模式，保留旧 demo schema 和头部迁移；默认封面由宿主传入。正式模式不经过草稿初始化、不创建业务根/标题/封面。
 - FRB、Rust 原始 API、EditorState 和内部块类型是包内实现，宿主使用公开控制器状态/命令及编辑页。不要从 src 导入。
 
+## 编辑器与同步边界
+
+`DocumentEditorController`独立拥有AppFlowy内存文档、输入继承、选区和本地历史，
+`DocumentEditorView`只借用正文状态，复用原T/Aa/布局/添加与划词菜单。
+独立会话默认空宿主服务，不初始化Rust、SQLite或网关；业务能力由实例上下文注入。
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:cses_document_collab/cses_document_collab.dart';
+
+final editor = DocumentEditorController();
+final view = DocumentEditorView(editorState: editor.editorState);
+// 将view移出组件树后，由创建方释放：
+// await editor.close();
+```
+
+`CollabController`继续拥有协同资源，并向独立编辑会话挂载数据适配器。
+本地事务依次执行身份准备、默认格式、模型校验、输入继承及同步发布；远端投影不回送。
+投影隔离只覆盖AppFlowy同步改树阶段，不延长到Future收尾微任务；同步回放后的立即本地输入仍正常发布。
+同步适配器解绑后，外部持有的编辑会话仍可编辑；外部会话由创建方释放。
+既有`CollaborativeEditorPage(collab: ...)`调用方式不变；本地入口的返回值变化见下节。
+历史裸EditorState/适配器保留原宿主服务解析兼容入口，新的独立会话显式隔离服务。
+
+## 离线本地编辑与能力配置
+
+`showCollabImageComposer`目前提供本地块编辑与模板预览，返回`Future<void>`；已移除PNG生成、图片结果类型和输出尺寸参数，不接入截图导出。
+无需创建`CollabController`、登录、SQLite或网关，不初始化Rust文档；可与已有协同文档同时使用。
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:cses_document_collab/cses_document_collab.dart';
+
+Future<void> editLocal(BuildContext context) => showCollabImageComposer(
+  context: context,
+  initialText: '本地正文',
+  editorConfig: EditorConfiguration(
+    blocks: [EditorBlock.paragraph, EditorBlock.heading, EditorBlock.quote, EditorBlock.table, EditorBlock.formula],
+    headingLevels: {1, 3},
+    inlineFormats: {EditorInlineFormat.bold, EditorInlineFormat.textColor},
+    alignments: {'left', 'center'},
+    nextParagraphStyle: false,
+    keyboardToolbarItems: [
+      EditorKeyboardToolbarItem.table,
+      EditorKeyboardToolbarItem.formula,
+      EditorKeyboardToolbarItem.textStyle,
+    ],
+    maxCharacters: 10000,
+    maxBlocks: 100,
+  ),
+);
+```
+
+`EditorConfiguration`在构造时复制并冻结集合，每个编辑器独立持有，创建后不支持热替换。
+`blocks`是完整启用列表，按配置顺序显示块类型；标题级别允许1～9的非连续集合以保留桌面与历史正文能力；移动端添加和类型菜单统一最多显示H6，与启用集合取交集。
+基础paragraph必须保留，保证空文档、回车和删除末块的落点；无效配置在创建资源前拒绝。
+默认启用包内已注册的全部25种用户块类型，标题菜单提供H1～H6，已有H7～H9仍可读取：正文、标题、引用、三类列表、代码、高亮、表格、分割线、分页符、公式、Mermaid绘图、图片、链接、音视频、附件、网页/Figma/掘金嵌入，以及会议/任务/KR引用。
+表格行/单元格和绘图源码按所属容器隐式启用，不单独出现在添加菜单。
+这表示开放现有移动端实现，不代表41种桌面块已全部适配；仍按根仓库适配表的支持范围使用。
+`EditorConfiguration.text`保留原六类文字块/H1～H4预设；也可通过`blocks`和`inlineFormats`选择更小的功能集合。
+
+字符格式可分别启停加粗、斜体、下划线、删除线、行内代码、字号、颜色、字体/字距/倍率、上下标、链接、行内公式和提及。
+字号菜单及命令使用`fontSizes`，默认12/16/20/24/28/32/36像素；对齐、下一段样式、行高写入及正文容量分别配置。
+`keyboardToolbarItems`是完整的键盘入口列表，按配置顺序显示。收起键盘不参与配置：只要存在可显示的菜单，就自动在最右侧显示；所有入口均被能力配置过滤时也隐藏整条。默认使用`EditorKeyboardToolbarItem.defaults`，保留原六个菜单入口及自动附加的收起按钮；传空列表`[]`隐藏整条工具栏，不留高度或分隔线。列表构造时冻结，重复项会抛出`ArgumentError`。
+可选原入口：`addBlock`（加号）、`blockType`（T）、`textStyle`（Aa）、`blockLayout`、`image`、`mention`。
+“更多→常用”可直接放到键盘上：`link`、`video`、`attachment`、`audio`、`bookmark`、`embed`、`juejin`、`figma`、`table`、`callout`、`meeting`、`formula`、`mermaid`、`inlineFormula`、`divider`、`pageDivider`，图片与@用户也可直接配置。
+`spreadsheet`、`multiTable`、`mindMap`保留原常用面板的占位行为，只提示“暂未支持”，不创建正文；能配置展示不代表这些块已适配。
+键盘直达动作与更多面板复用同一目录和插入流程，包括模态隔离、稳定位置、取消/失效拒绝写入和焦点恢复。入口仍与块/格式能力取交集，例如未启用图片块，即使列表包含`image`也不会显示图片按钮。
+旧加号布尔参数已移除；通过包含或省略`EditorKeyboardToolbarItem.addBlock`控制加号。隐藏入口仅改变键盘菜单，不禁止已启用的命令、快捷输入、划词操作或更多面板中的同类动作。
+空格式集隐藏Aa入口；空对齐集隐藏对齐按钮。原工具栏、划词菜单、快捷键、Markdown转换及本地事务校验共同使用配置，直接命令和粘贴同样受约束。
+粘贴保留纯文本，不解析HTML、Markdown或创建链接。默认容量100000个UTF-16单元（不计段落分隔换行）、500个正文节点（含容器结构子块），可由配置调整。
+默认业务端口为空，不继承活动协同文档的账号、上传、会议/任务详情或头像服务。
+如需从本地数据提供业务引用，可显式传入`services: CollabHostServices(...)`，服务由调用方持有；未提供服务时业务选择无法完成、详情仅保留引用快照；不伪造引用或业务数据。
+媒体默认可通过链接添加；未注入上传服务时不显示本地上传入口，嵌套面板也不回退到全局上传服务。
+资源链接的实际加载遵循平台和网络条件，不会因此启动文档协同。
+本地不创建块锁管理器，不提供锁定/解锁菜单，锁属性写入被拒绝；原协同文档的锁服务和协议保持。
+
+预览深复制正文并复用同一块组件；关闭输入、选区服务和正文点击，不显示光标、选区、工具栏、更多按钮、锁标或空白输入提示。
+返回编辑保留原正文及历史；再次预览捕获新快照。内置五款本地渐变模板，或传入ID唯一的`List<CollabImageTemplate>`；模板切换不进入正文历史。
+预览正文使用独立可滚动视图，尚未实现完整长图截图或导出。
+
+路由完整退场后释放本地编辑与预览资源；内容只保留在本次会话内，不自动保存、不访问相册或服务端。
+`LocalEditorController(configuration: ...)`及`DocumentEditorView`可通过公开入口用于自行装配；创建者在视图卸载后等待`close()`。
+现有协同会话默认`EditorConfiguration.document`兼容预设，完整块及复杂业务端口保持，不受本地配置影响；该预设不能用于本地控制器。
+
 ## 图片点击
 
 正式图片块的图片本体点击调用可选的 `CollabHostServices.onImageTap(url)`，完整传递当前原始链接，包括查询签名和片段。宿主负责预览路由及资源，异步回调应在预览关闭后完成；同一图片回调未结束时忽略重复点击。编辑和预览均可用，题注与更多菜单不触发。
@@ -435,6 +519,18 @@ SVG图片使用flutter_svg绘制：带`.svg`后缀的远端图片复用CachedNet
 
 本次按钮归并的验证范围见根仓库 `docs/verification/media-more-menu-20261016.json`。
 
+
+### 默认文字颜色真机回归
+
+`integration_test/document_text_color_test.dart`复用共用正文颜色回归，在Android实际视口核对编辑/预览、左对齐/分散对齐的最终字符颜色。覆盖默认黑色、局部红/蓝/白色、链接色和高亮块颜色继承，并确认正文JSON不变且没有同步回送。显式白字使用深色字符背景方便截图辨认；测试正文仅存在内存中，不登录或访问已有文档。
+
+从Demo宿主根目录运行，`TEXT_COLOR_SCREENSHOTS`可指定截图目录：
+
+```bash
+TEXT_COLOR_SCREENSHOTS=build/document-text-color-screenshots flutter drive --driver packages/cses_document_collab/test_driver/document_text_color_driver.dart --target packages/cses_document_collab/integration_test/document_text_color_test.dart -d ANDROID_DEVICE_ID --no-pub --keep-app-running
+```
+
+必须保留`--keep-app-running`，结束后用普通Demo APK执行`adb install -r`覆盖恢复，保留用户数据。截图和结果见[2026-10-21验收记录](../../docs/verification/default-text-color-device-20261021.json)。页面背景及根字色同步不属于本次验收。
 
 ### 普通文本段Tab缩进（BlockCraft 0.11.21）
 

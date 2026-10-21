@@ -1,8 +1,8 @@
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'package:cses_document_collab/src/model/collab_image.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_cached_image.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_dialog.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
@@ -163,6 +163,7 @@ Future<void> showCollabImageEditor(
         ]),
         builder: (_, _) => _CollabImageEditDialog(
           original: original,
+          newId: EditorCommandContext.of(editorState).services.newId,
           captionOnly: captionOnly,
           canSave: () =>
               canEditCollabNode(editorState, node) &&
@@ -184,7 +185,8 @@ Future<void> showCollabImageEditor(
     final conflict =
         error is StateError && error.message == 'IMAGE_EDIT_CONFLICT';
     if (!conflict) {
-      CollabDiagnostics.report(
+      EditorCommandContext.report(
+        editorState,
         '图片编辑失败',
         error: error,
         stackTrace: stackTrace,
@@ -202,12 +204,16 @@ Future<void> showCollabImageEditor(
 /// 图片编辑表单；持有打开时的原始投影，提交后由外层检查远端竞态。
 class _CollabImageEditDialog extends StatefulWidget {
   /// [original] 为打开表单时的图片投影，借用且不修改；资源由 State 持有。
-  /// [captionOnly] 决定仅编辑题注或仅编辑链接与布局；[canSave]同步核对块锁及会话代次。
+  /// [newId]借用当前会话ID生成器；[captionOnly] 决定仅编辑题注或仅编辑链接与布局；[canSave]同步核对块锁及会话代次。
   const _CollabImageEditDialog({
     required this.original,
+    required this.newId,
     required this.captionOnly,
     this.canSave,
   });
+
+  /// 当前会话借用的ID生成器，不读取其他文档的宿主。
+  final String Function() newId;
 
   /// 可选即时保存权限；null保留独立表单默认行为，失败时保留草稿。
   final bool Function()? canSave;
@@ -247,7 +253,7 @@ class _CollabImageEditDialogState extends State<_CollabImageEditDialog> {
     wr = TextEditingController(text: image.widthRatio?.toString() ?? '');
     ar = TextEditingController(text: image.aspectRatio?.toString() ?? '');
     captions = widget.captionOnly && image.captions.isEmpty
-        ? [CollabImageCaption(id: CollabRuntime.services.newId(), text: '')]
+        ? [CollabImageCaption(id: widget.newId(), text: '')]
         : image.captions;
     texts = captions
         .map((c) => TextEditingController(text: c.text))

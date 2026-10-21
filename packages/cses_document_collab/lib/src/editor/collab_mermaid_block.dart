@@ -1,10 +1,10 @@
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/editor/collab_mermaid_sheet.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_mermaid.dart';
 import 'package:cses_document_collab/src/model/collab_mermaid_options.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_card_frame.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_card_header.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_menu_row.dart';
@@ -106,7 +106,8 @@ class _MermaidBlockState extends State<_MermaidBlock> with SelectableMixin {
         await changeCollabMermaidView(editor, id, view);
       });
     } catch (error, stack) {
-      CollabDiagnostics.report(
+      EditorCommandContext.report(
+        mounted ? context.read<EditorState>() : null,
         '切换绘图视图失败',
         error: error,
         stackTrace: stack,

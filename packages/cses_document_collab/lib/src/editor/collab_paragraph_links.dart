@@ -1,5 +1,5 @@
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -57,8 +57,10 @@ final class CollabParagraphLinks {
   /// Future在系统剪贴板完成后结束；空链接抛出[StateError]，平台及构造失败向菜单传播。
   /// 迟到结果在关闭、权限或宿主变化、节点替换后不显示提示；不恢复正文键盘。
   Future<void> copy(BuildContext context, Node node, {bool Function()? isCurrent}) async {
-    if (!context.mounted || !supports(node) || !(isCurrent?.call() ?? true)) return;
-    final services = CollabRuntime.services;
+    if (!context.mounted || !supports(node) || !(isCurrent?.call() ?? true)) {
+      return;
+    }
+    final services = EditorCommandContext.of(editor).services;
     final editable = editor.editable;
     final link = buildLink(documentId, node.attributes['cses_collab_block_id'] as String);
     if (link.trim().isEmpty) throw StateError('段落链接为空');
@@ -67,7 +69,7 @@ final class CollabParagraphLinks {
         supports(node) &&
         (isCurrent?.call() ?? true) &&
         editor.editable == editable &&
-        identical(CollabRuntime.services, services)) {
+        identical(EditorCommandContext.of(editor).services, services)) {
       ScaffoldMessenger.maybeOf(context)
         ?..hideCurrentSnackBar()
         ..showSnackBar(const SnackBar(content: Text('段落链接已复制')));

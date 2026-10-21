@@ -3,7 +3,7 @@ import 'package:cses_document_collab/src/editor/collab_formula_sheet.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
 import 'package:cses_document_collab/src/model/collab_text_range.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_dialog.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_modal_colors.dart';
@@ -52,7 +52,7 @@ Future<void> showEditorTextLink(BuildContext context, EditorState editor) async 
       );
     });
   } catch (error, stack) {
-    CollabDiagnostics.report('文字链接修改失败', error: error, stackTrace: stack, tag: 'DocCollab');
+    EditorCommandContext.of(editor).services.report('文字链接修改失败', error, stack, 'DocCollab');
     if (context.mounted) _selectionMessage(context, '链接修改失败，请重试');
   }
 }
@@ -81,7 +81,7 @@ Future<void> showEditorSelectionFormula(BuildContext context, EditorState editor
       }
     }, selectionAfterAction: () => landing);
   } catch (error, stack) {
-    CollabDiagnostics.report('选中文字转换公式失败', error: error, stackTrace: stack, tag: 'DocCollab');
+    EditorCommandContext.of(editor).services.report('选中文字转换公式失败', error, stack, 'DocCollab');
     if (context.mounted) _selectionMessage(context, '转换失败，请重试');
   }
 }

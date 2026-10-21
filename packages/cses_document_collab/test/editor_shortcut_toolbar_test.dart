@@ -163,7 +163,7 @@ void main() {
     },
   );
 
-  testWidgets('plus toolbar exposes H1 through H9 and applies H9', (
+  testWidgets('plus toolbar exposes H1 through H6 and applies H6', (
     tester,
   ) async {
     await tester.binding.setSurfaceSize(const Size(390, 844));
@@ -194,20 +194,25 @@ void main() {
     );
     expect(tester.takeException(), isNull);
     // The add sheet is the non-progressive entry point, so both ends of the
-    // supported H1-H9 range must exist immediately.
+    // supported H1-H6 range must exist immediately.
     expect(
       find.byKey(const ValueKey('editor-shortcut-heading-1')),
       findsOneWidget,
     );
     final headingList = find.byKey(const ValueKey('editor-add-heading-list'));
     expect(headingList, findsOneWidget);
-    // H1-H9 remain on one horizontal axis. Reveal H9 with a horizontal gesture
-    // before looking it up because ListView lazily builds off-screen children.
+    // Reveal the final H6 item and confirm that no deeper menu is offered.
     await tester.drag(headingList, const Offset(-360, 0));
     await tester.pumpAndSettle();
-    final headingNine = find.byKey(const ValueKey('editor-shortcut-heading-9'));
-    expect(headingNine, findsOneWidget);
-    await tester.tap(headingNine);
+    final headingSix = find.byKey(const ValueKey('editor-shortcut-heading-6'));
+    expect(headingSix, findsOneWidget);
+    for (final level in [7, 8, 9]) {
+      expect(
+        find.byKey(ValueKey('editor-shortcut-heading-$level')),
+        findsNothing,
+      );
+    }
+    await tester.tap(headingSix);
     await tester.pumpAndSettle();
     // Advance beyond the Android-only fallback window so the test observes
     // the same settled IME state as a device after the bottom sheet closes.
@@ -215,7 +220,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(state.document.first!.type, HeadingBlockKeys.type);
-    expect(state.document.first!.attributes[HeadingBlockKeys.level], 9);
+    expect(state.document.first!.attributes[HeadingBlockKeys.level], 6);
     expect(find.byKey(const ValueKey('editor-add-block-sheet')), findsNothing);
     // Choosing a block returns the resulting caret to the editor instead of
     // treating the sheet dismissal as a cancellation.
@@ -727,7 +732,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('primary T progressively reveals H4 through H9 and resets', (
+  testWidgets('primary T progressively reveals H4 through H6 and resets', (
     tester,
   ) async {
     await tester.binding.setSurfaceSize(const Size(390, 844));
@@ -783,7 +788,7 @@ void main() {
     state.selection = Selection.single(path: [0], startOffset: 3);
     await tester.pump();
 
-    for (var level = 3; level <= 8; level += 1) {
+    for (var level = 3; level <= 5; level += 1) {
       final heading = find.byKey(ValueKey('editor-block-heading-$level'));
       await tester.ensureVisible(heading);
       await tester.tap(heading);
@@ -793,12 +798,15 @@ void main() {
         findsOneWidget,
       );
     }
-    final headingNine = find.byKey(const ValueKey('editor-block-heading-9'));
-    expect(headingNine, findsOneWidget);
-    await tester.ensureVisible(headingNine);
-    await tester.tap(headingNine);
+    final headingSix = find.byKey(const ValueKey('editor-block-heading-6'));
+    expect(headingSix, findsOneWidget);
+    await tester.ensureVisible(headingSix);
+    await tester.tap(headingSix);
     await tester.pumpAndSettle();
-    expect(state.document.first!.attributes[HeadingBlockKeys.level], 9);
+    expect(state.document.first!.attributes[HeadingBlockKeys.level], 6);
+    for (final level in [7, 8, 9]) {
+      expect(find.byKey(ValueKey('editor-block-heading-$level')), findsNothing);
+    }
 
     await tester.drag(
       find.byKey(const ValueKey('editor-block-style-menu')),

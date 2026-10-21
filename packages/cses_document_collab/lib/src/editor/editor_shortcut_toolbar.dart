@@ -30,8 +30,10 @@ import 'package:cses_document_collab/src/model/collab_table.dart';
 import 'package:cses_document_collab/src/model/collab_text_range.dart';
 import 'package:cses_document_collab/src/model/collab_user_mention.dart';
 import 'package:cses_document_collab/src/model/editor_media_upload.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
+import 'package:cses_document_collab/src/editor/core/editor_configuration.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_bottom_sheet.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_menu_row.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_color_picker.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_modal_colors.dart';
@@ -40,6 +42,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show ScrollCacheExtent;
 import 'package:flutter/services.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+
+/// 移动端标题菜单的展示上限，不改变历史正文或桌面Schema支持的级别。
+const _maxHeadingMenuLevel = 6;
+
+/// 添加面板与T菜单共用的一至六级标题图标，顺序与标题级别一一对应。
+const _headingMenuIcons = [
+  LucideIcons.heading1,
+  LucideIcons.heading2,
+  LucideIcons.heading3,
+  LucideIcons.heading4,
+  LucideIcons.heading5,
+  LucideIcons.heading6,
+];
+
+/// 从[config]取得已启用的一至六级标题，按级别排序，不修改原配置。
+List<int> _menuHeadingLevels(EditorConfiguration config) =>
+    (config.headingLevels.where((level) => level <= _maxHeadingMenuLevel).toList()..sort());
 
 /// 移动键盘工具栏，借用正文编辑器并隔离添加面板的输入与选区。
 /// ```dart
@@ -188,13 +207,15 @@ class _EditorShortcutToolbarState extends State<EditorShortcutToolbar> {
     await SystemChannels.textInput.invokeMethod<void>('TextInput.show');
   }
 
-  /// 在借用 [context] 中按平台提供Lucide图标的移动工具栏，包括人员提及入口。
+  /// 在借用[context]中按实例入口集合显示原工具栏；菜单与块/格式能力取交集。
   @override
   Widget build(BuildContext context) {
     if (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS) {
       return widget.child;
     }
+    final config = EditorCommandContext.of(widget.editorState).configuration;
     return StableMobileToolbar(
+      key: ObjectKey(widget.editorState),
       editorState: widget.editorState,
       toolbarHeight: 52,
       buttonHeight: 42,
@@ -202,12 +223,8 @@ class _EditorShortcutToolbarState extends State<EditorShortcutToolbar> {
       itemOutlineColor: const Color(0xFFE5E7EB),
       primaryColor: const Color(0xFF2563EB),
       toolbarItems: [
-        _addBlockToolbarItem,
-        _blockStyleToolbarItem,
-        _textDecorationToolbarItem(_inlineStyleController),
-        _blockLayoutToolbarItem,
-        _imageToolbarItem,
-        _mentionToolbarItem,
+        for (final item in config.keyboardToolbarItems)
+          if (_keyboardItemAllowed(config, item)) _buildKeyboardItem(item, _inlineStyleController, context),
       ],
       child: widget.child,
     );
@@ -251,6 +268,405 @@ class _InlineStyleController extends ChangeNotifier {
     editorState.toggledStyleNotifier.removeListener(notifyListeners);
     editorState.selectionNotifier.removeListener(notifyListeners);
     super.dispose();
+  }
+}
+
+/// 键盘直达入口和更多常用网格共用的动作描述，不持有编辑器或异步资源。
+class _CommonInsertionAction {
+  /// [item]为配置标识，[label]/[icon]为现有展示，[key]为更多面板的稳定测试身份。
+  /// [blockType]限制块能力；已实现动作的null类型使用[formatKey]限制行内能力。
+  /// [implemented]默认true；false沿用原占位提示，不创建数据。
+  const _CommonInsertionAction(
+    this.item,
+    this.label,
+    this.icon,
+    this.key, {
+    this.blockType,
+    this.formatKey,
+    this.implemented = true,
+  });
+
+  /// 对应的键盘配置项。
+  final EditorKeyboardToolbarItem item;
+
+  /// 面板名称与键盘提示。
+  final String label;
+
+  /// 沿用原常用入口图标。
+  final IconData icon;
+
+  /// 更多面板的稳定身份，不依赖配置排序。
+  final String key;
+
+  /// 块类型；行内动作为空。
+  final String? blockType;
+
+  /// 行内格式属性；块动作为空。
+  final String? formatKey;
+
+  /// 是否已有实际插入实现，false仅显示原占位提示。
+  final bool implemented;
+}
+
+/// 更多常用目录的单一来源；占位项可显示，但不生成编辑能力或正文数据。
+const _commonInsertions = [
+  _CommonInsertionAction(
+    EditorKeyboardToolbarItem.image,
+    '图片',
+    LucideIcons.image,
+    'editor-shortcut-image-block',
+    blockType: 'image',
+  ),
+  _CommonInsertionAction(
+    EditorKeyboardToolbarItem.link,
+    '链接',
+    LucideIcons.link,
+    'editor-shortcut-link-block',
+    blockType: 'link',
+  ),
+  _CommonInsertionAction(
+    EditorKeyboardToolbarItem.video,
+    '视频',
+    LucideIcons.film,
+    'editor-shortcut-video-block',
+    blockType: 'video',
+  ),
+  _CommonInsertionAction(
+    EditorKeyboardToolbarItem.attachment,
+    '附件',
+    LucideIcons.paperclip,
+    'editor-shortcut-attachment-block',
+    blockType: 'attachment',
+  ),
+  _CommonInsertionAction(
+    EditorKeyboardToolbarItem.audio,
+    '音频',
+    LucideIcons.music2,
+    'editor-shortcut-audio-block',
+    blockType: 'audio',
+  ),
+  _CommonInsertionAction(
+    EditorKeyboardToolbarItem.bookmark,
+    '网页卡片',
+    LucideIcons.bookmark,
+    'editor-shortcut-bookmark-block',
+    blockType: 'bookmark',
+  ),
+  _CommonInsertionAction(
+    EditorKeyboardToolbarItem.embed,
+    '网页嵌入',
+    LucideIcons.globe,
+    'editor-shortcut-embed-block',
+    blockType: 'embed',
+  ),
+  _CommonInsertionAction(
+    EditorKeyboardToolbarItem.juejin,
+    '掘金',
+    LucideIcons.newspaper,
+    'editor-shortcut-juejin-embed-block',
+    blockType: 'juejin-embed',
+  ),
+  _CommonInsertionAction(
+    EditorKeyboardToolbarItem.figma,
+    'Figma',
+    LucideIcons.penTool,
+    'editor-shortcut-figma-embed-block',
+    blockType: 'figma-embed',
+  ),
+  _CommonInsertionAction(
+    EditorKeyboardToolbarItem.table,
+    '表格',
+    LucideIcons.table2,
+    'editor-shortcut-table',
+    blockType: 'table',
+  ),
+  _CommonInsertionAction(
+    EditorKeyboardToolbarItem.callout,
+    '高亮块',
+    LucideIcons.highlighter,
+    'editor-shortcut-callout',
+    blockType: 'callout',
+  ),
+  _CommonInsertionAction(
+    EditorKeyboardToolbarItem.meeting,
+    '会议',
+    LucideIcons.users,
+    'editor-shortcut-meeting',
+    blockType: 'meeting',
+  ),
+  _CommonInsertionAction(
+    EditorKeyboardToolbarItem.formula,
+    '公式',
+    LucideIcons.sigma,
+    'editor-shortcut-formula',
+    blockType: 'formula',
+  ),
+  _CommonInsertionAction(
+    EditorKeyboardToolbarItem.mermaid,
+    '代码绘图',
+    LucideIcons.chartNetwork,
+    'editor-shortcut-mermaid',
+    blockType: 'mermaid',
+  ),
+  _CommonInsertionAction(
+    EditorKeyboardToolbarItem.mention,
+    '@用户',
+    LucideIcons.atSign,
+    'editor-shortcut-mention-more',
+    formatKey: 'cses_inline_mention',
+  ),
+  _CommonInsertionAction(
+    EditorKeyboardToolbarItem.inlineFormula,
+    '行内公式',
+    LucideIcons.omega,
+    'editor-shortcut-inline-formula',
+    formatKey: 'cses_inline_latex',
+  ),
+  _CommonInsertionAction(
+    EditorKeyboardToolbarItem.divider,
+    '分割线',
+    LucideIcons.minus,
+    'editor-shortcut-divider',
+    blockType: 'divider',
+  ),
+  _CommonInsertionAction(
+    EditorKeyboardToolbarItem.pageDivider,
+    '分页符',
+    LucideIcons.separatorHorizontal,
+    'editor-shortcut-page-divider',
+    blockType: 'page-divider',
+  ),
+  _CommonInsertionAction(
+    EditorKeyboardToolbarItem.spreadsheet,
+    '电子表格',
+    LucideIcons.grid2X2,
+    'editor-shortcut-spreadsheet',
+    implemented: false,
+  ),
+  _CommonInsertionAction(
+    EditorKeyboardToolbarItem.multiTable,
+    '多维表格',
+    LucideIcons.layoutDashboard,
+    'editor-shortcut-multi-table',
+    implemented: false,
+  ),
+  _CommonInsertionAction(
+    EditorKeyboardToolbarItem.mindMap,
+    '思维导图',
+    LucideIcons.network,
+    'editor-shortcut-mind-map',
+    implemented: false,
+  ),
+];
+
+/// 在原常用目录中查找[item]，原工具菜单返回null。
+_CommonInsertionAction? _commonInsertion(EditorKeyboardToolbarItem item) =>
+    _commonInsertions.where((action) => action.item == item).firstOrNull;
+
+/// 按[config]检查[action]的底层块或格式，不因入口显式选择而开启被禁用能力。
+bool _commonInsertionAllowed(EditorConfiguration config, _CommonInsertionAction action) =>
+    !action.implemented ||
+    (action.blockType != null ? config.allowsBlock(action.blockType!) : config.allowsFormat(action.formatKey!));
+
+/// 对[item]应用[config]的实际能力约束；工具菜单不由直达动作目录处理。
+bool _keyboardItemAllowed(EditorConfiguration config, EditorKeyboardToolbarItem item) => switch (item) {
+  EditorKeyboardToolbarItem.textStyle => config.inlineFormats.isNotEmpty,
+  EditorKeyboardToolbarItem.blockLayout => config.hasLayout,
+  EditorKeyboardToolbarItem.addBlock || EditorKeyboardToolbarItem.blockType => true,
+  _ => _commonInsertionAllowed(config, _commonInsertion(item)!),
+};
+
+/// 为[item]构建原工具菜单或常用直达按钮，[styles]与[context]由所属工具栏借用。
+/// 直达按钮仍走稳定书签、模态隔离及退场后恢复，不展示中间的更多网格。
+MobileToolbarItem _buildKeyboardItem(
+  EditorKeyboardToolbarItem item,
+  _InlineStyleController styles,
+  BuildContext context,
+) => switch (item) {
+  EditorKeyboardToolbarItem.addBlock => _addBlockToolbarItem,
+  EditorKeyboardToolbarItem.blockType => _blockStyleToolbarItem,
+  EditorKeyboardToolbarItem.textStyle => _textDecorationToolbarItem(styles, context),
+  EditorKeyboardToolbarItem.blockLayout => _blockLayoutToolbarItem,
+  EditorKeyboardToolbarItem.image => _imageToolbarItem,
+  EditorKeyboardToolbarItem.mention => _mentionToolbarItem,
+  _ => MobileToolbarItem.action(
+    itemIconBuilder: (_, _, _) => Tooltip(
+      message: _commonInsertion(item)!.label,
+      child: KeyedSubtree(key: ValueKey('editor-keyboard-${item.name}'), child: Icon(_commonInsertion(item)!.icon)),
+    ),
+    actionHandler: (context, state) => unawaited(_showKeyboardCommonInsertion(context, state, _commonInsertion(item)!)),
+  ),
+};
+
+/// 在借用[context]/[state]中直达[action]，暂停正文输入直到整个动作退场。
+/// 撤权、关闭、宿主切换或旧位置失效时拒绝提交及恢复；失败在当前会话报告。
+Future<void> _showKeyboardCommonInsertion(
+  BuildContext context,
+  EditorState state,
+  _CommonInsertionAction action,
+) async {
+  if (state.isDisposed ||
+      !state.editable ||
+      !_commonInsertionAllowed(EditorCommandContext.of(state).configuration, action)) {
+    return;
+  }
+  if (state.selection == null) {
+    _showToolbarMessage(context, '请先把光标放入正文');
+    return;
+  }
+  final services = EditorCommandContext.of(state).services;
+  final session = _EditorModalSession(state);
+  var revoked = false;
+  Selection? landing;
+
+  /// 撤权永久作废本次操作，重新授权须重新打开。
+  void changed() {
+    if (!state.editable) revoked = true;
+  }
+
+  /// 检查借用上下文、权限和业务端口是否仍属于原会话。
+  bool current() =>
+      context.mounted &&
+      !state.isDisposed &&
+      !revoked &&
+      state.editable &&
+      identical(EditorCommandContext.of(state).services, services);
+
+  state.editableNotifier.addListener(changed);
+  try {
+    landing = await _performCommonInsertion(context, state, session.bookmark!, current, action);
+  } catch (error, stack) {
+    if (current()) {
+      _reportEditorError(state, '插入${action.label}失败', error: error, stackTrace: stack, tag: 'DocCollab');
+    } else {
+      debugPrint('插入${action.label}失败：$error\n$stack');
+    }
+    if (context.mounted && current()) _showToolbarMessage(context, '插入失败，请重试');
+  } finally {
+    state.editableNotifier.removeListener(changed);
+    try {
+      await session.finish(current() ? context : null, landing);
+    } catch (error, stack) {
+      if (current()) {
+        _reportEditorError(state, '恢复正文输入失败', error: error, stackTrace: stack, tag: 'DocCollab');
+      } else {
+        debugPrint('恢复正文输入失败：$error\n$stack');
+      }
+      if (context.mounted && current()) _showToolbarMessage(context, '请重新点击正文继续编辑');
+    }
+  }
+}
+
+/// 在[context]中执行[state]的[action]，使用[bookmark]重定位原插入位置。
+/// [canUseHost]在每次异步返回后检查权限/宿主代次；取消不写入，失效/失败返回null。
+/// 调用方拥有模态隔离和焦点恢复，更多面板与键盘直达复用此函数。
+Future<Selection?> _performCommonInsertion(
+  BuildContext context,
+  EditorState state,
+  _EditorSelectionBookmark bookmark,
+  bool Function() canUseHost,
+  _CommonInsertionAction action,
+) async {
+  /// 异步结束后拒绝迟到结果；书签进一步校验稳定身份及块锁代次。
+  Selection? current() => context.mounted && !state.isDisposed && canUseHost() ? bookmark.resolve(state) : null;
+
+  if (current() == null || !_commonInsertionAllowed(EditorCommandContext.of(state).configuration, action)) return null;
+  try {
+    if (!action.implemented) {
+      _showUnsupportedMessage(context, action.label);
+      return null;
+    }
+    final type = action.blockType;
+    if (type != null &&
+        const {
+          'image',
+          'link',
+          'video',
+          'attachment',
+          'audio',
+          'bookmark',
+          'embed',
+          'figma-embed',
+          'juejin-embed',
+        }.contains(type)) {
+      final source = await showEditorMediaSourceSheet(
+        context,
+        blockType: type,
+        editorState: state,
+        canEdit: () => current() != null,
+      );
+      final selection = current();
+      if (source == null || selection == null) return null;
+      return await applyUrlBlockShortcut(state, selection, type, source.url, mediaSource: source);
+    }
+    switch (action.item) {
+      case EditorKeyboardToolbarItem.table:
+        return await insertCollabTable(state, current()!);
+      case EditorKeyboardToolbarItem.callout:
+        return await insertCollabCallout(state, current()!);
+      case EditorKeyboardToolbarItem.meeting:
+        if (EditorCommandContext.of(state).services.pickMeetingReference == null) {
+          _showToolbarMessage(context, '当前实例未提供会议选择服务');
+          return null;
+        }
+        final reference = await pickHostMeetingReference(context, state);
+        final selection = current();
+        if (reference == null || selection == null) return null;
+        return await insertCollabMeeting(state, selection, {
+          'meetingId': reference.meetingId,
+          'title': reference.title,
+          'number': reference.number,
+        });
+      case EditorKeyboardToolbarItem.formula:
+      case EditorKeyboardToolbarItem.inlineFormula:
+        final block = action.item == EditorKeyboardToolbarItem.formula;
+        final latex = await showCollabFormulaInput(context, state, creatingBlock: block);
+        final selection = current();
+        if (latex == null || selection == null) return null;
+        return block
+            ? await insertCollabFormula(state, selection, latex)
+            : await insertCollabInlineFormula(state, selection, latex);
+      case EditorKeyboardToolbarItem.mermaid:
+        final draft = await showCollabMermaidInput(context, state);
+        final selection = current();
+        if (draft == null || selection == null) return null;
+        return await insertCollabMermaid(state, selection, draft.source, view: draft.view);
+      case EditorKeyboardToolbarItem.mention:
+        final selection = current()!;
+        final node = state.getNodeAtPath(selection.start.path);
+        if (!selection.isSingle || node?.delta == null || node!.type == 'code') {
+          _showToolbarMessage(context, '此位置不支持用户提及');
+          return null;
+        }
+        final original = Delta.fromJson(node.delta!.toJson());
+        if (EditorCommandContext.of(state).services.pickMentionUser == null) {
+          _showToolbarMessage(context, '当前实例未提供人员选择服务');
+          return null;
+        }
+        final user = await pickHostMentionUser(context, state);
+        final target = current();
+        if (user == null || target == null || state.getNodeAtPath(target.start.path)?.delta != original) return null;
+        return await insertCollabUserMention(state, target, user);
+      case EditorKeyboardToolbarItem.divider:
+        final draft = await showCollabDividerInput(context, state, canCreate: () => current() != null);
+        final selection = current();
+        if (draft == null || selection == null) return null;
+        return await insertCollabDivider(state, selection, values: draft.values);
+      case EditorKeyboardToolbarItem.pageDivider:
+        final landing = await insertCollabPageDivider(state, current()!);
+        if (landing == null && context.mounted) _showToolbarMessage(context, '分页符只能插入文档顶层，请选择顶层光标位置');
+        return landing;
+      default:
+        return null;
+    }
+  } catch (error, stack) {
+    if (!state.isDisposed && canUseHost()) {
+      _reportEditorError(state, '插入${action.label}失败', error: error, stackTrace: stack, tag: 'DocCollab');
+    } else {
+      debugPrint('插入${action.label}失败：$error\n$stack');
+    }
+    if (context.mounted && !state.isDisposed && canUseHost()) _showToolbarMessage(context, '插入失败，请重试');
+    return null;
   }
 }
 
@@ -301,7 +717,7 @@ Future<void> showEditorUserMentionSheet(
   bool replaceTrigger = false,
 }) async {
   if (editorState.isDisposed || !editorState.editable) return;
-  final services = CollabRuntime.services;
+  final services = EditorCommandContext.of(editorState).services;
   if (services.pickMentionUser == null) {
     _showToolbarMessage(context, '宿主未提供人员选择器');
     return;
@@ -347,24 +763,30 @@ Future<void> showEditorUserMentionSheet(
     }
   } catch (error, stack) {
     services.report('插入用户提及失败', error, stack, 'DocCollab');
-    if (context.mounted && identical(CollabRuntime.services, services)) {
+    if (context.mounted && identical(EditorCommandContext.of(editorState).services, services)) {
       _showToolbarMessage(context, '插入失败，请重试');
     }
   } finally {
-    await session.finish(context.mounted && identical(CollabRuntime.services, services) ? context : null, landing);
+    await session.finish(
+      context.mounted && identical(EditorCommandContext.of(editorState).services, services) ? context : null,
+      landing,
+    );
   }
 }
 
 /// 以Lucide文字样式图标构建菜单入口，借用 [inlineStyleController] 回显格式。
-/// 控制器由所属工具栏释放，入口不接管编辑器资源。
-MobileToolbarItem _textDecorationToolbarItem(_InlineStyleController inlineStyleController) =>
+/// [modalContext]借用工具栏的稳定上下文，控制器由所属工具栏释放。
+MobileToolbarItem _textDecorationToolbarItem(_InlineStyleController inlineStyleController, BuildContext modalContext) =>
     MobileToolbarItem.withMenu(
       itemIconBuilder: (_, _, _) => const KeyedSubtree(
         key: ValueKey('editor-shortcut-inline-style'),
         child: Tooltip(message: '文字样式', child: Icon(LucideIcons.caseSensitive, size: 27)),
       ),
-      itemMenuBuilder: (_, editorState, service) =>
-          _InlineStyleMenu(editorState: editorState, inlineStyleController: inlineStyleController),
+      itemMenuBuilder: (_, editorState, service) => _InlineStyleMenu(
+        editorState: editorState,
+        inlineStyleController: inlineStyleController,
+        modalContext: modalContext,
+      ),
     );
 
 /// 为借用 [context]/[editorState] 中的文字范围打开格式面板，复用键盘工具栏的 T、Aa 和布局控件。
@@ -386,7 +808,7 @@ Future<void> showEditorSelectionFormats(BuildContext context, EditorState editor
       );
     }, selectionAfterAction: () => editorState.selection);
   } catch (error, stack) {
-    CollabDiagnostics.report('划词格式修改失败', error: error, stackTrace: stack, tag: 'DocCollab');
+    _reportEditorError(editorState, '划词格式修改失败', error: error, stackTrace: stack, tag: 'DocCollab');
     if (context.mounted) _showToolbarMessage(context, '格式修改失败，请重试');
   }
 }
@@ -490,6 +912,7 @@ class _SelectionFormatSheetState extends State<_SelectionFormatSheet> {
                             editorState: widget.editorState,
                             inlineStyleController: _styles,
                             expanded: true,
+                            modalContext: context,
                           ),
                           const SizedBox(height: 20),
                           const Text('段落布局', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
@@ -554,6 +977,7 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
     final isBorder = attribute == csesBlockBorderColorAttribute;
     final targets = nodes.where((node) => node.delta != null && (!isBorder || node.type == QuoteBlockKeys.type));
     return CollabColorPicker(
+      onError: (error, stack) => _reportEditorError(widget.editorState, '颜色设置失败', error: error, stackTrace: stack),
       keyPrefix: isBorder ? 'editor-block-border-color' : 'editor-block-background-color',
       horizontal: true,
       selection: CollabColorSelection.fromValues(targets.map((node) => node.attributes[attribute] as String?)),
@@ -610,76 +1034,82 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
       key: const ValueKey('editor-block-layout-menu'),
       scrollDirection: Axis.horizontal,
       children: [
-        _PopupIconButton(
-          key: const ValueKey('editor-block-outdent'),
-          tooltip: '减少缩进',
-          enabled: canOutdent,
-          selected: false,
-          icon: const Icon(LucideIcons.indentDecrease, size: 28),
-          onPressed: () => _changeIndent(-1),
-        ),
-        const SizedBox(width: 5),
-        _PopupIconButton(
-          key: const ValueKey('editor-block-indent'),
-          tooltip: '增加缩进',
-          enabled: canIncreaseIndent,
-          selected: false,
-          icon: const Icon(LucideIcons.indentIncrease, size: 28),
-          onPressed: () => _changeIndent(1),
-        ),
-        const SizedBox(width: 10),
+        if (EditorCommandContext.of(widget.editorState).configuration.hasComplexBlocks) ...[
+          _PopupIconButton(
+            key: const ValueKey('editor-block-outdent'),
+            tooltip: '减少缩进',
+            enabled: canOutdent,
+            selected: false,
+            icon: const Icon(LucideIcons.indentDecrease, size: 28),
+            onPressed: () => _changeIndent(-1),
+          ),
+          const SizedBox(width: 5),
+          _PopupIconButton(
+            key: const ValueKey('editor-block-indent'),
+            tooltip: '增加缩进',
+            enabled: canIncreaseIndent,
+            selected: false,
+            icon: const Icon(LucideIcons.indentIncrease, size: 28),
+            onPressed: () => _changeIndent(1),
+          ),
+          const SizedBox(width: 10),
+        ],
         for (final option in const [
           ('left', '左对齐', LucideIcons.textAlignStart),
           ('center', '居中', LucideIcons.textAlignCenter),
           ('right', '右对齐', LucideIcons.textAlignEnd),
           ('justify', '两端对齐', LucideIcons.textAlignJustify),
           ('distributed', '分散对齐', LucideIcons.space),
-        ]) ...[
-          _PopupIconButton(
-            key: ValueKey('editor-block-align-${option.$1}'),
-            tooltip: option.$2,
-            enabled: !const {'justify', 'distributed'}.contains(option.$1) || nodes.every((n) => n.delta != null),
-            selected: nodes.isNotEmpty && nodes.every((node) => _alignmentOf(node) == option.$1),
-            icon: Icon(option.$3, size: 28),
-            onPressed: () => _setAlignment(option.$1),
-          ),
-          const SizedBox(width: 5),
-        ],
-        _PopupIconButton(
-          key: const ValueKey('editor-block-background-color'),
-          tooltip: '块背景色',
-          enabled: nodes.any((n) => n.delta != null),
-          selected: false,
-          icon: const Icon(LucideIcons.paintBucket, size: 28),
-          onPressed: () => setState(() => _colorAttribute = csesBlockBackgroundColorAttribute),
-        ),
-        if (nodes.any((n) => n.type == QuoteBlockKeys.type))
-          _PopupIconButton(
-            key: const ValueKey('editor-block-border-color'),
-            tooltip: '左侧线条颜色',
-            selected: false,
-            icon: const Icon(LucideIcons.panelLeft, size: 28),
-            onPressed: () => setState(() => _colorAttribute = csesBlockBorderColorAttribute),
-          ),
-        for (final option in const [
-          (null, '下一段：默认', LucideIcons.rotateCcw),
-          ('same', '下一段：延续样式', LucideIcons.cornerDownRight),
-          ('body', '下一段：正文', LucideIcons.textAlignStart),
         ])
+          if (EditorCommandContext.of(widget.editorState).configuration.alignments.contains(option.$1)) ...[
+            _PopupIconButton(
+              key: ValueKey('editor-block-align-${option.$1}'),
+              tooltip: option.$2,
+              enabled: !const {'justify', 'distributed'}.contains(option.$1) || nodes.every((n) => n.delta != null),
+              selected: nodes.isNotEmpty && nodes.every((node) => _alignmentOf(node) == option.$1),
+              icon: Icon(option.$3, size: 28),
+              onPressed: () => _setAlignment(option.$1),
+            ),
+            const SizedBox(width: 5),
+          ],
+        if (EditorCommandContext.of(widget.editorState).configuration.hasComplexBlocks) ...[
           _PopupIconButton(
-            key: ValueKey('editor-next-paragraph-${option.$1 ?? 'default'}'),
-            tooltip: option.$2,
-            enabled: nodes.any(supportsCollabParagraph),
-            selected:
-                nodes.isNotEmpty &&
-                nodes.every(
-                  (node) =>
-                      supportsCollabParagraph(node) &&
-                      readCollabParagraph(node).values['nextParagraphStyle'] == option.$1,
-                ),
-            icon: Icon(option.$3, size: 28),
-            onPressed: () => unawaited(_setNextParagraphStyle(option.$1)),
+            key: const ValueKey('editor-block-background-color'),
+            tooltip: '块背景色',
+            enabled: nodes.any((n) => n.delta != null),
+            selected: false,
+            icon: const Icon(LucideIcons.paintBucket, size: 28),
+            onPressed: () => setState(() => _colorAttribute = csesBlockBackgroundColorAttribute),
           ),
+          if (nodes.any((n) => n.type == QuoteBlockKeys.type))
+            _PopupIconButton(
+              key: const ValueKey('editor-block-border-color'),
+              tooltip: '左侧线条颜色',
+              selected: false,
+              icon: const Icon(LucideIcons.panelLeft, size: 28),
+              onPressed: () => setState(() => _colorAttribute = csesBlockBorderColorAttribute),
+            ),
+        ],
+        if (EditorCommandContext.of(widget.editorState).configuration.nextParagraphStyle)
+          for (final option in const [
+            (null, '下一段：默认', LucideIcons.rotateCcw),
+            ('same', '下一段：延续样式', LucideIcons.cornerDownRight),
+            ('body', '下一段：正文', LucideIcons.textAlignStart),
+          ])
+            _PopupIconButton(
+              key: ValueKey('editor-next-paragraph-${option.$1 ?? 'default'}'),
+              tooltip: option.$2,
+              enabled: nodes.any(supportsCollabParagraph),
+              selected:
+                  nodes.isNotEmpty &&
+                  nodes.every(
+                    (node) =>
+                        supportsCollabParagraph(node) &&
+                        readCollabParagraph(node).values['nextParagraphStyle'] == option.$1,
+                  ),
+              icon: Icon(option.$3, size: 28),
+              onPressed: () => unawaited(_setNextParagraphStyle(option.$1)),
+            ),
       ],
     );
   }
@@ -691,7 +1121,7 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
       await setCollabNextParagraphStyle(state, style);
       if (mounted && identical(widget.editorState, state)) setState(() {});
     } catch (error, stackTrace) {
-      CollabDiagnostics.report('设置下一段样式失败', error: error, stackTrace: stackTrace);
+      _reportEditorError(state, '设置下一段样式失败', error: error, stackTrace: stackTrace);
       if (mounted) {
         ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(content: Text('设置失败，请重试')));
       }
@@ -719,7 +1149,7 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
         setState(() {});
       }
     } catch (error, stackTrace) {
-      CollabDiagnostics.report('文档块缩进失败', error: error, stackTrace: stackTrace, tag: 'DocCollab');
+      _reportEditorError(state, '文档块缩进失败', error: error, stackTrace: stackTrace, tag: 'DocCollab');
       FlutterError.reportError(
         FlutterErrorDetails(
           exception: error,
@@ -731,10 +1161,12 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
     }
   }
 
+  /// 将[alignment]写入当前正文对齐；制图模式拒绝尚未支持的分散对齐。
   Future<void> _setAlignment(String alignment) async {
     final state = widget.editorState;
     final selection = state.selection;
     if (state.isDisposed || !state.editable || selection == null) return;
+    if (!EditorCommandContext.of(state).configuration.alignments.contains(alignment)) return;
     final nodes = state.getNodesInSelection(selection);
     if (const {'justify', 'distributed'}.contains(alignment) && nodes.any((n) => n.delta == null)) {
       return;
@@ -791,8 +1223,7 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
   /// 类型命令执行期间拒绝重复提交；所有退出路径均在 finally 恢复，不持有外部资源。
   bool _applyingStyle = false;
 
-  // H1-H3 are the initial choices. Selecting H3 reveals H4, and each
-  // subsequent highest visible heading reveals exactly one more level.
+  /// 从H1～H3开始逐级披露，最高到H6；切换正文块时重新推导。
   int _maxHeadingLevel = 3;
   String? _activeNodeId;
 
@@ -802,16 +1233,6 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
     label: '正文',
     icon: LucideIcons.type,
   );
-
-  /// 图标库提供的一至六级标题；更高级别复用heading并单独标出数字。
-  static const _headingIcons = [
-    LucideIcons.heading1,
-    LucideIcons.heading2,
-    LucideIcons.heading3,
-    LucideIcons.heading4,
-    LucideIcons.heading5,
-    LucideIcons.heading6,
-  ];
 
   /// 列表、代码与引用类型共享的Lucide图标及命令定义。
   static const _blockStyles = <_BlockStyleAction>[
@@ -847,6 +1268,7 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
     super.dispose();
   }
 
+  /// 选区进入另一块时重置渐进标题范围，最多披露至H6。
   void _onSelectionChanged() {
     final nextNodeId = _selectedNodeId();
     if (nextNodeId == _activeNodeId) {
@@ -854,9 +1276,6 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
     }
     _activeNodeId = nextNodeId;
     if (mounted) {
-      // Heading disclosure is scoped to the selected paragraph. A normal block
-      // starts at H1-H3, while entering an existing H4-H9 block must expose its
-      // current level so the selected state is visible in the T menu.
       setState(() => _maxHeadingLevel = _headingLimitForSelection());
     }
   }
@@ -869,6 +1288,7 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
     return widget.editorState.getNodeAtPath(selection.start.path)?.id;
   }
 
+  /// 按当前标题推进一级菜单；普通正文从H1～H3开始，历史深标题也最多显示H6。
   int _headingLimitForSelection() {
     final selection = widget.editorState.selection;
     if (selection == null) {
@@ -880,20 +1300,17 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
     }
 
     final storedLevel = node?.attributes[HeadingBlockKeys.level];
-    final level = storedLevel is int ? storedLevel.clamp(1, 9) : 1;
+    final level = storedLevel is int ? storedLevel.clamp(1, _maxHeadingMenuLevel) : 1;
     if (level < 3) {
       return 3;
     }
 
-    // H3 is the first progressive boundary: entering an existing H3 exposes
-    // H4 immediately. H4-H8 follow the same Hn/H(n+1) rule, while H9 is the
-    // schema maximum and therefore exposes only through H9.
-    return math.min(level + 1, 9);
+    return math.min(level + 1, _maxHeadingMenuLevel);
   }
 
   /// 为借用的 [context] 构建类型菜单；高亮当前起点类型，按钮在点击时读取最新选区。
   /// 构建过程无编辑副作用，列表命令由统一事务执行，Heading 选项按当前披露上限显示。
-  /// 所有类型使用Lucide图标；七至九级在heading图标旁标出级别，保持原有功能范围。
+  /// 标题入口最多显示H6，使用对应Lucide图标；不改变已有标题数据。
   @override
   Widget build(BuildContext context) {
     final selection = widget.editorState.selection;
@@ -901,17 +1318,27 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
       return const SizedBox.shrink();
     }
     final node = widget.editorState.getNodeAtPath(selection.start.path);
+    final config = EditorCommandContext.of(widget.editorState).configuration;
     final styles = <_BlockStyleAction>[
       _paragraphStyle,
-      for (var level = 1; level <= _maxHeadingLevel; level += 1)
-        _BlockStyleAction(
-          blockType: HeadingBlockKeys.type,
-          headingLevel: level,
-          label: '$level 级标题',
-          icon: level <= _headingIcons.length ? _headingIcons[level - 1] : LucideIcons.heading,
-        ),
+      for (final level in _menuHeadingLevels(config))
+        if (level <= _maxHeadingLevel || !config.hasComplexBlocks)
+          _BlockStyleAction(
+            blockType: HeadingBlockKeys.type,
+            headingLevel: level,
+            label: '$level 级标题',
+            icon: _headingMenuIcons[level - 1],
+          ),
       ..._blockStyles,
-    ];
+    ].where((style) => config.allowsBlock(style.blockType, level: style.headingLevel)).toList();
+    if (!config.hasComplexBlocks) {
+      styles.sort((a, b) {
+        final order = config.blocks
+            .indexWhere((block) => block.type == a.blockType)
+            .compareTo(config.blocks.indexWhere((block) => block.type == b.blockType));
+        return order != 0 ? order : (a.headingLevel ?? 0).compareTo(b.headingLevel ?? 0);
+      });
+    }
 
     return ListView.separated(
       key: const ValueKey('editor-block-style-menu'),
@@ -926,23 +1353,7 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
           key: ValueKey('editor-block-${style.blockType}-${style.headingLevel ?? 0}'),
           tooltip: style.label,
           selected: selected,
-          icon: style.headingLevel != null && style.headingLevel! > _headingIcons.length
-              ? Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Icon(style.icon, size: 24),
-                    Text(
-                      '${style.headingLevel}',
-                      style: TextStyle(
-                        fontSize: 11,
-                        height: 1,
-                        color: selected ? CollabModalColors.of(context).accent : CollabModalColors.of(context).text,
-                      ),
-                    ),
-                  ],
-                )
-              : Icon(style.icon, size: 27),
+          icon: Icon(style.icon, size: 27),
           onPressed: () => _apply(style),
         );
       },
@@ -956,6 +1367,10 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
   /// 命令同步应用文档后立即捕获范围，异步结束只交付该快照，不接受等待期间的远端变化。
   Future<void> _apply(_BlockStyleAction style) async {
     final state = widget.editorState;
+    final capabilities = EditorCommandContext.of(state).configuration;
+    if (!capabilities.allowsBlock(style.blockType, level: style.headingLevel)) {
+      return;
+    }
     final selection = state.selection;
     if (_applyingStyle || state.isDisposed || !state.editable || selection == null) {
       return;
@@ -978,14 +1393,14 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
       widget.onRangeChanged?.call(range);
       final level = style.headingLevel;
       setState(() {
-        if (level != null && level >= 3 && level < 9) {
+        if (level != null && level >= 3 && level < _maxHeadingMenuLevel) {
           _maxHeadingLevel = math.max(_maxHeadingLevel, level + 1);
         } else if (level == null || level < 3) {
           _maxHeadingLevel = 3;
         }
       });
     } catch (error, stackTrace) {
-      CollabDiagnostics.report('文档列表类型切换失败', error: error, stackTrace: stackTrace, tag: 'DocCollab');
+      _reportEditorError(state, '文档列表类型切换失败', error: error, stackTrace: stackTrace, tag: 'DocCollab');
       FlutterError.reportError(
         FlutterErrorDetails(
           exception: error,
@@ -1003,7 +1418,7 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
 /// 类型菜单的不可变命令描述；图标与标签不参与文档数据写入。
 class _BlockStyleAction {
   /// [blockType] 是目标块类型，[label] 是提示，[icon] 是Lucide图标。
-  /// [headingLevel] 仅标题使用，范围1～9；其他类型为null。
+  /// [headingLevel] 仅标题菜单使用，范围1～6；其他类型为null。
   const _BlockStyleAction({required this.blockType, required this.label, required this.icon, this.headingLevel});
 
   /// 转换命令使用的目标类型，不由菜单重新定义Schema。
@@ -1029,8 +1444,17 @@ class _BlockStyleAction {
 
 /// 借用编辑器和输入样式控制器，工具栏采用单行模式，弹窗采用展开模式。
 class _InlineStyleMenu extends StatefulWidget {
-  /// [editorState] 和 [inlineStyleController] 为借用对象；[expanded] 默认false，true展开样式和色板。
-  const _InlineStyleMenu({required this.editorState, required this.inlineStyleController, this.expanded = false});
+  /// [editorState]和[inlineStyleController]为借用对象；[expanded]默认false，true展开样式和色板。
+  /// [modalContext]来自仍挂载的工具栏/格式面板，避免收起子菜单时使字号任务失效。
+  const _InlineStyleMenu({
+    required this.editorState,
+    required this.inlineStyleController,
+    this.expanded = false,
+    this.modalContext,
+  });
+
+  /// 不随键盘菜单隐藏而卸载的弹窗来源；null使用当前菜单，仅供不打开弹窗的历史用例。
+  final BuildContext? modalContext;
 
   /// 借用的当前文档编辑器，不由菜单释放。
   final EditorState editorState;
@@ -1051,8 +1475,6 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
   // The two color entries are inserted after the five boolean text styles.
   // Keeping explicit indices makes the visual order stable while `_styles`
   // remains responsible only for on/off attributes such as bold and code.
-  static const _textColorButtonIndex = 5;
-  static const _backgroundColorButtonIndex = 6;
 
   // A single picker replaces the normal Aa row. The target records whether a
   // palette choice updates the glyph color (`font_color`) or the inline
@@ -1098,7 +1520,7 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
   }
 
   /// 在借用 [context] 中回显当前格式；点击命令时重新读取选区，避免使用构建阶段的旧路径。
-  /// 字色与背景色保留当前色值，图标与其他样式入口统一采用Lucide。
+  /// 字色与背景色保留当前色值；字样由实例配置选择，图标沿用Lucide。
   @override
   Widget build(BuildContext context) {
     final selection = widget.editorState.selection;
@@ -1116,62 +1538,72 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
     final currentTextColor = _currentColor(selection, AppFlowyRichTextKeys.textColor);
     final currentBackgroundColor = _currentColor(selection, AppFlowyRichTextKeys.backgroundColor);
 
+    final config = EditorCommandContext.of(widget.editorState).configuration;
+    final buttons = <Widget>[
+      for (final style in _styles.take(5))
+        if (config.allowsFormat(style.key)) _compactStyle(selection, style),
+      if (config.allowsFormat(AppFlowyRichTextKeys.textColor))
+        _PopupIconButton(
+          key: const ValueKey('editor-inline-text-color'),
+          tooltip: '文字颜色',
+          selected: !currentTextColor.isMixed && currentTextColor.value != null,
+          icon: Icon(
+            LucideIcons.baseline,
+            key: const ValueKey('editor-inline-text-color-icon'),
+            size: 28,
+            color: parseCollabBlockColor(currentTextColor.value),
+          ),
+          onPressed: () => setState(() => _colorPicker = _InlineColorTarget.text),
+        ),
+      if (config.allowsFormat(AppFlowyRichTextKeys.backgroundColor))
+        _PopupIconButton(
+          key: const ValueKey('editor-inline-background-color'),
+          tooltip: '文字背景颜色',
+          selected: !currentBackgroundColor.isMixed && currentBackgroundColor.value != null,
+          icon: Icon(
+            LucideIcons.paintBucket,
+            key: const ValueKey('editor-inline-background-color-icon'),
+            size: 28,
+            color: parseCollabBlockColor(currentBackgroundColor.value),
+          ),
+          onPressed: () => setState(() => _colorPicker = _InlineColorTarget.background),
+        ),
+      if (config.allowsFormat('t:px'))
+        _PopupIconButton(
+          key: const ValueKey('editor-inline-font-size'),
+          tooltip: '字号',
+          selected: false,
+          icon: const Icon(LucideIcons.aLargeSmall, size: 28),
+          onPressed: () => unawaited(_chooseFontSize()),
+        ),
+      for (final style in _styles.skip(5))
+        if (config.allowsFormat(style.key)) _compactStyle(selection, style),
+    ];
     return ListView.separated(
       key: const ValueKey('editor-inline-style-menu'),
       scrollDirection: Axis.horizontal,
       scrollCacheExtent: const ScrollCacheExtent.pixels(1000),
-      itemCount: _styles.length + 2,
+      itemCount: buttons.length,
       separatorBuilder: (_, _) => const SizedBox(width: 6),
-      itemBuilder: (context, index) {
-        if (index == _textColorButtonIndex) {
-          return _PopupIconButton(
-            key: const ValueKey('editor-inline-text-color'),
-            tooltip: '文字颜色',
-            selected: !currentTextColor.isMixed && currentTextColor.value != null,
-            icon: Icon(
-              LucideIcons.baseline,
-              key: const ValueKey('editor-inline-text-color-icon'),
-              size: 28,
-              color: parseCollabBlockColor(currentTextColor.value),
-            ),
-            onPressed: () => setState(() => _colorPicker = _InlineColorTarget.text),
-          );
-        }
-        if (index == _backgroundColorButtonIndex) {
-          return _PopupIconButton(
-            key: const ValueKey('editor-inline-background-color'),
-            tooltip: '文字背景颜色',
-            selected: !currentBackgroundColor.isMixed && currentBackgroundColor.value != null,
-            icon: Icon(
-              LucideIcons.paintBucket,
-              key: const ValueKey('editor-inline-background-color-icon'),
-              size: 28,
-              color: parseCollabBlockColor(currentBackgroundColor.value),
-            ),
-            onPressed: () => setState(() => _colorPicker = _InlineColorTarget.background),
-          );
-        }
-        final style = _styles[index < _textColorButtonIndex ? index : index - 2];
-        final key = switch (style.key) {
-          csesSuperscriptAttribute => 'editor-inline-superscript',
-          csesSubscriptAttribute => 'editor-inline-subscript',
-          _ => 'editor-inline-${style.key}',
-        };
-        return _PopupIconButton(
-          key: ValueKey(key),
-          tooltip: style.label,
-          selected: _isSelected(selection, style.key),
-          icon: Icon(style.icon, size: 28),
-          onPressed: () {
-            unawaited(_toggleStyle(style.key));
-          },
-        );
-      },
+      itemBuilder: (_, index) => buttons[index],
     );
   }
 
+  /// 对[selection]构建[style]的原格式按钮；是否显示由实例配置预先筛选。
+  Widget _compactStyle(Selection selection, _InlineStyleAction style) => _PopupIconButton(
+    key: ValueKey(switch (style.key) {
+      csesSuperscriptAttribute => 'editor-inline-superscript',
+      csesSubscriptAttribute => 'editor-inline-subscript',
+      _ => 'editor-inline-${style.key}',
+    }),
+    tooltip: style.label,
+    selected: _isSelected(selection, style.key),
+    icon: Icon(style.icon, size: 28),
+    onPressed: () => unawaited(_toggleStyle(style.key)),
+  );
+
   /// 用借用的 [selection] 构建设计稿中的文字样式与圆形色板，所有写入复用既有命令。
-  /// 上下标保留为第二行，完整九色及自定义色不被预览中的示例色替换。
+  /// 字符格式和颜色入口按实例配置筛选；原文档预设保留上下标第二行及完整九色。
   Widget _buildExpanded(Selection selection) {
     final c = CollabModalColors.of(context);
     const icons = [
@@ -1191,50 +1623,63 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
         const SizedBox(height: 12),
         Row(
           children: [
-            for (var i = 0; i < 5; i++) ...[
-              if (i > 0) const SizedBox(width: 6),
-              Expanded(child: _expandedStyle(selection, _styles[i], icons[i])),
-            ],
+            for (var i = 0; i < 5; i++)
+              if (EditorCommandContext.of(widget.editorState).configuration.allowsFormat(_styles[i].key)) ...[
+                if (i > 0) const SizedBox(width: 6),
+                Expanded(child: _expandedStyle(selection, _styles[i], icons[i])),
+              ],
           ],
         ),
+        if (EditorCommandContext.of(widget.editorState).configuration.allowsFormat('t:px'))
+          TextButton.icon(
+            key: const ValueKey('editor-inline-font-size'),
+            onPressed: () => unawaited(_chooseFontSize()),
+            icon: const Icon(LucideIcons.aLargeSmall),
+            label: const Text('字号'),
+          ),
         const SizedBox(height: 8),
-        Row(
-          children: [
-            for (var i = 5; i < _styles.length; i++) ...[
-              if (i > 5) const SizedBox(width: 6),
-              Expanded(child: _expandedStyle(selection, _styles[i], icons[i])),
+        if (EditorCommandContext.of(widget.editorState).configuration.hasComplexBlocks)
+          Row(
+            children: [
+              for (var i = 5; i < _styles.length; i++)
+                if (EditorCommandContext.of(widget.editorState).configuration.allowsFormat(_styles[i].key)) ...[
+                  if (i > 5) const SizedBox(width: 6),
+                  Expanded(child: _expandedStyle(selection, _styles[i], icons[i])),
+                ],
             ],
-          ],
-        ),
+          ),
         for (final (attribute, label, prefix, target) in [
           (AppFlowyRichTextKeys.textColor, '文字颜色', 'editor-text-color', 'text'),
           (AppFlowyRichTextKeys.backgroundColor, '文字背景颜色', 'editor-background-color', 'background'),
-        ]) ...[
-          const SizedBox(height: 20),
-          Row(
-            key: ValueKey('editor-inline-$target-color'),
-            children: [
-              Expanded(
-                child: Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
-              ),
-              Icon(
-                LucideIcons.palette,
-                key: ValueKey('editor-inline-$target-color-icon'),
-                size: 16,
-                color: parseCollabBlockColor(_currentColor(selection, attribute).value) ?? c.muted,
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          CollabColorPicker(
-            keyPrefix: prefix,
-            circular: true,
-            textColors: attribute == AppFlowyRichTextKeys.textColor,
-            selection: _currentColor(selection, attribute),
-            resetLabel: attribute == AppFlowyRichTextKeys.textColor ? '默认颜色' : '清除背景色',
-            onSelected: (value) => _applyColor(attribute, collabColorToEditor(value)),
-          ),
-        ],
+        ])
+          if (EditorCommandContext.of(widget.editorState).configuration.allowsFormat(attribute)) ...[
+            const SizedBox(height: 20),
+            Row(
+              key: ValueKey('editor-inline-$target-color'),
+              children: [
+                Expanded(
+                  child: Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+                ),
+                Icon(
+                  LucideIcons.palette,
+                  key: ValueKey('editor-inline-$target-color-icon'),
+                  size: 16,
+                  color: parseCollabBlockColor(_currentColor(selection, attribute).value) ?? c.muted,
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            CollabColorPicker(
+              onError: (error, stack) =>
+                  _reportEditorError(widget.editorState, '颜色设置失败', error: error, stackTrace: stack),
+              keyPrefix: prefix,
+              circular: true,
+              textColors: attribute == AppFlowyRichTextKeys.textColor,
+              selection: _currentColor(selection, attribute),
+              resetLabel: attribute == AppFlowyRichTextKeys.textColor ? '默认颜色' : '清除背景色',
+              onSelected: (value) => _applyColor(attribute, collabColorToEditor(value)),
+            ),
+          ],
       ],
     );
   }
@@ -1273,11 +1718,15 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
     );
   }
 
+  /// 将字号选择交给稳定的工具栏/格式面板上下文，子菜单卸载不取消已打开的面板。
+  Future<void> _chooseFontSize() => showEditorFontSizeSheet(widget.modalContext ?? context, widget.editorState);
+
   /// 用 [selection] 回显颜色；[target] 决定字色或浅色，共用选择器保留自定义色。
   Widget _buildColorPicker(Selection selection, _InlineColorTarget target) {
     final isBackground = target == _InlineColorTarget.background;
     final attribute = isBackground ? AppFlowyRichTextKeys.backgroundColor : AppFlowyRichTextKeys.textColor;
     return CollabColorPicker(
+      onError: (error, stack) => _reportEditorError(widget.editorState, '颜色设置失败', error: error, stackTrace: stack),
       keyPrefix: isBackground ? 'editor-background-color' : 'editor-text-color',
       horizontal: true,
       textColors: !isBackground,
@@ -1312,6 +1761,7 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
   /// 设置 [attribute] 对应的字色或背景色；[color] 为既有调色板值，null 清除颜色。
   /// 点击时读取实时选区，折叠位置配置后续输入，范围选区复用现有格式事务；失败由共用边界报告。
   Future<void> _applyColor(String attribute, String? color) => _runFormatAction((state, selection) async {
+    if (!EditorCommandContext.of(state).configuration.allowsFormat(attribute)) return;
     if (selection.isCollapsed) {
       await widget.inlineStyleController.setValue(attribute, color);
     } else {
@@ -1335,6 +1785,7 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
   /// 切换实时选区的 [attribute] 格式；上下标互斥，空段落同时保存默认字符格式。
   /// 异步完成包含事务和面板回显，错误由共用边界报告，不缓存构建阶段选区。
   Future<void> _toggleStyle(String attribute) => _runFormatAction((state, selection) async {
+    if (!EditorCommandContext.of(state).configuration.allowsFormat(attribute)) return;
     final isScript = attribute == csesSuperscriptAttribute || attribute == csesSubscriptAttribute;
     if (selection.isCollapsed) {
       final other = attribute == csesSuperscriptAttribute
@@ -1365,7 +1816,7 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
       await action(state, selection);
       if (mounted && identical(state, widget.editorState)) setState(() {});
     } catch (error, stack) {
-      CollabDiagnostics.report('文字格式修改失败', error: error, stackTrace: stack, tag: 'DocCollab');
+      _reportEditorError(state, '文字格式修改失败', error: error, stackTrace: stack, tag: 'DocCollab');
       if (mounted && identical(state, widget.editorState)) {
         _showToolbarMessage(context, '格式修改失败，请重试');
       }
@@ -1459,8 +1910,9 @@ class _InlineStyleAction {
   final IconData icon;
 }
 
+/// 在[context]内提示[label]仍为占位功能，不写入正文或历史。
 void _showUnsupportedMessage(BuildContext context, String label) {
-  _showToolbarMessage(context, '$label 尚未进入当前 Rust/Yrs 协同 Schema');
+  _showToolbarMessage(context, '$label 暂未支持');
 }
 
 void _showToolbarMessage(BuildContext context, String message) {
@@ -1579,7 +2031,7 @@ Future<void> showEditorAddBlockSheet(BuildContext context, EditorState editorSta
     _showToolbarMessage(context, '请先把光标放入正文');
     return;
   }
-  final services = CollabRuntime.services;
+  final services = EditorCommandContext.of(editorState).services;
   final session = _EditorModalSession(editorState);
   Selection? appliedSelection;
   var permissionRevoked = false;
@@ -1599,14 +2051,16 @@ Future<void> showEditorAddBlockSheet(BuildContext context, EditorState editorSta
         return _AddBlockSheet(
           editorState: editorState,
           bookmark: session.bookmark!,
-          canUseHost: () => !permissionRevoked && identical(CollabRuntime.services, services),
+          canUseHost: () => !permissionRevoked && identical(EditorCommandContext.of(editorState).services, services),
         );
       },
     );
   } finally {
     editorState.editableNotifier.removeListener(trackPermission);
     await session.finish(
-      context.mounted && !permissionRevoked && identical(CollabRuntime.services, services) ? context : null,
+      context.mounted && !permissionRevoked && identical(EditorCommandContext.of(editorState).services, services)
+          ? context
+          : null,
       appliedSelection,
     );
   }
@@ -1630,6 +2084,7 @@ Future<void> showEditorUrlBlockDialog(
     final source = await showEditorMediaSourceSheet(
       context,
       blockType: blockType,
+      editorState: editorState,
       service: service,
       canEdit: () => !editorState.isDisposed && editorState.editable,
     );
@@ -1790,22 +2245,20 @@ class _AddBlockSheet extends StatelessWidget {
   /// 原宿主会话有效性检查，失效面板不得调用新宿主选人。
   final bool Function() canUseHost;
 
-  // The add/more sheet is the exhaustive block picker, unlike the compact T
-  // menu that progressively discloses deep headings. Expose every heading
-  // level supported by the collaborative schema so H7-H9 can be inserted
-  // directly without first walking through H3-H8.
-  static const _maxHeadingLevel = 9;
-
   /// 使用借用的 [context] 构建块入口；代码块与标题、列表复用同一插入及关闭流程。
-  /// 返回面板 Widget，不持有或释放编辑器；未支持的入口继续显示占位提示。
+  /// 返回面板Widget，不持有或释放编辑器；本地块按实例配置选择，文档沿用既有入口。
   /// 在借用 [context] 中渲染可用块入口；插入按保存的稳定选区定位并等待事务完成。
   /// 在借用[context]中构建块/行内入口；用户选择调用宿主选择器并复用稳定插入位置。
   /// 标题显示“添加”及内容块图标，高亮/分页/代码绘图与各自卡片及菜单使用相同语义图标。
   /// 行内公式入口使用Ω图标，与独立公式块的Σ图标区分。
   /// 表格直接创建2×2网格；绘图先收集源码草稿再创建容器和子块；分页符仅插入根级光标位置。
-  /// 插入前重查原始书签，权限/文档失效时不插入。
+  /// 标题入口按实例启用集合与H1～H6取交集；插入前重查书签，权限/文档失效时不插入。
   @override
   Widget build(BuildContext context) {
+    final config = EditorCommandContext.of(editorState).configuration;
+    final headingLevels = config.allowsBlock(HeadingBlockKeys.type, level: config.headingLevels.firstOrNull)
+        ? _menuHeadingLevels(config)
+        : const <int>[];
     return CollabBottomSheet(
       key: const ValueKey('editor-add-block-sheet'),
       title: const Text('添加'),
@@ -1818,20 +2271,16 @@ class _AddBlockSheet extends StatelessWidget {
         children: [
           const _SectionTitle('基础'),
           const SizedBox(height: 14),
-          // H1-H9 belong to one ordered family, so a horizontal list
-          // preserves their sequence without wrapping H7-H9 onto a
-          // visually separate row. Explicit dimensions also keep the
-          // touch targets stable on narrow phones.
           SizedBox(
             height: 78,
             child: ListView.separated(
               key: const ValueKey('editor-add-heading-list'),
               scrollDirection: Axis.horizontal,
               scrollCacheExtent: const ScrollCacheExtent.pixels(1000),
-              itemCount: _maxHeadingLevel,
+              itemCount: headingLevels.length,
               separatorBuilder: (_, _) => const SizedBox(width: 8),
               itemBuilder: (context, index) {
-                final level = index + 1;
+                final level = headingLevels[index];
                 return SizedBox(
                   width: 52,
                   child: _HeadingShortcutTile(
@@ -1854,361 +2303,111 @@ class _AddBlockSheet extends StatelessWidget {
                 crossAxisSpacing: 10,
                 childAspectRatio: 1.18,
                 children: [
-                  _ActionShortcutTile(
-                    key: const ValueKey('editor-shortcut-numbered-list'),
-                    icon: LucideIcons.listOrdered,
-                    label: '有序列表',
-                    onTap: () => _applyAndClose(context, const _BlockShortcut(NumberedListBlockKeys.type)),
-                  ),
-                  _ActionShortcutTile(
-                    key: const ValueKey('editor-shortcut-bulleted-list'),
-                    icon: LucideIcons.list,
-                    label: '无序列表',
-                    onTap: () => _applyAndClose(context, const _BlockShortcut(BulletedListBlockKeys.type)),
-                  ),
-                  _ActionShortcutTile(
-                    key: const ValueKey('editor-shortcut-todo-list'),
-                    icon: LucideIcons.squareCheck,
-                    label: '待办列表',
-                    onTap: () => _applyAndClose(context, const _BlockShortcut(TodoListBlockKeys.type)),
-                  ),
-                  _ActionShortcutTile(
-                    key: const ValueKey('editor-shortcut-code-block'),
-                    icon: LucideIcons.code,
-                    label: '代码块',
-                    onTap: () => _applyAndClose(context, const _BlockShortcut(csesCodeBlockType)),
-                  ),
-                  _ActionShortcutTile(
-                    key: const ValueKey('editor-shortcut-quote'),
-                    icon: LucideIcons.quote,
-                    label: '引用',
-                    onTap: () => _applyAndClose(context, const _BlockShortcut(QuoteBlockKeys.type)),
-                  ),
+                  if (!EditorCommandContext.of(editorState).configuration.hasComplexBlocks)
+                    for (final block in EditorCommandContext.of(editorState).configuration.blocks)
+                      if (block.type != ParagraphBlockKeys.type && block.type != HeadingBlockKeys.type)
+                        _ActionShortcutTile(
+                          key: ValueKey(
+                            'editor-shortcut-${switch (block.type) {
+                              BulletedListBlockKeys.type => 'bulleted-list',
+                              NumberedListBlockKeys.type => 'numbered-list',
+                              TodoListBlockKeys.type => 'todo-list',
+                              _ => 'quote',
+                            }}',
+                          ),
+                          icon: switch (block.type) {
+                            BulletedListBlockKeys.type => LucideIcons.list,
+                            NumberedListBlockKeys.type => LucideIcons.listOrdered,
+                            TodoListBlockKeys.type => LucideIcons.squareCheck,
+                            _ => LucideIcons.quote,
+                          },
+                          label: switch (block.type) {
+                            BulletedListBlockKeys.type => '无序列表',
+                            NumberedListBlockKeys.type => '有序列表',
+                            TodoListBlockKeys.type => '待办列表',
+                            _ => '引用',
+                          },
+                          onTap: () => _applyAndClose(context, _BlockShortcut(block.type)),
+                        ),
+                  if (EditorCommandContext.of(editorState).configuration.hasComplexBlocks) ...[
+                    if (EditorCommandContext.of(editorState).configuration.allowsBlock(NumberedListBlockKeys.type))
+                      _ActionShortcutTile(
+                        key: const ValueKey('editor-shortcut-numbered-list'),
+                        icon: LucideIcons.listOrdered,
+                        label: '有序列表',
+                        onTap: () => _applyAndClose(context, const _BlockShortcut(NumberedListBlockKeys.type)),
+                      ),
+                    if (EditorCommandContext.of(editorState).configuration.allowsBlock(BulletedListBlockKeys.type))
+                      _ActionShortcutTile(
+                        key: const ValueKey('editor-shortcut-bulleted-list'),
+                        icon: LucideIcons.list,
+                        label: '无序列表',
+                        onTap: () => _applyAndClose(context, const _BlockShortcut(BulletedListBlockKeys.type)),
+                      ),
+                    if (EditorCommandContext.of(editorState).configuration.allowsBlock(TodoListBlockKeys.type))
+                      _ActionShortcutTile(
+                        key: const ValueKey('editor-shortcut-todo-list'),
+                        icon: LucideIcons.squareCheck,
+                        label: '待办列表',
+                        onTap: () => _applyAndClose(context, const _BlockShortcut(TodoListBlockKeys.type)),
+                      ),
+                    if (EditorCommandContext.of(editorState).configuration.allowsBlock(csesCodeBlockType))
+                      _ActionShortcutTile(
+                        key: const ValueKey('editor-shortcut-code-block'),
+                        icon: LucideIcons.code,
+                        label: '代码块',
+                        onTap: () => _applyAndClose(context, const _BlockShortcut(csesCodeBlockType)),
+                      ),
+                    if (EditorCommandContext.of(editorState).configuration.allowsBlock(QuoteBlockKeys.type))
+                      _ActionShortcutTile(
+                        key: const ValueKey('editor-shortcut-quote'),
+                        icon: LucideIcons.quote,
+                        label: '引用',
+                        onTap: () => _applyAndClose(context, const _BlockShortcut(QuoteBlockKeys.type)),
+                      ),
+                  ],
                 ],
               );
             },
           ),
-          const SizedBox(height: 24),
-          const _SectionTitle('常用'),
-          const SizedBox(height: 14),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final crossAxisCount = MediaQuery.textScalerOf(context).scale(14) > 22 ? 2 : 3;
-              return GridView.count(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: crossAxisCount,
-                mainAxisSpacing: 14,
-                crossAxisSpacing: 10,
-                childAspectRatio: 1.18,
-                children: [
-                  _ActionShortcutTile(
-                    key: const ValueKey('editor-shortcut-image-block'),
-                    icon: LucideIcons.image,
-                    label: '图片',
-                    accent: const Color(0xFFF4B400),
-                    tint: const Color(0xFFFFF8E1),
-                    onTap: () => _requestUrlAndClose(context, ImageBlockKeys.type),
-                  ),
-                  _ActionShortcutTile(
-                    key: const ValueKey('editor-shortcut-link-block'),
-                    icon: LucideIcons.link,
-                    label: '链接',
-                    accent: const Color(0xFF2563EB),
-                    tint: const Color(0xFFDBEAFE),
-                    onTap: () => _requestUrlAndClose(context, csesLinkBlockType),
-                  ),
-                  _ActionShortcutTile(
-                    key: const ValueKey('editor-shortcut-video-block'),
-                    icon: LucideIcons.film,
-                    label: '视频',
-                    accent: const Color(0xFF7C3AED),
-                    tint: const Color(0xFFEDE9FE),
-                    onTap: () => _requestUrlAndClose(context, csesVideoBlockType),
-                  ),
-                  for (final resource in const [
-                    ('attachment', '附件', LucideIcons.paperclip),
-                    ('audio', '音频', LucideIcons.music2),
-                    ('bookmark', '网页卡片', LucideIcons.bookmark),
-                    ('embed', '网页嵌入', LucideIcons.globe),
-                    ('juejin-embed', '掘金', LucideIcons.newspaper),
-                    ('figma-embed', 'Figma', LucideIcons.penTool),
-                  ])
-                    _ActionShortcutTile(
-                      key: ValueKey('editor-shortcut-${resource.$1}-block'),
-                      icon: resource.$3,
-                      label: resource.$2,
-                      accent: const Color(0xFF2563EB),
-                      tint: const Color(0xFFEFF6FF),
-                      onTap: () => _requestUrlAndClose(context, resource.$1),
-                    ),
-                  _ActionShortcutTile(
-                    key: const ValueKey('editor-shortcut-table'),
-                    icon: LucideIcons.table2,
-                    label: '表格',
-                    accent: const Color(0xFF14B8A6),
-                    tint: const Color(0xFFCCFBF1),
-                    onTap: () async {
-                      if (!canUseHost()) return;
-                      final captured = bookmark.resolve(editorState);
-                      if (captured == null) return;
-                      final selection = await insertCollabTable(editorState, captured);
-                      if (context.mounted && selection != null) {
-                        Navigator.pop<Selection>(context, selection);
-                      }
-                    },
-                  ),
-                  _ActionShortcutTile(
-                    key: const ValueKey('editor-shortcut-callout'),
-                    icon: LucideIcons.highlighter,
-                    label: '高亮块',
-                    accent: const Color(0xFFF97316),
-                    tint: const Color(0xFFFFEDD5),
-                    onTap: () async {
-                      final capturedSelection = bookmark.resolve(editorState);
-                      if (capturedSelection == null) return;
-                      final selection = await insertCollabCallout(editorState, capturedSelection);
-                      if (context.mounted && selection != null) {
-                        Navigator.pop<Selection>(context, selection);
-                      }
-                    },
-                  ),
-                  if (CollabRuntime.services.pickMeetingReference != null)
-                    _ActionShortcutTile(
-                      key: const ValueKey('editor-shortcut-meeting'),
-                      icon: LucideIcons.users,
-                      label: '会议',
-                      onTap: () async {
-                        final services = CollabRuntime.services;
-                        try {
-                          final reference = await pickHostMeetingReference(context, editorState);
-                          if (!context.mounted || reference == null) {
-                            return;
-                          }
-                          final selection = bookmark.resolve(editorState);
-                          if (selection == null) {
-                            _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
-                            return;
-                          }
-                          final landing = await insertCollabMeeting(editorState, selection, {
-                            'meetingId': reference.meetingId,
-                            'title': reference.title,
-                            'number': reference.number,
-                          });
-                          if (context.mounted && landing != null) {
-                            Navigator.pop<Selection>(context, landing);
-                          } else if (context.mounted && editorState.editable) {
-                            _showToolbarMessage(context, '会议引用无效或插入位置已变化');
-                          }
-                        } catch (error, stack) {
-                          services.report('插入会议引用失败', error, stack, 'DocCollab');
-                          if (context.mounted && identical(services, CollabRuntime.services)) {
-                            _showToolbarMessage(context, '插入失败，请重试');
-                          }
-                        }
-                      },
-                    ),
-                  _ActionShortcutTile(
-                    key: const ValueKey('editor-shortcut-formula'),
-                    icon: LucideIcons.sigma,
-                    label: '公式',
-                    onTap: () async {
-                      try {
-                        final latex = await showCollabFormulaInput(context, editorState, creatingBlock: true);
-                        if (!context.mounted || latex == null) return;
-                        final selection = bookmark.resolve(editorState);
-                        if (selection == null) {
-                          _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
-                          return;
-                        }
-                        final landing = await insertCollabFormula(editorState, selection, latex);
-                        if (context.mounted && landing != null) {
-                          Navigator.pop<Selection>(context, landing);
-                        }
-                      } catch (error, stack) {
-                        CollabDiagnostics.report('插入公式失败', error: error, stackTrace: stack, tag: 'DocCollab');
-                        if (context.mounted) {
-                          _showToolbarMessage(context, '插入失败，请重试');
-                        }
-                      }
-                    },
-                  ),
-                  _ActionShortcutTile(
-                    key: const ValueKey('editor-shortcut-mermaid'),
-                    icon: LucideIcons.chartNetwork,
-                    label: '代码绘图',
-                    onTap: () async {
-                      try {
-                        final draft = await showCollabMermaidInput(context, editorState);
-                        if (!context.mounted || draft == null) return;
-                        final selection = bookmark.resolve(editorState);
-                        if (selection == null) {
-                          _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
-                          return;
-                        }
-                        final landing = await insertCollabMermaid(
-                          editorState,
-                          selection,
-                          draft.source,
-                          view: draft.view,
-                        );
-                        if (context.mounted && landing != null) {
-                          Navigator.pop<Selection>(context, landing);
-                        }
-                      } catch (error, stack) {
-                        CollabDiagnostics.report('插入代码绘图失败', error: error, stackTrace: stack, tag: 'DocCollab');
-                        if (context.mounted) {
-                          _showToolbarMessage(context, '插入失败，请重试');
-                        }
-                      }
-                    },
-                  ),
-                  _ActionShortcutTile(
-                    key: const ValueKey('editor-shortcut-mention-more'),
-                    icon: LucideIcons.atSign,
-                    label: '@用户',
-                    onTap: () => _insertMention(context),
-                  ),
-                  _ActionShortcutTile(
-                    key: const ValueKey('editor-shortcut-inline-formula'),
-                    icon: LucideIcons.omega,
-                    label: '行内公式',
-                    onTap: () async {
-                      try {
-                        final latex = await showCollabFormulaInput(context, editorState);
-                        if (!context.mounted || latex == null) return;
-                        final selection = bookmark.resolve(editorState);
-                        if (selection == null) {
-                          _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
-                          return;
-                        }
-                        final landing = await insertCollabInlineFormula(editorState, selection, latex);
-                        if (context.mounted && landing != null) {
-                          Navigator.pop<Selection>(context, landing);
-                        } else if (context.mounted) {
-                          _showToolbarMessage(context, '请选择同一段正文中的位置，公式内容不能为空');
-                        }
-                      } catch (error, stack) {
-                        CollabDiagnostics.report('插入行内公式失败', error: error, stackTrace: stack, tag: 'DocCollab');
-                        if (context.mounted) {
-                          _showToolbarMessage(context, '插入失败，请重试');
-                        }
-                      }
-                    },
-                  ),
-                  _ActionShortcutTile(
-                    key: const ValueKey('editor-shortcut-divider'),
-                    icon: LucideIcons.minus,
-                    label: '分割线',
-                    accent: const Color(0xFF6366F1),
-                    tint: const Color(0xFFE0E7FF),
-                    onTap: () async {
-                      try {
-                        final draft = await showCollabDividerInput(
-                          context,
-                          editorState,
-                          canCreate: () => canUseHost() && bookmark.resolve(editorState) != null,
-                        );
-                        if (!context.mounted || draft == null || !canUseHost()) return;
-                        final selection = bookmark.resolve(editorState);
-                        if (selection == null) {
-                          _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
-                          return;
-                        }
-                        final landing = await insertCollabDivider(editorState, selection, values: draft.values);
-                        if (context.mounted && landing != null) {
-                          Navigator.pop<Selection>(context, landing);
-                        }
-                      } catch (error, stack) {
-                        CollabDiagnostics.report('插入分割线失败', error: error, stackTrace: stack, tag: 'DocCollab');
-                        if (context.mounted) {
-                          _showToolbarMessage(context, '插入失败，请重试');
-                        }
-                      }
-                    },
-                  ),
-                  _ActionShortcutTile(
-                    key: const ValueKey('editor-shortcut-page-divider'),
-                    icon: LucideIcons.separatorHorizontal,
-                    label: '分页符',
-                    onTap: () async {
-                      final selection = bookmark.resolve(editorState);
-                      if (selection == null || !canUseHost()) {
-                        _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
-                        return;
-                      }
-                      try {
-                        final landing = await insertCollabPageDivider(editorState, selection);
-                        if (!context.mounted) return;
-                        if (landing != null) {
-                          Navigator.pop<Selection>(context, landing);
-                        } else {
-                          _showToolbarMessage(context, '分页符只能插入文档顶层，请选择顶层光标位置');
-                        }
-                      } catch (error, stack) {
-                        CollabDiagnostics.report('插入分页符失败', error: error, stackTrace: stack, tag: 'DocCollab');
-                        if (context.mounted) _showToolbarMessage(context, '插入失败，请重试');
-                      }
-                    },
-                  ),
-                  const _ActionShortcutTile(
-                    icon: LucideIcons.grid2X2,
-                    label: '电子表格',
-                    accent: Color(0xFF22C55E),
-                    tint: Color(0xFFDCFCE7),
-                  ),
-                  const _ActionShortcutTile(
-                    icon: LucideIcons.layoutDashboard,
-                    label: '多维表格',
-                    accent: Color(0xFFA855F7),
-                    tint: Color(0xFFF3E8FF),
-                  ),
-                  const _ActionShortcutTile(
-                    icon: LucideIcons.network,
-                    label: '思维导图',
-                    accent: Color(0xFF06B6D4),
-                    tint: Color(0xFFCFFAFE),
-                  ),
-                ],
-              );
-            },
-          ),
+          if (EditorCommandContext.of(editorState).configuration.hasComplexBlocks) ...[
+            const SizedBox(height: 24),
+            const _SectionTitle('常用'),
+            const SizedBox(height: 14),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final crossAxisCount = MediaQuery.textScalerOf(context).scale(14) > 22 ? 2 : 3;
+                return GridView.count(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  crossAxisCount: crossAxisCount,
+                  mainAxisSpacing: 14,
+                  crossAxisSpacing: 10,
+                  childAspectRatio: 1.18,
+                  children: [
+                    for (final action in _commonInsertions)
+                      if (_commonInsertionAllowed(EditorCommandContext.of(editorState).configuration, action))
+                        _ActionShortcutTile(
+                          key: ValueKey(action.key),
+                          icon: action.icon,
+                          label: action.label,
+                          onTap: () => _performCommonAndClose(context, action),
+                        ),
+                  ],
+                );
+              },
+            ),
+          ],
         ],
       ),
     );
   }
 
-  /// 在借用[context]的更多面板内打开人员选择；按原书签插入，父面板退场后恢复正文。
-  /// 子面板期间正文/身份变化拒绝提交；取消保留父面板与原选区，失败报告并提示。
-  Future<void> _insertMention(BuildContext context) async {
-    if (!canUseHost()) return;
-    final services = CollabRuntime.services;
-    final captured = bookmark.resolve(editorState);
-    if (captured == null || !captured.isSingle) return;
-    final node = editorState.getNodeAtPath(captured.start.path);
-    if (node?.delta == null || node!.type == 'code') {
-      _showToolbarMessage(context, '此位置不支持用户提及');
-      return;
-    }
-    final original = Delta.fromJson(node.delta!.toJson());
-    try {
-      final user = await pickHostMentionUser(context, editorState);
-      if (!context.mounted || user == null) return;
-      final selection = bookmark.resolve(editorState);
-      if (selection == null || editorState.getNodeAtPath(selection.start.path)?.delta != original) {
-        _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
-        return;
-      }
-      final landing = await insertCollabUserMention(editorState, selection, user);
-      if (context.mounted && landing != null) {
-        Navigator.pop<Selection>(context, landing);
-      }
-    } catch (error, stack) {
-      services.report('插入用户提及失败', error, stack, 'DocCollab');
-      if (context.mounted && identical(CollabRuntime.services, services)) {
-        _showToolbarMessage(context, '插入失败，请重试');
-      }
-    }
+  /// 在[context]所属更多面板中执行[action]，成功后关闭父面板并返回落点。
+  /// 子面板取消、会话失效或操作失败时保留父面板，焦点由外层会话恢复。
+  Future<void> _performCommonAndClose(BuildContext context, _CommonInsertionAction action) async {
+    final landing = await _performCommonInsertion(context, editorState, bookmark, canUseHost, action);
+    if (context.mounted && landing != null) Navigator.pop<Selection>(context, landing);
   }
 
   /// 按稳定块标记解析插入位置，将 [shortcut] 应用于借用的编辑器。
@@ -2234,25 +2433,6 @@ class _AddBlockSheet extends StatelessWidget {
       Navigator.pop<Selection>(context, editorState.selection ?? capturedSelection);
     }
   }
-
-  Future<void> _requestUrlAndClose(BuildContext context, String blockType) async {
-    if (editorState.isDisposed || !editorState.editable) return;
-    final source = await showEditorMediaSourceSheet(
-      context,
-      blockType: blockType,
-      canEdit: () => !editorState.isDisposed && editorState.editable,
-    );
-    if (source == null || !context.mounted) return;
-    final current = bookmark.resolve(editorState);
-    final nextSelection = current == null
-        ? null
-        : await applyUrlBlockShortcut(editorState, current, blockType, source.url, mediaSource: source);
-    if (context.mounted && nextSelection != null) {
-      Navigator.pop<Selection>(context, nextSelection);
-    } else if (context.mounted) {
-      _showToolbarMessage(context, '插入位置已变化，请重新选择正文位置');
-    }
-  }
 }
 
 class _BlockShortcut {
@@ -2270,6 +2450,8 @@ class _BlockShortcut {
 /// the IME caret themselves. A trailing empty paragraph is always retained or
 /// created and selected. This is what makes choosing a block from “更多” return
 /// immediately to editing with the keyboard open.
+/// [editorState]是借用正文，[selection]为插入位置，[blockType]为资源类型，[url]为完整地址。
+/// [mediaSource]可补充宿主读取的资源信息；null仅使用url。制图模式返回null。
 Future<Selection?> applyUrlBlockShortcut(
   EditorState editorState,
   Selection selection,
@@ -2277,6 +2459,7 @@ Future<Selection?> applyUrlBlockShortcut(
   String url, {
   EditorMediaSource? mediaSource,
 }) async {
+  if (!EditorCommandContext.of(editorState).configuration.allowsBlock(blockType)) return null;
   if (editorState.isDisposed ||
       !editorState.editable ||
       selection.start.path.isEmpty ||
@@ -2366,15 +2549,17 @@ bool _isSupportedBlockUrl(String value) {
   return uri != null && (uri.scheme == 'http' || uri.scheme == 'https') && uri.host.isNotEmpty;
 }
 
-/// Converts an empty selected block, or inserts a new block after non-empty text.
-///
-/// Exposed for widget/unit testing and for future toolbar surfaces.
+/// 在借用[editorState]的稳定[selection]处转换空块，或在非空正文后插入[blockType]。
+/// [headingLevel]只用于标题，null按一级；超出所属能力、只读或失效目标返回false。
+/// 成功写入可撤销事务并返回true；异常交由所属操作边界处理。
 Future<bool> applyBlockShortcut(
   EditorState editorState,
   Selection selection,
   String blockType, {
   int? headingLevel,
 }) async {
+  final capabilities = EditorCommandContext.of(editorState).configuration;
+  if (!capabilities.allowsBlock(blockType, level: headingLevel)) return false;
   if (editorState.isDisposed || !editorState.editable || selection.start.path.isEmpty) {
     return false;
   }
@@ -2458,18 +2643,18 @@ class _SectionTitle extends StatelessWidget {
   Widget build(BuildContext context) => Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500));
 }
 
-/// 保留H1～H9入口的紧凑标题选择项。
+/// 使用与T菜单一致的Lucide图标展示H1～H6入口，保留下方标题说明。
 class _HeadingShortcutTile extends StatelessWidget {
-  /// [level] 为1～9标题等级；[onTap] 由业务持有并执行插入。
+  /// [level] 为1～6标题等级；[onTap] 由业务持有并执行插入。
   const _HeadingShortcutTile({required this.level, required this.onTap});
 
-  /// 必需的标题等级，调用方提供1～9。
+  /// 必需的标题菜单等级，调用方提供1～6。
   final int level;
 
   /// 必需的借用插入回调，本组件不持有编辑器。
   final VoidCallback onTap;
 
-  /// 根据 [context] 构建带稳定身份的标题入口，不接管业务资源。
+  /// 根据 [context] 构建带稳定身份的标题入口；图标复用T菜单映射，点击不接管业务资源。
   @override
   Widget build(BuildContext context) {
     final c = CollabModalColors.of(context);
@@ -2487,10 +2672,7 @@ class _HeadingShortcutTile extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              'H$level',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: c.accent),
-            ),
+            Icon(_headingMenuIcons[level - 1], size: 27, color: c.accent),
             const SizedBox(height: 5),
             Text('标题 $level', style: const TextStyle(fontSize: 11)),
           ],
@@ -2503,15 +2685,7 @@ class _HeadingShortcutTile extends StatelessWidget {
 /// 添加面板的统一内容入口，未知能力仍提示尚不支持。
 class _ActionShortcutTile extends StatelessWidget {
   /// [key] 控制身份；[icon]/[label] 为图标及名称；[onTap] 为 null 时提示尚不支持。
-  /// [accent]/[tint] 保留既有调用签名，视觉统一由弹窗配色决定。
-  const _ActionShortcutTile({
-    super.key,
-    required this.icon,
-    required this.label,
-    this.onTap,
-    this.accent = const Color(0xFF374151),
-    this.tint = const Color(0xFFF6F7F9),
-  });
+  const _ActionShortcutTile({super.key, required this.icon, required this.label, this.onTap});
 
   /// 必需的内容图标，按统一紫色主题展示。
   final IconData icon;
@@ -2521,12 +2695,6 @@ class _ActionShortcutTile extends StatelessWidget {
 
   /// 可选操作回调，null时显示尚未支持提示。
   final VoidCallback? onTap;
-
-  /// 既有入口提供的图标色；当前统一面板外观使用主题紫色。
-  final Color accent;
-
-  /// 既有入口提供的底色；当前统一面板外观使用主题字段底色。
-  final Color tint;
 
   /// 在 [context] 中以整块浅灰背景、紫色图标和12像素标签展示入口。
   @override
@@ -2558,5 +2726,88 @@ class _ActionShortcutTile extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+/// 向[editor]所属端口报告[message]、[error]与[stackTrace]，可选[tag]标识操作来源。
+void _reportEditorError(
+  EditorState editor,
+  String message, {
+  required Object error,
+  required StackTrace stackTrace,
+  String? tag,
+}) {
+  if (editor.isDisposed) return;
+  EditorCommandContext.of(editor).services.report(message, error, stackTrace, tag);
+}
+
+/// 在借用[context]/[state]中选择局部字号，弹窗退场后验证原文、权限及所属会话。
+/// 取消或来源失效不写正文；错误由此边界报告，不依赖已隐藏的键盘子菜单。
+Future<void> showEditorFontSizeSheet(BuildContext context, EditorState state) async {
+  final range = CollabTextRange.capture(state, allowCollapsed: true);
+  if (range == null || !state.editable) return;
+  final owner = EditorCommandContext.of(state);
+  if (!owner.configuration.allowsFormat('t:px')) return;
+  var permissionRevoked = false;
+
+  /// 撤权一旦发生，重新授权也不能提交旧字号面板。
+  void trackPermission() {
+    if (!state.editable) permissionRevoked = true;
+  }
+
+  state.editableNotifier.addListener(trackPermission);
+  try {
+    await runEditorHeaderAction<void>(
+      context,
+      state,
+      () async {
+        final size = await showCollabBottomSheet<int>(
+          context: context,
+          builder: (context) => CollabBottomSheet(
+            title: const Text('字号'),
+            icon: LucideIcons.aLargeSmall,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (final size in owner.configuration.fontSizes)
+                  CollabMenuRow(
+                    key: ValueKey('editor-font-size-$size'),
+                    title: Text('$size'),
+                    onTap: () => Navigator.pop(context, size),
+                  ),
+              ],
+            ),
+          ),
+        );
+        if (!context.mounted ||
+            state.isDisposed ||
+            !state.editable ||
+            permissionRevoked ||
+            size == null ||
+            !identical(owner, EditorCommandContext.of(state))) {
+          return;
+        }
+        final current = range.resolve(state);
+        if (current == null) return;
+        state.selection = current;
+        if (state.undoManager.undoStack.isNonEmpty) state.undoManager.undoStack.last.seal();
+        if (current.isCollapsed) {
+          await setCollabTypingAttributes(state, {'t:px': size});
+        } else {
+          await formatCollabParagraphSelection(state, current, {'t:px': size});
+        }
+      },
+      canRestore: () =>
+          !permissionRevoked &&
+          range.resolve(state, checkFormatting: false) != null &&
+          identical(owner, EditorCommandContext.of(state)),
+      selectionAfterAction: () => state.selection,
+    );
+  } catch (error, stack) {
+    if (state.isDisposed || !context.mounted || !identical(owner, EditorCommandContext.of(state))) return;
+    owner.services.report('字号设置失败', error, stack, 'DocEditor');
+    _showToolbarMessage(context, '字号设置失败，请重试');
+  } finally {
+    state.editableNotifier.removeListener(trackPermission);
   }
 }

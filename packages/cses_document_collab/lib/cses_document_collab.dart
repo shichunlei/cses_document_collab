@@ -3,7 +3,12 @@
 /// Hosts create a controller with their storage path and gateway, await
 /// initialize, present CollaborativeEditorPage(collab: controller), then await
 /// close before opening another document. Physical connections remain host-owned.
+/// Offline local editing uses showCollabImageComposer without opening a
+/// native document, database or collaboration session.
 library;
+
+export 'src/image_composer/show_image_composer.dart' show showCollabImageComposer;
+export 'src/model/collab_image_template.dart' show CollabImageTemplate, collabImageTemplates;
 
 export 'src/controller/collab_controller.dart' show CollabController, ConnectionStatus;
 export 'src/controller/document_feedback_controller.dart' show DocumentFeedbackController;
@@ -27,3 +32,11 @@ export 'src/sync/cses_collab_gateway.dart';
 export 'src/sync/cses_doc_collaboration_session.dart' show CsesCollabState;
 
 export 'src/model/collab_block_lock.dart' show CollabBlockLockState, CollabBlockUnlockContext;
+
+export 'src/editor/core/document_editor_controller.dart';
+export 'src/editor/core/editor_command_context.dart' show EditorCommandContext;
+export 'src/editor/document_editor_view.dart';
+
+export 'src/editor/core/editor_configuration.dart'
+    show EditorConfiguration, EditorBlock, EditorInlineFormat, EditorKeyboardToolbarItem;
+export 'src/editor/local_editor_controller.dart' show LocalEditorController;

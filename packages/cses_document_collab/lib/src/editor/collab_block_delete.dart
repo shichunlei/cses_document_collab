@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:cses_document_collab/src/model/collab_kr.dart';
 import 'package:cses_document_collab/src/model/collab_task_card.dart';
 import 'package:cses_document_collab/src/model/collab_meeting.dart';
@@ -9,7 +10,6 @@ import 'dart:async';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/model/collab_table.dart';
 import 'package:cses_document_collab/src/model/collab_formula.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_list_editing.dart';
 import 'package:flutter/material.dart';
@@ -107,7 +107,7 @@ class CollabBlockBackspaceInterceptor
 }
 
 /// 在同步硬件命令边界等待借用 [state] 的事务；[outdent] 为 true 时退级列表，否则删除前置资源。
-/// 不持有资源或跨回调保存选区。非预期异常保留原异常与堆栈，统一 CollabDiagnostics.report 并交 FlutterError，
+/// 不持有资源或跨回调保存选区。非预期异常保留原异常与堆栈，按所属编辑实例报告 并交 FlutterError，
 /// 使同步快捷键派发之外的异步失败可观测；不重复弹出用户提示。
 Future<void> _runBackspaceTransaction(
   EditorState state, {
@@ -120,7 +120,8 @@ Future<void> _runBackspaceTransaction(
       await deletePreviousUrlBackedBlock(state);
     }
   } catch (error, stackTrace) {
-    CollabDiagnostics.report(
+    EditorCommandContext.report(
+      state,
       '文档退格事务失败',
       error: error,
       stackTrace: stackTrace,

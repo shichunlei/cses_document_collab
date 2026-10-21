@@ -24,6 +24,7 @@ class CollabColorPicker extends StatefulWidget {
   /// [horizontal] 默认 false 使用自动换行；true 适配单行工具栏。
   /// [enabled] 默认 true；[onBack] 非空时显示返回按钮。
   /// [resetLabel] 指定恢复默认提示；[resetKey] 可保留既有入口标识。
+  /// [onError]可注入所属会话诊断，null使用历史诊断。
   /// [circular] 默认false，底部弹窗设为true展示圆形色块。
   const CollabColorPicker({
     super.key,
@@ -37,7 +38,11 @@ class CollabColorPicker extends StatefulWidget {
     this.resetLabel = '清除颜色',
     this.resetKey,
     this.circular = false,
+    this.onError,
   });
+
+  /// 所属业务的可选错误上报；null沿用历史诊断，界面始终显示失败提示。
+  final void Function(Object error, StackTrace stack)? onError;
 
   /// 必填稳定前缀；预设色的 key 为此前缀加色系 ID。
   final String keyPrefix;
@@ -89,12 +94,16 @@ class _CollabColorPickerState extends State<CollabColorPicker> {
     try {
       await widget.onSelected(value);
     } catch (error, stack) {
-      CollabDiagnostics.report(
-        '颜色设置失败',
-        error: error,
-        stackTrace: stack,
-        tag: 'DocCollab',
-      );
+      if (widget.onError case final report?) {
+        report(error, stack);
+      } else {
+        CollabDiagnostics.report(
+          '颜色设置失败',
+          error: error,
+          stackTrace: stack,
+          tag: 'DocCollab',
+        );
+      }
       if (mounted) {
         ScaffoldMessenger.maybeOf(
           context,

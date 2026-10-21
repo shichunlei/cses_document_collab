@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
@@ -6,7 +7,6 @@ import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.da
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/editor/collab_media_block_base.dart';
 import 'package:cses_document_collab/src/editor/collab_unsupported_block.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_card_lock_overlay.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_media_timeline.dart';
 import 'package:flutter/material.dart';
@@ -130,7 +130,13 @@ class _VideoBlockState extends CollabMediaBlockState<_VideoBlock> {
     } catch (error, stackTrace) {
       if (!mounted || !identical(_videoController, controller)) return;
       _videoError = error;
-      CollabDiagnostics.report('文档视频加载失败', error: error, stackTrace: stackTrace, tag: 'DocCollab');
+      EditorCommandContext.report(
+        mounted ? context.read<EditorState>() : null,
+        '文档视频加载失败',
+        error: error,
+        stackTrace: stackTrace,
+        tag: 'DocCollab',
+      );
     }
     if (mounted && identical(_videoController, controller)) {
       setState(() {});
@@ -146,13 +152,25 @@ class _VideoBlockState extends CollabMediaBlockState<_VideoBlock> {
       try {
         await pending;
       } catch (error, stackTrace) {
-        CollabDiagnostics.report('视频关闭前跳转失败', error: error, stackTrace: stackTrace, tag: 'DocCollab');
+        EditorCommandContext.report(
+          mounted ? context.read<EditorState>() : null,
+          '视频关闭前跳转失败',
+          error: error,
+          stackTrace: stackTrace,
+          tag: 'DocCollab',
+        );
       }
     }
     try {
       await controller.dispose();
     } catch (error, stackTrace) {
-      CollabDiagnostics.report('文档视频资源释放失败', error: error, stackTrace: stackTrace, tag: 'DocCollab');
+      EditorCommandContext.report(
+        mounted ? context.read<EditorState>() : null,
+        '文档视频资源释放失败',
+        error: error,
+        stackTrace: stackTrace,
+        tag: 'DocCollab',
+      );
     }
   }
 
@@ -265,7 +283,13 @@ class _VideoBlockState extends CollabMediaBlockState<_VideoBlock> {
       if (mounted && identical(_videoController, controller)) setState(() {});
     } catch (error, stackTrace) {
       if (!mounted || !identical(_videoController, controller)) return;
-      CollabDiagnostics.report('视频播放操作失败', error: error, stackTrace: stackTrace, tag: 'DocCollab');
+      EditorCommandContext.report(
+        mounted ? context.read<EditorState>() : null,
+        '视频播放操作失败',
+        error: error,
+        stackTrace: stackTrace,
+        tag: 'DocCollab',
+      );
       ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(content: Text('播放操作失败，请重试')));
     }
   }

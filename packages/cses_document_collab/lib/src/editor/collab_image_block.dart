@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'dart:async';
 import 'dart:math' as math;
 
@@ -8,7 +9,6 @@ import 'package:cses_document_collab/src/editor/collab_image_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_media_block_base.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_image.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_cached_image.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_card_lock_overlay.dart';
 import 'package:flutter/foundation.dart';
@@ -123,7 +123,13 @@ class _CollabImageBlockState extends CollabMediaBlockState<CollabImageBlock> {
       if (mounted && _source == source) setState(() => _data = bytes);
     } catch (error, stackTrace) {
       if (error is! FormatException) {
-        CollabDiagnostics.report('图片数据解码失败', error: error, stackTrace: stackTrace, tag: 'DocCollab');
+        EditorCommandContext.report(
+          mounted ? context.read<EditorState>() : null,
+          '图片数据解码失败',
+          error: error,
+          stackTrace: stackTrace,
+          tag: 'DocCollab',
+        );
       }
       if (mounted && _source == source) setState(() => _dataFailed = true);
     }
@@ -136,13 +142,13 @@ class _CollabImageBlockState extends CollabMediaBlockState<CollabImageBlock> {
     if (_opening || !mounted) return;
     final editor = context.read<EditorState>();
     if (editor.isDisposed) return;
-    final services = CollabRuntime.services;
+    final services = EditorCommandContext.of(editor).services;
     final source = _url;
     final id = widget.node.attributes['cses_collab_block_id'] as String? ?? widget.node.id;
 
     /// 检查本次点击是否仍属于同一宿主和稳定图片来源。
     bool isCurrent() {
-      if (!mounted || editor.isDisposed || !identical(services, CollabRuntime.services)) return false;
+      if (!mounted || editor.isDisposed || !identical(services, EditorCommandContext.of(editor).services)) return false;
       final node = findCollabActionNode(editor, id);
       return node?.type == ImageBlockKeys.type && node?.attributes[ImageBlockKeys.url] == source;
     }
@@ -198,11 +204,12 @@ class _CollabImageBlockState extends CollabMediaBlockState<CollabImageBlock> {
                       child: ExcludeFocus(
                         child: Semantics(
                           label: '图片',
-                          button: CollabRuntime.services.onImageTap != null && _url.trim().isNotEmpty,
+                          button: EditorCommandContext.of(editor).services.onImageTap != null && _url.trim().isNotEmpty,
                           child: GestureDetector(
                             key: ValueKey('collab-image-tap-$id'),
                             behavior: HitTestBehavior.opaque,
-                            excludeFromSemantics: CollabRuntime.services.onImageTap == null || _url.trim().isEmpty,
+                            excludeFromSemantics:
+                                EditorCommandContext.of(editor).services.onImageTap == null || _url.trim().isEmpty,
                             onTap: () => unawaited(_openImage()),
                             child: Transform.rotate(angle: (image.rotation ?? 0) * math.pi / 180, child: _buildImage()),
                           ),

@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/ui/modal/collab_editor_display_scope.dart';
 import 'package:flutter/material.dart';
 
 /// 固定操作区的公共标题栏，长标题或网址不会挤压右侧按钮。
@@ -102,8 +103,11 @@ class CollabCardHeader extends StatelessWidget {
                 ],
               ),
             ),
-            ...actions,
-            if (!readOnly && more != null)
+            if (CollabEditorDisplayScope.maybeOf(context)?.preview != true)
+              ...actions,
+            if (!readOnly &&
+                CollabEditorDisplayScope.maybeOf(context)?.preview != true &&
+                more != null)
               SizedBox(width: 44, height: 44, child: more),
           ],
         ),

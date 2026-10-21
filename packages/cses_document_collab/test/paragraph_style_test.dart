@@ -1,10 +1,10 @@
+import 'package:cses_document_collab/src/editor/collab_paragraph_text_style.dart';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_paragraph_editing.dart';
-import 'package:cses_document_collab/src/editor/collab_paragraph_presentation.dart';
 import 'package:cses_document_collab/src/model/collab_paragraph_style.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:flutter/material.dart';

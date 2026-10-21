@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/editor/collab_mention_tap_handler.dart';
@@ -6,7 +7,6 @@ import 'package:cses_document_collab/src/model/collab_host_services.dart';
 import 'package:cses_document_collab/src/model/collab_mention_tap.dart';
 import 'package:cses_document_collab/src/model/collab_task_card.dart';
 import 'package:cses_document_collab/src/model/collab_task_card_data.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
@@ -83,7 +83,7 @@ class _TaskCardState extends State<_TaskCard> with SelectableMixin {
         child: ListenableBuilder(
           listenable: editor.editableNotifier,
           builder: (context, _) {
-            final services = CollabRuntime.services;
+            final services = EditorCommandContext.of(editor).services;
             final future = _detailsFor(editor, id, taskId, services);
             return FutureBuilder<CollabTaskCardData?>(
               key: ValueKey((taskId, services)),
@@ -157,7 +157,7 @@ class _TaskCardState extends State<_TaskCard> with SelectableMixin {
       mounted &&
       !editor.isDisposed &&
       generation == _generation &&
-      identical(CollabRuntime.services, services) &&
+      identical(EditorCommandContext.of(editor).services, services) &&
       editor.getNodeAtPath(widget.node.path) == widget.node &&
       (widget.node.attributes['cses_collab_block_id'] ?? widget.node.id) == id &&
       CollabTaskCard.read(widget.node.attributes).string('taskId') == taskId;
@@ -207,7 +207,10 @@ class _TaskCardState extends State<_TaskCard> with SelectableMixin {
     required String expected,
     bool delete = false,
   }) async {
-    if (_busy || !mounted || editor.isDisposed || !identical(capturedServices, CollabRuntime.services)) {
+    if (_busy ||
+        !mounted ||
+        editor.isDisposed ||
+        !identical(capturedServices, EditorCommandContext.of(editor).services)) {
       return;
     }
     setState(() => _busy = true);

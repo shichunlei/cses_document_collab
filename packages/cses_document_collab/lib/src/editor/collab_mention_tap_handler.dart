@@ -1,3 +1,4 @@
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'dart:convert';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
@@ -6,7 +7,6 @@ import 'package:cses_document_collab/src/model/collab_host_services.dart';
 import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
 import 'package:cses_document_collab/src/model/collab_mention_tap.dart';
 import 'package:cses_document_collab/src/model/collab_user_mention.dart';
-import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:flutter/material.dart';
 
 /// 每个编辑器同时只运行一个提及面板或点击；弱关联不延长编辑器生命周期。
@@ -58,7 +58,7 @@ Future<void> runCollabMentionInteraction(
       _pendingMentionTap[state] == true) {
     return;
   }
-  final services = CollabRuntime.services;
+  final services = EditorCommandContext.of(state).services;
   _pendingMentionTap[state] = true;
   try {
     await runEditorHeaderAction<void>(
@@ -67,19 +67,20 @@ Future<void> runCollabMentionInteraction(
       () async {
         if (!context.mounted ||
             state.isDisposed ||
-            !identical(CollabRuntime.services, services)) {
+            !identical(EditorCommandContext.of(state).services, services)) {
           return;
         }
         await action(services);
       },
       canRestore: () =>
-          restoreFocus && identical(CollabRuntime.services, services),
+          restoreFocus &&
+          identical(EditorCommandContext.of(state).services, services),
     );
   } catch (error, stack) {
     services.report('提及点击操作失败', error, stack, 'DocCollab');
     if (context.mounted &&
         !state.isDisposed &&
-        identical(CollabRuntime.services, services)) {
+        identical(EditorCommandContext.of(state).services, services)) {
       ScaffoldMessenger.maybeOf(
         context,
       )?.showSnackBar(const SnackBar(content: Text('操作失败，请重试')));
@@ -98,7 +99,7 @@ Future<void> handleCollabMentionTap(
   Node node,
   int offset,
 ) async {
-  if (CollabRuntime.services.onMentionTap == null) return;
+  if (EditorCommandContext.of(state).services.onMentionTap == null) return;
   await runCollabMentionInteraction(context, state, (services) async {
     final blockId =
         node.attributes['cses_collab_block_id'] as String? ?? node.id;

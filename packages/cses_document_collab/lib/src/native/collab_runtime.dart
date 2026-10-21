@@ -1,4 +1,5 @@
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:cses_document_collab/src/model/collab_host_services.dart';
 import 'package:cses_document_collab/src/native/frb_generated.dart';
 
@@ -22,6 +23,7 @@ abstract final class CollabRuntime {
     if (_owner != null && !identical(_owner, owner)) {
       throw StateError('COLLAB_DOCUMENT_IN_USE: 请先等待当前文档关闭');
     }
+    legacyEditorServices = () => _services;
     _owner = owner;
     _services = services;
   }

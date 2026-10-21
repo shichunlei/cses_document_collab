@@ -1,48 +1,8 @@
+import 'package:cses_document_collab/src/editor/document_editor_view.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/controller/collab_controller.dart';
-import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
-import 'package:cses_document_collab/src/editor/collab_attachment_block.dart';
-import 'package:cses_document_collab/src/editor/collab_audio_block.dart';
-import 'package:cses_document_collab/src/editor/collab_block_colors.dart';
-import 'package:cses_document_collab/src/editor/collab_block_delete.dart';
 import 'package:cses_document_collab/src/editor/collab_block_lock_chrome.dart';
-import 'package:cses_document_collab/src/editor/collab_bookmark_block.dart';
-import 'package:cses_document_collab/src/editor/collab_callout_block.dart';
-import 'package:cses_document_collab/src/editor/collab_code_block.dart';
-import 'package:cses_document_collab/src/editor/collab_code_editing.dart';
-import 'package:cses_document_collab/src/editor/collab_divider_block.dart';
-import 'package:cses_document_collab/src/editor/collab_embed_block.dart';
-import 'package:cses_document_collab/src/editor/collab_figma_embed_block.dart';
-import 'package:cses_document_collab/src/editor/collab_formula_block.dart';
-import 'package:cses_document_collab/src/editor/collab_image_block.dart';
-import 'package:cses_document_collab/src/editor/collab_inline_formula.dart';
-import 'package:cses_document_collab/src/editor/collab_inline_mention.dart';
-import 'package:cses_document_collab/src/editor/collab_juejin_embed_block.dart';
-import 'package:cses_document_collab/src/editor/collab_kr_block.dart';
-import 'package:cses_document_collab/src/editor/collab_link_actions.dart';
-import 'package:cses_document_collab/src/editor/collab_meeting_block.dart';
-import 'package:cses_document_collab/src/editor/collab_mermaid_block.dart';
-import 'package:cses_document_collab/src/editor/collab_mobile_selection_menu.dart';
-import 'package:cses_document_collab/src/editor/collab_ordered_marker.dart';
-import 'package:cses_document_collab/src/editor/collab_page_divider_block.dart';
-import 'package:cses_document_collab/src/editor/collab_paragraph_editing.dart';
-import 'package:cses_document_collab/src/editor/collab_paragraph_indent.dart';
-import 'package:cses_document_collab/src/editor/collab_paragraph_presentation.dart';
-import 'package:cses_document_collab/src/editor/collab_text_alignment.dart';
-import 'package:cses_document_collab/src/editor/collab_unsupported_block.dart';
-import 'package:cses_document_collab/src/editor/collab_video_block.dart';
-import 'package:cses_document_collab/src/editor/collab_web_embed_block.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
-import 'package:cses_document_collab/src/model/collab_block_colors.dart';
-import 'package:cses_document_collab/src/model/collab_divider.dart';
-import 'package:cses_document_collab/src/model/collab_formula.dart';
-import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
-import 'package:cses_document_collab/src/model/collab_kr.dart';
-import 'package:cses_document_collab/src/model/collab_meeting.dart';
-import 'package:cses_document_collab/src/model/collab_page_divider.dart';
-import 'package:cses_document_collab/src/model/collab_paragraph_style.dart';
-import 'package:cses_document_collab/src/model/collab_task_card.dart';
-import 'package:cses_document_collab/src/model/collab_user_mention.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_dialog.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
@@ -51,11 +11,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
-import 'collab_inline_entity_mention.dart';
-import 'collab_table_block.dart';
-import 'collab_table_cell_block.dart';
-import 'collab_table_row_block.dart';
-import 'collab_task_card_block.dart';
 import 'document_feedback_footer.dart';
 import 'document_header.dart';
 import 'markdown_import.dart';
@@ -355,9 +310,7 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
                           // 正式头部使用完整宽度；正文左右留白由每个根块的样式提供。
                           // 本地草稿仍保留顶部留白，SafeArea 负责底部系统边距。
                           padding: EdgeInsets.only(top: collab.header == null ? 20 : 0),
-                          child: _previewOnly
-                              ? _buildEditor()
-                              : EditorShortcutToolbar(editorState: collab.editorState, child: _buildEditor()),
+                          child: _buildEditor(),
                         ),
                         if (!collab.initialized)
                           const Align(
@@ -376,268 +329,27 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
     );
   }
 
-  /// 构建原生编辑器，输入遵守用户模式与模型能力；有序/无序/Todo 列表 Enter 在标准快捷键
-  /// 之前处理扁平 depth；行首退格先退级再交给容器/媒体边界处理。软键盘通过工具栏注册
-  /// 同规则拦截器，硬件命令在下方优先派发，共用事务及现有协同发布链路。
-  /// @字符在普通可编辑正文打开宿主人员选择，无服务时保持普通输入。
-  /// 宿主启用文末互动时，正文至少占满当前编辑视口，footer随后滚动且不属于可编辑块树。
-  /// 移动端挂载独立于键盘显示的划词菜单，和正文借用同一页面滚动控制器。
-  /// 普通文本段的Tab/Shift+Tab先写平面depth，不交给标准命令建立嵌套块。
-  /// 代码块普通回车在原节点内换行，不进入默认的新段落拆分流程。
-  /// 绘图容器注册独立源码面板及离线预览，源码子节点不直接承担正文输入。
-  Widget _buildEditor() {
-    return CollabMobileSelectionMenu(
-      key: ObjectKey(collab.editorState),
-      editorState: collab.editorState,
-      scrollController: _editorScrollController,
-      enabled: collab.initialized,
-      child: IgnorePointer(
-        ignoring: !collab.initialized,
-        child: Opacity(
-          opacity: collab.initialized ? 1 : 0.45,
-          child: AppFlowyEditor(
-            key: const ValueKey('collaborative-appflowy-editor'),
+  /// 构建共用正文视图；协同状态、头部、业务尾部和@入口由本页面注入。
+  /// 编辑操作及输入规则由独立会话与正文组件复用，不在页面中维护同步事务。
+  Widget _buildEditor() => DocumentEditorView(
+    editorState: collab.editorState,
+    scrollController: _editorScrollController,
+    enabled: collab.initialized,
+    editable: !_previewOnly && !_importing,
+    editorKey: const ValueKey('collaborative-appflowy-editor'),
+    padding: const EdgeInsets.symmetric(horizontal: DocumentHeader.contentInset),
+    header: collab.header == null
+        ? null
+        : DocumentHeader(controller: collab.header!, editorState: collab.editorState, preview: _isPreview),
+    footer: collab.hostServices.showDocumentFeedback
+        ? DocumentFeedbackFooter(
+            key: ObjectKey(collab),
+            controller: collab.feedback,
             editorState: collab.editorState,
-            editorScrollController: _editorScrollController,
-            header: collab.header == null
-                ? null
-                : DocumentHeader(controller: collab.header!, editorState: collab.editorState, preview: _isPreview),
-            footer: collab.hostServices.showDocumentFeedback
-                ? DocumentFeedbackFooter(
-                    key: ObjectKey(collab),
-                    controller: collab.feedback,
-                    editorState: collab.editorState,
-                    enabled: !_importing,
-                  )
-                : null,
-            editable: !_previewOnly && !_importing,
-            disableKeyboardService: _previewOnly,
-            blockComponentBuilders: {
-              ..._collabBlockComponentBuilders,
-              PageBlockKeys.type: PageBlockComponentBuilder(
-                minimumBodyHeight: collab.hostServices.showDocumentFeedback ? null : 0,
-              ),
-            },
-            characterShortcutEvents: [
-              collabParagraphEnter,
-              collabCodeEnter,
-              CharacterShortcutEvent(key: 'cses-user-mention', character: '@', handler: _handleUserMention),
-              ...standardCharacterShortcutEvents,
-            ],
-            // 列表行首先逐级退级；非列表再保护容器边界/删除前置媒体，最后交标准退格。
-            // 不能先让标准命令合并正文，或在退级前删除列表旁的图片/视频。
-            commandShortcutEvents: [
-              collabBlockBackspaceCommand,
-              collabParagraphTabCommand,
-              collabParagraphShiftTabCommand,
-              ...standardCommandShortcutEvents,
-            ],
-            shrinkWrap: false,
-            editorStyle: const EditorStyle.mobile(
-              padding: EdgeInsets.symmetric(horizontal: DocumentHeader.contentInset),
-              cursorColor: Color(0xFF5B5BD6),
-              dragHandleColor: Color(0xFF5B5BD6),
-              selectionColor: Color(0x335B5BD6),
-              textSpanDecorator: _collabTextSpanDecorator,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// 正式协同块的渲染器工厂；音频、附件和四类网页使用各自独立构建器。
-/// 表格保留行和单元格子树，分页符等无正文块及未知占位使用独立组件。
-final Map<String, BlockComponentBuilder> _collabBlockComponentBuilders =
-    {
-      ...standardBlockComponentBuilderMap,
-      // Renderer validation failures use the same card as native opaque blocks.
-      errorBlockComponentBuilderKey: CollabUnsupportedBlockComponentBuilder(),
-      QuoteBlockKeys.type: QuoteBlockComponentBuilder(iconBuilder: buildCollabQuoteBorder),
-      ParagraphBlockKeys.type: ParagraphBlockComponentBuilder(
-        configuration: standardBlockComponentBuilderMap[ParagraphBlockKeys.type]!.configuration.copyWith(
-          padding: _paragraphBlockPadding,
-        ),
-      ),
-      // 正式图片复用资源块选区外壳并展示尺寸/题注；离线图片仍使用 AppFlowy 原组件。
-      ImageBlockKeys.type: CollabImageBlockComponentBuilder(),
-      // Links and videos remain first-class selectable editor blocks by providing
-      // custom renderers whose URL attributes are synchronized through Rust/Yrs.
-      csesLinkBlockType: CollabEmbedBlockComponentBuilder(kind: CollabEmbedKind.link),
-      csesVideoBlockType: CollabVideoBlockComponentBuilder(),
-      BulletedListBlockKeys.type: BulletedListBlockComponentBuilder(
-        configuration: standardBlockComponentConfiguration.copyWith(padding: _listBlockPadding),
-      ),
-      NumberedListBlockKeys.type: NumberedListBlockComponentBuilder(
-        iconBuilder: buildCollabOrderedMarker,
-        configuration: standardBlockComponentConfiguration.copyWith(padding: _listBlockPadding),
-      ),
-      TodoListBlockKeys.type: TodoListBlockComponentBuilder(
-        configuration: standardBlockComponentConfiguration.copyWith(padding: _listBlockPadding),
-      ),
-      collabDividerType: CollabDividerBlockComponentBuilder(),
-      collabPageDividerType: CollabPageDividerBlockComponentBuilder(),
-      collabFormulaType: CollabFormulaBlockComponentBuilder(),
-      'mermaid': CollabMermaidBlockComponentBuilder(),
-      collabMeetingType: CollabMeetingBlockComponentBuilder(),
-      collabTaskCardType: CollabTaskCardBlockComponentBuilder(),
-      collabKrType: CollabKrBlockComponentBuilder(),
-      csesCodeBlockType: CollabCodeBlockComponentBuilder(),
-      csesCalloutBlockType: CollabCalloutBlockComponentBuilder(),
-      'table': CollabTableBlockComponentBuilder(),
-      'table-row': CollabTableRowBlockComponentBuilder(),
-      'table-cell': CollabTableCellBlockComponentBuilder(),
-      csesUnsupportedBlockType: CollabUnsupportedBlockComponentBuilder(),
-      'audio': CollabAudioBlockComponentBuilder(),
-      'attachment': CollabAttachmentBlockComponentBuilder(),
-      'bookmark': CollabBookmarkBlockComponentBuilder(),
-      'embed': CollabWebEmbedBlockComponentBuilder(),
-      'juejin-embed': CollabJuejinEmbedBlockComponentBuilder(),
-      'figma-embed': CollabFigmaEmbedBlockComponentBuilder(),
-    }.map((type, builder) {
-      const textTypes = {
-        ParagraphBlockKeys.type,
-        HeadingBlockKeys.type,
-        QuoteBlockKeys.type,
-        BulletedListBlockKeys.type,
-        NumberedListBlockKeys.type,
-        TodoListBlockKeys.type,
-      };
-      return MapEntry(
-        type,
-        textTypes.contains(type)
-            ? CollabTextAlignmentBuilder(configureCollabParagraphPresentation(builder, type))
-            : builder,
-      );
-    });
-
-/// Reduces the extra gap between body paragraphs while preserving line height.
-EdgeInsets _paragraphBlockPadding(Node node) => const EdgeInsets.symmetric(vertical: 2);
-
-EdgeInsets _listBlockPadding(Node node) {
-  final value = node.attributes[csesBlockIndentAttribute];
-  final indent = value is int ? value.clamp(0, 6) : 0;
-  return EdgeInsets.fromLTRB(indent * 28.0, 2, 0, 2);
-}
-
-/// 在借用 [context]/[node] 中装饰 UTF-16 [index] 开始的 [text]。
-/// [before] 是内置字符格式，[after] 已应用段落/标题样式；段落族保留后者，
-/// 再应用行内字号和倍率，避免丢失标题字号或重复乘算段落倍率。
-/// 行内公式、用户和三类业务实体提及使用单字符 WidgetSpan，保留文字颜色；
-/// 整段链接点击提供打开和三视图切换，混排正文维持原链接行为。
-InlineSpan _collabTextSpanDecorator(
-  BuildContext context,
-  Node node,
-  int index,
-  TextInsert text,
-  TextSpan before,
-  TextSpan after,
-) {
-  var decorated = decorateCollabLinkSpan(
-    context,
-    node,
-    mobileTextSpanDecoratorForAttribute(
-      context,
-      node,
-      index,
-      text,
-      supportsCollabParagraph(node) ? after : before,
-      after,
-    ),
-  );
-  if (supportsCollabParagraph(node)) {
-    decorated = decorated.copyWith(
-      style: collabParagraphTextStyle(
-        node,
-        decorated.style ?? const TextStyle(),
-        text.attributes ?? const {},
-        applyParagraph: false,
-      ),
-    );
-  }
-  // Container color is inherited only when the text has no explicit foreground.
-  if (text.attributes?[AppFlowyRichTextKeys.textColor] == null) {
-    Node? ancestor = node.parent;
-    while (ancestor != null) {
-      if (ancestor.type == csesCalloutBlockType) {
-        final color = parseCollabBlockColor(ancestor.attributes[csesBlockTextColorAttribute] as String?);
-        if (color != null) {
-          decorated = TextSpan(
-            text: decorated.text,
-            children: decorated.children,
-            style: (decorated.style ?? const TextStyle()).copyWith(color: color),
-            recognizer: decorated.recognizer,
-            mouseCursor: decorated.mouseCursor,
-          );
-          break;
-        }
-      }
-      ancestor = ancestor.parent;
-    }
-  }
-  final attributes = text.attributes;
-  final latex = attributes?[collabInlineLatexAttribute];
-  final mention = attributes?[collabInlineMentionAttribute];
-  if (latex is String || mention is String) {
-    var offset = index;
-    final spans = <InlineSpan>[];
-    for (final rune in text.text.runes) {
-      if (rune == 0xfffc) {
-        spans.add(
-          WidgetSpan(
-            alignment: PlaceholderAlignment.middle,
-            child:
-                mention is String && const {'meeting', 'task', 'doc'}.contains(attributes?[collabMentionTypeAttribute])
-                ? CollabInlineEntityMention(
-                    node: node,
-                    offset: offset,
-                    name: mention,
-                    entityType: attributes![collabMentionTypeAttribute] as String,
-                    style: decorated.style ?? before.style ?? const TextStyle(fontSize: 16),
-                  )
-                : mention is String
-                ? CollabInlineMention(
-                    node: node,
-                    offset: offset,
-                    name: mention,
-                    userId: attributes?[collabMentionIdAttribute] as String? ?? '',
-                    style: decorated.style ?? before.style ?? const TextStyle(fontSize: 16),
-                  )
-                : CollabInlineFormula(
-                    node: node,
-                    offset: offset,
-                    latex: latex as String,
-                    style: decorated.style ?? before.style ?? const TextStyle(fontSize: 16),
-                  ),
-          ),
-        );
-      } else {
-        spans.add(TextSpan(text: String.fromCharCode(rune), style: decorated.style));
-      }
-      offset += rune > 0xffff ? 2 : 1;
-    }
-    return TextSpan(children: spans);
-  }
-  final superscript = attributes?[csesSuperscriptAttribute] == true;
-  final subscript = attributes?[csesSubscriptAttribute] == true;
-  if (!superscript && !subscript) {
-    return decorated;
-  }
-  return TextSpan(
-    text: decorated.text,
-    children: decorated.children,
-    style: (decorated.style ?? const TextStyle()).copyWith(
-      fontFeatures: [if (superscript) const FontFeature.superscripts(), if (subscript) const FontFeature.subscripts()],
-    ),
-    recognizer: decorated.recognizer,
-    mouseCursor: decorated.mouseCursor,
-    onEnter: decorated.onEnter,
-    onExit: decorated.onExit,
-    semanticsLabel: decorated.semanticsLabel,
-    semanticsIdentifier: decorated.semanticsIdentifier,
-    locale: decorated.locale,
-    spellOut: decorated.spellOut,
+            enabled: !_importing,
+          )
+        : null,
+    onUserMention: _handleUserMention,
   );
 }
 
