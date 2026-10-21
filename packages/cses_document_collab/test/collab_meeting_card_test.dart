@@ -14,6 +14,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// 验证会议状态卡片、会议号剪贴板、按钮命中、键盘和详情失效，使用公开宿主数据契约。
+/// 加载前后保持四行槽、卡片高度和按钮右边界；按钮宽度允许随文案及字号变化。
 void main() {
   setUpAll(() async {
     await _loadPreviewFonts();
@@ -300,7 +301,26 @@ void main() {
         );
         expect(paragraph.didExceedMaxLines, isTrue);
         expect(tester.getSize(_surface), size);
-        expect(tester.getRect(_open), actionRect);
+        final loadedActionRect = tester.getRect(_open);
+        expect(loadedActionRect.top, closeTo(actionRect.top, .01));
+        expect(loadedActionRect.bottom, closeTo(actionRect.bottom, .01));
+        expect(loadedActionRect.right, closeTo(actionRect.right, .01));
+        expect(loadedActionRect.width, greaterThanOrEqualTo(64));
+        final actionRowRect = tester.getRect(
+          find.byKey(const ValueKey('meeting-action-row-meeting')),
+        );
+        expect(
+          actionRowRect.inflate(.01).contains(loadedActionRect.topLeft),
+          isTrue,
+        );
+        expect(
+          actionRowRect.inflate(.01).contains(loadedActionRect.bottomRight),
+          isTrue,
+        );
+        final actionLabel = tester.renderObject<RenderParagraph>(
+          find.descendant(of: _open, matching: find.byType(Text)),
+        );
+        expect(actionLabel.didExceedMaxLines, isFalse);
         expect(tester.getTopLeft(find.byKey(tail.key)).dy, tailTop);
         final names = ['title', 'meta', 'number', 'action'];
         for (var i = 0; i < names.length; i++) {

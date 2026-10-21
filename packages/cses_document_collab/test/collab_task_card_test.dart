@@ -14,7 +14,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
-/// 任务卡片真实布局、宿主加载/头像注入、按钮导航及生命周期回归。
+/// 任务卡片布局、34像素详情按钮的对齐/命中、宿主加载及生命周期回归。
 void main() {
   setUpAll(() async {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
@@ -115,16 +115,18 @@ void main() {
         final contentRight = tester
             .getRect(find.byKey(const ValueKey('task-card-progress-card')))
             .right;
+        final detailButtonRect = tester.getRect(_open);
+        final detailIconRect = tester.getRect(detailIcon);
         expect(
-          tester.getRect(detailIcon).right,
+          detailButtonRect.right,
           closeTo(contentRight, .01),
-          reason: '放大图标应与内容右边界对齐',
+          reason: '详情按钮热区右边缘与正文对齐，图标保留居中留白',
         );
-        expect(
-          tester.getRect(detailIcon).right,
-          closeTo(tester.getRect(_open).right, .01),
-        );
-        expect(tester.getSize(_open), const Size(44, 44));
+        expect(detailButtonRect.size, const Size(34, 34));
+        expect(detailIconRect.size, const Size(16, 16));
+        expect(detailIconRect.center, detailButtonRect.center);
+        expect(detailButtonRect.contains(detailIconRect.topLeft), isTrue);
+        expect(detailButtonRect.contains(detailIconRect.bottomRight), isTrue);
 
         expect(
           find.byKey(const ValueKey('task-card-progress-dot-card')),

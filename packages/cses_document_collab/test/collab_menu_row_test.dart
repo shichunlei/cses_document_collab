@@ -1,4 +1,5 @@
 import 'dart:ui' show SemanticsAction, Tristate;
+import 'package:flutter/cupertino.dart' show CupertinoSwitch;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -68,8 +69,8 @@ void main() {
     await tester.tapAt(tester.getTopLeft(find.byType(CollabSwitchRow)) + const Offset(3, 3));
     await tester.pump();
     expect(changes, isEmpty);
-    expect(tester.widget<Switch>(find.byType(Switch)).value, isFalse);
-    await tester.tap(find.byType(Switch));
+    expect(tester.widget<CupertinoSwitch>(find.byType(CupertinoSwitch)).value, isFalse);
+    await tester.tap(find.byType(CupertinoSwitch));
     await tester.pumpAndSettle();
     expect(changes, [true]);
     final data = tester.getSemantics(find.byType(CollabSwitchRow)).getSemanticsData();
@@ -86,10 +87,10 @@ void main() {
   testWidgets('disabled switch keeps its value and has no activation action', (tester) async {
     await _mount(tester, const CollabSwitchRow(title: Text('锁定内容块'), value: true, onChanged: null));
     await tester.tap(find.text('锁定内容块'));
-    await tester.tap(find.byType(Switch));
+    await tester.tap(find.byType(CupertinoSwitch));
     await tester.sendKeyEvent(LogicalKeyboardKey.tab);
     await tester.sendKeyEvent(LogicalKeyboardKey.space);
-    expect(tester.widget<Switch>(find.byType(Switch)).value, isTrue);
+    expect(tester.widget<CupertinoSwitch>(find.byType(CupertinoSwitch)).value, isTrue);
     final data = tester.getSemantics(find.byType(CollabSwitchRow)).getSemanticsData();
     expect(data.flagsCollection.isEnabled, Tristate.isFalse);
     expect(data.hasAction(SemanticsAction.tap), isFalse);
@@ -161,7 +162,7 @@ void main() {
         );
         expect(tester.takeException(), isNull);
         final row = tester.getRect(find.byType(CollabSwitchRow));
-        final control = tester.getRect(find.byType(Switch));
+        final control = tester.getRect(find.byType(CupertinoSwitch));
         expect(row.contains(control.topLeft), isTrue);
         expect(row.contains(control.bottomRight), isTrue);
         expect(row.height, greaterThanOrEqualTo(compact ? 42 : 51));

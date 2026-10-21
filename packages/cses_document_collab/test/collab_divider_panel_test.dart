@@ -11,6 +11,7 @@ import 'package:cses_document_collab/src/model/collab_block_lock.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_switch_row.dart';
+import 'package:flutter/cupertino.dart' show CupertinoSwitch;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -36,7 +37,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(fixture.locks.state('line').locked, isFalse);
     await _capture(tester, 'divider-edit');
-    final switchFinder = find.descendant(of: lockRow, matching: find.byType(Switch));
+    final switchFinder = find.descendant(of: lockRow, matching: find.byType(CupertinoSwitch));
     await tester.tap(switchFinder);
     await tester.pumpAndSettle();
     expect(fixture.locks.state('line').locked, isTrue);

@@ -6,6 +6,7 @@ import 'package:cses_document_collab/src/editor/collab_divider_block.dart';
 import 'package:cses_document_collab/src/editor/collab_page_divider_block.dart';
 import 'package:cses_document_collab/src/model/collab_block_lock.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
+import 'package:flutter/cupertino.dart' show CupertinoSwitch;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -45,7 +46,7 @@ void main() {
         }
         final switchFinder = find.descendant(
           of: find.byKey(const ValueKey('block-lock-line')),
-          matching: find.byType(Switch),
+          matching: find.byType(CupertinoSwitch),
         );
         await tester.ensureVisible(switchFinder);
         await tester.pumpAndSettle();

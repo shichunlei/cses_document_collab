@@ -9,6 +9,7 @@ import 'package:cses_document_collab/src/editor/collab_juejin_embed_block.dart';
 import 'package:cses_document_collab/src/editor/collab_web_embed_block.dart';
 import 'package:cses_document_collab/src/model/collab_block_lock.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
+import 'package:flutter/cupertino.dart' show CupertinoSwitch;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:metalink/metalink.dart';
@@ -154,7 +155,7 @@ void main() {
       expect(fixture.commits, isEmpty);
       expect(find.byKey(const ValueKey('block-lock-resource')), findsOneWidget);
       await tester.tap(
-        find.descendant(of: find.byKey(const ValueKey('block-lock-resource')), matching: find.byType(Switch)),
+        find.descendant(of: find.byKey(const ValueKey('block-lock-resource')), matching: find.byType(CupertinoSwitch)),
       );
       await tester.pumpAndSettle();
       expect(fixture.commits, [true]);
@@ -166,7 +167,7 @@ void main() {
       expect(find.byKey(const ValueKey('link-view-card')), findsNothing);
       if (kind != 'attachment') expect(find.byKey(const ValueKey('link-copy')), findsOneWidget);
       await tester.tap(
-        find.descendant(of: find.byKey(const ValueKey('block-lock-resource')), matching: find.byType(Switch)),
+        find.descendant(of: find.byKey(const ValueKey('block-lock-resource')), matching: find.byType(CupertinoSwitch)),
       );
       await tester.pumpAndSettle();
       expect(fixture.commits, [true, false]);
@@ -229,7 +230,7 @@ void main() {
     await tester.tap(find.byTooltip('更多操作'));
     await tester.pumpAndSettle();
     await tester.tap(
-      find.descendant(of: find.byKey(const ValueKey('block-lock-resource')), matching: find.byType(Switch)),
+      find.descendant(of: find.byKey(const ValueKey('block-lock-resource')), matching: find.byType(CupertinoSwitch)),
     );
     await fixture.adapter.replaceFromRemote(const [
       CollabEditorBlock(

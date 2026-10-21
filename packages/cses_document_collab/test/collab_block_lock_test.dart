@@ -4,6 +4,7 @@ import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'package:cses_document_collab/src/model/collab_block_lock.dart';
 import 'package:cses_document_collab/src/model/collab_text_range.dart';
+import 'package:flutter/cupertino.dart' show CupertinoSwitch;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -185,7 +186,7 @@ void main() {
         expect(find.text('删除内容'), locked ? findsNothing : findsOneWidget);
         expect(find.text('复制内容'), findsNothing);
         await tester.tap(
-          find.descendant(of: find.byKey(const ValueKey('block-lock-a')), matching: find.byType(Switch)),
+          find.descendant(of: find.byKey(const ValueKey('block-lock-a')), matching: find.byType(CupertinoSwitch)),
         );
         await tester.pumpAndSettle();
         expect(commits, 1);

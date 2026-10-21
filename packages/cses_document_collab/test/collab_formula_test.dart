@@ -14,6 +14,7 @@ import 'package:cses_document_collab/src/editor/collaborative_editor_page.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_formula.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
+import 'package:flutter/cupertino.dart' show CupertinoSwitch;
 import 'package:flutter/material.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -489,7 +490,7 @@ void main() {
     await _captureFormulaPreview(tester, 'create');
     expect(find.byKey(const ValueKey('formula-insert-below')), findsNothing);
     expect(find.byKey(const ValueKey('formula-delete')), findsNothing);
-    expect(find.byType(Switch), findsNothing);
+    expect(find.byType(CupertinoSwitch), findsNothing);
     await tester.tap(find.byKey(const ValueKey('formula-close')));
     await tester.pumpAndSettle();
     expect(await future, isNull);
@@ -623,8 +624,8 @@ void main() {
           find.byKey(const ValueKey('formula-insert-below')),
           findsNothing,
         );
-        final toggle = find.byType(Switch);
-        expect(tester.widget<Switch>(toggle).onChanged != null, canToggle);
+        final toggle = find.byType(CupertinoSwitch);
+        expect(tester.widget<CupertinoSwitch>(toggle).onChanged != null, canToggle);
         if (canToggle) {
           await tester.ensureVisible(toggle);
           await tester.tap(toggle);
@@ -666,8 +667,8 @@ void main() {
         find.byKey(const ValueKey('formula-input')),
         'draft',
       );
-      await tester.ensureVisible(find.byType(Switch));
-      await tester.tap(find.byType(Switch));
+      await tester.ensureVisible(find.byType(CupertinoSwitch));
+      await tester.tap(find.byType(CupertinoSwitch));
       await tester.pumpAndSettle();
       locks.update([
         const CollabBlockLockState(
@@ -762,8 +763,8 @@ void main() {
           find.byKey(const ValueKey('formula-input')),
           'saved^2',
         );
-        await tester.ensureVisible(find.byType(Switch));
-        await tester.tap(find.byType(Switch));
+        await tester.ensureVisible(find.byType(CupertinoSwitch));
+        await tester.tap(find.byType(CupertinoSwitch));
         await tester.pumpAndSettle();
         await tester.tap(
           find.byKey(
