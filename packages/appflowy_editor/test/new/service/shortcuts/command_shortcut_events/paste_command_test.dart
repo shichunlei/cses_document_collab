@@ -383,6 +383,8 @@ Future<String> _testPasteNode(
   return node.type;
 }
 
+/// Uses [tester] to paste [document] repeatedly at the current document end.
+/// Owns and disposes the fixture editor; checks append order and rich-text runs.
 Future<void> _testHandleCopyMultiplePaste(
   WidgetTester tester,
   Document document,
@@ -402,27 +404,23 @@ Future<void> _testHandleCopyMultiplePaste(
     editor.editorState,
     documentToHTML(Document.fromJson(paragraphData)),
   );
-  expect(
-    editor.editorState.document.toJson(),
-    paragraphData,
-  );
-  await editor.updateSelection(Selection.single(path: [0], startOffset: 10));
-  pasteHTML(
-    editor.editorState,
-    documentToHTML(Document.fromJson(paragraphData)),
-  );
-  expect(
-    editor.document.toJson(),
-    secondParagraph,
+  expect(editor.editorState.document.toJson(), paragraphData);
+  await editor.updateSelection(
+    Selection.single(
+      path: [0],
+      startOffset: editor.nodeAtPath([0])!.delta!.length,
+    ),
   );
   pasteHTML(
     editor.editorState,
     documentToHTML(Document.fromJson(paragraphData)),
   );
-  expect(
-    editor.document.toJson(),
-    thirdParagraph,
+  expect(editor.document.toJson(), secondParagraph);
+  pasteHTML(
+    editor.editorState,
+    documentToHTML(Document.fromJson(paragraphData)),
   );
+  expect(editor.document.toJson(), thirdParagraph);
   await editor.dispose();
 }
 
