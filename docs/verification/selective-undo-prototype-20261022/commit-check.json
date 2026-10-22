@@ -1,0 +1,583 @@
+{
+  "date": "2026-10-22T12:05:35.028980+00:00",
+  "baseCommit": "a058ef10a64f981cb36ffc0e65221eed3f4c36aa",
+  "splitCommits": [
+    {
+      "key": "native",
+      "title": "feat: 增加持久化协同撤销与原生选区能力",
+      "wholeFiles": 84,
+      "partialFiles": []
+    },
+    {
+      "key": "editor",
+      "title": "feat: 支持外部历史委托与独立输入暂停",
+      "wholeFiles": 11,
+      "partialFiles": []
+    },
+    {
+      "key": "integration",
+      "title": "feat: 接入协同历史并归档审查修复记录",
+      "wholeFiles": 117,
+      "partialFiles": [
+        "packages/cses_document_collab/README.md",
+        "docs/verification/README.md",
+        "docs/block-adaptation.md"
+      ]
+    }
+  ],
+  "sourceSha256": {
+    "packages/appflowy_editor/lib/appflowy_editor.dart": "7edbc81d579834b20493486d9e82d45c6df1b3ab8efba78e3f5bbf0570aad54c",
+    "packages/appflowy_editor/lib/src/editor/editor_component/service/ime/character_shortcut_event_helper.dart": "625e5691dbe6cbe482c0efa02aa831d910b1d2014f6e08272275344a7a876819",
+    "packages/appflowy_editor/lib/src/editor/editor_component/service/ime/delta_input_on_insert_impl.dart": "e6ff9f5f26d45d6b7373cf3208fef0e1ed8ab627f103daf6d5edeb86d7ae5798",
+    "packages/appflowy_editor/lib/src/editor/editor_component/service/ime/delta_input_on_non_text_update_impl.dart": "8f58b5b4ccaa221749d3d4d8a7a244809066b39cc83a0e139a95e1e96911f2cf",
+    "packages/appflowy_editor/lib/src/editor/editor_component/service/ime/delta_input_on_replace_impl.dart": "e0676a615fbee6490bb0acdc6bc52ea800b9d8073731d6c923cd4214248604e1",
+    "packages/appflowy_editor/lib/src/editor/editor_component/service/ime/non_delta_input_service.dart": "c0f1b37530c38a4d5e83dca8c2071d824473a96f368ade47448ecb00678be4d0",
+    "packages/appflowy_editor/lib/src/editor/editor_component/service/keyboard_service_widget.dart": "eca316762cdf69a80d1449b6c9b3208c9e153496549a1e575f93856aed7c29e6",
+    "packages/appflowy_editor/lib/src/editor_state.dart": "5563a0e01d20d97849f823ce35252701b8e504a581a6a1a7aa1081b8ba7f7b18",
+    "packages/appflowy_editor/lib/src/history/undo_manager.dart": "6c1c5591dc87e89490fdecc8414e7b989de3160c7e617d8347b49cb60c37bd25",
+    "packages/appflowy_editor/test/legacy/external_history_test.dart": "e43274f6f32834e2e797c1b28e548e21d524510f24e062c1f31d92cc1331a622",
+    "packages/appflowy_editor/test/legacy/local_transaction_pause_test.dart": "92f8a2698e300b0175645ec9f3100b46d8c251f88876a3199373b1215ebd217f",
+    "packages/cses_document_collab/lib/src/controller/collab_controller.dart": "b3abe38f1e1383471b454f0d01275a07133770c34b3930e626de3d225118a328",
+    "packages/cses_document_collab/lib/src/editor/appflowy_block_editor_adapter.dart": "3eab82ff3f7fca3e3669ce2c920010b240818aadc7e7860fbee908c2851f3c44",
+    "packages/cses_document_collab/lib/src/editor/collab_native_selection.dart": "efb311c0b65b0f5c2816ffc4c31ce5c1fee3512891ac05107ad1a88a8b8d03d2",
+    "packages/cses_document_collab/lib/src/editor/collaborative_editor_page.dart": "d368a6c44fd5ec68ca72706b9a6ff44f0f97242b6fbfb96238fbb5d2122a15c7",
+    "packages/cses_document_collab/lib/src/native/api/collab/history.dart": "ce3eaab792807ad63613986da030812d12942983d79d50d6c827c851413064f9",
+    "packages/cses_document_collab/lib/src/native/frb_generated.dart": "3dcb2dd5fabc8e5d0c4b3c2120374f8e40d23e0877462ff012682f29c7484959",
+    "packages/cses_document_collab/lib/src/native/frb_generated.io.dart": "58ae6b24413b4f9148a39a108ff0d3a6b4a0b2544ad7110eeb917a3dbc572408",
+    "packages/cses_document_collab/lib/src/native/frb_generated.web.dart": "e91237ab44a886c711b833f11fe4b7bb7c8823e92b313796ada05e7d2eb6751c",
+    "packages/cses_document_collab/rust/Cargo.lock": "8607b0acdae550d335259249d3410cc00b9aa7f13abc8c57332a544c33b8ceb9",
+    "packages/cses_document_collab/rust/Cargo.toml": "bde41c5ba3cde1a4761e148796e10844100bfc6436eb4fea4d1f42bcf02c43e9",
+    "packages/cses_document_collab/rust/src/api/blockcraft.rs": "d7b9d6b6ac388232aaf7a87610702db90e15066e00034e692ae24e24ef8d18d4",
+    "packages/cses_document_collab/rust/src/api/collab.rs": "e116f6430869b1f0f12fe61cf8c17a472fca84671cc7739ef4b87dce5d89a02f",
+    "packages/cses_document_collab/rust/src/api/document_history.rs": "034b1f6e9903055c63f4b63f5300fde44955100d2617158f8433c51e0b1f5c35",
+    "packages/cses_document_collab/rust/src/api/document_history_tests.rs": "9f2ca5ce268a81d0adc78b198e6c9d752eb8fdb2a6324496bc84c8ceb74c061b",
+    "packages/cses_document_collab/rust/src/frb_generated.rs": "fc1b079f524adecb9ebc506ef68511735e15ab1f6f52abdd48ac0ca543483870",
+    "packages/cses_document_collab/rust/src/history_prototype.rs": "022a93392fa63b5febc1a778d045fa2526cde91e27d89b8fa7ebe6734b4e077f",
+    "packages/cses_document_collab/rust/tests/fixtures/native-history-peer.json": "55ecc5079f8c8ccf91a3e22a62f813aa86ad7a495bd4389494c476c7e3bbe9aa",
+    "packages/cses_document_collab/rust/tests/fixtures/native-history-review.json": "3e6d7aabf2191274add6de546759dcc0684f02a1b292b8ca285df4623d4c4361",
+    "packages/cses_document_collab/rust/vendor/yrs-history/Cargo.toml": "b63b881c90ec7cd4ef49e5a87575b45d4446543408403956c2f2d19f62bd453b",
+    "packages/cses_document_collab/rust/vendor/yrs-history/LOCAL_CHANGES.md": "572ac5b0b47afa0bd0d611fe803a9165bc5250b2182e8b61612c424b3855cbac",
+    "packages/cses_document_collab/rust/vendor/yrs-history/UPSTREAM.json": "3ce509e31f0502566fa6b5a9589f5fc6ee6a19ccf22b2d7b821e1468a6774864",
+    "packages/cses_document_collab/rust/vendor/yrs-history/src/history_checkpoint.rs": "012675ec595c4e75fdf6806a36cfe293ee8fdb7430e9a900523ec3885c5fb529",
+    "packages/cses_document_collab/rust/vendor/yrs-history/src/lib.rs": "26f460a2769b568ccc9e221aa7352e82890b198e21dde61f07c0c74d29c314d5",
+    "packages/cses_document_collab/test/collab_native_selection_test.dart": "ecc44c576bdfed9721e2be12e47edbe3b84168ef3d5b07f783d9bfae439f2c27",
+    "packages/cses_document_collab/test/native_history_editor_test.dart": "bee265be22a9b38ef2a487e04787a5da5437af74101ab44d11999097a0543534",
+    "packages/cses_document_collab/test/native_history_review_regression_test.dart": "6940283743fa82bb87754d41a4e933ebea4b649ffe31a3d37aec0b6edd4f9da0",
+    "packages/cses_document_collab/test/table_native_integration_test.dart": "5a4a2394ed282b3e07414b0d3e6d5c5b88a10629d0644f3138b79eb5ec4da72b",
+    "packages/cses_document_collab/tool/generate_native_history_fixture.mjs": "692cac8487d67df5d73645c049d5538e05d915af71936ade32877bda2a83ea05",
+    "packages/cses_document_collab/tool/generate_native_history_review_fixture.mjs": "b866f0c6f754e582adb985f5c8d39e2276d60878299e97f07fe62a8b141cb987"
+  },
+  "sourceSnapshotMatched": true,
+  "reusedValidation": "fix-validation.json",
+  "vendorFiles": 65,
+  "vendorTrackedBytes": 1415691,
+  "vendorBuildCacheExcluded": true,
+  "partialDocumentPolicy": {
+    "docs/block-adaptation.md": "仅2段历史说明、6条历史版本记录及2条历史更新记录",
+    "docs/verification/README.md": "仅 selective-undo 分类条目",
+    "packages/cses_document_collab/README.md": "排除另一会话的宿主自定义编辑表面一节"
+  },
+  "excludedOtherWork": [
+    "README.md",
+    "packages/cses_document_collab/lib/cses_document_collab.dart",
+    "packages/cses_document_collab/lib/src/editor/document_editor_commands.dart",
+    "packages/cses_document_collab/lib/src/editor/editor_interaction_shell.dart",
+    "packages/cses_document_collab/test/document_editor_commands_test.dart",
+    "lib/src/daily_guidance/",
+    "test/daily_guidance/",
+    "docs/verification/offline-journal-20261022/",
+    "docs/verification/offline-journal-design-20261022/",
+    "lib/src/demo/collab_demo_page.dart",
+    "pubspec.yaml",
+    "test/collab_demo_page_test.dart",
+    "test/file_journal_store_test.dart",
+    "integration_test/local_journal_device_test.dart"
+  ],
+  "knownLimits": [
+    "宿主全量210通过/1项期间新增的日记剪贴板探针失败，未作为全绿",
+    "保留两包及宿主既有静态提示、Yrs上游格式差异",
+    "未新增物理手机、真实在线双端和完整iOS App验收"
+  ],
+  "willPush": false,
+  "verificationRecordFiles": 107,
+  "nativeCachedWhitespaceCheck": {
+    "exitCode": 2,
+    "status": "preserved_exact_upstream_baseline",
+    "issueCount": 17,
+    "filesSha256": {
+      "packages/cses_document_collab/rust/vendor/yrs-history/README.md": "6c56d67ee262839d49c3d5bba0930800274f78d5a3a3aacb7225d9649f019b6c",
+      "packages/cses_document_collab/rust/vendor/yrs-history/src/branch.rs": "e23b042bbfb631c90f52dbc85f53359f95bae7c2ddb6eded4eb4594148b0ef5e",
+      "packages/cses_document_collab/rust/vendor/yrs-history/src/updates/decoder.rs": "1a2a0cf4f4ce34b0dcc081bf79812778f866726cdd8b16cf0c01315e22947245"
+    },
+    "evidence": "commit-vendor-whitespace.txt",
+    "provenance": "Rust sources match UPSTREAM.json; README matches installed Cargo registry yrs 0.27.4 original",
+    "otherStagedIssues": 0
+  },
+  "prerequisiteCommits": [
+    {
+      "hash": "2ebdc6287ea762c264be74854fddf4c0eeceee2c",
+      "title": "feat: 增加持久化协同撤销与原生选区能力"
+    },
+    {
+      "hash": "e73006286f58f3b88d6bca35b3cde33f414823ae",
+      "title": "feat: 支持外部历史委托与独立输入暂停"
+    }
+  ],
+  "integrationCachedWhitespaceCheck": {
+    "exitCode": 2,
+    "status": "raw_evidence_bytes_preserved",
+    "issueCount": 83,
+    "issues": [
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/commit-vendor-whitespace.txt",
+        "line": 2,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/commit-vendor-whitespace.txt",
+        "line": 4,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/commit-vendor-whitespace.txt",
+        "line": 6,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/commit-vendor-whitespace.txt",
+        "line": 8,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/commit-vendor-whitespace.txt",
+        "line": 10,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/commit-vendor-whitespace.txt",
+        "line": 12,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/commit-vendor-whitespace.txt",
+        "line": 14,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/commit-vendor-whitespace.txt",
+        "line": 16,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/commit-vendor-whitespace.txt",
+        "line": 18,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/commit-vendor-whitespace.txt",
+        "line": 20,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/commit-vendor-whitespace.txt",
+        "line": 22,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/commit-vendor-whitespace.txt",
+        "line": 24,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/commit-vendor-whitespace.txt",
+        "line": 26,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/commit-vendor-whitespace.txt",
+        "line": 28,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/commit-vendor-whitespace.txt",
+        "line": 30,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/commit-vendor-whitespace.txt",
+        "line": 32,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/commit-vendor-whitespace.txt",
+        "line": 34,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-android-build.txt",
+        "line": 1,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-appflowy-analyze.txt",
+        "line": 1,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-appflowy-tests.txt",
+        "line": 58,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-appflowy-tests.txt",
+        "line": 59,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-appflowy-tests.txt",
+        "line": 60,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-appflowy-tests.txt",
+        "line": 164,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-appflowy-tests.txt",
+        "line": 166,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-appflowy-tests.txt",
+        "line": 168,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-appflowy-tests.txt",
+        "line": 194,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-appflowy-tests.txt",
+        "line": 863,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-appflowy-tests.txt",
+        "line": 864,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-appflowy-tests.txt",
+        "line": 865,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-appflowy-tests.txt",
+        "line": 866,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-appflowy-tests.txt",
+        "line": 867,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-appflowy-tests.txt",
+        "line": 868,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-appflowy-tests.txt",
+        "line": 869,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-appflowy-tests.txt",
+        "line": 870,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-appflowy-tests.txt",
+        "line": 871,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-appflowy-tests.txt",
+        "line": 872,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-appflowy-tests.txt",
+        "line": 873,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-appflowy-tests.txt",
+        "line": 874,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-appflowy-tests.txt",
+        "line": 875,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-closed-keyboard-before.txt",
+        "line": 29,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-closed-keyboard-before.txt",
+        "line": 56,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-cses-analyze-all.txt",
+        "line": 1,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-cses-analyze-target.txt",
+        "line": 1,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-host-analyze-all.txt",
+        "line": 52,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-host-analyze-target.txt",
+        "line": 1,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-host-tests.txt",
+        "line": 8,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-ime-close-before.txt",
+        "line": 28,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-native-targets-before-payload-correction.txt",
+        "line": 247,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/fix-rust-tests.txt",
+        "line": 787,
+        "kind": "new blank line at EOF."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/review-empty-draft.txt",
+        "line": 38,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/review-empty-draft.txt",
+        "line": 42,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/review-input-connection.txt",
+        "line": 29,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/review-numbering.txt",
+        "line": 9,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/review-numbering.txt",
+        "line": 13,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/review-picker.txt",
+        "line": 9,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/review-picker.txt",
+        "line": 13,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/rust-tests.txt",
+        "line": 144,
+        "kind": "new blank line at EOF."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/stage2-checkpoint-tests.txt",
+        "line": 714,
+        "kind": "new blank line at EOF."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/stage2-rust-tests.txt",
+        "line": 765,
+        "kind": "new blank line at EOF."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/stage2-upstream-format-baseline.txt",
+        "line": 4,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/stage2-upstream-format-baseline.txt",
+        "line": 15,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/stage2-vendor-format.txt",
+        "line": 4,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/stage2-vendor-format.txt",
+        "line": 15,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/stage3-android-build.txt",
+        "line": 1,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/stage3-appflowy-analyze.txt",
+        "line": 2,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/stage3-appflowy-full-tests.txt",
+        "line": 59,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/stage3-appflowy-full-tests.txt",
+        "line": 60,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/stage3-appflowy-full-tests.txt",
+        "line": 61,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/stage3-appflowy-full-tests.txt",
+        "line": 165,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/stage3-appflowy-full-tests.txt",
+        "line": 167,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/stage3-appflowy-full-tests.txt",
+        "line": 169,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/stage3-appflowy-full-tests.txt",
+        "line": 195,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/stage3-appflowy-full-tests.txt",
+        "line": 842,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/stage3-appflowy-full-tests.txt",
+        "line": 843,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/stage3-appflowy-full-tests.txt",
+        "line": 844,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/stage3-appflowy-full-tests.txt",
+        "line": 845,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/stage3-checkpoint-tests.txt",
+        "line": 715,
+        "kind": "new blank line at EOF."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/stage3-cses-analyze.txt",
+        "line": 1,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/stage3-cses-full-analyze.txt",
+        "line": 1,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/stage3-host-analyze.txt",
+        "line": 52,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/stage3-rust-tests.txt",
+        "line": 779,
+        "kind": "new blank line at EOF."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/stage3-vendor-format.txt",
+        "line": 4,
+        "kind": "trailing whitespace."
+      },
+      {
+        "path": "docs/verification/selective-undo-prototype-20261022/stage3-vendor-format.txt",
+        "line": 15,
+        "kind": "trailing whitespace."
+      }
+    ],
+    "filesSha256": {
+      "docs/verification/selective-undo-prototype-20261022/commit-vendor-whitespace.txt": "34df475be7ed6650d1187e3e4c14969e4a6bccb08f970b8a774d942fc333f4ed",
+      "docs/verification/selective-undo-prototype-20261022/fix-android-build.txt": "7e68832ab60b46c73fa780d73acaa2d1574424f04917e3bf93191aba3d7ade16",
+      "docs/verification/selective-undo-prototype-20261022/fix-appflowy-analyze.txt": "db281dbe7ac5ec687a7d36980a321f9e1e28718c07f514ae0ee303cfa5a4c4cf",
+      "docs/verification/selective-undo-prototype-20261022/fix-appflowy-tests.txt": "001ef8e9289eef3addac26ea1417fe1b08c0bcbe9bf23e36a11b5c1a299395ce",
+      "docs/verification/selective-undo-prototype-20261022/fix-closed-keyboard-before.txt": "9e49db8caa2e7e04b15e8cbc44566c59f497f12dd63be549f1adc907c64737fe",
+      "docs/verification/selective-undo-prototype-20261022/fix-cses-analyze-all.txt": "b5a57ece666aee5caf97d271377fe7ffbb01ddf39cd18b2c951703ad0fb51f1a",
+      "docs/verification/selective-undo-prototype-20261022/fix-cses-analyze-target.txt": "48ef149fb56eabaa6e18f3801623c306d01247527902bb2a13ce9201de6be412",
+      "docs/verification/selective-undo-prototype-20261022/fix-host-analyze-all.txt": "3c79e01fef7b07e0dc17f5723bc5f3cd0c69c7d6f3ac20ed10648c59686af5d4",
+      "docs/verification/selective-undo-prototype-20261022/fix-host-analyze-target.txt": "7edd73f0b8a18940f5feba6edddc4f5d0ac9c65d5c7c4f70bb5f4878dcc078bb",
+      "docs/verification/selective-undo-prototype-20261022/fix-host-tests.txt": "44050cfb4b1098cc1c3c89a173289222f4be12d2f3da68649083c188d3fe94b6",
+      "docs/verification/selective-undo-prototype-20261022/fix-ime-close-before.txt": "7169d927e841a2447ab6d2e09666ccacf150e88302451902be6984a29ab4a910",
+      "docs/verification/selective-undo-prototype-20261022/fix-native-targets-before-payload-correction.txt": "193efee6cbfafbe8fbb725a3af5c5b0d17fa1a73eabecb93ec750aedc8bdcd81",
+      "docs/verification/selective-undo-prototype-20261022/fix-rust-tests.txt": "356225ad55dbd9d8e3b32f75d522f6bea8e0d85fd36d99c0157d3c6f128f23e5",
+      "docs/verification/selective-undo-prototype-20261022/review-empty-draft.txt": "f152377cb32420021c0304e2d162a7bb034d95b6453eca87636c5d6114b177d9",
+      "docs/verification/selective-undo-prototype-20261022/review-input-connection.txt": "1cc47bec4149e2e7a4862d25227ea47acf1c3b71875ea98d98453aed0480626a",
+      "docs/verification/selective-undo-prototype-20261022/review-numbering.txt": "2cc79f4a5a50214801acb3d85451593e4f3294aefe5d4c6f8c71fd972e389963",
+      "docs/verification/selective-undo-prototype-20261022/review-picker.txt": "4be1afa756e5d8a563da1a80221077a2aa73995b6ff8179968cf128bc2656278",
+      "docs/verification/selective-undo-prototype-20261022/rust-tests.txt": "630bef0c94466379deb795038ab5cb7a8fb0454321a16cd9f76a14b1508eacb4",
+      "docs/verification/selective-undo-prototype-20261022/stage2-checkpoint-tests.txt": "ea3dd0899c7ae04d0372840e9d77db03d337dc06df806fd4b3bb357f917b9a67",
+      "docs/verification/selective-undo-prototype-20261022/stage2-rust-tests.txt": "45ad2cbf4483231dc111f955ace7293b9eee8a7bf8a9453db8b9d6cedb1857b7",
+      "docs/verification/selective-undo-prototype-20261022/stage2-upstream-format-baseline.txt": "250973fda144ed2a0347ff26251dc4bb1221007c9e34fb85410584c7388c8558",
+      "docs/verification/selective-undo-prototype-20261022/stage2-vendor-format.txt": "b425b772cb14b14ce4401b8ac7939d9ff98b508fe871a56a2fa5b417a0787241",
+      "docs/verification/selective-undo-prototype-20261022/stage3-android-build.txt": "a0e0f8f7fcb6228c99822a87ce77f134342901d313041e9c4171f0419616d66a",
+      "docs/verification/selective-undo-prototype-20261022/stage3-appflowy-analyze.txt": "ba634099f85476db0d75e58268a4db0edf7367a4f59f3b50460451a8f0a9ff7c",
+      "docs/verification/selective-undo-prototype-20261022/stage3-appflowy-full-tests.txt": "3feb44a190cb20d9aff13454638a44007b062b41a1d40a9af4d51e4528b5c7a9",
+      "docs/verification/selective-undo-prototype-20261022/stage3-checkpoint-tests.txt": "e990d2a2ce6ec6bef552bdd233ccb2308019b35c9da1ca0d86c191579f9eec85",
+      "docs/verification/selective-undo-prototype-20261022/stage3-cses-analyze.txt": "19438e418ed10f1b553aae748a446a09550be4296413594926f754413a9f17d4",
+      "docs/verification/selective-undo-prototype-20261022/stage3-cses-full-analyze.txt": "f628c21f7cc1040f593198cf742f3f2a4ef209e9d50b718a58cb46d5db855997",
+      "docs/verification/selective-undo-prototype-20261022/stage3-host-analyze.txt": "7a80aee88f6c0e15705dd2ac84bfe722b1c6a04dbb25a03106a3fc17593afb6b",
+      "docs/verification/selective-undo-prototype-20261022/stage3-rust-tests.txt": "90e30c8e845b6995a0e078b7859536f663eaad6fe9669db9150a8b81942d86d5",
+      "docs/verification/selective-undo-prototype-20261022/stage3-vendor-format.txt": "b425b772cb14b14ce4401b8ac7939d9ff98b508fe871a56a2fa5b417a0787241"
+    },
+    "handwrittenSourceTestsAndMarkdownCheckExitCode": 0,
+    "reason": "Framework progress/test names, quoted upstream diffs and raw diagnostic logs keep original bytes and existing evidence hashes. Do not rewrite historical evidence to remove whitespace."
+  }
+}

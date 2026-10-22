@@ -1,0 +1,46 @@
+   Compiling cses_collab_core v0.1.0 (/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/rust)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.97s
+     Running unittests src/lib.rs (packages/cses_document_collab/rust/target/debug/deps/cses_collab_core-73160672f7997dda)
+
+running 28 tests
+test history_prototype::tests::deletion_only_update_is_persisted_even_when_vector_does_not_advance ... ok
+test history_prototype::tests::replay_divergence_is_rejected_before_persistence_or_state_swap ... ok
+test history_prototype::tests::cache_document_partition_does_not_restore_another_sessions_content_or_history ... ok
+test history_prototype::tests::out_of_order_dependency_update_is_durable_even_without_visible_change ... ok
+test history_prototype::tests::deleted_block_is_not_resurrected_by_text_undo ... ok
+test history_prototype::tests::database_lock_failure_preserves_exact_history_and_retry ... ok
+test history_prototype::tests::invalid_remote_update_and_missing_target_do_not_change_history_or_storage ... ok
+test history_prototype::tests::remote_edit_in_other_block_retains_local_history ... ok
+test history_prototype::tests::undo_local_delete_restores_text_without_removing_remote_insert ... ok
+test history_prototype::tests::remote_deletion_of_local_text_makes_undo_noop_without_resurrection ... ok
+test history_prototype::tests::local_undo_and_redo_preserve_remote_prefix_and_converge ... ok
+test history_prototype::tests::cache_reopen_restores_accepted_updates_but_starts_fresh_history ... ok
+test history_prototype::tests::snapshot_and_stack_copy_alone_lose_native_redone_associations ... ok
+test history_prototype::tests::remote_format_is_preserved_when_undoing_local_characters ... ok
+test history_prototype::tests::remote_update_preserves_redo_and_echo_does_not_capture_history ... ok
+test history_prototype::tests::remote_write_failure_preserves_local_history ... ok
+test history_prototype::tests::replacement_is_one_group_and_noop_does_not_clear_redo ... ok
+test history_prototype::tests::local_write_failure_preserves_redo ... ok
+test history_prototype::tests::redo_write_failure_is_atomic_and_retryable ... ok
+test history_prototype::tests::unknown_block_properties_and_metadata_survive_history_and_peer_sync ... ok
+
+thread 'history_prototype::tests::undo_local_run_preserves_remote_insert_inside_that_run' (19766084) panicked at src/history_prototype_tests.rs:185:51:
+called `Result::unwrap()` on an `Err` value: "HISTORY_REPLAY_DIVERGED"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test history_prototype::tests::utf16_ranges_preserve_emoji_and_reject_split_surrogates_atomically ... ok
+test history_prototype::tests::undo_local_run_preserves_remote_insert_inside_that_run ... FAILED
+test history_prototype::tests::undo_commit_failure_is_atomic_and_retryable ... ok
+test history_prototype::tests::remote_commit_failure_preserves_local_history ... ok
+test history_prototype::tests::local_commit_failure_preserves_redo ... ok
+test history_prototype::tests::undo_write_failure_is_atomic_and_retryable ... ok
+test history_prototype::tests::redo_commit_failure_is_atomic_and_retryable ... ok
+test history_prototype::tests::insertion_deletion_and_repeated_undo_redo_preserve_native_redone_links ... ok
+
+failures:
+
+failures:
+    history_prototype::tests::undo_local_run_preserves_remote_insert_inside_that_run
+
+test result: FAILED. 27 passed; 1 failed; 0 ignored; 0 measured; 107 filtered out; finished in 0.07s
+
+error: test failed, to rerun pass `--lib`

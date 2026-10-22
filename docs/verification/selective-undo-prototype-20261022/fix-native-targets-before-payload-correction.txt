@@ -1,0 +1,321 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_review_regression_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_review_regression_test.dart: (setUpAll)
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_review_regression_test.dart: first input in a reopened empty draft paragraph creates reversible history
+00:00 +1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_review_regression_test.dart: undo preserves an active text input connection and resolved caret
+00:00 +2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_review_regression_test.dart: undo preserves an active text input connection and resolved caret
+00:01 +2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart: failed controller retry must not send the next owner document
+DocCollab: 编辑器操作失败: Bad state: fixture registration failure
+#0      _ProbeGateway.register (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:254:28)
+<asynchronous suspension>
+#1      CsesDocCollaborationSession.start (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:167:5)
+<asynchronous suspension>
+#2      CollabController._startSession (package:cses_document_collab/src/controller/collab_controller.dart:608:7)
+<asynchronous suspension>
+#3      CollabController._initialize (package:cses_document_collab/src/controller/collab_controller.dart:439:9)
+<asynchronous suspension>
+#4      CollabController._initializeRecoverably (package:cses_document_collab/src/controller/collab_controller.dart:413:7)
+<asynchronous suspension>
+#5      Throws._matchFuture (package:matcher/src/expect/throws_matcher.dart:103:19)
+<asynchronous suspension>
+#6      _expect.<anonymous closure> (package:matcher/src/expect/expect.dart:153:17)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      expectLater.<anonymous closure> (package:flutter_test/src/widget_tester.dart:508:19)
+<asynchronous suspension>
+#9      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:41:7)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#11     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#12     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+DocCollab: 编辑器操作失败: Bad state: COLLAB_DOCUMENT_IN_USE: 请先等待当前文档关闭
+#0      CollabRuntime.acquire (package:cses_document_collab/src/native/collab_runtime.dart:24:7)
+#1      CollabController._initialize (package:cses_document_collab/src/controller/collab_controller.dart:430:21)
+#2      CollabController._initializeRecoverably (package:cses_document_collab/src/controller/collab_controller.dart:413:13)
+#3      CollabController.initialize (package:cses_document_collab/src/controller/collab_controller.dart:407:36)
+#4      CollabController.retry (package:cses_document_collab/src/controller/collab_controller.dart:506:13)
+<asynchronous suspension>
+#5      Throws._matchFuture (package:matcher/src/expect/throws_matcher.dart:103:19)
+<asynchronous suspension>
+#6      _expect.<anonymous closure> (package:matcher/src/expect/expect.dart:153:17)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      expectLater.<anonymous closure> (package:flutter_test/src/widget_tester.dart:508:19)
+<asynchronous suspension>
+#9      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:50:7)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#11     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#12     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:01 +3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_review_regression_test.dart: undo preserves an active text input connection and resolved caret
+00:01 +4: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_review_regression_test.dart: undo preserves an active text input connection and resolved caret
+00:01 +4: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart: permission registration failure must not poison transitions or cleanup
+DocCollab: 编辑器操作失败: Bad state: fixture registration failure
+#0      _ProbeGateway.register (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:254:28)
+<asynchronous suspension>
+#1      CsesDocCollaborationSession.start (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:167:5)
+<asynchronous suspension>
+#2      CollabController._startSession (package:cses_document_collab/src/controller/collab_controller.dart:608:7)
+<asynchronous suspension>
+#3      CollabController.setEditable.<anonymous closure> (package:cses_document_collab/src/controller/collab_controller.dart:485:57)
+<asynchronous suspension>
+#4      Throws._matchFuture (package:matcher/src/expect/throws_matcher.dart:103:19)
+<asynchronous suspension>
+#5      _expect.<anonymous closure> (package:matcher/src/expect/expect.dart:153:17)
+<asynchronous suspension>
+#6      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#7      expectLater.<anonymous closure> (package:flutter_test/src/widget_tester.dart:508:19)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:123:9)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#11     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:01 +5: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_review_regression_test.dart: undo preserves an active text input connection and resolved caret
+00:01 +5: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart: close waits for pending registration and stale callbacks cannot mutate the next owner
+DocCollab: 文档协同处理失败: Bad state: COLLAB_SESSION_STALE
+#0      CollabController._requireCurrentSession (package:cses_document_collab/src/controller/collab_controller.dart:631:38)
+#1      CollabController._startSession.<anonymous closure> (package:cses_document_collab/src/controller/collab_controller.dart:563:9)
+#2      CsesDocCollaborationSession._beginSync (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:245:40)
+#3      CsesDocCollaborationSession.start (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:185:30)
+<asynchronous suspension>
+#4      CollabController._startSession (package:cses_document_collab/src/controller/collab_controller.dart:608:7)
+<asynchronous suspension>
+#5      CollabController._initialize (package:cses_document_collab/src/controller/collab_controller.dart:439:9)
+<asynchronous suspension>
+#6      CollabController._initializeRecoverably (package:cses_document_collab/src/controller/collab_controller.dart:413:7)
+<asynchronous suspension>
+#7      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:181:9)
+<asynchronous suspension>
+#8      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#10     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:01 +6: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_review_regression_test.dart: undo preserves an active text input connection and resolved caret
+00:01 +7: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: page undo and redo buttons use native history without entering preview
+00:01 +8: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_review_regression_test.dart: redo preserves an active text input connection and resolved caret
+00:02 +9: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_review_regression_test.dart: redo preserves an active text input connection and resolved caret
+00:02 +10: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: transport exception after commit still projects accepted native history
+DocCollab: 历史更新已落盘但即时发送失败: Bad state: test transport failure
+#0      _Gateway.send (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart:404:52)
+#1      CsesDocCollaborationSession.sendLocalUpdate (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:199:18)
+#2      CollabController._performNativeHistory (package:cses_document_collab/src/controller/collab_controller.dart:363:19)
+<asynchronous suspension>
+#3      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#4      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart:123:7)
+<asynchronous suspension>
+#5      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#6      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#7      Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:02 +11: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_review_regression_test.dart: remote preserves an active text input connection and resolved caret
+00:02 +12: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_review_regression_test.dart: remote preserves an active text input connection and resolved caret
+00:02 +13: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: real peer reorder preserves native history and restores caret by ID
+00:02 +14: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_review_regression_test.dart: table body input keeps its native selection and input connection across undo and redo
+00:02 +15: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_review_regression_test.dart: table body input keeps its native selection and input connection across undo and redo
+00:02 +15: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: lock and host revocation keep native history until editing is allowed
+DocCollab: 原生撤销/重做被拒绝: READ_ONLY_BLOCK: p1
+#0      SimpleDecoder.decode (package:flutter_rust_bridge/src/codec/base.dart:34:9)
+#1      SseCodec._decode (package:flutter_rust_bridge/src/codec/sse.dart:45:55)
+#2      SseCodec.decodeWireSyncType (package:flutter_rust_bridge/src/codec/sse.dart:40:7)
+#3      BaseHandler.executeSync (package:flutter_rust_bridge/src/main_components/handler.dart:35:25)
+#4      RustLibApiImpl.crateApiCollabHistoryUndoDocument (package:cses_document_collab/src/native/frb_generated.dart:924:20)
+#5      undoDocument (package:cses_document_collab/src/native/api/collab/history.dart:48:6)
+#6      CollabController._performNativeHistory (package:cses_document_collab/src/controller/collab_controller.dart:356:28)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart:205:7)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#11     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:02 +16: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_review_regression_test.dart: table body input keeps its native selection and input connection across undo and redo
+00:02 +16: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: real SQLite write failure leaves UI/history and permits retry
+DocCollab: 原生撤销/重做被拒绝: cannot persist Yjs update: history failure
+#0      SimpleDecoder.decode (package:flutter_rust_bridge/src/codec/base.dart:34:9)
+#1      SseCodec._decode (package:flutter_rust_bridge/src/codec/sse.dart:45:55)
+#2      SseCodec.decodeWireSyncType (package:flutter_rust_bridge/src/codec/sse.dart:40:7)
+#3      BaseHandler.executeSync (package:flutter_rust_bridge/src/main_components/handler.dart:35:25)
+#4      RustLibApiImpl.crateApiCollabHistoryUndoDocument (package:cses_document_collab/src/native/frb_generated.dart:924:20)
+#5      undoDocument (package:cses_document_collab/src/native/api/collab/history.dart:48:6)
+#6      CollabController._performNativeHistory (package:cses_document_collab/src/controller/collab_controller.dart:356:28)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart:252:13)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#11     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+DocCollab: 原生撤销/重做被拒绝: cannot persist Yjs update: history failure
+#0      SimpleDecoder.decode (package:flutter_rust_bridge/src/codec/base.dart:34:9)
+#1      SseCodec._decode (package:flutter_rust_bridge/src/codec/sse.dart:45:55)
+#2      SseCodec.decodeWireSyncType (package:flutter_rust_bridge/src/codec/sse.dart:40:7)
+#3      BaseHandler.executeSync (package:flutter_rust_bridge/src/main_components/handler.dart:35:25)
+#4      RustLibApiImpl.crateApiCollabHistoryRedoDocument (package:cses_document_collab/src/native/frb_generated.dart:798:20)
+#5      redoDocument (package:cses_document_collab/src/native/api/collab/history.dart:55:6)
+#6      CollabController._performNativeHistory (package:cses_document_collab/src/controller/collab_controller.dart:355:28)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart:250:13)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#11     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:02 +17: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_review_regression_test.dart: table body input keeps its native selection and input connection across undo and redo
+00:03 +17: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: real SQLite COMMIT failure leaves UI/history and permits retry
+DocCollab: 原生撤销/重做被拒绝: cannot persist Yjs update: FOREIGN KEY constraint failed
+#0      SimpleDecoder.decode (package:flutter_rust_bridge/src/codec/base.dart:34:9)
+#1      SseCodec._decode (package:flutter_rust_bridge/src/codec/sse.dart:45:55)
+#2      SseCodec.decodeWireSyncType (package:flutter_rust_bridge/src/codec/sse.dart:40:7)
+#3      BaseHandler.executeSync (package:flutter_rust_bridge/src/main_components/handler.dart:35:25)
+#4      RustLibApiImpl.crateApiCollabHistoryUndoDocument (package:cses_document_collab/src/native/frb_generated.dart:924:20)
+#5      undoDocument (package:cses_document_collab/src/native/api/collab/history.dart:48:6)
+#6      CollabController._performNativeHistory (package:cses_document_collab/src/controller/collab_controller.dart:356:28)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart:252:13)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#11     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:03 +17: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_review_regression_test.dart: table body input keeps its native selection and input connection across undo and redo
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: Selection:<start = path = [3, 0, 0, 0], offset = 2, end = path = [3, 0, 0, 0], offset = 2>
+  Actual: Selection:<start = path = [3, 0, 0, 0], offset = 1, end = path = [3, 0, 0, 0], offset = 1>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_review_regression_test.dart:172:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_review_regression_test.dart line 172
+The test description was:
+  table body input keeps its native selection and input connection across undo and redo
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:03 +17 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:03 +17 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_review_regression_test.dart: table body input keeps its native selection and input connection across undo and redo [E]
+  Test failed. See exception logs above.
+  The test description was: table body input keeps its native selection and input connection across undo and redo
+  
+00:03 +17 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: real SQLite COMMIT failure leaves UI/history and permits retry
+DocCollab: 原生撤销/重做被拒绝: cannot persist Yjs update: FOREIGN KEY constraint failed
+#0      SimpleDecoder.decode (package:flutter_rust_bridge/src/codec/base.dart:34:9)
+#1      SseCodec._decode (package:flutter_rust_bridge/src/codec/sse.dart:45:55)
+#2      SseCodec.decodeWireSyncType (package:flutter_rust_bridge/src/codec/sse.dart:40:7)
+#3      BaseHandler.executeSync (package:flutter_rust_bridge/src/main_components/handler.dart:35:25)
+#4      RustLibApiImpl.crateApiCollabHistoryRedoDocument (package:cses_document_collab/src/native/frb_generated.dart:798:20)
+#5      redoDocument (package:cses_document_collab/src/native/api/collab/history.dart:55:6)
+#6      CollabController._performNativeHistory (package:cses_document_collab/src/controller/collab_controller.dart:355:28)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart:250:13)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#11     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:03 +18 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:03 +19 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:03 +20 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:03 +21 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:03 +22 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:03 +23 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:03 +24 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:04 +25 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_review_regression_test.dart: initial writable handshake repairs missing numbering without creating personal history
+00:04 +26 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import success respects transaction and lifecycle
+00:04 +27 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import success respects transaction and lifecycle
+00:06 +28 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import cancel respects transaction and lifecycle
+00:07 +29 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import invalid respects transaction and lifecycle
+MarkdownImport: Markdown 导入失败: FormatException: Markdown 文件为空
+#0      decodeMarkdownImport (package:cses_document_collab/src/editor/markdown_import.dart:20:30)
+#1      compute.<anonymous closure> (package:flutter/src/foundation/_isolates_io.dart:23:20)
+#2      _RemoteRunner._run (dart:isolate:1116:47)
+#3      _RemoteRunner._remoteExecute (dart:isolate:1110:12)
+#4      _delayEntrypointInvocation.<anonymous closure> (dart:isolate-patch/isolate_patch.dart:316:17)
+#5      _RawReceivePort._handleMessage (dart:isolate-patch/isolate_patch.dart:192:12)
+
+00:09 +30 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import revoked respects transaction and lifecycle
+00:10 +31 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import closed respects transaction and lifecycle
+00:10 +32 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: unrenderable video  uses the unified placeholder
+00:10 +33 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: unrenderable video blob:desktop-only uses the unified placeholder
+00:10 +34 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: unrenderable video file:///desktop/video.mp4 uses the unified placeholder
+00:10 +35 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: unrenderable video null uses the unified placeholder
+00:10 +36 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: unknown blocks stay opaque while surrounding text remains editable
+00:11 +37 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: desktop quote background and border render in edit and preview
+00:11 +38 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: alignment switches keep the live paragraph caret and text
+00:11 +39 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: paragraph renders justify and preserves selection in preview
+00:11 +40 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: heading_2 renders justify and preserves selection in preview
+00:11 +41 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: quote renders justify and preserves selection in preview
+00:11 +42 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: bulleted_list renders justify and preserves selection in preview
+00:11 +43 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: numbered_list renders justify and preserves selection in preview
+00:11 +44 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: todo_list renders justify and preserves selection in preview
+00:12 +45 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: paragraph renders distributed and preserves selection in preview
+00:12 +46 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: heading_2 renders distributed and preserves selection in preview
+00:12 +47 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: quote renders distributed and preserves selection in preview
+00:12 +48 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: bulleted_list renders distributed and preserves selection in preview
+00:12 +49 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: numbered_list renders distributed and preserves selection in preview
+00:12 +50 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: todo_list renders distributed and preserves selection in preview
+00:12 +51 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: paragraph rows stay compact in edit and preview
+00:12 +52 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: numbered_list rows stay compact in edit and preview
+00:12 +53 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: bulleted_list rows stay compact in edit and preview
+00:13 +54 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: todo_list rows stay compact in edit and preview
+00:13 +55 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: formal cover fills page width; centered controls overlay image and icon crosses its bottom
+00:13 +56 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: standalone page owns the full-screen editor UI
+00:13 +57 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: remote read-only capability disables all editing and preserves preview choice
+00:13 +58 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: (tearDownAll)
+00:13 +58 -1: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_review_regression_test.dart: table body input keeps its native selection and input connection across undo and redo

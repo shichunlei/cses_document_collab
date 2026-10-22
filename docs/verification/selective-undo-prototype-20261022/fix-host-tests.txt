@@ -1,0 +1,480 @@
+Test events retained; fake account HTTP/session traces omitted.
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart: 真实页面工具栏选人确认后插入、保存、预览并取消下一次选择
+00:00 +0 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart: 真实页面工具栏选人确认后插入、保存、预览并取消下一次选择
+00:00 +0 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/review_clipboard_probe_test.dart: cut a mention then paste must round-trip the selected content [E]
+  Bad state: 粘贴内容超出日记支持的格式或容量
+  package:cses_mobile_collab_demo/src/daily_guidance/local_journal_controller.dart 149:7  LocalJournalController.pasteFromClipboard
+  
+00:01 +1 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart: 真实页面工具栏选人确认后插入、保存、预览并取消下一次选择
+00:01 +2 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart: 真实页面工具栏选人确认后插入、保存、预览并取消下一次选择
+00:01 +3 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart: 真实页面工具栏选人确认后插入、保存、预览并取消下一次选择
+00:01 +4 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart: 真实页面工具栏选人确认后插入、保存、预览并取消下一次选择
+00:01 +4 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 真实组织目录 保留真实部门树、同名不同 ID 与跨类型同 ID，缓存同会话结果
+00:01 +5 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart: 真实页面工具栏选人确认后插入、保存、预览并取消下一次选择
+00:01 +5 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 真实组织目录 保留真实部门树、同名不同 ID 与跨类型同 ID，缓存同会话结果
+00:01 +6 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart: 真实页面工具栏选人确认后插入、保存、预览并取消下一次选择
+00:01 +6 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 真实组织目录 保留真实部门树、同名不同 ID 与跨类型同 ID，缓存同会话结果
+00:01 +7 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart: 真实页面工具栏选人确认后插入、保存、预览并取消下一次选择
+00:01 +7 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 真实组织目录 保留真实部门树、同名不同 ID 与跨类型同 ID，缓存同会话结果
+00:01 +8 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart: 真实页面工具栏选人确认后插入、保存、预览并取消下一次选择
+00:01 +8 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 真实组织目录 保留真实部门树、同名不同 ID 与跨类型同 ID，缓存同会话结果
+00:01 +9 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart: 真实页面工具栏选人确认后插入、保存、预览并取消下一次选择
+00:01 +9 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 真实组织目录 保留真实部门树、同名不同 ID 与跨类型同 ID，缓存同会话结果
+00:01 +10 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart: 真实页面工具栏选人确认后插入、保存、预览并取消下一次选择
+00:01 +10 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 真实组织目录 保留真实部门树、同名不同 ID 与跨类型同 ID，缓存同会话结果
+00:01 +11 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart: 真实页面工具栏选人确认后插入、保存、预览并取消下一次选择
+00:01 +11 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 真实组织目录 失败与非法子树不缓存，重试重新请求
+00:01 +12 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart: 真实页面工具栏选人确认后插入、保存、预览并取消下一次选择
+00:01 +12 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 真实组织目录 会话切换拒绝缓存与请求迟到结果
+00:01 +13 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart: 真实页面工具栏选人确认后插入、保存、预览并取消下一次选择
+00:02 +14 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart: 真实页面工具栏选人确认后插入、保存、预览并取消下一次选择
+00:02 +15 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart: 真实页面工具栏选人确认后插入、保存、预览并取消下一次选择
+00:02 +16 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_page_test.dart: same paper layout in edit and preview at 390.0/1.0
+00:02 +17 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_page_test.dart: same paper layout in edit and preview at 390.0/1.0
+00:02 +18 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_page_test.dart: same paper layout in edit and preview at 390.0/1.0
+00:02 +19 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_page_test.dart: same paper layout in edit and preview at 390.0/1.0
+00:02 +20 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_page_test.dart: same paper layout in edit and preview at 390.0/1.0
+00:02 +21 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_page_test.dart: same paper layout in edit and preview at 390.0/1.0
+00:02 +22 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_page_test.dart: same paper layout in edit and preview at 390.0/1.0
+00:02 +23 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_page_test.dart: same paper layout in edit and preview at 390.0/1.0
+00:02 +24 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_page_test.dart: same paper layout in edit and preview at 390.0/1.0
+00:02 +25 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_page_test.dart: same paper layout in edit and preview at 390.0/1.0
+00:02 +26 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_page_test.dart: same paper layout in edit and preview at 390.0/1.0
+00:02 +27 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:02 +28 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:02 +29 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:02 +30 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:02 +31 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:02 +32 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:02 +33 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:02 +34 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:02 +35 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:02 +36 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:02 +37 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:02 +38 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:02 +39 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:02 +40 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:02 +41 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:02 +42 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:03 +43 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:03 +44 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+00:03 +45 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+00:03 +46 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+00:03 +47 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: ctrl+v pastes plain text atomically, saves and supports undo: https://example.com
+00:03 +48 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: ctrl+v pastes plain text atomically, saves and supports undo: https://example.com
+00:03 +49 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: ctrl+v pastes plain text atomically, saves and supports undo: https://example.com
+00:03 +50 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: ctrl+v pastes plain text atomically, saves and supports undo: https://example.com
+00:03 +51 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: ctrl+v pastes plain text atomically, saves and supports undo: https://example.com
+00:04 +52 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: ctrl+v pastes plain text atomically, saves and supports undo: https://example.com
+00:04 +53 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: ctrl+v pastes plain text atomically, saves and supports undo: https://example.com
+00:04 +54 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: ctrl+v pastes plain text atomically, saves and supports undo: https://example.com
+00:04 +55 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: ctrl+v pastes plain text atomically, saves and supports undo: https://example.com
+00:04 +56 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: ctrl+v pastes plain text atomically, saves and supports undo: https://example.com
+00:04 +57 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: ctrl+v pastes plain text atomically, saves and supports undo: https://example.com
+00:04 +58 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: ctrl+v pastes plain text atomically, saves and supports undo: https://example.com
+00:04 +59 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: ctrl+v pastes plain text atomically, saves and supports undo: https://example.com
+00:04 +60 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/app_toast_test.dart: Common toast displays and expires in the demo app
+00:04 +61 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/app_toast_test.dart: Common toast displays and expires in the demo app
+00:04 +62 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/app_toast_test.dart: Common toast displays and expires in the demo app
+00:05 +62 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:05 +63 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/app_toast_test.dart: Common toast displays and expires in the demo app
+00:05 +64 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/app_toast_test.dart: Common toast displays and expires in the demo app
+00:05 +65 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/app_toast_test.dart: Common toast displays and expires in the demo app
+00:05 +66 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/app_toast_test.dart: Common toast displays and expires in the demo app
+00:05 +67 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:05 +67 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: space documents use parent id and totalCount pagination without requiring hasMore
+00:05 +68 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:05 +68 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: space documents use parent id and totalCount pagination without requiring hasMore
+00:05 +69 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:05 +70 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:05 +70 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: space documents use parent id and totalCount pagination without requiring hasMore
+00:06 +71 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +72 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +72 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: rejected shortcut paste shows a retry message and keeps the saved original
+00:06 +72 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document list rejects invalid metadata, request bounds and stale account results
+00:06 +73 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +73 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document list rejects invalid metadata, request bounds and stale account results
+00:06 +74 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +74 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document metadata preserves immutable pages and uses the most recent available timestamp
+00:06 +75 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +75 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document metadata preserves immutable pages and uses the most recent available timestamp
+00:06 +76 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +77 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +77 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:06 +78 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +78 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:06 +79 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +79 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:06 +80 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +80 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:06 +81 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +81 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:06 +82 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +82 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: create uses empty title and formal text type; snapshot has two Insert blocks
+00:06 +83 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +83 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: known create ID remains available when account changes during response
+00:06 +84 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +84 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:06 +85 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +85 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +86 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +86 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +87 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +87 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: real Common timeout persists unknown create and never repeats the HTTP create
+00:06 +87 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +87 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: real Common timeout persists unknown create and never repeats the HTTP create
+00:06 +87 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +88 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +88 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:06 +88 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +88 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:06 +88 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +88 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:06 +88 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +88 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:06 +88 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +88 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:06 +88 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +88 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:06 +89 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +89 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:06 +90 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +90 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: scope is stable across cookie rotations but service refuses stale identity
+00:06 +91 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +92 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +92 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:06 +93 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: username/password only; validation, single submission and successful handoff
+00:06 +94 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: host picker searches initial keyword and returns selected user after transition
+00:06 +94 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:06 +94 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: failure stays on login page; late success after dispose is ignored
+00:06 +94 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:06 +94 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: failure stays on login page; late success after dispose is ignored
+00:06 +94 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:06 +95 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: host picker searches initial keyword and returns selected user after transition
+00:06 +95 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:06 +95 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: failure stays on login page; late success after dispose is ignored
+00:06 +95 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:06 +95 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: failure stays on login page; late success after dispose is ignored
+00:06 +95 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:06 +96 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: host picker searches initial keyword and returns selected user after transition
+00:06 +96 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:06 +96 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: failure stays on login page; late success after dispose is ignored
+00:06 +96 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:06 +96 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: failure stays on login page; late success after dispose is ignored
+00:06 +97 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: host picker searches initial keyword and returns selected user after transition
+00:06 +97 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: failure stays on login page; late success after dispose is ignored
+00:06 +97 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +97 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: failure stays on login page; late success after dispose is ignored
+00:06 +97 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +97 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: failure stays on login page; late success after dispose is ignored
+00:06 +97 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +97 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: failure stays on login page; late success after dispose is ignored
+00:06 +97 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +98 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: host picker searches initial keyword and returns selected user after transition
+00:06 +98 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename omitted; save uses Common while preserving other header fields
+00:06 +98 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:06 +98 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename omitted; save uses Common while preserving other header fields
+00:07 +98 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +98 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename omitted; save uses Common while preserving other header fields
+00:07 +99 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: host picker searches initial keyword and returns selected user after transition
+00:07 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: host picker searches initial keyword and returns selected user after transition
+00:07 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: host picker searches initial keyword and returns selected user after transition
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: failure stays on login page; late success after dispose is ignored
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: failure stays on login page; late success after dispose is ignored
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: failure stays on login page; late success after dispose is ignored
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: failure stays on login page; late success after dispose is ignored
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: failure stays on login page; late success after dispose is ignored
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: failure stays on login page; late success after dispose is ignored
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: failure stays on login page; late success after dispose is ignored
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: failure stays on login page; late success after dispose is ignored
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: failure stays on login page; late success after dispose is ignored
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:07 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +102 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: host picker searches initial keyword and returns selected user after transition
+00:07 +102 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +102 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:07 +102 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +102 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:07 +102 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +102 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:07 +102 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: organization route, auth, real users only, name/department filtering, cached details
+00:07 +102 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: failure stays on login page; late success after dispose is ignored
+00:07 +102 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:07 +102 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_login_page_test.dart: failure stays on login page; late success after dispose is ignored
+00:07 +102 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:07 +103 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: host picker searches initial keyword and returns selected user after transition
+00:07 +103 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:07 +104 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: host picker searches initial keyword and returns selected user after transition
+00:07 +104 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:07 +105 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: host picker searches initial keyword and returns selected user after transition
+00:07 +105 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:07 +105 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: failed response is not cached; retry queries server again
+00:07 +105 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:07 +105 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: failed response is not cached; retry queries server again
+00:07 +105 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:07 +105 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: failed response is not cached; retry queries server again
+00:07 +105 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:07 +105 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: failed response is not cached; retry queries server again
+00:07 +105 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:07 +105 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: failed response is not cached; retry queries server again
+00:07 +105 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:07 +105 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: failed response is not cached; retry queries server again
+00:07 +105 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:07 +105 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: failed response is not cached; retry queries server again
+00:07 +105 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:07 +105 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: failed response is not cached; retry queries server again
+00:07 +105 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:07 +105 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: failed response is not cached; retry queries server again
+00:07 +105 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:07 +106 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: host picker searches initial keyword and returns selected user after transition
+00:07 +106 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: failed response is not cached; retry queries server again
+00:07 +106 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:07 +106 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: failed response is not cached; retry queries server again
+00:07 +106 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:07 +106 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: failed response is not cached; retry queries server again
+00:07 +107 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: host picker searches initial keyword and returns selected user after transition
+00:07 +107 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:07 +107 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: failed response is not cached; retry queries server again
+00:07 +107 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:07 +107 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: failed response is not cached; retry queries server again
+00:07 +108 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: host picker searches initial keyword and returns selected user after transition
+00:07 +108 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:07 +108 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: failed response is not cached; retry queries server again
+00:07 +108 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:07 +108 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: failed response is not cached; retry queries server again
+00:07 +108 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:07 +108 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: failed response is not cached; retry queries server again
+00:07 +108 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:07 +108 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: failed response is not cached; retry queries server again
+00:07 +108 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:07 +108 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: failed response is not cached; retry queries server again
+00:07 +108 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:07 +108 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: failed response is not cached; retry queries server again
+00:07 +108 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:07 +108 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: failed response is not cached; retry queries server again
+00:07 +109 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: host picker searches initial keyword and returns selected user after transition
+00:07 +109 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: failed response is not cached; retry queries server again
+00:07 +109 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:07 +109 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: failed response is not cached; retry queries server again
+00:07 +109 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:07 +109 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: failed response is not cached; retry queries server again
+00:07 +109 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:07 +110 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: host picker searches initial keyword and returns selected user after transition
+00:07 +110 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:07 +110 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: changed session rejects cached data and delayed response
+00:07 +110 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:07 +110 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: changed session rejects cached data and delayed response
+00:07 +110 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:07 +111 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: host picker searches initial keyword and returns selected user after transition
+00:07 +111 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_mention_directory_test.dart: changed session rejects cached data and delayed response
+00:07 +112 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: host picker searches initial keyword and returns selected user after transition
+00:07 +113 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: host picker searches initial keyword and returns selected user after transition
+00:07 +114 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: host picker searches initial keyword and returns selected user after transition
+00:07 +114 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:07 +115 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: host picker searches initial keyword and returns selected user after transition
+00:07 +116 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:07 +117 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: all soft lines remain ruled in edit and preview: "首行\n\n末行" / 1.0
+00:07 +117 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps InProgress through Common headers without changing wire state
+00:07 +118 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: all soft lines remain ruled in edit and preview: "首行\n\n末行" / 1.0
+00:07 +118 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Pause through Common headers without changing wire state
+00:07 +119 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: all soft lines remain ruled in edit and preview: "首行\n\n末行" / 1.0
+00:07 +119 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Completed through Common headers without changing wire state
+00:07 +120 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: old query cannot replace new query; failed requests retry; closing ignores late result
+00:07 +120 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Completed through Common headers without changing wire state
+00:07 +121 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: old query cannot replace new query; failed requests retry; closing ignores late result
+00:07 +121 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +121 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: old query cannot replace new query; failed requests retry; closing ignores late result
+00:07 +121 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +121 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: old query cannot replace new query; failed requests retry; closing ignores late result
+00:07 +121 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +121 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: old query cannot replace new query; failed requests retry; closing ignores late result
+00:07 +121 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +121 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: old query cannot replace new query; failed requests retry; closing ignores late result
+00:07 +121 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +121 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: old query cannot replace new query; failed requests retry; closing ignores late result
+00:07 +121 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +121 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: old query cannot replace new query; failed requests retry; closing ignores late result
+00:07 +121 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +121 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: old query cannot replace new query; failed requests retry; closing ignores late result
+00:07 +121 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +122 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: old query cannot replace new query; failed requests retry; closing ignores late result
+00:07 +122 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Delete through Common headers without changing wire state
+00:07 +123 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: old query cannot replace new query; failed requests retry; closing ignores late result
+00:07 +123 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps FutureState through Common headers without changing wire state
+00:07 +124 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: old query cannot replace new query; failed requests retry; closing ignores late result
+00:07 +124 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: wrapped detail and explicit missing item/data are supported
+00:08 +125 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: old query cannot replace new query; failed requests retry; closing ignores late result
+00:08 +126 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: all soft lines remain ruled in edit and preview: "第一行\n" / 2.0
+00:08 +126 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: optional metadata can be omitted and memberCount is used when members are absent
+00:08 +127 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: all soft lines remain ruled in edit and preview: "第一行\n" / 2.0
+00:08 +127 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:08 +128 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: permission change disables selection and ignores pending request
+00:08 +128 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:08 +129 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/mention_picker_test.dart: permission change disables selection and ignores pending request
+00:08 +129 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: stale session refuses requests and late responses
+00:08 +130 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/meeting_reference_picker_test.dart: host validates reference and returns public value after route dismissal
+00:08 +130 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: stale session refuses requests and late responses
+00:08 +131 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/meeting_reference_picker_test.dart: host validates reference and returns public value after route dismissal
+00:08 +132 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/meeting_reference_picker_test.dart: host validates reference and returns public value after route dismissal
+00:08 +133 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/meeting_reference_picker_test.dart: host validates reference and returns public value after route dismissal
+00:08 +134 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/meeting_reference_picker_test.dart: host validates reference and returns public value after route dismissal
+00:08 +134 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:09 +135 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/meeting_reference_picker_test.dart: host validates reference and returns public value after route dismissal
+00:09 +135 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_account_login_test.dart: empty credentials and missing Common device never send HTTP
+00:09 +136 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/meeting_reference_picker_test.dart: host validates reference and returns public value after route dismissal
+00:09 +136 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_account_login_test.dart: business failure does not inject an authenticated context
+00:09 +137 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/meeting_reference_picker_test.dart: host validates reference and returns public value after route dismissal
+00:09 +137 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_account_login_test.dart: storage initialization failure still clears Common login on exit
+00:09 +138 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/meeting_reference_picker_test.dart: host validates reference and returns public value after route dismissal
+00:09 +138 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_account_login_test.dart: incomplete and invalid resolved context is cleared before retry
+00:09 +139 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/meeting_reference_picker_test.dart: host validates reference and returns public value after route dismissal
+00:09 +139 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:09 +140 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/meeting_reference_picker_test.dart: host validates reference and returns public value after route dismissal
+00:09 +140 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_account_login_test.dart: network and gateway errors use Common mapping without credentials
+00:09 +141 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/meeting_reference_picker_test.dart: host validates reference and returns public value after route dismissal
+00:09 +141 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_account_login_test.dart: late login response cannot overwrite a newer context
+00:09 +142 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/meeting_reference_picker_test.dart: host validates reference and returns public value after route dismissal
+00:09 +142 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_account_login_test.dart: logout clears Common identity but retains app device for next login
+00:09 +143 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/meeting_reference_picker_test.dart: host validates reference and returns public value after route dismissal
+00:09 +144 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: connection page scrolls and exposes the editor route
+00:09 +145 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/meeting_reference_picker_test.dart: host narrow large-text form disables confirmation on revoke and cancels
+00:09 +146 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: offline entry works during loading and after storage failure
+00:10 +147 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: offline entry works during loading and after storage failure
+00:10 +148 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: offline entry works during loading and after storage failure
+00:10 +149 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: offline entry works during loading and after storage failure
+00:10 +150 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: offline entry works during loading and after storage failure
+00:10 +150 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_ws_gateway_integration_test.dart: missing Common login rejects connection without creating a socket
+00:10 +151 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: offline entry works during loading and after storage failure
+00:10 +151 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_ws_gateway_integration_test.dart: unmodified Common connects, subscribes, joins and exchanges routed JSON
+00:10 +152 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_ws_gateway_integration_test.dart: unmodified Common connects, subscribes, joins and exchanges routed JSON
+00:10 +153 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: cached formal document opens read-only before a pending permission HTTP response
+00:11 +154 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: create persists stages before writes; one doc and one prepared paragraph
+00:11 +154 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +155 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +156 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +157 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +158 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +159 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +160 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +161 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +162 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +163 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +164 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +165 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +166 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +167 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +168 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +169 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +170 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +171 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +172 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +173 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +174 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +175 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +175 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: reads desktop detail contract through Common and maps full screenshot fields
+00:11 +176 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +176 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:11 +177 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +177 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:11 +178 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +178 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress 101 -> 100.0
+00:11 +179 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +179 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress 18.888 -> 18.89
+00:11 +180 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +180 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress invalid -> 0.0
+00:11 +181 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +181 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress  -> 0.0
+00:12 +182 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:12 +182 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: malformed identity, tags, leaders, dates and counts are rejected
+00:12 +183 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:12 +183 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: stale session prevents requests and rejects late successful response
+00:12 +184 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:12 +185 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:12 +186 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:12 +187 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:12 +188 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:12 +189 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:12 +190 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:12 +191 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:12 +192 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:12 +193 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:12 +194 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:12 +195 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:12 +196 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:12 +197 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:13 +198 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:13 +199 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:13 +200 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:13 +201 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:13 +202 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:13 +203 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:13 +204 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:13 +205 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:27 +206 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: foreground recovery refreshes authorization even when the socket remains offline
+00:27 +207 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: late permission response cannot re-enable a closed host or retain its native engine
+00:27 +208 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: storage failure can retry local opening without recreating or losing the cached document
+00:35 +209 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/document_host_native_test.dart: account change during a permission refresh revokes the old editable controller
+00:43 +210 -1: Some tests failed.

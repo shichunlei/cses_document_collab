@@ -1,0 +1,34 @@
+packages/cses_document_collab/rust/vendor/yrs-history/README.md:3: trailing whitespace.
++Yrs (read: *wires*) is a Rust port of the [Yjs framework](https://yjs.dev/). 
+packages/cses_document_collab/rust/vendor/yrs-history/README.md:18: trailing whitespace.
++fn main() {    
+packages/cses_document_collab/rust/vendor/yrs-history/README.md:22: trailing whitespace.
++    let mut txn = doc.transact_mut(); 
+packages/cses_document_collab/rust/vendor/yrs-history/README.md:29: trailing whitespace.
++    
+packages/cses_document_collab/rust/vendor/yrs-history/README.md:35: trailing whitespace.
++    // in order to exchange data with other documents 
+packages/cses_document_collab/rust/vendor/yrs-history/README.md:38: trailing whitespace.
++    
+packages/cses_document_collab/rust/vendor/yrs-history/README.md:39: trailing whitespace.
++    // now compute a differential update based on remote document's 
+packages/cses_document_collab/rust/vendor/yrs-history/README.md:42: trailing whitespace.
++    
+packages/cses_document_collab/rust/vendor/yrs-history/README.md:43: trailing whitespace.
++    // both update and state vector are serializable, we can pass them 
+packages/cses_document_collab/rust/vendor/yrs-history/README.md:50: trailing whitespace.
++  
+packages/cses_document_collab/rust/vendor/yrs-history/README.md:90: trailing whitespace.
++uniquely identified by an identifier consisting of client id and sequence number 
+packages/cses_document_collab/rust/vendor/yrs-history/README.md:91: trailing whitespace.
++(see: [Lamport Clock](https://en.wikipedia.org/wiki/Lamport_timestamp)). 
+packages/cses_document_collab/rust/vendor/yrs-history/README.md:92: trailing whitespace.
++When you receive a duplicate block, you discard it. In some cases blocks can be put 
+packages/cses_document_collab/rust/vendor/yrs-history/README.md:93: trailing whitespace.
++together to form a larger block. If necessary, blocks can be disassembled if only 
+packages/cses_document_collab/rust/vendor/yrs-history/src/branch.rs:762: trailing whitespace.
++    /// scope i.e. due to missing update, a `None` will be returned.  
+packages/cses_document_collab/rust/vendor/yrs-history/src/branch.rs:858: trailing whitespace.
++    /// Returns `None` if current descriptor doesn't reference a nested shared collection.  
+packages/cses_document_collab/rust/vendor/yrs-history/src/updates/decoder.rs:28: trailing whitespace.
++/// Both of these define a common set of operations defined in this trait.  

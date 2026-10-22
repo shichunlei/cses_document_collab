@@ -70,7 +70,8 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
     _syncEditorMode();
   }
 
-  /// 根据控制器能力、预览与导入状态同步输入；不连接网络或更改正文。
+  /// 根据控制器能力、预览与导入状态同步输入；投影与历史切换只暂缓输入，
+  /// 保留编辑模式及键盘。不连接网络或更改正文。
   void _syncEditorMode() {
     collab.editorState.editable = !_previewOnly && !_importing;
     if (_previewOnly) {
@@ -259,13 +260,17 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
                   IconButton(
                     key: const ValueKey('editor-undo'),
                     tooltip: '撤销',
-                    onPressed: _importing ? null : collab.editorState.undoManager.undo,
+                    onPressed: !_importing && collab.canEdit && collab.editorState.undoManager.canUndo
+                        ? collab.editorState.undoManager.undo
+                        : null,
                     icon: const Icon(LucideIcons.undo2),
                   ),
                   IconButton(
                     key: const ValueKey('editor-redo'),
                     tooltip: '重做',
-                    onPressed: _importing ? null : collab.editorState.undoManager.redo,
+                    onPressed: !_importing && collab.canEdit && collab.editorState.undoManager.canRedo
+                        ? collab.editorState.undoManager.redo
+                        : null,
                     icon: const Icon(LucideIcons.redo2),
                   ),
                 ],

@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-22",
+  "scope": "Native-only opt-in Rust/Yrs text-history and failure-atomic persistence prototype",
+  "head_at_final_validation": "a058ef10a64f981cb36ffc0e65221eed3f4c36aa",
+  "source_sha256": {
+    "packages/cses_document_collab/rust/Cargo.toml": "7dafdc0ed74f300fcdfbb45d51adf45138b44607a894408d5709f34798e623d3",
+    "packages/cses_document_collab/rust/src/lib.rs": "d7ad603ee5f55d22e96dad855ef7533f06703022a298645e363a878010b749c9",
+    "packages/cses_document_collab/rust/src/history_prototype.rs": "57d17b1654b01dfbe3e621d5486d584faad6799da7e555a3b55dadc9b04f86fd",
+    "packages/cses_document_collab/rust/src/history_prototype_tests.rs": "cfd1b4b8ed9f44490a3a201a942ae22b588db7d7aada2a9985cc0cc1dbe70888"
+  },
+  "yrs_locked": "0.27.4",
+  "feature": "history-prototype",
+  "enabled_in_production_default": false,
+  "frb_api_changed": false,
+  "rust_tests": {
+    "passed": 137,
+    "failed": 0,
+    "ignored": 0,
+    "new_prototype_tests": 30
+  },
+  "flutter_target_tests": {
+    "passed": 28,
+    "failed": 0,
+    "skipped": 0,
+    "native_library": "packages/cses_document_collab/rust/target/debug/libcses_collab_core.dylib"
+  },
+  "mixed_replica_steps": 400,
+  "failure_injections": [
+    "SQLite BEFORE INSERT RAISE(ABORT)",
+    "SQLite deferred foreign key at COMMIT",
+    "SQLite lock held by independent connection"
+  ],
+  "historical_failure": "exploratory-replay-failure.txt (superseded candidate replay strategy)",
+  "limitations": [
+    "not wired into Flutter/FRB undo",
+    "no local structure/format commands or inline object editing",
+    "no permission/lock/selection/IME integration",
+    "session-only history; content-only reopen",
+    "performance/capacity bounds not yet validated",
+    "no real server/device acceptance in this round"
+  ],
+  "git_diff_check_exit_code": 0
+}

@@ -1,0 +1,144 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_native_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_native_test.dart: (setUpAll)
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_native_test.dart: a rejected second controller cannot close the active native Doc
+DocCollab: 编辑器操作失败: Bad state: COLLAB_DOCUMENT_IN_USE: 请先等待当前文档关闭
+#0      CollabRuntime.acquire (package:cses_document_collab/src/native/collab_runtime.dart:24:7)
+#1      CollabController._initialize (package:cses_document_collab/src/controller/collab_controller.dart:265:21)
+#2      CollabController._initializeRecoverably (package:cses_document_collab/src/controller/collab_controller.dart:248:13)
+#3      CollabController.initialize (package:cses_document_collab/src/controller/collab_controller.dart:242:36)
+#4      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_native_test.dart:39:18)
+<asynchronous suspension>
+#5      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#6      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#7      Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:00 +1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_native_test.dart: formal cache survives reopen; read-only sync withholds pending edits
+00:00 +2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart: failed controller retry must not send the next owner document
+DocCollab: 编辑器操作失败: Bad state: fixture registration failure
+#0      _ProbeGateway.register (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:254:28)
+<asynchronous suspension>
+#1      CsesDocCollaborationSession.start (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:167:5)
+<asynchronous suspension>
+#2      CollabController._startSession (package:cses_document_collab/src/controller/collab_controller.dart:424:7)
+<asynchronous suspension>
+#3      CollabController._initialize (package:cses_document_collab/src/controller/collab_controller.dart:274:9)
+<asynchronous suspension>
+#4      CollabController._initializeRecoverably (package:cses_document_collab/src/controller/collab_controller.dart:248:7)
+<asynchronous suspension>
+#5      Throws._matchFuture (package:matcher/src/expect/throws_matcher.dart:103:19)
+<asynchronous suspension>
+#6      _expect.<anonymous closure> (package:matcher/src/expect/expect.dart:153:17)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      expectLater.<anonymous closure> (package:flutter_test/src/widget_tester.dart:508:19)
+<asynchronous suspension>
+#9      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:41:7)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#11     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#12     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+DocCollab: 编辑器操作失败: Bad state: COLLAB_DOCUMENT_IN_USE: 请先等待当前文档关闭
+#0      CollabRuntime.acquire (package:cses_document_collab/src/native/collab_runtime.dart:24:7)
+#1      CollabController._initialize (package:cses_document_collab/src/controller/collab_controller.dart:265:21)
+#2      CollabController._initializeRecoverably (package:cses_document_collab/src/controller/collab_controller.dart:248:13)
+#3      CollabController.initialize (package:cses_document_collab/src/controller/collab_controller.dart:242:36)
+#4      CollabController.retry (package:cses_document_collab/src/controller/collab_controller.dart:334:13)
+<asynchronous suspension>
+#5      Throws._matchFuture (package:matcher/src/expect/throws_matcher.dart:103:19)
+<asynchronous suspension>
+#6      _expect.<anonymous closure> (package:matcher/src/expect/expect.dart:153:17)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      expectLater.<anonymous closure> (package:flutter_test/src/widget_tester.dart:508:19)
+<asynchronous suspension>
+#9      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:50:7)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#11     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#12     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:00 +3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart: permission registration failure must not poison transitions or cleanup
+DocCollab: 编辑器操作失败: Bad state: fixture registration failure
+#0      _ProbeGateway.register (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:254:28)
+<asynchronous suspension>
+#1      CsesDocCollaborationSession.start (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:167:5)
+<asynchronous suspension>
+#2      CollabController._startSession (package:cses_document_collab/src/controller/collab_controller.dart:424:7)
+<asynchronous suspension>
+#3      CollabController.setEditable.<anonymous closure> (package:cses_document_collab/src/controller/collab_controller.dart:313:57)
+<asynchronous suspension>
+#4      Throws._matchFuture (package:matcher/src/expect/throws_matcher.dart:103:19)
+<asynchronous suspension>
+#5      _expect.<anonymous closure> (package:matcher/src/expect/expect.dart:153:17)
+<asynchronous suspension>
+#6      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#7      expectLater.<anonymous closure> (package:flutter_test/src/widget_tester.dart:508:19)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:123:9)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#11     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:00 +4: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart: close waits for pending registration and stale callbacks cannot mutate the next owner
+DocCollab: 文档协同处理失败: Bad state: COLLAB_SESSION_STALE
+#0      CollabController._requireCurrentSession (package:cses_document_collab/src/controller/collab_controller.dart:447:38)
+#1      CollabController._startSession.<anonymous closure> (package:cses_document_collab/src/controller/collab_controller.dart:379:9)
+#2      CsesDocCollaborationSession._beginSync (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:245:40)
+#3      CsesDocCollaborationSession.start (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:185:30)
+<asynchronous suspension>
+#4      CollabController._startSession (package:cses_document_collab/src/controller/collab_controller.dart:424:7)
+<asynchronous suspension>
+#5      CollabController._initialize (package:cses_document_collab/src/controller/collab_controller.dart:274:9)
+<asynchronous suspension>
+#6      CollabController._initializeRecoverably (package:cses_document_collab/src/controller/collab_controller.dart:248:7)
+<asynchronous suspension>
+#7      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:181:9)
+<asynchronous suspension>
+#8      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#10     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:00 +5: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_remote_history_test.dart: text invalidates unsafe undo without overwriting remote content
+00:00 +6: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_remote_history_test.dart: reorder invalidates unsafe undo without overwriting remote content
+00:00 +7: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_remote_history_test.dart: format invalidates unsafe undo without overwriting remote content
+00:00 +8: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_remote_history_test.dart: remote text invalidates old redo while allowing new local history
+00:00 +9: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_remote_history_test.dart: stable field history survives reorder after unsafe text entry is removed
+00:00 +10: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_remote_history_test.dart: equivalent authoritative snapshot preserves ordinary local undo
+00:00 +11: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_controller_test.dart: clipboard cut waits for system success and is independently undoable
+00:00 +12: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_controller_test.dart: late clipboard success never cuts a changed document
+00:00 +13: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_controller_test.dart: local sessions preserve independent input, formatting and history
+00:00 +14: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_controller_test.dart: empty paragraph typing style survives input and paragraph Enter
+00:00 +15: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_controller_test.dart: plain paste replaces a multi paragraph range atomically and keeps literal syntax
+00:00 +16: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_controller_test.dart: block conversion and undo retain text, and unsupported insert is rejected
+00:01 +17: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:02 +18: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:02 +19: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:02 +20: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:02 +21: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:02 +22: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:02 +23: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:02 +24: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:02 +25: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:02 +26: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:02 +27: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:03 +28: All tests passed!

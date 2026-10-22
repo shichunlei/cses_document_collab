@@ -1,0 +1,18 @@
+00:00 +0: loading /tmp/review_flutter_history.dart
+00:00 +0: (setUpAll)
+00:00 +0: REVIEW sync repairs numbering
+REVIEW needsRepair after handshake=[a, b, c], after manual repair=[]
+00:00 +0 -1: REVIEW sync repairs numbering [E]
+  Expected: empty
+    Actual: ['a', 'b', 'c']
+  Initial collabSync should perform derived numbering repair
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  /tmp/review_flutter_history.dart 40:7               main.<fn>
+  
+00:00 +0 -1: (tearDownAll)
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /tmp/review_flutter_history.dart: REVIEW sync repairs numbering

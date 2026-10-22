@@ -1,0 +1,35 @@
+#[test]
+fn review_first_typing_after_empty_legacy_paragraph() {
+ let directory=TempDir::new().unwrap();
+ let (mut engine,_) = CollabEngine::open("cache".into(), directory.path().join("cache.sqlite").to_string_lossy().into_owned()).unwrap();
+ engine.history=Some(NativeHistory{manager: manager(&engine.doc,vec![],vec![]), writable:true});
+ let mut block=CollabBlock{ paragraph_style:None,id:"empty".into(),block_type:"paragraph".into(),text:"".into(),segments:vec![],checked:false,alignment:"left".into(),indent:0,image:None,ordered:None,parent_id:None,callout_prefix:None,block_text_color:None,code:None,resource:None,replaces_id:None,block_background_color:None,block_border_color:None};
+ engine.history_input=Some(HistoryInput{before:None,after:selection("empty",0)});
+ engine.apply_block_snapshot(vec![block.clone()]).unwrap();
+ engine.history_input=None;
+ assert_eq!(engine.blocks()[0].text, "");
+ block.text="hello".into();
+ engine.history_input=Some(HistoryInput{before:selection("empty",0),after:selection("empty",5)});
+ let r=engine.apply_block_snapshot(vec![block]).unwrap();
+ engine.history_input=None;
+ eprintln!("result={:?}, history={:?}",r,engine.history_state());
+ assert_eq!(engine.blocks()[0].text,"hello");
+}
+
+#[test]
+fn review_table_row_delete_undo_redo_without_remote_changes() {
+ let directory=TempDir::new().unwrap();
+ let (mut engine,_) = CollabEngine::open("fixture-doc".into(),directory.path().join("table.sqlite").to_string_lossy().into_owned()).unwrap();
+ engine.blockcraft_root_id=Some("fixture-doc".into());
+ engine.apply_cses_update(include_bytes!("../../tests/fixtures/blockcraft-table.update").to_vec()).unwrap();
+ engine.history=Some(NativeHistory{manager:manager(&engine.doc,vec![],vec![]),writable:true});
+ let original=engine.blocks();
+ let desired=original.iter().filter(|b| b.id!="row-0" && !b.id.starts_with("cell-0-") && !b.id.starts_with("body-0-")).cloned().collect();
+ engine.history_input=Some(HistoryInput{before:None,after:None});
+ engine.apply_block_snapshot(desired).unwrap();
+ engine.history_input=None;
+ engine.replay_history(true,None).unwrap();
+ assert_eq!(engine.blocks(),original);
+ let redo=engine.replay_history(false,None);
+ assert!(redo.is_ok(), "redo rejected: {redo:?}");
+}

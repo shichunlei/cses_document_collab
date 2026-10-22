@@ -1,0 +1,5 @@
+Changed lib/src/editor/editor_component/service/ime/delta_input_on_insert_impl.dart
+Changed lib/src/editor/editor_component/service/ime/delta_input_on_non_text_update_impl.dart
+Changed lib/src/editor/editor_component/service/ime/delta_input_on_replace_impl.dart
+Changed lib/src/editor/editor_component/service/ime/non_delta_input_service.dart
+Formatted 9 files (4 changed) in 0.05 seconds.

@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:cses_document_collab/src/editor/core/document_editor_controller.dart';
+import 'package:cses_document_collab/src/editor/collab_native_selection.dart';
+import 'package:cses_document_collab/src/native/api/collab/history.dart' as native_history;
 import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'package:cses_document_collab/src/model/collab_block_lock.dart';
@@ -53,6 +55,7 @@ class CollabController extends ChangeNotifier {
   }) : this._(CollabDocumentConfig.localDraft(databasePath: databasePath, documentId: documentId), null, services);
 
   /// Store [config], [gateway] and [services]; native ownership begins on initialize.
+  /// Local transactions remain paused until initialization establishes access.
   /// 正式文档按宿主配置绑定段落链接，绑定先于编辑器释放；草稿不创建可分享链接。
   CollabController._(this.config, this._gateway, this._services) : _editable = config.editable {
     header = config.isFormal && _services.documentMetadata != null
@@ -66,7 +69,12 @@ class CollabController extends ChangeNotifier {
     header?.addListener(_notify);
     feedback = DocumentFeedbackController(documentId: config.documentId, services: _services);
     editor = DocumentEditorController(commandContext: EditorCommandContext(services: _services));
-    _editorAdapter = AppFlowyBlockEditorAdapter(editing: editor, onLocalBlocksChanged: _applyEditorBlocks);
+    _editorAdapter = AppFlowyBlockEditorAdapter(
+      editing: editor,
+      onLocalBlocksChanged: _applyEditorBlocks,
+      onTransactionPreparing: _captureHistoryTransaction,
+    );
+    editorState.selectionNotifier.addListener(_captureLiveSelection);
     final linkBuilder = _services.buildParagraphLink;
     _paragraphLinks = config.isFormal && linkBuilder != null
         ? CollabParagraphLinks(editor: editorState, documentId: config.documentId, buildLink: linkBuilder)
@@ -77,6 +85,7 @@ class CollabController extends ChangeNotifier {
       canUnlock: _canUnlockBlock,
       commit: _commitBlockLock,
     );
+    _syncLocalTransactionPause();
   }
 
   /// 本控制器拥有的独立编辑会话，数据绑定和页面只借用；投影结束后释放。
@@ -184,6 +193,38 @@ class CollabController extends ChangeNotifier {
   bool _busy = false;
   bool _disposed = false;
 
+  /// Last published document capability, excluding the page's preview mode.
+  /// Only real capability transitions update headless editor permissions;
+  /// ordinary projections must preserve preview and in-flight edit sessions.
+  bool _publishedCanEdit = false;
+
+  /// Native history is session-local; UI never replays a second path stack.
+  native_history.DocumentHistoryState _historyState = const native_history.DocumentHistoryState(
+    undoDepth: 0,
+    redoDepth: 0,
+  );
+
+  /// True after this owner has configured history on its current native Doc.
+  bool _nativeHistoryReady = false;
+
+  /// Suspends new input while an undo/redo awaits projection and selection replay.
+  bool _historyExecuting = false;
+
+  /// Number of serialized projections still borrowing this owner's editor.
+  int _projectionPending = 0;
+
+  /// Shared in-flight history operation; shutdown/cache reset await its completion.
+  Future<void>? _historyTask;
+
+  /// Borrowed transaction whose stable pre-edit selection belongs to the next write.
+  Transaction? _historyTransaction;
+
+  /// Endpoints captured before the transaction can delete or replace their nodes.
+  native_history.HistorySelection? _beforeHistorySelection;
+
+  /// Personal relative selection token, scoped to the current open native Doc.
+  String? _liveSelectionBookmark;
+
   /// 当前控制器的异步释放任务；切换账号前等待它，避免旧宿主关闭新连接。
   Future<void>? _shutdownTask;
 
@@ -212,6 +253,131 @@ class CollabController extends ChangeNotifier {
       _editable &&
       _readOnlyReason == null &&
       _status != ConnectionStatus.error;
+
+  /// Whether the native binding is ready for another local transaction.
+  /// Page preview/import additionally requires [editorState] to be editable.
+  /// History and projections pause transactions without changing [canEdit]'s
+  /// document permission or forcing a preview/keyboard transition.
+  bool get canAcceptEditorInput => canEdit && !_historyExecuting && _projectionPending == 0;
+
+  /// Whether a native undo group is currently available and the editor can write.
+  bool get canUndo => canAcceptEditorInput && editorState.editable && _historyState.undoDepth > 0;
+
+  /// Whether a native redo group is currently available and the editor can write.
+  bool get canRedo => canAcceptEditorInput && editorState.editable && _historyState.redoDepth > 0;
+
+  /// Replay one local group through Rust, then project and restore its relative
+  /// selection. Concurrent invocations share the in-flight operation. Native
+  /// failures are reported without clearing history or changing connection state.
+  Future<void> undo() => _requestNativeHistory(false);
+
+  /// Replay one undone group through Rust, with the same ownership, permission,
+  /// persistence and selection guarantees as [undo]. No server ACK is implied.
+  Future<void> redo() => _requestNativeHistory(true);
+
+  /// Capture [transaction]'s pre-edit stable endpoints while the old tree exists.
+  void _captureHistoryTransaction(Transaction transaction) {
+    _historyTransaction = transaction;
+    _beforeHistorySelection = captureNativeEditorSelection(
+      editorState,
+      transaction.beforeSelection ?? editorState.selection,
+      AppFlowyBlockEditorAdapter.collabBlockIdAttribute,
+    );
+  }
+
+  /// Keep a personal relative bookmark only while native data and UI are aligned.
+  void _captureLiveSelection() {
+    if (!_nativeHistoryReady ||
+        _disposed ||
+        _projectionPending != 0 ||
+        _historyExecuting ||
+        !CollabRuntime.owns(this)) {
+      return;
+    }
+    try {
+      _liveSelectionBookmark = native_history.bookmarkDocumentSelection(
+        selection: captureNativeEditorSelection(
+          editorState,
+          editorState.selection,
+          AppFlowyBlockEditorAdapter.collabBlockIdAttribute,
+        ),
+      );
+    } catch (error, stack) {
+      _services.report('选区书签捕获失败', error, stack, 'DocCollab');
+      _liveSelectionBookmark = null;
+    }
+  }
+
+  /// Pause local transactions to match the current native owner's availability.
+  /// Permission/preview stays on editable; pausing never emits a fake revocation
+  /// or detaches the keyboard. Only this controller owns this native editor pause.
+  void _syncLocalTransactionPause() {
+    editorState.localTransactionsPaused = !canAcceptEditorInput;
+  }
+
+  /// Serialize one [redo] request; true replays redo and false requests undo.
+  /// No stale owner can call the successor engine.
+  Future<void> _requestNativeHistory(bool redo) {
+    if (_historyTask != null) return _historyTask!;
+    if (!(redo ? canRedo : canUndo)) return Future<void>.value();
+    return _historyTask = _performNativeHistory(redo).whenComplete(() {
+      _historyTask = null;
+    });
+  }
+
+  /// Persist one transition before touching Flutter content or paths.
+  /// [redo] chooses redo when true, undo otherwise. Input is paused separately
+  /// from permission so selection replay keeps an existing input connection.
+  Future<void> _performNativeHistory(bool redo) async {
+    _historyExecuting = true;
+    _syncLocalTransactionPause();
+    _notify();
+    try {
+      Future<void> pending;
+      do {
+        pending = _projection;
+        await pending;
+      } while (!_disposed && !identical(pending, _projection));
+      if (_disposed ||
+          _busy ||
+          !CollabRuntime.owns(this) ||
+          !_editable ||
+          !editorState.editable ||
+          _readOnlyReason != null) {
+        return;
+      }
+      native_history.configureDocumentHistory(editable: _editable);
+      final selection = captureNativeEditorSelection(
+        editorState,
+        editorState.selection,
+        AppFlowyBlockEditorAdapter.collabBlockIdAttribute,
+      );
+      final result = redo
+          ? native_history.redoDocument(selection: selection)
+          : native_history.undoDocument(selection: selection);
+      _lastBlocks = List.unmodifiable(result.blocks);
+      _historyState = result.history;
+      _liveSelectionBookmark = result.selectionBookmark;
+      _error = null;
+      _syncBlockLocks();
+      try {
+        _session?.sendLocalUpdate(result.v1Update);
+      } catch (error, stack) {
+        _services.report('历史更新已落盘但即时发送失败', error, stack, 'DocCollab');
+        _error = '撤销或重做已保存在本地，重新连接后继续同步';
+      }
+      await _queueProjection();
+    } catch (error, stack) {
+      _services.report('原生撤销/重做被拒绝', error, stack, 'DocCollab');
+      if (!_disposed) _error = '撤销或重做失败，正文和历史已保留，可重试';
+    } finally {
+      _historyExecuting = false;
+      if (!_disposed) {
+        _syncLocalTransactionPause();
+        _notify();
+      }
+    }
+  }
 
   /// 当前文档打开时恢复的 SQLite update 数量。
   int get persistedUpdateCount => _persistedUpdateCount;
@@ -292,7 +458,10 @@ class CollabController extends ChangeNotifier {
       rethrow;
     } finally {
       _initializing = false;
-      if (!_disposed) editorState.editable = canEdit;
+      if (!_disposed) {
+        editorState.editable = canEdit;
+        _syncLocalTransactionPause();
+      }
       _notify();
     }
   }
@@ -304,8 +473,12 @@ class CollabController extends ChangeNotifier {
   Future<void> setEditable(bool editable) {
     if (_disposed || editable == _editable) return _accessTransition;
     _editable = editable;
+    if (_nativeHistoryReady && CollabRuntime.owns(this)) {
+      _historyState = native_history.configureDocumentHistory(editable: editable);
+    }
     header?.permissionsChanged();
     editorState.editable = canEdit;
+    _syncLocalTransactionPause();
     _notify();
     final transition = _accessTransition.then((_) async {
       if (_disposed) return;
@@ -356,6 +529,18 @@ class CollabController extends ChangeNotifier {
           );
     _lastBlocks = List.unmodifiable(result.blocks);
     _editorAdapter.resetDocumentHistory();
+    _liveSelectionBookmark = null;
+    _historyTransaction = null;
+    _beforeHistorySelection = null;
+    _historyState = native_history.configureDocumentHistory(editable: _editable);
+    _nativeHistoryReady = true;
+    _syncLocalTransactionPause();
+    editorState.undoManager.externalHistory = EditorHistoryDelegate(
+      undo: () => unawaited(undo()),
+      redo: () => unawaited(redo()),
+      canUndo: () => canUndo,
+      canRedo: () => canRedo,
+    );
     _readOnlyReason = rust.documentReadOnlyReason();
     _syncBlockLocks();
     _sharedTypeName = result.sharedTypeName;
@@ -452,14 +637,26 @@ class CollabController extends ChangeNotifier {
   /// 显式编号设置与后续派生序号共用原生事务；锁定区域、非法设置或表格结构/布局在写前拒绝，失败恢复UI。
   void _applyEditorBlocks(List<CollabEditorBlock> nextBlocks) {
     if (!_initialized || _disposed || _busy) return;
-    if (!canEdit) {
+    if (!canAcceptEditorInput) {
       unawaited(_queueProjection());
       return;
     }
     try {
       final blocks = _toRustBlocks(nextBlocks);
       if (_rustBlocksEqual(blocks, _lastBlocks)) return;
-      final result = rust.applyBlockSnapshot(blocks: blocks);
+      final result = native_history.applyHistorySnapshot(
+        blocks: blocks,
+        beforeSelection: _beforeHistorySelection,
+        afterSelection: captureNativeEditorSelection(
+          editorState,
+          _historyTransaction?.afterSelection ?? editorState.selection,
+          AppFlowyBlockEditorAdapter.collabBlockIdAttribute,
+        ),
+      );
+      _historyState = result.history;
+      _liveSelectionBookmark = result.selectionBookmark;
+      _historyTransaction = null;
+      _beforeHistorySelection = null;
       _error = null;
       _lastBlocks = List.unmodifiable(result.blocks);
       _lastProtocolEvent = 'local-block-update';
@@ -496,6 +693,7 @@ class CollabController extends ChangeNotifier {
   void _applyRemoteUpdate(Uint8List bytes) {
     if (_disposed) return;
     final result = rust.applyDocumentUpdate(bytes: bytes);
+    _historyState = native_history.documentHistoryState();
     _readOnlyReason = rust.documentReadOnlyReason();
     _syncBlockLocks();
     if (result.changed && !_rustBlocksEqual(result.blocks, _lastBlocks)) {
@@ -506,14 +704,36 @@ class CollabController extends ChangeNotifier {
   }
 
   /// 串行投影最新 Rust 快照；执行时读取最新状态，销毁后不访问编辑器。
+  /// 仅暂停本地事务，不翻转权限/预览状态；相对选区恢复期间保持已有输入连接。
   /// 返回的 Future 完成表示本任务已处理，投影异常由本边界记录且可继续后续投影。
   Future<void> _queueProjection() {
+    _projectionPending++;
+    _syncLocalTransactionPause();
     _projection = _projection.then((_) async {
-      if (_disposed) return;
       try {
-        await _editorAdapter.replaceFromRemote(_toEditorBlocks(_lastBlocks));
+        if (_disposed) return;
+        List<rust.CollabBlock> projected;
+        do {
+          projected = _lastBlocks;
+          await _editorAdapter.replaceFromRemote(_toEditorBlocks(projected));
+          if (_disposed) return;
+        } while (!identical(projected, _lastBlocks));
+        final token = _liveSelectionBookmark;
+        native_history.HistorySelection? selection;
+        if (token != null && CollabRuntime.owns(this)) {
+          selection = native_history.resolveDocumentSelection(token: token);
+        }
+        if (!editorState.editable) selection = null;
+        if (selection == null) _liveSelectionBookmark = null;
+        restoreNativeEditorSelection(editorState, selection, AppFlowyBlockEditorAdapter.collabBlockIdAttribute);
       } catch (error, stackTrace) {
         _setError(error, stackTrace);
+      } finally {
+        _projectionPending--;
+        if (!_disposed) {
+          _syncLocalTransactionPause();
+          _notify();
+        }
       }
     });
     return _projection;
@@ -538,8 +758,11 @@ class CollabController extends ChangeNotifier {
   Future<void> resetLocalCache() async {
     if (_disposed || busy || !_initialized) return;
     _busy = true;
+    editorState.editable = false;
+    _syncLocalTransactionPause();
     _notify();
     try {
+      await _historyTask;
       await _releaseSession();
       await _projection;
       if (_disposed) return;
@@ -553,6 +776,10 @@ class CollabController extends ChangeNotifier {
       _setError(error, stackTrace);
     } finally {
       _busy = false;
+      if (!_disposed) {
+        editorState.editable = canEdit;
+        _syncLocalTransactionPause();
+      }
       _notify();
     }
   }
@@ -579,9 +806,17 @@ class CollabController extends ChangeNotifier {
     _notify();
   }
 
-  /// 向仍存活的页面发布变更，不在销毁后回写 UI。
+  /// 发布当前能力与展示状态；真实能力切换同步无页面宿主的编辑权限。
+  /// 能力未变时保留页面的预览/导入状态，投影暂停不触发权限通知。
   void _notify() {
-    if (!_disposed) notifyListeners();
+    if (_disposed) return;
+    final writable = canEdit;
+    if (writable != _publishedCanEdit) {
+      _publishedCanEdit = writable;
+      editorState.editable = writable;
+    }
+    _syncLocalTransactionPause();
+    notifyListeners();
   }
 
   /// 将 Rust [blocks] 映射为编辑器快照，保留块身份、链接地址与格式；公式/用户/业务实体按单字符及身份字段传递，业务实体携带原始属性以恢复历史。
@@ -847,6 +1082,10 @@ class CollabController extends ChangeNotifier {
   void dispose() {
     if (_disposed) return;
     _disposed = true;
+    _syncLocalTransactionPause();
+    editorState.editable = false;
+    editorState.selectionNotifier.removeListener(_captureLiveSelection);
+    editorState.undoManager.externalHistory = null;
     _paragraphLinks?.dispose();
     header?.removeListener(_notify);
     header?.dispose();
@@ -869,6 +1108,9 @@ class CollabController extends ChangeNotifier {
       await _finishShutdownStep(feedback.close);
       await _finishShutdownStep(() => _accessTransition);
       await _finishShutdownStep(_releaseSession);
+      await _finishShutdownStep(() async {
+        await _historyTask;
+      });
       await _finishShutdownStep(() => _projection);
     } finally {
       if (CollabRuntime.owns(this) && CollabRuntime.nativeReady) {

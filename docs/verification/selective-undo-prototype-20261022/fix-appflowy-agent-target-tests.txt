@@ -1,0 +1,49 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/legacy/local_transaction_pause_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/legacy/local_transaction_pause_test.dart: pause is independent of permissions, block guards and input attachment
+00:00 +1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/legacy/local_transaction_pause_test.dart: authoritative projection bypasses readonly and local policies
+00:00 +2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/legacy/local_transaction_pause_test.dart: remote projection can defer selection until stable restoration
+00:00 +3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/legacy/local_transaction_pause_test.dart: pause entered from before hook rejects mutation and local history
+00:00 +4: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/legacy/local_transaction_pause_test.dart: completed pause invalidates remaining asynchronous shortcut chain
+00:00 +5: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/legacy/local_transaction_pause_test.dart: paused typing keeps the real input connection and restores cache
+00:00 +6: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/legacy/local_transaction_pause_test.dart: paused typing keeps the real input connection and restores cache
+00:01 +7: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/legacy/local_transaction_pause_test.dart: paused typing keeps the real input connection and restores cache
+00:01 +8: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/legacy/local_transaction_pause_test.dart: paused typing keeps the real input connection and restores cache
+00:01 +9: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/legacy/local_transaction_pause_test.dart: pause cycle invalidates awaited IME without stale cache
+00:02 +10: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/legacy/local_transaction_pause_test.dart: permission cycle invalidates awaited IME without stale cache
+00:02 +11: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/legacy/local_transaction_pause_test.dart: notifier cycle invalidates awaited IME without stale cache
+00:02 +12: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/legacy/local_transaction_pause_test.dart: notifier cycle invalidates awaited IME without stale cache
+00:02 +13: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/legacy/local_transaction_pause_test.dart: notifier cycle invalidates awaited IME without stale cache
+00:02 +14: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/legacy/local_transaction_pause_test.dart: notifier cycle invalidates awaited IME without stale cache
+00:02 +15: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/editor/editor_component/ime/non_delta_input_service_test.dart: Delta insertion format with deletion
+00:02 +16: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/editor/editor_component/ime/non_delta_input_service_test.dart: Delta insertion format with deletion
+00:02 +17: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/editor/editor_component/ime/non_delta_input_service_test.dart: Delta insertion format with deletion
+00:02 +18: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/editor/editor_component/ime/delta_input_on_action_update_impl_test.dart: onPerformAction call
+00:02 +19: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/legacy/local_transaction_pause_test.dart: explicit close invalidates input awaiting shortcut
+00:02 +20: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/legacy/local_transaction_pause_test.dart: explicit close invalidates input awaiting replacement connection
+00:03 +21: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/legacy/local_transaction_pause_test.dart: explicit close invalidates input awaiting platform close
+00:03 +22: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/legacy/local_transaction_pause_test.dart: unmount invalidates awaiting input and closes its connection
+00:03 +23: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/legacy/local_transaction_pause_test.dart: closing old service does not cancel another service input
+00:03 +24: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/editor/editor_component/ime/delta_input_on_delete_impl_test.dart: DeltaInputOnDelete onDelete
+00:03 +25: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/editor/editor_component/ime/text_diff_test.dart: Diff Diff()
+00:03 +26: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/editor/editor_component/ime/text_diff_test.dart: Diff getDiff
+00:03 +27: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/editor/editor_component/ime/text_diff_test.dart: Diff getDiff for Chinese
+00:03 +28: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/editor/editor_component/ime/text_diff_test.dart: Diff getTextEditingDeltas insertion
+00:03 +29: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/editor/editor_component/ime/text_diff_test.dart: Diff getTextEditingDeltas insertion & deletion
+00:03 +30: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/editor/editor_component/ime/text_diff_test.dart: Diff getTextEditingDeltas null oldValue
+00:03 +31: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/editor/editor_component/ime/text_diff_test.dart: Diff getTextEditingDeltas no change
+00:04 +32: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/service/ime/delta_input_on_insert_impl_test.dart: delta input insert - widget test replace a text in non-collapsed selection
+00:05 +33: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/service/ime/delta_input_on_insert_impl_test.dart: delta input insert - widget test replace a text in non-collapsed selection
+00:05 +34: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/service/ime/delta_input_on_insert_impl_test.dart: delta input insert - widget test replace a text in non-collapsed selection
+00:06 +35: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/service/shortcuts/command_shortcut_events/undo_redo_command_test.dart: undo and redo commands - widget test Delete text and then perform undo & redo
+00:06 +36: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/service/shortcuts/command_shortcut_events/undo_redo_command_test.dart: undo and redo commands - widget test Delete text and then perform undo & redo
+00:07 +37: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/service/shortcuts/command_shortcut_events/redo_undo_handler_test.dart: redo_undo_handler_test.dart Redo should do nothing if Undo is not yet performed
+00:07 +38: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/service/shortcuts/command_shortcut_events/undo_redo_command_test.dart: undo and redo commands - widget test Delete a non-text node and then perform undo and redo
+00:07 +39: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/service/shortcuts/command_shortcut_events/redo_undo_handler_test.dart: redo_undo_handler_test.dart Undo and Redo works properly with text formatting bold
+00:08 +40: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/service/shortcuts/command_shortcut_events/undo_redo_command_test.dart: undo and redo commands - widget test Undo the nested list
+00:08 +41: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/service/shortcuts/command_shortcut_events/undo_redo_command_test.dart: undo and redo commands - widget test Undo the nested list
+00:08 +42: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/service/shortcuts/command_shortcut_events/redo_undo_handler_test.dart: redo_undo_handler_test.dart Undo and Redo works properly with text formatting underline
+00:08 +43: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/service/shortcuts/command_shortcut_events/redo_undo_handler_test.dart: redo_undo_handler_test.dart Redo, Undo for backspace key, and selection is downward
+00:08 +44: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/service/shortcuts/command_shortcut_events/redo_undo_handler_test.dart: redo_undo_handler_test.dart Redo, Undo for backspace key, and selection is forward
+00:08 +45: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/service/shortcuts/command_shortcut_events/redo_undo_handler_test.dart: redo_undo_handler_test.dart Redo, Undo when the selection is null
+00:09 +46: /System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/service/shortcuts/command_shortcut_events/redo_undo_handler_test.dart: (tearDownAll)
+00:09 +46: All tests passed!

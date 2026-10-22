@@ -1,0 +1,62 @@
+00:00 +0: loading /tmp/native_history_closed_keyboard_review_minimal_test.dart
+00:00 +0: (setUpAll)
+00:00 +0: REVIEW closed keyboard remains closed after undo
+REVIEW closed keyboard after undo: clients=true, caret=1, calls=[TextInput.setClient, TextInput.setEditingState, TextInput.show, TextInput.setEditableSizeAndTransform, TextInput.setCaretRect, TextInput.setMarkedTextRect]
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: false
+  Actual: <true>
+Selection restoration must respect an explicitly closed keyboard.
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///tmp/native_history_closed_keyboard_review_minimal_test.dart:79:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/native_history_closed_keyboard_review_minimal_test.dart line 79
+The test description was:
+  REVIEW closed keyboard remains closed after undo
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +0 -1: REVIEW closed keyboard remains closed after undo [E]
+  Test failed. See exception logs above.
+  The test description was: REVIEW closed keyboard remains closed after undo
+  
+00:01 +0 -1: REVIEW closed keyboard remains closed after remote
+REVIEW closed keyboard after remote: clients=true, caret=5, calls=[TextInput.setClient, TextInput.setEditingState, TextInput.show, TextInput.setEditableSizeAndTransform, TextInput.setCaretRect, TextInput.setMarkedTextRect]
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: false
+  Actual: <true>
+Selection restoration must respect an explicitly closed keyboard.
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///tmp/native_history_closed_keyboard_review_minimal_test.dart:79:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/native_history_closed_keyboard_review_minimal_test.dart line 79
+The test description was:
+  REVIEW closed keyboard remains closed after remote
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +0 -2: REVIEW closed keyboard remains closed after remote [E]
+  Test failed. See exception logs above.
+  The test description was: REVIEW closed keyboard remains closed after remote
+  
+00:01 +0 -2: (tearDownAll)
+00:01 +0 -2: Some tests failed.
+
+Failing tests:
+  /tmp/native_history_closed_keyboard_review_minimal_test.dart: REVIEW closed keyboard remains closed after remote
+  /tmp/native_history_closed_keyboard_review_minimal_test.dart: REVIEW closed keyboard remains closed after undo

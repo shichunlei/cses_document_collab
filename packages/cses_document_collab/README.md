@@ -688,7 +688,7 @@ flutter test --no-pub test/collab_page_divider_test.dart test/page_divider_nativ
 
 共享mode沿用`props.mode=text/graph/default`，由现有CollabResource单字段补丁承载，没有新增FRB签名。缺失/null/未知mode仅在展示时回落为组合视图，普通源码编辑不归一化；旧调用未指定插入视图时仍默认graph。远端mode变化也会使打开的草稿冲突并清除过期历史；重新加载同时更新源码和模式。2026-10-17已完成真实桌面与Android现有时序图三种mode的双向在线联调，共6项通过；最终恢复原text模式，完整源码Delta/属性及树结构保持，仅绘图修改时间更新，见根仓库`docs/verification/mermaid-20261017/mermaid-view-sync-20261017.json`。不代表真实断网、同时并发、iOS或服务端持久化ACK通过。
 
-本阶段仍部分支持：不提供可视化节点/标签编辑、全屏缩放、SVG导出或Markdown导入。远端源码/格式/mode或含绘图文档的结构变化清空编辑器路径历史与选区；普通非结构正文属性更新保持历史。删除撤销恢复投影内容/身份和有效mode，不保证未投影属性、未知/非法模式或审计数据恢复。异常结构保持整棵占位。完整验证见根仓库`docs/verification/mermaid-20261017/mermaid-options-20261017.json`及`docs/block-adaptation.md`。
+本阶段仍部分支持：不提供可视化节点/标签编辑、全屏缩放、SVG导出或Markdown导入。未绑定外部原生历史的编辑器中，远端源码/格式/mode或含绘图文档的结构变化清空路径历史与选区；普通非结构正文属性更新保持历史。`CollabController` 的原生历史模式保留个人历史，由最新投影后的相对书签决定恢复或清除选区。删除撤销恢复投影内容/身份和有效mode，不保证未投影属性、未知/非法模式或审计数据恢复。异常结构保持整棵占位。完整验证见根仓库`docs/verification/mermaid-20261017/mermaid-options-20261017.json`及`docs/block-adaptation.md`。
 
 ## 会议 KR 列表
 
@@ -713,3 +713,44 @@ const rankServices = CollabHostServices(krRankIcons: (
   first: Text('🥇'), second: Text('🥈'), third: Text('🥉'),
 ));
 ```
+
+## Rust 历史与 Flutter 撤销/重做
+
+`CollabController` 初始化真实原生文档后，自动将 AppFlowy 的撤销/重做按钮和快捷键委托给 Rust。远端正文投影不清空当前用户的原生历史；本地新增编辑清空 redo，远端或系统写入不进入个人历史。正式文档和 SQLite 本地草稿共用这一入口；纯内存 `LocalEditorController` 保留原来的本地历史，不依赖原生协同。
+
+```dart
+import 'package:cses_document_collab/cses_document_collab.dart';
+
+Future<void> editDraft(String databasePath) async {
+  final controller = CollabController.localDraft(databasePath: databasePath);
+  try {
+    await controller.initialize();
+    // 展示 CollaborativeEditorPage(collab: controller) 后，按钮和快捷键自动接入。
+    if (controller.canUndo) await controller.undo();
+    if (controller.canRedo) await controller.redo();
+  } finally {
+    // 实际页面须先退出，再关闭其借用的控制器。
+    await controller.close();
+  }
+}
+```
+
+FRB 使用 2.13.0 重新生成桥接；原有块快照适配、协同会话及 V1 update 格式继续复用。Rust 正式引擎使用随包隔离的 Yrs 0.27.4 路径依赖 `rust/vendor/yrs-history`，增加独立候选检查点和只读相对位置解析；上游原生撤销、编码和网络算法不变，来源及改动见该目录的 `UPSTREAM.json`、`LOCAL_CHANGES.md`。
+
+每个 AppFlowy 事务对应一个原生历史组，最多保留 200 组，不跨事务按时间合并。历史仅限当前打开会话；重启恢复 SQLite 正文，不恢复个人撤销栈。Undo/Redo 在候选 Doc 执行，重新检查宿主编辑权限、锁及受影响子树、结构和表格规则；SQLite 写入及 COMMIT 成功后才替换权威正文/历史，再投影到 Flutter。拒绝或落盘失败保留原正文和栈，可解除限制后重试。待删除子树含远端贡献时拒绝冲突，避免间接删除他人内容。
+
+选区随原生 StackItem 保存稳定块 ID 和 UTF-16 相对位置；逆向范围保留方向。正文完成最新投影后用当前路径恢复，支持远端插字与重排；端点被删除时清除选区。书签仅用于个人会话，不写入共享正文、网络或数据库。历史和投影期间暂缓输入，不切入预览或主动关闭键盘。此阶段没有实现跨事务 IME 合组、专门的视口滚动/键盘唤起、整块/表格多单元格范围恢复，或跨启动历史。
+
+暂缓本地事务使用 `EditorState.localTransactionsPaused`，与 `editable` 的权限/预览状态分开；只读页面仍可接收权威投影。原生模式不发布表格/绘图回放过程中的旧路径选区，最终一次恢复相对选区，保持已有输入连接；用户已收起的键盘保持关闭。普通远端正文更新不触发选人、会议或编辑草稿的永久撤权；真实权限撤销、目标变化和关闭仍按原有契约作废迟到结果。异步输入还核对权限/投影与输入连接代次，主动收起键盘后不继续处理旧连接的等待回调。
+
+空草稿段落的文字根在订阅历史前注册；若原生检测到正文有变化却没有捕获历史组，会在落盘前拒绝，保留权威正文与历史。表格删除保护使用可见一侧的内容指纹，支持删行、删列和整表的反复撤销/重做，同时继续拒绝删除含远端新增贡献的子树。完整握手后的自动编号修复只在可编辑且非预览时执行，不进入个人历史。
+
+在包目录验证：
+
+```sh
+cargo test --manifest-path rust/Cargo.toml --features history-prototype
+cargo build --manifest-path rust/Cargo.toml
+flutter test --no-pub test/native_history_editor_test.dart test/collab_native_selection_test.dart test/native_history_review_regression_test.dart
+```
+
+独立 Rust 原型仍以 `history-prototype` feature 供实验/回归使用，不是 Flutter 的指令实现。其 root/callout 结构命令限制与正式引擎完整适配范围分开；原型不要与运行中的正式引擎共用实验数据库。当前审查修复与验证见[5项修复记录](../../docs/verification/selective-undo-prototype-20261022/review-fixes.md)，接入实现见[第三阶段](../../docs/verification/selective-undo-prototype-20261022/frb-editor-history.md)，此前行为见[第二阶段](../../docs/verification/selective-undo-prototype-20261022/structure-format-locks.md)和[第一阶段](../../docs/verification/selective-undo-prototype-20261022/report.md)。

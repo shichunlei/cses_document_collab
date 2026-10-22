@@ -488,7 +488,8 @@ final class CollabEditorBlock {
 
 /// Maps AppFlowy top-level nodes to the mobile block-level Yrs schema.
 ///
-/// AppFlowy owns rendering, selection, IME and local undo. Rust/Yrs owns block
+/// AppFlowy owns rendering, selection and IME. Unbound editors use local undo;
+/// a collaboration owner can delegate history to Rust/Yrs, which owns block
 /// order, block type metadata and native text/props/children. 正式图片的题注保留在
 /// image 专属投影中，UI 仍是一个根级资源节点，不把题注混入根顺序。
 /// ```dart
@@ -501,9 +502,11 @@ final class AppFlowyBlockEditorAdapter {
   /// [onLocalBlocksChanged] 在本地事务完成后接收完整同步投影，远端回放不调用。
   /// [editing] 为外部借用的编辑会话；null按旧契约自建并拥有会话。
   /// [initialBlocks] 仅用于自建会话，传入editing时须为空。
+  /// [onTransactionPreparing] 可选，供原生历史在树改变前捕获稳定选区。
   /// dispose卸载同步绑定，只有自建会话才同时释放正文。
   AppFlowyBlockEditorAdapter({
     required this.onLocalBlocksChanged,
+    this.onTransactionPreparing,
     List<CollabEditorBlock> initialBlocks = const [],
     DocumentEditorController? editing,
   }) : editing =
@@ -529,6 +532,10 @@ final class AppFlowyBlockEditorAdapter {
 
   /// 本地事务完成后的同步回调，由数据层持有。
   final LocalEditorBlocksChanged onLocalBlocksChanged;
+
+  /// Optional borrowed hook capturing stable selection before a local tree edit.
+  /// Called synchronously with the prepared transaction; never for projection.
+  final void Function(Transaction transaction)? onTransactionPreparing;
 
   /// 绑定的独立编辑会话，默认自建时归本适配器释放。
   final DocumentEditorController editing;
@@ -566,13 +573,16 @@ final class AppFlowyBlockEditorAdapter {
   /// 不记录本地撤销或发送 WS；销毁后不执行，事务异常向调用边界传播。
   /// 表格路径/单元格正文或绘图源码/结构改变会清除本地路径历史及选区，避免过期撤销覆盖远端内容；布局属性更新保留历史。
   /// 普通正文、格式或结构变化会移除未受稳定身份/指纹保护的历史项，不自动转换旧文字撤销。
+  /// 此失效策略仅影响本地路径栈，不清空外部原生历史所有者的栈。
+  /// 原生历史模式将选区通知延后至所有者完成相对书签解析，避免中间旧路径关闭输入连接。
   /// 正式编号及原始设置更新内存投影，不进入历史；成功转换后清除 replacesId。
   Future<void> replaceFromRemote(List<CollabEditorBlock> nextBlocks) async {
     if (_disposed) return;
     await editing.project(() => _replaceFromRemote(nextBlocks));
   }
 
-  /// 在隔离本地输入与同步的范围中回放 [nextBlocks]，沿用原投影与历史失效策略。
+  /// 在隔离同步回送的范围中回放 [nextBlocks]，沿用原投影与历史失效策略。
+  /// 权威回放不修改 editable，不将只读或预览短暂变为可写。
   Future<void> _replaceFromRemote(List<CollabEditorBlock> nextBlocks) async {
     if (_disposed) {
       return;
@@ -699,42 +709,37 @@ final class AppFlowyBlockEditorAdapter {
       _lastPublishedBlocks = targetBlocks;
       return;
     }
+    final externalHistory = editorState.undoManager.externalHistory != null;
     final invalidateTableHistory = _tableContentChanged(currentBlocks, targetBlocks);
-    if (invalidateTableHistory || _mermaidContentChanged(currentBlocks, targetBlocks)) {
+    if (!externalHistory && (invalidateTableHistory || _mermaidContentChanged(currentBlocks, targetBlocks))) {
       editorState.undoManager.undoStack.clear();
       editorState.undoManager.redoStack.clear();
       // 路径历史不能越过远端换行/删行/合并或正文覆盖后继续作用于其他单元格。
       transaction.afterSelection = null;
       editorState.selection = null;
-    } else {
+    } else if (!externalHistory) {
       final structureChanged = _historyStructureChanged(currentBlocks, targetBlocks);
       if (structureChanged || _historyContentChanged(currentBlocks, targetBlocks)) {
         _discardUnsafeHistory(structureChanged: structureChanged);
       }
     }
     _applyingRemote = true;
-    final wasEditable = editorState.editable;
     try {
-      // AppFlowy also gates remote transactions on editable. Authoritative
-      // replay must still render while the page is in preview/read-only mode.
-      editorState.editable = true;
+      // Trusted remote replay bypasses local permission/pause without changing
+      // editableNotifier, so preview and in-flight edit sessions remain intact.
       // 当前AppFlowy在返回Future前同步完成树更新；不能把本地发布抑制延长到
       // Future的微任务结束，否则刚插入表格后的立即撤销会只改UI而漏掉原生写入。
       final completion = editorState.apply(
         transaction,
         isRemote: true,
+        withUpdateSelection: !externalHistory,
         options: const ApplyOptions(recordUndo: false, inMemoryUpdate: true),
       );
       _lastPublishedBlocks = targetBlocks;
-      editorState.editable = wasEditable;
       _applyingRemote = false;
       await completion;
     } finally {
-      // 同步阶段已恢复权限后，不得在Future结束时覆盖宿主刚撤销的新权限。
-      if (_applyingRemote) {
-        editorState.editable = wasEditable;
-        _applyingRemote = false;
-      }
+      _applyingRemote = false;
     }
   }
 
@@ -883,6 +888,7 @@ final class AppFlowyBlockEditorAdapter {
     resolveCollabMentionCardCommand(editorState, value.$2);
     resolveCollabInlineFormulaCommands(editorState, value.$2);
     _resolveNumberingTargets(value.$2);
+    onTransactionPreparing?.call(value.$2);
   }
 
   /// 在本地[value]完成输入历史维护后发布同步快照，准备阶段已重定位稳定身份；

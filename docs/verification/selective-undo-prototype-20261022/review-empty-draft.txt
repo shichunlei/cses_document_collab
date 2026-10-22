@@ -1,0 +1,47 @@
+00:00 +0: loading /tmp/review_history_empty_draft.dart
+00:00 +0: (setUpAll)
+00:00 +0: new empty draft paragraph accepts its first text
+DocCollab: 编辑器操作失败: INVALID_HISTORY_SELECTION: offset
+#0      SimpleDecoder.decode (package:flutter_rust_bridge/src/codec/base.dart:34:9)
+#1      SseCodec._decode (package:flutter_rust_bridge/src/codec/sse.dart:45:55)
+#2      SseCodec.decodeWireSyncType (package:flutter_rust_bridge/src/codec/sse.dart:40:7)
+#3      BaseHandler.executeSync (package:flutter_rust_bridge/src/main_components/handler.dart:35:25)
+#4      RustLibApiImpl.crateApiCollabHistoryApplyHistorySnapshot (package:cses_document_collab/src/native/frb_generated.dart:277:20)
+#5      applyHistorySnapshot (package:cses_document_collab/src/native/api/collab/history.dart:36:28)
+#6      CollabController._applyEditorBlocks (package:cses_document_collab/src/controller/collab_controller.dart:614:37)
+#7      AppFlowyBlockEditorAdapter._handleTransaction (package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart:984:25)
+#8      DocumentEditorController._onTransaction (package:cses_document_collab/src/editor/core/document_editor_controller.dart:119:26)
+#9      StackZoneSpecification._registerUnaryCallback.<anonymous closure>.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:127:36)
+#10     StackZoneSpecification._run (package:stack_trace/src/stack_zone_specification.dart:207:15)
+#11     StackZoneSpecification._registerUnaryCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:127:24)
+#12     _rootRunUnary (dart:async/zone_root.dart:48:47)
+#13     _CustomZone.runUnary (dart:async/zone.dart:733:19)
+#14     _CustomZone.runUnaryGuarded (dart:async/zone.dart:633:7)
+#15     _BufferingStreamSubscription._sendData (dart:async/stream_impl.dart:381:11)
+#16     _BufferingStreamSubscription._add (dart:async/stream_impl.dart:312:7)
+#17     _SyncBroadcastStreamController._sendData (dart:async/broadcast_stream_controller.dart:385:25)
+#18     _BroadcastStreamController.add (dart:async/broadcast_stream_controller.dart:257:5)
+#19     EditorState.apply (package:appflowy_editor/src/editor_state.dart:479:19)
+#20     main.<anonymous closure> (file:///tmp/review_history_empty_draft.dart:28:19)
+<asynchronous suspension>
+#21     Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#22     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#23     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:00 +0 -1: new empty draft paragraph accepts its first text [E]
+  Expected: null
+    Actual: '操作失败，本地内容已保留，请检查运行日志'
+  Normal typing must not be rejected
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  /tmp/review_history_empty_draft.dart 30:7           main.<fn>
+  
+00:00 +0 -1: (tearDownAll)
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /tmp/review_history_empty_draft.dart: new empty draft paragraph accepts its first text

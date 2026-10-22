@@ -1,0 +1,25 @@
+Diff in /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/rust/vendor/yrs-history/src/observer.rs:173:
+     }
+ }
+ 
+-
+ #[cfg(test)]
+ mod test {
+     use std::sync::atomic::{AtomicI32, AtomicU32, Ordering};
+Diff in /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/rust/vendor/yrs-history/src/observer.rs:325:
+         assert_eq!(counter.load(Ordering::SeqCst), 0);
+     }
+ }
++
+Diff in /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/rust/vendor/yrs-history/src/sync/protocol.rs:160:
+ 
+     /// Returns an [AwarenessUpdate] which is a serializable representation of a current `awareness`
+     /// instance.
+-    fn handle_awareness_query(
+-        &self,
+-        awareness: &mut Awareness,
+-    ) -> Result<Option<Message>, Error> {
++    fn handle_awareness_query(&self, awareness: &mut Awareness) -> Result<Option<Message>, Error> {
+         let update = awareness.update()?;
+         Ok(Some(Message::Awareness(update)))
+     }

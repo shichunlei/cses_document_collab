@@ -23,6 +23,7 @@
 
 ### 编辑器架构、配置与离线能力
 
+- [selective-undo-prototype-20261022](selective-undo-prototype-20261022/)（[结构、格式与锁权限第二阶段](selective-undo-prototype-20261022/structure-format-locks.md)；[FRB、编辑器与选区第三阶段](selective-undo-prototype-20261022/frb-editor-history.md)；[第三阶段审查](selective-undo-prototype-20261022/review.md)；[2项P1与3项P2修复](selective-undo-prototype-20261022/review-fixes.md)）
 - [editor-add-visibility-20261020](editor-add-visibility-20261020/)
 - [editor-add-visibility-device-20261021](editor-add-visibility-device-20261021/)
 - [editor-configuration-20261020](editor-configuration-20261020/)

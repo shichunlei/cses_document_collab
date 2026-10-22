@@ -1,0 +1,52 @@
+[
+  {
+    "name": "stage2-vendor-format",
+    "args": [
+      "cargo",
+      "fmt",
+      "--manifest-path",
+      "packages/cses_document_collab/rust/vendor/yrs-history/Cargo.toml",
+      "--check"
+    ],
+    "exit_code": 1
+  },
+  {
+    "name": "stage2-upstream-format-baseline",
+    "args": [
+      "cargo",
+      "fmt",
+      "--manifest-path",
+      "/Users/cses-1/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/yrs-0.27.4/Cargo.toml",
+      "--check"
+    ],
+    "exit_code": 1
+  },
+  {
+    "name": "stage2-checkpoint-format",
+    "args": [
+      "rustfmt",
+      "--edition",
+      "2018",
+      "--config",
+      "skip_children=true",
+      "--check",
+      "packages/cses_document_collab/rust/vendor/yrs-history/src/lib.rs",
+      "packages/cses_document_collab/rust/vendor/yrs-history/src/history_checkpoint.rs"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "stage2-production-dependencies",
+    "args": [
+      "cargo",
+      "tree",
+      "--manifest-path",
+      "packages/cses_document_collab/rust/Cargo.toml",
+      "--edges",
+      "normal",
+      "--depth",
+      "1"
+    ],
+    "exit_code": 0
+  }
+]

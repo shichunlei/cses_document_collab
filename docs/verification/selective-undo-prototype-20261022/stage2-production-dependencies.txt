@@ -1,0 +1,8 @@
+cses_collab_core v0.1.0 (/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/rust)
+├── flutter_rust_bridge v2.13.0
+├── libc v0.2.186
+├── once_cell v1.21.4
+├── parking_lot v0.12.5
+├── rusqlite v0.40.2
+├── serde_json v1.0.154
+└── yrs v0.27.4

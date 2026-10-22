@@ -1,0 +1,271 @@
+{
+  "date": "2026-10-22T10:16:01.375553+00:00",
+  "scope": "Selective native history stage 3: FRB, shared editor entry, durable failure boundaries, relative selection",
+  "report": "frb-editor-history.md",
+  "commands": [
+    {
+      "cwd": "packages/cses_document_collab/rust",
+      "command": "cargo fmt --check",
+      "exitCode": 0,
+      "evidence": "stage3-rust-format.txt"
+    },
+    {
+      "cwd": "packages/cses_document_collab/rust",
+      "command": "cargo check",
+      "exitCode": 0,
+      "evidence": "stage3-rust-check.txt"
+    },
+    {
+      "cwd": "packages/cses_document_collab/rust",
+      "command": "cargo test --features history-prototype",
+      "exitCode": 0,
+      "passed": 182,
+      "failed": 0,
+      "ignored": 0,
+      "evidence": "stage3-rust-tests.txt"
+    },
+    {
+      "cwd": "packages/cses_document_collab/rust",
+      "command": "cargo build",
+      "exitCode": 0,
+      "evidence": "stage3-rust-build.txt"
+    },
+    {
+      "cwd": "packages/cses_document_collab/rust/vendor/yrs-history",
+      "command": "cargo test --features small-client,sync,history-checkpoint history_checkpoint::tests",
+      "exitCode": 0,
+      "passed": 3,
+      "failed": 0,
+      "filtered": 382,
+      "evidence": "stage3-checkpoint-tests.txt"
+    },
+    {
+      "cwd": "packages/cses_document_collab/rust/vendor/yrs-history",
+      "command": "rustfmt --edition 2018 --check --config skip_children=true src/history_checkpoint.rs",
+      "exitCode": 0,
+      "evidence": "stage3-checkpoint-format.txt"
+    },
+    {
+      "cwd": "packages/cses_document_collab/rust/vendor/yrs-history",
+      "command": "cargo fmt --check",
+      "exitCode": 1,
+      "status": "upstream_baseline_not_passed",
+      "files": [
+        "src/observer.rs",
+        "src/sync/protocol.rs"
+      ],
+      "evidence": "stage3-vendor-format.txt"
+    },
+    {
+      "cwd": "packages/cses_document_collab",
+      "command": "flutter_rust_bridge_codegen generate",
+      "toolVersion": "2.13.0",
+      "toolPath": "/tmp/cses-table-frb-2.13/bin/flutter_rust_bridge_codegen",
+      "exitCode": 0,
+      "evidence": "stage3-codegen.txt"
+    },
+    {
+      "cwd": "packages/cses_document_collab",
+      "command": "flutter test --no-pub --dart-define=BOOTSTRAP_DESKTOP_ROOT=/System/Volumes/Data/workspace/cses-client --dart-define=BOOTSTRAP_PACKAGE_ROOT=/tmp/native-history-blockcraft-0.11.28/package",
+      "exitCode": 0,
+      "passed": 1656,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "stage3-cses-full-tests.txt"
+    },
+    {
+      "cwd": "packages/appflowy_editor",
+      "command": "flutter test --no-pub",
+      "exitCode": 0,
+      "passed": 921,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "stage3-appflowy-full-tests.txt"
+    },
+    {
+      "cwd": ".",
+      "command": "FRB_DART_LOAD_EXTERNAL_LIBRARY_NATIVE_LIB_DIR=/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/rust/target/debug flutter test --no-pub",
+      "exitCode": 0,
+      "passed": 123,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "stage3-host-tests.txt",
+      "rawLogSha256": "6e1c786ea4887a5a1eb976f22fe6974c386abe9b0b3af7dd4cf5ba283646f27f",
+      "logPolicy": "Test event lines retained; fake account HTTP traces omitted"
+    },
+    {
+      "cwd": "packages/cses_document_collab",
+      "command": "flutter test --no-pub test/native_history_editor_test.dart test/table_native_integration_test.dart",
+      "exitCode": 0,
+      "passed": 12,
+      "failed": 0,
+      "evidence": "stage3-native-target-tests.txt"
+    },
+    {
+      "cwd": "packages/cses_document_collab",
+      "command": "flutter analyze lib/src/controller/collab_controller.dart lib/src/editor/appflowy_block_editor_adapter.dart lib/src/editor/collab_native_selection.dart lib/src/editor/collaborative_editor_page.dart lib/src/native test/native_history_editor_test.dart test/collab_native_selection_test.dart test/table_native_integration_test.dart",
+      "exitCode": 0,
+      "evidence": "stage3-cses-analyze.txt"
+    },
+    {
+      "cwd": "packages/cses_document_collab",
+      "command": "flutter analyze",
+      "exitCode": 1,
+      "status": "two_existing_infos_outside_changed_files",
+      "evidence": "stage3-cses-full-analyze.txt"
+    },
+    {
+      "cwd": "packages/appflowy_editor",
+      "command": "flutter analyze",
+      "exitCode": 0,
+      "evidence": "stage3-appflowy-analyze.txt"
+    },
+    {
+      "cwd": ".",
+      "command": "flutter analyze lib/src/demo/document_host.dart lib/src/demo/collab_demo_page.dart test/document_host_native_test.dart test/collab_demo_page_test.dart",
+      "exitCode": 0,
+      "evidence": "stage3-host-analyze.txt"
+    },
+    {
+      "cwd": ".",
+      "command": "dart format --output=none --set-exit-if-changed (11 touched handwritten Dart files; CSES six files use --line-length 120; table test and AppFlowy use existing 80)",
+      "exitCode": 0,
+      "evidence": "stage3-dart-format.txt"
+    },
+    {
+      "cwd": ".",
+      "command": "flutter build apk --debug --no-pub",
+      "exitCode": 0,
+      "evidence": "stage3-android-build.txt",
+      "artifactEvidence": "stage3-android-artifact.json"
+    },
+    {
+      "cwd": "packages/cses_document_collab",
+      "command": "tool/build_rust_ios.sh debug",
+      "exitCode": 0,
+      "targets": [
+        "aarch64-apple-ios",
+        "aarch64-apple-ios-sim",
+        "x86_64-apple-ios"
+      ],
+      "evidence": "stage3-ios-build.txt"
+    },
+    {
+      "cwd": ".",
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "unsuccessfulAttempts": [
+    {
+      "name": "First production Flutter history run",
+      "exitCode": 1,
+      "rawLogSha256": "8331384e9daf4d0c57ef5a87bc9bb86f66d82dbf3f33ddb935fe89449716ecc0",
+      "result": "Readonly formal fixture needed editable:true; a real UTF16 restored-chunk offset bug was then fixed with isolated read-only redone resolution."
+    },
+    {
+      "name": "First full CSES run",
+      "exitCode": 1,
+      "rawLogSha256": "53862f436e52c129d4b32ab3094aaa3f1abae2a284d833e4658b00ea2f866d38",
+      "result": "1653 passed, one optional interoperability skipped, one table assertion still read the intentionally unused old path stack. Updated test to verify shared canUndo/delegate and actual native table Undo/Redo; final full run enables optional interop and passes 1656."
+    },
+    {
+      "name": "Host without native search directory",
+      "exitCode": 1,
+      "rawLogSha256": "d9c2d00c42ee7ab888b589b4235da9e366c1dab5854c29521bd901b950731cf5",
+      "result": "Five native host cases could not load the framework. Corrected invocation environment, without skipping; final full host passes 123."
+    },
+    {
+      "name": "Mounted page fixture exploration",
+      "exitCode": 1,
+      "rawLogSha256": "a37de60f35d5385c0058873df3adf6cbc88e84fec16608c79dc5deab08515b2c",
+      "result": "Widget assertions reached redo and closure. Fake async shutdown required a pump before waiting and a 200ms drain for the existing toolbar timer. Test cleanup corrected; page regression passes in full suite."
+    }
+  ],
+  "frb": {
+    "generatorVersion": "2.13.0",
+    "rustContentHash": 182732725,
+    "dartContentHash": 182732725,
+    "generatedFromRustDeclarations": true
+  },
+  "upstream": {
+    "version": "0.27.4",
+    "changedOriginalRustSources": [
+      "src/lib.rs"
+    ],
+    "onlyAddedCode": "src/history_checkpoint.rs",
+    "provenance": "../../../packages/cses_document_collab/rust/vendor/yrs-history/UPSTREAM.json"
+  },
+  "peerFixture": {
+    "generatedBy": "packages/cses_document_collab/tool/generate_native_history_fixture.mjs",
+    "yjsVersion": "13.6.19",
+    "nodeVersion": "26.8.2",
+    "regeneratedIdentically": true,
+    "sha256": "55ecc5079f8c8ccf91a3e22a62f813aa86ad7a495bd4389494c476c7e3bbe9aa"
+  },
+  "sourceSha256": {
+    "packages/appflowy_editor/lib/appflowy_editor.dart": "7edbc81d579834b20493486d9e82d45c6df1b3ab8efba78e3f5bbf0570aad54c",
+    "packages/appflowy_editor/lib/src/editor_state.dart": "7a1c27a55b51bde50f8d1baad037b6475cb94d20382e36fc9c0fd59b85c45b1c",
+    "packages/appflowy_editor/lib/src/history/undo_manager.dart": "1e2c1620891352b5aad84299a88d59e02ab2f6c8e635ed616b00974b224c8805",
+    "packages/appflowy_editor/test/legacy/external_history_test.dart": "e43274f6f32834e2e797c1b28e548e21d524510f24e062c1f31d92cc1331a622",
+    "packages/cses_document_collab/lib/src/controller/collab_controller.dart": "5d39d780554c9e3e7cdb1c921c88ddbaa55ea54cbfb5ba0e4d9763b6dc00f1b4",
+    "packages/cses_document_collab/lib/src/editor/appflowy_block_editor_adapter.dart": "3b907ea10829fd5c1d5c09fe6d3927ba47c05374eff243068574b9bf4955b512",
+    "packages/cses_document_collab/lib/src/editor/collab_native_selection.dart": "efb311c0b65b0f5c2816ffc4c31ce5c1fee3512891ac05107ad1a88a8b8d03d2",
+    "packages/cses_document_collab/lib/src/editor/collaborative_editor_page.dart": "44a3235fe15ce4c99fe50c8235f0559e56fa517d473231ff748bad583847c445",
+    "packages/cses_document_collab/test/native_history_editor_test.dart": "bee265be22a9b38ef2a487e04787a5da5437af74101ab44d11999097a0543534",
+    "packages/cses_document_collab/test/collab_native_selection_test.dart": "ecc44c576bdfed9721e2be12e47edbe3b84168ef3d5b07f783d9bfae439f2c27",
+    "packages/cses_document_collab/test/table_native_integration_test.dart": "5a4a2394ed282b3e07414b0d3e6d5c5b88a10629d0644f3138b79eb5ec4da72b",
+    "packages/cses_document_collab/tool/generate_native_history_fixture.mjs": "692cac8487d67df5d73645c049d5538e05d915af71936ade32877bda2a83ea05",
+    "packages/cses_document_collab/rust/tests/fixtures/native-history-peer.json": "55ecc5079f8c8ccf91a3e22a62f813aa86ad7a495bd4389494c476c7e3bbe9aa",
+    "packages/cses_document_collab/rust/Cargo.toml": "bde41c5ba3cde1a4761e148796e10844100bfc6436eb4fea4d1f42bcf02c43e9",
+    "packages/cses_document_collab/rust/Cargo.lock": "8607b0acdae550d335259249d3410cc00b9aa7f13abc8c57332a544c33b8ceb9",
+    "packages/cses_document_collab/rust/src/api/collab.rs": "fd13340e64cdb96ed571d2c8c21b8dbdbcddeddf007d9ff8438483cff448ff14",
+    "packages/cses_document_collab/rust/src/api/blockcraft.rs": "d7b9d6b6ac388232aaf7a87610702db90e15066e00034e692ae24e24ef8d18d4",
+    "packages/cses_document_collab/rust/src/api/document_history.rs": "7b9fb8d3c567bf5d25775ffd6823c15c2445e64fe90d852d1f75f7e5e92f3128",
+    "packages/cses_document_collab/rust/src/api/document_history_tests.rs": "9ba70ef2ea55be70fe6e7dc48bdc0b6452f4849bafe48314280a14a532b0966f",
+    "packages/cses_document_collab/rust/src/history_prototype.rs": "022a93392fa63b5febc1a778d045fa2526cde91e27d89b8fa7ebe6734b4e077f",
+    "packages/cses_document_collab/rust/vendor/yrs-history/src/history_checkpoint.rs": "012675ec595c4e75fdf6806a36cfe293ee8fdb7430e9a900523ec3885c5fb529",
+    "packages/cses_document_collab/rust/vendor/yrs-history/src/lib.rs": "26f460a2769b568ccc9e221aa7352e82890b198e21dde61f07c0c74d29c314d5",
+    "packages/cses_document_collab/rust/vendor/yrs-history/Cargo.toml": "b63b881c90ec7cd4ef49e5a87575b45d4446543408403956c2f2d19f62bd453b",
+    "packages/cses_document_collab/rust/vendor/yrs-history/UPSTREAM.json": "3ce509e31f0502566fa6b5a9589f5fc6ee6a19ccf22b2d7b821e1468a6774864",
+    "packages/cses_document_collab/rust/vendor/yrs-history/LOCAL_CHANGES.md": "572ac5b0b47afa0bd0d611fe803a9165bc5250b2182e8b61612c424b3855cbac",
+    "packages/cses_document_collab/rust/src/frb_generated.rs": "fc1b079f524adecb9ebc506ef68511735e15ab1f6f52abdd48ac0ca543483870",
+    "packages/cses_document_collab/lib/src/native/frb_generated.dart": "3dcb2dd5fabc8e5d0c4b3c2120374f8e40d23e0877462ff012682f29c7484959",
+    "packages/cses_document_collab/lib/src/native/frb_generated.io.dart": "58ae6b24413b4f9148a39a108ff0d3a6b4a0b2544ad7110eeb917a3dbc572408",
+    "packages/cses_document_collab/lib/src/native/frb_generated.web.dart": "e91237ab44a886c711b833f11fe4b7bb7c8823e92b313796ada05e7d2eb6751c",
+    "packages/cses_document_collab/lib/src/native/api/collab/history.dart": "ce3eaab792807ad63613986da030812d12942983d79d50d6c827c851413064f9"
+  },
+  "evidenceSha256": {
+    "stage3-cses-analyze.txt": "19438e418ed10f1b553aae748a446a09550be4296413594926f754413a9f17d4",
+    "stage3-appflowy-analyze.txt": "ba634099f85476db0d75e58268a4db0edf7367a4f59f3b50460451a8f0a9ff7c",
+    "stage3-codegen.txt": "eef3c35576858aad5366faffa2162a7a069324b253506d776bfb04933e21dca3",
+    "stage3-android-artifact.json": "5df404ffc56b44963b1c51967f554c5865d3d56632d0e98d46e3975dff2396e9",
+    "stage3-android-build.txt": "a0e0f8f7fcb6228c99822a87ce77f134342901d313041e9c4171f0419616d66a",
+    "stage3-host-tests.txt": "a7e257481471cdc1a2b49deec11d26948fa195f0c186b92c639fbef8ea55e6bd",
+    "stage3-host-analyze.txt": "7a80aee88f6c0e15705dd2ac84bfe722b1c6a04dbb25a03106a3fc17593afb6b",
+    "stage3-vendor-format.txt": "b425b772cb14b14ce4401b8ac7939d9ff98b508fe871a56a2fa5b417a0787241",
+    "stage3-checkpoint-format.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stage3-cses-full-analyze.txt": "f628c21f7cc1040f593198cf742f3f2a4ef209e9d50b718a58cb46d5db855997",
+    "stage3-dart-format.txt": "1db529f175bf6bd007ecdb76ef244aff70e8766fbc8c20197f240d5157eb282d",
+    "stage3-native-target-tests.txt": "a41e566b5453f58b9dc4d455b6fbe47f69c6e417983ffed512f5d86e10945710",
+    "stage3-rust-check.txt": "5cf9580908ca4a34fbab0bd8fc7588d6da3123a5968ae44b3b8dd5db95dc6525",
+    "stage3-ios-build.txt": "b53adb43eb37fb34b0ac1cac4c86e9769790582d2a5ffa0cdf8a6f7c7f2b0602",
+    "stage3-rust-format.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stage3-rust-build.txt": "fff55e6874548edf751047d173253953263b4135056772c6f4c21ac7ea439973",
+    "stage3-checkpoint-tests.txt": "e990d2a2ce6ec6bef552bdd233ccb2308019b35c9da1ca0d86c191579f9eec85",
+    "stage3-cses-full-tests.txt": "3ef5c5b85f1846a7dc17c4427ada72746dd6e59b5bf5c2ad135cb564b2d1057b",
+    "stage3-blockcraft-registry.json": "fb37e4b6251b16a0f17ecccd49b660dc5050260ae208882c6d857303cefd8128",
+    "stage3-appflowy-full-tests.txt": "3feb44a190cb20d9aff13454638a44007b062b41a1d40a9af4d51e4528b5c7a9",
+    "stage3-rust-tests.txt": "90e30c8e845b6995a0e078b7859536f663eaad6fe9669db9150a8b81942d86d5"
+  },
+  "limits": [
+    "No physical phone or real server/two-client acceptance in this phase",
+    "iOS native/XCFramework build only, no complete iOS App/SwiftPM acceptance",
+    "Session-only history; no cross-restart stack restoration",
+    "One AppFlowy transaction per group; cross-transaction IME merging not implemented",
+    "No dedicated offscreen reveal/focus activation or object/table multi-cell selection restore",
+    "Full-document candidate copy and GC-disabled storage need performance/memory measurements",
+    "Two existing CSES analysis infos and two vendored upstream formatting differences remain"
+  ],
+  "workspaceBoundary": "Unrelated journal/host work was preserved; no commits or pushes."
+}

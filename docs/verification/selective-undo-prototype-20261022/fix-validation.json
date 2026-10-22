@@ -1,0 +1,386 @@
+{
+  "date": "2026-10-22T11:58:05.537162+00:00",
+  "report": "review-fixes.md",
+  "scope": "R1/R2 P1, then R3/R4/R5 P2; active IME connection, selective native history, real permission and preview boundaries",
+  "fixedFindings": [
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "R5"
+  ],
+  "newRegressions": {
+    "rust": 9,
+    "cses": 15,
+    "appflowy": 16,
+    "total": 40
+  },
+  "commands": [
+    {
+      "cwd": "packages/cses_document_collab/rust",
+      "command": "cargo fmt --check",
+      "exitCode": 0,
+      "evidence": "fix-rust-format.txt"
+    },
+    {
+      "cwd": "packages/cses_document_collab/rust",
+      "command": "cargo check --offline --features history-prototype",
+      "exitCode": 0,
+      "evidence": "fix-rust-check.txt"
+    },
+    {
+      "cwd": "packages/cses_document_collab/rust",
+      "command": "cargo test --offline --features history-prototype",
+      "exitCode": 0,
+      "evidence": "fix-rust-tests.txt",
+      "passed": 191,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "cwd": "packages/cses_document_collab/rust",
+      "command": "cargo build --offline",
+      "exitCode": 0,
+      "evidence": "fix-rust-build.txt"
+    },
+    {
+      "cwd": "packages/cses_document_collab",
+      "command": "flutter test --no-pub --reporter expanded --dart-define=BOOTSTRAP_DESKTOP_ROOT=/System/Volumes/Data/workspace/cses-client --dart-define=BOOTSTRAP_PACKAGE_ROOT=/tmp/native-history-blockcraft-0.11.28/package",
+      "exitCode": 0,
+      "evidence": "fix-cses-tests.txt",
+      "passed": 1627,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "cwd": "packages/appflowy_editor",
+      "command": "flutter test --no-pub --reporter expanded",
+      "exitCode": 0,
+      "evidence": "fix-appflowy-tests.txt",
+      "passed": 937,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "cwd": ".",
+      "command": "FRB_DART_LOAD_EXTERNAL_LIBRARY_NATIVE_LIB_DIR=/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/rust/target/debug flutter test --no-pub --reporter expanded",
+      "exitCode": 1,
+      "evidence": "fix-host-tests.txt",
+      "passed": 210,
+      "failed": 1,
+      "skipped": 0,
+      "rawLogSha256": "71173297ead20ab21d787aad95128b1a08bea33c50ec78bb23f56c18eb17da08",
+      "logPolicy": "Test event lines retained; fake account HTTP/session traces omitted",
+      "status": "new_concurrent_unrelated_journal_review_probe_failed"
+    },
+    {
+      "cwd": "packages/appflowy_editor",
+      "command": "flutter test --no-pub --reporter expanded test/legacy/local_transaction_pause_test.dart test/legacy/external_history_test.dart",
+      "exitCode": 0,
+      "evidence": "fix-appflowy-target-tests.txt",
+      "passed": 18,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "cwd": "packages/appflowy_editor",
+      "command": "flutter analyze --no-pub",
+      "exitCode": 0,
+      "evidence": "fix-appflowy-analyze.txt"
+    },
+    {
+      "cwd": "packages/cses_document_collab",
+      "command": "flutter analyze --no-pub lib/src/controller/collab_controller.dart lib/src/editor/appflowy_block_editor_adapter.dart lib/src/editor/collaborative_editor_page.dart test/native_history_review_regression_test.dart",
+      "exitCode": 0,
+      "evidence": "fix-cses-analyze-target.txt"
+    },
+    {
+      "cwd": "packages/cses_document_collab",
+      "command": "flutter analyze",
+      "exitCode": 1,
+      "evidence": "fix-cses-analyze-all.txt",
+      "status": "two_existing_infos_outside_changed_files"
+    },
+    {
+      "cwd": ".",
+      "command": "flutter analyze --no-pub lib/src/demo/document_host.dart lib/src/demo/collab_demo_page.dart test/document_host_native_test.dart test/collab_demo_page_test.dart",
+      "exitCode": 0,
+      "evidence": "fix-host-analyze-target.txt"
+    },
+    {
+      "cwd": ".",
+      "command": "flutter analyze",
+      "exitCode": 1,
+      "evidence": "fix-host-analyze-all.txt",
+      "status": "four_existing_host_dependency_infos_plus_two_existing_package_infos"
+    },
+    {
+      "cwd": "packages/cses_document_collab",
+      "command": "dart format --output=none --set-exit-if-changed --line-length 120 lib/src/controller/collab_controller.dart lib/src/editor/appflowy_block_editor_adapter.dart lib/src/editor/collaborative_editor_page.dart test/native_history_review_regression_test.dart",
+      "exitCode": 0,
+      "evidence": "fix-cses-format.txt",
+      "handwrittenFiles": 4
+    },
+    {
+      "cwd": "packages/appflowy_editor",
+      "command": "dart format --output=none --set-exit-if-changed --line-length 80 lib/src/editor_state.dart lib/src/history/undo_manager.dart lib/src/editor/editor_component/service/keyboard_service_widget.dart lib/src/editor/editor_component/service/ime/character_shortcut_event_helper.dart lib/src/editor/editor_component/service/ime/delta_input_on_insert_impl.dart lib/src/editor/editor_component/service/ime/delta_input_on_non_text_update_impl.dart lib/src/editor/editor_component/service/ime/delta_input_on_replace_impl.dart lib/src/editor/editor_component/service/ime/non_delta_input_service.dart test/legacy/local_transaction_pause_test.dart",
+      "exitCode": 0,
+      "evidence": "fix-appflowy-format.txt",
+      "handwrittenFiles": 9
+    },
+    {
+      "cwd": ".",
+      "command": "flutter build apk --debug --no-pub",
+      "exitCode": 0,
+      "evidence": "fix-android-build.txt",
+      "artifactEvidence": "fix-android-artifact.json"
+    },
+    {
+      "cwd": "packages/cses_document_collab",
+      "command": "tool/build_rust_ios.sh debug",
+      "exitCode": 0,
+      "evidence": "fix-ios-native.txt",
+      "targets": [
+        "aarch64-apple-ios",
+        "aarch64-apple-ios-sim",
+        "x86_64-apple-ios"
+      ],
+      "artifactEvidence": "fix-ios-native-artifact.json",
+      "scope": "Native libraries and XCFramework; no complete iOS App"
+    },
+    {
+      "cwd": ".",
+      "command": "git diff --check",
+      "exitCode": 0,
+      "evidence": "fix-diff-check.txt"
+    },
+    {
+      "cwd": ".",
+      "command": "FRB_DART_LOAD_EXTERNAL_LIBRARY_NATIVE_LIB_DIR=/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/rust/target/debug flutter test --no-pub --reporter expanded",
+      "exitCode": 0,
+      "passed": 210,
+      "failed": 0,
+      "skipped": 0,
+      "evidence": "fix-host-tests-before-probe.txt",
+      "status": "earlier_run_before_other_conversation_added_probe",
+      "rawLogSha256": "2887bd8cd3cdf1d0aed1bf36cf594acfa5e70002e3d9a20f925fbbcbdb02fd45"
+    }
+  ],
+  "unsuccessfulAttempts": [
+    {
+      "name": "Table IME payload used editor text rather than the actual platform state",
+      "exitCode": 1,
+      "passed": 58,
+      "failed": 1,
+      "evidence": "fix-native-targets-before-payload-correction.txt",
+      "resolution": "Read actual platform editingState with NonDelta sentinel; strict editor caret=2 unchanged. Expanded native review file 15 passes; final CSES full 1627 passes."
+    },
+    {
+      "name": "Final read-only lifecycle review found late input after explicit keyboard close",
+      "exitCode": 1,
+      "evidence": "fix-ime-close-before.txt",
+      "source": "fix-ime-close-before.dart.txt",
+      "resolution": "Connection epochs propagated through async helpers; explicit close, system close, shortcut wait and reconnect covered by four added tests."
+    },
+    {
+      "name": "Initial touched-file formatter check",
+      "exitCode": 1,
+      "evidence": "fix-appflowy-format-initial.txt",
+      "resolution": "Formatted four affected IME files at existing 80-column width; final 9-file check passed."
+    },
+    {
+      "name": "Closed keyboard reopened by a restored selection",
+      "exitCode": 1,
+      "evidence": "fix-closed-keyboard-before.txt",
+      "source": "fix-closed-keyboard-before.dart.txt",
+      "resolution": "Paused selection updates refresh only an existing connection; undo/redo/remote each assert resolved content/caret and zero setClient/show after close."
+    },
+    {
+      "name": "Host test startup shared-cache conflict while building Android",
+      "exitCode": 1,
+      "status": "tool_startup_failure_before_tests",
+      "evidence": "fix-host-cache-startup-failure.txt",
+      "resolution": "After Android completed, sequential host tests executed: 210 passed, one concurrently added journal clipboard review probe failed. No source edits or cache-clean workaround."
+    }
+  ],
+  "frb": {
+    "publicSignaturesChanged": false,
+    "generatedFilesUnchangedFromStage3": true,
+    "contentHash": 182732725,
+    "files": {
+      "packages/cses_document_collab/lib/src/native/api/collab/history.dart": "ce3eaab792807ad63613986da030812d12942983d79d50d6c827c851413064f9",
+      "packages/cses_document_collab/lib/src/native/frb_generated.dart": "3dcb2dd5fabc8e5d0c4b3c2120374f8e40d23e0877462ff012682f29c7484959",
+      "packages/cses_document_collab/lib/src/native/frb_generated.io.dart": "58ae6b24413b4f9148a39a108ff0d3a6b4a0b2544ad7110eeb917a3dbc572408",
+      "packages/cses_document_collab/lib/src/native/frb_generated.web.dart": "e91237ab44a886c711b833f11fe4b7bb7c8823e92b313796ada05e7d2eb6751c",
+      "packages/cses_document_collab/rust/src/frb_generated.rs": "fc1b079f524adecb9ebc506ef68511735e15ab1f6f52abdd48ac0ca543483870"
+    }
+  },
+  "fixture": {
+    "path": "packages/cses_document_collab/rust/tests/fixtures/native-history-review.json",
+    "sha256": "3e6d7aabf2191274add6de546759dcc0684f02a1b292b8ca285df4623d4c4361",
+    "generator": "tool/generate_native_history_review_fixture.mjs",
+    "yjsVersion": "13.6.19",
+    "clientId": 420100,
+    "baseSha256": "fcfecb298f79e8af112ef0a1c938595b292c3b041d204622360134c0655a48c6",
+    "regeneratedIdentically": true
+  },
+  "sourceSha256": {
+    "packages/appflowy_editor/lib/appflowy_editor.dart": "7edbc81d579834b20493486d9e82d45c6df1b3ab8efba78e3f5bbf0570aad54c",
+    "packages/appflowy_editor/lib/src/editor/editor_component/service/ime/character_shortcut_event_helper.dart": "625e5691dbe6cbe482c0efa02aa831d910b1d2014f6e08272275344a7a876819",
+    "packages/appflowy_editor/lib/src/editor/editor_component/service/ime/delta_input_on_insert_impl.dart": "e6ff9f5f26d45d6b7373cf3208fef0e1ed8ab627f103daf6d5edeb86d7ae5798",
+    "packages/appflowy_editor/lib/src/editor/editor_component/service/ime/delta_input_on_non_text_update_impl.dart": "8f58b5b4ccaa221749d3d4d8a7a244809066b39cc83a0e139a95e1e96911f2cf",
+    "packages/appflowy_editor/lib/src/editor/editor_component/service/ime/delta_input_on_replace_impl.dart": "e0676a615fbee6490bb0acdc6bc52ea800b9d8073731d6c923cd4214248604e1",
+    "packages/appflowy_editor/lib/src/editor/editor_component/service/ime/non_delta_input_service.dart": "c0f1b37530c38a4d5e83dca8c2071d824473a96f368ade47448ecb00678be4d0",
+    "packages/appflowy_editor/lib/src/editor/editor_component/service/keyboard_service_widget.dart": "eca316762cdf69a80d1449b6c9b3208c9e153496549a1e575f93856aed7c29e6",
+    "packages/appflowy_editor/lib/src/editor_state.dart": "5563a0e01d20d97849f823ce35252701b8e504a581a6a1a7aa1081b8ba7f7b18",
+    "packages/appflowy_editor/lib/src/history/undo_manager.dart": "6c1c5591dc87e89490fdecc8414e7b989de3160c7e617d8347b49cb60c37bd25",
+    "packages/appflowy_editor/test/legacy/external_history_test.dart": "e43274f6f32834e2e797c1b28e548e21d524510f24e062c1f31d92cc1331a622",
+    "packages/appflowy_editor/test/legacy/local_transaction_pause_test.dart": "92f8a2698e300b0175645ec9f3100b46d8c251f88876a3199373b1215ebd217f",
+    "packages/cses_document_collab/lib/src/controller/collab_controller.dart": "b3abe38f1e1383471b454f0d01275a07133770c34b3930e626de3d225118a328",
+    "packages/cses_document_collab/lib/src/editor/appflowy_block_editor_adapter.dart": "3eab82ff3f7fca3e3669ce2c920010b240818aadc7e7860fbee908c2851f3c44",
+    "packages/cses_document_collab/lib/src/editor/collab_native_selection.dart": "efb311c0b65b0f5c2816ffc4c31ce5c1fee3512891ac05107ad1a88a8b8d03d2",
+    "packages/cses_document_collab/lib/src/editor/collaborative_editor_page.dart": "d368a6c44fd5ec68ca72706b9a6ff44f0f97242b6fbfb96238fbb5d2122a15c7",
+    "packages/cses_document_collab/lib/src/native/api/collab/history.dart": "ce3eaab792807ad63613986da030812d12942983d79d50d6c827c851413064f9",
+    "packages/cses_document_collab/lib/src/native/frb_generated.dart": "3dcb2dd5fabc8e5d0c4b3c2120374f8e40d23e0877462ff012682f29c7484959",
+    "packages/cses_document_collab/lib/src/native/frb_generated.io.dart": "58ae6b24413b4f9148a39a108ff0d3a6b4a0b2544ad7110eeb917a3dbc572408",
+    "packages/cses_document_collab/lib/src/native/frb_generated.web.dart": "e91237ab44a886c711b833f11fe4b7bb7c8823e92b313796ada05e7d2eb6751c",
+    "packages/cses_document_collab/rust/Cargo.lock": "8607b0acdae550d335259249d3410cc00b9aa7f13abc8c57332a544c33b8ceb9",
+    "packages/cses_document_collab/rust/Cargo.toml": "bde41c5ba3cde1a4761e148796e10844100bfc6436eb4fea4d1f42bcf02c43e9",
+    "packages/cses_document_collab/rust/src/api/blockcraft.rs": "d7b9d6b6ac388232aaf7a87610702db90e15066e00034e692ae24e24ef8d18d4",
+    "packages/cses_document_collab/rust/src/api/collab.rs": "e116f6430869b1f0f12fe61cf8c17a472fca84671cc7739ef4b87dce5d89a02f",
+    "packages/cses_document_collab/rust/src/api/document_history.rs": "034b1f6e9903055c63f4b63f5300fde44955100d2617158f8433c51e0b1f5c35",
+    "packages/cses_document_collab/rust/src/api/document_history_tests.rs": "9f2ca5ce268a81d0adc78b198e6c9d752eb8fdb2a6324496bc84c8ceb74c061b",
+    "packages/cses_document_collab/rust/src/frb_generated.rs": "fc1b079f524adecb9ebc506ef68511735e15ab1f6f52abdd48ac0ca543483870",
+    "packages/cses_document_collab/rust/src/history_prototype.rs": "022a93392fa63b5febc1a778d045fa2526cde91e27d89b8fa7ebe6734b4e077f",
+    "packages/cses_document_collab/rust/tests/fixtures/native-history-peer.json": "55ecc5079f8c8ccf91a3e22a62f813aa86ad7a495bd4389494c476c7e3bbe9aa",
+    "packages/cses_document_collab/rust/tests/fixtures/native-history-review.json": "3e6d7aabf2191274add6de546759dcc0684f02a1b292b8ca285df4623d4c4361",
+    "packages/cses_document_collab/rust/vendor/yrs-history/Cargo.toml": "b63b881c90ec7cd4ef49e5a87575b45d4446543408403956c2f2d19f62bd453b",
+    "packages/cses_document_collab/rust/vendor/yrs-history/LOCAL_CHANGES.md": "572ac5b0b47afa0bd0d611fe803a9165bc5250b2182e8b61612c424b3855cbac",
+    "packages/cses_document_collab/rust/vendor/yrs-history/UPSTREAM.json": "3ce509e31f0502566fa6b5a9589f5fc6ee6a19ccf22b2d7b821e1468a6774864",
+    "packages/cses_document_collab/rust/vendor/yrs-history/src/history_checkpoint.rs": "012675ec595c4e75fdf6806a36cfe293ee8fdb7430e9a900523ec3885c5fb529",
+    "packages/cses_document_collab/rust/vendor/yrs-history/src/lib.rs": "26f460a2769b568ccc9e221aa7352e82890b198e21dde61f07c0c74d29c314d5",
+    "packages/cses_document_collab/test/collab_native_selection_test.dart": "ecc44c576bdfed9721e2be12e47edbe3b84168ef3d5b07f783d9bfae439f2c27",
+    "packages/cses_document_collab/test/native_history_editor_test.dart": "bee265be22a9b38ef2a487e04787a5da5437af74101ab44d11999097a0543534",
+    "packages/cses_document_collab/test/native_history_review_regression_test.dart": "6940283743fa82bb87754d41a4e933ebea4b649ffe31a3d37aec0b6edd4f9da0",
+    "packages/cses_document_collab/test/table_native_integration_test.dart": "5a4a2394ed282b3e07414b0d3e6d5c5b88a10629d0644f3138b79eb5ec4da72b",
+    "packages/cses_document_collab/tool/generate_native_history_fixture.mjs": "692cac8487d67df5d73645c049d5538e05d915af71936ade32877bda2a83ea05",
+    "packages/cses_document_collab/tool/generate_native_history_review_fixture.mjs": "b866f0c6f754e582adb985f5c8d39e2276d60878299e97f07fe62a8b141cb987"
+  },
+  "fullSuiteStartSourceSha256": {
+    "packages/appflowy_editor/lib/appflowy_editor.dart": "7edbc81d579834b20493486d9e82d45c6df1b3ab8efba78e3f5bbf0570aad54c",
+    "packages/appflowy_editor/lib/src/editor/editor_component/service/ime/character_shortcut_event_helper.dart": "625e5691dbe6cbe482c0efa02aa831d910b1d2014f6e08272275344a7a876819",
+    "packages/appflowy_editor/lib/src/editor/editor_component/service/ime/delta_input_on_insert_impl.dart": "e6ff9f5f26d45d6b7373cf3208fef0e1ed8ab627f103daf6d5edeb86d7ae5798",
+    "packages/appflowy_editor/lib/src/editor/editor_component/service/ime/delta_input_on_non_text_update_impl.dart": "8f58b5b4ccaa221749d3d4d8a7a244809066b39cc83a0e139a95e1e96911f2cf",
+    "packages/appflowy_editor/lib/src/editor/editor_component/service/ime/delta_input_on_replace_impl.dart": "e0676a615fbee6490bb0acdc6bc52ea800b9d8073731d6c923cd4214248604e1",
+    "packages/appflowy_editor/lib/src/editor/editor_component/service/ime/non_delta_input_service.dart": "c0f1b37530c38a4d5e83dca8c2071d824473a96f368ade47448ecb00678be4d0",
+    "packages/appflowy_editor/lib/src/editor/editor_component/service/keyboard_service_widget.dart": "eca316762cdf69a80d1449b6c9b3208c9e153496549a1e575f93856aed7c29e6",
+    "packages/appflowy_editor/lib/src/editor_state.dart": "5563a0e01d20d97849f823ce35252701b8e504a581a6a1a7aa1081b8ba7f7b18",
+    "packages/appflowy_editor/lib/src/history/undo_manager.dart": "6c1c5591dc87e89490fdecc8414e7b989de3160c7e617d8347b49cb60c37bd25",
+    "packages/appflowy_editor/test/legacy/external_history_test.dart": "e43274f6f32834e2e797c1b28e548e21d524510f24e062c1f31d92cc1331a622",
+    "packages/appflowy_editor/test/legacy/local_transaction_pause_test.dart": "92f8a2698e300b0175645ec9f3100b46d8c251f88876a3199373b1215ebd217f",
+    "packages/cses_document_collab/lib/src/controller/collab_controller.dart": "b3abe38f1e1383471b454f0d01275a07133770c34b3930e626de3d225118a328",
+    "packages/cses_document_collab/lib/src/editor/appflowy_block_editor_adapter.dart": "3eab82ff3f7fca3e3669ce2c920010b240818aadc7e7860fbee908c2851f3c44",
+    "packages/cses_document_collab/lib/src/editor/collab_native_selection.dart": "efb311c0b65b0f5c2816ffc4c31ce5c1fee3512891ac05107ad1a88a8b8d03d2",
+    "packages/cses_document_collab/lib/src/editor/collaborative_editor_page.dart": "d368a6c44fd5ec68ca72706b9a6ff44f0f97242b6fbfb96238fbb5d2122a15c7",
+    "packages/cses_document_collab/lib/src/native/api/collab/history.dart": "ce3eaab792807ad63613986da030812d12942983d79d50d6c827c851413064f9",
+    "packages/cses_document_collab/lib/src/native/frb_generated.dart": "3dcb2dd5fabc8e5d0c4b3c2120374f8e40d23e0877462ff012682f29c7484959",
+    "packages/cses_document_collab/lib/src/native/frb_generated.io.dart": "58ae6b24413b4f9148a39a108ff0d3a6b4a0b2544ad7110eeb917a3dbc572408",
+    "packages/cses_document_collab/lib/src/native/frb_generated.web.dart": "e91237ab44a886c711b833f11fe4b7bb7c8823e92b313796ada05e7d2eb6751c",
+    "packages/cses_document_collab/rust/Cargo.lock": "8607b0acdae550d335259249d3410cc00b9aa7f13abc8c57332a544c33b8ceb9",
+    "packages/cses_document_collab/rust/Cargo.toml": "bde41c5ba3cde1a4761e148796e10844100bfc6436eb4fea4d1f42bcf02c43e9",
+    "packages/cses_document_collab/rust/src/api/blockcraft.rs": "d7b9d6b6ac388232aaf7a87610702db90e15066e00034e692ae24e24ef8d18d4",
+    "packages/cses_document_collab/rust/src/api/collab.rs": "e116f6430869b1f0f12fe61cf8c17a472fca84671cc7739ef4b87dce5d89a02f",
+    "packages/cses_document_collab/rust/src/api/document_history.rs": "034b1f6e9903055c63f4b63f5300fde44955100d2617158f8433c51e0b1f5c35",
+    "packages/cses_document_collab/rust/src/api/document_history_tests.rs": "9f2ca5ce268a81d0adc78b198e6c9d752eb8fdb2a6324496bc84c8ceb74c061b",
+    "packages/cses_document_collab/rust/src/frb_generated.rs": "fc1b079f524adecb9ebc506ef68511735e15ab1f6f52abdd48ac0ca543483870",
+    "packages/cses_document_collab/rust/src/history_prototype.rs": "022a93392fa63b5febc1a778d045fa2526cde91e27d89b8fa7ebe6734b4e077f",
+    "packages/cses_document_collab/rust/tests/fixtures/native-history-peer.json": "55ecc5079f8c8ccf91a3e22a62f813aa86ad7a495bd4389494c476c7e3bbe9aa",
+    "packages/cses_document_collab/rust/tests/fixtures/native-history-review.json": "3e6d7aabf2191274add6de546759dcc0684f02a1b292b8ca285df4623d4c4361",
+    "packages/cses_document_collab/rust/vendor/yrs-history/Cargo.toml": "b63b881c90ec7cd4ef49e5a87575b45d4446543408403956c2f2d19f62bd453b",
+    "packages/cses_document_collab/rust/vendor/yrs-history/LOCAL_CHANGES.md": "572ac5b0b47afa0bd0d611fe803a9165bc5250b2182e8b61612c424b3855cbac",
+    "packages/cses_document_collab/rust/vendor/yrs-history/UPSTREAM.json": "3ce509e31f0502566fa6b5a9589f5fc6ee6a19ccf22b2d7b821e1468a6774864",
+    "packages/cses_document_collab/rust/vendor/yrs-history/src/history_checkpoint.rs": "012675ec595c4e75fdf6806a36cfe293ee8fdb7430e9a900523ec3885c5fb529",
+    "packages/cses_document_collab/rust/vendor/yrs-history/src/lib.rs": "26f460a2769b568ccc9e221aa7352e82890b198e21dde61f07c0c74d29c314d5",
+    "packages/cses_document_collab/test/collab_native_selection_test.dart": "ecc44c576bdfed9721e2be12e47edbe3b84168ef3d5b07f783d9bfae439f2c27",
+    "packages/cses_document_collab/test/native_history_editor_test.dart": "bee265be22a9b38ef2a487e04787a5da5437af74101ab44d11999097a0543534",
+    "packages/cses_document_collab/test/native_history_review_regression_test.dart": "6940283743fa82bb87754d41a4e933ebea4b649ffe31a3d37aec0b6edd4f9da0",
+    "packages/cses_document_collab/test/table_native_integration_test.dart": "5a4a2394ed282b3e07414b0d3e6d5c5b88a10629d0644f3138b79eb5ec4da72b",
+    "packages/cses_document_collab/tool/generate_native_history_fixture.mjs": "692cac8487d67df5d73645c049d5538e05d915af71936ade32877bda2a83ea05",
+    "packages/cses_document_collab/tool/generate_native_history_review_fixture.mjs": "b866f0c6f754e582adb985f5c8d39e2276d60878299e97f07fe62a8b141cb987"
+  },
+  "postStartEdits": {},
+  "workspaceBoundary": "Other conversation journal migration/host work preserved; current package and host totals reflect that migration. No commits or pushes.",
+  "limits": [
+    "No physical-device, real server, online desktop/mobile two-client acceptance in this fix turn",
+    "iOS native/XCFramework only, no complete iOS App build",
+    "Session-only history; no cross-restart personal history",
+    "No cross-transaction IME grouping, dedicated offscreen reveal or table/object range restoration",
+    "Full-document candidate copy/GC-disabled storage still need performance and memory measurement",
+    "Existing analysis infos and vendored upstream formatting/warning baseline preserved"
+  ],
+  "suiteSnapshotScope": "Final CSES suite includes the three last closed-keyboard tests. AppFlowy/host suites use the same final production sources; no production edits occurred after their starts.",
+  "unrelatedHostFailure": {
+    "path": "test/daily_guidance/review_clipboard_probe_test.dart",
+    "sha256": "7dbdc3719bfb83ff35ef72c98a140940497e1ffc44268e3b2638faca6c7ab6b5",
+    "testName": "cut a mention then paste must round-trip the selected content",
+    "error": "Bad state: 粘贴内容超出日记支持的格式或容量",
+    "throwSite": "lib/src/daily_guidance/local_journal_controller.dart:149",
+    "scope": "Concurrent journal review probe; no mounted keyboard/IME or native history, rejected by host paste-format validation",
+    "modifiedOrSkippedByThisTask": false
+  },
+  "finalAudit": {
+    "sourceHashesMatch": true,
+    "allLocalMarkdownLinksExist": true,
+    "passedTestCounts": {
+      "rust": 191,
+      "cses": 1627,
+      "appflowy": 937,
+      "host": 210
+    },
+    "failedTestCounts": {
+      "rust": 0,
+      "cses": 0,
+      "appflowy": 0,
+      "host": 1
+    },
+    "newFormalRegressions": 40,
+    "diffCheckExitCode": 0,
+    "dartFormatCheckedHandwrittenFiles": 13,
+    "exactApkSourceChecks": 16,
+    "generatedFilesManuallyEdited": false,
+    "hostFullSuiteGreen": false
+  },
+  "evidenceSha256": {
+    "fix-android-artifact.json": "58ed0a06eb31733c51dfcbd1c28ccfbd25501373c6efb91667a642d898cf050c",
+    "fix-android-build.txt": "7e68832ab60b46c73fa780d73acaa2d1574424f04917e3bf93191aba3d7ade16",
+    "fix-appflowy-agent-target-tests.txt": "08350b7682fa10d50ce2c3562082851fc203246834ca75a4d286d5e148c07341",
+    "fix-appflowy-analyze.txt": "db281dbe7ac5ec687a7d36980a321f9e1e28718c07f514ae0ee303cfa5a4c4cf",
+    "fix-appflowy-format-initial.txt": "c8495e4358debce19074c45f94a63d3819ab49709f50ea514a1e027e4102c470",
+    "fix-appflowy-format.txt": "02eb9fa358f28957cd6b7e7361d6253051f3eafb189b7a3ae3d166b15886bb07",
+    "fix-appflowy-target-tests.txt": "721ff23126e4a038be949826c70064be92e56a6e2720146a72c68be35ea58ab5",
+    "fix-appflowy-tests.txt": "001ef8e9289eef3addac26ea1417fe1b08c0bcbe9bf23e36a11b5c1a299395ce",
+    "fix-blockcraft-version.json": "695c24cdd453ed487da4a84c86075ae38e44ef91d7ac67e8dd497a8a48cd1d99",
+    "fix-closed-keyboard-before.dart.txt": "253945fb48e9710d8c5f2b5c946df8087dc635dcedd9e1df3744a691206990c2",
+    "fix-closed-keyboard-before.txt": "9e49db8caa2e7e04b15e8cbc44566c59f497f12dd63be549f1adc907c64737fe",
+    "fix-cses-analyze-all.txt": "b5a57ece666aee5caf97d271377fe7ffbb01ddf39cd18b2c951703ad0fb51f1a",
+    "fix-cses-analyze-target.txt": "48ef149fb56eabaa6e18f3801623c306d01247527902bb2a13ce9201de6be412",
+    "fix-cses-format.txt": "7bb8050e41a39a859547048f7bd721bbcc6d4f7b14270a6854deddb3516f15cf",
+    "fix-cses-tests.txt": "0a0db168244f23052836b6d3dbf5f62205ca1f1c904b502068d880c9e918485b",
+    "fix-diff-check.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "fix-host-analyze-all.txt": "3c79e01fef7b07e0dc17f5723bc5f3cd0c69c7d6f3ac20ed10648c59686af5d4",
+    "fix-host-analyze-target.txt": "7edd73f0b8a18940f5feba6edddc4f5d0ac9c65d5c7c4f70bb5f4878dcc078bb",
+    "fix-host-cache-startup-failure.txt": "97ef2cc4b9d890bf23724735cdd381d898ef596261b1e1dd6160de302af633a3",
+    "fix-host-tests-before-probe.txt": "67683b715496cd24b2baf6b40bddfa2cb086744875c8754b7b37ed0ebe95d689",
+    "fix-host-tests.txt": "44050cfb4b1098cc1c3c89a173289222f4be12d2f3da68649083c188d3fe94b6",
+    "fix-ime-close-before.dart.txt": "fa3cccb39378441dc58b9d65d282b05c675241ac7b220ffbcacf6dac132797f3",
+    "fix-ime-close-before.txt": "7169d927e841a2447ab6d2e09666ccacf150e88302451902be6984a29ab4a910",
+    "fix-ios-native-artifact.json": "db9241a2d3d02e94c57b65ccbfc5cd98817169bbbf8518cada269b5f5e039dfa",
+    "fix-ios-native.txt": "1c38bfb38dc67c8d52c64374f29ecb73bc2370c488a100d28ec082249a84acdd",
+    "fix-native-review-tests.txt": "a48ab8032f0901ef7dea4038064fc42d09456780b0332be453c9a0cb9f4505be",
+    "fix-native-targets-before-payload-correction.txt": "193efee6cbfafbe8fbb725a3af5c5b0d17fa1a73eabecb93ec750aedc8bdcd81",
+    "fix-rust-build.txt": "5bfcf6c67175a8906fb180e32b0bbe610b7857ca946d166c000a78d78d0f794e",
+    "fix-rust-check.txt": "2b880fc4e7fbaf2daf303c516a73d199308d45f70eb30ff46f29ac91a35407b3",
+    "fix-rust-format.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "fix-rust-tests.txt": "356225ad55dbd9d8e3b32f75d522f6bea8e0d85fd36d99c0157d3c6f128f23e5"
+  }
+}

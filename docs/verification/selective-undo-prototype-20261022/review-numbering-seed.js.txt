@@ -1,0 +1,10 @@
+// Run in packages/cses_document_collab. Change output path to the archived fixture if needed.
+const Y = require('/System/Volumes/Data/workspace/cses-client/node_modules/yjs');
+const fs = require('fs');
+const doc = new Y.Doc();
+Y.applyUpdate(doc, fs.readFileSync('rust/tests/fixtures/blockcraft-ordered.update'));
+const blocks = doc.getMap('blocks');
+doc.transact(() => {
+  for (const id of ['a', 'b', 'c']) blocks.get(id).get('props').delete('order');
+});
+fs.writeFileSync('/tmp/review-ordered-missing.update', Y.encodeStateAsUpdate(doc));

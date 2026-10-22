@@ -1,0 +1,18 @@
+00:00 +0: loading /tmp/review_flutter_history_picker.dart
+00:00 +0: (setUpAll)
+00:00 +0: REVIEW remote unrelated edit preserves host picker permission
+REVIEW permission after unrelated remote text update=false
+00:00 +0 -1: REVIEW remote unrelated edit preserves host picker permission [E]
+  Expected: <Instance of 'CollabMentionUser'>
+    Actual: <null>
+  Remote text update must not revoke the pending host picker
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  /tmp/review_flutter_history_picker.dart 53:7        main.<fn>
+  
+00:00 +0 -1: (tearDownAll)
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /tmp/review_flutter_history_picker.dart: REVIEW remote unrelated edit preserves host picker permission

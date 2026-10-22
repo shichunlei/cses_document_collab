@@ -142,19 +142,21 @@ void main() {
           2,
         );
         expect(
-          state.undoManager.undoStack.isNonEmpty,
+          state.undoManager.canUndo,
           isTrue,
           reason: 'history empty after creation: ${controller.error}',
         );
+        expect(state.undoManager.externalHistory, isNotNull);
+        expect(state.undoManager.undoStack.isEmpty, isTrue);
         state.undoManager.undo();
-        await Future<void>.delayed(Duration.zero);
+        await controller.undo();
         expect(controller.error, isNull);
         expect(
           native.currentBlocks().where((b) => b.blockType == 'table').length,
           1,
         );
         state.undoManager.redo();
-        await Future<void>.delayed(Duration.zero);
+        await controller.redo();
         expect(controller.error, isNull);
         expect(
           native.currentBlocks().where((b) => b.blockType == 'table').length,

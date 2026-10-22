@@ -1,0 +1,26 @@
+import 'dart:async';
+import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:appflowy_editor/src/editor/editor_component/service/ime/non_delta_input_service.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+import '/System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/infra/testable_editor.dart';
+void main() {
+ testWidgets('pending actual keyboard callback cannot reopen explicit close', (tester) async {
+  final editor=tester.editor..addParagraph(initialText:'ab');
+  await editor.startTesting();
+  await editor.updateSelection(Selection.collapsed(Position(path:[0],offset:2)));
+  final keyboard=tester.state<KeyboardServiceWidgetState>(find.byType(KeyboardServiceWidget));
+  final input=keyboard.textInputService as NonDeltaTextInputService;
+  final interceptor=_Wait(); keyboard.registerInterceptor(interceptor);
+  final pending=input.apply([const TextEditingDeltaInsertion(oldText:' ab',textInserted:'X',insertionOffset:3,selection:TextSelection.collapsed(offset:4),composing:TextRange.empty)]);
+  expect(interceptor.started.isCompleted,true);
+  keyboard.closeKeyboard(); expect(input.attached,false);
+  interceptor.release.complete(); await pending; await tester.pump();
+  expect(editor.document.first!.delta!.toPlainText(),'ab');
+  expect(input.attached,false);
+ });
+}
+class _Wait extends AppFlowyKeyboardServiceInterceptor {
+ final started=Completer<void>(); final release=Completer<void>();
+ @override Future<bool> interceptInsert(TextEditingDeltaInsertion insertion,EditorState editorState,List<CharacterShortcutEvent> events)async{started.complete();await release.future;return false;}
+}

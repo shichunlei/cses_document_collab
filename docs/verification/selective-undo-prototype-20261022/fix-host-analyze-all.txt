@@ -1,0 +1,61 @@
+Resolving dependencies...
+Downloading packages...
+  android_file_picker 2.0.1 (2.1.1 available)
+  archive 4.5.1 (4.5.2 available)
+  cached_network_image 3.4.1 (4.0.5 available)
+  cached_network_image_platform_interface 4.1.1 (5.0.3 available)
+  cached_network_image_web 1.3.1 (2.0.3 available)
+  camera_android_camerax 0.7.5+1 (0.7.6 available)
+  camera_avfoundation 0.10.3+1 (0.11.1 available)
+  clock 1.1.2 (1.1.3 available)
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  file_picker_darwin 2.2.0 (2.3.2 available)
+  file_picker_platform_interface 4.1.0 (4.2.0 available)
+  file_picker_web 4.1.0 (4.2.0 available)
+  hive_ce 2.21.0 (2.22.0 available)
+  hooks 2.0.2 (2.2.0 available)
+  image_cropper 12.2.1 (13.0.0 available)
+  image_cropper_for_web 7.0.0 (8.0.1 available)
+  image_cropper_platform_interface 8.0.0 (9.0.0 available)
+  intl 0.20.2 (0.20.3 available)
+  matcher 0.12.19 (0.12.20 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  meta 1.18.0 (1.19.0 available)
+  metalink 2.1.0 (2.2.0 available)
+  objective_c 9.5.0 (9.6.2 available)
+  permission_handler 12.0.3 (13.0.2 available)
+  permission_handler_android 13.0.1 (14.1.0 available)
+  permission_handler_apple 9.6.2 (9.6.3 available)
+  petitparser 7.0.2 (7.1.0 available)
+  qr 3.0.2 (4.0.0 available)
+  record_use 0.6.0 (1.1.1 available)
+  shared_preferences_android 2.4.28 (2.5.2 available)
+  shared_preferences_foundation 2.5.7 (2.6.0 available)
+  sqflite 2.4.4+1 (2.4.5 available)
+  sqflite_android 2.4.4 (2.4.5 available)
+  sqflite_common 2.5.13+1 (2.5.14 available)
+  sqflite_darwin 2.4.4 (2.4.4+1 available)
+  sqflite_platform_interface 2.4.2 (2.4.3 available)
+  stack_trace 1.12.1 (1.12.2 available)
+  test_api 0.7.11 (0.7.15 available)
+  vector_graphics 1.2.3 (1.2.4 available)
+  vector_graphics_compiler 1.3.1 (1.3.2 available)
+  vector_math 2.2.0 (2.4.3 available)
+  video_player_avfoundation 2.12.1 (2.12.2 available)
+  vm_service 15.3.0 (15.4.0 available)
+  webview_flutter_wkwebview 3.26.2 (3.27.2 available)
+  xml 7.0.1 (7.1.0 available)
+Got dependencies!
+46 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+Analyzing mobile-collab-demo...                                 
+
+   info • The imported package 'bot_toast' isn't a dependency of the importing package. Try adding a dependency for 'bot_toast' in the 'pubspec.yaml' file • lib/src/demo/app.dart:1:8 • depend_on_referenced_packages
+   info • The imported package 'file_picker' isn't a dependency of the importing package. Try adding a dependency for 'file_picker' in the 'pubspec.yaml' file • lib/src/demo/cses_editor_media_upload_service.dart:12:8 • depend_on_referenced_packages
+   info • The imported package 'mime' isn't a dependency of the importing package. Try adding a dependency for 'mime' in the 'pubspec.yaml' file • lib/src/demo/cses_editor_media_upload_service.dart:13:8 • depend_on_referenced_packages
+   info • The imported package 'file_picker' isn't a dependency of the importing package. Try adding a dependency for 'file_picker' in the 'pubspec.yaml' file • lib/src/demo/markdown_file_picker.dart:5:8 • depend_on_referenced_packages
+   info • Missing an 'await' for the 'Future' computed by this expression. Try adding an 'await' or wrapping the expression with 'unawaited' • packages/cses_document_collab/lib/src/editor/collab_video_block.dart:265:21 • unawaited_futures
+   info • Unclosed instance of 'Sink'. Try invoking 'close' in the function in which the 'Sink' was created • packages/cses_document_collab/test/collab_controller_native_test.dart:186:9 • close_sinks
+
+6 issues found. (ran in 16.8s)

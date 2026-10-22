@@ -1,0 +1,55 @@
+[
+  {
+    "name": "rust-format",
+    "command": [
+      "cargo",
+      "fmt",
+      "--manifest-path",
+      "packages/cses_document_collab/rust/Cargo.toml",
+      "--check"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "rust-check",
+    "command": [
+      "cargo",
+      "check",
+      "--manifest-path",
+      "packages/cses_document_collab/rust/Cargo.toml"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "rust-prototype-check",
+    "command": [
+      "cargo",
+      "check",
+      "--manifest-path",
+      "packages/cses_document_collab/rust/Cargo.toml",
+      "--features",
+      "history-prototype"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "rust-tests",
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "packages/cses_document_collab/rust/Cargo.toml"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "rust-build",
+    "command": [
+      "cargo",
+      "build",
+      "--manifest-path",
+      "packages/cses_document_collab/rust/Cargo.toml"
+    ],
+    "exit_code": 0
+  }
+]

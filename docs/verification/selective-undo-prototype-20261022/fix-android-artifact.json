@@ -1,0 +1,87 @@
+{
+  "apk": "build/app/outputs/flutter-apk/app-debug.apk",
+  "sha256": "1899d589d33339bbdc51549f939332d91874cc6aed6a44f576cb0c189113175d",
+  "sourceChecks": {
+    "packages/appflowy_editor/lib/appflowy_editor.dart": {
+      "sha256": "7edbc81d579834b20493486d9e82d45c6df1b3ab8efba78e3f5bbf0570aad54c",
+      "embeddedExactSource": true
+    },
+    "packages/appflowy_editor/lib/src/editor/editor_component/service/ime/character_shortcut_event_helper.dart": {
+      "sha256": "625e5691dbe6cbe482c0efa02aa831d910b1d2014f6e08272275344a7a876819",
+      "embeddedExactSource": true
+    },
+    "packages/appflowy_editor/lib/src/editor/editor_component/service/ime/delta_input_on_insert_impl.dart": {
+      "sha256": "e6ff9f5f26d45d6b7373cf3208fef0e1ed8ab627f103daf6d5edeb86d7ae5798",
+      "embeddedExactSource": true
+    },
+    "packages/appflowy_editor/lib/src/editor/editor_component/service/ime/delta_input_on_non_text_update_impl.dart": {
+      "sha256": "8f58b5b4ccaa221749d3d4d8a7a244809066b39cc83a0e139a95e1e96911f2cf",
+      "embeddedExactSource": true
+    },
+    "packages/appflowy_editor/lib/src/editor/editor_component/service/ime/delta_input_on_replace_impl.dart": {
+      "sha256": "e0676a615fbee6490bb0acdc6bc52ea800b9d8073731d6c923cd4214248604e1",
+      "embeddedExactSource": true
+    },
+    "packages/appflowy_editor/lib/src/editor/editor_component/service/ime/non_delta_input_service.dart": {
+      "sha256": "c0f1b37530c38a4d5e83dca8c2071d824473a96f368ade47448ecb00678be4d0",
+      "embeddedExactSource": true
+    },
+    "packages/appflowy_editor/lib/src/editor/editor_component/service/keyboard_service_widget.dart": {
+      "sha256": "eca316762cdf69a80d1449b6c9b3208c9e153496549a1e575f93856aed7c29e6",
+      "embeddedExactSource": true
+    },
+    "packages/appflowy_editor/lib/src/editor_state.dart": {
+      "sha256": "5563a0e01d20d97849f823ce35252701b8e504a581a6a1a7aa1081b8ba7f7b18",
+      "embeddedExactSource": true
+    },
+    "packages/appflowy_editor/lib/src/history/undo_manager.dart": {
+      "sha256": "6c1c5591dc87e89490fdecc8414e7b989de3160c7e617d8347b49cb60c37bd25",
+      "embeddedExactSource": true
+    },
+    "packages/cses_document_collab/lib/src/controller/collab_controller.dart": {
+      "sha256": "b3abe38f1e1383471b454f0d01275a07133770c34b3930e626de3d225118a328",
+      "embeddedExactSource": true
+    },
+    "packages/cses_document_collab/lib/src/editor/appflowy_block_editor_adapter.dart": {
+      "sha256": "3eab82ff3f7fca3e3669ce2c920010b240818aadc7e7860fbee908c2851f3c44",
+      "embeddedExactSource": true
+    },
+    "packages/cses_document_collab/lib/src/editor/collab_native_selection.dart": {
+      "sha256": "efb311c0b65b0f5c2816ffc4c31ce5c1fee3512891ac05107ad1a88a8b8d03d2",
+      "embeddedExactSource": true
+    },
+    "packages/cses_document_collab/lib/src/editor/collaborative_editor_page.dart": {
+      "sha256": "d368a6c44fd5ec68ca72706b9a6ff44f0f97242b6fbfb96238fbb5d2122a15c7",
+      "embeddedExactSource": true
+    },
+    "packages/cses_document_collab/lib/src/native/api/collab/history.dart": {
+      "sha256": "ce3eaab792807ad63613986da030812d12942983d79d50d6c827c851413064f9",
+      "embeddedExactSource": true
+    },
+    "packages/cses_document_collab/lib/src/native/frb_generated.dart": {
+      "sha256": "3dcb2dd5fabc8e5d0c4b3c2120374f8e40d23e0877462ff012682f29c7484959",
+      "embeddedExactSource": true
+    },
+    "packages/cses_document_collab/lib/src/native/frb_generated.io.dart": {
+      "sha256": "58ae6b24413b4f9148a39a108ff0d3a6b4a0b2544ad7110eeb917a3dbc572408",
+      "embeddedExactSource": true
+    }
+  },
+  "excludedConditionalSource": {
+    "packages/cses_document_collab/lib/src/native/frb_generated.web.dart": "Android uses IO; this source is excluded from the APK"
+  },
+  "nativeLibraries": {
+    "lib/arm64-v8a/libcses_collab_core.so": {
+      "size": 7281784,
+      "sha256": "62194a75414e3c688255934a94b2a68212e790a0d0d999c7c71e21ee80d08a67"
+    },
+    "lib/armeabi-v7a/libcses_collab_core.so": {
+      "size": 4474248,
+      "sha256": "d5eac40de75199422c0cb0ccedc41a1818a2d9b173543fe115949ecbb00e142f"
+    },
+    "lib/x86_64/libcses_collab_core.so": {
+      "size": 7876912,
+      "sha256": "2c953bd26abfebafd1bfc8526a25cb53755731036cc26651a1dc5dbb22011049"
+    }
+  }
+}

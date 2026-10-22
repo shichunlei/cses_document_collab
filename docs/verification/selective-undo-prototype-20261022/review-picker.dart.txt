@@ -1,0 +1,450 @@
+import 'dart:async';
+import 'package:cses_document_collab/src/editor/collab_host_mention_ui.dart';
+import 'package:flutter/foundation.dart';
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/cses_document_collab.dart';
+import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
+import 'package:cses_document_collab/src/native/api/collab.dart' as native;
+import 'package:cses_document_collab/src/native/api/collab/history.dart' as history;
+import 'package:cses_document_collab/src/native/frb_generated.dart';
+import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+/// Exercise real FRB/native SQLite and the same editor entry used by shortcuts.
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  late Map<String, dynamic> fixture;
+  setUpAll(() async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockStreamHandler(
+      const EventChannel('keyboardHeightEventChannel'),
+      MockStreamHandler.inline(onListen: (_, events) => events.success(0.0)),
+    );
+    final suffix = Platform.isMacOS ? 'dylib' : 'so';
+    await RustLib.init(
+      externalLibrary: ExternalLibrary.open(File('rust/target/debug/libcses_collab_core.$suffix').absolute.path),
+    );
+    fixture =
+        jsonDecode(await File('rust/tests/fixtures/native-history-peer.json').readAsString()) as Map<String, dynamic>;
+  });
+
+  test('REVIEW remote unrelated edit preserves host picker permission', () async {
+    final pending = Completer<CollabMentionUser?>();
+    ValueListenable<bool>? permission;
+    final services = CollabHostServices(pickMentionUser: (context, {required keyword, required canEdit}) {
+      permission = canEdit;
+      return pending.future;
+    });
+    final h = await _Harness.open(fixture, services: services);
+    try {
+      final result = pickHostMentionUser(_ReviewContext(), h.owner.editorState);
+      expect(permission!.value, isTrue);
+      h.gateway.update(h.update('prefix'));
+      await _settle();
+      expect(h.owner.canEdit, isTrue);
+      expect(h.owner.editorState.editable, isTrue);
+      print('REVIEW permission after unrelated remote text update=${permission!.value}');
+      const user=CollabMentionUser(id: 'user2',name:'User Two');
+      pending.complete(user);
+      expect(await result, user, reason: 'Remote text update must not revoke the pending host picker');
+    } finally { await h.close(); }
+  });
+
+  test('legacy persisted draft uses native undo and reopens without personal history', () async {
+    final dir = await Directory.systemTemp.createTemp('native-history-draft-');
+    final owner = CollabController.localDraft(databasePath: '${dir.path}/updates.sqlite');
+    try {
+      await owner.initialize();
+      await _insert(owner, owner.editorState.document.first!, 0, '你好😀');
+      expect(owner.canUndo, isTrue);
+      expect(owner.editorState.undoManager.undoStack.isEmpty, isTrue);
+      owner.editorState.undoManager.undo();
+      await owner.undo();
+      expect(native.currentBlocks(), isEmpty);
+      expect(owner.canRedo, isTrue);
+      owner.editorState.undoManager.redo();
+      await owner.redo();
+      expect(native.currentBlocks().single.text, '你好😀');
+      expect(owner.editorState.selection?.start.offset, 4);
+      expect(owner.editorState.undoManager.redoStack.isEmpty, isTrue);
+      await owner.close();
+      final reopened = CollabController.localDraft(databasePath: '${dir.path}/updates.sqlite');
+      try {
+        await reopened.initialize();
+        expect(native.currentBlocks().single.text, '你好😀');
+        expect(reopened.canUndo, isFalse);
+      } finally {
+        await reopened.close();
+      }
+    } finally {
+      await owner.close();
+      await dir.delete(recursive: true);
+    }
+  });
+
+  testWidgets('page undo and redo buttons use native history without entering preview', (tester) async {
+    final directory = (await tester.runAsync(() => Directory.systemTemp.createTemp('native-history-page-')))!;
+    final owner = CollabController.localDraft(databasePath: '${directory.path}/updates.sqlite');
+    try {
+      await owner.initialize();
+      await tester.pumpWidget(MaterialApp(home: CollaborativeEditorPage(collab: owner)));
+      await tester.pump();
+      final undo = find.byKey(const ValueKey('editor-undo'));
+      final redo = find.byKey(const ValueKey('editor-redo'));
+      expect(tester.widget<IconButton>(undo).onPressed, isNull);
+      final state = owner.editorState;
+      final node = state.document.first!;
+      state.selection = Selection.single(path: node.path, startOffset: 0);
+      final transaction = state.transaction..insertText(node, 0, '你好😀');
+      transaction.afterSelection = Selection.single(path: node.path, startOffset: 4);
+      await state.apply(transaction);
+      await tester.pump();
+      expect(tester.widget<IconButton>(undo).onPressed, isNotNull);
+      await tester.tap(undo);
+      await tester.pump();
+      expect(native.currentBlocks(), isEmpty);
+      expect(owner.canEdit, isTrue);
+      expect(state.editable, isTrue);
+      expect(tester.widget<IconButton>(redo).onPressed, isNotNull);
+      await tester.tap(redo);
+      await tester.pump();
+      expect(state.document.first!.delta!.toPlainText(), '你好😀');
+      expect(state.selection?.start.offset, 4);
+      expect(state.undoManager.undoStack.isEmpty, isTrue);
+      expect(tester.takeException(), isNull);
+    } finally {
+      await tester.pumpWidget(const SizedBox.shrink());
+      final closing = owner.close();
+      await tester.pump();
+      await tester.runAsync(() => closing);
+      await tester.pump(const Duration(milliseconds: 200));
+      await tester.runAsync(() => directory.delete(recursive: true));
+    }
+  });
+
+  test('remote deletion clears the selected endpoint instead of reusing its old path', () async {
+    final h = await _Harness.open(fixture);
+    try {
+      h.owner.editorState.selection = Selection.single(path: h.paragraph.path, startOffset: 1);
+      h.gateway.update(h.update('delete'));
+      await _settle();
+      expect(h.owner.editorState.selection, isNull);
+      expect(native.currentBlocks().any((block) => block.id == fixture['paragraphId']), isFalse);
+    } finally {
+      await h.close();
+    }
+  });
+
+  test('transport exception after commit still projects accepted native history', () async {
+    final h = await _Harness.open(fixture);
+    try {
+      await _insert(h.owner, h.paragraph, 1, 'X');
+      h.gateway.rejectUpdates = true;
+      await h.owner.undo();
+      expect(h.paragraph.delta!.toPlainText(), fixture['text']);
+      expect(history.documentHistoryState().undoDepth, 0);
+      expect(history.documentHistoryState().redoDepth, 1);
+      expect(h.owner.error, contains('已保存在本地'));
+      h.gateway.rejectUpdates = false;
+      await h.owner.redo();
+      expect(h.paragraph.delta!.toPlainText(), '正X文😀');
+      expect(h.owner.error, isNull);
+    } finally {
+      await h.close();
+    }
+  });
+
+  for (final kind in ['prefix', 'reorder']) {
+    test('real peer $kind preserves native history and restores caret by ID', () async {
+      final h = await _Harness.open(fixture);
+      try {
+        final owner = h.owner;
+        await _insert(owner, h.paragraph, 1, 'X');
+        h.gateway.update(h.update(kind));
+        await _settle();
+        expect(owner.canUndo, isTrue);
+        expect(history.documentHistoryState().undoDepth, 1);
+        owner.editorState.undoManager.undo();
+        await owner.undo();
+        final expected = kind == 'prefix' ? '远端-${fixture['text']}' : fixture['text'];
+        expect(native.currentBlocks().firstWhere((block) => block.id == fixture['paragraphId']).text, expected);
+        expect(owner.editorState.selection?.start.path, h.paragraph.path);
+        expect(owner.editorState.selection?.start.offset, kind == 'prefix' ? 4 : 1);
+        expect(owner.canRedo, isTrue);
+        owner.editorState.undoManager.redo();
+        await owner.redo();
+        expect(h.paragraph.delta!.toPlainText(), kind == 'prefix' ? '远端-正X文😀' : '正X文😀');
+        expect(owner.editorState.selection?.start.offset, kind == 'prefix' ? 5 : 2);
+        expect(h.gateway.localUpdates, isNotEmpty);
+      } finally {
+        await h.close();
+      }
+    });
+  }
+
+  test('backwards format selection and remote marks survive undo and redo', () async {
+    final h = await _Harness.open(fixture);
+    try {
+      final state = h.owner.editorState;
+      state.selection = Selection(
+        start: Position(path: h.paragraph.path, offset: 2),
+        end: Position(path: h.paragraph.path, offset: 0),
+      );
+      await state.apply(state.transaction..formatText(h.paragraph, 0, 2, {'underline': true}));
+      await _settle();
+      h.gateway.update(h.update('format'));
+      await _settle();
+      await h.owner.undo();
+      expect(
+        state.selection,
+        Selection(
+          start: Position(path: h.paragraph.path, offset: 2),
+          end: Position(path: h.paragraph.path, offset: 0),
+        ),
+      );
+      final paragraph = native.currentBlocks().firstWhere((block) => block.id == fixture['paragraphId']);
+      expect(paragraph.segments.first.italic, isTrue);
+      expect(paragraph.segments.first.underline, isFalse);
+      await h.owner.redo();
+      expect(
+        native.currentBlocks().firstWhere((block) => block.id == fixture['paragraphId']).segments.first.underline,
+        isTrue,
+      );
+    } finally {
+      await h.close();
+    }
+  });
+
+  test('lock and host revocation keep native history until editing is allowed', () async {
+    final h = await _Harness.open(fixture);
+    try {
+      await _insert(h.owner, h.paragraph, 1, 'X');
+      h.gateway.update(h.update('lock'));
+      await _settle();
+      final before = native.encodeDocumentDiff(stateVector: Uint8List.fromList([0]));
+      await h.owner.undo();
+      expect(native.encodeDocumentDiff(stateVector: Uint8List.fromList([0])), before);
+      expect(history.documentHistoryState().undoDepth, 1);
+      h.gateway.update(h.update('unlock'));
+      await _settle();
+      await h.owner.setEditable(false);
+      await h.owner.undo();
+      expect(history.documentHistoryState().undoDepth, 1);
+      await h.owner.setEditable(true);
+      await _settle();
+      await h.owner.undo();
+      expect(history.documentHistoryState().undoDepth, 0);
+    } finally {
+      await h.close();
+    }
+  });
+
+  for (final commit in [false, true]) {
+    test('real SQLite ${commit ? 'COMMIT' : 'write'} failure leaves UI/history and permits retry', () async {
+      final h = await _Harness.open(fixture);
+      try {
+        await _insert(h.owner, h.paragraph, 1, 'X');
+        final before = h.owner.editorState.document.toJson();
+        final selection = h.owner.editorState.selection;
+        final bytes = native.encodeDocumentDiff(stateVector: Uint8List.fromList([0]));
+        await _sql(
+          h.database,
+          commit
+              ? 'CREATE TABLE history_guard_parent(id INTEGER PRIMARY KEY); CREATE TABLE history_guard_child(parent INTEGER REFERENCES history_guard_parent(id) DEFERRABLE INITIALLY DEFERRED); CREATE TRIGGER fail_history AFTER INSERT ON document_updates BEGIN INSERT INTO history_guard_child VALUES (1); END;'
+              : "CREATE TRIGGER fail_history BEFORE INSERT ON document_updates BEGIN SELECT RAISE(ABORT,'history failure'); END;",
+        );
+        for (final redo in [false, true]) {
+          if (redo) {
+            await _sql(h.database, 'DROP TRIGGER fail_history;');
+            await h.owner.undo();
+            await _sql(
+              h.database,
+              commit
+                  ? 'CREATE TRIGGER fail_history AFTER INSERT ON document_updates BEGIN INSERT INTO history_guard_child VALUES(1); END;'
+                  : "CREATE TRIGGER fail_history BEFORE INSERT ON document_updates BEGIN SELECT RAISE(ABORT,'history failure'); END;",
+            );
+          }
+          final snapshot = h.owner.editorState.document.toJson();
+          final counts = history.documentHistoryState();
+          if (redo) {
+            await h.owner.redo();
+          } else {
+            await h.owner.undo();
+          }
+          expect(h.owner.editorState.document.toJson(), snapshot);
+          expect(history.documentHistoryState(), counts);
+          if (!redo) {
+            expect(h.owner.editorState.document.toJson(), before);
+            expect(h.owner.editorState.selection, selection);
+            expect(native.encodeDocumentDiff(stateVector: Uint8List.fromList([0])), bytes);
+          }
+        }
+        await _sql(h.database, 'DROP TRIGGER fail_history;');
+        await h.owner.redo();
+        expect(h.paragraph.delta!.toPlainText(), '正X文😀');
+      } finally {
+        await h.close();
+      }
+    });
+  }
+
+  test('closing during an undo prevents a late native call into the next document', () async {
+    final h = await _Harness.open(fixture);
+    await _insert(h.owner, h.paragraph, 1, 'X');
+    final pending = h.owner.undo();
+    await h.owner.close();
+    await pending;
+    final other = CollabController.localDraft(databasePath: '${h.directory.path}/other.sqlite');
+    try {
+      await other.initialize();
+      await h.owner.undo();
+      expect(native.currentBlocks(), isEmpty);
+      expect(other.editorState.undoManager.externalHistory, isNotNull);
+    } finally {
+      await other.close();
+      await h.close();
+    }
+  });
+}
+
+/// Wait for controller projection microtasks; no device/network timing is assumed.
+Future<void> _settle() async {
+  for (var i = 0; i < 4; i++) {
+    await Future<void>.delayed(Duration.zero);
+  }
+}
+
+/// Insert [text] at [offset] in borrowed [node] through [owner]'s real editor.
+Future<void> _insert(CollabController owner, Node node, int offset, String text) async {
+  final state = owner.editorState;
+  state.selection = Selection.single(path: node.path, startOffset: offset);
+  final transaction = state.transaction..insertText(node, offset, text);
+  transaction.afterSelection = Selection.single(path: node.path, startOffset: offset + text.length);
+  await state.apply(transaction, skipHistoryDebounce: true);
+  await _settle();
+}
+
+/// Execute test-only [statement] against real SQLite [database]. The sqlite3 CLI
+/// is a prerequisite for this native gate; absence/errors fail rather than skip.
+Future<void> _sql(String database, String statement) async {
+  final result = await Process.run('sqlite3', [database, statement]);
+  expect(result.exitCode, 0, reason: '${result.stderr}');
+}
+
+/// Own one temporary formal controller and borrowed fake transport for a test.
+class _Harness {
+  /// Store owned [directory]/[owner] and borrowed [gateway]/[fixture].
+  _Harness(this.directory, this.owner, this.gateway, this.fixture);
+
+  /// Owned temporary cache directory, removed after the controller closes.
+  final Directory directory;
+
+  /// Owned controller; close it before removing SQLite or opening another Doc.
+  final CollabController owner;
+
+  /// In-memory transport used to deliver independent peer updates.
+  final _Gateway gateway;
+
+  /// Borrowed immutable fixture shared by cases, without native resources.
+  final Map<String, dynamic> fixture;
+
+  /// The currently projected paragraph, found by stable identity after reorders.
+  Node get paragraph => owner.editorState.document.root.children.firstWhere(
+    (node) => node.attributes[AppFlowyBlockEditorAdapter.collabBlockIdAttribute] == fixture['paragraphId'],
+  );
+
+  /// Native cache path used by this controller's real SQLite connection.
+  String get database => '${directory.path}/updates.sqlite';
+
+  /// Return the independent peer update named [kind].
+  Uint8List update(String kind) => Uint8List.fromList((fixture['updates'][kind] as List).cast<int>());
+
+  /// Initialize a real controller from borrowed [fixture]; caller must [close].
+  static Future<_Harness> open(Map<String, dynamic> fixture, {CollabHostServices services=const CollabHostServices()}) async {
+    final directory = await Directory.systemTemp.createTemp('native-history-editor-');
+    final gateway = _Gateway();
+    final owner = CollabController.cses(
+      config: CollabDocumentConfig(
+        documentId: fixture['rootId'] as String,
+        serverIdentity: 'wss://test.invalid/ws',
+        companyId: 'company',
+        userId: 'user',
+        editable: true,
+        databasePath: '${directory.path}/updates.sqlite',
+      ),
+      gateway: gateway,
+      services: services,
+    );
+    await owner.initialize();
+    gateway.sync(await File('rust/tests/fixtures/blockcraft-basic.update').readAsBytes());
+    await _settle();
+    return _Harness(directory, owner, gateway, fixture);
+  }
+
+  /// Close owned controller before removing its database; transport has no socket.
+  Future<void> close() async {
+    await owner.close();
+    if (await directory.exists()) await directory.delete(recursive: true);
+  }
+}
+
+/// Deliver real Yjs fixtures through the production session's callbacks.
+class _Gateway implements CsesCollabGateway {
+  /// Borrowed session handlers, released on unregister.
+  Map<String, void Function(Map<String, dynamic>)> _callbacks = {};
+
+  /// Encoded accepted local updates; this test transport never sends a socket.
+  final List<String> localUpdates = [];
+
+  /// Inject a synchronous host transport failure after native persistence.
+  bool rejectUpdates = false;
+
+  /// Test transport is always connected and owns no physical connection.
+  @override
+  bool get isConnected => true;
+
+  /// No connection changes are emitted during a case.
+  @override
+  Stream<bool> get connectionStates => const Stream<bool>.empty();
+
+  /// Borrow [callbacks] for [pageId]/[documentId]/[instanceId] until unregister.
+  @override
+  Future<void> register({
+    required String pageId,
+    required String documentId,
+    required String instanceId,
+    required Map<String, void Function(Map<String, dynamic>)> callbacks,
+  }) async {
+    _callbacks = callbacks;
+  }
+
+  /// Record [action]/[body] for [pageId]; no network or server ACK is simulated.
+  /// [rejectUpdates] throws on document updates to exercise the post-commit boundary.
+  @override
+  bool send(String pageId, String action, Map<String, dynamic> body) {
+    if (action == 'collabUpdate' && rejectUpdates) throw StateError('test transport failure');
+    if (action == 'collabUpdate') localUpdates.add(body['data'] as String);
+    return true;
+  }
+
+  /// Release borrowed handlers for [pageId] without disposing external resources.
+  @override
+  Future<void> unregister(String pageId) async {
+    _callbacks = {};
+  }
+
+  /// Deliver initial [bytes] through the normal state-vector handshake.
+  void sync(List<int> bytes) => _callbacks['collabSync']!({
+    'data': base64Encode(bytes),
+    'stateVector': base64Encode([0]),
+  });
+
+  /// Deliver independent peer [bytes] without echoing a local edit.
+  void update(List<int> bytes) => _callbacks['collabUpdate']!({'data': base64Encode(bytes)});
+}
+
+class _ReviewContext implements BuildContext { @override bool get mounted => true; @override dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation); }

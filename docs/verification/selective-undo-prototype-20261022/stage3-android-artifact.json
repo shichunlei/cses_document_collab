@@ -1,0 +1,52 @@
+{
+  "apk": "build/app/outputs/flutter-apk/app-debug.apk",
+  "sha256": "690db6abb237f63420295704e374ef0e1dfd6898afb90c62b3b5cfa5c6a05dd2",
+  "sourceChecks": {
+    "packages/cses_document_collab/lib/src/controller/collab_controller.dart": {
+      "sha256": "5d39d780554c9e3e7cdb1c921c88ddbaa55ea54cbfb5ba0e4d9763b6dc00f1b4",
+      "embeddedExactSource": true
+    },
+    "packages/cses_document_collab/lib/src/editor/collab_native_selection.dart": {
+      "sha256": "efb311c0b65b0f5c2816ffc4c31ce5c1fee3512891ac05107ad1a88a8b8d03d2",
+      "embeddedExactSource": true
+    },
+    "packages/cses_document_collab/lib/src/editor/appflowy_block_editor_adapter.dart": {
+      "sha256": "3b907ea10829fd5c1d5c09fe6d3927ba47c05374eff243068574b9bf4955b512",
+      "embeddedExactSource": true
+    },
+    "packages/cses_document_collab/lib/src/editor/collaborative_editor_page.dart": {
+      "sha256": "44a3235fe15ce4c99fe50c8235f0559e56fa517d473231ff748bad583847c445",
+      "embeddedExactSource": true
+    },
+    "packages/cses_document_collab/lib/src/native/api/collab/history.dart": {
+      "sha256": "ce3eaab792807ad63613986da030812d12942983d79d50d6c827c851413064f9",
+      "embeddedExactSource": true
+    },
+    "packages/cses_document_collab/lib/src/native/frb_generated.dart": {
+      "sha256": "3dcb2dd5fabc8e5d0c4b3c2120374f8e40d23e0877462ff012682f29c7484959",
+      "embeddedExactSource": true
+    },
+    "packages/appflowy_editor/lib/src/history/undo_manager.dart": {
+      "sha256": "1e2c1620891352b5aad84299a88d59e02ab2f6c8e635ed616b00974b224c8805",
+      "embeddedExactSource": true
+    },
+    "packages/appflowy_editor/lib/src/editor_state.dart": {
+      "sha256": "7a1c27a55b51bde50f8d1baad037b6475cb94d20382e36fc9c0fd59b85c45b1c",
+      "embeddedExactSource": true
+    }
+  },
+  "nativeLibraries": {
+    "lib/arm64-v8a/libcses_collab_core.so": {
+      "size": 7277136,
+      "sha256": "672342dc97eccc1292f57202669be51edee2761dd2b40bd14234d07d8b04821b"
+    },
+    "lib/armeabi-v7a/libcses_collab_core.so": {
+      "size": 4471880,
+      "sha256": "3380a6591985746fd11418c3284add017d29f82f100a1d25bab1e5a3e0b7b672"
+    },
+    "lib/x86_64/libcses_collab_core.so": {
+      "size": 7871792,
+      "sha256": "a3a4bb98337b069e162db2134a96977890fd7a6c1b9fc759efc55eb2c3a4a4e6"
+    }
+  }
+}

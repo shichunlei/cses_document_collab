@@ -1,0 +1,18 @@
+{
+  "checked_at": "2026-10-22",
+  "registry": "http://npm.runtongqiuben.com/@ccc%2fblockcraft",
+  "latest": "0.11.27",
+  "dist": {
+    "integrity": "sha512-nE0/fG7LYmsbHaqF6MwRVPb6BXHM9LW/5PitpdWJk4x4qlDott+i+O/iVnPQDfQg7B3qEONvQtfz1/kn62Vsyw==",
+    "shasum": "7edb6a7e3316b5a505024932e6b2e4a1d7b83823",
+    "tarball": "http://npm.runtongqiuben.com/@ccc/blockcraft/-/blockcraft-0.11.27.tgz"
+  },
+  "downloaded_sha512": "nE0/fG7LYmsbHaqF6MwRVPb6BXHM9LW/5PitpdWJk4x4qlDott+i+O/iVnPQDfQg7B3qEONvQtfz1/kn62Vsyw==",
+  "integrity_verified": true,
+  "desktop": {
+    "path": "/System/Volumes/Data/workspace/cses-client",
+    "declaration": "0.11.24",
+    "installed": "0.11.17",
+    "yarn_lock": "\"@ccc/blockcraft@0.11.24\":\n  version \"0.11.24\"\n  resolved \"http://npm.runtongqiuben.com/@ccc/blockcraft/-/blockcraft-0.11.24.tgz#e1cb38a32d6d44f5edb9b7ecd2087cafcdd0131b\"\n  integrity sha512-LCb/ZygIWkkXTwb9SvAgckFg1j6C1cGlfbtDTGHNjbMHmbLyCjK2rPftLl/+SY03AlrpG6P95hb5z16G6D8/Hw==\n  dependencies:"
+  }
+}

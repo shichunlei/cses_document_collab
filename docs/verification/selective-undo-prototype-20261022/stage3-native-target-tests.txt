@@ -1,0 +1,132 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: (setUpAll)
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: legacy persisted draft uses native undo and reopens without personal history
+00:00 +1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: page undo and redo buttons use native history without entering preview
+00:00 +2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: page undo and redo buttons use native history without entering preview
+00:01 +3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: remote deletion clears the selected endpoint instead of reusing its old path
+00:01 +4: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: transport exception after commit still projects accepted native history
+DocCollab: 历史更新已落盘但即时发送失败: Bad state: test transport failure
+#0      _Gateway.send (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart:392:52)
+#1      CsesDocCollaborationSession.sendLocalUpdate (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:199:18)
+#2      CollabController._performNativeHistory (package:cses_document_collab/src/controller/collab_controller.dart:336:19)
+<asynchronous suspension>
+#3      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#4      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart:123:7)
+<asynchronous suspension>
+#5      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#6      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#7      Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:01 +5: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: real peer prefix preserves native history and restores caret by ID
+00:01 +6: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: real peer reorder preserves native history and restores caret by ID
+00:01 +7: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: backwards format selection and remote marks survive undo and redo
+00:01 +8: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: lock and host revocation keep native history until editing is allowed
+DocCollab: 原生撤销/重做被拒绝: READ_ONLY_BLOCK: p1
+#0      SimpleDecoder.decode (package:flutter_rust_bridge/src/codec/base.dart:34:9)
+#1      SseCodec._decode (package:flutter_rust_bridge/src/codec/sse.dart:45:55)
+#2      SseCodec.decodeWireSyncType (package:flutter_rust_bridge/src/codec/sse.dart:40:7)
+#3      BaseHandler.executeSync (package:flutter_rust_bridge/src/main_components/handler.dart:35:25)
+#4      RustLibApiImpl.crateApiCollabHistoryUndoDocument (package:cses_document_collab/src/native/frb_generated.dart:924:20)
+#5      undoDocument (package:cses_document_collab/src/native/api/collab/history.dart:48:6)
+#6      CollabController._performNativeHistory (package:cses_document_collab/src/controller/collab_controller.dart:329:28)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart:205:7)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#11     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:01 +9: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: real SQLite write failure leaves UI/history and permits retry
+DocCollab: 原生撤销/重做被拒绝: cannot persist Yjs update: history failure
+#0      SimpleDecoder.decode (package:flutter_rust_bridge/src/codec/base.dart:34:9)
+#1      SseCodec._decode (package:flutter_rust_bridge/src/codec/sse.dart:45:55)
+#2      SseCodec.decodeWireSyncType (package:flutter_rust_bridge/src/codec/sse.dart:40:7)
+#3      BaseHandler.executeSync (package:flutter_rust_bridge/src/main_components/handler.dart:35:25)
+#4      RustLibApiImpl.crateApiCollabHistoryUndoDocument (package:cses_document_collab/src/native/frb_generated.dart:924:20)
+#5      undoDocument (package:cses_document_collab/src/native/api/collab/history.dart:48:6)
+#6      CollabController._performNativeHistory (package:cses_document_collab/src/controller/collab_controller.dart:329:28)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart:252:13)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#11     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+DocCollab: 原生撤销/重做被拒绝: cannot persist Yjs update: history failure
+#0      SimpleDecoder.decode (package:flutter_rust_bridge/src/codec/base.dart:34:9)
+#1      SseCodec._decode (package:flutter_rust_bridge/src/codec/sse.dart:45:55)
+#2      SseCodec.decodeWireSyncType (package:flutter_rust_bridge/src/codec/sse.dart:40:7)
+#3      BaseHandler.executeSync (package:flutter_rust_bridge/src/main_components/handler.dart:35:25)
+#4      RustLibApiImpl.crateApiCollabHistoryRedoDocument (package:cses_document_collab/src/native/frb_generated.dart:798:20)
+#5      redoDocument (package:cses_document_collab/src/native/api/collab/history.dart:55:6)
+#6      CollabController._performNativeHistory (package:cses_document_collab/src/controller/collab_controller.dart:328:28)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart:250:13)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#11     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:01 +10: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: real SQLite COMMIT failure leaves UI/history and permits retry
+DocCollab: 原生撤销/重做被拒绝: cannot persist Yjs update: FOREIGN KEY constraint failed
+#0      SimpleDecoder.decode (package:flutter_rust_bridge/src/codec/base.dart:34:9)
+#1      SseCodec._decode (package:flutter_rust_bridge/src/codec/sse.dart:45:55)
+#2      SseCodec.decodeWireSyncType (package:flutter_rust_bridge/src/codec/sse.dart:40:7)
+#3      BaseHandler.executeSync (package:flutter_rust_bridge/src/main_components/handler.dart:35:25)
+#4      RustLibApiImpl.crateApiCollabHistoryUndoDocument (package:cses_document_collab/src/native/frb_generated.dart:924:20)
+#5      undoDocument (package:cses_document_collab/src/native/api/collab/history.dart:48:6)
+#6      CollabController._performNativeHistory (package:cses_document_collab/src/controller/collab_controller.dart:329:28)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart:252:13)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#11     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+DocCollab: 原生撤销/重做被拒绝: cannot persist Yjs update: FOREIGN KEY constraint failed
+#0      SimpleDecoder.decode (package:flutter_rust_bridge/src/codec/base.dart:34:9)
+#1      SseCodec._decode (package:flutter_rust_bridge/src/codec/sse.dart:45:55)
+#2      SseCodec.decodeWireSyncType (package:flutter_rust_bridge/src/codec/sse.dart:40:7)
+#3      BaseHandler.executeSync (package:flutter_rust_bridge/src/main_components/handler.dart:35:25)
+#4      RustLibApiImpl.crateApiCollabHistoryRedoDocument (package:cses_document_collab/src/native/frb_generated.dart:798:20)
+#5      redoDocument (package:cses_document_collab/src/native/api/collab/history.dart:55:6)
+#6      CollabController._performNativeHistory (package:cses_document_collab/src/controller/collab_controller.dart:328:28)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart:250:13)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#11     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:01 +11: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: closing during an undo prevents a late native call into the next document
+00:01 +12: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: (tearDownAll)
+00:01 +12: All tests passed!

@@ -1,0 +1,37 @@
+import 'dart:io';
+import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/cses_document_collab.dart';
+import 'package:cses_document_collab/src/native/frb_generated.dart';
+import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+/// Reproduce first typing after persisting a new empty draft paragraph.
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  setUpAll(() async {
+    await RustLib.init(externalLibrary: ExternalLibrary.open('/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/rust/target/debug/libcses_collab_core.dylib'));
+  });
+  test('new empty draft paragraph accepts its first text', () async {
+    final directory = await Directory.systemTemp.createTemp('review-empty-draft-');
+    final owner = CollabController.localDraft(databasePath: '${directory.path}/updates.sqlite');
+    try {
+      await owner.initialize();
+      final state = owner.editorState;
+      final paragraph = paragraphNode();
+      final add = state.transaction..insertNode([1], paragraph);
+      add.afterSelection = Selection.single(path: [1], startOffset: 0);
+      await state.apply(add);
+      await Future<void>.delayed(Duration.zero);
+      final node = state.document.root.children[1];
+      final input = state.transaction..insertText(node, 0, 'hello');
+      input.afterSelection = Selection.single(path: node.path, startOffset: 5);
+      await state.apply(input);
+      await Future<void>.delayed(Duration.zero);
+      expect(owner.error, isNull, reason: 'Normal typing must not be rejected');
+      expect(state.document.root.children[1].delta!.toPlainText(), 'hello');
+    } finally {
+      await owner.close();
+      await directory.delete(recursive: true);
+    }
+  });
+}

@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-10-22T12:05:35.028980+00:00",
+  "registry": "http://npm.runtongqiuben.com/",
+  "latest": "0.11.28",
+  "desktop": {
+    "declared": "0.11.24",
+    "yarnLocked": "0.11.24",
+    "installed": "0.11.17"
+  },
+  "latestIntegrity": "sha512-KNVpgHHAY6ds1bo+EvtiQjS80aoS5kS6oSuJ9nIaJlA8y6yelew5H7F1wTK/bS3Rl9fVyoNAnydz/Si8y0EACg==",
+  "samePreviouslyReadPackageSkillsMigrationsAndImplementation": true,
+  "historicalPnpm": "0.2.78",
+  "previousReadEvidence": "fix-blockcraft-version.json"
+}

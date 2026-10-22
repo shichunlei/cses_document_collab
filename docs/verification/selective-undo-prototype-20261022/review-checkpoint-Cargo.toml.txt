@@ -1,0 +1,6 @@
+[package]
+name="yrs_checkpoint_review"
+version="0.1.0"
+edition="2021"
+[dependencies]
+yrs={path="/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/rust/vendor/yrs-history",features=["small-client","sync","history-checkpoint"]}

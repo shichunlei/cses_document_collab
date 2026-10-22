@@ -1,0 +1,2 @@
+    Checking cses_collab_core v0.1.0 (/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/rust)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.52s

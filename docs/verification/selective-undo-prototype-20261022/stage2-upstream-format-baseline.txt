@@ -1,0 +1,25 @@
+Diff in /Users/cses-1/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/yrs-0.27.4/src/observer.rs:173:
+     }
+ }
+ 
+-
+ #[cfg(test)]
+ mod test {
+     use std::sync::atomic::{AtomicI32, AtomicU32, Ordering};
+Diff in /Users/cses-1/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/yrs-0.27.4/src/observer.rs:325:
+         assert_eq!(counter.load(Ordering::SeqCst), 0);
+     }
+ }
++
+Diff in /Users/cses-1/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/yrs-0.27.4/src/sync/protocol.rs:160:
+ 
+     /// Returns an [AwarenessUpdate] which is a serializable representation of a current `awareness`
+     /// instance.
+-    fn handle_awareness_query(
+-        &self,
+-        awareness: &mut Awareness,
+-    ) -> Result<Option<Message>, Error> {
++    fn handle_awareness_query(&self, awareness: &mut Awareness) -> Result<Option<Message>, Error> {
+         let update = awareness.update()?;
+         Ok(Some(Message::Awareness(update)))
+     }
