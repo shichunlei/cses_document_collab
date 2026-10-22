@@ -1,0 +1,4 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/document_editor_commands_test.dart
+00:00 +0: public paragraph command splits within a host container and restores text on undo
+00:00 +1: public block command respects capability selection and preserves undo
+00:00 +2: All tests passed!

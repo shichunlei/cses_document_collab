@@ -1,0 +1,85 @@
+Resolving dependencies...
+Downloading packages...
+  android_file_picker 2.0.1 (2.1.1 available)
+  archive 4.5.1 (4.5.2 available)
+  cached_network_image 3.4.1 (4.0.5 available)
+  cached_network_image_platform_interface 4.1.1 (5.0.3 available)
+  cached_network_image_web 1.3.1 (2.0.3 available)
+  camera_android_camerax 0.7.5+1 (0.7.6 available)
+  camera_avfoundation 0.10.3+1 (0.11.1 available)
+  clock 1.1.2 (1.1.3 available)
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  file_picker_darwin 2.2.0 (2.3.2 available)
+  file_picker_platform_interface 4.1.0 (4.2.0 available)
+  file_picker_web 4.1.0 (4.2.0 available)
+  hive_ce 2.21.0 (2.22.0 available)
+  hooks 2.0.2 (2.2.0 available)
+  image_cropper 12.2.1 (13.0.0 available)
+  image_cropper_for_web 7.0.0 (8.0.1 available)
+  image_cropper_platform_interface 8.0.0 (9.0.0 available)
+  intl 0.20.2 (0.20.3 available)
+  matcher 0.12.19 (0.12.20 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  meta 1.18.0 (1.19.0 available)
+  metalink 2.1.0 (2.2.0 available)
+  objective_c 9.5.0 (9.6.2 available)
+  permission_handler 12.0.3 (13.0.2 available)
+  permission_handler_android 13.0.1 (14.1.0 available)
+  permission_handler_apple 9.6.2 (9.6.3 available)
+  petitparser 7.0.2 (7.1.0 available)
+  qr 3.0.2 (4.0.0 available)
+  record_use 0.6.0 (1.1.1 available)
+  shared_preferences_android 2.4.28 (2.5.2 available)
+  shared_preferences_foundation 2.5.7 (2.6.0 available)
+  sqflite 2.4.4+1 (2.4.5 available)
+  sqflite_android 2.4.4 (2.4.5 available)
+  sqflite_common 2.5.13+1 (2.5.14 available)
+  sqflite_darwin 2.4.4 (2.4.4+1 available)
+  sqflite_platform_interface 2.4.2 (2.4.3 available)
+  stack_trace 1.12.1 (1.12.2 available)
+  test_api 0.7.11 (0.7.15 available)
+  vector_graphics 1.2.3 (1.2.4 available)
+  vector_graphics_compiler 1.3.1 (1.3.2 available)
+  vector_math 2.2.0 (2.4.3 available)
+  video_player_avfoundation 2.12.1 (2.12.2 available)
+  vm_service 15.3.0 (15.4.0 available)
+  webview_flutter_wkwebview 3.26.2 (3.27.2 available)
+  xml 7.0.1 (7.1.0 available)
+Got dependencies!
+46 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_clipboard_test.dart
+00:00 +0: mention copy yields readable names, ordinary Unicode and no model mutation
+00:00 +1: cut saved and reopened draft can paste readable names and undo/redo the move
+00:00 +2: selected department and user objects expand independently of display width
+00:00 +3: multiline cut keeps readable references and supports one undo
+00:00 +3 -1: multiline cut keeps readable references and supports one undo [E]
+  Expected: [
+              (String, List<Map<String, dynamic>>):(paragraph, [{insert: ￼, attributes: {guidance_mention: {"id":"u1","name":"张三","type":"user"}}}, {insert:  说明😀}]),
+              (String, List<Map<String, dynamic>>):(paragraph, [{insert: 第二段}])
+            ]
+    Actual: [
+              (String, List<Map<String, dynamic>>):(paragraph, [{insert: ￼, attributes: {guidance_mention: {"id":"u1","name":"张三","type":"user"}}}, {insert:  说明😀}]),
+              (String, List<Map<String, dynamic>>):(paragraph, [{insert: 第二段}])
+            ]
+     Which: at location [0] is (String, List<Map<String, dynamic>>):<(paragraph, [{insert: ￼, attributes: {guidance_mention: {"id":"u1","name":"张三","type":"user"}}}, {insert:  说明😀}])> instead of (String, List<Map<String, dynamic>>):<(paragraph, [{insert: ￼, attributes: {guidance_mention: {"id":"u1","name":"张三","type":"user"}}}, {insert:  说明😀}])>
+  
+  package:matcher                                        expect
+  package:flutter_test/src/widget_tester.dart 473:18     expect
+  test/daily_guidance/journal_clipboard_test.dart 184:9  main.<fn>
+  
+00:00 +3 -1: failed platform clipboard write preserves content and undo history
+00:00 +4 -1: pending clipboard cut does not delete after edit
+00:00 +5 -1: pending clipboard cut does not delete after format
+00:00 +6 -1: pending clipboard cut does not delete after selection
+00:00 +7 -1: pending clipboard cut does not delete after selection-restored
+00:00 +8 -1: pending clipboard cut does not delete after readonly
+00:00 +9 -1: pending clipboard cut does not delete after readonly-restored
+00:00 +10 -1: pending clipboard cut does not delete after close
+00:00 +11 -1: cut refuses readable expansion beyond paste capacity without deleting references
+00:00 +12 -1: external bare object clipboard remains rejected atomically
+00:00 +13 -1: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_clipboard_test.dart: multiline cut keeps readable references and supports one undo

@@ -1,0 +1,15 @@
+{
+  "draftCountBefore": 1,
+  "draftCountAfter": 1,
+  "checks": [
+    {
+      "sameFilename": true,
+      "schemaVersion": 2,
+      "sameDraftIdentity": true,
+      "sameDate": true,
+      "allOriginalSectionsIdentical": true,
+      "backupMatchesOriginalBytes": true,
+      "fileSizeBytes": 12941
+    }
+  ]
+}

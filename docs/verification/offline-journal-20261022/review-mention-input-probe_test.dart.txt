@@ -1,0 +1,43 @@
+import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/guidance_people.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/journal_draft.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/journal_store.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/local_journal_controller.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/journal_surface.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+class Store implements JournalStore {
+ JournalDraft? value;
+ Future<JournalDraft?> read() async => value;
+ Future<void> write(JournalDraft draft) async { value=draft; }
+}
+Future<LocalJournalController> openMention(WidgetTester tester) async {
+ debugPrint('STAGE OPEN'); final j=await LocalJournalController.open(store:Store(),saveDelay:const Duration(days:1));
+ debugPrint('STAGE OPENED'); final s=j.editor.editorState;
+ s.selection=Selection.collapsed(Position(path:[0,0]));
+ debugPrint('STAGE INSERT'); await j.insertPeople(j.captureInsertionTarget()!,const [GuidancePerson(id:'u1',name:'张三')]);
+ debugPrint('STAGE PUMP'); await tester.pumpWidget(MaterialApp(home:Scaffold(body:JournalSurface(editorState:s, preview:false, header:const SizedBox()))));
+ await tester.pump(); debugPrint('STAGE PUMPED');
+ return j;
+}
+void main() {
+ testWidgets('typing immediately after an atomic mention should be accepted', (tester) async {
+  final j=await openMention(tester); debugPrint('STAGE OPENED'); final s=j.editor.editorState;
+  try {
+   s.selection=Selection.collapsed(Position(path:[0,0],offset:1)); await tester.pump();
+   final k=tester.state<KeyboardServiceWidgetState>(find.byType(KeyboardServiceWidget));
+   debugPrint('STAGE INPUT'); await k.textInputService.apply([const TextEditingDeltaInsertion(oldText:' \uFFFC ',textInserted:'新',insertionOffset:2,selection:TextSelection.collapsed(offset:3),composing:TextRange.empty)]);
+   debugPrint('ACTUAL ${s.getNodeAtPath([0,0])!.delta!.toJson()}'); expect(s.getNodeAtPath([0,0])!.delta!.toPlainText(),'\uFFFC新 ');
+  } finally {await tester.pumpWidget(const SizedBox()); await tester.pumpAndSettle(); await tester.runAsync(() => j.close());}
+ });
+ testWidgets('typing to replace a selected mention should be accepted', (tester) async {
+  final j=await openMention(tester); debugPrint('STAGE OPENED'); final s=j.editor.editorState;
+  try {
+   s.selection=Selection.single(path:[0,0],startOffset:0,endOffset:1); await tester.pump();
+   final k=tester.state<KeyboardServiceWidgetState>(find.byType(KeyboardServiceWidget));
+   debugPrint('STAGE INPUT'); await k.textInputService.apply([const TextEditingDeltaReplacement(oldText:' \uFFFC ',replacementText:'新',replacedRange:TextRange(start:1,end:2),selection:TextSelection.collapsed(offset:2),composing:TextRange.empty)]);
+   debugPrint('ACTUAL ${s.getNodeAtPath([0,0])!.delta!.toJson()}'); expect(s.getNodeAtPath([0,0])!.delta!.toPlainText(),'新 ');
+  } finally {await tester.pumpWidget(const SizedBox()); await tester.pumpAndSettle(); await tester.runAsync(() => j.close());}
+ });
+}

@@ -1,0 +1,14 @@
+{
+  "sourceSha256": {
+    "packages/cses_document_collab/lib/src/journal/journal_list_markers.dart": "e49093b775dada58ea4b752a871c0b2508abc93744715eae3261bf2f8b196e54",
+    "packages/cses_document_collab/lib/src/journal/journal_surface.dart": "ba274a171ff12a3ee61a108bafc8026865bbe520a89a365d3024c148b4178aca",
+    "packages/cses_document_collab/test/journal_list_markers_test.dart": "40bdaaf95d20e398ae7ad7ecd31edfcd7b3298c9dd91dfff94f1727b402d3657"
+  },
+  "apkPath": "/System/Volumes/Data/workspace/mobile-collab-demo/build/app/outputs/flutter-apk/app-debug.apk",
+  "apkSha256": "adc78ebf4133e2ab7b6eb2723cb469cf9ba599546de971a1a4ea819bc67f1112",
+  "embeddedSourcesMatch": {
+    "packages/cses_document_collab/lib/src/journal/journal_list_markers.dart": true,
+    "packages/cses_document_collab/lib/src/journal/journal_surface.dart": true
+  },
+  "installedOnDevice": false
+}

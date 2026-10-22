@@ -212,6 +212,14 @@ Future<void> editLocal(BuildContext context) => showCollabImageComposer(
 `LocalEditorController(configuration: ...)`及`DocumentEditorView`可通过公开入口用于自行装配；创建者在视图卸载后等待`close()`。
 现有协同会话默认`EditorConfiguration.document`兼容预设，完整块及复杂业务端口保持，不受本地配置影响；该预设不能用于本地控制器。
 
+## 宿主自定义编辑表面
+
+宿主业务页面通过公开的`DocumentEditorController`持有编辑会话，可自行配置AppFlowy正文的块、行内对象和样式，再用`EditorInteractionShell`复用划词菜单与快捷栏。借用的正文及滚动控制器由宿主在视图卸载后释放。`handleDocumentParagraphEnter`和`applyDocumentBlockShortcut`提供通用输入/块转换，所有事务仍受宿主设置的保护策略约束。
+
+`EditorCommandContext.copySelection`可选接管移动菜单的复制/剪切，接收调用时捕获的选区与`cut`意图。宿主负责内容序列化、等待剪贴板写入成功后删除，以及正文、选区、权限和关闭的异步失效检查；回调完成后菜单不再重复写入或删除。未配置时沿用原有行为。自定义键盘命令需显式复用同一端口；通用包不解释宿主业务对象。
+
+今日导向页面、草稿模型、本地存储和业务块已迁到宿主`lib/src/daily_guidance/`；本包不再导出日记业务API。包仅提供通用编辑与共享数据协同，业务扩展不应反向加入包内。宿主实现与迁移验证见[实施记录](../../docs/verification/offline-journal-20261022/host-implementation.md)。
+
 ## 图片点击
 
 正式图片块的图片本体点击调用可选的 `CollabHostServices.onImageTap(url)`，完整传递当前原始链接，包括查询签名和片段。宿主负责预览路由及资源，异步回调应在预览关闭后完成；同一图片回调未结束时忽略重复点击。编辑和预览均可用，题注与更多菜单不触发。

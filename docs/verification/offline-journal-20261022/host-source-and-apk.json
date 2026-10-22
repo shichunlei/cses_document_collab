@@ -1,0 +1,66 @@
+{
+  "checkedAt": "2026-10-22T18:41:41.460762+08:00",
+  "apkSha256": "837377829d48c67a8197717a87495853521f8a86c3593915d26d5beb85276939",
+  "sources": {
+    "lib/src/daily_guidance/local_journal_controller.dart": {
+      "sha256": "c610df54ffeef5dd8c6dff5f05176b3b2ee45865b6574c54bb6873a3df3887b5",
+      "sourceEmbedded": true
+    },
+    "lib/src/daily_guidance/journal_ruled_content.dart": {
+      "sha256": "b99367a854e0434d1cc8aeefdd89f158de8eb95d4c2d0f65ca2ca638c8861c61",
+      "sourceEmbedded": true
+    },
+    "lib/src/daily_guidance/guidance_entries.dart": {
+      "sha256": "90c9dd6854c16054feeee1267bb90b9ca15815ac47f524404d87c4901673d769",
+      "sourceEmbedded": true
+    },
+    "lib/src/daily_guidance/local_journal_page.dart": {
+      "sha256": "c13f8cbf4773378cc687bc74e7ac3831c82d52edbb81ace94a4bf0c7666fa04f",
+      "sourceEmbedded": true
+    },
+    "lib/src/daily_guidance/journal_store.dart": {
+      "sha256": "ff8a703c1068125717c323d66d9e9e1f63943a8d2d34cdd39f7bf597bd731ebe",
+      "sourceEmbedded": true
+    },
+    "lib/src/daily_guidance/journal_editing.dart": {
+      "sha256": "587dee9250ef8cc095198844fec91776cc4e782dca418f0b1a2c1c390c6fad03",
+      "sourceEmbedded": true
+    },
+    "lib/src/daily_guidance/journal_draft.dart": {
+      "sha256": "7a08c407739b15844b64612f29c5d50e3bc252fa6aed4cc3d6effe13c372e7a9",
+      "sourceEmbedded": true
+    },
+    "lib/src/daily_guidance/guidance_people.dart": {
+      "sha256": "79b0fc3364ef7fa114146cbec6272effdfcf9e06c256b34133de4e718306fcdb",
+      "sourceEmbedded": true
+    },
+    "lib/src/daily_guidance/journal_surface.dart": {
+      "sha256": "7d1e6aaec4c60ee08c0e8ae905e33dc22cc03788a320c674b75975b9d34e2acd",
+      "sourceEmbedded": true
+    },
+    "lib/src/daily_guidance/file_journal_store.dart": {
+      "sha256": "d379dc2488dfeec027649b46747cd091ce125deb41174ada9667ab672137e96c",
+      "sourceEmbedded": true
+    },
+    "lib/src/daily_guidance/journal_list_markers.dart": {
+      "sha256": "e49093b775dada58ea4b752a871c0b2508abc93744715eae3261bf2f8b196e54",
+      "sourceEmbedded": true
+    },
+    "lib/src/demo/collab_demo_page.dart": {
+      "sha256": "a5118d2435e925ea561dd75380b4d7a11600393d43ba1b91f08a6afb05171390",
+      "sourceEmbedded": true
+    },
+    "packages/cses_document_collab/lib/cses_document_collab.dart": {
+      "sha256": "b5779092a19aee9311babd7facc354594c576d7c74f859b2416a942b544184bd",
+      "sourceEmbedded": true
+    },
+    "packages/cses_document_collab/lib/src/editor/document_editor_commands.dart": {
+      "sha256": "504ea02b4eac46e7f790f16577ef3cda3ccd38d6be7138830d93ee9492bcaa88",
+      "sourceEmbedded": true
+    },
+    "packages/cses_document_collab/lib/src/editor/editor_interaction_shell.dart": {
+      "sha256": "e96a73cd83e9ec0d979537c716bf9dfab4e184347b04b0d0b29865c30234d6ba",
+      "sourceEmbedded": true
+    }
+  }
+}

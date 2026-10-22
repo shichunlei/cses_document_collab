@@ -24,6 +24,8 @@
 ### 编辑器架构、配置与离线能力
 
 - [selective-undo-prototype-20261022](selective-undo-prototype-20261022/)（[结构、格式与锁权限第二阶段](selective-undo-prototype-20261022/structure-format-locks.md)；[FRB、编辑器与选区第三阶段](selective-undo-prototype-20261022/frb-editor-history.md)；[第三阶段审查](selective-undo-prototype-20261022/review.md)；[2项P1与3项P2修复](selective-undo-prototype-20261022/review-fixes.md)）
+- [offline-journal-design-20261022](offline-journal-design-20261022/)
+- [offline-journal-20261022](offline-journal-20261022/)（[审查](offline-journal-20261022/review.md)；[4项输入/行线修复](offline-journal-20261022/fixes.md)；[日期排版](offline-journal-20261022/date-layout.md)；[列表对齐](offline-journal-20261022/list-alignment.md)；[v6视频对照、宿主业务分层与后续方案](offline-journal-20261022/video-plan.md)；[宿主迁移与动态内容实施](offline-journal-20261022/host-implementation.md)；[动态引用审查](offline-journal-20261022/dynamic-review.md)；[引用输入与剪贴板修复](offline-journal-20261022/dynamic-fixes.md)）
 - [editor-add-visibility-20261020](editor-add-visibility-20261020/)
 - [editor-add-visibility-device-20261021](editor-add-visibility-device-20261021/)
 - [editor-configuration-20261020](editor-configuration-20261020/)

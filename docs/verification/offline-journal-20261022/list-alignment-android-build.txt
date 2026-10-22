@@ -1,0 +1,9 @@
+Running Gradle task 'assembleDebug'...                          
+INFO: Precompiled binaries are disabled
+INFO: Building cses_collab_core for armv7-linux-androideabi
+INFO: Building cses_collab_core for aarch64-linux-android
+INFO: Building cses_collab_core for x86_64-linux-android
+INFO: Building cses_collab_core for i686-linux-android
+INFO: Building cses_collab_core for x86_64-linux-android
+Running Gradle task 'assembleDebug'...                             47.4s
+✓ Built build/app/outputs/flutter-apk/app-debug.apk

@@ -1,0 +1,18 @@
+Waiting for another flutter command to release the startup lock...
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_test.dart: three stable sections and date survive close and reopen on another day
+00:00 +1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_test.dart: auto save debounce persists without an explicit save button
+00:00 +2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_test.dart: slow saves serialize and include edits arriving during the first write
+00:00 +3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_test.dart: save failure retains dirty content and retry saves the latest revision
+00:00 +4: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_test.dart: section deletion, reordering, unsupported objects and last-leaf deletion are atomic rejections
+00:00 +5: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_test.dart: paragraph splitting and list conversion retain undo and redo inside their section
+00:00 +6: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_test.dart: unsupported persisted versions and malformed dates never become blank drafts
+00:00 +7: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_test.dart: closing waits for the last write and rejects late mutations
+00:00 +8: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_test.dart: synchronous dispose releases listeners and still completes pending persistence
+00:00 +9: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: same paper layout in edit and preview at 390.0/1.0
+00:01 +10: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: same paper layout in edit and preview at 390.0/1.0
+00:01 +11: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: same paper layout in edit and preview at 390.0/1.0
+00:01 +12: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: same paper layout in edit and preview at 280.0/2.0
+00:02 +13: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: date changes persist and back waits for save before restoring the same sections
+00:02 +14: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: paper screenshot with all three sections
+00:03 +15: All tests passed!

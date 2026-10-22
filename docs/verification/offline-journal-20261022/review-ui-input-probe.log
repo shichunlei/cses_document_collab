@@ -1,0 +1,35 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/review_ui_probe_test.dart
+00:00 +0: page IME typing immediately after mention
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: '￼新 '
+  Actual: '￼ '
+   Which: is different.
+          Expected: ￼新
+            Actual: ￼
+                     ^
+           Differ at offset 1
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/review_ui_probe_test.dart:34:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/review_ui_probe_test.dart line 34
+The test description was:
+  page IME typing immediately after mention
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:00 +0 -1: page IME typing immediately after mention [E]
+  Test failed. See exception logs above.
+  The test description was: page IME typing immediately after mention
+  
+00:01 +0 -1: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/review_ui_probe_test.dart: page IME typing immediately after mention

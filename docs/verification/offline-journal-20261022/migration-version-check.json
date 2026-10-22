@@ -1,0 +1,12 @@
+{
+  "checkedAt": "2026-10-22T18:13:30.665836+08:00",
+  "registry": "http://npm.runtongqiuben.com/",
+  "latest": "0.11.28",
+  "integrity": "sha512-KNVpgHHAY6ds1bo+EvtiQjS80aoS5kS6oSuJ9nIaJlA8y6yelew5H7F1wTK/bS3Rl9fVyoNAnydz/Si8y0EACg==",
+  "desktopDeclared": "0.11.24",
+  "desktopYarnLocked": "0.11.24",
+  "desktopInstalled": "0.11.17",
+  "desktopHistoricalPnpmLocked": "0.2.78",
+  "query": "sandbox DNS failed; authorized read-only registry query succeeded",
+  "scope": "host journal migration and dynamic business extensions, not desktop block protocol migration"
+}

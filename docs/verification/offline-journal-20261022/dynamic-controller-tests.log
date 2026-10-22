@@ -1,0 +1,18 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/dynamic_journal_test.dart
+00:00 +0: a fresh draft shows only record and optional sections follow add order without duplicates
+00:00 +1: first-time section addition has an independent undo and redo
+00:00 +2: closing a filled section preserves its text and formatting through undo and reopening
+00:00 +3: inline mentions replace the captured range and deduplicate by type and id with undo and redo
+00:00 +4: mention identity and name snapshots survive save and reopen without organization children
+00:00 +5: task conversion preserves existing rich text as one editable entry and supports undo
+00:00 +6: tasks, help and pilot entries stay inside reflection and each help or pilot appends a row
+00:00 +7: Enter ends a task entry without inheriting business attributes and is undoable
+00:00 +8: Enter ends a help entry without inheriting business attributes and is undoable
+00:00 +9: Enter ends a pilot entry without inheriting business attributes and is undoable
+00:00 +10: late mention targets reject text changes, date changes, another session and closure
+00:00 +11: bare objects, unknown inline attributes and invalid mention objects are atomic rejections
+00:00 +12: the 500-reference budget accepts the last reference and rejects the next atomically
+00:00 +13: references in closed sections remain part of the total budget
+00:00 +14: closed section text remains part of the character capacity
+00:00 +15: closed section leaves remain part of the block capacity
+00:00 +16: All tests passed!

@@ -1,0 +1,43 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_mention_input_test.dart
+00:00 +0: IME insertion beside mention preserves identity and inherited style: bold=false
+00:00 +1: IME replacing selected mention keeps normal text and undo restores object: bold=false
+00:01 +2: IME insertion beside mention preserves identity and inherited style: bold=true
+00:01 +3: IME replacing selected mention keeps normal text and undo restores object: bold=true
+00:01 +4: IME backward replacement preserves surrounding styles and original object history
+00:01 +5: IME composing insertion and conversion beside mention remain editable
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: '￼新 '
+  Actual: '￼xin '
+   Which: is different.
+          Expected: ￼新
+            Actual: ￼xin
+                     ^
+           Differ at offset 1
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_mention_input_test.dart:272:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_mention_input_test.dart line 272
+The test description was:
+  IME composing insertion and conversion beside mention remain editable
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +5 -1: IME composing insertion and conversion beside mention remain editable [E]
+  Test failed. See exception logs above.
+  The test description was: IME composing insertion and conversion beside mention remain editable
+  
+00:01 +5 -1: normalization preserves validation evidence outside actual mention input
+00:01 +6 -1: incremental input normalization is idempotent and keeps an exact inverse
+00:01 +7 -1: object insertions and mismatched identities keep strict validation evidence
+00:01 +8 -1: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_mention_input_test.dart: IME composing insertion and conversion beside mention remain editable

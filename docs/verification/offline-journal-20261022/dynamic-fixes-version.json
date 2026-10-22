@@ -1,0 +1,29 @@
+{
+  "checkedAt": "2026-10-22T20:46:20.806990+08:00",
+  "registry": "http://npm.runtongqiuben.com/",
+  "latest": "0.11.28",
+  "integrity": "sha512-KNVpgHHAY6ds1bo+EvtiQjS80aoS5kS6oSuJ9nIaJlA8y6yelew5H7F1wTK/bS3Rl9fVyoNAnydz/Si8y0EACg==",
+  "integrityMatches": true,
+  "desktopAtStart": {
+    "declared": "0.11.24",
+    "yarnLocked": "0.11.24",
+    "installed": "0.11.17"
+  },
+  "desktopAtFinalCheck": {
+    "declared": "0.11.28",
+    "yarnLocked": "0.11.28",
+    "installed": "0.11.17",
+    "historicalPnpmLocked": "0.2.78"
+  },
+  "desktopObservation": "期间桌面声明/Yarn锁由其他工作更新到0.11.28，实际安装仍0.11.17；本轮未修改桌面或升级其运行时，不据声明宣称完成移动兼容。",
+  "scope": "宿主引用输入与可读纯文本复制剪切；包内仅通用复制委托。桌面正式块41及13/14/1/13保持；未新增共享Schema/FRB/网络副作用。",
+  "publishedSourcesRead": {
+    "ai-skills/SKILL.md": "1bdaa3efdde9a455284810febaffb043cd3e59e8ef9a0babbb76c5c875140b0d",
+    "ai-skills/blockcraft.md": "fd35128d50e0f4b68d3d60881e155a884027aaef497d9e6ed2731b01c268686e",
+    "ai-skills/blockcraft-embed.md": "00b9a563e3b71334f5af0cb0027ef185fc0d45b054963b8f85db5ff013ea356f",
+    "ai-skills/blockcraft-input.md": "766f1e0300998620f61cef9013f6ddb6fa9d519c8a803b1292bbe91a5b19a46f",
+    "ai-skills/MIGRATIONS.md": "d1bb5a6337b0e1ce0879099a34134b6e440891720386af9af4c20cdeba205ac2",
+    "fesm2022/ccc-blockcraft.mjs": "d045dd9ff8f17552ed9c15ba1c090fa77ec66bcdaf48a666db742a9f59e639f7"
+  },
+  "compatibility": "复核Schema/实体属性与单字符偏移、选区/菜单、剪贴板、IME、逆增量/撤销及本地协同边界；本地业务对象不写入正式共享模型。本轮未升级移动依赖；原右键/只读链接/UI peer/对象动画及完整桌面升级兼容继续待同步或待验收。"
+}

@@ -1,0 +1,20 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/test/file_journal_store_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/test/file_journal_store_test.dart: actual disk round trip is isolated per account and resumes the stored date
+00:00 +1: /System/Volumes/Data/workspace/mobile-collab-demo/test/file_journal_store_test.dart: failed temporary write preserves the previously committed file
+00:00 +2: /System/Volumes/Data/workspace/mobile-collab-demo/test/file_journal_store_test.dart: damaged or unsupported record is not silently replaced
+00:00 +3: /System/Volumes/Data/workspace/mobile-collab-demo/test/file_journal_store_test.dart: uncommitted temporary file is ignored and invalid scopes are rejected
+00:00 +4: /System/Volumes/Data/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: (setUpAll)
+00:00 +4: /System/Volumes/Data/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: connection page scrolls and exposes the editor route
+00:01 +5: /System/Volumes/Data/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: offline entry works during loading and after storage failure
+[38;5;1m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;1m│ [DocCollabDemo] [ERROR] [2026-10-22 17:13:03.963] package:cses_mobile_collab_demo/src/demo/document_host.dart:229[0m
+[38;5;1m│ 🚀 Demo 文档初始化失败[0m
+[38;5;1m│ MissingPlatformDirectoryException(Unable to get application support directory)[0m
+[38;5;1m│ #0      getApplicationSupportDirectory (package:path_provider/path_provider.dart:79:5)[0m
+[38;5;1m│ <asynchronous suspension>[0m
+[38;5;1m│ #1      DemoDocumentHost._initialize (package:cses_mobile_collab_demo/src/demo/document_host.dart:118:25)[0m
+[38;5;1m│ <asynchronous suspension>[0m
+[38;5;1m│ [0m
+[38;5;1m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+00:02 +6: /System/Volumes/Data/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: (tearDownAll)
+00:02 +6: All tests passed!

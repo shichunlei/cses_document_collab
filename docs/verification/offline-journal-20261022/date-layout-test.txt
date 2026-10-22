@@ -1,0 +1,41 @@
+Waiting for another flutter command to release the startup lock...
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: same paper layout in edit and preview at 390.0/1.0
+00:01 +1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: same paper layout in edit and preview at 390.0/1.0
+00:01 +2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_regressions_test.dart: ctrl+v pastes plain text atomically, saves and supports undo: 13800138000
+00:01 +3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: same paper layout in edit and preview at 280.0/2.0
+00:01 +4: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: same paper layout in edit and preview at 280.0/2.0
+00:02 +5: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: same paper layout in edit and preview at 280.0/2.0
+00:02 +6: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_regressions_test.dart: ctrl+shift+v pastes plain text atomically, saves and supports undo: 13800138000
+00:02 +7: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: date changes persist and back waits for save before restoring the same sections
+00:02 +8: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: date changes persist and back waits for save before restoring the same sections
+00:02 +9: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: date changes persist and back waits for save before restoring the same sections
+00:02 +10: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: date changes persist and back waits for save before restoring the same sections
+00:02 +10: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_regressions_test.dart: rejected shortcut paste shows a retry message and keeps the saved original
+null: 日记粘贴失败: Bad state: 粘贴内容超出日记支持的格式或容量
+#0      LocalJournalController.pasteFromClipboard (package:cses_document_collab/src/journal/local_journal_controller.dart:144:7)
+<asynchronous suspension>
+#1      _JournalSurfaceState._paste (package:cses_document_collab/src/journal/journal_surface.dart:62:7)
+<asynchronous suspension>
+
+00:02 +11: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: date changes persist and back waits for save before restoring the same sections
+00:02 +12: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: date changes persist and back waits for save before restoring the same sections
+00:02 +13: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: date changes persist and back waits for save before restoring the same sections
+00:02 +14: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: date changes persist and back waits for save before restoring the same sections
+00:02 +15: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: date changes persist and back waits for save before restoring the same sections
+00:02 +16: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_regressions_test.dart: backspace preserves fixed section boundaries and allows same-section merge
+00:02 +17: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: paper screenshot with all three sections
+00:02 +18: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_regressions_test.dart: delete preserves fixed section boundaries and allows same-section merge
+00:02 +19: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_regressions_test.dart: ime preserves fixed section boundaries and allows same-section merge
+00:03 +20: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_regressions_test.dart: empty todo_list Enter returns to paragraph and supports undo/redo
+00:03 +21: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_regressions_test.dart: empty bulleted_list Enter returns to paragraph and supports undo/redo
+00:03 +22: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_regressions_test.dart: empty numbered_list Enter returns to paragraph and supports undo/redo
+00:03 +23: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_regressions_test.dart: all soft lines remain ruled in edit and preview: "第一行\n" / 1.0
+00:03 +24: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_regressions_test.dart: all soft lines remain ruled in edit and preview: "第一行\n\n\n" / 1.0
+00:04 +25: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_regressions_test.dart: all soft lines remain ruled in edit and preview: "\n\n" / 1.0
+00:04 +26: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_regressions_test.dart: all soft lines remain ruled in edit and preview: "首行\n\n末行" / 1.0
+00:04 +27: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_regressions_test.dart: all soft lines remain ruled in edit and preview: "第一行\n" / 2.0
+00:04 +28: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_regressions_test.dart: all soft lines remain ruled in edit and preview: "第一行\n\n\n" / 2.0
+00:04 +29: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_regressions_test.dart: all soft lines remain ruled in edit and preview: "\n\n" / 2.0
+00:04 +30: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_regressions_test.dart: all soft lines remain ruled in edit and preview: "首行\n\n末行" / 2.0
+00:04 +31: All tests passed!

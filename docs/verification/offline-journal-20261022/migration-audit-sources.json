@@ -1,0 +1,13 @@
+{
+  "capturedAt": "2026-10-22T18:35:03.847148+08:00",
+  "scope": "public editor commands and dynamic journal controller regressions",
+  "files": {
+    "packages/cses_document_collab/lib/src/editor/editor_interaction_shell.dart": "e96a73cd83e9ec0d979537c716bf9dfab4e184347b04b0d0b29865c30234d6ba",
+    "packages/cses_document_collab/lib/src/editor/document_editor_commands.dart": "504ea02b4eac46e7f790f16577ef3cda3ccd38d6be7138830d93ee9492bcaa88",
+    "packages/cses_document_collab/test/document_editor_commands_test.dart": "93ca03634c38b0003e00de62409b3201ad52a16011252ac851999d4d4460c342",
+    "test/daily_guidance/dynamic_journal_test.dart": "c3e055a8e9825c08e11f0ce22180b1cfe4036c574ee2008cc0d15a68d833b9ee",
+    "lib/src/daily_guidance/local_journal_controller.dart": "b0c086202bd3489279a79a6fa4a562cb423f9da3554b28d0c438635256dd6b80",
+    "lib/src/daily_guidance/journal_draft.dart": "7a08c407739b15844b64612f29c5d50e3bc252fa6aed4cc3d6effe13c372e7a9",
+    "lib/src/daily_guidance/guidance_entries.dart": "90c9dd6854c16054feeee1267bb90b9ca15815ac47f524404d87c4901673d769"
+  }
+}

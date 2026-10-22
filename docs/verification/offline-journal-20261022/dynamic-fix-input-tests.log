@@ -1,0 +1,11 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_mention_input_test.dart
+00:00 +0: IME insertion beside mention preserves identity and inherited style: bold=false
+00:00 +1: IME replacing selected mention keeps normal text and undo restores object: bold=false
+00:01 +2: IME insertion beside mention preserves identity and inherited style: bold=true
+00:01 +3: IME replacing selected mention keeps normal text and undo restores object: bold=true
+00:01 +4: IME backward replacement preserves surrounding styles and original object history
+00:01 +5: IME composing insertion and conversion beside mention remain editable
+00:01 +6: normalization preserves validation evidence outside actual mention input
+00:01 +7: incremental input normalization is idempotent and keeps an exact inverse
+00:01 +8: object insertions and mismatched identities keep strict validation evidence
+00:01 +9: All tests passed!

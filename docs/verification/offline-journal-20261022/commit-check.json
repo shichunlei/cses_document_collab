@@ -1,0 +1,1384 @@
+{
+  "checkedAt": "2026-10-22T21:01:17.022523+08:00",
+  "scope": "今日导向独立宿主页面、草稿兼容/备份、动态栏目/业务行、组织选人、引用输入与可读剪贴板、通用编辑扩展及验证证据；本地提交，不推送。",
+  "blockcraft": {
+    "latest": "0.11.28",
+    "registry": "http://npm.runtongqiuben.com/",
+    "integrity": "sha512-KNVpgHHAY6ds1bo+EvtiQjS80aoS5kS6oSuJ9nIaJlA8y6yelew5H7F1wTK/bS3Rl9fVyoNAnydz/Si8y0EACg==",
+    "publishedReadSourcesMatch": true,
+    "desktopDeclared": "0.11.28",
+    "desktopYarnLocked": "0.11.28",
+    "desktopInstalled": "0.11.17",
+    "historicalPnpmLocked": "0.2.78",
+    "desktopModifiedByThisWork": false
+  },
+  "validation": {
+    "hostTests": 122,
+    "packageTests": 54,
+    "hostAnalyze": "no issues",
+    "packageAnalyze": "no issues",
+    "androidDebugBuild": true,
+    "productionSourcesIdenticalToVerifiedBuild": 18,
+    "sourceSnapshot": "dynamic-fixes-source-apk.json",
+    "testsRerunForCommit": false,
+    "reason": "运行时源码与最终通过验证的18文件快照完全一致，仅补提交归档、链接和私有证据排除规则。"
+  },
+  "privateEvidenceKeptLocally": [
+    "docs/verification/offline-journal-20261022/android-final-screen.png",
+    "docs/verification/offline-journal-20261022/device-host-editor.png",
+    "docs/verification/offline-journal-20261022/device-host-org-picker.png",
+    "docs/verification/offline-journal-20261022/device-host-preview.png",
+    "docs/verification/offline-journal-20261022/device-host-preview.xml"
+  ],
+  "rawEvidenceWhitespace": {
+    "allStagedDiffCheckExit": 2,
+    "warningCount": 237,
+    "files": 40,
+    "onlyIssue": "原始Flutter日志的行尾空格，保留原字节；未改写历史失败/验证证据。",
+    "codeTestsDocsDiffCheck": "passed",
+    "details": [
+      {
+        "file": "docs/verification/offline-journal-20261022/android-build.txt",
+        "line": 1,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/android-first-attempt.txt",
+        "line": 2,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/android-first-attempt.txt",
+        "line": 63,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/android-test.txt",
+        "line": 2,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/date-layout-analyze.txt",
+        "line": 1,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/date-layout-android-build.txt",
+        "line": 1,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-controller-analyze.log",
+        "line": 1,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fix-clipboard-tests.log",
+        "line": 67,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fix-clipboard-tests.log",
+        "line": 71,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fix-input-analyze.log",
+        "line": 1,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fix-input-first-run.log",
+        "line": 36,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-android-build.log",
+        "line": 1,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-analyze.log",
+        "line": 1,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 61,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 64,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 74,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 84,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 87,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 96,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 202,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 205,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 225,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 228,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 237,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 304,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 307,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 317,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 327,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 330,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 339,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 445,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 448,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 468,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 471,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 480,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 514,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 517,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 537,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 540,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 549,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 580,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 583,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 603,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 606,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 615,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 675,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 678,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 688,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 698,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 701,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 710,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 816,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 819,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 839,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 842,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 851,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+        "line": 957,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-fixes-package-analyze.log",
+        "line": 1,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-clipboard.log",
+        "line": 6,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 59,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 62,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 72,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 82,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 85,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 96,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 204,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 207,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 227,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 230,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 241,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 309,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 312,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 322,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 332,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 335,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 344,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 450,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 453,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 473,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 476,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 485,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 519,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 522,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 542,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 545,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 554,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 585,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 588,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 608,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 611,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 620,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 680,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 683,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 693,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 703,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 706,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 715,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 821,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 824,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 844,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 847,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 856,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+        "line": 924,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/editor-public-api-analyze.log",
+        "line": 1,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/entry-layout-analyze.log",
+        "line": 1,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/entry-layout-initial-failures.log",
+        "line": 31,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/entry-layout-initial-failures.log",
+        "line": 59,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/entry-long-name-initial-failure.log",
+        "line": 29,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/fix-android-build.txt",
+        "line": 2,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/fix-host-analyze.txt",
+        "line": 1,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/fix-package-analyze.txt",
+        "line": 1,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/fix-package-first.txt",
+        "line": 54,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/fix-package-first.txt",
+        "line": 58,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/fix-package-first.txt",
+        "line": 72,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/fix-package-first.txt",
+        "line": 76,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/fix-regressions-second.txt",
+        "line": 24,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/fix-regressions-second.txt",
+        "line": 47,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/fix-regressions-second.txt",
+        "line": 48,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/fix-regressions-second.txt",
+        "line": 69,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/fix-regressions-second.txt",
+        "line": 72,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/fix-regressions-second.txt",
+        "line": 74,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/fix-regressions-second.txt",
+        "line": 97,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/fix-regressions-second.txt",
+        "line": 120,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/fix-regressions-second.txt",
+        "line": 121,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/fix-regressions-second.txt",
+        "line": 142,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/fix-regressions-second.txt",
+        "line": 145,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/fix-regressions-second.txt",
+        "line": 147,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/fix-regressions-second.txt",
+        "line": 171,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/fix-regressions-third.txt",
+        "line": 4,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/fix-regressions-third.txt",
+        "line": 8,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-analyze.txt",
+        "line": 1,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-android-build.log",
+        "line": 1,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-analyze.log",
+        "line": 1,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 57,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 62,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 72,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 82,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 85,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 96,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 204,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 207,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 227,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 230,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 241,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 310,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 313,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 323,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 333,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 336,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 345,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 451,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 454,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 474,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 477,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 486,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 520,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 523,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 543,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 546,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 555,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 586,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 589,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 609,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 612,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 621,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 681,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 684,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 694,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 704,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 707,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 716,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 822,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 825,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 845,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 848,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 857,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+        "line": 922,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/host-package-analyze.log",
+        "line": 1,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/list-alignment-analyze.txt",
+        "line": 1,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/list-alignment-android-build.txt",
+        "line": 1,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/list-alignment-test.txt",
+        "line": 13,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/list-alignment-test.txt",
+        "line": 18,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/migration-v1-tests.log",
+        "line": 30,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/package-analyze.txt",
+        "line": 1,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 51,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 54,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 64,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 74,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 77,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 86,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 192,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 195,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 215,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 218,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 227,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 293,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 296,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 306,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 316,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 319,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 328,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 434,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 437,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 457,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 460,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 469,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 503,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 506,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 526,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 529,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 538,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 569,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 572,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 592,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 595,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 604,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 663,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 666,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 676,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 686,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 689,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 698,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 804,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 807,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 827,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 830,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/people-tests.log",
+        "line": 839,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/review-mention-input-probe.log",
+        "line": 39,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/review-mention-input-probe.log",
+        "line": 77,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/review-probes-analyze.txt",
+        "line": 1,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/review-probes.txt",
+        "line": 9,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/review-probes.txt",
+        "line": 13,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/review-probes.txt",
+        "line": 19,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/review-probes.txt",
+        "line": 23,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/review-probes.txt",
+        "line": 55,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/review-probes.txt",
+        "line": 81,
+        "issue": "trailing whitespace"
+      },
+      {
+        "file": "docs/verification/offline-journal-20261022/review-ui-input-probe.log",
+        "line": 31,
+        "issue": "trailing whitespace"
+      }
+    ]
+  },
+  "stagedPathsBeforeThisRecord": [
+    ".gitignore",
+    "README.md",
+    "docs/block-adaptation.md",
+    "docs/verification/README.md",
+    "docs/verification/offline-journal-20261022/android-build.txt",
+    "docs/verification/offline-journal-20261022/android-first-attempt.txt",
+    "docs/verification/offline-journal-20261022/android-install.txt",
+    "docs/verification/offline-journal-20261022/android-test.txt",
+    "docs/verification/offline-journal-20261022/business-boundary-version-check.json",
+    "docs/verification/offline-journal-20261022/date-layout-analyze.txt",
+    "docs/verification/offline-journal-20261022/date-layout-android-build.txt",
+    "docs/verification/offline-journal-20261022/date-layout-apk.json",
+    "docs/verification/offline-journal-20261022/date-layout-test.txt",
+    "docs/verification/offline-journal-20261022/date-layout-version-check.json",
+    "docs/verification/offline-journal-20261022/date-layout.md",
+    "docs/verification/offline-journal-20261022/device-after-migration.json",
+    "docs/verification/offline-journal-20261022/device-before-migration.json",
+    "docs/verification/offline-journal-20261022/device-validation.json",
+    "docs/verification/offline-journal-20261022/dynamic-controller-analyze.log",
+    "docs/verification/offline-journal-20261022/dynamic-controller-tests.log",
+    "docs/verification/offline-journal-20261022/dynamic-fix-clipboard-tests.log",
+    "docs/verification/offline-journal-20261022/dynamic-fix-input-analyze.log",
+    "docs/verification/offline-journal-20261022/dynamic-fix-input-first-run.log",
+    "docs/verification/offline-journal-20261022/dynamic-fix-input-tests.log",
+    "docs/verification/offline-journal-20261022/dynamic-fixes-android-build.log",
+    "docs/verification/offline-journal-20261022/dynamic-fixes-host-analyze.log",
+    "docs/verification/offline-journal-20261022/dynamic-fixes-host-tests.log",
+    "docs/verification/offline-journal-20261022/dynamic-fixes-menu-tests.log",
+    "docs/verification/offline-journal-20261022/dynamic-fixes-package-analyze.log",
+    "docs/verification/offline-journal-20261022/dynamic-fixes-package-tests.log",
+    "docs/verification/offline-journal-20261022/dynamic-fixes-source-apk.json",
+    "docs/verification/offline-journal-20261022/dynamic-fixes-version.json",
+    "docs/verification/offline-journal-20261022/dynamic-fixes.md",
+    "docs/verification/offline-journal-20261022/dynamic-review-clipboard-probe_test.dart.txt",
+    "docs/verification/offline-journal-20261022/dynamic-review-clipboard.log",
+    "docs/verification/offline-journal-20261022/dynamic-review-existing-tests.log",
+    "docs/verification/offline-journal-20261022/dynamic-review-source-version.json",
+    "docs/verification/offline-journal-20261022/dynamic-review.md",
+    "docs/verification/offline-journal-20261022/editor-public-api-analyze.log",
+    "docs/verification/offline-journal-20261022/editor-public-api-tests.log",
+    "docs/verification/offline-journal-20261022/entry-layout-analyze.log",
+    "docs/verification/offline-journal-20261022/entry-layout-initial-failures.log",
+    "docs/verification/offline-journal-20261022/entry-layout-tests.log",
+    "docs/verification/offline-journal-20261022/entry-long-name-initial-failure.log",
+    "docs/verification/offline-journal-20261022/entry-renderer-review.md",
+    "docs/verification/offline-journal-20261022/fix-android-build.txt",
+    "docs/verification/offline-journal-20261022/fix-apk.json",
+    "docs/verification/offline-journal-20261022/fix-host-analyze.txt",
+    "docs/verification/offline-journal-20261022/fix-host-test.txt",
+    "docs/verification/offline-journal-20261022/fix-package-analyze.txt",
+    "docs/verification/offline-journal-20261022/fix-package-first.txt",
+    "docs/verification/offline-journal-20261022/fix-package-test.txt",
+    "docs/verification/offline-journal-20261022/fix-regressions-first.txt",
+    "docs/verification/offline-journal-20261022/fix-regressions-second.txt",
+    "docs/verification/offline-journal-20261022/fix-regressions-third.txt",
+    "docs/verification/offline-journal-20261022/fix-source-sha256.json",
+    "docs/verification/offline-journal-20261022/fix-version-check.json",
+    "docs/verification/offline-journal-20261022/fixes.md",
+    "docs/verification/offline-journal-20261022/host-analyze.txt",
+    "docs/verification/offline-journal-20261022/host-android-build.log",
+    "docs/verification/offline-journal-20261022/host-dynamic-analyze.log",
+    "docs/verification/offline-journal-20261022/host-dynamic-tests.log",
+    "docs/verification/offline-journal-20261022/host-implementation.md",
+    "docs/verification/offline-journal-20261022/host-migration-map.json",
+    "docs/verification/offline-journal-20261022/host-package-analyze.log",
+    "docs/verification/offline-journal-20261022/host-package-tests.log",
+    "docs/verification/offline-journal-20261022/host-pub-get.log",
+    "docs/verification/offline-journal-20261022/host-source-and-apk.json",
+    "docs/verification/offline-journal-20261022/host-test.txt",
+    "docs/verification/offline-journal-20261022/list-alignment-analyze.txt",
+    "docs/verification/offline-journal-20261022/list-alignment-android-build.txt",
+    "docs/verification/offline-journal-20261022/list-alignment-apk.json",
+    "docs/verification/offline-journal-20261022/list-alignment-test.txt",
+    "docs/verification/offline-journal-20261022/list-alignment-version-check.json",
+    "docs/verification/offline-journal-20261022/list-alignment.md",
+    "docs/verification/offline-journal-20261022/migration-audit-sources.json",
+    "docs/verification/offline-journal-20261022/migration-audit.md",
+    "docs/verification/offline-journal-20261022/migration-v1-source.json",
+    "docs/verification/offline-journal-20261022/migration-v1-tests.log",
+    "docs/verification/offline-journal-20261022/migration-version-check.json",
+    "docs/verification/offline-journal-20261022/package-analyze.txt",
+    "docs/verification/offline-journal-20261022/package-test.txt",
+    "docs/verification/offline-journal-20261022/people-implementation.md",
+    "docs/verification/offline-journal-20261022/people-tests.log",
+    "docs/verification/offline-journal-20261022/report.md",
+    "docs/verification/offline-journal-20261022/review-baseline-host-test.txt",
+    "docs/verification/offline-journal-20261022/review-baseline-package-test.txt",
+    "docs/verification/offline-journal-20261022/review-mention-input-probe.log",
+    "docs/verification/offline-journal-20261022/review-mention-input-probe_test.dart.txt",
+    "docs/verification/offline-journal-20261022/review-probes-analyze.txt",
+    "docs/verification/offline-journal-20261022/review-probes.txt",
+    "docs/verification/offline-journal-20261022/review-ui-input-probe.dart.txt",
+    "docs/verification/offline-journal-20261022/review-ui-input-probe.log",
+    "docs/verification/offline-journal-20261022/review-version-source-check.json",
+    "docs/verification/offline-journal-20261022/review.md",
+    "docs/verification/offline-journal-20261022/review_probes_test.dart.txt",
+    "docs/verification/offline-journal-20261022/source-sha256.json",
+    "docs/verification/offline-journal-20261022/video-analysis-source.json",
+    "docs/verification/offline-journal-20261022/video-contact-01.jpg",
+    "docs/verification/offline-journal-20261022/video-contact-02.jpg",
+    "docs/verification/offline-journal-20261022/video-contact-03.jpg",
+    "docs/verification/offline-journal-20261022/video-contact-04.jpg",
+    "docs/verification/offline-journal-20261022/video-contact-05.jpg",
+    "docs/verification/offline-journal-20261022/video-contact-06.jpg",
+    "docs/verification/offline-journal-20261022/video-detail-005.png",
+    "docs/verification/offline-journal-20261022/video-detail-027.png",
+    "docs/verification/offline-journal-20261022/video-detail-079.png",
+    "docs/verification/offline-journal-20261022/video-plan-version-check.json",
+    "docs/verification/offline-journal-20261022/video-plan.md",
+    "docs/verification/offline-journal-20261022/widget-layout.png",
+    "docs/verification/offline-journal-design-20261022/report.md",
+    "integration_test/local_journal_device_test.dart",
+    "lib/src/daily_guidance/file_journal_store.dart",
+    "lib/src/daily_guidance/guidance_entries.dart",
+    "lib/src/daily_guidance/guidance_people.dart",
+    "lib/src/daily_guidance/journal_draft.dart",
+    "lib/src/daily_guidance/journal_editing.dart",
+    "lib/src/daily_guidance/journal_input.dart",
+    "lib/src/daily_guidance/journal_list_markers.dart",
+    "lib/src/daily_guidance/journal_ruled_content.dart",
+    "lib/src/daily_guidance/journal_store.dart",
+    "lib/src/daily_guidance/journal_surface.dart",
+    "lib/src/daily_guidance/local_journal_controller.dart",
+    "lib/src/daily_guidance/local_journal_page.dart",
+    "lib/src/demo/collab_demo_page.dart",
+    "packages/cses_document_collab/README.md",
+    "packages/cses_document_collab/lib/cses_document_collab.dart",
+    "packages/cses_document_collab/lib/src/editor/collab_mobile_selection_menu.dart",
+    "packages/cses_document_collab/lib/src/editor/core/editor_command_context.dart",
+    "packages/cses_document_collab/lib/src/editor/document_editor_commands.dart",
+    "packages/cses_document_collab/lib/src/editor/editor_interaction_shell.dart",
+    "packages/cses_document_collab/test/document_editor_commands_test.dart",
+    "packages/cses_document_collab/test/editor_copy_delegate_test.dart",
+    "pubspec.yaml",
+    "test/collab_demo_page_test.dart",
+    "test/daily_guidance/dynamic_journal_test.dart",
+    "test/daily_guidance/fixtures.dart",
+    "test/daily_guidance/guidance_entries_layout_test.dart",
+    "test/daily_guidance/guidance_people_test.dart",
+    "test/daily_guidance/journal_clipboard_test.dart",
+    "test/daily_guidance/journal_clipboard_ui_test.dart",
+    "test/daily_guidance/journal_list_markers_test.dart",
+    "test/daily_guidance/journal_mention_input_test.dart",
+    "test/daily_guidance/journal_rules_test.dart",
+    "test/daily_guidance/legacy_migration_test.dart",
+    "test/daily_guidance/local_journal_page_test.dart",
+    "test/daily_guidance/local_journal_regressions_test.dart",
+    "test/daily_guidance/local_journal_test.dart",
+    "test/file_journal_store_test.dart"
+  ],
+  "remainingLimitations": [
+    "含@剪贴板使用可读纯文本，不保留实体身份",
+    "跨栏目复制/剪切拒绝",
+    "本轮未新增物理设备、iOS或在线双端验收",
+    "BlockCraft原上游差异继续待同步/验收"
+  ]
+}

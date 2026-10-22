@@ -56,3 +56,11 @@ app.*.map.json
 
 # Lock native dependencies for reproducible plugin builds.
 !packages/cses_document_collab/rust/Cargo.lock
+
+# Keep this feature's verification logs, but retain private device evidence locally.
+!docs/verification/offline-journal-20261022/*.log
+/docs/verification/offline-journal-20261022/device-host-editor.png
+/docs/verification/offline-journal-20261022/device-host-org-picker.png
+/docs/verification/offline-journal-20261022/device-host-preview.png
+/docs/verification/offline-journal-20261022/device-host-preview.xml
+/docs/verification/offline-journal-20261022/android-final-screen.png

@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// 验证首页路由，以及协同文档不可用时独立制图的完整往返流程。
+/// 验证首页提供独立日记入口，以及协同文档不可用时原离线编辑的完整往返流程。
 void main() {
   setUpAll(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
@@ -39,6 +39,7 @@ void main() {
     expect(find.text('CSES 协同 Demo'), findsOneWidget);
     expect(find.byKey(const ValueKey('open-collaborative-editor')), findsOne);
     expect(find.byKey(const ValueKey('open-offline-image-composer')), findsOne);
+    expect(find.byKey(const ValueKey('open-local-journal')), findsOne);
     expect(
       find.byKey(const ValueKey('collaborative-appflowy-editor')),
       findsNothing,

@@ -1,0 +1,24 @@
+{
+  "checkedAt": "2026-10-22T19:58:46.723369+08:00",
+  "registry": "http://npm.runtongqiuben.com/",
+  "latest": "0.11.28",
+  "integrity": "sha512-KNVpgHHAY6ds1bo+EvtiQjS80aoS5kS6oSuJ9nIaJlA8y6yelew5H7F1wTK/bS3Rl9fVyoNAnydz/Si8y0EACg==",
+  "desktopDeclared": "0.11.24",
+  "desktopYarnLocked": "0.11.24",
+  "desktopInstalled": "0.11.17",
+  "historicalPnpmLocked": "0.2.78",
+  "scope": "review current host migration/dynamic journal, clipboard and actual IME; no implementation modifications",
+  "sources": {
+    "lib/src/daily_guidance/local_journal_controller.dart": "c610df54ffeef5dd8c6dff5f05176b3b2ee45865b6574c54bb6873a3df3887b5",
+    "lib/src/daily_guidance/journal_ruled_content.dart": "b99367a854e0434d1cc8aeefdd89f158de8eb95d4c2d0f65ca2ca638c8861c61",
+    "lib/src/daily_guidance/guidance_entries.dart": "90c9dd6854c16054feeee1267bb90b9ca15815ac47f524404d87c4901673d769",
+    "lib/src/daily_guidance/local_journal_page.dart": "c13f8cbf4773378cc687bc74e7ac3831c82d52edbb81ace94a4bf0c7666fa04f",
+    "lib/src/daily_guidance/journal_store.dart": "ff8a703c1068125717c323d66d9e9e1f63943a8d2d34cdd39f7bf597bd731ebe",
+    "lib/src/daily_guidance/journal_editing.dart": "587dee9250ef8cc095198844fec91776cc4e782dca418f0b1a2c1c390c6fad03",
+    "lib/src/daily_guidance/journal_draft.dart": "7a08c407739b15844b64612f29c5d50e3bc252fa6aed4cc3d6effe13c372e7a9",
+    "lib/src/daily_guidance/guidance_people.dart": "79b0fc3364ef7fa114146cbec6272effdfcf9e06c256b34133de4e718306fcdb",
+    "lib/src/daily_guidance/journal_surface.dart": "7d1e6aaec4c60ee08c0e8ae905e33dc22cc03788a320c674b75975b9d34e2acd",
+    "lib/src/daily_guidance/file_journal_store.dart": "d379dc2488dfeec027649b46747cd091ce125deb41174ada9667ab672137e96c",
+    "lib/src/daily_guidance/journal_list_markers.dart": "e49093b775dada58ea4b752a871c0b2508abc93744715eae3261bf2f8b196e54"
+  }
+}

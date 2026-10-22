@@ -201,13 +201,20 @@ class _CollabMobileSelectionMenuState extends State<CollabMobileSelectionMenu> {
   }
 
   /// 复制借用 [state] 中稳定 [range] 的纯文本；[cut] 默认 false，为 true 时复制成功才删除。
-  /// 剪贴板失败不删除；异步期间原文、格式、权限或组件身份变化均取消删除。
+  /// 存在宿主复制端口时委托其处理，不再重复写剪贴板或删除。
+  /// 默认路径剪贴板失败不删除；异步期间原文、格式、权限或组件身份变化均取消删除。
   Future<void> _copy(
     EditorState state,
     CollabTextRange range, {
     bool cut = false,
   }) async {
-    if (range.resolve(state) == null || (cut && !state.editable)) return;
+    final captured = range.resolve(state);
+    if (captured == null || (cut && !state.editable)) return;
+    final copy = EditorCommandContext.of(state).copySelection;
+    if (copy != null) {
+      await copy(captured, cut: cut);
+      return;
+    }
     await AppFlowyClipboard.setData(text: range.text);
     if (!cut ||
         !mounted ||

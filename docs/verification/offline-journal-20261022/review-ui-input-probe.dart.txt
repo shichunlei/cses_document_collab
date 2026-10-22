@@ -1,0 +1,82 @@
+import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/guidance_people.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/journal_draft.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/journal_store.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/local_journal_controller.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/local_journal_page.dart';
+
+class ProbeStore implements JournalStore {
+  @override
+  Future<JournalDraft?> read() async => null;
+  @override
+  Future<void> write(JournalDraft draft) async {}
+}
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  testWidgets('page IME typing immediately after mention', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(390, 1000));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await tester.pumpWidget(MaterialApp(home: LocalJournalPage(store: ProbeStore())));
+    await tester.pumpAndSettle();
+    try {
+      final state = tester.widget<AppFlowyEditor>(find.byType(AppFlowyEditor)).editorState;
+      final node = state.document.root.children.single.children.single;
+      final delta = Delta()..insert('\uFFFC', attributes: {'guidance_mention': '{"id":"u1","name":"张三","type":"user"}'})..insert(' ');
+      await state.apply(state.transaction..updateNode(node, {blockComponentDelta: delta.toJson()}));
+      state.selection = Selection.collapsed(Position(path: node.path, offset: 1));
+      await tester.pump();
+      final keyboard = tester.state<KeyboardServiceWidgetState>(find.byType(KeyboardServiceWidget));
+      await keyboard.textInputService.apply([const TextEditingDeltaInsertion(oldText: '\uFFFC ', textInserted: '新', insertionOffset: 1, selection: TextSelection.collapsed(offset: 2), composing: TextRange.empty)]);
+      await tester.pump();
+      expect(node.delta!.toPlainText(), '\uFFFC新 ');
+    } finally {
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
+    }
+  });
+  testWidgets('cut and paste a mention-containing row', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(390, 1000));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await tester.pumpWidget(MaterialApp(home: LocalJournalPage(store: ProbeStore())));
+    await tester.pumpAndSettle();
+    try {
+      final editor = tester.widget<AppFlowyEditor>(find.byType(AppFlowyEditor));
+      final state = editor.editorState;
+      final node = state.document.root.children.single.children.single;
+      final delta = Delta()..insert('\uFFFC', attributes: {'guidance_mention': '{"id":"u1","name":"张三","type":"user"}'})..insert(' 请处理');
+      await state.apply(state.transaction..updateNode(node, {blockComponentDelta: delta.toJson()}));
+      state.selection = Selection.single(path: node.path, startOffset: 0, endOffset: delta.length);
+      await tester.pump();
+      editor.commandShortcutEvents.singleWhere((event) => event.key == 'cut the selected content').handler(state);
+      await tester.pump();
+      final copied = AppFlowyClipboard.lastText;
+      print('PROBE cut clipboard=$copied remaining=${node.delta!.toPlainText()}');
+      AppFlowyClipboard.mockSetData(AppFlowyClipboardData(text: copied));
+      editor.commandShortcutEvents.singleWhere((event) => event.key == 'journal-ctrl+v').handler(state);
+      await tester.pumpAndSettle();
+      print('PROBE pasted=${node.delta!.toPlainText()} error=${find.text("粘贴失败，原文已保留，请检查内容或重试").evaluate().length}');
+      expect(node.delta!.toPlainText(), contains('请处理'));
+    } finally {
+      AppFlowyClipboard.mockSetData(null);
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
+    }
+  });
+  test('typing immediately after a mention', () async {
+    final journal = await LocalJournalController.open(store: ProbeStore());
+    try {
+      final state = journal.editor.editorState;
+      final node = state.document.root.children.single.children.single;
+      state.selection = Selection.collapsed(Position(path: node.path, offset: 0));
+      await journal.insertPeople(journal.captureInsertionTarget()!, const [GuidancePerson(id: 'u1', name: '张三')]);
+      state.selection = Selection.collapsed(Position(path: node.path, offset: 1));
+      final transaction = state.transaction..insertText(node, 1, '新');
+      print('PROBE transaction=${transaction.operations} canApply=${state.canApplyTransaction(transaction)} delta=${node.delta!.toJson()}');
+      await state.apply(transaction);
+      expect(node.delta!.toPlainText(), '\uFFFC新 ');
+    } finally { await journal.close(); }
+  });
+}

@@ -1,0 +1,18 @@
+{
+  "checkedAt": "2026-10-22T18:08:53+08:00",
+  "registry": "http://npm.runtongqiuben.com/",
+  "latest": "0.11.28",
+  "desktopDeclared": "0.11.24",
+  "desktopInstalled": "0.11.17",
+  "latestIntegrity": "sha512-KNVpgHHAY6ds1bo+EvtiQjS80aoS5kS6oSuJ9nIaJlA8y6yelew5H7F1wTK/bS3Rl9fVyoNAnydz/Si8y0EACg==",
+  "desktopYarnLocked": "0.11.24",
+  "desktopHistoricalPnpmLocked": "0.2.78",
+  "artifactVerified": true,
+  "queryMethod": "configured registry latest HTTP metadata; npm view did not return promptly",
+  "scope": "Host business ownership and journal migration plan only; code migration pending",
+  "reviewed": [
+    "current package public exports, DocumentEditorView and journal imports",
+    "host journal entry and file store",
+    "0.11.28 bundled L0, host guide, MIGRATIONS and published date-card/render-unit implementation; unchanged installed/declaration versions and their prior same-day review remain applicable"
+  ]
+}

@@ -1,0 +1,9 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart
+00:00 +0: 真实页面工具栏选人确认后插入、保存、预览并取消下一次选择
+00:01 +1: business entry layout scale=1.0 wrapped=false longName=false
+00:02 +2: business entry layout scale=1.0 wrapped=true longName=false
+00:02 +3: business entry layout scale=1.0 wrapped=true longName=true
+00:02 +4: business entry layout scale=2.0 wrapped=false longName=false
+00:02 +5: business entry layout scale=2.0 wrapped=true longName=false
+00:02 +6: business entry layout scale=2.0 wrapped=true longName=true
+00:02 +7: All tests passed!

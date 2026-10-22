@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-10-22T17:21:14+0800",
+  "latest": "0.11.28",
+  "desktopDeclared": "0.11.24",
+  "desktopInstalled": "0.11.17",
+  "latestIntegrity": "sha512-KNVpgHHAY6ds1bo+EvtiQjS80aoS5kS6oSuJ9nIaJlA8y6yelew5H7F1wTK/bS3Rl9fVyoNAnydz/Si8y0EACg==",
+  "artifactVerified": true,
+  "desktopYarnLocked": "0.11.24",
+  "desktopHistoricalPnpmLocked": "0.2.78",
+  "schemaFactoryHashes": {
+    "DateCardBlockSchema": {
+      "0.11.27": "7eae948736874dbd004551b3bda686daf85639c88f10809108edcefe84f9191c",
+      "0.11.28": "7eae948736874dbd004551b3bda686daf85639c88f10809108edcefe84f9191c"
+    },
+    "RenderUnitBlockSchema": {
+      "0.11.27": "47b3a40fb68995e92e1fc47a13430e8c9cdaa190f444d1a67a8f44e9e2a9ca92",
+      "0.11.28": "47b3a40fb68995e92e1fc47a13430e8c9cdaa190f444d1a67a8f44e9e2a9ca92"
+    }
+  },
+  "upstreamDelta": "0.11.28新增可配置CSS对象动画，移动端待同步/验收；本次只调整本地日记日期头部，不升级桌面依赖。"
+}

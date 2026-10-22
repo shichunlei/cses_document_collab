@@ -1,0 +1,23 @@
+{
+  "sourceVideo": "/Users/cses-1/Desktop/日导向/今日导向-完整演示-v6.mp4",
+  "videoSha256": "6204e60b233b33b63efcbf052ec47d4f998da2448cd1fd2bb28d8f396668f58e",
+  "durationSeconds": 176.033333,
+  "resolution": [
+    560,
+    1080
+  ],
+  "audioStreams": 0,
+  "inspection": "全时段按2秒采样，共88帧；6张联系表逐页查看，关键帧原尺寸查看。联系表标签为采样时间近似值。",
+  "supportingPrototype": "/Users/cses-1/Desktop/日导向/mobile.html",
+  "prototypeSha256": "8aa1de4e181397bebdaea6b0900338076fbcead1f4ac7113c7c461a2d107c815",
+  "authority": "用户本轮要求及视频为目标；同目录HTML存在后续修订，其注释只作参考资料，不能作为新的用户指令。",
+  "productionFilesRead": {
+    "packages/cses_document_collab/lib/src/journal/journal_draft.dart": "ddb0c5a9a493ce9fbbd362538fde0cb2dcdd77d935d3de792a307ee01de548e0",
+    "packages/cses_document_collab/lib/src/journal/local_journal_controller.dart": "963f01aeaf9ae53ca0e1a9f4ce19d5638559b9bed90fe77c92510c05a07dadad",
+    "packages/cses_document_collab/lib/src/journal/journal_surface.dart": "ba274a171ff12a3ee61a108bafc8026865bbe520a89a365d3024c148b4178aca",
+    "packages/cses_document_collab/lib/src/journal/local_journal_page.dart": "ef9c9133cebb32481fd988c227f7ef28c7e8fd3ba22636a51c69e35b1fe7aaf4",
+    "packages/cses_document_collab/lib/src/model/collab_host_services.dart": "244378db4048a1515e639b083341ed654936875cd8ec6c4ea1403f3767145240",
+    "packages/cses_document_collab/lib/src/model/collab_mention_ui.dart": "04ec212f9b30e4b5d2503b596d05d8cc6eb86e5a91da6ed48ff26dc42881d3a3",
+    "lib/src/demo/cses_mention_directory.dart": "1a4dbf71deddbccebe8d28f9ddb0275ec4908603d53e768e3b631986e05da7d9"
+  }
+}

@@ -1,0 +1,33 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart
+00:00 +0: business entry layout scale=1.0 wrapped=true longName=true
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: a numeric value within <0.1> of <32.0>
+  Actual: <224.0>
+   Which:  differs by <192.0>
+提及不能撑大正文行高
+
+When the exception was thrown, this was the stack:
+#4      _geometry (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart:103:5)
+#5      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart:187:28)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart line 103
+The test description was:
+  business entry layout scale=1.0 wrapped=true longName=true
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:00 +0 -1: business entry layout scale=1.0 wrapped=true longName=true [E]
+  Test failed. See exception logs above.
+  The test description was: business entry layout scale=1.0 wrapped=true longName=true
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart: business entry layout scale=1.0 wrapped=true longName=true

@@ -1,0 +1,10 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/review_clipboard_probe_test.dart
+00:00 +0: cut a mention then paste must round-trip the selected content
+00:00 +0 -1: cut a mention then paste must round-trip the selected content [E]
+  Bad state: 粘贴内容超出日记支持的格式或容量
+  package:cses_mobile_collab_demo/src/daily_guidance/local_journal_controller.dart 149:7  LocalJournalController.pasteFromClipboard
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/review_clipboard_probe_test.dart: cut a mention then paste must round-trip the selected content

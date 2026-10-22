@@ -1,0 +1,11 @@
+{
+  "checkedAt": "2026-10-22T17:02:13+0800",
+  "registry": "http://npm.runtongqiuben.com/",
+  "latest": "0.11.27",
+  "desktopDeclared": "0.11.24",
+  "desktopInstalled": "0.11.17",
+  "latestIntegrity": "sha512-nE0/fG7LYmsbHaqF6MwRVPb6BXHM9LW/5PitpdWJk4x4qlDott+i+O/iVnPQDfQg7B3qEONvQtfz1/kn62Vsyw==",
+  "desktopYarnLocked": "0.11.24",
+  "desktopHistoricalPnpmLocked": "0.2.78",
+  "latestArtifactIntegrityVerified": true
+}

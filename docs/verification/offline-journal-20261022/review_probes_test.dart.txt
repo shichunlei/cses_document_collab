@@ -1,0 +1,184 @@
+import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/cses_document_collab.dart';
+import 'package:cses_document_collab/src/journal/journal_ruled_content.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+/// 审查探针的内存持久端口，隔离实际账号和设备文件。
+class _Store implements JournalStore {
+  /// 最近提交的独立快照。
+  JournalDraft? draft;
+
+  /// 返回已经保存的快照。
+  @override
+  Future<JournalDraft?> read() async => draft;
+
+  /// 保存独立[draft]，用于核对有问题的操作是否进入持久化。
+  @override
+  Future<void> write(JournalDraft draft) async {
+    this.draft = draft;
+  }
+}
+
+/// 验证审查发现的输入和横格边界；断言为期望行为，当前缺陷会使探针失败。
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  for (final text in ['普通粘贴内容', 'https://example.com']) {
+    test(
+      'keyboard paste replaces the selection without losing data: $text',
+      () async {
+        final store = _Store();
+        final journal = await LocalJournalController.open(store: store);
+        final state = journal.editor.editorState;
+        try {
+          final node = state.getNodeAtPath([0, 0])!;
+          await state.apply(state.transaction..insertText(node, 0, '原来的记录'));
+          state.selection = Selection.single(
+            path: [0, 0],
+            startOffset: 0,
+            endOffset: node.delta!.length,
+          );
+          AppFlowyClipboard.mockSetData(AppFlowyClipboardData(text: text));
+          pasteCommand.handler(state);
+          await Future<void>.delayed(Duration.zero);
+          await journal.flush();
+          expect(
+            state.getNodeAtPath([0, 0])!.delta!.toPlainText(),
+            text,
+            reason: '粘贴后内容已保存：${store.draft!.documentJson}',
+          );
+        } finally {
+          AppFlowyClipboard.mockSetData(null);
+          await journal.close();
+        }
+      },
+    );
+  }
+
+  test(
+    'backspace at the beginning of self-check must not merge it into reflection',
+    () async {
+      final journal = await LocalJournalController.open(store: _Store());
+      final state = journal.editor.editorState;
+      try {
+        await state.apply(
+          state.transaction
+            ..insertText(state.getNodeAtPath([1, 0])!, 0, '感悟正文'),
+        );
+        await state.apply(
+          state.transaction
+            ..insertText(state.getNodeAtPath([2, 0])!, 0, '自检首行'),
+        );
+        await state.apply(
+          state.transaction..insertNode([2, 1], paragraphNode(text: '自检第二行')),
+        );
+        state.selection = Selection.collapsed(Position(path: [2, 0]));
+        backspaceCommand.handler(state);
+        await Future<void>.delayed(Duration.zero);
+        expect(state.getNodeAtPath([1, 0])!.delta!.toPlainText(), '感悟正文');
+        expect(
+          state.document.root.children.last.children.map(
+            (node) => node.delta!.toPlainText(),
+          ),
+          ['自检首行', '自检第二行'],
+        );
+      } finally {
+        await journal.close();
+      }
+    },
+  );
+
+  testWidgets(
+    'empty todo Enter exits the list within the fixed journal section',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(home: LocalJournalPage(store: _Store())),
+      );
+      await tester.pumpAndSettle(
+        const Duration(milliseconds: 100),
+        EnginePhase.sendSemanticsUpdate,
+        const Duration(seconds: 3),
+      );
+      final state = tester
+          .widget<AppFlowyEditor>(find.byType(AppFlowyEditor))
+          .editorState;
+      try {
+        final transaction = state.transaction
+          ..insertNode([0, 0], todoListNode(checked: false))
+          ..deleteNode(state.getNodeAtPath([0, 0])!);
+        await state.apply(transaction);
+        expect(state.getNodeAtPath([0, 0])!.type, TodoListBlockKeys.type);
+        state.selection = Selection.collapsed(Position(path: [0, 0]));
+        await tester.pump();
+        final keyboard = tester.state<KeyboardServiceWidgetState>(
+          find.byType(KeyboardServiceWidget),
+        );
+        await keyboard.textInputService.apply([
+          const TextEditingDeltaInsertion(
+            oldText: '',
+            textInserted: '\n',
+            insertionOffset: 0,
+            selection: TextSelection.collapsed(offset: 1),
+            composing: TextRange.empty,
+          ),
+        ]);
+        expect(
+          state.getNodeAtPath([0, 0])!.type,
+          ParagraphBlockKeys.type,
+          reason: '实际正文：${state.getNodeAtPath([0, 0])!.toJson()}',
+        );
+      } finally {
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pumpAndSettle(
+          const Duration(milliseconds: 100),
+          EnginePhase.sendSemanticsUpdate,
+          const Duration(seconds: 3),
+        );
+      }
+    },
+  );
+
+  testWidgets('a trailing soft newline still has a ruled line', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(home: LocalJournalPage(store: _Store())),
+    );
+    await tester.pumpAndSettle(
+      const Duration(milliseconds: 100),
+      EnginePhase.sendSemanticsUpdate,
+      const Duration(seconds: 3),
+    );
+    final state = tester
+        .widget<AppFlowyEditor>(find.byType(AppFlowyEditor))
+        .editorState;
+    try {
+      await state.apply(
+        state.transaction..insertText(state.getNodeAtPath([0, 0])!, 0, '第一行\n'),
+      );
+      await tester.pumpAndSettle(
+        const Duration(milliseconds: 100),
+        EnginePhase.sendSemanticsUpdate,
+        const Duration(seconds: 3),
+      );
+      final rules = tester
+          .renderObjectList<RenderJournalRules>(
+            find.descendant(
+              of: find.byKey(const ValueKey('journal-section-record')),
+              matching: find.byType(JournalRuledContent),
+            ),
+          )
+          .toList();
+      final lines = rules.expand((rule) => rule.debugLineOffsets).toList()
+        ..sort();
+      expect(lines, [32, 64, 96]);
+    } finally {
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle(
+        const Duration(milliseconds: 100),
+        EnginePhase.sendSemanticsUpdate,
+        const Duration(seconds: 3),
+      );
+    }
+  });
+}

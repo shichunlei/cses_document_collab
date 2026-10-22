@@ -16,11 +16,13 @@ class EditorCommandContext {
   /// [configuration] 默认原文档预设，[localOnly]标记纯本地装配且默认false。
   /// [services] 为null时使用空端口，与同步绑定独立。
   /// [pastePlainText] 可接管纯文本粘贴，借用所属会话且必须自行校验迟到结果。
+  /// [copySelection] 可接管复制/剪切；接收捕获的选区及cut意图，必须自行等待剪贴板成功并保护迟到写入。
   const EditorCommandContext({
     this.configuration = EditorConfiguration.document,
     this.localOnly = false,
     CollabHostServices? services,
     this.pastePlainText,
+    this.copySelection,
   }) : _services = services ?? const CollabHostServices(),
        _legacy = false;
 
@@ -30,6 +32,7 @@ class EditorCommandContext {
       localOnly = false,
       _services = const CollabHostServices(),
       pastePlainText = null,
+      copySelection = null,
       _legacy = true;
 
   final CollabHostServices _services;
@@ -43,6 +46,10 @@ class EditorCommandContext {
 
   /// 可选纯文本粘贴命令，返回Future在事务完成后结束。
   final Future<void> Function()? pastePlainText;
+
+  /// 可选的复制/剪切命令，Future在剪贴板及可选删除完成后结束；默认沿用编辑器行为。
+  /// 选区为调用时的快照，cut为true才允许删除；实现自行校验正文/权限/关闭及异步失效。
+  final Future<void> Function(Selection selection, {required bool cut})? copySelection;
 
   static final _contexts = Expando<EditorCommandContext>('editor-command-context');
 

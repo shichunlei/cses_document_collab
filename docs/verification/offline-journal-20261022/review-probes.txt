@@ -1,0 +1,88 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/_journal_review_probes_test.dart
+00:00 +0: keyboard paste replaces the selection without losing data: 普通粘贴内容
+00:00 +1: keyboard paste replaces the selection without losing data: https://example.com
+00:00 +1 -1: keyboard paste replaces the selection without losing data: https://example.com [E]
+  Expected: 'https://example.com'
+    Actual: ''
+     Which: is different. Both strings start the same, but the actual value is missing the following trailing characters: https://ex ...
+  粘贴后内容已保存：{"document":{"type":"page","children":[{"type":"local-journal-section","children":[{"type":"paragraph","data":{"delta":[],"cses_paragraph_target":"JB7v3D","cses_paragraph_textDefaults":"{\"value\":null}"}}],"data":{"section":"record"}},{"type":"local-journal-section","children":[{"type":"paragraph","data":{"delta":[]}}],"data":{"section":"reflection"}},{"type":"local-journal-section","children":[{"type":"paragraph","data":{"delta":[]}}],"data":{"section":"self-check"}}]}}
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/_journal_review_probes_test.dart 47:11         main.<fn>
+  
+00:00 +1 -1: backspace at the beginning of self-check must not merge it into reflection
+00:00 +1 -2: backspace at the beginning of self-check must not merge it into reflection [E]
+  Expected: '感悟正文'
+    Actual: '感悟正文自检首行'
+     Which: is different. Both strings start the same, but the actual value also has the following trailing characters: 自检首行
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/_journal_review_probes_test.dart 80:9          main.<fn>
+  
+00:00 +1 -2: empty todo Enter exits the list within the fixed journal section
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'paragraph'
+  Actual: 'todo_list'
+   Which: is different.
+          Expected: paragraph
+            Actual: todo_list
+                    ^
+           Differ at offset 0
+实际正文：{type: todo_list, data: {checked: false, delta: [{insert:
+}]}}
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/_journal_review_probes_test.dart:127:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/_journal_review_probes_test.dart line 127
+The test description was:
+  empty todo Enter exits the list within the fixed journal section
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +1 -3: empty todo Enter exits the list within the fixed journal section [E]
+  Test failed. See exception logs above.
+  The test description was: empty todo Enter exits the list within the fixed journal section
+  
+00:01 +1 -3: a trailing soft newline still has a ruled line
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: [32, 64, 96]
+  Actual: [32.0, 96.0]
+   Which: at location [1] is <96.0> instead of <64>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/_journal_review_probes_test.dart:174:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/_journal_review_probes_test.dart line 174
+The test description was:
+  a trailing soft newline still has a ruled line
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +1 -4: a trailing soft newline still has a ruled line [E]
+  Test failed. See exception logs above.
+  The test description was: a trailing soft newline still has a ruled line
+  
+00:01 +1 -4: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/_journal_review_probes_test.dart: a trailing soft newline still has a ruled line
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/_journal_review_probes_test.dart: backspace at the beginning of self-check must not merge it into reflection
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/_journal_review_probes_test.dart: empty todo Enter exits the list within the fixed journal section
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/_journal_review_probes_test.dart: keyboard paste replaces the selection without losing data: https://example.com

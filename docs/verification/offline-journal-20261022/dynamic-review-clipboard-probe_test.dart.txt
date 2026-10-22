@@ -1,0 +1,42 @@
+import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/guidance_people.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/journal_draft.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/journal_store.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/local_journal_controller.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+class _Store implements JournalStore {
+  JournalDraft? value;
+  @override
+  Future<JournalDraft?> read() async => value;
+  @override
+  Future<void> write(JournalDraft draft) async => value = draft;
+}
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  test('cut a mention then paste must round-trip the selected content', () async {
+    final store = _Store();
+    final journal = await LocalJournalController.open(store: store);
+    try {
+      final state = journal.editor.editorState;
+      final node = state.getNodeAtPath([0,0])!;
+      state.selection = Selection.collapsed(Position(path: node.path));
+      await journal.insertPeople(journal.captureInsertionTarget()!, const [GuidancePerson(id:'review-user', name:'审查人员')]);
+      await state.apply(state.transaction..insertText(node,node.delta!.length,'说明'));
+      final original = node.delta!.toPlainText();
+      state.selection = Selection.single(path:node.path,startOffset:0,endOffset:node.delta!.length);
+      cutCommand.handler(state);
+      await Future<void>.delayed(Duration.zero);
+      expect(AppFlowyClipboard.lastText,original);
+      expect(node.delta!.toPlainText(),isEmpty);
+      await journal.flush();
+      expect(store.value!.documentJson, isNot(contains('审查人员')));
+      AppFlowyClipboard.mockSetData(AppFlowyClipboardData(text:AppFlowyClipboard.lastText));
+      await expectLater(journal.pasteFromClipboard(), completes);
+    } finally {
+      AppFlowyClipboard.mockSetData(null);
+      await journal.close();
+    }
+  });
+}

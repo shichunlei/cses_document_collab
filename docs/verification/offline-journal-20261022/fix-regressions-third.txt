@@ -1,0 +1,28 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_regressions_test.dart
+00:00 +0: ctrl+v pastes plain text atomically, saves and supports undo: https://example.com
+00:01 +1: ctrl+v pastes plain text atomically, saves and supports undo: 13800138000
+00:01 +2: ctrl+v pastes plain text atomically, saves and supports undo: 甲
+乙丙
+00:02 +3: ctrl+shift+v pastes plain text atomically, saves and supports undo: https://example.com
+00:02 +4: ctrl+shift+v pastes plain text atomically, saves and supports undo: 13800138000
+00:02 +5: ctrl+shift+v pastes plain text atomically, saves and supports undo: 甲
+乙丙
+00:02 +6: paste port rejects overflow, objects and cross-section replacement without changing content or history
+00:02 +7: pending clipboard read cannot overwrite after edit
+00:02 +8: pending clipboard read cannot overwrite after selection
+00:02 +9: pending clipboard read cannot overwrite after close
+00:02 +10: backspace preserves fixed section boundaries and allows same-section merge
+00:03 +11: delete preserves fixed section boundaries and allows same-section merge
+00:03 +12: ime preserves fixed section boundaries and allows same-section merge
+00:03 +13: empty todo_list Enter returns to paragraph and supports undo/redo
+00:03 +14: empty bulleted_list Enter returns to paragraph and supports undo/redo
+00:03 +15: empty numbered_list Enter returns to paragraph and supports undo/redo
+00:03 +16: all soft lines remain ruled in edit and preview: "第一行\n" / 1.0
+00:04 +17: all soft lines remain ruled in edit and preview: "第一行\n\n\n" / 1.0
+00:04 +18: all soft lines remain ruled in edit and preview: "\n\n" / 1.0
+00:04 +19: all soft lines remain ruled in edit and preview: "首行\n\n末行" / 1.0
+00:04 +20: all soft lines remain ruled in edit and preview: "第一行\n" / 2.0
+00:04 +21: all soft lines remain ruled in edit and preview: "第一行\n\n\n" / 2.0
+00:04 +22: all soft lines remain ruled in edit and preview: "\n\n" / 2.0
+00:04 +23: all soft lines remain ruled in edit and preview: "首行\n\n末行" / 2.0
+00:05 +24: All tests passed!

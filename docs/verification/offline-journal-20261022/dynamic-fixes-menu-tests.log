@@ -1,0 +1,52 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_copy_delegate_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_copy_delegate_test.dart: (setUpAll)
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_copy_delegate_test.dart: mobile copy delegates captured selection without fallback writes or deletion (variant: TargetPlatform.android)
+00:00 +1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: multiline paste replaces a range in one undo and preserves surrounding styles (variant: TargetPlatform.android)
+00:01 +2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: multiline paste replaces a range in one undo and preserves surrounding styles (variant: TargetPlatform.android)
+00:01 +3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: multiline paste replaces a range in one undo and preserves surrounding styles (variant: TargetPlatform.android)
+00:01 +3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_copy_delegate_test.dart: a failed copy delegate preserves source and shows the menu error message (variant: TargetPlatform.android)
+DocCollab: 划词操作失败: PlatformException(clipboard-unavailable, null, null, null)
+#0      main.<anonymous closure>.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_copy_delegate_test.dart:181:9)
+#1      _CollabMobileSelectionMenuState._copy (package:cses_document_collab/src/editor/collab_mobile_selection_menu.dart:215:17)
+#2      _CollabMobileSelectionMenuState._buildMenu.<anonymous closure>.<anonymous closure> (package:cses_document_collab/src/editor/collab_mobile_selection_menu.dart:102:35)
+#3      _CollabMobileSelectionMenuState._run (package:cses_document_collab/src/editor/collab_mobile_selection_menu.dart:188:19)
+#4      _CollabMobileSelectionMenuState._button.<anonymous closure> (package:cses_document_collab/src/editor/collab_mobile_selection_menu.dart:180:17)
+#5      _choose (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_copy_delegate_test.dart:90:74)
+#6      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_copy_delegate_test.dart:183:13)
+<asynchronous suspension>
+#7      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#8      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+#9      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+
+00:01 +4: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: multiline paste replaces a range in one undo and preserves surrounding styles (variant: TargetPlatform.android)
+00:01 +5: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: cut waits for clipboard and rejects remote edits during that wait (variant: TargetPlatform.android)
+00:01 +6: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: link tracks original block after remote reorder (variant: TargetPlatform.android)
+00:01 +7: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: formula conversion rejects remote changes while preview is open (variant: TargetPlatform.android)
+00:02 +8: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: range rejects cross-cell selection, code and whole-block selection
+00:02 +9: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: keyboard-hidden range exposes native menu and copy (variant: TargetPlatform.android)
+00:02 +10: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: readonly range keeps copy and select all only (variant: TargetPlatform.iOS)
+00:02 +11: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: select all completes and later menu actions remain available (variant: TargetPlatform.android)
+00:02 +12: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: link keeps text and styles, supports undo, edit and remove (variant: TargetPlatform.android)
+00:02 +13: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: link rejects text while dialog is open (variant: TargetPlatform.android)
+00:03 +14: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: link rejects delete while dialog is open (variant: TargetPlatform.android)
+00:03 +15: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: link rejects readonly while dialog is open (variant: TargetPlatform.android)
+00:03 +16: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: link rejects format while dialog is open (variant: TargetPlatform.android)
+00:03 +17: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: formula prefills selected text and atom undo restores styled UTF16 text (variant: TargetPlatform.android)
+00:03 +18: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: cancel formula leaves original text and selection (variant: TargetPlatform.android)
+00:03 +19: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel reuses bold, colors, heading and alignment controls without keyboard (variant: TargetPlatform.android)
+00:04 +20: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:06 +21: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel continues after zero-depth list outdent (variant: TargetPlatform.android)
+00:06 +22: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel validates remote type after a local conversion (variant: TargetPlatform.android)
+00:07 +23: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel validates remote delete after a local conversion (variant: TargetPlatform.android)
+00:07 +24: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel validates remote readonly after a local conversion (variant: TargetPlatform.android)
+00:07 +25: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel validates remote text after a local conversion (variant: TargetPlatform.android)
+00:08 +26: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel validates remote reorder after a local conversion (variant: TargetPlatform.android)
+00:08 +27: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format action checks live range after remote reorder (variant: TargetPlatform.android)
+00:08 +28: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format action checks live range after remote text (variant: TargetPlatform.android)
+00:08 +29: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: cross paragraph menu allows formats but hides link and formula (variant: TargetPlatform.android)
+00:08 +30: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: stable snapshot follows reorder, rejects insertion inside range and object conversion
+00:08 +31: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: (tearDownAll)
+00:08 +31: All tests passed!

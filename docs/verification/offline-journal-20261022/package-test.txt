@@ -1,0 +1,43 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_test.dart: three stable sections and date survive close and reopen on another day
+00:00 +1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_test.dart: auto save debounce persists without an explicit save button
+00:00 +2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_test.dart: slow saves serialize and include edits arriving during the first write
+00:00 +3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_test.dart: save failure retains dirty content and retry saves the latest revision
+00:00 +4: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_test.dart: section deletion, reordering, unsupported objects and last-leaf deletion are atomic rejections
+00:00 +5: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_test.dart: paragraph splitting and list conversion retain undo and redo inside their section
+00:00 +6: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_test.dart: unsupported persisted versions and malformed dates never become blank drafts
+00:00 +7: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_test.dart: closing waits for the last write and rejects late mutations
+00:00 +8: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_test.dart: synchronous dispose releases listeners and still completes pending persistence
+00:00 +9: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: same paper layout in edit and preview at 390.0/1.0
+00:01 +10: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: same paper layout in edit and preview at 390.0/1.0
+00:01 +11: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: same paper layout in edit and preview at 390.0/1.0
+00:02 +12: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: same paper layout in edit and preview at 390.0/1.0
+00:02 +13: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: same paper layout in edit and preview at 390.0/1.0
+00:02 +14: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: same paper layout in edit and preview at 390.0/1.0
+00:02 +15: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: same paper layout in edit and preview at 390.0/1.0
+00:02 +16: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: same paper layout in edit and preview at 390.0/1.0
+00:02 +17: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: same paper layout in edit and preview at 390.0/1.0
+00:02 +18: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_journal_page_test.dart: same paper layout in edit and preview at 390.0/1.0
+00:02 +19: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/image_composer_page_test.dart: preview uses an isolated noninteractive document and has no export
+00:02 +20: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/image_composer_page_test.dart: preview uses an isolated noninteractive document and has no export
+00:02 +21: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/image_composer_page_test.dart: preview uses an isolated noninteractive document and has no export
+00:02 +22: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/image_composer_page_test.dart: preview uses an isolated noninteractive document and has no export
+00:03 +23: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/image_composer_page_test.dart: preview uses an isolated noninteractive document and has no export
+00:03 +24: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/image_composer_page_test.dart: preview uses an isolated noninteractive document and has no export
+00:03 +25: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/image_composer_page_test.dart: preview uses an isolated noninteractive document and has no export
+00:03 +26: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/image_composer_page_test.dart: preview uses an isolated noninteractive document and has no export
+00:03 +27: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/image_composer_page_test.dart: preview uses an isolated noninteractive document and has no export
+00:03 +28: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/image_composer_page_test.dart: preview uses an isolated noninteractive document and has no export
+00:03 +29: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/image_composer_page_test.dart: preview uses an isolated noninteractive document and has no export
+00:03 +30: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/image_composer_page_test.dart: preview uses an isolated noninteractive document and has no export
+00:03 +31: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/image_composer_page_test.dart: preview uses an isolated noninteractive document and has no export
+00:03 +32: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/image_composer_page_test.dart: preview uses an isolated noninteractive document and has no export
+00:03 +33: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/image_composer_operations_test.dart: image editor uses original menus and isolates host services
+00:03 +34: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/image_composer_operations_test.dart: image editor uses original menus and isolates host services
+00:03 +35: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/image_composer_operations_test.dart: image editor uses original menus and isolates host services
+00:04 +36: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/image_composer_operations_test.dart: image editor uses original menus and isolates host services
+00:04 +37: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/image_composer_operations_test.dart: image editor uses original menus and isolates host services
+00:04 +38: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/image_composer_operations_test.dart: image editor uses original menus and isolates host services
+00:04 +39: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/image_composer_page_test.dart: long preview scrolls while todo controls remain inert
+00:04 +40: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/image_composer_operations_test.dart: instance configuration filters original menus and shortcuts
+00:05 +41: All tests passed!

@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-10-22T18:49:50.041410+08:00",
+  "deviceModel": "vivo V2353A",
+  "installedNormalEntry": true,
+  "installedApkMatchesBuiltApk": true,
+  "originalDraftMigrationFingerprintChecks": "device-after-migration.json",
+  "realOrganizationDirectoryVisible": true,
+  "selectionCancelledWithoutAgentTextInsertion": true,
+  "previewVisibleAndInputClosed": true,
+  "notCovered": [
+    "controlled real IME composition/drag selection for new inline references",
+    "iOS device",
+    "real business dispatch/status/notification"
+  ]
+}
