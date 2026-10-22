@@ -351,7 +351,7 @@ final class CsesDocCollaborationSession {
     _retryTimer = Timer(delay, () => _beginSync(join: true));
   }
 
-  /// 非预期 [error]/[stackTrace] 由此统一记录；Schema 和格式错误停止自动重试。
+  /// 非预期 [error]/[stackTrace] 由此统一记录；Schema、初始化来源冲突和格式错误停止自动重试。
   void _exception(Object error, StackTrace stackTrace) {
     CollabDiagnostics.report(
       '文档协同处理失败',
@@ -362,9 +362,20 @@ final class CsesDocCollaborationSession {
     final incompatible = error.toString().contains(
       'UNSUPPORTED_DOCUMENT_SCHEMA',
     );
+    final bootstrapConflict = error.toString().contains(
+      'DOCUMENT_BOOTSTRAP_CONFLICT',
+    );
     _fail(
-      incompatible ? 'UNSUPPORTED_DOCUMENT_SCHEMA' : 'INVALID_RESPONSE',
-      incompatible ? '文档结构不合法或缓存模型冲突，已停止写入并保留本地正文' : '协同数据解析失败，本地正文已保留',
+      bootstrapConflict
+          ? 'DOCUMENT_BOOTSTRAP_CONFLICT'
+          : incompatible
+          ? 'UNSUPPORTED_DOCUMENT_SCHEMA'
+          : 'INVALID_RESPONSE',
+      bootstrapConflict
+          ? '服务端已有不同来源的初始正文，已停止写入并保留本地内容，请核对文档'
+          : incompatible
+          ? '文档结构不合法或缓存模型冲突，已停止写入并保留本地正文'
+          : '协同数据解析失败，本地正文已保留',
       retry: false,
     );
   }

@@ -15,6 +15,8 @@ use yrs::{
 #[path = "blockcraft.rs"]
 mod blockcraft;
 use super::block_locks;
+#[path = "document_bootstrap.rs"]
+mod document_bootstrap;
 #[path = "paragraph_style.rs"]
 mod paragraph_style;
 
@@ -202,6 +204,8 @@ struct CollabEngine {
     connection: Connection,
     /// Some 时使用正式 blocks 根；值是业务 docId，不能以本机哈希缓存键替代。
     blockcraft_root_id: Option<String>,
+    /// 本机初始化标记的正式根，打开时读取一次，避免每个协同增量查询SQLite。
+    bootstrap_root_id: Option<String>,
 }
 
 impl CollabEngine {
@@ -248,6 +252,7 @@ impl CollabEngine {
                 .map_err(|error| format!("cannot apply persisted Yjs update: {error}"))?;
         }
 
+        let bootstrap_root_id = document_bootstrap::protected_root(&connection, &document_id)?;
         let mut engine = Self {
             document_id,
             database_path,
@@ -261,6 +266,7 @@ impl CollabEngine {
             block_colors,
             connection,
             blockcraft_root_id: None,
+            bootstrap_root_id,
         };
         let mut persisted_update_count = updates.len() as u32;
         // 仅清理旧私有草稿头部，正式 BlockCraft 的 blocks 共享类型完全不动。
@@ -582,6 +588,7 @@ impl CollabEngine {
     /// 未写入内容的旧引擎可在第一次收到合法 BlockCraft 根时识别正式模型。
     /// 校验失败不改变当前 Doc/SQLite，正式业务 docId 与缓存键由打开 API 分别提供。
     fn apply_cses_update(&mut self, payload: Vec<u8>) -> Result<WireMessageResult, String> {
+        document_bootstrap::guard_remote(self, &payload)?;
         let probe = create_compatible_doc();
         let local = self
             .doc
@@ -1639,6 +1646,35 @@ pub fn open_cses_document(
     let result = open_result(&engine, count);
     *ENGINE.lock() = Some(engine);
     Ok(result)
+}
+
+/// Prepare a newly created formal document without installing the global engine.
+/// `document_id` is the server root, `cache_document_id` is the host's isolated cache,
+/// and `database_path` is the SQLite file. `operation_id`, `paragraph_id` and the
+/// epoch-millisecond `created_time` remain stable across retries. Returns the root
+/// snapshot JSON after the initial V1 update and local receipt commit atomically.
+/// An occupied engine, existing content or mismatching receipt fails without mutation.
+#[flutter_rust_bridge::frb(sync)]
+pub fn prepare_cses_document(
+    document_id: String,
+    cache_document_id: String,
+    database_path: String,
+    operation_id: String,
+    paragraph_id: String,
+    created_time: f64,
+) -> Result<String, String> {
+    let guard = ENGINE.lock();
+    if guard.is_some() {
+        return Err("COLLAB_DOCUMENT_IN_USE: 请先关闭当前文档".into());
+    }
+    document_bootstrap::prepare(
+        document_id,
+        cache_document_id,
+        database_path,
+        operation_id,
+        paragraph_id,
+        created_time,
+    )
 }
 
 /// 返回正式模型的只读原因，None 表示当前已知结构可编辑；不代表服务端业务授权。

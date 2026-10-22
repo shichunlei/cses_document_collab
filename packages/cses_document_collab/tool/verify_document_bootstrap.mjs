@@ -1,0 +1,42 @@
+// Inspect the actual mobile update with the desktop's installed Yjs and published
+// RootBlockSchema implementation, then return an edit using the same shared types.
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import vm from 'node:vm';
+import {createRequire} from 'node:module';
+
+const [desktopRoot, packageRoot, directory] = process.argv.slice(2);
+if (!directory) throw Error('Usage: node tool/verify_document_bootstrap.mjs <desktop-root> <package-root> <directory>');
+const require = createRequire(path.resolve(desktopRoot, 'package.json'));
+const Y = require('yjs');
+const source = fs.readFileSync(path.join(packageRoot, 'fesm2022/ccc-blockcraft.mjs'), 'utf8');
+const start = source.indexOf('const RootBlockSchema = {');
+const end = source.indexOf('\n};', start) + 3;
+assert.ok(start >= 0 && end > start, 'review published RootBlockSchema extraction boundary');
+const context = vm.createContext({RootBlockComponent: class {}, BlockNodeType$1: {root: 'root'}});
+vm.runInContext(source.slice(start, end) + ';globalThis.schema = RootBlockSchema;', context);
+const snapshot = JSON.parse(fs.readFileSync(path.join(directory, 'snapshot.json'), 'utf8'));
+const doc = new Y.Doc({gc: false});
+Y.applyUpdate(doc, fs.readFileSync(path.join(directory, 'phone.update')));
+const blocks = doc.getMap('blocks');
+assert.equal(blocks.size, 2);
+const root = blocks.get(snapshot.id);
+const paragraph = blocks.get(snapshot.children[0].id);
+assert.ok(root instanceof Y.Map);
+assert.ok(root.get('children') instanceof Y.Array);
+assert.ok(paragraph.get('children') instanceof Y.Text);
+const expected = context.schema.createSnapshot(snapshot.id, []);
+assert.equal(root.get('flavour'), expected.flavour);
+assert.equal(root.get('nodeType'), expected.nodeType);
+assert.deepEqual(root.get('props').toJSON(), {});
+assert.deepEqual(root.get('meta').toJSON(), snapshot.meta);
+assert.deepEqual(root.get('children').toArray(), [snapshot.children[0].id]);
+assert.equal(paragraph.get('nodeType'), 'editable');
+assert.deepEqual(paragraph.get('props').toJSON(), {depth: 0});
+assert.equal(paragraph.get('children').length, 0);
+const vector = Y.encodeStateVector(doc);
+paragraph.get('children').insert(0, '桌面接续手机新建');
+fs.writeFileSync(path.join(directory, 'desktop.update'), Y.encodeStateAsUpdate(doc, vector));
+doc.destroy();
+process.stdout.write('Published desktop schema + Yjs read/edit interoperability passed\n');

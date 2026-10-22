@@ -67,7 +67,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.13.0';
 
   @override
-  int get rustContentHash => -2072767205;
+  int get rustContentHash => 1588999200;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -126,6 +126,15 @@ abstract class RustLibApi extends BaseApi {
   OpenDocumentResult crateApiCollabOpenDocument({
     required String documentId,
     required String databasePath,
+  });
+
+  String crateApiCollabPrepareCsesDocument({
+    required String documentId,
+    required String cacheDocumentId,
+    required String databasePath,
+    required String operationId,
+    required String paragraphId,
+    required double createdTime,
   });
 
   OpenDocumentResult crateApiCollabResetLocalDocument();
@@ -586,12 +595,64 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   );
 
   @override
+  String crateApiCollabPrepareCsesDocument({
+    required String documentId,
+    required String cacheDocumentId,
+    required String databasePath,
+    required String operationId,
+    required String paragraphId,
+    required double createdTime,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(documentId, serializer);
+          sse_encode_String(cacheDocumentId, serializer);
+          sse_encode_String(databasePath, serializer);
+          sse_encode_String(operationId, serializer);
+          sse_encode_String(paragraphId, serializer);
+          sse_encode_f_64(createdTime, serializer);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 18)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_String,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta: kCrateApiCollabPrepareCsesDocumentConstMeta,
+        argValues: [
+          documentId,
+          cacheDocumentId,
+          databasePath,
+          operationId,
+          paragraphId,
+          createdTime,
+        ],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiCollabPrepareCsesDocumentConstMeta =>
+      const TaskConstMeta(
+        debugName: "prepare_cses_document",
+        argNames: [
+          "documentId",
+          "cacheDocumentId",
+          "databasePath",
+          "operationId",
+          "paragraphId",
+          "createdTime",
+        ],
+      );
+
+  @override
   OpenDocumentResult crateApiCollabResetLocalDocument() {
     return handler.executeSync(
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 18)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 19)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_open_document_result,
@@ -626,7 +687,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           sse_encode_bool(grant, serializer);
           sse_encode_opt_String(expectedOwner, serializer);
           sse_encode_bool(expectedTemplate, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 19)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 20)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_block_change_result,

@@ -1,0 +1,56 @@
+{
+  "date": "2026-10-22",
+  "finding": "L2/P2",
+  "status": "fixed",
+  "implementation": "one in-flight position request; immediate progress state; identity token checks before success/error writes; invalidate on dispose; unlock in finally",
+  "changed_handmade_dart_files": [
+    "lib/src/demo/document_creation/document_creation_page.dart",
+    "test/document_creation_coordinator_test.dart"
+  ],
+  "tests": {
+    "target_files": 3,
+    "passed": 55,
+    "failed": 0,
+    "skipped": 0,
+    "new_cases": 4,
+    "before_fix_new_failure_cases": 2
+  },
+  "new_regressions": [
+    "cached retry callback invoked twice before a frame sends one request",
+    "failed retry unlocks and later retry is deduplicated",
+    "late success after page unmount is ignored",
+    "late failure after page unmount is handled"
+  ],
+  "analysis": "no issues in affected host and related source/tests",
+  "dart_format": "2 handmade files checked, no final changes",
+  "git_diff_check": "passed",
+  "source_sha256": {
+    "lib/src/demo/document_creation/document_creation_page.dart": "421defbc0388adfbab740412d226aa9bb45f6a5b6a015396fded57520b233eef",
+    "test/document_creation_coordinator_test.dart": "5ce6e09fe45c4c3e67cbde9cc418e2fbfa6c9c666d45b920a0867d3a0c718134"
+  },
+  "baseline_source_sha256": {
+    "lib/src/demo/document_creation/document_creation_page.dart": "c4613b8e4415527b1366e263bac07ec2ba438424de2a0a94cb6772ae69757cd2",
+    "test/document_creation_coordinator_test.dart": "c98db522c193cf1cac2aaf9a5a0ecd602904ba26d815c86b06b89d89b002eb4e"
+  },
+  "android": {
+    "build": "debug apk passed",
+    "sha256": "d8e79e9a9c491f898eba06fc7adcea56a10f56b584f0f221b430aced65f2b197",
+    "embedded_page_source_matches_current_file": true,
+    "device_flow_run": false
+  },
+  "blockcraft": {
+    "latest": "0.11.27",
+    "desktop_declared": "0.11.24",
+    "desktop_yarn": "0.11.24",
+    "desktop_installed": "0.11.21",
+    "upgraded": false
+  },
+  "not_rerun": [
+    "unchanged package/Rust tests",
+    "real business service integration",
+    "physical devices",
+    "iOS complete app (previous SwiftPM blocker)"
+  ],
+  "staged_by_this_task": false,
+  "committed_by_this_task": false
+}

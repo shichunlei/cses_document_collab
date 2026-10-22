@@ -1,0 +1,8 @@
+iOS integration attempt: SwiftPM resolution did not finish after more than ten minutes; test assertions were not executed.
+
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -clonedSourcePackagesDirPath /Users/shichunlei/workspace/mobile-collab-demo/build/ios/SourcePackages -resolvePackageDependencies -skipPackageUpdates -onlyUsePackageVersionsFromResolvedFile -project Runner.xcodeproj -scheme Runner
+
+Resolve Package Graph
+
+TIMEOUT: locked SwiftPM resolution exceeded 90 seconds

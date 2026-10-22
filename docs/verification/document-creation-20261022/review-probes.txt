@@ -1,0 +1,40 @@
+=== 首次记录失败补充复现 ===
+00:00 +0: loading /tmp/document_creation_review_probe_test.dart
+00:00 +0: review journal failure before HTTP must permit a fresh attempt
+00:00 +0 -1: review journal failure before HTTP must permit a fresh attempt [E]
+  Expected: 'server-doc'
+    Actual: <null>
+     Which: not an <Instance of 'String'>
+
+  package:matcher                                      expect
+  package:flutter_test/src/widget_tester.dart 473:18   expect
+  /tmp/document_creation_review_probe_test.dart 111:5  main.<fn>
+
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /tmp/document_creation_review_probe_test.dart: review journal failure before HTTP must permit a fresh attempt
+
+=== 仅删除更新补充复现 ===
+   Compiling cses_collab_core v0.1.0 (/var/folders/sx/qjydrwp90_99lm16z_rld7n00000gn/T/document-creation-review-gs0h47na)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 32.31s
+     Running unittests src/lib.rs (packages/cses_document_collab/rust/target/debug/deps/cses_collab_core-73160672f7997dda)
+
+running 1 test
+test api::collab::document_bootstrap::review_probe::review_delete_only_changes_must_reject_reprepare ... FAILED
+
+failures:
+
+---- api::collab::document_bootstrap::review_probe::review_delete_only_changes_must_reject_reprepare stdout ----
+
+thread 'api::collab::document_bootstrap::review_probe::review_delete_only_changes_must_reject_reprepare' (2613736) panicked at src/api/document_bootstrap.rs:344:9:
+changed body must not return stale initial snapshot
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    api::collab::document_bootstrap::review_probe::review_delete_only_changes_must_reject_reprepare
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 106 filtered out; finished in 0.04s
+
+error: test failed, to rerun pass `--lib`

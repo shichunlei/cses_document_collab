@@ -29,6 +29,7 @@ dependencies:
   lucide_icons_flutter: ^4.0.0
 
 dev_dependencies:
+  path: ^1.9.1
   integration_test:
     sdk: flutter
   flutter_test:

@@ -16,6 +16,10 @@ dependencies:
     path: packages/cses_document_collab
   cses_common:
     path: ../cses/cses.common
+  crypto: ^3.0.7
+  dio: ^5.11.1
+  path: ^1.9.1
+  path_provider: ^2.1.6
 
 dev_dependencies:
   appflowy_editor:

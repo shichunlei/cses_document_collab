@@ -1,0 +1,35 @@
+00:00 +0: loading /tmp/document_space_list_review_probe_test.dart
+00:00 +0: review completed restoration keeps its target when spaces arrive after completion
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'restored-folder'
+  Actual: 'space'
+   Which: is different.
+          Expected: restored-f ...
+            Actual: space
+                    ^
+           Differ at offset 0
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///tmp/document_space_list_review_probe_test.dart:455:5)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/document_space_list_review_probe_test.dart line 455
+The test description was:
+  review completed restoration keeps its target when spaces arrive after completion
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:04 +0 -1: review completed restoration keeps its target when spaces arrive after completion [E]
+  Test failed. See exception logs above.
+  The test description was: review completed restoration keeps its target when spaces arrive after completion
+
+00:05 +0 -1: Some tests failed.
+
+Failing tests:
+  /tmp/document_space_list_review_probe_test.dart: review completed restoration keeps its target when spaces arrive after completion

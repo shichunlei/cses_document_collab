@@ -31,6 +31,28 @@ OpenDocumentResult openCsesDocument({
   databasePath: databasePath,
 );
 
+/// Prepare a newly created formal document without installing the global engine.
+/// `document_id` is the server root, `cache_document_id` is the host's isolated cache,
+/// and `database_path` is the SQLite file. `operation_id`, `paragraph_id` and the
+/// epoch-millisecond `created_time` remain stable across retries. Returns the root
+/// snapshot JSON after the initial V1 update and local receipt commit atomically.
+/// An occupied engine, existing content or mismatching receipt fails without mutation.
+String prepareCsesDocument({
+  required String documentId,
+  required String cacheDocumentId,
+  required String databasePath,
+  required String operationId,
+  required String paragraphId,
+  required double createdTime,
+}) => RustLib.instance.api.crateApiCollabPrepareCsesDocument(
+  documentId: documentId,
+  cacheDocumentId: cacheDocumentId,
+  databasePath: databasePath,
+  operationId: operationId,
+  paragraphId: paragraphId,
+  createdTime: createdTime,
+);
+
 /// 返回正式模型的只读原因，None 表示当前已知结构可编辑；不代表服务端业务授权。
 /// 每次应用远端更新后重新查询，锁、修订和行内对象可能随协同状态变化。
 String? documentReadOnlyReason() =>

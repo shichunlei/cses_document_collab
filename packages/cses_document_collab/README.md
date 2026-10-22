@@ -70,6 +70,64 @@ Widget editor(CollabController controller) =>
 - `localDraft` 是独立模式，保留旧 demo schema 和头部迁移；默认封面由宿主传入。正式模式不经过草稿初始化、不创建业务根/标题/封面。
 - FRB、Rust 原始 API、EditorState 和内部块类型是包内实现，宿主使用公开控制器状态/命令及编辑页。不要从 src 导入。
 
+## 正式空文档准备
+
+宿主先通过业务HTTP创建文档记录，持久化返回的正式docId和稳定的operationId、paragraphId、createdAt，
+等待旧控制器关闭，再调用公开的`DocumentBootstrapper.prepareBlank()`。该方法不创建视图或协同会话，
+短暂取得原生所有权，在同一SQLite事务保存初始V1增量和本地初始化标记，完成后释放准备资源。
+已占用引擎、既有正文或不同初始化身份会拒绝执行。同一操作重试恢复原CRDT身份；同时核对插入向量和删除集合，正文已变化（包括纯删除）时拒绝重新初始化。
+初始事务没有删除，既有只保存initial_vector的本地标记也可直接校验，不改变SQLite结构或FRB接口。
+
+```dart
+import 'package:cses_document_collab/cses_document_collab.dart';
+
+Future<CollabController> openNewDocument({
+  required CollabDocumentConfig config, // 已取得正式docId，账号分区由包计算。
+  required CsesCollabGateway gateway,
+  required String operationId,
+  required String paragraphId,
+  required DateTime createdAt,
+  required Future<void> Function(PreparedDocument) persistInitialSnapshot,
+}) async {
+  final prepared = await DocumentBootstrapper.prepareBlank(
+    config: config, operationId: operationId,
+    paragraphId: paragraphId, createdAt: createdAt,
+  );
+  // 宿主保存{docId: prepared.documentId, blocks: prepared.insertDiffs}并核验业务结果。
+  await persistInitialSnapshot(prepared);
+  final controller = CollabController.cses(config: config, gateway: gateway);
+  try {
+    await controller.initialize(); // 恢复刚才落盘的同一份增量。
+    return controller; // 视图卸载后由调用方await controller.close()。
+  } catch (_) {
+    await controller.close();
+    rethrow;
+  }
+}
+```
+
+`PreparedDocument.snapshotJson`可供宿主创建恢复记录保存，`insertDiffs`每次返回独立的桌面HTTP Insert投影。
+包不调用建档、目录或快照HTTP接口，不读取Common账号。示例之外的完整恢复流程由宿主管理：建档结果不明
+不自动重发，已知docId继续同一文档，快照结果不明先回读核对。Demo实现见根项目`lib/src/demo/document_creation/`。
+
+初始化生成root与一个空paragraph；根子序列使用Y.Array，正文使用空Y.Text，不创建业务标题或封面，不进入用户撤销历史。
+普通正式打开和清缓存不触发初始化。本机初始化过的文档检测到不同CRDT来源的远端根时，返回
+`DOCUMENT_BOOTSTRAP_CONFLICT`并停止补传和自动重试，保留本地数据供恢复。HTTP快照与PaaS根来源仍需真实服务联调确认。
+本地准备、HTTP成功、协同ready均不等同服务端正文持久化ACK。
+
+真实FRB/SQLite及桌面数据层互通可在包目录运行（先按下文构建宿主动态库；Node使用18或更新版本）：
+
+```bash
+flutter test --no-pub \
+  --dart-define=BOOTSTRAP_DESKTOP_ROOT=/path/to/cses-client \
+  --dart-define=BOOTSTRAP_PACKAGE_ROOT=/path/to/blockcraft/package \
+  --dart-define=BOOTSTRAP_NODE_EXECUTABLE=/path/to/node \
+  test/document_bootstrapper_native_test.dart test/prepared_document_test.dart
+```
+
+未提供桌面路径时互通项显式标记跳过；普通原生准备/编辑/重开项仍需真实动态库，缺库直接失败。
+该测试不连接真实业务服务，也不替代桌面窗口或手机在线验收。
+
 ## 编辑器与同步边界
 
 `DocumentEditorController`独立拥有AppFlowy内存文档、输入继承、选区和本地历史，

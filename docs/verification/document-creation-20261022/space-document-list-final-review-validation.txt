@@ -1,0 +1,75 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: create persists stages before writes; one doc and one prepared paragraph
+00:00 +1: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: double click shares in-flight create and does not duplicate shell
+00:00 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: concurrent restore shares one read and does not overwrite an active create
+00:00 +3: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: failed restore can retry after storage recovery
+00:00 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: unknown create outcome never automatically creates again
+00:00 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: journal failure before HTTP permits a fresh attempt after storage recovers
+00:00 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: reviewed unknown operation persists before allowing a separate new creation
+00:00 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: account change cannot resolve an unknown operation or retain a busy lock
+00:00 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: in-flight create cannot be ended as a reviewed unknown result
+00:00 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: explicit shell rejection allows a new operation
+00:00 +10: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: native failure resumes the same doc and stable paragraph
+00:00 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: receipt write failure retains known ID in memory and retries storage before native work
+00:00 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: account change during native preparation prevents initial HTTP write and navigation
+00:00 +13: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: uncertain snapshot reads first; missing never re-inserts
+00:00 +14: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: explicit snapshot rejection remains safely retryable
+00:00 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: accepted snapshot survives editor failure without re-sending
+00:00 +16: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: late create after account switch preserves old receipt without preparing
+00:00 +17: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: close joins in-flight create and only saves its late receipt
+00:00 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: restore converts a crashed creating request to unknown
+00:00 +19: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: corrupted records cannot silently become a fresh create
+00:00 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: atomic account files reopen; different scopes cannot see pending IDs
+00:00 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: real creation page selects a location and returns created doc ID
+00:02 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: space documents use parent id and totalCount pagination without requiring hasMore
+00:02 +22: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: real creation page selects a location and returns created doc ID
+00:02 +22: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document list rejects invalid metadata, request bounds and stale account results
+00:03 +23: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: real creation page selects a location and returns created doc ID
+00:03 +23: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document metadata preserves immutable pages and uses the most recent available timestamp
+00:03 +24: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: real creation page selects a location and returns created doc ID
+00:03 +24: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:03 +25: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: real creation page selects a location and returns created doc ID
+00:03 +25: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:03 +26: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: real creation page selects a location and returns created doc ID
+00:03 +26: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: create uses empty title and formal text type; snapshot has two Insert blocks
+00:03 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: real creation page selects a location and returns created doc ID
+00:03 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: known create ID remains available when account changes during response
+00:03 +28: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: real creation page selects a location and returns created doc ID
+00:03 +28: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:03 +29: /Users/shichunlei/workspace/mobile-collab-demo/test/document_space_list_test.dart: loads pages in order and deduplicates document ids while retaining server total
+00:03 +29: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:03 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:03 +31: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: app bar creates in the selected space even when its document list fails
+00:03 +31: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:03 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: app bar creates in the selected space even when its document list fails
+00:03 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:03 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: app bar creates in the selected space even when its document list fails
+00:03 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: real Common timeout persists unknown create and never repeats the HTTP create
+00:04 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: app bar creates in the selected space even when its document list fails
+00:04 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:04 +35: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: app bar creates in the selected space even when its document list fails
+00:04 +35: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:04 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: app bar creates in the selected space even when its document list fails
+00:04 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:04 +37: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: app bar creates in the selected space even when its document list fails
+00:04 +37: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: scope is stable across cookie rotations but service refuses stale identity
+00:04 +38: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: app bar creates in the selected space even when its document list fails
+00:04 +39: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: app bar creates in the selected space even when its document list fails
+00:04 +40: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: app bar creates in the selected space even when its document list fails
+00:04 +41: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: app bar creates in the selected space even when its document list fails
+00:04 +42: /Users/shichunlei/workspace/mobile-collab-demo/test/document_space_list_test.dart: long lists build lazily and render on a narrow screen with large text
+00:04 +43: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: position retries deduplicate cached callbacks and recover (failure=false)
+00:05 +44: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: position retries deduplicate cached callbacks and recover (failure=true)
+00:05 +45: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: leaving during a position request ignores its late result (failure=false)
+00:05 +46: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: leaving during a position request ignores its late result (failure=true)
+00:05 +47: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: completed restoration retains its target after late spaces (retry=false)
+00:05 +48: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: completed restoration retains its target after late spaces (retry=true)
+00:06 +49: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: a previous completed operation does not override the next page creation target
+00:06 +50: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: pending creation lists its fixed folder instead of the default personal space
+00:06 +51: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: leaving while create is pending saves progress without a late pop
+00:06 +52: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: late creation keeps a newer route and offers opening the existing document
+00:06 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: 320 width large text keeps creation action reachable
+00:06 +54: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: unknown result requires explicit review and never creates when ending the record
+00:07 +55: All tests passed!
+
+All relevant source hashes match the validated snapshot.

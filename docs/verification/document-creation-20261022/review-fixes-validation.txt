@@ -1,0 +1,337 @@
+=== host ===
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: create persists stages before writes; one doc and one prepared paragraph
+00:00 +1: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: double click shares in-flight create and does not duplicate shell
+00:00 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: concurrent restore shares one read and does not overwrite an active create
+00:00 +3: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: failed restore can retry after storage recovery
+00:00 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: unknown create outcome never automatically creates again
+00:00 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: journal failure before HTTP permits a fresh attempt after storage recovers
+00:00 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: reviewed unknown operation persists before allowing a separate new creation
+00:00 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: account change cannot resolve an unknown operation or retain a busy lock
+00:00 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: in-flight create cannot be ended as a reviewed unknown result
+00:00 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: explicit shell rejection allows a new operation
+00:00 +10: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: native failure resumes the same doc and stable paragraph
+00:00 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: receipt write failure retains known ID in memory and retries storage before native work
+00:00 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: account change during native preparation prevents initial HTTP write and navigation
+00:00 +13: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: uncertain snapshot reads first; missing never re-inserts
+00:00 +14: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: explicit snapshot rejection remains safely retryable
+00:00 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: accepted snapshot survives editor failure without re-sending
+00:00 +16: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: late create after account switch preserves old receipt without preparing
+00:00 +17: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: close joins in-flight create and only saves its late receipt
+00:00 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: restore converts a crashed creating request to unknown
+00:00 +19: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: corrupted records cannot silently become a fresh create
+00:00 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: atomic account files reopen; different scopes cannot see pending IDs
+00:00 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: real creation page selects a location and returns created doc ID
+00:02 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:02 +22: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: real creation page selects a location and returns created doc ID
+00:02 +22: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:02 +23: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: real creation page selects a location and returns created doc ID
+00:02 +23: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: create uses empty title and formal text type; snapshot has two Insert blocks
+00:02 +24: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: real creation page selects a location and returns created doc ID
+00:02 +24: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: known create ID remains available when account changes during response
+00:03 +25: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: real creation page selects a location and returns created doc ID
+00:03 +25: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:03 +26: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: real creation page selects a location and returns created doc ID
+00:03 +26: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:03 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: real creation page selects a location and returns created doc ID
+00:03 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: real Common timeout persists unknown create and never repeats the HTTP create
+00:03 +28: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: real creation page selects a location and returns created doc ID
+00:03 +28: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:03 +29: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: real creation page selects a location and returns created doc ID
+00:03 +29: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:03 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: cached formal document opens read-only before a pending permission HTTP response
+00:03 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:04 +31: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: cached formal document opens read-only before a pending permission HTTP response
+00:04 +31: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: scope is stable across cookie rotations but service refuses stale identity
+00:04 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: cached formal document opens read-only before a pending permission HTTP response
+00:04 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: cached formal document opens read-only before a pending permission HTTP response
+00:05 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: cached formal document opens read-only before a pending permission HTTP response
+00:05 +35: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: cached formal document opens read-only before a pending permission HTTP response
+00:05 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: unknown result requires explicit review and never creates when ending the record
+00:05 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:05 +37: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:08 +37: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:08 +37: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:08 +37: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:08 +38: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:08 +38: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:09 +39: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:09 +39: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:09 +40: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:09 +40: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename omitted; save uses Common while preserving other header fields
+00:09 +41: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:09 +41: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:09 +42: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:09 +42: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:09 +43: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:09 +43: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:09 +44: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:09 +44: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:10 +45: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:10 +45: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:10 +45: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:10 +45: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:10 +45: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:10 +45: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:10 +45: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:10 +45: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:10 +46: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:10 +46: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:10 +46: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:10 +46: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:10 +46: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:10 +46: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:10 +46: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:10 +46: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:10 +47: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:10 +47: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:10 +48: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:10 +48: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: empty credentials and missing Common device never send HTTP
+00:10 +49: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:10 +49: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: business failure does not inject an authenticated context
+00:10 +50: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:10 +50: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: storage initialization failure still clears Common login on exit
+00:10 +51: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:10 +51: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: incomplete and invalid resolved context is cleared before retry
+00:11 +52: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +52: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:11 +52: /Users/shichunlei/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: offline entry works during loading and after storage failure
+00:11 +52: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:11 +52: /Users/shichunlei/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: offline entry works during loading and after storage failure
+00:11 +52: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:11 +52: /Users/shichunlei/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: offline entry works during loading and after storage failure
+00:11 +52: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:11 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: network and gateway errors use Common mapping without credentials
+00:11 +54: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +54: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: late login response cannot overwrite a newer context
+00:11 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: logout clears Common identity but retains app device for next login
+00:11 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: logout clears Common identity but retains app device for next login
+00:11 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: logout clears Common identity but retains app device for next login
+00:11 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: logout clears Common identity but retains app device for next login
+00:11 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: logout clears Common identity but retains app device for next login
+00:11 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: logout clears Common identity but retains app device for next login
+00:11 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: logout clears Common identity but retains app device for next login
+00:11 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: logout clears Common identity but retains app device for next login
+00:11 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: logout clears Common identity but retains app device for next login
+00:11 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: logout clears Common identity but retains app device for next login
+00:11 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:11 +56: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:13 +57: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:21 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: foreground recovery refreshes authorization even when the socket remains offline
+00:22 +59: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: late permission response cannot re-enable a closed host or retain its native engine
+00:22 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: storage failure can retry local opening without recreating or losing the cached document
+00:30 +61: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: account change during a permission refresh revokes the old editable controller
+00:39 +62: All tests passed!
+
+=== package ===
+Waiting for another flutter command to release the startup lock...
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/document_bootstrapper_native_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/document_bootstrapper_native_test.dart: (setUpAll)
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/document_bootstrapper_native_test.dart: prepare reuses CRDT and opens editable with an empty initial undo stack
+00:01 +1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/document_bootstrapper_native_test.dart: preparation cannot replace another active controller
+00:01 +2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/document_bootstrapper_native_test.dart: published desktop Yjs reads mobile root and returns an editable update
+00:01 +3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/document_bootstrapper_native_test.dart: published desktop Yjs reads mobile root and returns an editable update
+00:01 +4: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/document_bootstrapper_native_test.dart: published desktop Yjs reads mobile root and returns an editable update
+00:02 +5: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/document_bootstrapper_native_test.dart: (tearDownAll)
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/cses_doc_collaboration_session_test.dart: subscribe precedes join; sync status never completes handshake
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/cses_doc_collaboration_session_test.dart: applies server update before calculating unframed reverse diff
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/cses_doc_collaboration_session_test.dart: remote updates apply without echo; local edits only send while ready
+00:04 +8: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/cses_doc_collaboration_session_test.dart: terminal document errors survive reconnect and foreground recovery
+00:04 +9: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/cses_doc_collaboration_session_test.dart: bootstrap root conflict stops supplement and automatic reconnect
+DocCollab: 文档协同处理失败: Bad state: DOCUMENT_BOOTSTRAP_CONFLICT: independent root
+#0      main.<anonymous closure>.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/cses_doc_collaboration_session_test.dart:189:13)
+#1      CsesDocCollaborationSession._handle (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:276:30)
+#2      CsesDocCollaborationSession.start.<anonymous closure> (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:172:33)
+#3      _Gateway.receive (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/cses_doc_collaboration_session_test.dart:62:26)
+#4      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/cses_doc_collaboration_session_test.dart:197:15)
+<asynchronous suspension>
+#5      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#6      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#7      Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:04 +10: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/cses_doc_collaboration_session_test.dart: collabClose retries join with a bounded retry count
+00:04 +11: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/cses_doc_collaboration_session_test.dart: online disposal sends awareness removal, leave, unsubscribe once
+00:04 +12: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/cses_doc_collaboration_session_test.dart: offline disposal sends no stale exit commands
+00:04 +13: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/cses_doc_collaboration_session_test.dart: upstream larger than 1 MiB stops without byte slicing
+00:04 +14: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/cses_doc_collaboration_session_test.dart: downstream sync may exceed upstream limit
+00:04 +15: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/cses_doc_collaboration_session_test.dart: send failure leaves ready without claiming delivery or save
+00:06 +16: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart: (setUpAll)
+00:06 +16: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart: failed controller retry must not send the next owner document
+DocCollab: 编辑器操作失败: Bad state: fixture registration failure
+#0      _ProbeGateway.register (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:254:28)
+<asynchronous suspension>
+#1      CsesDocCollaborationSession.start (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:167:5)
+<asynchronous suspension>
+#2      CollabController._startSession (package:cses_document_collab/src/controller/collab_controller.dart:424:7)
+<asynchronous suspension>
+#3      CollabController._initialize (package:cses_document_collab/src/controller/collab_controller.dart:274:9)
+<asynchronous suspension>
+#4      CollabController._initializeRecoverably (package:cses_document_collab/src/controller/collab_controller.dart:248:7)
+<asynchronous suspension>
+#5      Throws._matchFuture (package:matcher/src/expect/throws_matcher.dart:103:19)
+<asynchronous suspension>
+#6      _expect.<anonymous closure> (package:matcher/src/expect/expect.dart:153:17)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      expectLater.<anonymous closure> (package:flutter_test/src/widget_tester.dart:508:19)
+<asynchronous suspension>
+#9      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:41:7)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#11     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#12     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+DocCollab: 编辑器操作失败: Bad state: COLLAB_DOCUMENT_IN_USE: 请先等待当前文档关闭
+#0      CollabRuntime.acquire (package:cses_document_collab/src/native/collab_runtime.dart:24:7)
+#1      CollabController._initialize (package:cses_document_collab/src/controller/collab_controller.dart:265:21)
+#2      CollabController._initializeRecoverably (package:cses_document_collab/src/controller/collab_controller.dart:248:13)
+#3      CollabController.initialize (package:cses_document_collab/src/controller/collab_controller.dart:242:36)
+#4      CollabController.retry (package:cses_document_collab/src/controller/collab_controller.dart:334:13)
+<asynchronous suspension>
+#5      Throws._matchFuture (package:matcher/src/expect/throws_matcher.dart:103:19)
+<asynchronous suspension>
+#6      _expect.<anonymous closure> (package:matcher/src/expect/expect.dart:153:17)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      expectLater.<anonymous closure> (package:flutter_test/src/widget_tester.dart:508:19)
+<asynchronous suspension>
+#9      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:50:7)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#11     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#12     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:07 +17: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart: permission registration failure must not poison transitions or cleanup
+DocCollab: 编辑器操作失败: Bad state: fixture registration failure
+#0      _ProbeGateway.register (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:254:28)
+<asynchronous suspension>
+#1      CsesDocCollaborationSession.start (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:167:5)
+<asynchronous suspension>
+#2      CollabController._startSession (package:cses_document_collab/src/controller/collab_controller.dart:424:7)
+<asynchronous suspension>
+#3      CollabController.setEditable.<anonymous closure> (package:cses_document_collab/src/controller/collab_controller.dart:313:57)
+<asynchronous suspension>
+#4      Throws._matchFuture (package:matcher/src/expect/throws_matcher.dart:103:19)
+<asynchronous suspension>
+#5      _expect.<anonymous closure> (package:matcher/src/expect/expect.dart:153:17)
+<asynchronous suspension>
+#6      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#7      expectLater.<anonymous closure> (package:flutter_test/src/widget_tester.dart:508:19)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:123:9)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#11     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart: close waits for pending registration and stale callbacks cannot mutate the next owner
+DocCollab: 文档协同处理失败: Bad state: COLLAB_SESSION_STALE
+#0      CollabController._requireCurrentSession (package:cses_document_collab/src/controller/collab_controller.dart:447:38)
+#1      CollabController._startSession.<anonymous closure> (package:cses_document_collab/src/controller/collab_controller.dart:379:9)
+#2      CsesDocCollaborationSession._beginSync (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:245:40)
+#3      CsesDocCollaborationSession.start (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:185:30)
+<asynchronous suspension>
+#4      CollabController._startSession (package:cses_document_collab/src/controller/collab_controller.dart:424:7)
+<asynchronous suspension>
+#5      CollabController._initialize (package:cses_document_collab/src/controller/collab_controller.dart:274:9)
+<asynchronous suspension>
+#6      CollabController._initializeRecoverably (package:cses_document_collab/src/controller/collab_controller.dart:248:7)
+<asynchronous suspension>
+#7      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:181:9)
+<asynchronous suspension>
+#8      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#10     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:07 +19: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart: (tearDownAll)
+00:08 +19: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_native_test.dart: (setUpAll)
+00:08 +19: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_native_test.dart: a rejected second controller cannot close the active native Doc
+DocCollab: 编辑器操作失败: Bad state: COLLAB_DOCUMENT_IN_USE: 请先等待当前文档关闭
+#0      CollabRuntime.acquire (package:cses_document_collab/src/native/collab_runtime.dart:24:7)
+#1      CollabController._initialize (package:cses_document_collab/src/controller/collab_controller.dart:265:21)
+#2      CollabController._initializeRecoverably (package:cses_document_collab/src/controller/collab_controller.dart:248:13)
+#3      CollabController.initialize (package:cses_document_collab/src/controller/collab_controller.dart:242:36)
+#4      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_native_test.dart:39:18)
+<asynchronous suspension>
+#5      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#6      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#7      Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:09 +20: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_native_test.dart: formal cache survives reopen; read-only sync withholds pending edits
+00:10 +21: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_native_test.dart: (tearDownAll)
+00:10 +21: All tests passed!
+
+=== rust ===
+test api::collab::blockcraft::tests::non_user_and_invalid_mentions_remain_protected ... ok
+test api::collab::blockcraft::tests::list_type_history_settings_and_v1_replica_converge ... ok
+
+test result: ok. 107 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.34s
+
+=== host_analyze ===
+Analyzing 6 items...
+No issues found! (ran in 12.2s)
+
+=== package_analyze ===
+Analyzing 3 items...
+No issues found! (ran in 12.1s)
+
+=== android ===
+Running Gradle task 'assembleDebug'...
+Resolving dependencies...
+Downloading packages...
+  http_parser 4.0.2 (4.1.2 available)
+  petitparser 7.0.2 (7.1.0 available)
+Got dependencies!
+2 packages have newer versions incompatible with dependency constraints.
+Try `dart pub outdated` for more information.
+Compiling bin/build_tool_runner.dart to kernel file bin/build_tool_runner.dill.
+INFO: Precompiled binaries are disabled
+INFO: Building cses_collab_core for armv7-linux-androideabi
+INFO: Building cses_collab_core for aarch64-linux-android
+INFO: Building cses_collab_core for x86_64-linux-android
+INFO: Building cses_collab_core for i686-linux-android
+INFO: Building cses_collab_core for x86_64-linux-android
+Running Gradle task 'assembleDebug'...                             73.7s
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+
+=== Android source verification ===
+{
+  "lib/src/demo/document_creation/cses_document_creation_service.dart": true,
+  "lib/src/demo/document_creation/document_creation_operation.dart": true,
+  "lib/src/demo/document_creation/document_creation_coordinator.dart": true,
+  "lib/src/demo/document_creation/document_creation_page.dart": true,
+  "lib/src/demo/document_host.dart": true,
+  "lib/src/demo/collab_demo_page.dart": true
+}

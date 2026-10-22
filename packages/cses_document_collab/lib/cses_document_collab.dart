@@ -11,6 +11,8 @@ export 'src/image_composer/show_image_composer.dart' show showCollabImageCompose
 export 'src/model/collab_image_template.dart' show CollabImageTemplate, collabImageTemplates;
 
 export 'src/controller/collab_controller.dart' show CollabController, ConnectionStatus;
+export 'src/controller/document_bootstrapper.dart';
+export 'src/model/prepared_document.dart';
 export 'src/controller/document_feedback_controller.dart' show DocumentFeedbackController;
 export 'src/controller/document_metadata_controller.dart';
 export 'src/editor/collaborative_editor_page.dart' show CollaborativeEditorPage;

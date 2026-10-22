@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-22",
+  "finding": "L1/P2",
+  "status": "fixed",
+  "implementation": "capture restored target before awaiting space choices; bind resume target before execution; late results preserve current selection",
+  "changed_handmade_dart_files": [
+    "lib/src/demo/document_creation/document_creation_page.dart",
+    "test/document_creation_coordinator_test.dart"
+  ],
+  "new_regressions": [
+    "completion before successful delayed spaces",
+    "completion before failed spaces followed by retry",
+    "previous completed operation does not override a fresh page target"
+  ],
+  "tests": {
+    "target_files": 3,
+    "passed": 51,
+    "failed": 0,
+    "skipped": 0,
+    "before_fix_new_failure_cases": 2
+  },
+  "analysis": "no issues in affected host, source and test scope",
+  "format": "2 handmade files checked, no changes on final pass",
+  "git_diff_check": "passed",
+  "source_sha256": {
+    "lib/src/demo/document_creation/document_creation_page.dart": "c4613b8e4415527b1366e263bac07ec2ba438424de2a0a94cb6772ae69757cd2",
+    "test/document_creation_coordinator_test.dart": "c98db522c193cf1cac2aaf9a5a0ecd602904ba26d815c86b06b89d89b002eb4e"
+  },
+  "baseline_source_sha256": {
+    "lib/src/demo/document_creation/document_creation_page.dart": "58482bb240fa396978c69a2b68fde3d117d749d51709812c0b1815ee9ac8fb27",
+    "test/document_creation_coordinator_test.dart": "208d9c77b5b6d35b9dec7b6ec1c24a8d6cc0068ae72172be39e6ead7ae66cea3"
+  },
+  "android": {
+    "build": "debug apk passed",
+    "sha256": "82d7d3dee9f1b222d1cf4a6c1ce4d1af98a2d0446a193ce5bd2700b91739860c",
+    "embedded_page_source_matches_current_file": true,
+    "device_flow_run": false
+  },
+  "blockcraft": {
+    "latest": "0.11.27",
+    "desktop_declared": "0.11.24",
+    "desktop_yarn": "0.11.24",
+    "desktop_installed": "0.11.21",
+    "upgraded": false
+  },
+  "not_rerun": [
+    "unchanged package/Rust tests",
+    "real business service integration",
+    "physical devices",
+    "iOS complete app (previous SwiftPM blocker)"
+  ],
+  "staged_by_this_task": false,
+  "committed_by_this_task": false
+}

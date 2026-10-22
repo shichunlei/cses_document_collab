@@ -178,6 +178,36 @@ void main() {
     },
   );
 
+  test(
+    'bootstrap root conflict stops supplement and automatic reconnect',
+    () async {
+      String? event;
+      String? message;
+      session = _session(
+        gateway,
+        onSync: (_, _) =>
+            throw StateError('DOCUMENT_BOOTSTRAP_CONFLICT: independent root'),
+        onState: (_, code, error) {
+          event = code;
+          message = error;
+        },
+        retries: 2,
+      );
+      await session.start();
+      gateway.receive('collabSync', _sync());
+      expect(session.state, CsesCollabState.error);
+      expect(event, 'DOCUMENT_BOOTSTRAP_CONFLICT');
+      expect(message, contains('保留本地内容'));
+      expect(gateway.sent.where((m) => m.$1 == 'collabUpdate'), isEmpty);
+      final count = gateway.sent.where((m) => m.$1 == 'collabJoin').length;
+      gateway.connection(false);
+      gateway.connection(true);
+      session.resync();
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+      expect(gateway.sent.where((m) => m.$1 == 'collabJoin').length, count);
+    },
+  );
+
   test('collabClose retries join with a bounded retry count', () async {
     final retried = Completer<void>();
     session = _session(

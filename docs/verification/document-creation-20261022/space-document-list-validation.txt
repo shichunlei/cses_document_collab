@@ -1,0 +1,392 @@
+=== Host tests ===
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: create persists stages before writes; one doc and one prepared paragraph
+00:00 +1: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: double click shares in-flight create and does not duplicate shell
+00:00 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: concurrent restore shares one read and does not overwrite an active create
+00:00 +3: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: failed restore can retry after storage recovery
+00:00 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: unknown create outcome never automatically creates again
+00:00 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: journal failure before HTTP permits a fresh attempt after storage recovers
+00:00 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: reviewed unknown operation persists before allowing a separate new creation
+00:00 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: account change cannot resolve an unknown operation or retain a busy lock
+00:00 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: in-flight create cannot be ended as a reviewed unknown result
+00:00 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: explicit shell rejection allows a new operation
+00:00 +10: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: native failure resumes the same doc and stable paragraph
+00:00 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: receipt write failure retains known ID in memory and retries storage before native work
+00:00 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: account change during native preparation prevents initial HTTP write and navigation
+00:00 +13: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: uncertain snapshot reads first; missing never re-inserts
+00:00 +14: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: explicit snapshot rejection remains safely retryable
+00:00 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: accepted snapshot survives editor failure without re-sending
+00:00 +16: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: late create after account switch preserves old receipt without preparing
+00:00 +17: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: close joins in-flight create and only saves its late receipt
+00:00 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: restore converts a crashed creating request to unknown
+00:00 +19: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: corrupted records cannot silently become a fresh create
+00:00 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: atomic account files reopen; different scopes cannot see pending IDs
+00:00 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: real creation page selects a location and returns created doc ID
+00:03 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: space documents use parent id and totalCount pagination without requiring hasMore
+00:04 +22: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: real creation page selects a location and returns created doc ID
+00:04 +22: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document list rejects invalid metadata, request bounds and stale account results
+00:04 +23: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: real creation page selects a location and returns created doc ID
+00:04 +23: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document metadata preserves immutable pages and uses the most recent available timestamp
+00:04 +24: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: real creation page selects a location and returns created doc ID
+00:04 +24: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:04 +25: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: real creation page selects a location and returns created doc ID
+00:04 +25: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +26: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: real creation page selects a location and returns created doc ID
+00:04 +26: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: real creation page selects a location and returns created doc ID
+00:04 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: create uses empty title and formal text type; snapshot has two Insert blocks
+00:05 +28: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: real creation page selects a location and returns created doc ID
+00:05 +28: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: create uses empty title and formal text type; snapshot has two Insert blocks
+00:05 +29: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: create uses empty title and formal text type; snapshot has two Insert blocks
+00:05 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/document_space_list_test.dart: failed next page keeps existing rows and retries the same page
+00:05 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: known create ID remains available when account changes during response
+00:05 +31: /Users/shichunlei/workspace/mobile-collab-demo/test/document_space_list_test.dart: failed next page keeps existing rows and retries the same page
+00:05 +31: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/document_space_list_test.dart: failed next page keeps existing rows and retries the same page
+00:05 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: app bar creates in the selected space even when its document list fails
+00:05 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:05 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: app bar creates in the selected space even when its document list fails
+00:05 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: real Common timeout persists unknown create and never repeats the HTTP create
+00:05 +35: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: app bar creates in the selected space even when its document list fails
+00:05 +35: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: real Common timeout persists unknown create and never repeats the HTTP create
+00:05 +35: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: cached formal document opens read-only before a pending permission HTTP response
+00:05 +35: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: real Common timeout persists unknown create and never repeats the HTTP create
+00:05 +35: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: cached formal document opens read-only before a pending permission HTTP response
+00:05 +35: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: real Common timeout persists unknown create and never repeats the HTTP create
+00:05 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: app bar creates in the selected space even when its document list fails
+00:05 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:05 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: cached formal document opens read-only before a pending permission HTTP response
+00:05 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:05 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: cached formal document opens read-only before a pending permission HTTP response
+00:05 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:05 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: cached formal document opens read-only before a pending permission HTTP response
+00:05 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:05 +37: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: app bar creates in the selected space even when its document list fails
+00:05 +37: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:05 +37: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: cached formal document opens read-only before a pending permission HTTP response
+00:05 +37: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:05 +38: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: app bar creates in the selected space even when its document list fails
+00:05 +38: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:05 +38: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: cached formal document opens read-only before a pending permission HTTP response
+00:05 +38: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:05 +38: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: cached formal document opens read-only before a pending permission HTTP response
+00:05 +38: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:06 +38: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: cached formal document opens read-only before a pending permission HTTP response
+00:06 +38: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:06 +38: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: cached formal document opens read-only before a pending permission HTTP response
+00:06 +38: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:06 +38: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: cached formal document opens read-only before a pending permission HTTP response
+00:06 +38: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:06 +39: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: app bar creates in the selected space even when its document list fails
+00:06 +39: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:06 +40: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: app bar creates in the selected space even when its document list fails
+00:06 +40: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: scope is stable across cookie rotations but service refuses stale identity
+00:06 +40: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: cached formal document opens read-only before a pending permission HTTP response
+00:06 +41: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: app bar creates in the selected space even when its document list fails
+00:06 +41: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: cached formal document opens read-only before a pending permission HTTP response
+00:06 +42: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: app bar creates in the selected space even when its document list fails
+00:06 +43: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: cached formal document opens read-only before a pending permission HTTP response
+00:06 +44: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: cached formal document opens read-only before a pending permission HTTP response
+00:07 +45: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: cached formal document opens read-only before a pending permission HTTP response
+00:08 +46: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: late creation keeps a newer route and offers opening the existing document
+00:08 +47: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:08 +48: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:08 +49: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:14 +49: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:14 +49: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:14 +49: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:14 +50: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:14 +50: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:15 +51: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:15 +51: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:15 +52: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:15 +52: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename omitted; save uses Common while preserving other header fields
+00:15 +52: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +52: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename omitted; save uses Common while preserving other header fields
+00:15 +52: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +52: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename omitted; save uses Common while preserving other header fields
+00:15 +52: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +52: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename omitted; save uses Common while preserving other header fields
+00:15 +52: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +52: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename omitted; save uses Common while preserving other header fields
+00:15 +52: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +52: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename omitted; save uses Common while preserving other header fields
+00:15 +52: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +52: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename omitted; save uses Common while preserving other header fields
+00:15 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:15 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:15 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:15 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:15 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:15 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:15 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:15 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:15 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:15 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:15 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:15 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:15 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:15 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:15 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:15 +54: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:15 +54: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:15 +54: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +54: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:15 +54: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +54: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:15 +54: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +54: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:15 +54: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +54: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:15 +54: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +54: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:15 +54: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +54: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:15 +54: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +54: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:15 +54: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +54: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:15 +54: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:15 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:15 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:15 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:15 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:15 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:15 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:15 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:15 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:15 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:15 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:15 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:15 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:15 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +56: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:15 +56: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +56: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:15 +56: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +56: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:15 +56: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +56: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:15 +56: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common login initializes headers and context before handing off
+00:15 +56: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:15 +57: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:15 +57: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:15 +57: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: empty credentials and missing Common device never send HTTP
+00:15 +57: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:15 +57: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: empty credentials and missing Common device never send HTTP
+00:15 +57: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:15 +57: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: empty credentials and missing Common device never send HTTP
+00:15 +57: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:15 +57: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: empty credentials and missing Common device never send HTTP
+00:15 +57: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:15 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:15 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:15 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: business failure does not inject an authenticated context
+00:15 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:15 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: business failure does not inject an authenticated context
+00:15 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:15 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: business failure does not inject an authenticated context
+00:15 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:15 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: business failure does not inject an authenticated context
+00:15 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:15 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: business failure does not inject an authenticated context
+00:15 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:15 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: business failure does not inject an authenticated context
+00:15 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:15 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: business failure does not inject an authenticated context
+00:15 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:15 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: business failure does not inject an authenticated context
+00:15 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:15 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: business failure does not inject an authenticated context
+00:15 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:15 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: business failure does not inject an authenticated context
+00:15 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:15 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: business failure does not inject an authenticated context
+00:15 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:15 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: business failure does not inject an authenticated context
+00:15 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:16 +59: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +59: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: storage initialization failure still clears Common login on exit
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: storage initialization failure still clears Common login on exit
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: storage initialization failure still clears Common login on exit
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: storage initialization failure still clears Common login on exit
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: storage initialization failure still clears Common login on exit
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: storage initialization failure still clears Common login on exit
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: storage initialization failure still clears Common login on exit
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: storage initialization failure still clears Common login on exit
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: storage initialization failure still clears Common login on exit
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: storage initialization failure still clears Common login on exit
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: storage initialization failure still clears Common login on exit
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: storage initialization failure still clears Common login on exit
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: storage initialization failure still clears Common login on exit
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: storage initialization failure still clears Common login on exit
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: storage initialization failure still clears Common login on exit
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: storage initialization failure still clears Common login on exit
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: storage initialization failure still clears Common login on exit
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: storage initialization failure still clears Common login on exit
+00:16 +61: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +61: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: storage initialization failure still clears Common login on exit
+00:16 +61: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:16 +61: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: storage initialization failure still clears Common login on exit
+00:16 +61: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:16 +61: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: storage initialization failure still clears Common login on exit
+00:16 +61: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:16 +61: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: storage initialization failure still clears Common login on exit
+00:16 +61: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:16 +61: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: storage initialization failure still clears Common login on exit
+00:16 +61: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:16 +61: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: storage initialization failure still clears Common login on exit
+00:16 +61: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:16 +61: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: storage initialization failure still clears Common login on exit
+00:16 +62: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +63: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +63: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: incomplete and invalid resolved context is cleared before retry
+00:16 +63: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +63: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: incomplete and invalid resolved context is cleared before retry
+00:16 +63: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +63: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: incomplete and invalid resolved context is cleared before retry
+00:16 +63: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +63: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: incomplete and invalid resolved context is cleared before retry
+00:16 +63: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: Common chooses cached organization and supplies environment WS default
+00:16 +65: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +65: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: network and gateway errors use Common mapping without credentials
+00:16 +66: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:16 +66: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: late login response cannot overwrite a newer context
+00:17 +67: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:17 +67: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_account_login_test.dart: logout clears Common identity but retains app device for next login
+00:17 +68: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:17 +68: /Users/shichunlei/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: offline entry works during loading and after storage failure
+00:17 +68: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:19 +69: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:25 +70: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: foreground recovery refreshes authorization even when the socket remains offline
+00:25 +71: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: late permission response cannot re-enable a closed host or retain its native engine
+00:25 +72: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: storage failure can retry local opening without recreating or losing the cached document
+00:33 +73: /Users/shichunlei/workspace/mobile-collab-demo/test/document_host_native_test.dart: account change during a permission refresh revokes the old editable controller
+00:42 +74: All tests passed!
+
+=== Static analysis ===
+Analyzing 7 items...
+No issues found! (ran in 12.7s)
+
+=== Android build ===
+Running Gradle task 'assembleDebug'...
+INFO: Precompiled binaries are disabled
+INFO: Building cses_collab_core for armv7-linux-androideabi
+INFO: Building cses_collab_core for aarch64-linux-android
+INFO: Building cses_collab_core for x86_64-linux-android
+INFO: Building cses_collab_core for i686-linux-android
+INFO: Building cses_collab_core for x86_64-linux-android
+Running Gradle task 'assembleDebug'...                             87.4s
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+
+=== Embedded sources ===
+{
+  "lib/src/demo/document_creation/cses_document_creation_service.dart": true,
+  "lib/src/demo/document_creation/document_creation_page.dart": true,
+  "lib/src/demo/document_creation/document_list_page.dart": true,
+  "lib/src/demo/document_creation/document_space_list.dart": true,
+  "lib/src/demo/document_host.dart": true,
+  "lib/src/demo/collab_demo_page.dart": true
+}

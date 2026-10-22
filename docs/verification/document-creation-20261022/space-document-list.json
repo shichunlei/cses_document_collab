@@ -1,0 +1,111 @@
+{
+  "date": "2026-10-22",
+  "status": "implemented_and_local_verification_passed",
+  "api": {
+    "method": "POST",
+    "path": "/doc/document/list",
+    "params": {
+      "id": "selected space or folder id",
+      "pageNumber": "1-based",
+      "pageSize": 20,
+      "timeSort": "createdAt"
+    },
+    "response": "items + totalCount",
+    "pagination": "derive hasMore from request pageNumber * pageSize < totalCount",
+    "scope": "direct child documents, server visibility filtering, no owner filter"
+  },
+  "source_references": {
+    "client_entity_service": {
+      "path": "/Users/shichunlei/workspace/cses-client/packages/docs/src/entity-catalog/entity.service.ts",
+      "sha256": "bc4944d3d9fef8b283cd9583151a8b0ed28800a0910ef9f6abcd9c50e479d448"
+    },
+    "java_controller": {
+      "path": "/Users/shichunlei/workspace/cses-java/server/src/main/java/org/cses/server/service/doc/controllers/document/DocDocumentController.java",
+      "sha256": "abfd257a073ca497ad5c5ce36d9ee38e50509e5f2eb572810edc6347a0050385"
+    },
+    "java_query": {
+      "path": "/Users/shichunlei/workspace/cses-java/server/src/main/java/org/cses/server/service/doc/controllers/document/query/ComplexIdQuery.java",
+      "sha256": "007296812ba43f3b0abdaa2c69bc7b5ec5eeee8b8e5cfe23684197bd07ca87ad"
+    },
+    "java_filter": {
+      "path": "/Users/shichunlei/workspace/cses-java/server/src/main/java/org/cses/server/service/doc/controllers/document/query/FilterQuery.java",
+      "sha256": "900a7ba2fea6b401f37055c5de5e4e5df6232a34714c8930eee61937b29b9d34"
+    },
+    "java_handler": {
+      "path": "/Users/shichunlei/workspace/cses-java/server/src/main/java/org/cses/server/service/doc/services/document/DocumentQueryHandler.java",
+      "sha256": "b5dd67330a86b158f35519e6fd7fdbbba5b77ed438f8988da8ec9238e72a50dc"
+    },
+    "java_scope": {
+      "path": "/Users/shichunlei/workspace/cses-java/server/src/main/java/org/cses/server/service/doc/repositories/searcher/query/DocNodesQuery.java",
+      "sha256": "487f21a998367f342c06442362bf1992b8b8166a1b435fd8a1605d8a2736ba36"
+    }
+  },
+  "reference_heads": {
+    "cses-client": "235b0073bd",
+    "cses-java": "9b0b673e1a"
+  },
+  "blockcraft": {
+    "latest": "0.11.27",
+    "desktop_declared": "0.11.24",
+    "desktop_yarn": "0.11.24",
+    "desktop_installed": "0.11.21",
+    "upgraded": false,
+    "editor_schema_changed": false
+  },
+  "behavior": [
+    "current-space document metadata list",
+    "create button in app bar trailing actions",
+    "space-scoped lazy sliver list",
+    "refresh, pagination, duplicate id merge and retry",
+    "pending creation uses its fixed target",
+    "stale responses ignored on space change/unmount",
+    "creation remains available when the independent document list fails",
+    "unknown-result review action remains separate"
+  ],
+  "checks": {
+    "host_related_tests": {
+      "passed": 74,
+      "failed": 0,
+      "skipped": 0
+    },
+    "target_analyze": "no issues",
+    "format": "10 handmade files, 0 changes on final pass",
+    "git_diff_check": "passed",
+    "android_debug_apk": "passed"
+  },
+  "android": {
+    "path": "build/app/outputs/flutter-apk/app-debug.apk",
+    "sha256": "e2a215abb6078faeeea879ae9c28a1d4cf02e1845f4f3f2c7d7c78450cb26bcc",
+    "embedded_sources_match_current_files": {
+      "lib/src/demo/document_creation/cses_document_creation_service.dart": true,
+      "lib/src/demo/document_creation/document_creation_page.dart": true,
+      "lib/src/demo/document_creation/document_list_page.dart": true,
+      "lib/src/demo/document_creation/document_space_list.dart": true,
+      "lib/src/demo/document_host.dart": true,
+      "lib/src/demo/collab_demo_page.dart": true
+    }
+  },
+  "source_sha256": {
+    "lib/src/demo/document_creation/cses_document_creation_service.dart": "1748ee131ffdb5848bcf1ca3a3342ae2f587924062f38e49f73f8115a9010326",
+    "lib/src/demo/document_creation/document_creation_page.dart": "58482bb240fa396978c69a2b68fde3d117d749d51709812c0b1815ee9ac8fb27",
+    "lib/src/demo/document_creation/document_list_page.dart": "53c88c5442e1aafcb9637b1ab612bbb253c6bad76411b6b60e06b63b83426d3d",
+    "lib/src/demo/document_creation/document_space_list.dart": "3bdec2e55ad682ac252da71c31bf8af8a2c56fc104c8e1fab393f9979adba0fe",
+    "lib/src/demo/document_host.dart": "9259cd8a0ab69cbf6aa5591f54eabbbaa527ddd6a8d735c8a1256d57557d6be3",
+    "lib/src/demo/collab_demo_page.dart": "14d3e101dbeade9520f14c77fb066a01d748a77687cc05b3c19c3fa7be5cc7f6",
+    "test/document_creation_coordinator_test.dart": "208d9c77b5b6d35b9dec7b6ec1c24a8d6cc0068ae72172be39e6ead7ae66cea3",
+    "test/cses_document_creation_service_test.dart": "00cdbf48f8fdd37d1c573d941b4e9d7014f542243947b650cb9db4733d5bdfc0",
+    "test/document_space_list_test.dart": "7e06cd8e9bf83c1c2676b72e5af8fe0b9c62141e00fd56f5c36d386d8549cc56",
+    "integration_test/document_creation_device_test.dart": "6cbfb074cd5c7d56195c3f162b3689fb3a892dc42abab8c37da0486c440f4b78"
+  },
+  "not_verified": [
+    "real HTTP list response and real business account",
+    "physical-device UI flow; no connected Android device",
+    "iOS complete app; previous SwiftPM dependency blocker not retried"
+  ],
+  "scope_notes": [
+    "metadata list only; no new document-opening or directory-management behavior",
+    "no Java/client repository changes",
+    "no package/Rust/schema/FRB API changes; previous package/Rust checks not rerun for this UI change"
+  ],
+  "committed_by_this_task": false
+}
