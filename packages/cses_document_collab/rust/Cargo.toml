@@ -6,6 +6,10 @@ edition = "2021"
 [lib]
 crate-type = ["cdylib", "staticlib"]
 
+[features]
+# Native-only experiment; never enabled by Flutter/Cargokit builds by default.
+history-prototype = []
+
 [dependencies]
 flutter_rust_bridge = "=2.13.0"
 # backtrace 0.3.76 requires dyld declarations on iOS; libc 0.2.190 hides them.
@@ -13,7 +17,7 @@ libc = "=0.2.186"
 once_cell = "1.21.3"
 parking_lot = "0.12.5"
 rusqlite = { version = "0.40.1", features = ["bundled"] }
-yrs = { version = "0.27.3", features = ["small-client", "sync"] }
+yrs = { path = "vendor/yrs-history", features = ["small-client", "sync", "history-checkpoint"] }
 serde_json = "1"
 
 [lints.rust]

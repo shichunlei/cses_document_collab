@@ -5,6 +5,7 @@
 
 import 'api/block_locks.dart';
 import 'api/collab.dart';
+import 'api/collab/history.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi' as ffi;
@@ -44,6 +45,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   double dco_decode_box_autoadd_f_64(dynamic raw);
 
   @protected
+  HistorySelection dco_decode_box_autoadd_history_selection(dynamic raw);
+
+  @protected
   int dco_decode_box_autoadd_u_32(dynamic raw);
 
   @protected
@@ -71,7 +75,19 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   CollabTextSegment dco_decode_collab_text_segment(dynamic raw);
 
   @protected
+  DocumentHistoryResult dco_decode_document_history_result(dynamic raw);
+
+  @protected
+  DocumentHistoryState dco_decode_document_history_state(dynamic raw);
+
+  @protected
   double dco_decode_f_64(dynamic raw);
+
+  @protected
+  HistoryPoint dco_decode_history_point(dynamic raw);
+
+  @protected
+  HistorySelection dco_decode_history_selection(dynamic raw);
 
   @protected
   List<CollabBlock> dco_decode_list_collab_block(dynamic raw);
@@ -111,6 +127,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   double? dco_decode_opt_box_autoadd_f_64(dynamic raw);
+
+  @protected
+  HistorySelection? dco_decode_opt_box_autoadd_history_selection(dynamic raw);
 
   @protected
   int? dco_decode_opt_box_autoadd_u_32(dynamic raw);
@@ -158,6 +177,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   double sse_decode_box_autoadd_f_64(SseDeserializer deserializer);
 
   @protected
+  HistorySelection sse_decode_box_autoadd_history_selection(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   int sse_decode_box_autoadd_u_32(SseDeserializer deserializer);
 
   @protected
@@ -189,7 +213,23 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  DocumentHistoryResult sse_decode_document_history_result(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  DocumentHistoryState sse_decode_document_history_state(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   double sse_decode_f_64(SseDeserializer deserializer);
+
+  @protected
+  HistoryPoint sse_decode_history_point(SseDeserializer deserializer);
+
+  @protected
+  HistorySelection sse_decode_history_selection(SseDeserializer deserializer);
 
   @protected
   List<CollabBlock> sse_decode_list_collab_block(SseDeserializer deserializer);
@@ -245,6 +285,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   double? sse_decode_opt_box_autoadd_f_64(SseDeserializer deserializer);
+
+  @protected
+  HistorySelection? sse_decode_opt_box_autoadd_history_selection(
+    SseDeserializer deserializer,
+  );
 
   @protected
   int? sse_decode_opt_box_autoadd_u_32(SseDeserializer deserializer);
@@ -306,6 +351,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_box_autoadd_f_64(double self, SseSerializer serializer);
 
   @protected
+  void sse_encode_box_autoadd_history_selection(
+    HistorySelection self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_box_autoadd_u_32(int self, SseSerializer serializer);
 
   @protected
@@ -345,7 +396,28 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_document_history_result(
+    DocumentHistoryResult self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_document_history_state(
+    DocumentHistoryState self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_f_64(double self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_history_point(HistoryPoint self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_history_selection(
+    HistorySelection self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_list_collab_block(
@@ -415,6 +487,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_opt_box_autoadd_f_64(double? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_history_selection(
+    HistorySelection? self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_opt_box_autoadd_u_32(int? self, SseSerializer serializer);

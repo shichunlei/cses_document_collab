@@ -17,6 +17,8 @@ mod blockcraft;
 use super::block_locks;
 #[path = "document_bootstrap.rs"]
 mod document_bootstrap;
+#[path = "document_history.rs"]
+pub mod history;
 #[path = "paragraph_style.rs"]
 mod paragraph_style;
 
@@ -191,6 +193,10 @@ pub struct WireMessageResult {
 }
 
 struct CollabEngine {
+    /// Session-local history; the controller enables it after opening the document.
+    history: Option<history::NativeHistory>,
+    /// Borrowed local command context, cleared on either successful or failed apply.
+    history_input: Option<history::HistoryInput>,
     document_id: String,
     database_path: String,
     doc: Doc,
@@ -225,6 +231,7 @@ impl CollabEngine {
             .execute_batch(
                 "
                 PRAGMA journal_mode = WAL;
+                PRAGMA foreign_keys = ON;
                 CREATE TABLE IF NOT EXISTS document_updates (
                     sequence INTEGER PRIMARY KEY AUTOINCREMENT,
                     document_id TEXT NOT NULL,
@@ -254,6 +261,8 @@ impl CollabEngine {
 
         let bootstrap_root_id = document_bootstrap::protected_root(&connection, &document_id)?;
         let mut engine = Self {
+            history: None,
+            history_input: None,
             document_id,
             database_path,
             awareness: Awareness::new(doc.clone()),
@@ -421,10 +430,10 @@ impl CollabEngine {
         validate_blocks(&blocks, self.blockcraft_root_id.is_some())?;
         if let Some(root_id) = &self.blockcraft_root_id {
             let before = self.doc.transact().state_vector();
-            let staged = self.staged_document()?;
+            let (staged, recording) = self.stage_local_history(&blocks)?;
             blockcraft::apply(&staged, root_id, &blocks)?;
             let update = staged.transact().encode_state_as_update_v1(&before);
-            self.persist_and_apply_update(&update)?;
+            self.commit_local_history(staged, recording, &update)?;
             return Ok(BlockChangeResult {
                 blocks: self.blocks(),
                 v1_update: update.clone(),
@@ -452,7 +461,7 @@ impl CollabEngine {
             });
         }
 
-        let staged = self.staged_document()?;
+        let (staged, recording) = self.stage_local_history(&blocks)?;
         let block_order = staged.get_or_insert_array(BLOCK_ORDER_NAME);
         let block_meta = staged.get_or_insert_map(BLOCK_META_NAME);
         let block_checked = staged.get_or_insert_map(BLOCK_CHECKED_NAME);
@@ -574,7 +583,7 @@ impl CollabEngine {
         }
 
         let update = staged.transact().encode_state_as_update_v1(&before);
-        self.persist_and_apply_update(&update)?;
+        self.commit_local_history(staged, recording, &update)?;
         Ok(BlockChangeResult {
             blocks: self.blocks(),
             v1_update: update.clone(),
@@ -775,27 +784,10 @@ impl CollabEngine {
     }
 
     /// 复制当前完整状态及待整合增量以隔离本地编辑；UTF-16、GC及clientID与权威Doc一致。
-    /// 临时副本不发布Awareness或网络消息，只有落盘后的更新才会回到原Doc。
+    /// 保留原生历史的恢复关联；临时副本不发布Awareness或网络消息。
+    /// 系统写入只整合落盘更新，显式历史写入则在提交后安装完整候选Doc及历史。
     fn staged_document(&self) -> Result<Doc, String> {
-        let staged = Doc::with_options(Options {
-            client_id: self.doc.client_id(),
-            guid: self.doc.guid(),
-            offset_kind: OffsetKind::Utf16,
-            skip_gc: true,
-            ..Options::default()
-        });
-        let snapshot = self
-            .doc
-            .transact()
-            .encode_state_as_update_v1(&StateVector::default());
-        staged
-            .transact_mut()
-            .apply_update(
-                Update::decode_v1(&snapshot)
-                    .map_err(|error| format!("cannot decode staged document: {error}"))?,
-            )
-            .map_err(|error| format!("cannot stage document: {error}"))?;
-        Ok(staged)
+        self.doc.fork_for_history()
     }
 
     /// 解码已校验的 `payload`，SQLite成功后在同一引擎锁内推进权威Doc。
@@ -808,7 +800,7 @@ impl CollabEngine {
             .map_err(|error| format!("invalid Yjs V1 update: {error}"))?;
         self.persist_update(payload)?;
         self.doc
-            .transact_mut()
+            .transact_mut_with(history::REMOTE_ORIGIN)
             .apply_update(update)
             .map_err(|error| format!("cannot apply persisted Yjs update: {error}"))
     }
@@ -818,11 +810,18 @@ impl CollabEngine {
         if payload.is_empty() {
             return Ok(());
         }
-        self.connection
+        let transaction = self
+            .connection
+            .unchecked_transaction()
+            .map_err(|error| format!("cannot persist Yjs update: {error}"))?;
+        transaction
             .execute(
                 "INSERT INTO document_updates(document_id, payload) VALUES (?1, ?2)",
                 params![self.document_id, payload],
             )
+            .map_err(|error| format!("cannot persist Yjs update: {error}"))?;
+        transaction
+            .commit()
             .map_err(|error| format!("cannot persist Yjs update: {error}"))?;
         Ok(())
     }

@@ -479,7 +479,8 @@ fn table_properties(
 }
 
 /// 在取得写事务前检查表格层级、列宽数和合并覆盖关系，错误不会产生部分写入。
-fn validate_tables(desired: &[CollabBlock]) -> Result<(), String> {
+/// Validate projected table grids before local snapshots or native history commit.
+pub(super) fn validate_tables(desired: &[CollabBlock]) -> Result<(), String> {
     let by_id: HashMap<_, _> = desired.iter().map(|b| (b.id.as_str(), b)).collect();
     let mut children_by_parent: HashMap<&str, Vec<&CollabBlock>> = HashMap::new();
     for block in desired {

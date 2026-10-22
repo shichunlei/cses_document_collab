@@ -5,6 +5,7 @@
 
 import 'api/block_locks.dart';
 import 'api/collab.dart';
+import 'api/collab/history.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'frb_generated.dart';
@@ -67,7 +68,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.13.0';
 
   @override
-  int get rustContentHash => 1588999200;
+  int get rustContentHash => 182732725;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -89,17 +90,33 @@ abstract class RustLibApi extends BaseApi {
     required List<int> bytes,
   });
 
+  DocumentHistoryResult crateApiCollabHistoryApplyHistorySnapshot({
+    required List<CollabBlock> blocks,
+    HistorySelection? beforeSelection,
+    HistorySelection? afterSelection,
+  });
+
+  String? crateApiCollabHistoryBookmarkDocumentSelection({
+    HistorySelection? selection,
+  });
+
   void crateApiCollabClearRemoteAwareness();
 
   void crateApiCollabCloseDocument();
 
   Future<CollabImage> crateApiCollabCollabImageDefault();
 
+  DocumentHistoryState crateApiCollabHistoryConfigureDocumentHistory({
+    required bool editable,
+  });
+
   Uint8List crateApiCollabCreateSyncStep1();
 
   List<CollabBlockLock> crateApiCollabCurrentBlockLocks();
 
   List<CollabBlock> crateApiCollabCurrentBlocks();
+
+  DocumentHistoryState crateApiCollabHistoryDocumentHistoryState();
 
   String? crateApiCollabDocumentReadOnlyReason();
 
@@ -137,7 +154,15 @@ abstract class RustLibApi extends BaseApi {
     required double createdTime,
   });
 
+  DocumentHistoryResult crateApiCollabHistoryRedoDocument({
+    HistorySelection? selection,
+  });
+
   OpenDocumentResult crateApiCollabResetLocalDocument();
+
+  HistorySelection? crateApiCollabHistoryResolveDocumentSelection({
+    required String token,
+  });
 
   BlockChangeResult crateApiCollabSetBlockLock({
     required String blockId,
@@ -146,6 +171,10 @@ abstract class RustLibApi extends BaseApi {
     required bool grant,
     String? expectedOwner,
     required bool expectedTemplate,
+  });
+
+  DocumentHistoryResult crateApiCollabHistoryUndoDocument({
+    HistorySelection? selection,
   });
 }
 
@@ -240,12 +269,78 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  DocumentHistoryResult crateApiCollabHistoryApplyHistorySnapshot({
+    required List<CollabBlock> blocks,
+    HistorySelection? beforeSelection,
+    HistorySelection? afterSelection,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_list_collab_block(blocks, serializer);
+          sse_encode_opt_box_autoadd_history_selection(
+            beforeSelection,
+            serializer,
+          );
+          sse_encode_opt_box_autoadd_history_selection(
+            afterSelection,
+            serializer,
+          );
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 4)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_document_history_result,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta: kCrateApiCollabHistoryApplyHistorySnapshotConstMeta,
+        argValues: [blocks, beforeSelection, afterSelection],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiCollabHistoryApplyHistorySnapshotConstMeta =>
+      const TaskConstMeta(
+        debugName: "apply_history_snapshot",
+        argNames: ["blocks", "beforeSelection", "afterSelection"],
+      );
+
+  @override
+  String? crateApiCollabHistoryBookmarkDocumentSelection({
+    HistorySelection? selection,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_opt_box_autoadd_history_selection(selection, serializer);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 5)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_opt_String,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta: kCrateApiCollabHistoryBookmarkDocumentSelectionConstMeta,
+        argValues: [selection],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiCollabHistoryBookmarkDocumentSelectionConstMeta =>
+      const TaskConstMeta(
+        debugName: "bookmark_document_selection",
+        argNames: ["selection"],
+      );
+
+  @override
   void crateApiCollabClearRemoteAwareness() {
     return handler.executeSync(
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 4)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 6)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -267,7 +362,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 5)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 7)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
@@ -292,7 +387,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 6,
+            funcId: 8,
             port: port_,
           );
         },
@@ -311,12 +406,40 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "collab_image_default", argNames: []);
 
   @override
+  DocumentHistoryState crateApiCollabHistoryConfigureDocumentHistory({
+    required bool editable,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_bool(editable, serializer);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 9)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_document_history_state,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta: kCrateApiCollabHistoryConfigureDocumentHistoryConstMeta,
+        argValues: [editable],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiCollabHistoryConfigureDocumentHistoryConstMeta =>
+      const TaskConstMeta(
+        debugName: "configure_document_history",
+        argNames: ["editable"],
+      );
+
+  @override
   Uint8List crateApiCollabCreateSyncStep1() {
     return handler.executeSync(
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 7)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 10)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_prim_u_8_strict,
@@ -338,7 +461,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 8)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 11)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_collab_block_lock,
@@ -360,7 +483,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 9)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 12)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_collab_block,
@@ -377,12 +500,34 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "current_blocks", argNames: []);
 
   @override
+  DocumentHistoryState crateApiCollabHistoryDocumentHistoryState() {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 13)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_document_history_state,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta: kCrateApiCollabHistoryDocumentHistoryStateConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiCollabHistoryDocumentHistoryStateConstMeta =>
+      const TaskConstMeta(debugName: "document_history_state", argNames: []);
+
+  @override
   String? crateApiCollabDocumentReadOnlyReason() {
     return handler.executeSync(
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 10)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 14)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_opt_String,
@@ -405,7 +550,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_list_prim_u_8_loose(stateVector, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 11)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 15)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_prim_u_8_strict,
@@ -437,7 +582,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           sse_encode_String(userId, serializer);
           sse_encode_String(userName, serializer);
           sse_encode_bool(present, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 12)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 16)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_prim_u_8_strict,
@@ -462,7 +607,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 13)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 17)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_prim_u_8_strict,
@@ -487,7 +632,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_list_prim_u_8_loose(bytes, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 14)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 18)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_wire_message_result,
@@ -515,7 +660,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 15,
+            funcId: 19,
             port: port_,
           );
         },
@@ -546,7 +691,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           sse_encode_String(documentId, serializer);
           sse_encode_String(cacheDocumentId, serializer);
           sse_encode_String(databasePath, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 16)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 20)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_open_document_result,
@@ -576,7 +721,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_String(documentId, serializer);
           sse_encode_String(databasePath, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 17)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 21)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_open_document_result,
@@ -613,7 +758,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           sse_encode_String(operationId, serializer);
           sse_encode_String(paragraphId, serializer);
           sse_encode_f_64(createdTime, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 18)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 22)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_String,
@@ -647,12 +792,37 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  DocumentHistoryResult crateApiCollabHistoryRedoDocument({
+    HistorySelection? selection,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_opt_box_autoadd_history_selection(selection, serializer);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 23)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_document_history_result,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta: kCrateApiCollabHistoryRedoDocumentConstMeta,
+        argValues: [selection],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiCollabHistoryRedoDocumentConstMeta =>
+      const TaskConstMeta(debugName: "redo_document", argNames: ["selection"]);
+
+  @override
   OpenDocumentResult crateApiCollabResetLocalDocument() {
     return handler.executeSync(
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 19)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 24)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_open_document_result,
@@ -667,6 +837,34 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   TaskConstMeta get kCrateApiCollabResetLocalDocumentConstMeta =>
       const TaskConstMeta(debugName: "reset_local_document", argNames: []);
+
+  @override
+  HistorySelection? crateApiCollabHistoryResolveDocumentSelection({
+    required String token,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(token, serializer);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 25)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_opt_box_autoadd_history_selection,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta: kCrateApiCollabHistoryResolveDocumentSelectionConstMeta,
+        argValues: [token],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiCollabHistoryResolveDocumentSelectionConstMeta =>
+      const TaskConstMeta(
+        debugName: "resolve_document_selection",
+        argNames: ["token"],
+      );
 
   @override
   BlockChangeResult crateApiCollabSetBlockLock({
@@ -687,7 +885,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           sse_encode_bool(grant, serializer);
           sse_encode_opt_String(expectedOwner, serializer);
           sse_encode_bool(expectedTemplate, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 20)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 26)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_block_change_result,
@@ -718,6 +916,31 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       "expectedTemplate",
     ],
   );
+
+  @override
+  DocumentHistoryResult crateApiCollabHistoryUndoDocument({
+    HistorySelection? selection,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_opt_box_autoadd_history_selection(selection, serializer);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 27)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_document_history_result,
+          decodeErrorData: sse_decode_String,
+        ),
+        constMeta: kCrateApiCollabHistoryUndoDocumentConstMeta,
+        argValues: [selection],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiCollabHistoryUndoDocumentConstMeta =>
+      const TaskConstMeta(debugName: "undo_document", argNames: ["selection"]);
 
   @protected
   String dco_decode_String(dynamic raw) {
@@ -772,6 +995,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   double dco_decode_box_autoadd_f_64(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as double;
+  }
+
+  @protected
+  HistorySelection dco_decode_box_autoadd_history_selection(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_history_selection(raw);
   }
 
   @protected
@@ -923,9 +1152,59 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  DocumentHistoryResult dco_decode_document_history_result(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 4)
+      throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
+    return DocumentHistoryResult(
+      blocks: dco_decode_list_collab_block(arr[0]),
+      v1Update: dco_decode_list_prim_u_8_strict(arr[1]),
+      selectionBookmark: dco_decode_opt_String(arr[2]),
+      history: dco_decode_document_history_state(arr[3]),
+    );
+  }
+
+  @protected
+  DocumentHistoryState dco_decode_document_history_state(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return DocumentHistoryState(
+      undoDepth: dco_decode_u_32(arr[0]),
+      redoDepth: dco_decode_u_32(arr[1]),
+    );
+  }
+
+  @protected
   double dco_decode_f_64(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as double;
+  }
+
+  @protected
+  HistoryPoint dco_decode_history_point(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return HistoryPoint(
+      blockId: dco_decode_String(arr[0]),
+      offset: dco_decode_u_32(arr[1]),
+    );
+  }
+
+  @protected
+  HistorySelection dco_decode_history_selection(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return HistorySelection(
+      anchor: dco_decode_history_point(arr[0]),
+      focus: dco_decode_history_point(arr[1]),
+    );
   }
 
   @protected
@@ -1011,6 +1290,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   double? dco_decode_opt_box_autoadd_f_64(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw == null ? null : dco_decode_box_autoadd_f_64(raw);
+  }
+
+  @protected
+  HistorySelection? dco_decode_opt_box_autoadd_history_selection(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_history_selection(raw);
   }
 
   @protected
@@ -1113,6 +1398,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   double sse_decode_box_autoadd_f_64(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_f_64(deserializer));
+  }
+
+  @protected
+  HistorySelection sse_decode_box_autoadd_history_selection(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_history_selection(deserializer));
   }
 
   @protected
@@ -1305,9 +1598,55 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  DocumentHistoryResult sse_decode_document_history_result(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_blocks = sse_decode_list_collab_block(deserializer);
+    var var_v1Update = sse_decode_list_prim_u_8_strict(deserializer);
+    var var_selectionBookmark = sse_decode_opt_String(deserializer);
+    var var_history = sse_decode_document_history_state(deserializer);
+    return DocumentHistoryResult(
+      blocks: var_blocks,
+      v1Update: var_v1Update,
+      selectionBookmark: var_selectionBookmark,
+      history: var_history,
+    );
+  }
+
+  @protected
+  DocumentHistoryState sse_decode_document_history_state(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_undoDepth = sse_decode_u_32(deserializer);
+    var var_redoDepth = sse_decode_u_32(deserializer);
+    return DocumentHistoryState(
+      undoDepth: var_undoDepth,
+      redoDepth: var_redoDepth,
+    );
+  }
+
+  @protected
   double sse_decode_f_64(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return deserializer.buffer.getFloat64();
+  }
+
+  @protected
+  HistoryPoint sse_decode_history_point(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_blockId = sse_decode_String(deserializer);
+    var var_offset = sse_decode_u_32(deserializer);
+    return HistoryPoint(blockId: var_blockId, offset: var_offset);
+  }
+
+  @protected
+  HistorySelection sse_decode_history_selection(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_anchor = sse_decode_history_point(deserializer);
+    var var_focus = sse_decode_history_point(deserializer);
+    return HistorySelection(anchor: var_anchor, focus: var_focus);
   }
 
   @protected
@@ -1468,6 +1807,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  HistorySelection? sse_decode_opt_box_autoadd_history_selection(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_history_selection(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
   int? sse_decode_opt_box_autoadd_u_32(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
@@ -1581,6 +1933,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   void sse_encode_box_autoadd_f_64(double self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_f_64(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_history_selection(
+    HistorySelection self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_history_selection(self, serializer);
   }
 
   @protected
@@ -1704,9 +2065,48 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_document_history_result(
+    DocumentHistoryResult self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_list_collab_block(self.blocks, serializer);
+    sse_encode_list_prim_u_8_strict(self.v1Update, serializer);
+    sse_encode_opt_String(self.selectionBookmark, serializer);
+    sse_encode_document_history_state(self.history, serializer);
+  }
+
+  @protected
+  void sse_encode_document_history_state(
+    DocumentHistoryState self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_u_32(self.undoDepth, serializer);
+    sse_encode_u_32(self.redoDepth, serializer);
+  }
+
+  @protected
   void sse_encode_f_64(double self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     serializer.buffer.putFloat64(self);
+  }
+
+  @protected
+  void sse_encode_history_point(HistoryPoint self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.blockId, serializer);
+    sse_encode_u_32(self.offset, serializer);
+  }
+
+  @protected
+  void sse_encode_history_selection(
+    HistorySelection self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_history_point(self.anchor, serializer);
+    sse_encode_history_point(self.focus, serializer);
   }
 
   @protected
@@ -1859,6 +2259,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_bool(self != null, serializer);
     if (self != null) {
       sse_encode_box_autoadd_f_64(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_opt_box_autoadd_history_selection(
+    HistorySelection? self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_history_selection(self, serializer);
     }
   }
 

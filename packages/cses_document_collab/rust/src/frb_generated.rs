@@ -39,7 +39,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.13.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1588999200;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 182732725;
 
 // Section: executor
 
@@ -137,6 +137,81 @@ fn wire__crate__api__collab__apply_document_update_impl(
         },
     )
 }
+fn wire__crate__api__collab__history__apply_history_snapshot_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "apply_history_snapshot",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_blocks = <Vec<crate::api::collab::CollabBlock>>::sse_decode(&mut deserializer);
+            let api_before_selection =
+                <Option<crate::api::collab::history::HistorySelection>>::sse_decode(
+                    &mut deserializer,
+                );
+            let api_after_selection =
+                <Option<crate::api::collab::history::HistorySelection>>::sse_decode(
+                    &mut deserializer,
+                );
+            deserializer.end();
+            transform_result_sse::<_, String>((move || {
+                let output_ok = crate::api::collab::history::apply_history_snapshot(
+                    api_blocks,
+                    api_before_selection,
+                    api_after_selection,
+                )?;
+                std::result::Result::Ok(output_ok)
+            })())
+        },
+    )
+}
+fn wire__crate__api__collab__history__bookmark_document_selection_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "bookmark_document_selection",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_selection = <Option<crate::api::collab::history::HistorySelection>>::sse_decode(
+                &mut deserializer,
+            );
+            deserializer.end();
+            transform_result_sse::<_, String>((move || {
+                let output_ok =
+                    crate::api::collab::history::bookmark_document_selection(api_selection)?;
+                std::result::Result::Ok(output_ok)
+            })())
+        },
+    )
+}
 fn wire__crate__api__collab__clear_remote_awareness_impl(
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -229,6 +304,37 @@ fn wire__crate__api__collab__collab_image_default_impl(
         },
     )
 }
+fn wire__crate__api__collab__history__configure_document_history_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "configure_document_history",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_editable = <bool>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse::<_, String>((move || {
+                let output_ok =
+                    crate::api::collab::history::configure_document_history(api_editable)?;
+                std::result::Result::Ok(output_ok)
+            })())
+        },
+    )
+}
 fn wire__crate__api__collab__create_sync_step1_impl(
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -311,6 +417,35 @@ fn wire__crate__api__collab__current_blocks_impl(
             deserializer.end();
             transform_result_sse::<_, String>((move || {
                 let output_ok = crate::api::collab::current_blocks()?;
+                std::result::Result::Ok(output_ok)
+            })())
+        },
+    )
+}
+fn wire__crate__api__collab__history__document_history_state_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "document_history_state",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            transform_result_sse::<_, String>((move || {
+                let output_ok = crate::api::collab::history::document_history_state()?;
                 std::result::Result::Ok(output_ok)
             })())
         },
@@ -614,6 +749,38 @@ fn wire__crate__api__collab__prepare_cses_document_impl(
         },
     )
 }
+fn wire__crate__api__collab__history__redo_document_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "redo_document",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_selection = <Option<crate::api::collab::history::HistorySelection>>::sse_decode(
+                &mut deserializer,
+            );
+            deserializer.end();
+            transform_result_sse::<_, String>((move || {
+                let output_ok = crate::api::collab::history::redo_document(api_selection)?;
+                std::result::Result::Ok(output_ok)
+            })())
+        },
+    )
+}
 fn wire__crate__api__collab__reset_local_document_impl(
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -638,6 +805,36 @@ fn wire__crate__api__collab__reset_local_document_impl(
             deserializer.end();
             transform_result_sse::<_, String>((move || {
                 let output_ok = crate::api::collab::reset_local_document()?;
+                std::result::Result::Ok(output_ok)
+            })())
+        },
+    )
+}
+fn wire__crate__api__collab__history__resolve_document_selection_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "resolve_document_selection",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_token = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse::<_, String>((move || {
+                let output_ok = crate::api::collab::history::resolve_document_selection(api_token)?;
                 std::result::Result::Ok(output_ok)
             })())
         },
@@ -680,6 +877,38 @@ fn wire__crate__api__collab__set_block_lock_impl(
                     api_expected_owner,
                     api_expected_template,
                 )?;
+                std::result::Result::Ok(output_ok)
+            })())
+        },
+    )
+}
+fn wire__crate__api__collab__history__undo_document_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "undo_document",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_selection = <Option<crate::api::collab::history::HistorySelection>>::sse_decode(
+                &mut deserializer,
+            );
+            deserializer.end();
+            transform_result_sse::<_, String>((move || {
+                let output_ok = crate::api::collab::history::undo_document(api_selection)?;
                 std::result::Result::Ok(output_ok)
             })())
         },
@@ -909,10 +1138,63 @@ impl SseDecode for crate::api::collab::CollabTextSegment {
     }
 }
 
+impl SseDecode for crate::api::collab::history::DocumentHistoryResult {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_blocks = <Vec<crate::api::collab::CollabBlock>>::sse_decode(deserializer);
+        let mut var_v1Update = <Vec<u8>>::sse_decode(deserializer);
+        let mut var_selectionBookmark = <Option<String>>::sse_decode(deserializer);
+        let mut var_history =
+            <crate::api::collab::history::DocumentHistoryState>::sse_decode(deserializer);
+        return crate::api::collab::history::DocumentHistoryResult {
+            blocks: var_blocks,
+            v1_update: var_v1Update,
+            selection_bookmark: var_selectionBookmark,
+            history: var_history,
+        };
+    }
+}
+
+impl SseDecode for crate::api::collab::history::DocumentHistoryState {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_undoDepth = <u32>::sse_decode(deserializer);
+        let mut var_redoDepth = <u32>::sse_decode(deserializer);
+        return crate::api::collab::history::DocumentHistoryState {
+            undo_depth: var_undoDepth,
+            redo_depth: var_redoDepth,
+        };
+    }
+}
+
 impl SseDecode for f64 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         deserializer.cursor.read_f64::<NativeEndian>().unwrap()
+    }
+}
+
+impl SseDecode for crate::api::collab::history::HistoryPoint {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_blockId = <String>::sse_decode(deserializer);
+        let mut var_offset = <u32>::sse_decode(deserializer);
+        return crate::api::collab::history::HistoryPoint {
+            block_id: var_blockId,
+            offset: var_offset,
+        };
+    }
+}
+
+impl SseDecode for crate::api::collab::history::HistorySelection {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_anchor = <crate::api::collab::history::HistoryPoint>::sse_decode(deserializer);
+        let mut var_focus = <crate::api::collab::history::HistoryPoint>::sse_decode(deserializer);
+        return crate::api::collab::history::HistorySelection {
+            anchor: var_anchor,
+            focus: var_focus,
+        };
     }
 }
 
@@ -1066,6 +1348,19 @@ impl SseDecode for Option<f64> {
     }
 }
 
+impl SseDecode for Option<crate::api::collab::history::HistorySelection> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(<crate::api::collab::history::HistorySelection>::sse_decode(
+                deserializer,
+            ));
+        } else {
+            return None;
+        }
+    }
+}
+
 impl SseDecode for Option<u32> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -1128,8 +1423,8 @@ fn pde_ffi_dispatcher_primary_impl(
 ) {
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
-        6 => wire__crate__api__collab__collab_image_default_impl(port, ptr, rust_vec_len, data_len),
-        15 => wire__crate__api__init__init_app_impl(port, ptr, rust_vec_len, data_len),
+        8 => wire__crate__api__collab__collab_image_default_impl(port, ptr, rust_vec_len, data_len),
+        19 => wire__crate__api__init__init_app_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -1145,21 +1440,48 @@ fn pde_ffi_dispatcher_sync_impl(
         1 => wire__crate__api__collab__apply_awareness_update_impl(ptr, rust_vec_len, data_len),
         2 => wire__crate__api__collab__apply_block_snapshot_impl(ptr, rust_vec_len, data_len),
         3 => wire__crate__api__collab__apply_document_update_impl(ptr, rust_vec_len, data_len),
-        4 => wire__crate__api__collab__clear_remote_awareness_impl(ptr, rust_vec_len, data_len),
-        5 => wire__crate__api__collab__close_document_impl(ptr, rust_vec_len, data_len),
-        7 => wire__crate__api__collab__create_sync_step1_impl(ptr, rust_vec_len, data_len),
-        8 => wire__crate__api__collab__current_block_locks_impl(ptr, rust_vec_len, data_len),
-        9 => wire__crate__api__collab__current_blocks_impl(ptr, rust_vec_len, data_len),
-        10 => wire__crate__api__collab__document_read_only_reason_impl(ptr, rust_vec_len, data_len),
-        11 => wire__crate__api__collab__encode_document_diff_impl(ptr, rust_vec_len, data_len),
-        12 => wire__crate__api__collab__encode_local_awareness_impl(ptr, rust_vec_len, data_len),
-        13 => wire__crate__api__collab__encode_state_vector_impl(ptr, rust_vec_len, data_len),
-        14 => wire__crate__api__collab__handle_wire_message_impl(ptr, rust_vec_len, data_len),
-        16 => wire__crate__api__collab__open_cses_document_impl(ptr, rust_vec_len, data_len),
-        17 => wire__crate__api__collab__open_document_impl(ptr, rust_vec_len, data_len),
-        18 => wire__crate__api__collab__prepare_cses_document_impl(ptr, rust_vec_len, data_len),
-        19 => wire__crate__api__collab__reset_local_document_impl(ptr, rust_vec_len, data_len),
-        20 => wire__crate__api__collab__set_block_lock_impl(ptr, rust_vec_len, data_len),
+        4 => wire__crate__api__collab__history__apply_history_snapshot_impl(
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        5 => wire__crate__api__collab__history__bookmark_document_selection_impl(
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        6 => wire__crate__api__collab__clear_remote_awareness_impl(ptr, rust_vec_len, data_len),
+        7 => wire__crate__api__collab__close_document_impl(ptr, rust_vec_len, data_len),
+        9 => wire__crate__api__collab__history__configure_document_history_impl(
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        10 => wire__crate__api__collab__create_sync_step1_impl(ptr, rust_vec_len, data_len),
+        11 => wire__crate__api__collab__current_block_locks_impl(ptr, rust_vec_len, data_len),
+        12 => wire__crate__api__collab__current_blocks_impl(ptr, rust_vec_len, data_len),
+        13 => wire__crate__api__collab__history__document_history_state_impl(
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        14 => wire__crate__api__collab__document_read_only_reason_impl(ptr, rust_vec_len, data_len),
+        15 => wire__crate__api__collab__encode_document_diff_impl(ptr, rust_vec_len, data_len),
+        16 => wire__crate__api__collab__encode_local_awareness_impl(ptr, rust_vec_len, data_len),
+        17 => wire__crate__api__collab__encode_state_vector_impl(ptr, rust_vec_len, data_len),
+        18 => wire__crate__api__collab__handle_wire_message_impl(ptr, rust_vec_len, data_len),
+        20 => wire__crate__api__collab__open_cses_document_impl(ptr, rust_vec_len, data_len),
+        21 => wire__crate__api__collab__open_document_impl(ptr, rust_vec_len, data_len),
+        22 => wire__crate__api__collab__prepare_cses_document_impl(ptr, rust_vec_len, data_len),
+        23 => wire__crate__api__collab__history__redo_document_impl(ptr, rust_vec_len, data_len),
+        24 => wire__crate__api__collab__reset_local_document_impl(ptr, rust_vec_len, data_len),
+        25 => wire__crate__api__collab__history__resolve_document_selection_impl(
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        26 => wire__crate__api__collab__set_block_lock_impl(ptr, rust_vec_len, data_len),
+        27 => wire__crate__api__collab__history__undo_document_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -1403,6 +1725,92 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::collab::CollabTextSegment>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::collab::history::DocumentHistoryResult {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.blocks.into_into_dart().into_dart(),
+            self.v1_update.into_into_dart().into_dart(),
+            self.selection_bookmark.into_into_dart().into_dart(),
+            self.history.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::collab::history::DocumentHistoryResult
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::collab::history::DocumentHistoryResult>
+    for crate::api::collab::history::DocumentHistoryResult
+{
+    fn into_into_dart(self) -> crate::api::collab::history::DocumentHistoryResult {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::collab::history::DocumentHistoryState {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.undo_depth.into_into_dart().into_dart(),
+            self.redo_depth.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::collab::history::DocumentHistoryState
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::collab::history::DocumentHistoryState>
+    for crate::api::collab::history::DocumentHistoryState
+{
+    fn into_into_dart(self) -> crate::api::collab::history::DocumentHistoryState {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::collab::history::HistoryPoint {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.block_id.into_into_dart().into_dart(),
+            self.offset.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::collab::history::HistoryPoint
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::collab::history::HistoryPoint>
+    for crate::api::collab::history::HistoryPoint
+{
+    fn into_into_dart(self) -> crate::api::collab::history::HistoryPoint {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::collab::history::HistorySelection {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.anchor.into_into_dart().into_dart(),
+            self.focus.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::collab::history::HistorySelection
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::collab::history::HistorySelection>
+    for crate::api::collab::history::HistorySelection
+{
+    fn into_into_dart(self) -> crate::api::collab::history::HistorySelection {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::api::collab::OpenDocumentResult {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
@@ -1581,10 +1989,44 @@ impl SseEncode for crate::api::collab::CollabTextSegment {
     }
 }
 
+impl SseEncode for crate::api::collab::history::DocumentHistoryResult {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <Vec<crate::api::collab::CollabBlock>>::sse_encode(self.blocks, serializer);
+        <Vec<u8>>::sse_encode(self.v1_update, serializer);
+        <Option<String>>::sse_encode(self.selection_bookmark, serializer);
+        <crate::api::collab::history::DocumentHistoryState>::sse_encode(self.history, serializer);
+    }
+}
+
+impl SseEncode for crate::api::collab::history::DocumentHistoryState {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <u32>::sse_encode(self.undo_depth, serializer);
+        <u32>::sse_encode(self.redo_depth, serializer);
+    }
+}
+
 impl SseEncode for f64 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         serializer.cursor.write_f64::<NativeEndian>(self).unwrap();
+    }
+}
+
+impl SseEncode for crate::api::collab::history::HistoryPoint {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.block_id, serializer);
+        <u32>::sse_encode(self.offset, serializer);
+    }
+}
+
+impl SseEncode for crate::api::collab::history::HistorySelection {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <crate::api::collab::history::HistoryPoint>::sse_encode(self.anchor, serializer);
+        <crate::api::collab::history::HistoryPoint>::sse_encode(self.focus, serializer);
     }
 }
 
@@ -1703,6 +2145,16 @@ impl SseEncode for Option<f64> {
         <bool>::sse_encode(self.is_some(), serializer);
         if let Some(value) = self {
             <f64>::sse_encode(value, serializer);
+        }
+    }
+}
+
+impl SseEncode for Option<crate::api::collab::history::HistorySelection> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <crate::api::collab::history::HistorySelection>::sse_encode(value, serializer);
         }
     }
 }
