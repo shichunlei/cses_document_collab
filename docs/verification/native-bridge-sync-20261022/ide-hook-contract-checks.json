@@ -1,0 +1,74 @@
+[
+  {
+    "configuration": "Debug",
+    "platform": "iphoneos",
+    "flutter_build_mode": null,
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "rust_profile": "debug",
+    "passed": true
+  },
+  {
+    "configuration": "Profile",
+    "platform": "iphoneos",
+    "flutter_build_mode": null,
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "rust_profile": "release",
+    "passed": true
+  },
+  {
+    "configuration": "Release",
+    "platform": "iphonesimulator",
+    "flutter_build_mode": null,
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "rust_profile": "release",
+    "passed": true
+  },
+  {
+    "configuration": "Debug-custom",
+    "platform": "iphonesimulator",
+    "flutter_build_mode": null,
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "rust_profile": "debug",
+    "passed": true
+  },
+  {
+    "configuration": "Debug",
+    "platform": "iphoneos",
+    "flutter_build_mode": "profile",
+    "expected_exit": 0,
+    "actual_exit": 0,
+    "rust_profile": "release",
+    "passed": true
+  },
+  {
+    "configuration": "Invalid",
+    "platform": "iphoneos",
+    "flutter_build_mode": null,
+    "expected_exit": 2,
+    "actual_exit": 2,
+    "rust_profile": null,
+    "passed": true
+  },
+  {
+    "configuration": "Debug",
+    "platform": "macosx",
+    "flutter_build_mode": null,
+    "expected_exit": 2,
+    "actual_exit": 2,
+    "rust_profile": null,
+    "passed": true
+  },
+  {
+    "configuration": "Debug",
+    "platform": "iphoneos",
+    "flutter_build_mode": null,
+    "expected_exit": 42,
+    "actual_exit": 42,
+    "rust_profile": "debug",
+    "passed": true
+  }
+]

@@ -269,6 +269,11 @@ iOS 使用 `ios/cses_document_collab/Package.swift` 的本地动态 XCFramework�
 
 所需 targets 为 aarch64-apple-ios、aarch64-apple-ios-sim、x86_64-apple-ios。构建工具以包位置为根，不依赖调用方 cwd。CocoaPods podspec 也随包保留，当前 demo 验证 SPM；CocoaPods 单独标为未验证。
 
+本仓库 Demo 的 Runner 构建阶段会自动执行 `scripts/build_rust_ios_xcode.sh`，增量构建本包
+并刷新 SwiftPM 已处理的 framework；IDE 完整启动 iOS 无需手动重建。其他 SPM 宿主需自行
+配置对应构建集成。首次解析缺失的 XCFramework 前仍需先运行上述包内初始化脚本；
+热重载/热重启不能替换已加载的原生库，Rust 修改后须停止并重新启动调试。
+
 包内开发先由宿主配置 AppFlowy override。独立运行包测试时可在此目录建立不提交的 pubspec_overrides.yaml，使用同一 fork；本目录执行：
 
 ```bash

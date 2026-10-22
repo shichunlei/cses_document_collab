@@ -1,0 +1,14 @@
+[
+  {
+    "platform": "iphoneos",
+    "staged_matches_rebuilt_framework": true,
+    "embedded_hash": 1588999200,
+    "embedded_hash_disassembly": "00000000000a0b64\tmov\tw0, #0x3420\n00000000000a0b68\tmovk\tw0, #0x5eb6, lsl #16\n00000000000a0b6c\tret"
+  },
+  {
+    "platform": "iphonesimulator",
+    "staged_matches_rebuilt_framework": true,
+    "embedded_hash": 1588999200,
+    "embedded_hash_disassembly": "00000000000fdc34\tmov\tw0, #0x3420\n00000000000fdc38\tmovk\tw0, #0x5eb6, lsl #16\n00000000000fdc3c\tret"
+  }
+]

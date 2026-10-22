@@ -1,0 +1,21 @@
+{
+  "app": {
+    "appClip": false,
+    "builtByDeveloper": true,
+    "bundleIdentifier": "com.cses.csesMobileCollabDemo",
+    "bundleVersion": "1",
+    "defaultApp": false,
+    "hidden": false,
+    "internalApp": false,
+    "name": "Cses Mobile Collab Demo",
+    "removable": true,
+    "url": "file:///private/var/containers/Bundle/Application/2A5C49BD-F6C2-4A1D-BE3D-21EF2A0D1B23/Runner.app/",
+    "version": "1.0.0"
+  },
+  "processes": [
+    {
+      "executable": "file:///private/var/containers/Bundle/Application/2A5C49BD-F6C2-4A1D-BE3D-21EF2A0D1B23/Runner.app/Runner",
+      "processIdentifier": 3118
+    }
+  ]
+}

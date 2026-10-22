@@ -1,0 +1,5 @@
+_frb_get_rust_content_hash:
+00000000000a0b64	mov	w0, #0x3420
+00000000000a0b68	movk	w0, #0x5eb6, lsl #16
+00000000000a0b6c	ret
+_frb_pde_ffi_dispatcher_primary:

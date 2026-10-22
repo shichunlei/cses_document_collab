@@ -176,15 +176,31 @@ scripts/ios.sh build ipa --release
 
 脚本用 Cargo 增量构建真机 arm64、模拟器 arm64/x86_64，并生成 XCFramework。
 Rust 二进制和 `ios/Flutter/ephemeral/` 都不提交；干净检出后必须先通过上述入口生成二进制。
-使用 Xcode 前先执行 `scripts/build_rust_ios.sh debug`（归档使用 `release`），再执行
+首次使用 Xcode 前先执行 `scripts/build_rust_ios.sh debug`，再执行
 `flutter build ios --debug --config-only` 并打开 `ios/Runner.xcworkspace`。
-Rust 源码改变后，直接使用 Xcode 或 `flutter run` 前也需要重新执行 Rust 构建脚本。
+之后 IDE 的完整 iOS 构建会自动执行 Runner 的 `Build Rust iOS Library` 阶段：
+Debug 使用 Rust dev，Profile/Release 使用 release，真机和模拟器均受支持。
+该阶段也覆盖 VS Code、Android Studio 的 Flutter 启动和直接 `flutter run/build`；
+Cargo 增量编译后刷新 SwiftPM 已处理的 framework，Rust 构建失败会中止应用构建。
+IDE 启动的 Xcode 无需继承交互终端 PATH；构建脚本会补充标准 Rustup/Homebrew 路径。
+全新检出的首次 SwiftPM 解析仍需要上述初始化入口，因为解析发生在 Runner 构建阶段之前。
 iPhone 首次运行需要在 Xcode 中配置开发者签名。
 
 `cses_document_collab` 保留 `.podspec` 和 Cargokit 构建脚本，供其他使用 CocoaPods 的宿主接入；
 本宿主不提供 CocoaPods 回退配置。
 当前 Android 构建输出位于 `build/app/outputs/flutter-apk/app-debug.apk`。
 Rust 或 FRB 桥接声明变化后必须停止运行并完整重新构建安装；热重载/热重启不能替换已加载的原生库。
+
+若打开文档出现 `Content hash on Dart side ... is different from Rust side ...`，
+说明应用加载的 Rust 库与当前 Dart 桥接代码不匹配。先停止当前调试会话；iOS 使用
+`scripts/ios.sh run -d <ios-device-id>` 重建原生库并重新安装启动，Android 完整执行
+`flutter run -d <android-device-id>`。只执行热重启、依赖解析或单独生成 FRB 代码不能更新
+手机进程中的原生库。包内原生测试另需执行
+`cargo build --locked --manifest-path packages/cses_document_collab/rust/Cargo.toml`。
+从仓库根目录执行使用默认加载器的原生测试时，通过
+`FRB_DART_LOAD_EXTERNAL_LIBRARY_NATIVE_LIB_DIR="$PWD/packages/cses_document_collab/rust/target/debug" flutter test <测试路径>`
+指向该动态库；包内显式指定动态库路径的测试无需此环境变量。
+保留 FRB 的内容哈希检查，不通过跳过检查或手工修改生成文件规避版本不一致。
 
 建议按以下顺序验收当前块级阶段：
 
