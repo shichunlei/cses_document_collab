@@ -3,11 +3,22 @@ import 'package:appflowy_editor/src/editor/util/platform_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+/// Apply IME cursor/composing [nonTextUpdate] to borrowed [editorState].
+/// [characterShortcutEvents] are retained for shortcut integration. A local
+/// permission or pause transition invalidates pending cursor updates.
+/// Optional [isInputCurrent] rejects a closed/replaced input connection after
+/// asynchronous work; null retains direct editor-command behavior.
 Future<void> onNonTextUpdate(
   TextEditingDeltaNonTextUpdate nonTextUpdate,
   EditorState editorState,
-  List<CharacterShortcutEvent> characterShortcutEvents,
-) async {
+  List<CharacterShortcutEvent> characterShortcutEvents, {
+  bool Function()? isInputCurrent,
+}) async {
+  final epoch = editorState.localTransactionEpoch;
+  if (!editorState.canAcceptLocalTransactions ||
+      !(isInputCurrent?.call() ?? true)) {
+    return;
+  }
   AppFlowyEditorLog.input.debug('onNonTextUpdate: $nonTextUpdate');
 
   // update the selection on Windows
@@ -16,7 +27,16 @@ Future<void> onNonTextUpdate(
   // with the selection range.
   final selection = editorState.selection;
 
-  if (await _checkIfBacktickPressed(editorState, nonTextUpdate)) {
+  if (await _checkIfBacktickPressed(
+    editorState,
+    nonTextUpdate,
+    isInputCurrent: isInputCurrent,
+  )) {
+    return;
+  }
+  if (!editorState.canAcceptLocalTransactions ||
+      editorState.localTransactionEpoch != epoch ||
+      !(isInputCurrent?.call() ?? true)) {
     return;
   }
 
@@ -65,10 +85,7 @@ Future<void> onNonTextUpdate(
       if (nonTextUpdateStart != selectionStart) {
         editorState.updateSelectionWithReason(
           Selection.collapsed(
-            Position(
-              path: selection.start.path,
-              offset: nonTextUpdateStart,
-            ),
+            Position(path: selection.start.path, offset: nonTextUpdateStart),
           ),
           reason: SelectionUpdateReason.uiEvent,
         );
@@ -81,10 +98,15 @@ Future<void> onNonTextUpdate(
   }
 }
 
+/// Interpret a completed backtick composition in [nonTextUpdate] for borrowed
+/// [editorState]; a changed input epoch or false [isInputCurrent] prevents a
+/// subsequent formatting step.
 Future<bool> _checkIfBacktickPressed(
   EditorState editorState,
-  TextEditingDeltaNonTextUpdate nonTextUpdate,
-) async {
+  TextEditingDeltaNonTextUpdate nonTextUpdate, {
+  bool Function()? isInputCurrent,
+}) async {
+  final epoch = editorState.localTransactionEpoch;
   // if the composing range is not empty, it means the user is typing a text,
   // so we don't need to handle the backtick pressed event
   if (!nonTextUpdate.composing.isCollapsed) {
@@ -133,6 +155,11 @@ Future<bool> _checkIfBacktickPressed(
   final transaction = editorState.transaction;
   transaction.deleteText(node, node.delta!.toPlainText().length - 1, 1);
   await editorState.apply(transaction);
+  if (!editorState.canAcceptLocalTransactions ||
+      editorState.localTransactionEpoch != epoch ||
+      !(isInputCurrent?.call() ?? true)) {
+    return false;
+  }
 
   // remove the last backtick, and try to format the text to code block
   final isFormatted = handleFormatByWrappingWithSingleCharacter(

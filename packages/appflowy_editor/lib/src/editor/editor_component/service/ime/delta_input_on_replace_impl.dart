@@ -4,11 +4,22 @@ import 'package:appflowy_editor/src/editor/editor_component/service/ime/delta_in
 import 'package:appflowy_editor/src/editor/util/platform_extension.dart';
 import 'package:flutter/services.dart';
 
+/// Apply IME [replacement] to borrowed [editorState], trying
+/// [characterShortcutEvents] for a single block. Changed local input epochs
+/// invalidate continuations before applying offsets from the original delta.
+/// Optional [isInputCurrent] rejects a closed/replaced input connection after
+/// asynchronous work; null retains direct editor-command behavior.
 Future<void> onReplace(
   TextEditingDeltaReplacement replacement,
   EditorState editorState,
-  List<CharacterShortcutEvent> characterShortcutEvents,
-) async {
+  List<CharacterShortcutEvent> characterShortcutEvents, {
+  bool Function()? isInputCurrent,
+}) async {
+  final epoch = editorState.localTransactionEpoch;
+  if (!editorState.canAcceptLocalTransactions ||
+      !(isInputCurrent?.call() ?? true)) {
+    return;
+  }
   AppFlowyEditorLog.input.debug('onReplace: $replacement');
 
   // delete the selection
@@ -22,7 +33,13 @@ Future<void> onReplace(
       editorState,
       replacement.replacementText,
       characterShortcutEvents,
+      isInputCurrent: isInputCurrent,
     );
+    if (!editorState.canAcceptLocalTransactions ||
+        editorState.localTransactionEpoch != epoch ||
+        !(isInputCurrent?.call() ?? true)) {
+      return;
+    }
 
     if (execution) {
       return;
@@ -33,8 +50,10 @@ Future<void> onReplace(
       if (replacement.replacementText.endsWith('\n')) {
         replacement = TextEditingDeltaReplacement(
           oldText: replacement.oldText,
-          replacementText: replacement.replacementText
-              .substring(0, replacement.replacementText.length - 1),
+          replacementText: replacement.replacementText.substring(
+            0,
+            replacement.replacementText.length - 1,
+          ),
           replacedRange: replacement.replacedRange,
           selection: replacement.selection,
           composing: replacement.composing,
@@ -62,12 +81,18 @@ Future<void> onReplace(
     await editorState.apply(transaction);
   } else {
     await editorState.deleteSelection(selection);
+    if (!editorState.canAcceptLocalTransactions ||
+        editorState.localTransactionEpoch != epoch ||
+        !(isInputCurrent?.call() ?? true)) {
+      return;
+    }
     // insert the replacement
     final insertion = replacement.toInsertion();
     await onInsert(
       insertion,
       editorState,
       characterShortcutEvents,
+      isInputCurrent: isInputCurrent,
     );
   }
 }

@@ -34,6 +34,8 @@ class KeyboardServiceWidgetState extends State<KeyboardServiceWidget>
     implements AppFlowyKeyboardService {
   late final SelectionGestureInterceptor interceptor;
   late final EditorState editorState;
+
+  /// Input service created here and closed on disposal; callers only borrow it.
   late final TextInputService textInputService;
   late final FocusNode focusNode;
 
@@ -76,6 +78,8 @@ class KeyboardServiceWidgetState extends State<KeyboardServiceWidget>
     keepEditorFocusNotifier.addListener(_onKeepEditorFocusChanged);
   }
 
+  /// Unregister selection/focus callbacks and close this widget's owned input
+  /// service, invalidating queued IME work before releasing its focus node.
   @override
   void dispose() {
     editorState.selectionNotifier.removeListener(_onSelectionChanged);
@@ -83,10 +87,11 @@ class KeyboardServiceWidgetState extends State<KeyboardServiceWidget>
       'keyboard',
     );
     focusNode.removeListener(_onFocusChanged);
+    keepEditorFocusNotifier.removeListener(_onKeepEditorFocusChanged);
+    textInputService.close();
     if (widget.focusNode == null) {
       focusNode.dispose();
     }
-    keepEditorFocusNotifier.removeListener(_onKeepEditorFocusChanged);
     super.dispose();
   }
 
@@ -199,7 +204,9 @@ class KeyboardServiceWidgetState extends State<KeyboardServiceWidget>
     return KeyEventResult.ignored;
   }
 
-  /// Synchronize selection and input, preserving copy-only selections on protected blocks.
+  /// Synchronize selection and input, preserving copy-only selections on
+  /// protected blocks. A paused projection may refresh an active connection,
+  /// but must retain a keyboard the user or platform has already closed.
   void _onSelectionChanged() {
     final doNotAttach = editorState
         .selectionExtraInfo?[selectionExtraInfoDoNotAttachTextService];
@@ -214,7 +221,8 @@ class KeyboardServiceWidgetState extends State<KeyboardServiceWidget>
 
     if (selection == null || !editorState.canInputAt(selection)) {
       textInputService.close();
-    } else {
+    } else if (!editorState.localTransactionsPaused ||
+        textInputService.attached) {
       // For the deletion, we should attach the text input service immediately.
       _attachTextInputService(selection);
       _updateCaretPosition(selection);
@@ -366,15 +374,55 @@ class KeyboardServiceWidgetState extends State<KeyboardServiceWidget>
     }
   }
 
+  /// Whether input captured in [epoch] and [connectionEpoch] still belongs to
+  /// the current permission/projection phase and platform input session.
+  /// Pausing never detaches the input service itself.
+  bool _canProcessInput(int epoch, int connectionEpoch) =>
+      mounted &&
+      editorState.canAcceptLocalTransactions &&
+      editorState.localTransactionEpoch == epoch &&
+      _inputConnectionEpoch == connectionEpoch &&
+      editorState.canInputAt(editorState.selection);
+
+  /// Session identity from the non-delta service created by this widget.
+  int get _inputConnectionEpoch =>
+      (textInputService as NonDeltaTextInputService).connectionEpoch;
+
+  /// Refresh rejected input from the current tree, retaining the connection
+  /// only if [connectionEpoch] still owns it. An old callback must not refresh
+  /// a replacement connection opened while its interceptor was awaiting.
+  bool _rejectInput(int connectionEpoch) {
+    final selection = editorState.selection;
+    if (mounted &&
+        !editorState.isDisposed &&
+        textInputService.attached &&
+        _inputConnectionEpoch == connectionEpoch &&
+        editorState.canInputAt(selection)) {
+      textInputService.clearComposingTextRange();
+      _attachTextInputService(selection!);
+    }
+    return false;
+  }
+
+  /// Build this widget's input service. Each callback rejects stale asynchronous
+  /// interceptor results without closing the existing platform connection.
   NonDeltaTextInputService buildTextInputService() {
     return NonDeltaTextInputService(
       onInsert: (insertion) async {
+        final epoch = editorState.localTransactionEpoch;
+        final connectionEpoch = _inputConnectionEpoch;
+        if (!_canProcessInput(epoch, connectionEpoch)) {
+          return _rejectInput(connectionEpoch);
+        }
         for (final interceptor in interceptors) {
           final result = await interceptor.interceptInsert(
             insertion,
             editorState,
             widget.characterShortcutEvents,
           );
+          if (!_canProcessInput(epoch, connectionEpoch)) {
+            return _rejectInput(connectionEpoch);
+          }
           if (result) {
             AppFlowyEditorLog.input.info(
               'keyboard service onInsert - intercepted by interceptor: $interceptor',
@@ -383,15 +431,29 @@ class KeyboardServiceWidgetState extends State<KeyboardServiceWidget>
           }
         }
 
-        await onInsert(insertion, editorState, widget.characterShortcutEvents);
-        return true;
+        await onInsert(
+          insertion,
+          editorState,
+          widget.characterShortcutEvents,
+          isInputCurrent: () => _canProcessInput(epoch, connectionEpoch),
+        );
+        return _canProcessInput(epoch, connectionEpoch) ||
+            _rejectInput(connectionEpoch);
       },
       onDelete: (deletion) async {
+        final epoch = editorState.localTransactionEpoch;
+        final connectionEpoch = _inputConnectionEpoch;
+        if (!_canProcessInput(epoch, connectionEpoch)) {
+          return _rejectInput(connectionEpoch);
+        }
         for (final interceptor in interceptors) {
           final result = await interceptor.interceptDelete(
             deletion,
             editorState,
           );
+          if (!_canProcessInput(epoch, connectionEpoch)) {
+            return _rejectInput(connectionEpoch);
+          }
           if (result) {
             AppFlowyEditorLog.input.info(
               'keyboard service onDelete - intercepted by interceptor: $interceptor',
@@ -401,15 +463,24 @@ class KeyboardServiceWidgetState extends State<KeyboardServiceWidget>
         }
 
         await onDelete(deletion, editorState);
-        return true;
+        return _canProcessInput(epoch, connectionEpoch) ||
+            _rejectInput(connectionEpoch);
       },
       onReplace: (replacement) async {
+        final epoch = editorState.localTransactionEpoch;
+        final connectionEpoch = _inputConnectionEpoch;
+        if (!_canProcessInput(epoch, connectionEpoch)) {
+          return _rejectInput(connectionEpoch);
+        }
         for (final interceptor in interceptors) {
           final result = await interceptor.interceptReplace(
             replacement,
             editorState,
             widget.characterShortcutEvents,
           );
+          if (!_canProcessInput(epoch, connectionEpoch)) {
+            return _rejectInput(connectionEpoch);
+          }
           if (result) {
             AppFlowyEditorLog.input.info(
               'keyboard service onReplace - intercepted by interceptor: $interceptor',
@@ -422,16 +493,26 @@ class KeyboardServiceWidgetState extends State<KeyboardServiceWidget>
           replacement,
           editorState,
           widget.characterShortcutEvents,
+          isInputCurrent: () => _canProcessInput(epoch, connectionEpoch),
         );
-        return true;
+        return _canProcessInput(epoch, connectionEpoch) ||
+            _rejectInput(connectionEpoch);
       },
       onNonTextUpdate: (nonTextUpdate) async {
+        final epoch = editorState.localTransactionEpoch;
+        final connectionEpoch = _inputConnectionEpoch;
+        if (!_canProcessInput(epoch, connectionEpoch)) {
+          return _rejectInput(connectionEpoch);
+        }
         for (final interceptor in interceptors) {
           final result = await interceptor.interceptNonTextUpdate(
             nonTextUpdate,
             editorState,
             widget.characterShortcutEvents,
           );
+          if (!_canProcessInput(epoch, connectionEpoch)) {
+            return _rejectInput(connectionEpoch);
+          }
           if (result) {
             AppFlowyEditorLog.input.info(
               'keyboard service onNonTextUpdate - intercepted by interceptor: $interceptor',
@@ -444,15 +525,21 @@ class KeyboardServiceWidgetState extends State<KeyboardServiceWidget>
           nonTextUpdate,
           editorState,
           widget.characterShortcutEvents,
+          isInputCurrent: () => _canProcessInput(epoch, connectionEpoch),
         );
-        return true;
+        return _canProcessInput(epoch, connectionEpoch) ||
+            _rejectInput(connectionEpoch);
       },
       onPerformAction: (action) async {
+        final epoch = editorState.localTransactionEpoch;
+        final connectionEpoch = _inputConnectionEpoch;
+        if (!_canProcessInput(epoch, connectionEpoch)) return;
         for (final interceptor in interceptors) {
           final result = await interceptor.interceptPerformAction(
             action,
             editorState,
           );
+          if (!_canProcessInput(epoch, connectionEpoch)) return;
           if (result) {
             AppFlowyEditorLog.input.info(
               'keyboard service onPerformAction - intercepted by interceptor: $interceptor',
@@ -464,11 +551,15 @@ class KeyboardServiceWidgetState extends State<KeyboardServiceWidget>
         await onPerformAction(action, editorState);
       },
       onFloatingCursor: (point) async {
+        final epoch = editorState.localTransactionEpoch;
+        final connectionEpoch = _inputConnectionEpoch;
+        if (!_canProcessInput(epoch, connectionEpoch)) return;
         for (final interceptor in interceptors) {
           final result = await interceptor.interceptFloatingCursor(
             point,
             editorState,
           );
+          if (!_canProcessInput(epoch, connectionEpoch)) return;
           if (result) {
             AppFlowyEditorLog.input.info(
               'keyboard service onFloatingCursor - intercepted by interceptor: $interceptor',

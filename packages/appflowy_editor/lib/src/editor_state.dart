@@ -103,15 +103,21 @@ enum TransactionTime { before, after }
 /// import 'package:appflowy_editor/appflowy_editor.dart';
 /// final editor = EditorState.blank();
 /// editor.transactionGuard = (transaction) => true;
+/// editor.localTransactionsPaused = true; // Keep input connected while projecting.
+/// editor.localTransactionsPaused = false;
 /// // A host may also set selectionInputGuard and blockDecorator.
 /// editor.dispose();
 /// ```
 class EditorState {
+  /// Own [document] until disposal. [minHistoryItemDuration] defaults to 50 ms
+  /// between local history groups; [maxHistoryItemSize] defaults to 200 when
+  /// null. Input permission notifications invalidate awaiting local input.
   EditorState({
     required this.document,
     this.minHistoryItemDuration = const Duration(milliseconds: 50),
     int? maxHistoryItemSize,
   }) {
+    editableNotifier.addListener(_invalidateLocalInput);
     undoManager = UndoManager(maxHistoryItemSize ?? 200);
     undoManager.state = this;
   }
@@ -130,14 +136,52 @@ class EditorState {
   /// Whether the editor is editable.
   ValueNotifier<bool> editableNotifier = ValueNotifier(true);
 
+  /// Whether the host permits editing, independently of temporary input pauses.
   bool get editable => editableNotifier.value;
 
+  /// Apply host permission [value]; real changes invalidate pending local input.
   set editable(bool value) {
     if (value == editable) {
       return;
     }
     editableNotifier.value = value;
   }
+
+  /// Invalidate pending local input when the host updates the permission
+  /// notifier, including writes made directly to its public value.
+  void _invalidateLocalInput() {
+    _localTransactionEpoch++;
+  }
+
+  /// Temporary host-owned pause for local writes. Defaults to false and does
+  /// not change editability, selection, focus or the existing input connection.
+  /// The host must balance its own nested work before clearing this value.
+  bool get localTransactionsPaused => _localTransactionsPaused;
+
+  /// Pause or resume local transactions with [value]. Every actual transition
+  /// invalidates asynchronous input started before it, including a complete
+  /// pause/resume cycle. Remote projections bypass this local-only restriction.
+  set localTransactionsPaused(bool value) {
+    if (_localTransactionsPaused == value) return;
+    _localTransactionsPaused = value;
+    _localTransactionEpoch++;
+  }
+
+  /// Whether new local work is currently permitted before per-block checks.
+  /// This does not control input attachment; pauses keep the keyboard connected.
+  bool get canAcceptLocalTransactions =>
+      !isDisposed && editable && !_localTransactionsPaused;
+
+  /// Monotonic version of local input permissions and pause transitions.
+  /// Asynchronous input must capture this version and reject a changed version
+  /// after awaiting; [isDisposed] must also be checked before using the editor.
+  int get localTransactionEpoch => _localTransactionEpoch;
+
+  /// The host owns this pause independently of block-level write policies.
+  bool _localTransactionsPaused = false;
+
+  /// Invalidates callbacks even when a pause or permission change is reversed.
+  int _localTransactionEpoch = 0;
 
   /// Optional host-owned block decoration. The borrowed context, node and child
   /// must retain their editing/selection identity; null renders the child directly.
@@ -156,7 +200,8 @@ class EditorState {
   /// Check borrowed [transaction] before local mutation or popping a history item.
   /// Policies must be synchronous and must not mutate the document or history.
   bool canApplyTransaction(Transaction transaction) =>
-      !isDisposed && editable && (transactionGuard?.call(transaction) ?? true);
+      canAcceptLocalTransactions &&
+      (transactionGuard?.call(transaction) ?? true);
 
   /// Whether borrowed [selection] may attach an input connection. A null selection
   /// has no editable target; the host retains ownership of both policy callbacks.
@@ -409,8 +454,11 @@ class EditorState {
 
   bool isDisposed = false;
 
+  /// Reject future work and release owned document/selection subscriptions.
+  /// The host must first unmount its widgets and finish outstanding projections.
   void dispose() {
     isDisposed = true;
+    editableNotifier.removeListener(_invalidateLocalInput);
     _observer.close();
     _asyncObserver.close();
     _debouncedSealHistoryItemTimer?.cancel();
@@ -435,7 +483,12 @@ class EditorState {
   /// [options] controls history recording, [withUpdateSelection] controls the final
   /// selection update, and [skipHistoryDebounce] seals this change independently.
   /// Local host-policy rejection performs no mutation or history recording; remote
-  /// projection bypasses the local guard. The Future completes after processing.
+  /// projection bypasses editability, local pauses and host write policies, so
+  /// readonly views still receive authoritative content. Disposed editors reject
+  /// both paths. With [withUpdateSelection] false, remote operations still update
+  /// the tree and compute transformed paths but do not publish an intermediate
+  /// selection; the caller owns restoring its stable selection afterwards.
+  /// The Future completes after processing.
   Future<void> apply(
     Transaction transaction, {
     bool isRemote = false,
@@ -443,9 +496,12 @@ class EditorState {
     bool withUpdateSelection = true,
     bool skipHistoryDebounce = false,
   }) async {
-    if (!editable ||
-        isDisposed ||
-        (!isRemote && !canApplyTransaction(transaction))) {
+    if (isDisposed) return;
+    if (!isRemote && !canApplyTransaction(transaction)) {
+      // Materialize queued text deltas without applying them. Their upstream
+      // compose cache is shared, so leaving a rejected delta there would let a
+      // later transaction apply it after the pause has ended.
+      if (transaction.markNeedsComposing) transaction.compose();
       return;
     }
 
@@ -458,7 +514,8 @@ class EditorState {
 
     if (isRemote) {
       _selectionUpdateReason = SelectionUpdateReason.remote;
-      selection = _applyTransactionFromRemote(transaction);
+      final remoteSelection = _applyTransactionFromRemote(transaction);
+      if (withUpdateSelection) selection = remoteSelection;
     } else {
       // broadcast to other users here, before applying the transaction
       if (!_observer.isClosed) {
@@ -693,11 +750,13 @@ class EditorState {
   /// seals them after the history interval. Redo always gets its own sealed
   /// entry without clearing remaining redo; remote projection never calls this.
   /// Does not execute operations or publish document changes.
+  /// A borrowed external history owner suppresses both local path stacks.
   void _recordRedoOrUndo(
     ApplyOptions options,
     Transaction transaction,
     bool skipDebounce,
   ) {
+    if (undoManager.externalHistory != null) return;
     if (options.recordUndo) {
       final undoItem = undoManager.getUndoHistoryItem(isRedo: options.isRedo);
       undoItem.addAll(transaction.operations);

@@ -7,6 +7,42 @@ import 'package:appflowy_editor/src/core/transform/transaction.dart';
 import 'package:appflowy_editor/src/editor_state.dart';
 import 'package:appflowy_editor/src/infra/log.dart';
 
+/// Borrowed history commands for a host that owns durable collaboration history.
+/// The host handles asynchronous failures and releases its own resources. Local
+/// editors omit this delegate and retain the built-in path history.
+///
+/// ```dart
+/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// final editor = EditorState.blank();
+/// editor.undoManager.externalHistory = EditorHistoryDelegate(
+///   undo: () {}, redo: () {}, canUndo: () => false, canRedo: () => false,
+/// );
+/// editor.undoManager.externalHistory = null;
+/// editor.dispose();
+/// ```
+class EditorHistoryDelegate {
+  /// [undo] and [redo] dispatch commands; [canUndo] and [canRedo] read the
+  /// host's latest availability and permissions at invocation time.
+  const EditorHistoryDelegate({
+    required this.undo,
+    required this.redo,
+    required this.canUndo,
+    required this.canRedo,
+  });
+
+  /// Dispatch one undo; the owner handles completion and failure reporting.
+  final void Function() undo;
+
+  /// Dispatch one redo; the owner handles completion and failure reporting.
+  final void Function() redo;
+
+  /// Whether undo is currently permitted and available.
+  final bool Function() canUndo;
+
+  /// Whether redo is currently permitted and available.
+  final bool Function() canRedo;
+}
+
 /// A [HistoryItem] contains list of operations committed by users.
 /// If a [HistoryItem] is not sealed, operations can be added sequentially.
 /// Otherwise, the operations should be added to a new [HistoryItem].
@@ -86,7 +122,8 @@ class FixedSizeStack {
   bool get isNonEmpty => _list.isNotEmpty;
 }
 
-/// Editor-owned undo/redo stacks. A rejected host write policy never pops an item.
+/// Editor-owned undo/redo stacks, or borrowed commands when [externalHistory]
+/// is attached. A rejected host write policy never pops a local item.
 ///
 /// ```dart
 /// import 'package:appflowy_editor/appflowy_editor.dart';
@@ -98,6 +135,26 @@ class UndoManager {
   final FixedSizeStack undoStack;
   final FixedSizeStack redoStack;
   EditorState? state;
+  EditorHistoryDelegate? _externalHistory;
+
+  /// Borrowed durable history owner; null retains built-in local history.
+  /// Replacing the owner clears path stacks so detached collaboration commands
+  /// can never later fall back to stale local replay. This does not dispose it.
+  EditorHistoryDelegate? get externalHistory => _externalHistory;
+
+  /// Bind borrowed [value], clearing stale local stacks when ownership changes.
+  set externalHistory(EditorHistoryDelegate? value) {
+    if (identical(value, _externalHistory)) return;
+    undoStack.clear();
+    redoStack.clear();
+    _externalHistory = value;
+  }
+
+  /// Current availability from the host or the built-in local undo stack.
+  bool get canUndo => _externalHistory?.canUndo() ?? undoStack.isNonEmpty;
+
+  /// Current availability from the host or the built-in local redo stack.
+  bool get canRedo => _externalHistory?.canRedo() ?? redoStack.isNonEmpty;
 
   UndoManager([int stackSize = 20])
     : undoStack = FixedSizeStack(stackSize),
@@ -128,9 +185,19 @@ class UndoManager {
     return last;
   }
 
-  /// Replay the latest local change only after the borrowed editor authorizes it.
-  /// A rejected, readonly or disposed target leaves both history stacks untouched.
+  /// Dispatch to the external owner or replay the latest local change after the
+  /// borrowed editor authorizes it. A paused, readonly or disposed target is ignored;
+  /// rejected local transactions leave both path stacks untouched.
   void undo() {
+    final external = _externalHistory;
+    if (external != null) {
+      if (state?.canAcceptLocalTransactions == true &&
+          state?.isDisposed == false &&
+          external.canUndo()) {
+        external.undo();
+      }
+      return;
+    }
     final s = state;
     if (s == null || undoStack.isEmpty) return;
     final transaction = undoStack.last.toTransaction(s);
@@ -149,11 +216,23 @@ class UndoManager {
   }
 
   /// Replays the latest undone command through the attached editor state.
+  /// With [externalHistory], dispatches only to that owner when writable and
+  /// available and local transactions are not paused; the owner handles
+  /// completion and asynchronous failures.
   /// Preserves other redo entries and records this command separately so a
   /// subsequent undo reverses only this replay. Host policy rejection keeps the
   /// item on its original stack. No attached state or no redo
   /// entry is a no-op; transaction failures follow EditorState.apply semantics.
   void redo() {
+    final external = _externalHistory;
+    if (external != null) {
+      if (state?.canAcceptLocalTransactions == true &&
+          state?.isDisposed == false &&
+          external.canRedo()) {
+        external.redo();
+      }
+      return;
+    }
     final s = state;
     if (s == null || redoStack.isEmpty) return;
     final transaction = redoStack.last.toTransaction(s);

@@ -14,6 +14,7 @@ export 'src/editor/l10n/appflowy_editor_l10n.dart';
 export 'src/editor/selection_menu/selection_menu.dart';
 // editor state
 export 'src/editor_state.dart';
+export 'src/history/undo_manager.dart' show EditorHistoryDelegate;
 // extension
 export 'src/extensions/extensions.dart';
 export 'src/infra/clipboard.dart';

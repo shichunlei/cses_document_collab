@@ -4,11 +4,22 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:universal_platform/universal_platform.dart';
 
+/// Apply IME [insertion] to borrowed [editorState], trying
+/// [characterShortcutEvents] first. Permission or pause changes across an await
+/// invalidate the remainder; the caller owns the editor and input connection.
+/// Optional [isInputCurrent] rejects a closed/replaced input connection after
+/// asynchronous work; null retains direct editor-command behavior.
 Future<void> onInsert(
   TextEditingDeltaInsertion insertion,
   EditorState editorState,
-  List<CharacterShortcutEvent> characterShortcutEvents,
-) async {
+  List<CharacterShortcutEvent> characterShortcutEvents, {
+  bool Function()? isInputCurrent,
+}) async {
+  final epoch = editorState.localTransactionEpoch;
+  if (!editorState.canAcceptLocalTransactions ||
+      !(isInputCurrent?.call() ?? true)) {
+    return;
+  }
   AppFlowyEditorLog.input.debug('onInsert: $insertion');
 
   final textInserted = insertion.textInserted;
@@ -27,7 +38,13 @@ Future<void> onInsert(
       editorState,
       textInserted,
       characterShortcutEvents,
+      isInputCurrent: isInputCurrent,
     );
+    if (!editorState.canAcceptLocalTransactions ||
+        editorState.localTransactionEpoch != epoch ||
+        !(isInputCurrent?.call() ?? true)) {
+      return;
+    }
 
     if (execution) {
       editorState.sliceUpcomingAttributes = false;
@@ -42,6 +59,11 @@ Future<void> onInsert(
 
   if (!selection.isCollapsed) {
     await editorState.deleteSelection(selection);
+    if (!editorState.canAcceptLocalTransactions ||
+        editorState.localTransactionEpoch != epoch ||
+        !(isInputCurrent?.call() ?? true)) {
+      return;
+    }
   }
 
   selection = editorState.selection?.normalized;
@@ -67,14 +89,8 @@ Future<void> onInsert(
   }
 
   final afterSelection = Selection(
-    start: Position(
-      path: node.path,
-      offset: insertion.selection.baseOffset,
-    ),
-    end: Position(
-      path: node.path,
-      offset: insertion.selection.extentOffset,
-    ),
+    start: Position(path: node.path, offset: insertion.selection.baseOffset),
+    end: Position(path: node.path, offset: insertion.selection.extentOffset),
   );
 
   final transaction = editorState.transaction
