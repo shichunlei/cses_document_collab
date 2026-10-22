@@ -23,10 +23,10 @@ dependencies:
   provider: ^6.1.5+1
   url_launcher: ^6.3.3
   video_player: ^2.14.1
-  val_highlight: ^0.1.0
+  val_highlight: ^0.1.1
   cached_network_image: ^3.4.1
   flutter_cache_manager: ^3.4.5
-  lucide_icons_flutter: ^4.0.0
+  lucide_icons_flutter: ^4.0.1
 
 dev_dependencies:
   path: ^1.9.1
