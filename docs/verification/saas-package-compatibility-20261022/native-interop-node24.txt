@@ -1,0 +1,7 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/document_bootstrapper_native_test.dart
+00:00 +0: (setUpAll)
+00:00 +0: prepare reuses CRDT and opens editable with an empty initial undo stack
+00:00 +1: preparation cannot replace another active controller
+00:00 +2: published desktop Yjs reads mobile root and returns an editable update
+00:02 +3: (tearDownAll)
+00:02 +3: All tests passed!

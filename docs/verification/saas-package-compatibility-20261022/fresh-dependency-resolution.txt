@@ -1,0 +1,351 @@
+Resolving dependencies...
+Downloading packages...
++ agora_rtc_engine 6.6.4
++ ai_barcode_scanner 8.2.0+cses.1 from path /Users/shichunlei/workspace/cses/cses.plugins/ai_barcode_scanner
++ ali_auth_spm 1.4.3
++ aliyun_log_dart_sdk_plus 1.1.8 from path ../../../../Users/shichunlei/workspace/cses/cses.plugins/aliyun_log_dart_sdk_plus
++ android_file_picker 2.1.1
++ animated_reorderable_list 1.3.0
++ ansicolor 2.0.3
++ app_badge_plus 1.3.5
++ appflowy_editor 6.2.0 from path ../../../../Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor
++ archive 4.5.2
++ args 2.7.0
++ async 2.13.1
++ audio_service 0.18.19
++ audio_service_platform_interface 0.1.3
++ audio_service_web 0.1.4
++ audio_session 0.2.4
++ audioplayers 6.8.1
++ audioplayers_android 5.3.0
++ audioplayers_darwin 6.5.0
++ audioplayers_linux 4.3.0
++ audioplayers_platform_interface 7.2.0
++ audioplayers_web 5.3.0
++ audioplayers_windows 4.4.1
++ badges 3.2.0 (4.0.1 available)
++ barcode 2.2.9
++ better_native_video_player 1.6.7 (1.7.5 available)
++ better_player_plus 1.4.1 (2.0.0 available)
++ bidi 2.0.13
++ boolean_selector 2.1.2
++ bot_toast 4.1.3
++ build_cli_annotations 2.1.1
++ cached_network_image 3.4.1 (4.0.4 available)
++ cached_network_image_platform_interface 4.1.1 (5.0.3 available)
++ cached_network_image_web 1.3.1 (2.0.3 available)
++ camera 0.12.1
++ camera_android_camerax 0.7.6
++ camera_avfoundation 0.10.3+1 (0.11.1 available)
++ camera_platform_interface 2.15.0
++ camera_web 0.3.5+6
++ characters 1.4.1
++ charcode 1.4.0
++ charset 2.0.1
++ clock 1.1.2 (1.1.3 available)
++ code_assets 1.2.1 (2.1.0 available)
++ collection 1.19.1
++ connectivity_plus 7.3.2
++ connectivity_plus_platform_interface 2.1.0
++ convert 3.1.2
++ convert_object 1.1.1
++ cookie_jar 4.0.9
++ cross_file 0.3.5+5 (0.4.0 available)
++ crypto 3.0.7
++ cses_common 1.0.1 from path /Users/shichunlei/workspace/cses/cses.common
++ cses_document_collab 0.1.0 from path /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab
++ cses_form 0.0.1 from path /Users/shichunlei/workspace/cses/cses.form
++ cses_widgets 1.0.0 from path /Users/shichunlei/workspace/cses/cses.widgets
++ csslib 1.0.2
++ cupertino_icons 1.0.9 (2.0.0 available)
++ cupertino_ui 1.0.2 (1.1.4 available)
++ custom_sliding_segmented_control 1.8.5 (2.0.0 available)
++ dbus 0.8.0
++ device_info_plus 13.3.0
++ device_info_plus_platform_interface 8.1.0
++ diff_match_patch 0.4.1
++ dio 5.11.1
++ dio_cookie_manager 3.5.0
++ dio_web_adapter 2.2.2
++ dynamic_timeline_tile_flutter 0.0.4
++ entry 1.0.3
++ event_bus 2.0.1
++ extended_image 10.1.0
++ extended_image_library 5.0.1
++ extended_nested_scroll_view 6.2.1
++ extended_text_field 17.0.0
++ extended_text_library 12.0.1
++ fake_async 1.3.3
++ ffi 2.2.0
++ ffi_leak_tracker 0.1.2
++ file 7.0.1
++ file_picker 13.1.0
++ file_picker_darwin 2.3.2
++ file_picker_linux 2.0.2
++ file_picker_platform_interface 4.2.0
++ file_picker_web 4.2.0
++ filesaverplus 0.0.5 from path ../../../../Users/shichunlei/workspace/cses/cses.plugins/filesaverplus
++ fixnum 1.1.1
++ flat_buffers 25.9.23
++ floating 6.0.0
++ flutter 0.0.0 from sdk flutter
++ flutter_cache_manager 3.4.5
++ flutter_circular_text 0.3.1
++ flutter_cupertino_datetime_picker2 3.0.2
++ flutter_easyrefresh_strong 2.2.1
++ flutter_floating 2.0.2
++ flutter_image_compress 2.5.1
++ flutter_image_compress_common 1.1.1
++ flutter_image_compress_macos 1.1.0
++ flutter_image_compress_ohos 0.0.3+1
++ flutter_image_compress_platform_interface 1.1.0
++ flutter_image_compress_web 0.1.5+1
++ flutter_lints 6.0.0
++ flutter_localizations 0.0.0 from sdk flutter
++ flutter_math_fork 0.7.4
++ flutter_plugin_android_lifecycle 2.0.35
++ flutter_rust_bridge 2.13.0
++ flutter_screenutil 5.9.3
++ flutter_svg 2.3.0
++ flutter_swiper_null_safety_flutter3 4.0.3
++ flutter_test 0.0.0 from sdk flutter
++ flutter_web_plugins 0.0.0 from sdk flutter
++ flutter_widget_from_html_core 0.17.4
++ fluwx_no_pay 6.0.6
++ get 4.7.3
++ get_it 9.3.0
++ glob 2.2.0
++ google_fonts 8.2.1 (9.0.0 available)
++ gpt_markdown 1.4.0
++ graphview 1.5.1
++ hive_ce 2.22.0
++ hooks 2.0.2 (2.2.0 available)
++ html 0.15.7
++ http 1.6.0
++ http_client_helper 3.0.0
++ http_parser 4.1.2
++ image 4.12.0
++ image_cropper 12.2.1 (13.0.0 available)
++ image_cropper_for_web 7.0.0 (8.0.1 available)
++ image_cropper_platform_interface 8.0.0 (9.0.0 available)
++ image_gallery_saver_plus 5.1.1
++ intl 0.20.2 (0.20.3 available)
++ iris_method_channel 2.2.7
++ isolate_channel 0.6.1
++ jiffy 6.4.5
++ jni 1.1.0
++ jni_flutter 1.0.4+1
++ jni_util 1.0.0
++ jpush_flutter 3.5.9
+! js 0.7.2 (overridden)
++ json_annotation 4.12.0
++ just_audio 0.10.6
++ just_audio_background 0.0.1-beta.17
++ just_audio_platform_interface 4.6.0
++ just_audio_web 0.4.16
++ keyboard_actions 4.2.2 (5.0.3 available)
++ keyboard_height_plugin 0.3.0
++ leak_tracker 11.0.2
++ leak_tracker_flutter_testing 3.0.10
++ leak_tracker_testing 3.0.2
++ like_button 2.1.0
++ lints 6.1.0
++ loading_animation_widget 1.3.0
++ logger 2.8.0
++ logging 1.3.0
++ lottie 3.6.1
++ lucide_icons_flutter 4.0.1
++ lunar 1.7.8
++ markdown 7.3.1
++ matcher 0.12.19 (0.12.20 available)
++ material_color_utilities 0.13.0 (0.13.1 available)
++ material_ui 1.2.0 (1.8.0 available)
++ media_info 1.0.0 from path ../../../../Users/shichunlei/workspace/cses/cses.plugins/media_info
++ meta 1.18.0 (1.19.0 available)
++ metalink 2.1.0 (2.2.0 available)
++ mime 2.1.0
++ mobile_scanner 7.4.2
++ modal_bottom_sheet 3.0.0
++ multicast_dns 0.3.3+1
++ nanoid2 2.1.0
++ native_toolchain_c 0.19.2 (0.19.5 available)
++ nested 1.0.0
++ nm 0.6.0
++ numerus 2.3.2
++ objective_c 9.5.0 (9.6.2 available)
++ octo_image 2.1.2
++ open_file 4.0.0
++ open_file_android 1.1.0
++ open_file_ios 1.1.0
++ open_file_linux 1.1.0
++ open_file_mac 1.1.0
++ open_file_platform_interface 1.1.0
++ open_file_web 1.1.0
++ open_file_windows 1.1.0
++ opentelemetry_wk 0.18.11
++ package_config 3.0.0
++ package_info_plus 10.2.2
++ package_info_plus_platform_interface 4.1.0
++ path 1.9.1
++ path_parsing 1.1.0
++ path_provider 2.1.6
++ path_provider_android 2.3.1
++ path_provider_foundation 2.6.0
++ path_provider_linux 2.2.2
++ path_provider_platform_interface 2.1.3
++ path_provider_windows 2.3.0
++ pdf 3.13.1
++ permission_handler 12.0.3 (13.0.2 available)
++ permission_handler_android 13.0.1 (14.1.0 available)
++ permission_handler_apple 9.6.3
++ permission_handler_html 0.1.4+1
++ permission_handler_platform_interface 4.4.1
++ permission_handler_windows 0.2.2
++ petitparser 7.0.2 (7.1.0 available)
++ photo_manager 3.12.0
++ photo_manager_image_provider 2.2.0
++ pinyin 3.3.0
++ platform 3.2.0
++ plugin_platform_interface 2.1.8
++ posix 6.5.2
++ pretty_dio_logger 1.4.0
++ pretty_qr_code 3.6.0
++ protobuf 6.1.0
++ provider 6.1.5+1
++ pub_semver 2.2.1
++ qr 3.0.2 (4.0.0 available)
++ quick_actions 1.1.1
++ quick_actions_android 1.0.34
++ quick_actions_ios 1.2.5
++ quick_actions_platform_interface 1.1.0
++ quiver 3.2.2
++ realtime_captions 1.0.0 from path /Users/shichunlei/workspace/cses/cses.plugins/realtime_captions
++ record 7.1.2
++ record_android 2.2.0
++ record_ios 2.1.1
++ record_linux 2.1.3
++ record_macos 2.1.1
++ record_platform_interface 2.1.0
++ record_use 0.6.0 (1.1.1 available)
++ record_web 2.1.3
++ record_windows 2.3.0
++ rotated_corner_decoration 2.1.0+1
++ rxdart 0.28.0
++ screen_brightness 2.1.11
++ screen_brightness_android 2.1.6
++ screen_brightness_ios 2.1.4
++ screen_brightness_macos 2.1.4
++ screen_brightness_ohos 2.1.4
++ screen_brightness_platform_interface 2.1.2
++ screen_brightness_windows 2.1.2
++ screenshot 3.0.0
++ scroll_to_index 3.0.1
++ scrollable_positioned_list 0.3.8
++ sensors_plus 7.1.1
++ sensors_plus_platform_interface 2.0.2
++ shared_preferences 2.5.6
++ shared_preferences_android 2.5.1
++ shared_preferences_foundation 2.5.7 (2.6.0 available)
++ shared_preferences_linux 2.4.1
++ shared_preferences_platform_interface 2.4.2
++ shared_preferences_web 2.4.3
++ shared_preferences_windows 2.4.1
++ shelf 1.4.3
++ shelf_static 1.2.0
++ shelf_web_socket 3.0.0
++ simple_animations 5.3.0
++ simple_gesture_detector 0.2.1
++ sky_engine 0.0.0 from sdk flutter
++ sliding_up_panel2 3.3.0+1
++ source_span 1.10.2
++ sqflite 2.4.5
++ sqflite_android 2.4.5
++ sqflite_common 2.5.14
++ sqflite_darwin 2.4.4+1
++ sqflite_platform_interface 2.4.3
++ sqlite3 3.5.2 (3.7.1 available)
++ stack_trace 1.12.1 (1.12.2 available)
++ step_progress_indicator 1.0.2
++ stream_channel 2.1.4
++ stream_transform 2.1.2
++ string_scanner 1.4.1
++ string_validator 1.2.0
++ stts 1.3.4
++ stts_platform_interface 1.2.3
++ stts_web 1.1.2
++ syncfusion_flutter_charts 35.1.41
++ syncfusion_flutter_core 35.1.41
++ syncfusion_flutter_pdf 35.1.41
++ syncfusion_flutter_pdfviewer 35.1.41
++ syncfusion_flutter_signaturepad 35.1.41
++ syncfusion_flutter_xlsio 35.1.41
++ syncfusion_officecore 35.1.41
++ syncfusion_pdfviewer_linux 35.1.41
++ syncfusion_pdfviewer_macos 35.1.41
++ syncfusion_pdfviewer_platform_interface 35.1.41
++ syncfusion_pdfviewer_web 35.1.41
++ syncfusion_pdfviewer_windows 35.1.41
++ synchronized 3.5.0
++ table_calendar 3.2.0+1 from path /Users/shichunlei/workspace/cses/cses.plugins/table_calendar
++ talker 5.1.20
++ talker_dio_logger 5.1.20
++ talker_logger 5.1.20
++ term_glyph 1.2.2
++ test_api 0.7.11 (0.7.15 available)
++ tuple 2.0.2
++ typed_data 1.4.0
++ universal_html 2.3.0
++ universal_io 2.3.1
++ universal_platform 1.1.0
++ url_launcher 6.3.3
++ url_launcher_android 6.3.33
++ url_launcher_ios 6.4.2
++ url_launcher_linux 3.2.3
++ url_launcher_macos 3.2.6
++ url_launcher_platform_interface 2.3.2
++ url_launcher_web 2.4.3
++ url_launcher_windows 3.1.6
++ uuid 4.6.0
++ val_highlight 0.1.1
++ val_highlight_flutter 0.1.1
++ val_latex 0.1.3
++ val_latex_flutter 0.1.3
++ vector_graphics 1.2.4
++ vector_graphics_codec 1.1.13
++ vector_graphics_compiler 1.3.2
++ vector_math 2.2.0 (2.4.3 available)
++ venus 0.0.1 from path ../../../../Users/shichunlei/workspace/cses/venus_engine
++ vibration 3.2.1
++ vibration_platform_interface 0.1.2
++ video_player 2.14.1
++ video_player_android 2.12.2
++ video_player_avfoundation 2.12.1 (2.12.2 available)
++ video_player_platform_interface 6.9.0
++ video_player_web 2.4.0
++ visibility_detector 0.4.0+2
++ vm_service 15.4.0
++ volume_controller 3.7.1
++ vulcan 0.0.1 from path ../../../../Users/shichunlei/workspace/cses/vulcan
++ wakelock_plus 1.8.1
++ wakelock_plus_platform_interface 1.7.0
++ web 1.1.1
++ web_socket 1.0.1
++ web_socket_channel 3.0.3
++ web_socket_client 0.2.1
++ webview_flutter 4.14.1
++ webview_flutter_android 4.14.1
++ webview_flutter_platform_interface 2.15.1
++ webview_flutter_wkwebview 3.26.2 (3.27.2 available)
++ wechat_assets_picker 10.1.3
++ wechat_camera_picker 4.6.0
++ wechat_picker_library 1.0.7
++ win32 6.4.0
++ win32_registry 3.0.3
++ windows_file_picker 2.0.1
++ xbr_plugin_record 2.0.2 from path /Users/shichunlei/workspace/cses/cses.plugins/xbr_plugin_record
++ xdg_directories 1.1.0
++ xml 7.0.1 (7.1.0 available)
++ yaml 3.1.4
+Changed 345 dependencies!
+40 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.

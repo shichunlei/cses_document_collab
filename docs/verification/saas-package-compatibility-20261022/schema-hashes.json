@@ -1,0 +1,14 @@
+{
+  "0.11.21": {
+    "RootBlockSchema": "a58e76e0a69d643638764617737f2fe6492b96fa67356a302001a5a0babec83f",
+    "ParagraphBlockSchema": "512a63152e67be5cf52a862eacae26586ba61f7c9765083cfe9a087a18601029"
+  },
+  "0.11.24": {
+    "RootBlockSchema": "a58e76e0a69d643638764617737f2fe6492b96fa67356a302001a5a0babec83f",
+    "ParagraphBlockSchema": "512a63152e67be5cf52a862eacae26586ba61f7c9765083cfe9a087a18601029"
+  },
+  "0.11.27": {
+    "RootBlockSchema": "a58e76e0a69d643638764617737f2fe6492b96fa67356a302001a5a0babec83f",
+    "ParagraphBlockSchema": "512a63152e67be5cf52a862eacae26586ba61f7c9765083cfe9a087a18601029"
+  }
+}
