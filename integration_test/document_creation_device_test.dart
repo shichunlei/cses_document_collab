@@ -73,19 +73,21 @@ void main() {
               body: Center(
                 child: FilledButton(
                   onPressed: () async {
-                    final id = await Navigator.of(context).push<String>(
+                    await Navigator.of(context).push<void>(
                       MaterialPageRoute(
-                        builder: (_) => DocumentCreationPage(
+                        builder: (listContext) => DocumentCreationPage(
                           loadDocuments: _emptyDocuments,
                           coordinator: coordinator,
                           loadTargets: api.loadTargets,
+                          onOpenDocument: (id) async {
+                            expect(id, config.documentId);
+                            await Navigator.of(listContext).push<void>(
+                              MaterialPageRoute(
+                                builder: (_) => CollaborativeEditorPage(collab: controller!),
+                              ),
+                            );
+                          },
                         ),
-                      ),
-                    );
-                    if (!context.mounted || id == null) return;
-                    await Navigator.of(context).push<void>(
-                      MaterialPageRoute(
-                        builder: (_) => CollaborativeEditorPage(collab: controller!),
                       ),
                     );
                   },
@@ -132,6 +134,12 @@ void main() {
 
 /// 只替换业务HTTP，不替换原生初始化、SQLite、控制器或编辑器。
 class _DeviceApi implements DocumentCreationApi {
+  /// 隔离设备测试仅允许访问固定[documentId]，不读真实服务或初始化正文。
+  @override
+  Future<void> verifyDocumentToOpen(String documentId) async {
+    if (documentId != 'device-new-document') throw const FormatException('隔离文档ID不匹配');
+  }
+
   /// 隔离建档调用次数，不代表真实服务器创建数量。
   int creates = 0;
 

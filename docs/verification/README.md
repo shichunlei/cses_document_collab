@@ -17,7 +17,7 @@
 ### 文档创建与文档信息
 
 - [document-cover-drag-20261016](document-cover-drag-20261016/)
-- [document-creation-20261022](document-creation-20261022/)
+- [document-creation-20261022](document-creation-20261022/)（[文档列表与今日导向合并验证](document-creation-20261022/journal-merge.md)）
 - [document-feedback-20261015](document-feedback-20261015/)
 - [document-header-image-cache-20261016](document-header-image-cache-20261016/)
 

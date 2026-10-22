@@ -105,12 +105,12 @@ Demo 登录（Common HTTP → User/ctx）→ DemoDocumentHost → cses_document_
 完整接入契约、资源释放顺序和迁入 SaaS 的步骤见 [协同包接入文档](docs/collab-package-integration.md)；独立包的公共 API 与构建说明见 [包 README](packages/cses_document_collab/README.md)。包不引用 demo、SaaS、Common 或全局登录上下文。
 
 - Android 宿主通过 `com.yundiz/common` 提供设备 ID、CPU 型号及 CPU 信息，复用 CSES Android 的设备处理器契约，使 Common 的 `ctx.updateDeviceInfo()` 可完整初始化；CPU 信息读取失败时使用系统兜底。
-- Demo 按 SaaS 账号密码流程先初始化 Common 的 PRE 配置、偏好和设备信息，再通过 `HttpManager` 的共享 Dio 请求 `/User/login`；公共 header 和异常映射均由 Common 提供。固定正式测试文档 ID，不保存密码或登录账户快照。
-- 登录成功后由 `CsesAccountLogin` 将完整响应交给 `User().resolveContext(value)`，统一解析身份、企业、权限、媒体站点、域名和 WebSocket 地址，校验通过后才进入文档页。企业选择复用 Common 的组织排序和上次企业偏好；Demo 不再保留响应副本、手动推导企业或覆盖连接地址。页面已销毁的迟到响应不注入上下文；解析/校验失败清理本次用户态，留在登录页重试。
+- Demo 按 SaaS 账号密码流程先初始化 Common 的 PRE 配置、偏好和设备信息，再通过 `HttpManager` 的共享 Dio 请求 `/User/login`；公共 header 和异常映射均由 Common 提供。首页仅启动主 WebSocket 连接，不自动选择文档，不保存密码或登录账户快照。
+- 登录成功后由 `CsesAccountLogin` 将完整响应交给 `User().resolveContext(value)`，统一解析身份、企业、权限、媒体站点、域名和 WebSocket 地址，校验通过后才进入首页。企业选择复用 Common 的组织排序和上次企业偏好；Demo 不再保留响应副本、手动推导企业或覆盖连接地址。页面已销毁的迟到响应不注入上下文；解析/校验失败清理本次用户态，留在登录页重试。
 - 登录成功直接通知页面切换，账号与展示名读取 Common 的 `User`，不传递独立会话对象。`DemoDocumentHost` 选择旧 SQLite 路径，在创建控制器时直接使用 `ctx.websocketHost`、`User().companyId`、`User().userId` 和展示名构造 `CollabDocumentConfig`，再注入 Gateway、ID、日志和媒体上传；不再次解析登录或请求 `/User/auth`。包直接打开正式模型，不先打开草稿；离线预览和测试显式设置 `localDraft: true`。
 - 文档 ID、服务端、企业、用户和数据库路径只在 `CollabDocumentConfig` 中形成不可变快照；缓存键由协同包统一计算，宿主不保存 Cookie 副本或重复维护缓存算法。切换身份须关闭旧控制器后重新创建。
 - WebSocket 地址和默认协议以 Common 解析结果为准。若与历史 Demo 的默认地址不同，按现有地址/企业/用户/文档缓存键进入对应分区，旧缓存仍保留。
-- `initialize()` 完成表示本地恢复和回调注册完成；协同 ready/online 只表示客户端差量交换，不是服务端落库回执。
+- `DemoDocumentHost.initialize()` 完成表示账号服务、创建记录恢复及主连接启动已调度，不打开文档；从“文档列表”点击条目后才核验访问权限、恢复缓存并进入编辑页，返回后保留列表位置。新建也在列表页完成并从该页进入编辑器；文档控制器的 `initialize()` 完成表示本地恢复和回调注册完成；协同 ready/online 只表示客户端差量交换，不是服务端落库回执。
 - 页面借用控制器；退出账号先等待包的 close，再由 Demo 宿主关闭主连接，并通过 Common 清理用户态，保留应用级设备信息。即使本地文档初始化失败，退出也会清理已登录身份。返回连接面板仍复用同一控制器。
 - Rust 是单文档引擎，包对第二控制器明确拒绝；新文档必须等待旧控制器关闭。
 - 包使用宿主编辑授权和模型只读条件。只读握手不补传缓存中的本地变更，恢复授权后再同步。正式部署仍需服务端文档/租户鉴权。
@@ -140,13 +140,14 @@ scripts/ios.sh run -d <ios-device-id>
 ```
 
 启动后进入用户名、密码登录页，使用 PRE 环境的真实账号登录；不预填账号密码，
-不再手动填写 userId、cookieId、companyId 或 WS 地址。登录成功后自动连接固定正式测试文档
-`6ad06c992a6b14f42c256937`。文档页可重新连接、清理本机缓存或退出登录。
+不再手动填写 userId、cookieId、companyId 或 WS 地址。登录成功后首页只启动主连接；
+通过“文档列表”选择文档，或在列表右上角新建后进入编辑页，返回时回到原列表。
+首页可重新连接或退出登录，选定文档后可清理其本机缓存。
 会话只驻留内存，重启后重新登录；SQLite 正文缓存仍按地址/企业/用户/文档隔离并保留。
 
 首页另有“离线本地编辑 → 开始离线编辑”入口，文档加载中或连接失败时仍可打开。
 文字编辑能力由包内实例配置选择；模板预览隐藏编辑装饰，本地不提供块锁和图片导出。
-正文仅保留在本次会话内，不写入协同文档、服务端或相册；返回首页可继续协同编辑。
+正文仅保留在本次会话内，不写入协同文档、服务端或相册；返回首页后可从文档列表进入协同编辑。
 
 两台设备分别登录各自账号，deviceId 自动读取本机标识，测试文档 ID 相同。
 instance 自动生成，同一次文档宿主挂载期间保持稳定，重新配置连接时产生新实例。

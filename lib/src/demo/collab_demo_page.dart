@@ -1,4 +1,3 @@
-import 'package:cses_mobile_collab_demo/src/daily_guidance/local_journal_page.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -6,9 +5,10 @@ import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:cses_common/runtime/session/user.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/file_journal_store.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/local_journal_page.dart';
 import 'package:cses_mobile_collab_demo/src/demo/cses_connection_panel.dart';
 import 'package:cses_mobile_collab_demo/src/demo/document_host.dart';
-import 'package:cses_mobile_collab_demo/src/daily_guidance/file_journal_store.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -16,31 +16,22 @@ import 'package:path_provider/path_provider.dart';
 import 'markdown_file_picker.dart';
 import 'package:cses_mobile_collab_demo/src/demo/document_creation/document_creation_page.dart';
 
-/// 登录后的文档入口，拥有协同控制器并提供独立的本地编辑和离线日记路由。
+/// 登录后的连接首页；通过列表选择协同文档，并提供独立离线编辑与今日导向入口。
 ///
 /// ```dart
 /// import 'package:cses_mobile_collab_demo/src/demo/collab_demo_page.dart';
 /// import 'package:flutter/material.dart';
-/// const app = MaterialApp(home: CollabDemoPage(localDraft: true));
+/// const app = MaterialApp(home: CollabDemoPage());
 /// // 页面卸载时释放协同资源，离线制图会话由包的路由入口释放。
 /// ```
 class CollabDemoPage extends StatefulWidget {
-  /// 创建文档状态页；控制器随此页生命周期创建与释放。
+  /// 创建连接首页；账号主连接随本页释放，文档控制器由列表选择后创建。
   /// [key] 控制组件身份与状态复用，[localDraft] 默认为false，true使用本地协同草稿。
   /// [onLogout] 在退出并释放协同资源后调用，null隐藏退出按钮。
-  /// [initialDocumentId]显式指定正式文档，null恢复账号最近新建文档或Demo默认文档。
-  const CollabDemoPage({
-    super.key,
-    this.localDraft = false,
-    this.onLogout,
-    this.initialDocumentId,
-  });
+  const CollabDemoPage({super.key, this.localDraft = false, this.onLogout});
 
   /// 离线预览和测试可显式打开本地草稿；正式文档直接使用 Common 上下文。
   final bool localDraft;
-
-  /// 入口指定的正式docId，默认由宿主恢复最近创建记录。
-  final String? initialDocumentId;
 
   /// 返回登录页；移除本页会释放协同控制器及共享连接。
   final VoidCallback? onLogout;
@@ -60,17 +51,14 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
   /// 独立日记路由持有其账号文件的唯一写入权，返回后才重新开放入口。
   bool _openingJournal = false;
 
-  /// Controller borrowed from the demo composition root.
-  CollabController get _collab => _host.controller!;
+  /// 从打开列表到退出列表期间锁定入口，避免重复回调堆叠多个列表路由。
+  bool _openingDocumentList = false;
 
   @override
-  /// 初始化本地文档，随后使用登录会话自动连接。
+  /// 准备账号服务并启动主连接；正式文档由列表选择后加载。
   void initState() {
     super.initState();
-    _host = DemoDocumentHost(
-      localDraft: widget.localDraft,
-      initialDocumentId: widget.initialDocumentId,
-    );
+    _host = DemoDocumentHost(localDraft: widget.localDraft);
     unawaited(_host.initialize());
   }
 
@@ -87,85 +75,14 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
     return ListenableBuilder(
       listenable: _host,
       builder: (context, _) {
-        if (_host.controller == null) {
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text('CSES 协同 Demo'),
-              actions: [
-                if (widget.onLogout != null)
-                  IconButton(
-                    onPressed: _logout,
-                    tooltip: '退出登录',
-                    icon: const Icon(Icons.logout),
-                  ),
-              ],
-            ),
-            body: SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(_host.error ?? '正在加载文档…'),
-                  if (_host.error != null)
-                    OutlinedButton(
-                      key: const ValueKey('retry-document-open'),
-                      onPressed: _host.creation?.busy == true
-                          ? null
-                          : _host.reconnect,
-                      child: const Text('重试打开文档'),
-                    ),
-                  if (_host.creation != null) ...[
-                    const SizedBox(height: 16),
-                    FilledButton.icon(
-                      onPressed: _host.creation!.busy
-                          ? null
-                          : _openDocumentCreation,
-                      icon: const Icon(Icons.note_add_outlined),
-                      label: const Text('新建空白文档'),
-                    ),
-                  ],
-                  const FilledButton(
-                    onPressed: null,
-                    key: ValueKey('open-collaborative-editor'),
-                    child: Text('正在加载文档'),
-                  ),
-                  const SizedBox(height: 16),
-                  _OfflineImageComposerCard(
-                    busy: _openingImageComposer,
-                    onOpen: _openOfflineImageComposer,
-                  ),
-                  _journalEntry(),
-                ],
-              ),
-            ),
-          );
-        }
+        final controller = _host.controller;
+        final coordinator = _host.creation;
         return Scaffold(
           appBar: AppBar(
             title: const Text('CSES 协同 Demo'),
             actions: [
-              if (_host.creation != null)
-                IconButton(
-                  key: const ValueKey('new-formal-document'),
-                  onPressed: _host.creation!.busy
-                      ? null
-                      : _openDocumentCreation,
-                  tooltip: _host.creation!.pending ? '继续完成新建文档' : '新建空白文档',
-                  icon: const Icon(Icons.note_add_outlined),
-                ),
               if (widget.onLogout != null)
-                IconButton(
-                  onPressed: _collab.busy ? null : _logout,
-                  tooltip: '退出登录',
-                  icon: const Icon(Icons.logout),
-                ),
-              Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: _StatusChip(
-                  status: _collab.status,
-                  editable: _collab.canEdit,
-                ),
-              ),
+                IconButton(onPressed: _logout, tooltip: '退出登录', icon: const Icon(Icons.logout)),
             ],
           ),
           body: SafeArea(
@@ -175,67 +92,44 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  if (_host.creation?.pending == true) ...[
+                  Text(
+                    _host.error ??
+                        (coordinator != null
+                            ? '主连接已启动，请从文档列表选择文档'
+                            : widget.localDraft && controller?.initialized == true
+                            ? '本地预览已就绪'
+                            : '正在初始化连接…'),
+                  ),
+                  if (!widget.localDraft)
+                    OutlinedButton(
+                      key: const ValueKey('retry-connection'),
+                      onPressed: coordinator?.busy == true ? null : _host.reconnect,
+                      child: const Text('重新连接'),
+                    ),
+                  const SizedBox(height: 16),
+                  FilledButton.icon(
+                    key: const ValueKey('open-document-list'),
+                    onPressed: coordinator == null || coordinator.busy || _openingDocumentList
+                        ? null
+                        : _openDocumentList,
+                    icon: const Icon(Icons.folder_open_outlined),
+                    label: const Text('文档列表'),
+                  ),
+                  if (coordinator?.pending == true)
                     TextButton(
-                      onPressed: _host.creation!.busy
+                      onPressed: coordinator!.busy || _openingDocumentList
                           ? null
-                          : _openDocumentCreation,
+                          : _openDocumentList,
                       child: const Text('上次创建尚未完成，点击继续'),
                     ),
-                    if (_host.creation?.error != null)
-                      Text(_host.creation!.error!),
-                  ],
-                  CsesConnectionPanel(
-                    collab: _collab,
-                    onReset: _confirmReset,
-                    onReconnect: _host.reconnect,
-                  ),
-                  if (_collab.error != null) ...[
-                    const SizedBox(height: 12),
-                    _ErrorBanner(message: _collab.error!),
-                  ],
-                  const SizedBox(height: 16),
-                  Card(
-                    clipBehavior: Clip.antiAlias,
-                    elevation: 0,
-                    color: Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'AppFlowy 协同正文',
-                            style: Theme.of(context).textTheme.titleMedium
-                                ?.copyWith(fontWeight: FontWeight.w700),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            '支持 paragraph、H1–H6、两种列表、Todo、引用，以及'
-                            '加粗、斜体、下划线、删除线和行内代码。每块文本使用 '
-                            'Y.Text 原生富文本属性协同，离线更新写入 SQLite。',
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                          const Divider(height: 28),
-                          FilledButton.icon(
-                            key: const ValueKey('open-collaborative-editor'),
-                            onPressed: _collab.initialized && !_collab.busy
-                                ? _openCollaborativeEditor
-                                : null,
-                            icon: const Icon(Icons.edit_document),
-                            label: Text(
-                              _collab.initialized ? '进入协同编辑' : '正在加载文档',
-                            ),
-                          ),
-                          if (!_collab.initialized)
-                            const Padding(
-                              padding: EdgeInsets.only(top: 12),
-                              child: Text('正在从 Rust/Yrs 加载本地文档……'),
-                            ),
-                        ],
-                      ),
+                  if (controller != null) ...[
+                    const SizedBox(height: 16),
+                    CsesConnectionPanel(
+                      collab: controller,
+                      onReset: _confirmReset,
+                      onReconnect: _host.reconnect,
                     ),
-                  ),
+                  ],
                   const SizedBox(height: 16),
                   _OfflineImageComposerCard(
                     busy: _openingImageComposer,
@@ -268,30 +162,25 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
     if (_openingJournal) return;
     setState(() => _openingJournal = true);
     final user = User();
-    final identity = widget.localDraft
-        ? 'local-demo'
-        : '${user.companyId}:${user.userId}';
+    final identity = widget.localDraft ? 'local-demo' : '${user.companyId}:${user.userId}';
     final scope = sha256.convert(utf8.encode(identity)).toString();
     try {
       final directory = await getApplicationSupportDirectory();
       if (!mounted || ModalRoute.of(context)?.isCurrent != true) return;
-      if (!widget.localDraft &&
-          identity != '${User().companyId}:${User().userId}') {
+      if (!widget.localDraft && identity != '${User().companyId}:${User().userId}') {
         return;
       }
       final store = FileJournalStore(
         directory: Directory(p.join(directory.path, 'local-journals')),
         scope: scope,
       );
-      await Navigator.of(context).push<void>(
-        MaterialPageRoute(builder: (_) => LocalJournalPage(store: store)),
-      );
+      await Navigator.of(
+        context,
+      ).push<void>(MaterialPageRoute(builder: (_) => LocalJournalPage(store: store)));
     } catch (error, stack) {
       debugPrint('打开离线日记失败：$error\n$stack');
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('无法打开本地日记，请重试')));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('无法打开本地日记，请重试')));
       }
     } finally {
       if (mounted) setState(() => _openingJournal = false);
@@ -309,9 +198,7 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
     } catch (error, stack) {
       debugPrint('离线本地编辑失败：$error\n$stack');
       if (mounted && ModalRoute.of(context)?.isCurrent == true) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('本地编辑失败，请重试')));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('本地编辑失败，请重试')));
       }
     } finally {
       if (mounted) setState(() => _openingImageComposer = false);
@@ -324,42 +211,49 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
     if (mounted) widget.onLogout?.call();
   }
 
-  /// 打开宿主新建页面；成功返回后进入已安装的正式控制器，迟到结果不导航。
-  Future<void> _openDocumentCreation() async {
+  /// 打开文档列表和新建入口；编辑页只能由列表的选择回调推入。
+  /// 返回时保留账号主连接，列表与编辑页借用的控制器均由宿主释放。
+  Future<void> _openDocumentList() async {
     final coordinator = _host.creation;
-    if (coordinator == null || coordinator.busy) return;
-    final id = await Navigator.of(context).push<String>(
-      MaterialPageRoute(
-        builder: (_) => DocumentCreationPage(
-          coordinator: coordinator,
-          loadTargets: _host.loadCreationTargets,
-          loadDocuments: _host.loadCreationDocuments,
+    if (!mounted || coordinator == null || coordinator.busy || _openingDocumentList) return;
+    setState(() => _openingDocumentList = true);
+    try {
+      await Navigator.of(context).push<void>(
+        MaterialPageRoute(
+          builder: (listContext) => DocumentCreationPage(
+            coordinator: coordinator,
+            loadTargets: _host.loadCreationTargets,
+            loadDocuments: _host.loadCreationDocuments,
+            onOpenDocument: (documentId) => _openListedDocument(listContext, documentId),
+          ),
         ),
-      ),
-    );
-    if (!mounted ||
-        ModalRoute.of(context)?.isCurrent != true ||
-        id == null ||
-        _host.controller?.documentId != id) {
-      return;
+      );
+    } finally {
+      if (mounted) setState(() => _openingDocumentList = false);
     }
-    await _openCollaborativeEditor();
   }
 
-  /// 借用当前固定控制器打开正文页并注入Markdown选择器；失效或忙碌时不导航。
-  /// Future在返回时完成，路由构建不重新读取可变的文档指针。
-  Future<void> _openCollaborativeEditor() {
+  /// 从[listContext]所在列表打开[documentId]并借用正式控制器展示编辑页。
+  /// Future等待编辑页退出；旧路由或关闭宿主不导航，失败抛固定FormatException供列表重试。
+  Future<void> _openListedDocument(BuildContext listContext, String documentId) async {
+    if (!mounted || !listContext.mounted || ModalRoute.of(listContext)?.isCurrent != true) {
+      throw const FormatException('请返回文档列表后重新打开');
+    }
+    final opened = await _host.openListedDocument(documentId);
+    if (opened != documentId) {
+      throw FormatException(_host.creation?.error ?? '文档打开失败，请重试');
+    }
+    if (!mounted || !listContext.mounted || ModalRoute.of(listContext)?.isCurrent != true) {
+      throw const FormatException('文档已就绪，请返回列表后重新打开');
+    }
     final controller = _host.controller;
-    if (controller == null || !controller.initialized || controller.busy) {
-      return Future<void>.value();
+    if (controller == null || controller.documentId != documentId || !controller.initialized) {
+      throw const FormatException('文档尚未就绪，请重试');
     }
     FocusManager.instance.primaryFocus?.unfocus();
-    return Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (context) => CollaborativeEditorPage(
-          collab: controller,
-          pickMarkdown: pickMarkdownFile,
-        ),
+    await Navigator.of(listContext).push<void>(
+      MaterialPageRoute(
+        builder: (_) => CollaborativeEditorPage(collab: controller, pickMarkdown: pickMarkdownFile),
       ),
     );
   }
@@ -376,14 +270,8 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
         title: const Text('清除本机 Demo 缓存？'),
         content: const Text('只删除这个客户端的 SQLite Update 日志，不会清理服务器内存中的文档。'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('取消'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('清除'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('取消')),
+          FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('清除')),
         ],
       ),
     );
@@ -422,15 +310,10 @@ class _OfflineImageComposerCard extends StatelessWidget {
           children: [
             Text(
               '离线本地编辑',
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 4),
-            Text(
-              '本地编辑文字并预览模板，无需连接服务端。',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
+            Text('本地编辑文字并预览模板，无需连接服务端。', style: Theme.of(context).textTheme.bodySmall),
             const Divider(height: 28),
             FilledButton.icon(
               key: const ValueKey('open-offline-image-composer'),
@@ -439,65 +322,6 @@ class _OfflineImageComposerCard extends StatelessWidget {
               label: const Text('开始离线编辑'),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-/// 主连接及协同阶段的紧凑显示。
-class _StatusChip extends StatelessWidget {
-  /// 显示[status]对应的标签和颜色；[editable]用于区分离线编辑与只读。
-  const _StatusChip({required this.status, required this.editable});
-
-  /// 控制器持有的当前阶段。
-  final ConnectionStatus status;
-
-  /// 控制器的当前编辑能力，由宿主持有。
-  final bool editable;
-
-  @override
-  /// 使用 [context] 渲染当前状态，无网络或缓存副作用。
-  Widget build(BuildContext context) {
-    final (label, color) = switch (status) {
-      ConnectionStatus.starting => ('初始化', Colors.blueGrey),
-      ConnectionStatus.connecting => ('连接中', Colors.orange),
-      ConnectionStatus.online => ('在线', Colors.green),
-      ConnectionStatus.offline => (
-        editable ? '离线可编辑' : '离线只读',
-        Colors.blueGrey,
-      ),
-      ConnectionStatus.error => ('异常', Colors.red),
-    };
-    return Chip(
-      avatar: Icon(Icons.circle, size: 10, color: color),
-      label: Text(label),
-      visualDensity: VisualDensity.compact,
-    );
-  }
-}
-
-/// 可操作失败信息的单一展示位置。
-class _ErrorBanner extends StatelessWidget {
-  /// 显示控制器提供的 [message]，不包含登录凭证。
-  const _ErrorBanner({required this.message});
-
-  /// 当前失败文案。
-  final String message;
-
-  @override
-  /// 使用 [context] 渲染当前状态，无网络或缓存副作用。
-  Widget build(BuildContext context) {
-    return Material(
-      color: Theme.of(context).colorScheme.errorContainer,
-      borderRadius: BorderRadius.circular(12),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Text(
-          message,
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onErrorContainer,
-          ),
         ),
       ),
     );

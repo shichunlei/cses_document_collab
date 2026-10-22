@@ -5,7 +5,7 @@ import 'document_creation_api.dart';
 import 'document_creation_operation.dart';
 import 'document_creation_store.dart';
 
-/// 编排一个账号的新建操作；记录先于外部写入，迟到建档结果仍归原账号记录。
+/// 串行编排一个账号的新建及已有文档打开；记录先于建档写入，迟到结果归原账号。
 ///
 /// ```dart
 /// import 'package:cses_mobile_collab_demo/src/demo/document_creation/document_creation_coordinator.dart';
@@ -37,8 +37,11 @@ final class DocumentCreationCoordinator extends ChangeNotifier {
   /// 最新已知结果；落盘失败也保留已取得的正式ID，继续时先补写记录。
   DocumentCreationOperation? _operation;
 
-  /// 唯一在途创建任务，重复点击借用同一结果，close负责等待。
+  /// 唯一在途文档操作，创建重复调用共享结果，普通打开在忙碌时拒绝；close负责等待。
   Future<String?>? _task;
+
+  /// 普通打开占锁时不向创建/恢复调用者返回另一份文档的结果。
+  bool _openingExisting = false;
 
   /// 仅保留在途恢复任务供并发调用共享；结束后清除，不能与创建任务交错覆盖记录。
   Future<void>? _restoration;
@@ -144,6 +147,33 @@ final class DocumentCreationCoordinator extends ChangeNotifier {
     return _continue();
   });
 
+  /// 普通打开[documentId]并返回同一ID；忙碌、失败或关闭时返回null。
+  /// 先核验访问，再释放旧文档、打开正式控制器。沿用同一操作锁和账号检查，
+  /// 不建档、不准备正文，也不改变已有创建恢复记录；失败由error展示。
+  /// [reuseCurrentDocument]仅供宿主确认同一控制器已初始化时设true，保留其历史且不重新访问HTTP。
+  /// 复用仍核对账号并占用操作锁，同时清除上次打开失败的提示。
+  Future<String?> openExistingDocument(String documentId, {bool reuseCurrentDocument = false}) {
+    if (busy) return Future<String?>.value();
+    return _execute(
+      () async {
+        if (!_restored) throw const FormatException('文档服务尚未恢复，请重试');
+        if (documentId.trim().isEmpty || documentId.length > 128) {
+          throw const FormatException('请选择有效文档');
+        }
+        if (reuseCurrentDocument) return documentId;
+        await _api.verifyDocumentToOpen(documentId);
+        _ensureActive();
+        await _closeDocument();
+        _ensureActive();
+        await _openDocument(documentId);
+        _ensureActive();
+        return documentId;
+      },
+      failureMessage: '文档打开失败，请重试',
+      openingExisting: true,
+    );
+  }
+
   /// 用户核对文档库后结束[operationId]对应的未知操作，成功返回true。
   /// 先持久化reviewed再解除挂起；失败保留原记录。只结束本地跟踪，不发建档、
   /// 正文或删除请求。旧页面ID、账号变化及在途创建均不能结束另一项操作。
@@ -231,11 +261,18 @@ final class DocumentCreationCoordinator extends ChangeNotifier {
     return _operation!.documentId!;
   }
 
-  /// 排队执行[run]，在任何同步失败前安装唯一任务；重复调用共享结果。
+  /// 排队执行[run]，在任何同步失败前安装唯一任务；重复创建共享结果，普通打开期间拒绝其他操作。
   /// 失败映射为固定展示消息，已知阶段继续留在存储供恢复。
-  Future<String?> _execute(Future<String> Function() run) {
-    if (_task != null) return _task!;
+  /// [failureMessage]为非业务/格式错误的固定提示，null按当前创建阶段选择文案。
+  /// [openingExisting]为true时锁定普通打开，期间其他操作返回null而不共享该文档ID。
+  Future<String?> _execute(
+    Future<String> Function() run, {
+    String? failureMessage,
+    bool openingExisting = false,
+  }) {
+    if (_task != null) return _openingExisting ? Future<String?>.value() : _task!;
     _error = null;
+    _openingExisting = openingExisting;
     final task = _task = Future<String?>(() async {
       try {
         _ensureActive();
@@ -245,12 +282,14 @@ final class DocumentCreationCoordinator extends ChangeNotifier {
             ? failure.message
             : failure is FormatException
             ? failure.message
-            : _operation?.stage == DocumentCreationStage.createUnknown
-            ? '创建结果不明，请先在文档库核对，避免重复建档'
-            : '创建未完成，请重试或继续完成已有文档';
+            : failureMessage ??
+                  (_operation?.stage == DocumentCreationStage.createUnknown
+                      ? '创建结果不明，请先在文档库核对，避免重复建档'
+                      : '创建未完成，请重试或继续完成已有文档');
         return null;
       } finally {
         _task = null;
+        _openingExisting = false;
         _notify();
       }
     });

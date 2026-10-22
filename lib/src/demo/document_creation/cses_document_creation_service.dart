@@ -165,6 +165,18 @@ final class CsesDocumentCreationService implements DocumentCreationApi {
     }
   }
 
+  /// 读取[documentId]详情，由服务端执行access鉴权并核对返回ID。
+  /// 该读取可更新服务端访问行为；失败不改变本地文档或创建恢复记录。
+  @override
+  Future<void> verifyDocumentToOpen(String documentId) async {
+    if (documentId.trim().isEmpty || documentId.length > 128) {
+      throw const FormatException('请选择有效文档');
+    }
+    final data = await _post('/doc/document/view', {'id': documentId});
+    _requireSuccess(data);
+    if (data['id'] != documentId) throw const FormatException('文档不存在或已无权访问，请刷新列表');
+  }
+
   /// 请求[target]下的正式空名文本ID；成功响应先返回ID供协调器持久化。
   @override
   Future<String> createBlank(DocumentCreationTarget target) async {

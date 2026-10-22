@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'document_creation_operation.dart';
 import 'document_list_page.dart';
 
-/// 当前空间或文件夹的分页文档列表Sliver；只读取元数据，不打开协同文档。
+/// 当前空间或文件夹的分页文档列表Sliver；读取元数据，并将打开意图交给宿主。
 ///
 /// ```dart
 /// import 'package:flutter/material.dart';
@@ -17,14 +17,31 @@ import 'document_list_page.dart';
 /// ```
 class DocumentSpaceList extends StatefulWidget {
   /// [key]控制状态复用；[target]提供当前真实父节点，[loadPage]由宿主持有。
-  /// 更换目标或加载端口后重置分页；未完成请求的旧结果不会安装到新目标。
-  const DocumentSpaceList({super.key, required this.target, required this.loadPage});
+  /// [onOpenDocument]接收点击条目，null时只展示；[enabled]默认true，false禁用点击。
+  /// [openingDocumentId]非null时在对应行显示进度。更换目标或加载端口后重置分页。
+  const DocumentSpaceList({
+    super.key,
+    required this.target,
+    required this.loadPage,
+    this.onOpenDocument,
+    this.enabled = true,
+    this.openingDocumentId,
+  });
 
   /// 当前空间或文件夹；其ID用作列表查询的id字段。
   final DocumentCreationTarget target;
 
   /// 借用的分页加载函数，失败显示重试，组件不释放底层网络资源。
   final DocumentPageLoader loadPage;
+
+  /// 点击文档的同步意图回调；异步打开、错误及资源所有权由父级处理。
+  final ValueChanged<DocumentListEntry>? onOpenDocument;
+
+  /// 是否允许文档行交互，默认true；不影响独立的列表刷新和分页请求。
+  final bool enabled;
+
+  /// 正在打开的文档ID；默认null，该行显示进度并保留其他行布局。
+  final String? openingDocumentId;
 
   /// 创建仅持有列表元数据和在途请求版本的状态。
   @override
@@ -144,43 +161,65 @@ class _DocumentSpaceListState extends State<DocumentSpaceList> {
           itemBuilder: (context, index) {
             final item = _items[index];
             final subtitle = _subtitle(item);
+            final open = widget.enabled ? widget.onOpenDocument : null;
             return Padding(
               key: ValueKey('space-document-${item.id}'),
               padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(
-                          Icons.description_outlined,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(item.displayName, maxLines: 2, overflow: TextOverflow.ellipsis),
-                              if (subtitle.isNotEmpty) ...[
-                                const SizedBox(height: 4),
-                                Text(
-                                  subtitle,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
-                              ],
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: open == null ? null : () => open(item),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.description_outlined,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    item.displayName,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  if (subtitle.isNotEmpty) ...[
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      subtitle,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: Theme.of(context).textTheme.bodySmall,
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                            if (widget.openingDocumentId == item.id) ...[
+                              const SizedBox(width: 12),
+                              const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              ),
+                            ] else if (widget.onOpenDocument != null) ...[
+                              const SizedBox(width: 8),
+                              const Icon(Icons.chevron_right),
                             ],
-                          ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                      const Divider(height: 1),
+                    ],
                   ),
-                  const Divider(height: 1),
-                ],
+                ),
               ),
             );
           },

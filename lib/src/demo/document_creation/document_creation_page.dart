@@ -5,7 +5,7 @@ import 'document_creation_operation.dart';
 import 'document_list_page.dart';
 import 'document_space_list.dart';
 
-/// 新建空白文档的宿主页面，借用协调器，位置和进度变化只影响本路由。
+/// 展示空间文档列表并提供新建入口的宿主页面，借用协调器和打开回调。
 ///
 /// ```dart
 /// import 'package:flutter/material.dart';
@@ -20,12 +20,14 @@ import 'document_space_list.dart';
 class DocumentCreationPage extends StatefulWidget {
   /// [key]控制路由内状态复用，[coordinator]由宿主持有，[loadTargets]提供真实位置，
   /// [loadDocuments]读取该位置的分页文档。创建入口固定在右上角。
-  /// [initialTarget]非null时继承入口位置；成功后路由返回正式文档ID。
+  /// [onOpenDocument]打开条目并展示编辑页，Future在编辑页退出后完成；null时仅展示列表。
+  /// [initialTarget]非null时继承入口位置；创建成功后交给打开回调，未配置回调时返回正式ID。
   const DocumentCreationPage({
     super.key,
     required this.coordinator,
     required this.loadTargets,
     required this.loadDocuments,
+    this.onOpenDocument,
     this.initialTarget,
   });
 
@@ -37,6 +39,10 @@ class DocumentCreationPage extends StatefulWidget {
 
   /// 宿主文档分页读取函数；位置切换时刷新，失败显示重试，不影响独立创建命令。
   final DocumentPageLoader loadDocuments;
+
+  /// 借用的文档打开/导航回调，也用于新建成功的文档；失败抛异常，留在列表允许重试。
+  /// 宿主拥有控制器，回调负责有效路由检查，返回列表后本页保留原空间与滚动状态。
+  final Future<void> Function(String documentId)? onOpenDocument;
 
   /// 入口传入的空间或文件夹，默认选择真实列表首项。
   final DocumentCreationTarget? initialTarget;
@@ -62,7 +68,16 @@ class _DocumentCreationPageState extends State<DocumentCreationPage> {
 
   /// 成功时路由若被覆盖，保留结果供返回后打开，避免弹出其他页面或重复建档。
   String? _createdDocumentId;
+
+  /// 创建成功后重载当前空间列表，使返回列表时能够看到新文档。
+  int _documentListRevision = 0;
   String? _loadError;
+
+  /// 从点击到编辑页退出期间持有，防止重复切换文档或同时创建。
+  String? _openingDocumentId;
+
+  /// 已有文档打开失败的展示消息，与创建恢复及位置读取的错误分开持有。
+  String? _openError;
 
   /// 只认可用户对当前操作的核对勾选；操作ID变化后旧勾选不再生效。
   String? _reviewedOperationId;
@@ -128,8 +143,14 @@ class _DocumentCreationPageState extends State<DocumentCreationPage> {
   /// 执行新建或继续已有操作；继续前绑定记录位置，完成后仍保留相同展示目标。
   /// 关闭路由后不导航，协调器仍保留恢复结果。
   Future<void> _submit() async {
-    if (_running) return;
+    if (_running || _openingDocumentId != null || widget.coordinator.busy) {
+      return;
+    }
     if (_createdDocumentId != null) {
+      if (widget.onOpenDocument != null) {
+        await _openListedDocument(_createdDocumentId!);
+        return;
+      }
       if (ModalRoute.of(context)?.isCurrent == true) {
         Navigator.of(context).pop(_createdDocumentId);
       }
@@ -138,6 +159,7 @@ class _DocumentCreationPageState extends State<DocumentCreationPage> {
     final coordinator = widget.coordinator;
     setState(() {
       _running = true;
+      _openError = null;
       if (coordinator.pending) _selected = coordinator.operation!.target;
     });
     final id = coordinator.pending
@@ -149,15 +171,25 @@ class _DocumentCreationPageState extends State<DocumentCreationPage> {
     setState(() {
       _running = false;
       _createdDocumentId = id;
+      if (id != null) _documentListRevision++;
     });
     if (id != null && ModalRoute.of(context)?.isCurrent == true) {
-      Navigator.of(context).pop(id);
+      if (widget.onOpenDocument != null) {
+        await _openListedDocument(id);
+      } else {
+        Navigator.of(context).pop(id);
+      }
     }
   }
 
   /// 结束用户已核对的未知操作；不导航、不自动新建，失败继续展示原恢复记录。
   Future<void> _finishReviewedOperation() async {
-    if (_running || _reviewedOperationId == null) return;
+    if (_running ||
+        _openingDocumentId != null ||
+        widget.coordinator.busy ||
+        _reviewedOperationId == null) {
+      return;
+    }
     final operationId = _reviewedOperationId!;
     setState(() => _running = true);
     await widget.coordinator.finishReviewedOperation(operationId);
@@ -166,6 +198,33 @@ class _DocumentCreationPageState extends State<DocumentCreationPage> {
       _running = false;
       _reviewedOperationId = null;
     });
+  }
+
+  /// 派发[documentId]的打开意图，重复回调直接忽略；失败留在列表，成功后保留位置。
+  /// 宿主处理文档释放与导航；页面退出后不回写，已发起任务仍由宿主持有。
+  Future<void> _openListedDocument(String documentId) async {
+    final open = widget.onOpenDocument;
+    if (!mounted ||
+        open == null ||
+        _running ||
+        _openingDocumentId != null ||
+        widget.coordinator.busy) {
+      return;
+    }
+    setState(() {
+      _openingDocumentId = documentId;
+      _openError = null;
+    });
+    try {
+      await open(documentId);
+      if (!mounted) return;
+      setState(() => _createdDocumentId = null);
+    } catch (error) {
+      if (!mounted) return;
+      setState(() => _openError = error is FormatException ? error.message : '文档打开失败，请重试');
+    } finally {
+      if (mounted) setState(() => _openingDocumentId = null);
+    }
   }
 
   /// 将[stage]映射为用户能理解的当前进度，不宣称远端持久化完成。
@@ -186,7 +245,7 @@ class _DocumentCreationPageState extends State<DocumentCreationPage> {
       final pending = coordinator.pending;
       final needsReview = coordinator.needsReview;
       final created = _createdDocumentId != null;
-      final busy = _running || coordinator.busy;
+      final busy = _running || coordinator.busy || _openingDocumentId != null;
       final target = pending ? coordinator.operation!.target : _selected;
       final canCreate =
           !busy &&
@@ -194,7 +253,7 @@ class _DocumentCreationPageState extends State<DocumentCreationPage> {
           (pending || created || (_selected != null && !_loading && _loadError == null));
       return Scaffold(
         appBar: AppBar(
-          title: const Text('新建空白文档', maxLines: 1, overflow: TextOverflow.ellipsis),
+          title: const Text('文档列表', maxLines: 1, overflow: TextOverflow.ellipsis),
           actions: [
             TextButton(
               key: const ValueKey('create-blank-document'),
@@ -283,10 +342,18 @@ class _DocumentCreationPageState extends State<DocumentCreationPage> {
                           ],
                         ),
                       ],
-                      if (coordinator.error != null) ...[
+                      if (coordinator.error != null && _openError == null) ...[
                         const SizedBox(height: 16),
                         Text(
                           coordinator.error!,
+                          style: TextStyle(color: Theme.of(context).colorScheme.error),
+                        ),
+                      ],
+                      if (_openError != null) ...[
+                        const SizedBox(height: 16),
+                        Text(
+                          _openError!,
+                          key: const ValueKey('document-open-error'),
                           style: TextStyle(color: Theme.of(context).colorScheme.error),
                         ),
                       ],
@@ -304,7 +371,9 @@ class _DocumentCreationPageState extends State<DocumentCreationPage> {
                         Padding(
                           padding: const EdgeInsets.only(top: 12),
                           child: Text(
-                            '${_progress(coordinator.operation?.stage)} 返回后仍会保留创建进度，请勿重复创建。',
+                            _openingDocumentId != null
+                                ? '正在打开文档…'
+                                : '${_progress(coordinator.operation?.stage)} 返回后仍会保留创建进度，请勿重复创建。',
                           ),
                         ),
                     ],
@@ -313,9 +382,14 @@ class _DocumentCreationPageState extends State<DocumentCreationPage> {
               ),
               if (target != null)
                 DocumentSpaceList(
-                  key: ValueKey('space-documents-${target.id}'),
+                  key: ValueKey('space-documents-${target.id}-$_documentListRevision'),
                   target: target,
                   loadPage: widget.loadDocuments,
+                  onOpenDocument: widget.onOpenDocument == null
+                      ? null
+                      : (item) => unawaited(_openListedDocument(item.id)),
+                  enabled: !busy,
+                  openingDocumentId: _openingDocumentId,
                 ),
             ],
           ),

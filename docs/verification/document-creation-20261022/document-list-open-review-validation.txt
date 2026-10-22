@@ -1,0 +1,15 @@
+Review validation - 2026-10-22
+
+Root related tests (rerun):
+00:11 +77: All tests passed!
+
+Real FRB/SQLite host tests (rerun):
+00:42 +12: All tests passed!
+
+89 passed; 0 failed; 0 skipped.
+14/14 Dart source SHA256 values match the implementation validation snapshot.
+APK SHA256 matches: d8491838aa0a9a790fb0e0644abfb4856f53add6a9d2c38374f781a1be38780c
+Reuse unchanged-source analysis, format and Android debug build results from document-list-open.json.
+BlockCraft latest: 0.11.27; desktop declared/locked/installed: 0.11.24/0.11.24/0.11.21.
+No application or test code modified by this review.
+Live server, physical devices, cross-client online sync and iOS full app: not newly verified.
