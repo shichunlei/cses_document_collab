@@ -265,7 +265,7 @@ final services = CollabHostServices(
 
 Demo在`lib/src/demo/mention_avatar.dart`实现公共头像地址、圆形裁切和失败首字，在`mention_picker.dart`实现搜索/去抖/列表/重试，`document_host.dart`注入两个回调。其他宿主可完全替换这些UI而无需依赖Demo。迁移时请显式配置`pickMentionUser`与`mentionAvatarBuilder`，旧`mentionDirectory`构造参数须移除，目录改由宿主的选人回调捕获；点击详情使用`onMentionTap`。
 
-代码块/图片题注、未知实体与localDraft保持原保护范围；同步任务参与人业务副作用尚未提供端口。历史Android头像与桌面联调见根仓库`docs/verification/user-mention-20261014.json`；本次UI迁移尚未重做真机/桌面联调。
+代码块/图片题注、未知实体与localDraft保持原保护范围；同步任务参与人业务副作用尚未提供端口。历史Android头像与桌面联调见根仓库`docs/verification/user-mention-20261014/user-mention-20261014.json`；本次UI迁移尚未重做真机/桌面联调。
 
 ## 会议、任务和文档提及（普通正文）
 
@@ -301,7 +301,7 @@ CollabHostServices mentionServices(GlobalKey<NavigatorState> navigatorKey) =>
 
 四类原始属性JSON均限制为65536字节；正式投影完整传递，未就绪或损坏的属性拒绝派发并报告失败，不制造原始属性。新插入用户的身份快照立即可用；原有手工用户投影可不带快照展示，但配置回调后须等待真实属性就绪才能派发；未配置回调不报属性缺失。编辑包不内置用户业务路由或资料面板。用户引用仍可用正文选区删除并撤销/重做。
 
-用户点击面板移除、缺省不响应及统一回调兼容验证见根仓库`docs/verification/mention-user-tap-only-20261015.json`。
+用户点击面板移除、缺省不响应及统一回调兼容验证见根仓库`docs/verification/mention-integration-20261015/mention-user-tap-only-20261015.json`。
 
 
 ## 会议引用卡片
@@ -359,9 +359,9 @@ Demo实现在根项目`lib/src/demo/meeting_reference_picker.dart`，只填写�
 引用编辑不创建或修改业务会议，会议KR列表仍未适配；Android/iOS真机与实际桌面双端待验收。
 Rust内部映射复用现有属性桥接载体，没有FRB签名/ABI变化，不需要重新生成桥接文件。
 
-历史整卡点击、直接删除与键盘抑制验证见`docs/verification/meeting-card-actions-20261015.json`；状态配色与主按钮验证见根仓库`docs/verification/meeting-card-status-20261015.json`。当前删除入口统一到右上更多菜单，最新菜单回归见适配表。
+历史整卡点击、直接删除与键盘抑制验证见`docs/verification/meeting-card-20261015/meeting-card-actions-20261015.json`；状态配色与主按钮验证见根仓库`docs/verification/meeting-card-20261015/meeting-card-status-20261015.json`。当前删除入口统一到右上更多菜单，最新菜单回归见适配表。
 
-主按钮仅回调宿主、执行前后不新增详情请求的后续验证见`docs/verification/meeting-card-callback-only-20261015.json`。
+主按钮仅回调宿主、执行前后不新增详情请求的后续验证见`docs/verification/meeting-card-20261015/meeting-card-callback-only-20261015.json`。
 
 
 ## 提及操作与卡片视图
@@ -374,7 +374,7 @@ Rust内部映射复用现有属性桥接载体，没有FRB签名/ABI变化，不
 
 文档库提及始终保留图标+名称的行内形式，不提供卡片/链接视图切换，也不创建局部卡片状态。打开详情仍调用宿主，删除与撤销保留原始dc_t/ac_t及未知属性；仅打开面板或详情不修改共享内容或新增历史。会议和任务是唯一支持提及转卡片的实体类型。
 
-本轮验证与限制见根仓库`docs/verification/entity-mention-card-actions-20261015.json`；尚未进行真机安装与真实桌面同步验收。
+本轮验证与限制见根仓库`docs/verification/entity-mention-20261015/entity-mention-card-actions-20261015.json`；尚未进行真机安装与真实桌面同步验收。
 
 
 ## 任务卡片详情与布局
@@ -408,7 +408,7 @@ final services = CollabHostServices(
 
 Demo的`CsesTaskCardService`复用Common POST `/taskManage/task/detail`，参数`{queryType:'detail',tableName:'task_v3',id}`，解析item中的priority/status/leaders[].user、startTime/endTime毫秒、progress、space/project/workItem及fileCount/subCount。请求前后检查账号、企业及会话；进度沿用桌面归一规则，限制0～100并保留两位小数。无详情端口只显示共享引用，不做隐藏的默认网络请求。尚无实时详情推送、任务状态流转编辑或内置业务路由，仍为部分支持。
 
-验证与预览见根仓库`docs/verification/task-card-layout-20261015.json`。HONOR X70/Android16已安装并完成PRE真实任务卡片展示、编辑/预览详情回调、键盘抑制和删除/撤销/重做；最终任务引用及其他正文恢复，但删除撤销会重建审计meta并补默认depth=0。详情由Demo Toast确认，实际业务路由、本轮真实桌面同步联调和iOS未验收，见`docs/verification/task-card-phone-20261015.json`。
+验证与预览见根仓库`docs/verification/task-card-20261015/task-card-layout-20261015.json`。HONOR X70/Android16已安装并完成PRE真实任务卡片展示、编辑/预览详情回调、键盘抑制和删除/撤销/重做；最终任务引用及其他正文恢复，但删除撤销会重建审计meta并补默认depth=0。详情由Demo Toast确认，实际业务路由、本轮真实桌面同步联调和iOS未验收，见`docs/verification/task-card-20261015/task-card-phone-20261015.json`。
 
 
 ## Markdown 文件导入
@@ -419,7 +419,7 @@ Demo的`CsesTaskCardService`复用Common POST `/taskManage/task/detail`，参数
 
 支持段落、H1～H6、加粗/斜体/删除线/行内代码/链接、两种列表、待办、0～6级列表缩进、引用、围栏代码及语言、分割线、独立 HTTP(S) 图片。每个有序列表保留起始编号。表格按行转为带 ` | ` 分隔的富文本；行内图片及非 HTTP(S) 图片保留 Markdown 地址文字，不读取或上传本地资源。HTML 按文本保留，公式语法按普通文本保留；不增加表格、HTML或公式导入能力。超过六级的列表缩进按六级显示。
 
-Android 真机验收（2026-10-15）：HONOR X70/Android16 从系统下载目录选择 `.md` 后成功追加15块；整批撤销/重做、说明页取消与系统选择器取消通过。实际手机 SQLite/WAL 回读核对原34块的ID、顺序和所检查投影保持，最终清理测试块且在线。见根仓库[验收记录](../../docs/verification/markdown-import-phone-20261015.json)；iOS、服务器持久化ACK和实际桌面双端观察尚未验收。
+Android 真机验收（2026-10-15）：HONOR X70/Android16 从系统下载目录选择 `.md` 后成功追加15块；整批撤销/重做、说明页取消与系统选择器取消通过。实际手机 SQLite/WAL 回读核对原34块的ID、顺序和所检查投影保持，最终清理测试块且在线。见根仓库[验收记录](../../docs/verification/markdown-import-phone-20261015/markdown-import-phone-20261015.json)；iOS、服务器持久化ACK和实际桌面双端观察尚未验收。
 
 ## 文末点赞与全文评论
 
@@ -479,7 +479,7 @@ final page = CollaborativeEditorPage(collab: controller);
 
 面板期间暂停正文输入，完全退场后再按稳定ID、内容指纹和权限提交。远端变更或权限曾撤销即使旧面板失效，重新打开后继续操作；关闭时成对解绑借用监听。远端结构或单元格正文变化清除本地路径历史与选区，布局更新保留组件和光标；同步投影完成不会覆盖宿主刚撤销的权限。含未知占位的表格结构操作整体拒绝，列宽可独立设置；不完整/交叠/悬空隐藏或超限网格整体只读占位，原数据保留且不影响其他已适配正文。
 
-尚无拖拽式多格选区、行列剪切复制粘贴或Markdown表格导入；Markdown仍按文本行保留。Android真机已验证新建、行列操作、合并拆分、拖动列宽及历史；iOS真机、真实桌面双向、两端同时修改行列结构的冲突场景及服务器持久化ACK尚待验收。完整验证记录见根仓库适配表及 `docs/verification/table-editing-20261016.json`。
+尚无拖拽式多格选区、行列剪切复制粘贴或Markdown表格导入；Markdown仍按文本行保留。Android真机已验证新建、行列操作、合并拆分、拖动列宽及历史；iOS真机、真实桌面双向、两端同时修改行列结构的冲突场景及服务器持久化ACK尚待验收。完整验证记录见根仓库适配表及 `docs/verification/table-20261016/table-editing-20261016.json`。
 
 ## 网页资源的三种视图
 
@@ -517,7 +517,7 @@ SVG图片使用flutter_svg绘制：带`.svg`后缀的远端图片复用CachedNet
 
 音频初始化时保留最终的播放按钮、时间行和轨道槽，在同一轨道位置显示不确定加载动画；未就绪显示--:--并禁用播放/拖动，完成后恢复可拖动进度条，缓冲也在同一位置加载，卡片高度保持。音视频的播放/暂停按钮直接显示在播放器上，音视频共用`CollabMediaTimeline`进度条，统一细轨道、圆滑块及当前/总时长；音频使用浅色卡片配色，视频进度条叠放在画面内底部。拖动预览目标时间，松手跳转一次。未知时长不允许跳转，进度只在局部更新，换源/退出等待已有跳转完成再释放控制器。音频、视频、图片和附件的管理操作统一收进一个“更多操作”按钮，各块已有的外部打开/下载、编辑、删除和下方插入从菜单进入。预览模式下仍可直接播放/暂停，音视频和附件的菜单仅保留打开，不显示编辑、删除和插入；图片预览隐藏更多按钮。菜单退场后才执行操作，期间权限变化或资源属性更新会使旧操作失效，重排后按稳定块ID定位。
 
-本次按钮归并的验证范围见根仓库 `docs/verification/media-more-menu-20261016.json`。
+本次按钮归并的验证范围见根仓库 `docs/verification/media-more-menu-20261016/media-more-menu-20261016.json`。
 
 
 ### 默认文字颜色真机回归
@@ -530,7 +530,7 @@ SVG图片使用flutter_svg绘制：带`.svg`后缀的远端图片复用CachedNet
 TEXT_COLOR_SCREENSHOTS=build/document-text-color-screenshots flutter drive --driver packages/cses_document_collab/test_driver/document_text_color_driver.dart --target packages/cses_document_collab/integration_test/document_text_color_test.dart -d ANDROID_DEVICE_ID --no-pub --keep-app-running
 ```
 
-必须保留`--keep-app-running`，结束后用普通Demo APK执行`adb install -r`覆盖恢复，保留用户数据。截图和结果见[2026-10-21验收记录](../../docs/verification/default-text-color-device-20261021.json)。页面背景及根字色同步不属于本次验收。
+必须保留`--keep-app-running`，结束后用普通Demo APK执行`adb install -r`覆盖恢复，保留用户数据。截图和结果见[2026-10-21验收记录](../../docs/verification/default-text-color-device-20261021/default-text-color-device-20261021.json)。页面背景及根字色同步不属于本次验收。
 
 ### 普通文本段Tab缩进（BlockCraft 0.11.21）
 
@@ -557,7 +557,7 @@ flutter drive --driver packages/cses_document_collab/test_driver/integration_tes
 flutter drive --driver packages/cses_document_collab/test_driver/integration_test.dart --target packages/cses_document_collab/integration_test/editor_review_fixes_test.dart -d ANDROID_DEVICE_ID --no-pub --keep-app-running
 ```
 
-安装前可在应用停止后保留私有数据备份与文件校验值；验证后重新构建普通Demo，以`adb install -r`覆盖安装，禁止卸载或清数据。核对已有偏好与协同SQLite文件未丢失或改变，再启动正常入口；Flutter调试内核、资源时间戳与安装标记不属于用户数据。执行结果与设备范围见[真机验证记录](../../docs/verification/editor-review-fixes-device-20261016.json)。
+安装前可在应用停止后保留私有数据备份与文件校验值；验证后重新构建普通Demo，以`adb install -r`覆盖安装，禁止卸载或清数据。核对已有偏好与协同SQLite文件未丢失或改变，再启动正常入口；Flutter调试内核、资源时间戳与安装标记不属于用户数据。执行结果与设备范围见[真机验证记录](../../docs/verification/editor-review-fixes-device-20261016/editor-review-fixes-device-20261016.json)。
 
 ### BlockCraft 0.11.20 段落默认格式与下一段
 
@@ -565,7 +565,7 @@ flutter drive --driver packages/cses_document_collab/test_driver/integration_tes
 
 0.11.21 后续核对补齐三处边界：远端清除/替换空段默认格式会清除本机继承的旧字样、字号、字体、颜色和字距，本地明确选择的输入格式仍优先，主动导航后重新继承；划词格式面板接续自身类型转换与列表退回正文后的稳定选区，远端改字、改类型、删除或撤权仍使旧选区失效；旧CSS字号按发布版去首尾空白、不区分单位大小写，并统一像素/倍率范围、精度及新旧属性优先级。
 
-回归包含远端默认值更新后的实际输入与撤销、连续类型转换后继续格式化，以及发布函数生成的旧字号对照数据；完整页面在五种对齐和编辑/预览切换中检查最终渲染字号。验证结果与未覆盖范围见[修复记录](../../docs/verification/selection-format-review-fixes-0.11.21-20261016.json)。
+回归包含远端默认值更新后的实际输入与撤销、连续类型转换后继续格式化，以及发布函数生成的旧字号对照数据；完整页面在五种对齐和编辑/预览切换中检查最终渲染字号。验证结果与未覆盖范围见[修复记录](../../docs/verification/selection-format-review-fixes-20261016/selection-format-review-fixes-0.11.21-20261016.json)。
 
 对应发布产物的对照数据可在仓库根目录重新生成：
 
@@ -599,13 +599,13 @@ Future<void> lockBlock(CollabController controller, String blockId) async {
 }
 ```
 
-调用方提供当前会话的可信角色映射并维护账号/文档隔离；控制器借用授权函数，不释放宿主资源。接口Future完成表示本机落盘、投影与提交待发送增量，不代表服务端ACK。此策略与桌面一样由可信客户端执行，原始远端增量仍会应用；不替代服务端权限。快照写入对跨锁节点的重排采取保守拒绝，完整拖拽及富文本剪贴板另行适配。Android与实际发布桌面增量/SQLite交换已验证，在线手机到桌面窗口观察、iOS、同时并发及服务端ACK仍待验收；详见仓库`docs/verification/block-lock-20261019.json`。
+调用方提供当前会话的可信角色映射并维护账号/文档隔离；控制器借用授权函数，不释放宿主资源。接口Future完成表示本机落盘、投影与提交待发送增量，不代表服务端ACK。此策略与桌面一样由可信客户端执行，原始远端增量仍会应用；不替代服务端权限。快照写入对跨锁节点的重排采取保守拒绝，完整拖拽及富文本剪贴板另行适配。Android与实际发布桌面增量/SQLite交换已验证，在线手机到桌面窗口观察、iOS、同时并发及服务端ACK仍待验收；详见仓库`docs/verification/block-lock-corner-20261019/block-lock-20261019.json`。
 
 ## 分页符
 
 正式文档支持根级 `page-divider` 无正文块，连续流展示为虚线与“分页符”标记；添加面板提供插入，根级非空块在其后插入、空段落原位替换，并创建后置空段落。范围选区和嵌套位置拒绝插入，不向上寻找根。直接点击整条分页符弹出操作菜单，提供“在下方插入”和“删除分页符”，不显示右侧三个点；后置正文行首退格同样可以删除，删除末块补空段落；插入与删除均支持独立撤销/重做。只读保留标记并隐藏修改入口，打开面板期间撤权或目标删除时拒绝过期动作。
 
-桌面Schema为rootOnly，旧文档中的嵌套分页符、带非法子块或正文的分页符保持只读占位，原数据不迁移。正常块的未知props/meta在其他正文编辑时保留；删除撤销只恢复已投影数据，未投影扩展与审计字段恢复仍待适配。本阶段不提供纸张分页排版、打印/PDF导出或完整分页符剪贴板。Android/iOS与在线桌面联调另行验收，验证范围见根仓库`docs/verification/page-divider-20261018.json`。
+桌面Schema为rootOnly，旧文档中的嵌套分页符、带非法子块或正文的分页符保持只读占位，原数据不迁移。正常块的未知props/meta在其他正文编辑时保留；删除撤销只恢复已投影数据，未投影扩展与审计字段恢复仍待适配。本阶段不提供纸张分页排版、打印/PDF导出或完整分页符剪贴板。Android/iOS与在线桌面联调另行验收，验证范围见根仓库`docs/verification/page-divider-20261018/page-divider-20261018.json`。
 
 发布Schema夹具可从包目录重新生成：
 
@@ -623,9 +623,9 @@ flutter test --no-pub test/collab_page_divider_test.dart test/page_divider_nativ
 
 源码面板提供五类“类型”和“模板”：时序、流程、类图、思维导图、时间线，采用桌面发布源码；类型在草稿开头插入语法前缀，模板替换草稿全文。正文与面板均支持仅文本/仅预览/文本与预览，组合视图在手机上下排列；正文源码只读显示，点击编辑源码打开完整编辑面板。新建面板默认组合视图；取消不写入，保存将源码与主动选择的mode作为一个可撤销事务提交。正文切换视图是独立可撤销事务。
 
-共享mode沿用`props.mode=text/graph/default`，由现有CollabResource单字段补丁承载，没有新增FRB签名。缺失/null/未知mode仅在展示时回落为组合视图，普通源码编辑不归一化；旧调用未指定插入视图时仍默认graph。远端mode变化也会使打开的草稿冲突并清除过期历史；重新加载同时更新源码和模式。2026-10-17已完成真实桌面与Android现有时序图三种mode的双向在线联调，共6项通过；最终恢复原text模式，完整源码Delta/属性及树结构保持，仅绘图修改时间更新，见根仓库`docs/verification/mermaid-view-sync-20261017.json`。不代表真实断网、同时并发、iOS或服务端持久化ACK通过。
+共享mode沿用`props.mode=text/graph/default`，由现有CollabResource单字段补丁承载，没有新增FRB签名。缺失/null/未知mode仅在展示时回落为组合视图，普通源码编辑不归一化；旧调用未指定插入视图时仍默认graph。远端mode变化也会使打开的草稿冲突并清除过期历史；重新加载同时更新源码和模式。2026-10-17已完成真实桌面与Android现有时序图三种mode的双向在线联调，共6项通过；最终恢复原text模式，完整源码Delta/属性及树结构保持，仅绘图修改时间更新，见根仓库`docs/verification/mermaid-20261017/mermaid-view-sync-20261017.json`。不代表真实断网、同时并发、iOS或服务端持久化ACK通过。
 
-本阶段仍部分支持：不提供可视化节点/标签编辑、全屏缩放、SVG导出或Markdown导入。远端源码/格式/mode或含绘图文档的结构变化清空编辑器路径历史与选区；普通非结构正文属性更新保持历史。删除撤销恢复投影内容/身份和有效mode，不保证未投影属性、未知/非法模式或审计数据恢复。异常结构保持整棵占位。完整验证见根仓库`docs/verification/mermaid-options-20261017.json`及`docs/block-adaptation.md`。
+本阶段仍部分支持：不提供可视化节点/标签编辑、全屏缩放、SVG导出或Markdown导入。远端源码/格式/mode或含绘图文档的结构变化清空编辑器路径历史与选区；普通非结构正文属性更新保持历史。删除撤销恢复投影内容/身份和有效mode，不保证未投影属性、未知/非法模式或审计数据恢复。异常结构保持整棵占位。完整验证见根仓库`docs/verification/mermaid-20261017/mermaid-options-20261017.json`及`docs/block-adaptation.md`。
 
 ## 会议 KR 列表
 

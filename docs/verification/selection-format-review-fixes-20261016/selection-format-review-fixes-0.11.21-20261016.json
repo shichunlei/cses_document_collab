@@ -93,7 +93,7 @@
     },
     "format": "本次修改的手写Dart文件已运行dart format；生成常量仅由发布函数生成工具更新。",
     "diff_check": "git diff --check and git diff --cached --check passed",
-    "durable_log": "docs/verification/selection-format-review-fixes-20261016.txt",
+    "durable_log": "docs/verification/selection-format-review-fixes-20261016/selection-format-review-fixes-20261016.txt",
     "device": "本次未重新运行真机；此前Android30项记录保留为历史，不扩大到新增35项字号场景。"
   },
   "remaining": [

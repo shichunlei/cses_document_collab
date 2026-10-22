@@ -83,4 +83,4 @@
 
 只读、撤权恢复、远端换源/删除/重排、取消、异常提示、撤销/重做按实际触及的业务边界选用；复用已有效的测试，不为每次样式改动复制整套用例。消费者默认值不变时，选代表性回归即可。
 
-根仓库历史过程记录位于 `docs/verification/modal-ui-20261017.json`、`docs/verification/modal-delete-actions-20261017.json`；包独立迁出后记录可不可用不影响本文操作。旧HTML设计预览、历史测试计数和旧PNG不代表后续代码已验证；交付时报告本次实际命令和结果。
+根仓库历史过程记录位于 `docs/verification/modal-ui-20261017/modal-ui-20261017.json`、`docs/verification/modal-delete-actions-20261017/modal-delete-actions-20261017.json`；包独立迁出后记录可不可用不影响本文操作。旧HTML设计预览、历史测试计数和旧PNG不代表后续代码已验证；交付时报告本次实际命令和结果。

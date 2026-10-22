@@ -30,7 +30,7 @@
     },
     "render_preview": {
       "passed": true,
-      "path": "docs/verification/attachment-card-20261016.png",
+      "path": "docs/verification/attachment-card-20261016/attachment-card-20261016.png",
       "viewport": "390×450 logical pixels",
       "method": "真实Flutter资源渲染器Widget截图，加载本机STHeiti及MaterialIcons字体，仅用于核对布局；临时预览测试已清理。",
       "log": "/tmp/attachment-redesign-preview-final.log"
@@ -55,6 +55,6 @@
   "source_sha256": {
     "packages/cses_document_collab/lib/src/editor/collab_resource_block.dart": "7c40590b1c8bbbbb89f68527cdbb0df1a30d406b1da5022b74dc55a5e6a3b3a6",
     "packages/cses_document_collab/test/collab_resource_block_test.dart": "cf00a23f5e8d975fb9a8064cee2e64b94d00b4aaa647f539b896538451d35280",
-    "docs/verification/attachment-card-20261016.png": "56a008dc112ea5b1332df4fa93429baf67c44935eec7b8035a779ad63eaa66c0"
+    "docs/verification/attachment-card-20261016/attachment-card-20261016.png": "56a008dc112ea5b1332df4fa93429baf67c44935eec7b8035a779ad63eaa66c0"
   }
 }

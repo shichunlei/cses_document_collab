@@ -107,7 +107,7 @@
     "online_document_accessed": false
   },
   "evidence": {
-    "device_log": "docs/verification/editor-review-fixes-android-20261016.txt",
+    "device_log": "docs/verification/editor-review-fixes-device-20261016/editor-review-fixes-android-20261016.txt",
     "screenshots": [
       {
         "path": "docs/verification/screenshots/editor-review-selection-menu-android-20261016.png",

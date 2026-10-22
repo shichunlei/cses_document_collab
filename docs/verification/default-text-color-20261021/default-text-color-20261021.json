@@ -51,7 +51,7 @@
     "没有原生或桥接接口变更；本阶段未重建原生库或重跑全包测试，后续Android正常构建见device_acceptance",
     "41块及13已适配/14部分支持/1结构支持/13未适配统计保持；其他工作区改动保留"
   ],
-  "device_acceptance": "default-text-color-device-20261021.json",
+  "device_acceptance": "../default-text-color-device-20261021/default-text-color-device-20261021.json",
   "commit_audit": {
     "date": "2026-10-21",
     "git_conflicts": "无未合并条目或本次文件冲突标记，git diff --check通过；暂存区为空",

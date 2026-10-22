@@ -103,7 +103,7 @@
     "fixture": "test/fixtures/heading_typography_oracle.dart",
     "fixture_generator": "tool/generate_heading_typography_oracle.mjs",
     "fixture_regeneration": "JSON and compiled Dart payload both reproduce byte-for-byte from published 0.11.21 functions",
-    "log": "docs/verification/heading-typography-android-20261016.txt",
+    "log": "docs/verification/editor-regressions-and-heading-device-20261016/heading-typography-android-20261016.txt",
     "screenshot": {
       "path": "docs/verification/screenshots/heading-typography-android-mixed-20261016.png",
       "description": "Android hardware capture during right-aligned mixed typography scenario; paragraph and inline overrides intentionally vary glyph size. This is not the default heading overview.",
@@ -135,5 +135,5 @@
     "Code/formula interactions were verified through Widget tests; this hardware run specifically checks typography, not manual code/formula interaction or IME compatibility.",
     "Not a full BlockCraft 0.11.21 release certification; desktop installed artifact still 0.11.17 at start-of-task verification."
   ],
-  "supersedes_open_failures_in": "docs/verification/heading-font-size-fix-20261016.json"
+  "supersedes_open_failures_in": "docs/verification/heading-typography-20261016/heading-font-size-fix-20261016.json"
 }

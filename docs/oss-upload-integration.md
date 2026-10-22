@@ -55,9 +55,9 @@ Common 运行时核对结果：用户、企业、当前企业对象与 Cookie �
 
 新测试内容位于原 `OSS-check-20261014` 区域附近，文字标记为 `Common-login-check-20261014-1328`。测试图片和视频保留在文档中，便于人工复核。使用独立 Common 路由实例、空状态向量重新请求服务端完整 Yjs 文档，得到 58005 字节 update；以新的 Y.Doc 解码确认以上 URL、flavour 和根列表位置，证明结果已回到服务端，未以本机缓存代替。
 
-结果摘要与原文件 SHA-256 见 [验证数据](verification/common-login-upload-20261014.json)，界面见下图。记录不含密码、Cookie、OSS 临时凭证或完整登录响应。
+结果摘要与原文件 SHA-256 见 [验证数据](verification/common-login-upload-20261014/common-login-upload-20261014.json)，界面见下图。记录不含密码、Cookie、OSS 临时凭证或完整登录响应。
 
-![Android 真机资源上传后的在线文档](verification/common-login-upload-20261014.png)
+![Android 真机资源上传后的在线文档](verification/common-login-upload-20261014/common-login-upload-20261014.png)
 
 ### 范围与异常记录
 
@@ -82,9 +82,9 @@ Android debug APK 构建通过，根宿主 18 项回归测试通过。普通页�
 
 16 项根宿主测试通过，覆盖登录、失败重试、页面销毁后的迟到响应、文档初始化失败清理、Common 真实 Socket 回环、原缓存键固定值和服务端/企业/用户/文档分区隔离；连接地址 query、fragment、内嵌凭证和错误协议校验迁入登录测试。相关静态检查和 Android debug 构建通过。旧类及相关 getter、import、测试文件引用均已清理，根 App 不再直接依赖 crypto。
 
-验证摘要与哈希见 [验证数据](verification/direct-context-upload-20261014.json)，截图见下图。本轮仍仅覆盖 Android、小型测试图片和一秒视频；iOS、大文件、断网重试、音频和封面不在本轮范围。图片已适配、视频部分支持及剩余桌面工具栏/嵌入限制保持不变。
+验证摘要与哈希见 [验证数据](verification/direct-context-upload-20261014/direct-context-upload-20261014.json)，截图见下图。本轮仍仅覆盖 Android、小型测试图片和一秒视频；iOS、大文件、断网重试、音频和封面不在本轮范围。图片已适配、视频部分支持及剩余桌面工具栏/嵌入限制保持不变。
 
-![直接使用 Common 文档上下文的 Android 真机验证](verification/direct-context-upload-20261014.png)
+![直接使用 Common 文档上下文的 Android 真机验证](verification/direct-context-upload-20261014/direct-context-upload-20261014.png)
 
 ## 附件系统文件选择器完整流程复验（2026-10-14）
 
@@ -104,9 +104,9 @@ Android debug APK 构建通过，根宿主 18 项回归测试通过。普通页�
 
 为验证服务端同步，上传后通过 Demo 正常界面清理当前文档的本机缓存（保留其他文档缓存和服务端正文），再点击重新连接。协议记录确认首次 `collabJoin` 的状态向量为 `AA==`，随后收到 `collabSync` 和同步状态；没有在恢复期间再次插入附件。新的本机更新日志共 3 条、61944 字节，以新的 Y.Doc 解码确认上述附件及属性，编辑页恢复在线并显示新附件。该依据是清缓存后的服务端恢复，不是仅检查上传前的本机缓存，也不代表额外数据库落库 ACK。
 
-验证摘要、链接与哈希见 [验证数据](verification/attachment-picker-upload-20261014.json)。选择后的面板见 [选择器返回结果](verification/attachment-picker-selected-20261014.png)，清缓存后恢复的正文如下。记录不包含 Cookie、OSS 临时凭证、完整登录响应或完整正文数据。
+验证摘要、链接与哈希见 [验证数据](verification/attachment-picker-upload-20261014/attachment-picker-upload-20261014.json)。选择后的面板见 [选择器返回结果](verification/attachment-picker-upload-20261014/attachment-picker-selected-20261014.png)，清缓存后恢复的正文如下。记录不包含 Cookie、OSS 临时凭证、完整登录响应或完整正文数据。
 
-![系统选择器上传附件后，从服务端恢复的在线正文](verification/attachment-picker-upload-20261014.png)
+![系统选择器上传附件后，从服务端恢复的在线正文](verification/attachment-picker-upload-20261014/attachment-picker-upload-20261014.png)
 
 附件仍为部分支持，应用内下载管理尚未接入；本轮只验收 Android 本地小型 TXT 的完整选择、上传与插入流程，未覆盖 iOS、其他文件提供方、大文件及断网重试。
 
@@ -130,9 +130,9 @@ Android debug APK 构建通过，根宿主 18 项回归测试通过。普通页�
 
 重新打开恢复后的音频卡片，播放器再次初始化为 12 秒，并完整播放到 `0:12 / 0:12`。本轮实际选择、上传、插入、播放及缓存恢复均通过正常页面交互完成，无需修改音频上传或播放代码。
 
-验证摘要与哈希见 [验证数据](verification/audio-picker-upload-20261014.json)，选择后的面板见 [选择器返回结果](verification/audio-picker-selected-20261014.png)，暂停后拖动见 [进度操作结果](verification/audio-picker-seeked-20261014.png)。恢复并再次播放完成的正文如下。记录不含 Cookie、OSS 临时凭证、完整登录响应或完整正文数据。
+验证摘要与哈希见 [验证数据](verification/audio-picker-upload-20261014/audio-picker-upload-20261014.json)，选择后的面板见 [选择器返回结果](verification/audio-picker-upload-20261014/audio-picker-selected-20261014.png)，暂停后拖动见 [进度操作结果](verification/audio-picker-upload-20261014/audio-picker-seeked-20261014.png)。恢复并再次播放完成的正文如下。记录不含 Cookie、OSS 临时凭证、完整登录响应或完整正文数据。
 
-![系统选择器上传音频后，服务端恢复并播放完成](verification/audio-picker-upload-20261014.png)
+![系统选择器上传音频后，服务端恢复并播放完成](verification/audio-picker-upload-20261014/audio-picker-upload-20261014.png)
 
 音频仍为部分支持；blob 上传中地址、原始嵌入代码仍使用只读占位。本轮只覆盖 Android 本地小型 MP3；iOS、其他编码/文件提供方、大文件、断网重试和后台播放不在本次验收范围。
 

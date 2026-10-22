@@ -97,7 +97,7 @@
       "checks": "Per-character final font size and actual RenderParagraph position/maxWidth in edit -> preview -> edit. Intrinsic text position follows its alignment anchor: full step for left/justify/distributed, half for center, unchanged right edge for right alignment."
     },
     "remaining_scenarios": "Existing H1-H9 defaults, mixed paragraph/inline font overrides and links with real wrapping, and empty heading placeholders across five alignments.",
-    "log": "docs/verification/text-paragraph-indent-android-20261016.txt",
+    "log": "docs/verification/text-paragraph-indent-20261016/text-paragraph-indent-android-20261016.txt",
     "screenshot": {
       "path": "docs/verification/screenshots/text-paragraph-indent-android-20261016.png",
       "description": "Hardware capture during justified heading_3 layout at depth 0,1,2,0; all four runs keep the same heading size.",

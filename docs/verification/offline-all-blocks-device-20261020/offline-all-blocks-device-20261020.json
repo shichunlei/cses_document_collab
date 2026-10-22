@@ -116,7 +116,7 @@
     "android_build": "passed",
     "git_diff_check": "passed",
     "full_package_rerun": false,
-    "previous_full_suite": "offline-all-blocks-20261020.json，1485通过/43既有失败；本轮键盘补丁仅跑25项目标回归，不重新宣称全包通过"
+    "previous_full_suite": "../offline-all-blocks-20261020/offline-all-blocks-20261020.json，1485通过/43既有失败；本轮键盘补丁仅跑25项目标回归，不重新宣称全包通过"
   },
   "blockcraft": {
     "registry_latest": "0.11.23",

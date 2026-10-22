@@ -86,4 +86,4 @@ git diff --check
 
 需要截图时，`test/collab_modal_test.dart` 支持 `COLLAB_MODAL_PREVIEW_DIR` 和可选 `COLLAB_MODAL_PREVIEW_FONT`，可输出真实 Flutter PNG；普通测试不要硬依赖本机字体。共享外壳截图、交互式 HTML 设计稿和真机验收是不同证据，不能互相代替。不要把历史截图当作新布局验收。
 
-交付说明实际改动、运行结果及未验证范围。涉及块支持范围或限制变化时，同步仓库 `docs/block-adaptation.md`；历史过程见 `docs/verification/modal-ui-20261017.json` 和 `modal-delete-actions-20261017.json`，它们不是后续任务自动通过的证明。后续明确改变上述产品规则时，同步更新本 skill 的对应条目和参考，不累计互相冲突的“最终规则”。
+交付说明实际改动、运行结果及未验证范围。涉及块支持范围或限制变化时，同步仓库 `docs/block-adaptation.md`；历史过程见 `docs/verification/modal-ui-20261017/modal-ui-20261017.json` 和 `modal-delete-actions-20261017.json`，它们不是后续任务自动通过的证明。后续明确改变上述产品规则时，同步更新本 skill 的对应条目和参考，不累计互相冲突的“最终规则”。

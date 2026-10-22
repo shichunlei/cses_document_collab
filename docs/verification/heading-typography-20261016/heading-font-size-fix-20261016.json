@@ -169,5 +169,5 @@
     "Two existing full-suite failures remain open; not claimed as passing.",
     "Other 0.11.21 features, document-root font settings and platform font identity are outside this heading-regression scope."
   ],
-  "previous_diagnosis": "docs/verification/heading-font-size-diagnosis-20261016.json"
+  "previous_diagnosis": "docs/verification/heading-typography-20261016/heading-font-size-diagnosis-20261016.json"
 }
