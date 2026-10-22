@@ -7,6 +7,9 @@ import 'package:cses_common/runtime/session/user.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';
 import 'package:cses_mobile_collab_demo/src/demo/cses_account_login.dart';
 import 'package:cses_mobile_collab_demo/src/demo/document_host.dart';
+import 'package:cses_mobile_collab_demo/src/demo/document_creation/cses_document_creation_service.dart';
+import 'package:cses_mobile_collab_demo/src/demo/document_creation/document_creation_operation.dart';
+import 'package:cses_mobile_collab_demo/src/demo/document_creation/document_creation_store.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -57,7 +60,7 @@ void main() {
       await seed.close();
     }
     harness.requests.clear();
-    host = DemoDocumentHost(initialDocumentId: config.documentId);
+    host = DemoDocumentHost();
   });
   tearDown(() async {
     await host.close();
@@ -67,6 +70,155 @@ void main() {
     );
     await harness.uninstall();
     await directory.delete(recursive: true);
+  });
+
+  test('home initialization and reconnect never select or request a document', () async {
+    await host.initialize();
+    expect(host.creation, isNotNull);
+    expect(host.controller, isNull);
+    expect(harness.requests, isEmpty);
+    await host.reconnect();
+    expect(host.controller, isNull);
+    expect(harness.requests, isEmpty);
+  });
+
+  test(
+    'a completed creation record is restored without automatically opening its document',
+    () async {
+      final api = CsesDocumentCreationService();
+      final store = FileDocumentCreationStore(
+        directory: Directory(p.join(directory.path, 'cses_mobile_collab_demo', 'creation')),
+        scope: api.scope,
+      );
+      await store.write(
+        const DocumentCreationOperation(
+          operationId: 'previous-operation',
+          paragraphId: 'previous-paragraph',
+          createdAt: 1792584000000,
+          target: DocumentCreationTarget(id: 'space', name: '个人空间'),
+          stage: DocumentCreationStage.completed,
+          documentId: 'cached-host-document',
+        ),
+      );
+      await host.initialize();
+      expect(host.creation!.operation!.documentId, 'cached-host-document');
+      expect(host.controller, isNull);
+      expect(harness.requests, isEmpty);
+    },
+  );
+
+  test(
+    'selecting another cached document releases the old engine and keeps the new one read-only',
+    () async {
+      final config = CollabDocumentConfig(
+        documentId: 'another-document',
+        serverIdentity: ctx.websocketHost!,
+        companyId: User().companyId,
+        userId: User().userId!,
+        databasePath: p.join(directory.path, 'cses_mobile_collab_demo', 'updates.sqlite3'),
+        editable: true,
+      );
+      await DocumentBootstrapper.prepareBlank(
+        config: config,
+        operationId: 'another-operation',
+        paragraphId: 'another-paragraph',
+        createdAt: DateTime.fromMillisecondsSinceEpoch(1792584000000),
+      );
+      final seed = CollabController.cses(config: config, gateway: _OfflineGateway());
+      try {
+        await seed.initialize();
+        await seed.editorState.apply(
+          seed.editorState.transaction..insertText(seed.editorState.document.first!, 0, '另一篇正文'),
+        );
+      } finally {
+        await seed.close();
+      }
+      harness.respond = (request) => jsonResponse({
+        'isSuccess': true,
+        'role': 400,
+        'id': (request.data as Map)['id'] ?? 'cached-host-document',
+        'name': '文档',
+      });
+      await host.initialize();
+      await host.openListedDocument('cached-host-document');
+      final previous = host.controller!;
+      expect(await host.openListedDocument(config.documentId), config.documentId);
+      expect(previous.editorState.isDisposed, isTrue);
+      expect(host.controller!.initialized, isTrue);
+      expect(host.controller!.canEdit, isFalse);
+      expect(host.controller!.editorState.document.first!.delta!.toPlainText(), '另一篇正文');
+      expect(host.creation!.operation, isNull);
+      expect(
+        harness.requests.any(
+          (request) =>
+              request.path == '/doc/document/create' || request.path == '/doc/document/edit',
+        ),
+        isFalse,
+      );
+    },
+  );
+
+  test('opening the same selected document retains its controller and undo history', () async {
+    harness.respond = (_) =>
+        jsonResponse({'isSuccess': true, 'role': 600, 'id': 'cached-host-document'});
+    await host.initialize();
+    expect(await host.openListedDocument('cached-host-document'), 'cached-host-document');
+    final controller = host.controller!;
+    await _waitForHost(host, () => controller.canEdit);
+    await controller.editorState.apply(
+      controller.editorState.transaction
+        ..insertText(controller.editorState.document.first!, 0, '新增'),
+    );
+    final undoCount = controller.editorState.undoManager.undoStack.last;
+    final requestCount = harness.requests.length;
+    expect(controller.editorState.undoManager.undoStack.isNonEmpty, isTrue);
+    expect(await host.openListedDocument('cached-host-document'), 'cached-host-document');
+    expect(identical(host.controller, controller), isTrue);
+    expect(controller.editorState.undoManager.undoStack.last, undoCount);
+    expect(harness.requests.length, requestCount);
+  });
+
+  test('a rejected list selection preserves the current document and permits retry', () async {
+    var reject = false;
+    harness.respond = (request) =>
+        jsonResponse({'isSuccess': !reject, 'role': 600, 'id': 'cached-host-document'});
+    await host.initialize();
+    await host.openListedDocument('cached-host-document');
+    final controller = host.controller!;
+    await _waitForHost(host, () => controller.canEdit);
+    reject = true;
+    expect(await host.openListedDocument('denied-document'), isNull);
+    expect(identical(host.controller, controller), isTrue);
+    expect(controller.initialized, isTrue);
+    expect(controller.editorState.document.first!.delta!.toPlainText(), '离线缓存正文');
+    expect(host.creation!.error, isNotNull);
+    reject = false;
+    expect(await host.openListedDocument('cached-host-document'), 'cached-host-document');
+    expect(host.creation!.error, isNull);
+    expect(harness.requests.any((request) => request.path == '/doc/document/create'), isFalse);
+  });
+
+  test('a late access check after logout cannot open a document', () async {
+    final response = Completer<ResponseBody>();
+    final started = Completer<void>();
+    harness.respond = (_) {
+      started.complete();
+      return response.future;
+    };
+    await host.initialize();
+    final opening = host.openListedDocument('cached-host-document');
+    try {
+      await started.future.timeout(const Duration(seconds: 5));
+      final closing = host.close();
+      response.complete(jsonResponse({'isSuccess': true, 'id': 'cached-host-document'}));
+      expect(await opening, isNull);
+      await closing;
+      expect(host.controller, isNull);
+      expect(User().userId, anyOf(isNull, isEmpty));
+    } finally {
+      if (!response.isCompleted) response.complete(jsonResponse({'isSuccess': false}));
+      await opening;
+    }
   });
 
   test(
@@ -79,9 +231,12 @@ void main() {
           if (!readStarted.isCompleted) readStarted.complete();
           return response.future;
         }
-        return jsonResponse({'isSuccess': true});
+        return jsonResponse({'isSuccess': true, 'id': 'cached-host-document'});
       };
-      final initialization = host.initialize();
+      await host.initialize();
+      expect(host.controller, isNull);
+      expect(harness.requests, isEmpty);
+      final initialization = host.openListedDocument('cached-host-document');
       try {
         await readStarted.future.timeout(const Duration(seconds: 5));
         expect(host.controller, isNotNull);
@@ -100,11 +255,14 @@ void main() {
     () async {
       var state = 0;
       harness.respond = (request) {
-        if (request.path != '/doc/permission/read') return jsonResponse({'isSuccess': true});
+        if (request.path != '/doc/permission/read') {
+          return jsonResponse({'isSuccess': true, 'id': 'cached-host-document'});
+        }
         if (state == 0) throw StateError('offline permission service');
         return jsonResponse(state == 1 ? {'isSuccess': true, 'role': 600} : {'isSuccess': false});
       };
       await host.initialize();
+      await host.openListedDocument('cached-host-document');
       await _waitForHost(host, () => host.error?.contains('权限暂未确认') == true);
       final controller = host.controller!;
       expect(controller.initialized, isTrue);
@@ -129,11 +287,14 @@ void main() {
     () async {
       var online = false;
       harness.respond = (request) {
-        if (request.path != '/doc/permission/read') return jsonResponse({'isSuccess': true});
+        if (request.path != '/doc/permission/read') {
+          return jsonResponse({'isSuccess': true, 'id': 'cached-host-document'});
+        }
         if (!online) throw StateError('offline');
         return jsonResponse({'isSuccess': true, 'role': 600});
       };
       await host.initialize();
+      await host.openListedDocument('cached-host-document');
       await _waitForHost(host, () => host.error != null);
       await Future<void>.delayed(Duration.zero);
       online = true;
@@ -149,11 +310,14 @@ void main() {
       final response = Completer<ResponseBody>();
       final started = Completer<void>();
       harness.respond = (request) {
-        if (request.path != '/doc/permission/read') return jsonResponse({'isSuccess': true});
+        if (request.path != '/doc/permission/read') {
+          return jsonResponse({'isSuccess': true, 'id': 'cached-host-document'});
+        }
         if (!started.isCompleted) started.complete();
         return response.future;
       };
       await host.initialize();
+      await host.openListedDocument('cached-host-document');
       await started.future;
       final controller = host.controller!;
       final closing = host.close();
@@ -172,16 +336,22 @@ void main() {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
         pathChannel,
         (_) async {
-          if (!available) throw PlatformException(code: 'storage-unavailable');
+          if (!available) {
+            throw PlatformException(code: 'storage-unavailable');
+          }
           return directory.path;
         },
       );
-      harness.respond = (_) => jsonResponse({'isSuccess': true, 'role': 400});
+      harness.respond = (_) =>
+          jsonResponse({'isSuccess': true, 'role': 400, 'id': 'cached-host-document'});
       await host.initialize();
       expect(host.controller, isNull);
       expect(host.error, isNotNull);
       available = true;
       await host.reconnect();
+      expect(host.controller, isNull);
+      expect(harness.requests, isEmpty);
+      await host.openListedDocument('cached-host-document');
       expect(host.controller!.initialized, isTrue);
       expect(host.controller!.canEdit, isFalse);
       expect(host.controller!.editorState.document.first!.delta!.toPlainText(), '离线缓存正文');
@@ -189,15 +359,19 @@ void main() {
     },
   );
   test('account change during a permission refresh revokes the old editable controller', () async {
-    harness.respond = (_) => jsonResponse({'isSuccess': true, 'role': 600});
+    harness.respond = (_) =>
+        jsonResponse({'isSuccess': true, 'role': 600, 'id': 'cached-host-document'});
     await host.initialize().timeout(const Duration(seconds: 5));
+    await host.openListedDocument('cached-host-document');
     final controller = host.controller!;
     await _waitForHost(host, () => controller.canEdit && host.error == null);
     await host.reconnect().timeout(const Duration(seconds: 12));
     final response = Completer<ResponseBody>();
     final started = Completer<void>();
     harness.respond = (request) {
-      if (request.path != '/doc/permission/read') return jsonResponse({'isSuccess': true});
+      if (request.path != '/doc/permission/read') {
+        return jsonResponse({'isSuccess': true, 'id': 'cached-host-document'});
+      }
       started.complete();
       return response.future;
     };

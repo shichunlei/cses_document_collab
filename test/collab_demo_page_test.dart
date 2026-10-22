@@ -10,18 +10,13 @@ import 'package:flutter_test/flutter_test.dart';
 /// 验证首页路由，以及协同文档不可用时独立制图的完整往返流程。
 void main() {
   setUpAll(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockStreamHandler(
-          const EventChannel('keyboardHeightEventChannel'),
-          MockStreamHandler.inline(
-            onListen: (_, events) => events.success(0.0),
-          ),
-        );
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockStreamHandler(
+      const EventChannel('keyboardHeightEventChannel'),
+      MockStreamHandler.inline(onListen: (_, events) => events.success(0.0)),
+    );
   });
 
-  testWidgets('connection page scrolls and exposes the editor route', (
-    tester,
-  ) async {
+  testWidgets('connection page scrolls and exposes only the document list route', (tester) async {
     await tester.binding.setSurfaceSize(const Size(390, 844));
     addTearDown(() => tester.binding.setSurfaceSize(null));
     await tester.pumpWidget(
@@ -37,12 +32,10 @@ void main() {
 
     expect(find.byType(SingleChildScrollView), findsWidgets);
     expect(find.text('CSES 协同 Demo'), findsOneWidget);
-    expect(find.byKey(const ValueKey('open-collaborative-editor')), findsOne);
+    expect(find.byKey(const ValueKey('open-collaborative-editor')), findsNothing);
+    expect(find.byKey(const ValueKey('open-document-list')), findsOneWidget);
     expect(find.byKey(const ValueKey('open-offline-image-composer')), findsOne);
-    expect(
-      find.byKey(const ValueKey('collaborative-appflowy-editor')),
-      findsNothing,
-    );
+    expect(find.byKey(const ValueKey('collaborative-appflowy-editor')), findsNothing);
     expect(find.byKey(const ValueKey('editor-undo')), findsNothing);
     expect(find.byKey(const ValueKey('editor-redo')), findsNothing);
     expect(tester.takeException(), isNull);
@@ -50,15 +43,12 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
   });
 
-  testWidgets('offline entry works during loading and after storage failure', (
-    tester,
-  ) async {
+  testWidgets('offline entry works during loading and after storage failure', (tester) async {
     await tester.binding.setSurfaceSize(const Size(390, 844));
     addTearDown(() => tester.binding.setSurfaceSize(null));
     final supportPath = Completer<String?>();
     const pathChannel = MethodChannel('plugins.flutter.io/path_provider');
-    final messenger =
-        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+    final messenger = TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
     messenger.setMockMethodCallHandler(pathChannel, (_) => supportPath.future);
     addTearDown(() => messenger.setMockMethodCallHandler(pathChannel, null));
     try {
@@ -73,28 +63,23 @@ void main() {
         ),
       );
       final entry = find.byKey(const ValueKey('open-offline-image-composer'));
-      expect(find.text('正在加载文档…'), findsOneWidget);
+      expect(find.text('正在初始化连接…'), findsOneWidget);
       expect(tester.widget<FilledButton>(entry).onPressed, isNotNull);
       // 重复派发重建前的按钮回调，首页也只打开一个本地会话。
       final open = tester.widget<FilledButton>(entry).onPressed!;
       open();
       open();
       await tester.pumpAndSettle();
-      expect(
-        find.byKey(const ValueKey('image-composer-editor')),
-        findsOneWidget,
-      );
+      expect(find.byKey(const ValueKey('image-composer-editor')), findsOneWidget);
 
       supportPath.complete(null);
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('image-composer-back')));
       await _finishRoute(tester);
-      expect(find.text('文档加载失败，请检查本地库或登录配置'), findsOneWidget);
+      expect(find.text('连接初始化失败，请检查本地存储或登录配置'), findsOneWidget);
       expect(tester.widget<FilledButton>(entry).onPressed, isNotNull);
-      final collaborative = find.byKey(
-        const ValueKey('open-collaborative-editor'),
-      );
-      expect(tester.widget<FilledButton>(collaborative).onPressed, isNull);
+      final collaborative = find.byKey(const ValueKey('open-collaborative-editor'));
+      expect(collaborative, findsNothing);
 
       await tester.tap(entry);
       await tester.pumpAndSettle();
@@ -107,27 +92,17 @@ void main() {
       final edited = state.apply(transaction);
       await tester.pumpAndSettle();
       await edited;
-      await tester.tap(
-        find.byKey(const ValueKey('image-composer-template-sunset')),
-      );
+      await tester.tap(find.byKey(const ValueKey('image-composer-template-sunset')));
       await tester.pumpAndSettle();
-      await tester.tap(
-        find.byKey(const ValueKey('image-composer-preview-toggle')),
-      );
+      await tester.tap(find.byKey(const ValueKey('image-composer-preview-toggle')));
       await tester.pumpAndSettle();
-      expect(
-        find.byKey(const ValueKey('image-composer-preview')),
-        findsOneWidget,
-      );
-      expect(
-        find.byKey(const ValueKey('image-composer-generate')),
-        findsNothing,
-      );
+      expect(find.byKey(const ValueKey('image-composer-preview')), findsOneWidget);
+      expect(find.byKey(const ValueKey('image-composer-generate')), findsNothing);
       await tester.tap(find.byKey(const ValueKey('image-composer-back')));
       await _finishRoute(tester);
       expect(state.isDisposed, isTrue);
       expect(tester.widget<FilledButton>(entry).onPressed, isNotNull);
-      expect(tester.widget<FilledButton>(collaborative).onPressed, isNull);
+      expect(collaborative, findsNothing);
       expect(tester.takeException(), isNull);
     } finally {
       if (!supportPath.isCompleted) supportPath.complete(null);

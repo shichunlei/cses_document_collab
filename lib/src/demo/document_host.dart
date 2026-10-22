@@ -9,7 +9,6 @@ import 'package:cses_common/runtime/context/context.dart';
 import 'package:cses_common/runtime/session/user.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';
 import 'package:cses_mobile_collab_demo/src/demo/common_cses_collab_gateway.dart';
-import 'package:cses_mobile_collab_demo/src/demo/cses_account_login.dart';
 import 'package:cses_mobile_collab_demo/src/demo/cses_demo_host.dart';
 import 'package:cses_mobile_collab_demo/src/demo/cses_editor_media_upload_service.dart';
 import 'package:flutter/widgets.dart';
@@ -32,8 +31,9 @@ import 'mention_picker.dart';
 
 /// Demo composition root for package controllers and its owned Common socket.
 ///
-/// Create after Common login, await initialize, borrow
-/// controller for the editor page, then await close before account switching.
+/// Create after Common login and await initialize to start the account connection.
+/// Call openListedDocument for a selected list entry and borrow its controller.
+/// Await close before account switching.
 /// This host reads Common identity once into the package's document config,
 /// owns the storage location and foreground recovery, and clears Common login
 /// after document teardown. Late initialization is joined during close.
@@ -43,20 +43,20 @@ import 'mention_picker.dart';
 /// Future<void> openAfterLogin() async {
 ///   final host = DemoDocumentHost();
 ///   await host.initialize();
-///   // 页面借用host.controller；创建入口使用host.creation。
+///   // 首页只连接主连接；从列表选择文档后调用：
+///   await host.openListedDocument('selected-document-id');
+///   // 编辑页借用host.controller；创建入口使用host.creation。
 ///   await host.close(); // 移除借用视图后关闭账号与文档资源。
 /// }
 /// ```
 class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
   /// Uses Common login; [localDraft] opens an offline draft for preview or tests.
-  /// [initialDocumentId]显式指定正式根，null优先恢复最近创建文档，再回落测试文档。
-  DemoDocumentHost({this.localDraft = false, this.initialDocumentId});
+  /// 正式模式只准备账号服务并启动主连接；从列表选择文档后才创建控制器。
+  DemoDocumentHost({this.localDraft = false});
 
   /// Explicit document mode; credentials never enter the package controller.
   final bool localDraft;
 
-  /// 调用方指定的正式文档；草稿模式忽略，null使用本账号最近文档。
-  final String? initialDocumentId;
   final CsesDemoHost _socket = const CsesDemoHost();
   CollabController? _controller;
   Future<void>? _initialization;
@@ -72,7 +72,7 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
   /// 初始化失败后仍观察前台恢复；关闭时只注销一次。
   bool _observingLifecycle = false;
 
-  /// 首次恢复结束后才允许新建，避免与默认文档打开争用单Doc引擎。
+  /// 账号创建记录恢复结束后才开放列表和新建入口。
   bool _ready = false;
   late String _databasePath;
   late CollabHostServices _services;
@@ -93,13 +93,29 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
   Future<DocumentListPage> loadCreationDocuments(DocumentCreationTarget target, int pageNumber) =>
       _creationApi?.loadDocuments(target, pageNumber) ?? Future.error(StateError('新建服务尚未就绪'));
 
+  /// 从列表打开[documentId]，完成后返回相同ID，忙碌或不可用时返回null。
+  /// 当前已初始化文档可直接复用以保留选区及撤销历史；其他文档先访问核验，再通过
+  /// 协调器串行释放和打开，保留主连接及创建恢复记录。导航由页面持有，关闭等待在途操作。
+  Future<String?> openListedDocument(String documentId) async {
+    final coordinator = creation;
+    if (_disposed || coordinator == null || coordinator.busy) return null;
+    if (documentId.trim().isEmpty || documentId.length > 128) return null;
+    _creationApi!.checkSession();
+    final controller = _controller;
+    return coordinator.openExistingDocument(
+      documentId,
+      reuseCurrentDocument:
+          controller != null && controller.documentId == documentId && controller.initialized,
+    );
+  }
+
   /// Borrow the document controller after host storage initialization.
   CollabController? get controller => _controller;
 
   /// Host initialization failure, separate from the controller's sync errors.
   String? get error => _error;
 
-  /// 初始化文档并共享在途任务；创建控制器前失败时清理临时资源，允许再次调用。
+  /// 初始化账号服务及主连接并共享在途任务；失败时清理临时资源，允许再次调用。
   /// 关闭后不重新打开资源；错误由error公开给页面，缓存恢复不等待权限HTTP。
   Future<void> initialize() {
     if (_disposed) return Future<void>.error(StateError('文档宿主已关闭'));
@@ -107,7 +123,7 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
   }
 
   /// 初始化存储并注入公开包服务；头像、人员与会议引用页面由宿主创建，会议/任务详情绑定账号会话，草稿不启用业务加载。
-  /// 等待原生初始化与宿主连接，关闭期间迟到结果不安装页面监听。
+  /// 正式模式不打开文档或初始化原生引擎；草稿模式等待原生初始化，关闭后不安装监听。
   /// 段落链接按Common环境选择桌面同源文档域名，并携带正式文档ID及blockId。
   /// 文末点赞回调返回演示成员快照，评论回调返回当前数量；图片点击接收链接并演示提示，不进行业务持久化。
   Future<void> _initialize() async {
@@ -205,14 +221,6 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
         _creation!.addListener(_changed);
         await _creation!.restore();
         if (_disposed) return;
-        final operation = _creation!.operation;
-        await _openFormalDocument(
-          initialDocumentId ??
-              (operation?.stage == DocumentCreationStage.completed
-                  ? operation!.documentId!
-                  : csesDemoDocumentId),
-        );
-        if (_disposed) return;
         api.checkSession();
         await _socket.connect();
       }
@@ -222,6 +230,7 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
         await _controller!.initialize();
       }
       if (_disposed) return;
+      _error = null;
     } catch (error, stackTrace) {
       // Package initialization reports through the injected telemetry callback.
       // Only failures before a controller exists belong to this host boundary.
@@ -233,7 +242,7 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
         _creationApi = null;
         _initialization = null;
       }
-      _error = '文档加载失败，请检查本地库或登录配置';
+      _error = '连接初始化失败，请检查本地存储或登录配置';
     } finally {
       if (!_disposed && !_observingLifecycle) {
         WidgetsBinding.instance.addObserver(this);
@@ -295,20 +304,20 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
     if (!_disposed) notifyListeners();
   }
 
-  /// 先重试失败的本地打开并刷新权限，再恢复主连接及当前文档握手。
+  /// 重试账号服务并恢复主连接；已从列表打开文档时同步刷新权限及握手。
   /// HTTPS权限恢复不依赖WebSocket就绪；初始权限失败时继续使用同一缓存控制器。
   Future<void> reconnect() async {
     if (_disposed || _creation?.busy == true) return;
     try {
-      if (_controller == null) await initialize();
-      if (_disposed || _controller == null || !_ownsConnection) return;
-      final controller = _controller!;
-      await _refreshDocumentPermissions();
+      await initialize();
+      if (_disposed || !_ownsConnection || _creation == null) return;
+      final controller = _controller;
+      if (controller != null) await _refreshDocumentPermissions();
       if (_disposed || !identical(controller, _controller) || _creation?.busy == true) {
         return;
       }
       if (await _recover() && !_disposed && identical(controller, _controller)) {
-        await controller.retry();
+        await controller?.retry();
       }
     } catch (error, stackTrace) {
       Log.e('Demo 重新连接失败', error: error, stackTrace: stackTrace, tag: 'DocCollabDemo');
@@ -332,19 +341,19 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
     if (state == AppLifecycleState.resumed) unawaited(_resume());
   }
 
-  /// 前台先恢复本地打开和权限，再恢复连接；失败不会清除缓存或绕过终止错误。
+  /// 前台恢复账号主连接，存在已选文档时刷新权限并同步；不会选择或打开文档。
   Future<void> _resume() async {
     try {
       if (_disposed || _creation?.busy == true || !_ownsConnection) return;
-      if (_controller == null) await initialize();
-      if (_disposed || _controller == null) return;
-      final controller = _controller!;
-      await _refreshDocumentPermissions();
+      await initialize();
+      if (_disposed || _creation == null) return;
+      final controller = _controller;
+      if (controller != null) await _refreshDocumentPermissions();
       if (_disposed || !identical(controller, _controller) || _creation?.busy == true) {
         return;
       }
       if (await _recover() && !_disposed && identical(controller, _controller)) {
-        controller.resync();
+        controller?.resync();
       }
     } catch (error, stackTrace) {
       Log.e('Demo 前台恢复失败', error: error, stackTrace: stackTrace, tag: 'DocCollabDemo');

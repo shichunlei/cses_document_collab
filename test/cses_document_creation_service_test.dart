@@ -28,6 +28,27 @@ void main() {
   });
   tearDown(() => harness.uninstall());
   test(
+    'existing document preflight uses authorized view and rejects missing or foreign ids',
+    () async {
+      harness.respond = (_) =>
+          jsonResponse({'isSuccess': true, 'id': 'existing-doc', 'name': '文档'});
+      await service.verifyDocumentToOpen('existing-doc');
+      expect(harness.requests.single.path, '/doc/document/view');
+      expect(harness.requests.single.data, {'id': 'existing-doc'});
+      harness.respond = (_) => jsonResponse({'isSuccess': true, 'id': 'another-doc'});
+      await expectLater(service.verifyDocumentToOpen('existing-doc'), throwsFormatException);
+      harness.respond = (_) => jsonResponse({'isSuccess': false});
+      await expectLater(
+        service.verifyDocumentToOpen('existing-doc'),
+        throwsA(isA<DocumentCreationRejected>()),
+      );
+      final count = harness.requests.length;
+      await expectLater(service.verifyDocumentToOpen(''), throwsFormatException);
+      expect(harness.requests.length, count);
+      expect(harness.requests.every((request) => request.path == '/doc/document/view'), isTrue);
+    },
+  );
+  test(
     'space documents use parent id and totalCount pagination without requiring hasMore',
     () async {
       harness.respond = (_) => jsonResponse({

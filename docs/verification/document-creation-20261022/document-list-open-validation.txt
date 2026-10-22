@@ -1,0 +1,16 @@
+Final validation - 2026-10-22
+Analyzing 14 items...
+No issues found! (ran in 11.6s)
+
+Root related tests: 77 passed; native host tests: 12 passed; 0 failed/skipped.
+
+INFO: Building cses_collab_core for x86_64-linux-android
+Running Gradle task 'assembleDebug'...                             61.5s
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+
+APK source consistency: 8/8 modified lib sources match kernel_blob.bin.
+APK SHA256: d8491838aa0a9a790fb0e0644abfb4856f53add6a9d2c38374f781a1be38780c
+
+Format: 14 modified handwritten Dart files, --line-length=100; 0 changes on final check.
+Removed default ID / old API / old route symbols: no matches in lib, test, integration_test, README and current integration guide.
+Live server, device integration, iOS full app: not tested in this run.

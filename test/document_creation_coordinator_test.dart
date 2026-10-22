@@ -68,6 +68,89 @@ void main() {
     expect(coordinator.pending, isFalse);
     expect(api.lastPrepared!.paragraphId, 'id-1');
   });
+  test(
+    'existing document open only verifies, releases and opens without changing a pending record',
+    () async {
+      store.value = _operation(DocumentCreationStage.createUnknown);
+      await coordinator.restore();
+      final record = store.value;
+      final stages = List.of(store.stages);
+      expect(await coordinator.openExistingDocument('existing-doc'), 'existing-doc');
+      expect(api.openedDocuments, ['existing-doc']);
+      expect(actions, ['close', 'open:existing-doc']);
+      expect(identical(store.value, record), isTrue);
+      expect(store.stages, stages);
+      expect(coordinator.pending, isTrue);
+      expect(api.creates, 0);
+      expect(api.writes, 0);
+    },
+  );
+
+  test('existing document access rejection preserves current document and allows retry', () async {
+    await coordinator.restore();
+    api.openFailure = const DocumentCreationRejected('文档已删除或无权访问');
+    expect(await coordinator.openExistingDocument('existing-doc'), isNull);
+    expect(actions, isEmpty);
+    expect(coordinator.error, '文档已删除或无权访问');
+    expect(coordinator.busy, isFalse);
+    api.openFailure = null;
+    expect(await coordinator.openExistingDocument('existing-doc'), 'existing-doc');
+    expect(actions, ['close', 'open:existing-doc']);
+  });
+
+  test(
+    'existing document open rejects another target and creation during a pending switch',
+    () async {
+      await coordinator.restore();
+      final gate = api.openVerification = Completer<void>();
+      final first = coordinator.openExistingDocument('first');
+      expect(await coordinator.openExistingDocument('second'), isNull);
+      final creation = coordinator.start(_target);
+      await Future<void>.delayed(Duration.zero);
+      expect(api.openedDocuments, ['first']);
+      expect(api.creates, 0);
+      gate.complete();
+      expect(await first, 'first');
+      expect(await creation, isNull);
+      expect(actions, ['close', 'open:first']);
+    },
+  );
+
+  test(
+    'account change or close during access verification prevents releasing and opening',
+    () async {
+      await coordinator.restore();
+      final gate = api.openVerification = Completer<void>();
+      final opening = coordinator.openExistingDocument('first');
+      await Future<void>.delayed(Duration.zero);
+      api.valid = false;
+      gate.complete();
+      expect(await opening, isNull);
+      expect(actions, isEmpty);
+      api.valid = true;
+      final next = api.openVerification = Completer<void>();
+      final pending = coordinator.openExistingDocument('second');
+      await Future<void>.delayed(Duration.zero);
+      final closing = coordinator.close();
+      next.complete();
+      expect(await pending, isNull);
+      await closing;
+      expect(actions, isEmpty);
+    },
+  );
+
+  test('failed existing open leaves journal unchanged and can retry without bootstrap', () async {
+    await coordinator.restore();
+    failOpen = true;
+    expect(await coordinator.openExistingDocument('existing-doc'), isNull);
+    expect(coordinator.error, '文档打开失败，请重试');
+    expect(store.stages, isEmpty);
+    failOpen = false;
+    expect(await coordinator.openExistingDocument('existing-doc'), 'existing-doc');
+    expect(actions, ['close', 'open:existing-doc', 'close', 'open:existing-doc']);
+    expect(api.creates, 0);
+    expect(api.writes, 0);
+  });
   test('double click shares in-flight create and does not duplicate shell', () async {
     await coordinator.restore();
     final response = api.creation = Completer<String>();
@@ -368,13 +451,63 @@ void main() {
     );
     await tester.tap(find.text('打开'));
     await tester.pumpAndSettle();
-    expect(find.text('新建空白文档'), findsOneWidget);
+    expect(find.text('文档列表'), findsOneWidget);
     await tester.tap(find.byKey(const ValueKey('create-blank-document')));
     await tester.pumpAndSettle();
     expect(result, 'server-doc');
     expect(api.creates, 1);
     await tester.pumpWidget(const SizedBox.shrink());
   });
+  testWidgets('new document opens above the list and back returns to the selected space', (
+    tester,
+  ) async {
+    final navigator = GlobalKey<NavigatorState>();
+    final opened = <String>[];
+    var listLoads = 0;
+    await tester.pumpWidget(
+      MaterialApp(
+        navigatorKey: navigator,
+        home: Builder(
+          builder: (context) => TextButton(
+            onPressed: () => Navigator.of(context).push<void>(
+              MaterialPageRoute(
+                builder: (listContext) => DocumentCreationPage(
+                  coordinator: coordinator,
+                  loadTargets: () async => [_target],
+                  loadDocuments: (target, page) async {
+                    listLoads++;
+                    return _emptyDocuments(target, page);
+                  },
+                  onOpenDocument: (id) async {
+                    opened.add(id);
+                    await Navigator.of(listContext).push<void>(
+                      MaterialPageRoute(builder: (_) => Scaffold(body: Text('新建编辑:$id'))),
+                    );
+                  },
+                ),
+              ),
+            ),
+            child: const Text('文档列表入口'),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('文档列表入口'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('create-blank-document')));
+    await tester.pumpAndSettle();
+    expect(find.text('新建编辑:server-doc'), findsOneWidget);
+    expect(opened, ['server-doc']);
+    navigator.currentState!.pop();
+    await tester.pumpAndSettle();
+    expect(find.byType(DocumentCreationPage), findsOneWidget);
+    expect(find.byKey(const ValueKey('creation-target')), findsOneWidget);
+    expect(find.text('文档列表入口'), findsNothing);
+    expect(api.creates, 1);
+    expect(listLoads, 2);
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
+
   testWidgets('app bar creates in the selected space even when its document list fails', (
     tester,
   ) async {
@@ -420,6 +553,157 @@ void main() {
     expect(coordinator.operation!.target.id, other.id);
     expect(api.creates, 1);
     await tester.pumpWidget(const SizedBox.shrink());
+  });
+
+  testWidgets(
+    'list click opens one editor, retains list on back and blocks cached duplicate clicks',
+    (tester) async {
+      final navigator = GlobalKey<NavigatorState>();
+      final verify = api.openVerification = Completer<void>();
+      await tester.pumpWidget(
+        MaterialApp(
+          navigatorKey: navigator,
+          home: DocumentCreationPage(
+            coordinator: coordinator,
+            loadTargets: () async => [_target],
+            loadDocuments: (_, page) async => DocumentListPage(
+              items: [
+                DocumentListEntry.fromJson({'id': 'existing-doc', 'name': '已有文档'}),
+              ],
+              totalCount: 1,
+              pageNumber: page,
+              pageSize: 20,
+            ),
+            onOpenDocument: (id) async {
+              if (await coordinator.openExistingDocument(id) != id) {
+                throw FormatException(coordinator.error ?? '打开失败');
+              }
+              await navigator.currentState!.push<void>(
+                MaterialPageRoute(
+                  builder: (_) => Scaffold(
+                    appBar: AppBar(title: const Text('编辑页')),
+                    body: Text('编辑:$id'),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      try {
+        final row = find.byKey(const ValueKey('space-document-existing-doc'));
+        final tap = tester
+            .widget<InkWell>(find.descendant(of: row, matching: find.byType(InkWell)))
+            .onTap!;
+        tap();
+        tap();
+        await tester.pump(const Duration(milliseconds: 1));
+        await tester.pump();
+        expect(api.openedDocuments, ['existing-doc']);
+        expect(
+          tester.widget<TextButton>(find.byKey(const ValueKey('create-blank-document'))).onPressed,
+          isNull,
+        );
+        verify.complete();
+        await tester.pumpAndSettle();
+        expect(find.text('编辑:existing-doc'), findsOneWidget);
+        navigator.currentState!.pop();
+        await tester.pumpAndSettle();
+        expect(find.text('已有文档'), findsOneWidget);
+        expect(
+          tester
+              .widget<DropdownButtonFormField<String>>(
+                find.byKey(const ValueKey('creation-target')),
+              )
+              .initialValue,
+          _target.id,
+        );
+        expect(
+          tester.widget<TextButton>(find.byKey(const ValueKey('create-blank-document'))).onPressed,
+          isNotNull,
+        );
+        expect(actions, ['close', 'open:existing-doc']);
+        expect(api.creates, 0);
+        expect(api.writes, 0);
+      } finally {
+        if (!verify.isCompleted) verify.complete();
+        if (navigator.currentState?.canPop() == true) navigator.currentState!.pop();
+        await tester.pumpAndSettle();
+        await tester.pumpWidget(const SizedBox.shrink());
+      }
+    },
+  );
+
+  testWidgets('list open failure is visible and another click retries the same document', (
+    tester,
+  ) async {
+    api.openFailure = const DocumentCreationRejected('没有访问权限');
+    final ready = <String>[];
+    await tester.pumpWidget(
+      MaterialApp(
+        home: DocumentCreationPage(
+          coordinator: coordinator,
+          loadTargets: () async => [_target],
+          loadDocuments: (_, page) async => DocumentListPage(
+            items: [
+              DocumentListEntry.fromJson({'id': 'existing-doc', 'name': '已有文档'}),
+            ],
+            totalCount: 1,
+            pageNumber: page,
+            pageSize: 20,
+          ),
+          onOpenDocument: (id) async {
+            if (await coordinator.openExistingDocument(id) != id) {
+              throw FormatException(coordinator.error ?? '打开失败');
+            }
+            ready.add(id);
+          },
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('已有文档'));
+    await tester.pumpAndSettle();
+    expect(find.text('没有访问权限'), findsOneWidget);
+    expect(actions, isEmpty);
+    api.openFailure = null;
+    await tester.tap(find.text('已有文档'));
+    await tester.pumpAndSettle();
+    expect(ready, ['existing-doc']);
+    expect(find.byKey(const ValueKey('document-open-error')), findsNothing);
+    expect(api.openedDocuments, ['existing-doc', 'existing-doc']);
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
+
+  testWidgets('leaving a list while its open callback is pending handles a late failure', (
+    tester,
+  ) async {
+    final open = Completer<void>();
+    await tester.pumpWidget(
+      MaterialApp(
+        home: DocumentCreationPage(
+          coordinator: coordinator,
+          loadTargets: () async => [_target],
+          loadDocuments: (_, page) async => DocumentListPage(
+            items: [
+              DocumentListEntry.fromJson({'id': 'existing-doc', 'name': '已有文档'}),
+            ],
+            totalCount: 1,
+            pageNumber: page,
+            pageSize: 20,
+          ),
+          onOpenDocument: (_) => open.future,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('已有文档'));
+    await tester.pump();
+    await tester.pumpWidget(const SizedBox.shrink());
+    open.completeError(StateError('late failure'));
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
   });
 
   for (final retryFails in [false, true]) {
@@ -798,7 +1082,7 @@ void main() {
     expect(api.creates, 0);
     expect(api.writes, 0);
     expect(find.byKey(const ValueKey('creation-target')), findsOneWidget);
-    expect(find.text('新建空白文档'), findsOneWidget);
+    expect(find.text('文档列表'), findsOneWidget);
     expect(tester.takeException(), isNull);
     await tester.pumpWidget(const SizedBox.shrink());
   });
@@ -877,6 +1161,25 @@ class _Store implements DocumentCreationStore {
 
 /// 可暂停请求的业务端口，用于验证真实协调器状态机。
 class _Api implements DocumentCreationApi {
+  /// 已核验的已有文档ID，普通打开不得触发建档或正文写入。
+  final openedDocuments = <String>[];
+
+  /// 可暂停访问核验，由测试负责完成。
+  Completer<void>? openVerification;
+
+  /// 模拟文档已删除、拒绝访问或传输失败。
+  Object? openFailure;
+
+  /// 验证[documentId]的访问结果；检查仍绑定同一测试账号。
+  @override
+  Future<void> verifyDocumentToOpen(String documentId) async {
+    checkSession();
+    openedDocuments.add(documentId);
+    final gate = openVerification;
+    if (gate != null) await gate.future;
+    if (openFailure != null) throw openFailure!;
+  }
+
   /// 当前模拟账号是否仍有效。
   bool valid = true;
 

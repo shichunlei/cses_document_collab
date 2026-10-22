@@ -33,6 +33,10 @@ abstract interface class DocumentCreationApi {
   /// 读取[target]的createChild能力；未授权或读取失败抛错。
   Future<void> verifyTarget(DocumentCreationTarget target);
 
+  /// 核对[documentId]仍存在且本账号可访问；失败抛错，核验前不释放当前文档。
+  /// 只读取正式文档详情，不创建业务记录或初始化正文。
+  Future<void> verifyDocumentToOpen(String documentId);
+
   /// 在[target]下创建空名文本记录。成功返回ID，即使响应期间账号已切换也让
   /// 协调器先记录该ID；下一步由checkSession阻止旧操作继续。
   Future<String> createBlank(DocumentCreationTarget target);

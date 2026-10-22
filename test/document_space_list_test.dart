@@ -8,6 +8,62 @@ import 'package:flutter_test/flutter_test.dart';
 
 /// 验证真实Sliver列表的分页、刷新、切换空间、资源失效及窄屏布局。
 void main() {
+  testWidgets('document rows dispatch their entry and respect disabled opening state', (
+    tester,
+  ) async {
+    final selected = <String>[];
+
+    /// 以[target]和[page]提供固定一项文档，验证交互期间不触发其他加载。
+    Future<DocumentListPage> load(DocumentCreationTarget target, int page) async =>
+        _page(['a'], page, total: 1);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: CustomScrollView(
+            slivers: [
+              DocumentSpaceList(
+                target: _first,
+                loadPage: load,
+                onOpenDocument: (entry) => selected.add(entry.id),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('文档a'));
+    expect(selected, ['a']);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: CustomScrollView(
+            slivers: [
+              DocumentSpaceList(
+                target: _first,
+                loadPage: load,
+                enabled: false,
+                openingDocumentId: 'a',
+                onOpenDocument: (entry) => selected.add(entry.id),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    final row = find.byKey(const ValueKey('space-document-a'));
+    expect(
+      tester.widget<InkWell>(find.descendant(of: row, matching: find.byType(InkWell))).onTap,
+      isNull,
+    );
+    expect(
+      find.descendant(of: row, matching: find.byType(CircularProgressIndicator)),
+      findsOneWidget,
+    );
+    expect(selected, ['a']);
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
   testWidgets('loads pages in order and deduplicates document ids while retaining server total', (
     tester,
   ) async {
