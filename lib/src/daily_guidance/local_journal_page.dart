@@ -8,6 +8,9 @@ import 'package:cses_document_collab/cses_document_collab.dart';
 import 'package:cses_mobile_collab_demo/src/demo/cses_mention_directory.dart';
 import 'package:cses_mobile_collab_demo/src/demo/mention_avatar.dart';
 import 'package:cses_mobile_collab_demo/src/demo/mention_picker.dart';
+import 'package:cses_mobile_collab_demo/src/service/cses_meeting_card_service.dart';
+import 'package:cses_mobile_collab_demo/src/service/cses_task_card_service.dart';
+import 'package:cses_mobile_collab_demo/src/service/cses_kr_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,6 +20,13 @@ import 'journal_draft.dart';
 import 'journal_store.dart';
 import 'journal_surface.dart';
 import 'local_journal_controller.dart';
+import 'journal_blockcraft_codec.dart';
+import 'journal_json_files.dart';
+import 'journal_exchange_keys.dart';
+
+/// 后台将独立[snapshot]转换为可持久化草稿，不持有页面或编辑器资源。
+JournalDraft _importJournalSnapshot(Map<String, dynamic> snapshot) =>
+    JournalBlockCraftCodec.importSnapshot(snapshot);
 
 /// 独立的离线横线日记页面，拥有加载、正文、自动保存和预览快照的完整生命周期。
 ///
@@ -33,10 +43,12 @@ class LocalJournalPage extends StatefulWidget {
   /// [key]控制页面身份；[store]是当前账号独占的本地草稿端口，由宿主持有。
   /// 同一store只能打开一个日记页面，读取失败不会新建覆盖原记录。
   /// [mentionDirectory]可注入原生用户目录，null创建本页账号绑定目录；仅查询人员，不包含部门引用。
+  /// [jsonFiles]借用导入导出文件端口，默认系统文件框；导入始终创建独立存储和路由。
   const LocalJournalPage({
     super.key,
     required this.store,
     this.mentionDirectory,
+    this.jsonFiles = const DeviceJournalJsonFiles(),
   });
 
   /// 原生用户提及的可选宿主查询端口；由调用方持有，null时本页创建独立会话目录。
@@ -44,6 +56,9 @@ class LocalJournalPage extends StatefulWidget {
 
   /// 页面借用的单写入者存储，路由关闭时不释放宿主资源。
   final JournalStore store;
+
+  /// 页面借用的文件交换端口，不由页面释放。
+  final JournalJsonFiles jsonFiles;
 
   /// 创建管理异步加载、退场保存和预览资源的状态。
   @override
@@ -61,6 +76,9 @@ class _LocalJournalPageState extends State<LocalJournalPage>
   bool _leaving = false;
   bool _canPop = false;
   bool _chooseDate = false;
+
+  /// 文件框/转换期间串行化导入导出、编辑和退场，异步返回后复核账号及会话。
+  bool _exchanging = false;
   Selection? _selection;
 
   /// 本页原生提及专用目录；不与其他文档或账号共享缓存，不拥有HTTP连接。
@@ -101,6 +119,9 @@ class _LocalJournalPageState extends State<LocalJournalPage>
     _services = CollabHostServices(
       mentionAvatarBuilder: buildDemoMentionAvatar,
       pickMentionUser: _pickMentionUser,
+      loadMeetingCard: CsesMeetingCardService().load,
+      loadTaskCard: CsesTaskCardService().load,
+      kr: CsesKrService(),
     );
     WidgetsBinding.instance.addObserver(this);
     unawaited(_load());
@@ -172,7 +193,7 @@ class _LocalJournalPageState extends State<LocalJournalPage>
 
   /// 正常退出前冻结输入并等待最新修订落盘；失败留在当前页供重试，不丢失内存正文。
   Future<void> _leave() async {
-    if (_leaving || _switching || _picking) return;
+    if (_leaving || _switching || _picking || _exchanging) return;
     setState(() => _leaving = true);
     final journal = _journal;
     journal?.editor.editorState.service.keyboardService?.closeKeyboard();
@@ -193,7 +214,9 @@ class _LocalJournalPageState extends State<LocalJournalPage>
   /// 收起输入连接后创建同源只读快照；返回编辑时恢复原选区，过期回调不再操作资源。
   Future<void> _togglePreview() async {
     final journal = _journal;
-    if (journal == null || _switching || _leaving || _picking) return;
+    if (journal == null || _switching || _leaving || _picking || _exchanging) {
+      return;
+    }
     setState(() {
       _switching = true;
       _chooseDate = false;
@@ -213,7 +236,7 @@ class _LocalJournalPageState extends State<LocalJournalPage>
                 as Map<String, dynamic>,
           ),
           commandContext: EditorCommandContext(
-            configuration: journalConfiguration,
+            configuration: journalEditorConfiguration(state.document),
             localOnly: true,
             services: _services,
           ),
@@ -235,6 +258,89 @@ class _LocalJournalPageState extends State<LocalJournalPage>
       }
     } finally {
       if (mounted) setState(() => _switching = false);
+    }
+  }
+
+  /// 执行[action]对应的导出或独立打开；捕获完成输入后的快照，异步迟到不回写其他账号。
+  /// 文件取消保持原文，转换/写入失败显示可重试提示；导入不覆盖当前日记。
+  Future<void> _exchangeJson(String action) async {
+    final journal = _journal;
+    if (journal == null ||
+        _exchanging ||
+        _picking ||
+        _leaving ||
+        _switching ||
+        _preview != null ||
+        !_sameAccount) {
+      return;
+    }
+    setState(() => _exchanging = true);
+    final state = journal.editor.editorState;
+    final paused = state.localTransactionsPaused;
+
+    /// 判断本次文件操作是否仍属于活动页面与原业务身份。
+    bool current() =>
+        mounted &&
+        _sameAccount &&
+        identical(_journal, journal) &&
+        !journal.closed;
+
+    try {
+      state.service.keyboardService?.closeKeyboard();
+      FocusManager.instance.primaryFocus?.unfocus();
+      await SystemChannels.textInput.invokeMethod<void>('TextInput.hide');
+      await WidgetsBinding.instance.endOfFrame;
+      if (!current()) return;
+      state.localTransactionsPaused = true;
+      if (action == 'export') {
+        final snapshot = await journal.exportBlockCraftSnapshotAsync();
+        if (!current()) return;
+        final saved = await widget.jsonFiles.save(
+          snapshot,
+          '今日导向-${journal.date}.json',
+        );
+        if (mounted && current() && saved) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('JSON已导出')));
+        }
+      } else {
+        final snapshot = await widget.jsonFiles.pick();
+        if (!current() || snapshot == null) return;
+        final draft = await compute(_importJournalSnapshot, snapshot);
+        if (!current()) return;
+        final store = await widget.jsonFiles.createImportedStore(
+          draft,
+          '$_companyId:$_userId',
+        );
+        if (!mounted || !current()) return;
+        state.localTransactionsPaused = paused;
+        await Navigator.of(context).push<void>(
+          MaterialPageRoute(
+            builder: (_) => LocalJournalPage(
+              store: store,
+              mentionDirectory: widget.mentionDirectory,
+              jsonFiles: widget.jsonFiles,
+            ),
+          ),
+        );
+      }
+    } catch (error) {
+      if (mounted && current()) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              error is FormatException ? error.message : 'JSON操作失败，原内容已保留，请重试',
+            ),
+          ),
+        );
+      }
+    } finally {
+      if (!state.isDisposed) {
+        state.localTransactionsPaused = paused;
+        if (!_sameAccount) state.editable = false;
+      }
+      if (mounted) setState(() => _exchanging = false);
     }
   }
 
@@ -475,9 +581,35 @@ class _LocalJournalPageState extends State<LocalJournalPage>
               onPressed: _leaving ? null : () => unawaited(_leave()),
               icon: const Icon(LucideIcons.chevronLeft),
             ),
-            title: const Text('今日导向'),
+            title: Text(
+              journal
+                          ?.editor
+                          .editorState
+                          .document
+                          .root
+                          .attributes[journalPlainDesktopAttribute] ==
+                      true
+                  ? '导入文档'
+                  : '今日导向',
+            ),
             actions: [
               if (journal != null) ...[
+                PopupMenuButton<String>(
+                  key: const ValueKey('journal-json-menu'),
+                  tooltip: 'JSON导入导出',
+                  enabled:
+                      !_exchanging &&
+                      !_leaving &&
+                      !_switching &&
+                      !_picking &&
+                      _preview == null,
+                  onSelected: (action) => unawaited(_exchangeJson(action)),
+                  icon: const Icon(LucideIcons.fileJson),
+                  itemBuilder: (_) => const [
+                    PopupMenuItem(value: 'export', child: Text('导出桌面JSON')),
+                    PopupMenuItem(value: 'import', child: Text('打开桌面JSON')),
+                  ],
+                ),
                 IconButton(
                   tooltip: '撤销',
                   onPressed: _preview != null || _leaving
@@ -574,23 +706,42 @@ class _LocalJournalPageState extends State<LocalJournalPage>
                                   ? null
                                   : (kind) =>
                                         unawaited(_section(kind, close: true)),
-                              keyboardActions: _keyboardActions(journal),
-                              header: ListenableBuilder(
-                                listenable: journal,
-                                builder: (context, _) => _JournalHeader(
-                                  date: journal.date,
-                                  chooseDate: _chooseDate,
-                                  onChoose: _preview != null || _leaving
-                                      ? null
-                                      : () => setState(
-                                          () => _chooseDate = !_chooseDate,
-                                        ),
-                                  onDate: (date) {
-                                    journal.setDate(journalDate(date));
-                                    setState(() => _chooseDate = false);
-                                  },
-                                ),
-                              ),
+                              keyboardActions:
+                                  journal
+                                          .editor
+                                          .editorState
+                                          .document
+                                          .root
+                                          .attributes[journalPlainDesktopAttribute] ==
+                                      true
+                                  ? const []
+                                  : _keyboardActions(journal),
+                              header:
+                                  journal
+                                          .editor
+                                          .editorState
+                                          .document
+                                          .root
+                                          .attributes[journalPlainDesktopAttribute] ==
+                                      true
+                                  ? const SizedBox.shrink()
+                                  : ListenableBuilder(
+                                      listenable: journal,
+                                      builder: (context, _) => _JournalHeader(
+                                        date: journal.date,
+                                        chooseDate: _chooseDate,
+                                        onChoose: _preview != null || _leaving
+                                            ? null
+                                            : () => setState(
+                                                () =>
+                                                    _chooseDate = !_chooseDate,
+                                              ),
+                                        onDate: (date) {
+                                          journal.setDate(journalDate(date));
+                                          setState(() => _chooseDate = false);
+                                        },
+                                      ),
+                                    ),
                             ),
                           ),
                         ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'journal_draft.dart';
+import 'journal_exchange_keys.dart';
 import 'guidance_entries.dart';
 import 'journal_editing.dart';
 import 'journal_list_markers.dart';
@@ -51,8 +52,17 @@ class JournalSurface extends StatelessWidget {
   /// 编辑/预览使用同一排版配置，正文与滚动资源由共享组件按公开契约管理。
   @override
   Widget build(BuildContext context) {
+    final plain =
+        editorState.document.root.attributes[journalPlainDesktopAttribute] ==
+        true;
+    final baseStyle = blockCraftSnapshotRootStyle(
+      editorState.document.root,
+      plain
+          ? const TextStyle(fontSize: 16, color: Colors.black)
+          : const TextStyle(fontSize: 16, height: 2, color: Color(0xff3e4650)),
+    );
     return ColoredBox(
-      color: const Color(0xfffaf8f0),
+      color: plain ? Colors.white : const Color(0xfffaf8f0),
       child: DocumentEditorView(
         editorState: editorState,
         preview: preview,
@@ -69,28 +79,25 @@ class JournalSurface extends StatelessWidget {
             textScaleFactor: MediaQuery.textScalerOf(context).scale(16) / 16,
             cursorColor: const Color(0xff8b6e63),
             selectionColor: const Color(0x337e6257),
-            textStyleConfiguration: const TextStyleConfiguration(
-              text: TextStyle(
-                fontSize: 16,
-                height: 2,
-                color: Color(0xff3e4650),
-              ),
-              lineHeight: 2,
+            textStyleConfiguration: TextStyleConfiguration(
+              text: baseStyle,
+              lineHeight: baseStyle.height ?? (plain ? 1.5 : 2),
               applyHeightToFirstAscent: true,
               applyHeightToLastDescent: true,
             ),
           ),
           blockBuilders: (builders) {
+            if (plain) {
+              return blockCraftSnapshotBuilders({
+                ...builders,
+                journalSectionType: _JournalSectionBuilder(),
+              });
+            }
             final config = BlockComponentConfiguration(
               padding: (_) => EdgeInsets.zero,
               placeholderText: (_) => ' ',
-              textStyle: (node, {textSpan}) => textSpan?.children != null
-                  ? const TextStyle()
-                  : const TextStyle(
-                      fontSize: 16,
-                      height: 2,
-                      color: Color(0xff3e4650),
-                    ),
+              textStyle: (node, {textSpan}) =>
+                  textSpan?.children != null ? const TextStyle() : baseStyle,
             );
             final paperBuilders = <String, BlockComponentBuilder>{
               PageBlockKeys.type: PageBlockComponentBuilder(
@@ -118,7 +125,7 @@ class JournalSurface extends StatelessWidget {
                 iconBuilder: buildJournalTodoMarker,
               ),
             };
-            return {
+            final result = {
               ...builders,
               ...paperBuilders.map(
                 (type, builder) => MapEntry(
@@ -135,6 +142,11 @@ class JournalSurface extends StatelessWidget {
                 ),
               ),
             };
+            return journalEditorConfiguration(
+                  editorState.document,
+                ).documentFeatures
+                ? blockCraftSnapshotBuilders(result)
+                : result;
           },
         ),
       ),
@@ -178,11 +190,23 @@ class _JournalSection extends BlockComponentStatelessWidget {
   @override
   Widget build(BuildContext context) {
     final editor = context.read<EditorState>();
-    final title = switch (node.attributes['section']) {
-      'record' => '今日记录',
-      'reflection' => '感悟',
-      _ => '自检',
-    };
+    if (editor.document.root.attributes[journalPlainDesktopAttribute] == true) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (final child in node.children)
+            editor.renderer.build(context, child),
+        ],
+      );
+    }
+    final titleDelta = node.attributes['guidance_heading_delta'];
+    final title = titleDelta is List
+        ? Delta.fromJson(titleDelta).toPlainText()
+        : switch (node.attributes['section']) {
+            'record' => '今日记录',
+            'reflection' => '感悟',
+            _ => '自检',
+          };
     final lineHeight = MediaQuery.textScalerOf(context).scale(16) * 2;
     return Padding(
       key: ValueKey('journal-section-${node.attributes['section']}'),
@@ -221,11 +245,23 @@ class _JournalSection extends BlockComponentStatelessWidget {
             onBlankTap: editor.editable
                 ? () => editor.selection = Selection.collapsed(
                     Position(
-                      path: node.children.last.path,
-                      offset: node.children.last.delta!.length,
+                      path:
+                          journalContentNodes(node.children)
+                              .where((child) => child.delta != null)
+                              .lastOrNull
+                              ?.path ??
+                          node.children.last.path,
+                      offset:
+                          journalContentNodes(node.children)
+                              .where((child) => child.delta != null)
+                              .lastOrNull
+                              ?.delta
+                              ?.length ??
+                          0,
                     ),
                   )
                 : null,
+
             textLines: false,
             minimumHeight: lineHeight * 3,
             lineHeight: lineHeight,

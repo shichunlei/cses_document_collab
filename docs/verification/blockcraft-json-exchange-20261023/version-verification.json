@@ -1,0 +1,80 @@
+{
+  "date": "2026-10-23",
+  "registry": {
+    "source": "桌面项目配置仓库",
+    "query": "npm view @ccc/blockcraft dist-tags dist.integrity --json",
+    "latest": "0.11.30",
+    "integrity": "sha512-rx488SxuPm4FqjL88B4c0V5balNRL1h+gJ79IgYr84lfL68lCQdH/m11Dx0LvzdBnvQE/fgJDLscWlnogKlMPQ==",
+    "verified": true
+  },
+  "desktop": {
+    "declaration": "0.11.30",
+    "yarnLock": "0.11.30",
+    "installed": "0.11.17",
+    "historicalPnpm": "0.2.78",
+    "initialDeclaration": "0.11.28",
+    "initialYarnLock": "0.11.28",
+    "upgradeObserved": {
+      "from": "0.11.28",
+      "to": "0.11.30",
+      "source": "工作期间桌面仓库既有变更；本任务未写桌面依赖，最终重新读取声明及Yarn锁确认",
+      "installedStill": "0.11.17"
+    },
+    "upgradedByThisTask": false,
+    "finalEvidenceSha256": {
+      "package.json": "ab8b94ebb10a30b6800707a99649695684822d96caec79eef11c51e924b4d1c4",
+      "yarn.lock": "8e24cd17b030f37f48bc6f2b43cf4cd3f49d5b60f481178c8d03eccfb2dc45da",
+      "pnpm-lock.yaml": "abbe8dc4d81168c52602a19ebb4aaf6572e4ec34e9d2f62432fd8ecf96651a21"
+    }
+  },
+  "hashesSha256": {
+    "0.11.17": {
+      "package.json": "fb139ff2aee88165cbe2a3ae6b289120f87e9868d88da564f252e13311883be4",
+      "ai-skills/blockcraft.md": "15f256fc6e1ffb131d114371605feab0a4c58f1a6cc76b20bbba3011001f2dc1",
+      "ai-skills/blockcraft-data.md": "5e83cc2a8601f927f1842542f416c493dfeb68657986b7505d6546ee828fc240",
+      "ai-skills/blockcraft-adapter.md": "82dab68a6ff9e9e3e63589a94a05074fcdbc9c38b1d055c0cf15aef2a31f8077",
+      "ai-skills/MIGRATIONS.md": "4c87c528886aed39605183f6c6d812d04d94b600c4931f314bb611e689edf5dd",
+      "fesm2022/ccc-blockcraft.mjs": "c08ce485e4fce072ceea7958b5568001799083fe448807a541117984f29aeeea"
+    },
+    "0.11.28": {
+      "package.json": "5f5f9a3ad6579bdce18abd7fad87643a127ec1f60af7ae5b57459f13ae5f5ee8",
+      "ai-skills/blockcraft.md": "fd35128d50e0f4b68d3d60881e155a884027aaef497d9e6ed2731b01c268686e",
+      "ai-skills/blockcraft-data.md": "1991bbd90bd3d19a413b0b50a4329d99ec5cba5212be4d827f333d82ce192752",
+      "ai-skills/blockcraft-adapter.md": "6400f92fb7d87b482686189d3bafad983ab3dfc7bad9ec09e5b972dad81f2d42",
+      "ai-skills/MIGRATIONS.md": "d1bb5a6337b0e1ce0879099a34134b6e440891720386af9af4c20cdeba205ac2",
+      "fesm2022/ccc-blockcraft.mjs": "d045dd9ff8f17552ed9c15ba1c090fa77ec66bcdaf48a666db742a9f59e639f7"
+    },
+    "0.11.30": {
+      "package.json": "bb23a46c4af5586e1ada4614ffcf4a5e32dfc6b0f7ac525bba310ff37342214e",
+      "ai-skills/blockcraft.md": "f8b0ed3c2afcb2e03334b9bd6bedb1f7a2c502a303472447367701cdbac39ffd",
+      "ai-skills/blockcraft-data.md": "0f4b5993447ffcef96a0759bf17b40c0bb558726a264db19fa8c0bb3bcb2929e",
+      "ai-skills/blockcraft-adapter.md": "6400f92fb7d87b482686189d3bafad983ab3dfc7bad9ec09e5b972dad81f2d42",
+      "ai-skills/MIGRATIONS.md": "33f0840c7d98f89407e7237fa41aacfbc8b8d29eb826c1aeecbe318c509ec867",
+      "fesm2022/ccc-blockcraft.mjs": "11cf88de81ec375b2866d1d9b18adc7f9df43c9ad40837ca8776b795cf768b7c"
+    }
+  },
+  "scope": {
+    "desktopRegistered": 42,
+    "codecFlavours": 43,
+    "additionalFlavour": "sticker",
+    "shapePresets": 111,
+    "stickerPresets": 3
+  },
+  "differences": [
+    "0.11.30新增共享文档与独立区域内容组合，个人数据另行导出；移动端本次仅支持单根快照",
+    "0.11.29及之后图片gap光标与Enter路由差异未在本轮适配",
+    "既有0.11.20+段落属性/字号/字符协议按随包实现核对；保留历次未完成链路",
+    "0.11.30斜杠菜单触发/查询7字符及IME提交规则未移植，仍沿手机现有菜单链路；不影响根JSON协议"
+  ],
+  "runtime": {
+    "modelValidation": "0.11.17实际Schema/Yjs/exportSnapshot",
+    "latest": "静态对照；直接运行因旧@cses/ui缺少CsColorPickerPanelComponent失败，临时获取4.37.3遇ECONNRESET",
+    "device": "未新增真机/iOS/真实在线验收"
+  },
+  "evidence": [
+    "registry-verification.json",
+    "desktop-model-validation.json",
+    "vector-generation.json",
+    "report.md"
+  ]
+}

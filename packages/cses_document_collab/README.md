@@ -1,5 +1,29 @@
 # cses_document_collab
 
+## BlockCraft JSON 的独立编辑
+
+`BlockCraftJsonCodec.decode(snapshot)`将桌面根快照转换成实际AppFlowy节点树，`encode(document)`读取当前编辑结果重新导出。原生渲染通过`EditorViewConfiguration(blockBuilders: blockCraftSnapshotBuilders)`补充对象/分栏/卡片组件，资源、表格、代码、公式等沿用正式组件。创建者在视图卸载后关闭控制器，不创建WS、SQLite或原生全局文档。
+
+```dart
+import 'package:cses_document_collab/cses_document_collab.dart';
+import 'package:flutter/widgets.dart';
+
+DocumentEditorController openSnapshot(Map<String, dynamic> snapshot) =>
+    DocumentEditorController(
+      document: BlockCraftJsonCodec.decode(snapshot),
+      commandContext: const EditorCommandContext(localOnly: true),
+    );
+
+Widget snapshotBody(DocumentEditorController editor) => DocumentEditorView(
+  editorState: editor.editorState,
+  configuration: EditorViewConfiguration(blockBuilders: blockCraftSnapshotBuilders),
+);
+// final json = BlockCraftJsonCodec.encode(editor.editorState.document);
+// 视图卸载后 await editor.close();
+```
+
+所有已注册类型有显式数据转换，不以原始JSON兜底；未知插件类型整次拒绝。类型/字段转换不表示高级对象效果、动态业务源或独立Vectra图正文已全部实现。边界、测试与示例见[本轮记录](../../docs/verification/blockcraft-json-exchange-20261023/report.md)。矢量目录使用`node packages/cses_document_collab/tool/generate_snapshot_presets.mjs /绝对路径/桌面/node_modules`从已核对的公共几何数据重新生成，勿手改`blockcraft_snapshot_presets.g.dart`。
+
 Flutter FFI 插件包，提供正式 BlockCraft 文档的原生编辑、Yrs 差量协同、Awareness、SQLite 恢复及移动端块渲染。Dart >=3.12、Flutter >=3.44；移动端支持 Android（最终宿主至少 API 24）和 iOS 14+。macOS/Linux 原生库仅用于测试，不声明桌面插件支持。
 
 包的源代码与原生构建都在此目录内。包不依赖 demo、cses.saas、cses.common、登录接口或全局账号。依赖方向是宿主 → 本包 → AppFlowy/FRB/Yrs；Gateway 与上传服务由宿主实现。

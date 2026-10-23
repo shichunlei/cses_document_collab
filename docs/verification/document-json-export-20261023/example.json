@@ -1,0 +1,118 @@
+{
+  "id": "root-demo",
+  "flavour": "root",
+  "nodeType": "root",
+  "props": {},
+  "meta": {
+    "createdTime": 1792717200000,
+    "lastModified": {
+      "time": 1792717200000,
+      "user": null
+    }
+  },
+  "children": [
+    {
+      "id": "heading-demo",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0,
+        "heading": 1
+      },
+      "meta": {},
+      "children": [
+        {
+          "insert": "项目进展"
+        }
+      ]
+    },
+    {
+      "id": "paragraph-demo",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "meta": {},
+      "children": [
+        {
+          "insert": "今天完成了"
+        },
+        {
+          "insert": "文档导出",
+          "attributes": {
+            "a:bold": true,
+            "s:color": "#1677ff"
+          }
+        },
+        {
+          "insert": "，请 "
+        },
+        {
+          "insert": {
+            "mention": "张三"
+          },
+          "attributes": {
+            "mentionId": "user-demo",
+            "mentionType": "user"
+          }
+        },
+        {
+          "insert": " 帮忙检查。"
+        }
+      ]
+    },
+    {
+      "id": "todo-demo",
+      "flavour": "todo",
+      "nodeType": "editable",
+      "props": {
+        "created": 1792717200000,
+        "checked": 0,
+        "depth": 0
+      },
+      "meta": {},
+      "children": [
+        {
+          "insert": "补充导出说明"
+        }
+      ]
+    },
+    {
+      "id": "image-demo",
+      "flavour": "image",
+      "nodeType": "block",
+      "props": {
+        "src": "https://example.com/demo.png",
+        "wr": 100,
+        "ar": 1.5
+      },
+      "meta": {},
+      "children": [
+        {
+          "id": "caption-demo",
+          "flavour": "caption",
+          "nodeType": "editable",
+          "props": {
+            "textAlign": "center",
+            "depth": 0
+          },
+          "meta": {},
+          "children": [
+            {
+              "insert": "示例图片（虚构地址）"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "divider-demo",
+      "flavour": "divider",
+      "nodeType": "void",
+      "props": {},
+      "meta": {},
+      "children": []
+    }
+  ]
+}

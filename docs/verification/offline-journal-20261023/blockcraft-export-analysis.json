@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-23",
+  "scope": "仅分析今日导向到BlockCraft JSON转换；未实现转换器或生成转换结果",
+  "latest": "0.11.23",
+  "registry": "http://npm.runtongqiuben.com/",
+  "distIntegrity": "sha512-hGuC0Ank4stAQqbgfVdTYZaKtTi1dOHopT0Bt1YYQqleHkPBsFiXy6mnwf3E2OpEfcZ3UQaUhKeShArMuOtabw==",
+  "desktopDeclared": "0.11.28",
+  "desktopYarnLocked": "0.11.28",
+  "desktopInstalled": "0.11.17",
+  "historicalPnpmLocked": "0.2.78",
+  "bundledSkillsMatchPreviousVerifiedArtifacts": {
+    "installed-0.11.17": {
+      "ai-skills/SKILL.md": true,
+      "ai-skills/blockcraft.md": true,
+      "ai-skills/blockcraft-data.md": true,
+      "ai-skills/blockcraft-adapter.md": true,
+      "ai-skills/MIGRATIONS.md": true
+    },
+    "latest-0.11.23": {
+      "ai-skills/SKILL.md": true,
+      "ai-skills/blockcraft.md": true,
+      "ai-skills/blockcraft-data.md": true,
+      "ai-skills/blockcraft-adapter.md": true,
+      "ai-skills/MIGRATIONS.md": true
+    },
+    "declared-0.11.28": {
+      "ai-skills/SKILL.md": true,
+      "ai-skills/blockcraft.md": true,
+      "ai-skills/blockcraft-data.md": true,
+      "ai-skills/blockcraft-adapter.md": true,
+      "ai-skills/MIGRATIONS.md": true
+    }
+  },
+  "sources": {
+    "lib/src/daily_guidance/journal_draft.dart": "7949079aeef4213059ef759fcc2a09e05b04052813bfee855a24617bf6c5ec9d",
+    "lib/src/daily_guidance/guidance_entries.dart": "2fb6fc416a1a85e4515a65e9a589e389d7e653fccc13b59c494e9736e13a5a0e",
+    "lib/src/daily_guidance/journal_list_markers.dart": "7f73a84f15e4950cd2dca9ff8414b7c2b72b3248e91f35c07b25ae9c61781b25",
+    "lib/src/daily_guidance/journal_surface.dart": "31e5cae0b286e92b61c574dc51dd073d87a05d432956f8121a58060e7097162e",
+    "lib/src/daily_guidance/local_journal_controller.dart": "a2767edf9bd8d8fc104c08eee207dd2363c7cc32e4f5a56fba3926d0a4f1069c",
+    "packages/appflowy_editor/lib/src/editor/block_component/rich_text/appflowy_rich_text_keys.dart": "dd14cf0d8211f6c47c0d6c05795cae27b1d84b538acb84469c4a4f5b182921c2",
+    "packages/appflowy_editor/lib/src/core/document/node.dart": "b86313ec17c3bcb810eab337c30c11ff02a98b17f4840e313f85a9efe475d40a",
+    "packages/cses_document_collab/lib/src/editor/editor_user_mentions.dart": "531c0622462efca36ec941a4d5cb4b026e3bd9d6b1b927710d8fedc998cd77cd",
+    "packages/cses_document_collab/lib/src/model/collab_paragraph_style.dart": "e0930a1bc7529ffe6fe013b887ea8e1efc85d4e521d1eb8d91dc824f774a42c8",
+    "packages/cses_document_collab/rust/src/api/collab.rs": "e116f6430869b1f0f12fe61cf8c17a472fca84671cc7739ef4b87dce5d89a02f",
+    "packages/cses_document_collab/rust/src/api/blockcraft.rs": "d7b9d6b6ac388232aaf7a87610702db90e15066e00034e692ae24e24ef8d18d4",
+    "../cses-client/packages/docs/src/editor/reference-interactions/mention/mention-embed.converter.ts": "c2e2fbfd42dd8c9ff55115e147220c42f2c9a34934c33e51cec549b07d22654e",
+    "../cses-client/packages/docs/src/editor/reference-interactions/mention/index.ts": "fbe16d8e5d7620d0ef8ef5e66af21461101cd85791ccddb40ffcda640a3fc2af"
+  },
+  "notVerified": [
+    "转换输出Schema及桌面加载",
+    "全部格式/编号/引用/业务状态转换验收",
+    "桌面编辑后的移动端往返恢复",
+    "真机/业务提交/在线协同"
+  ]
+}

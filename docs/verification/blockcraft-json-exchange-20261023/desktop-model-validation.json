@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "desktopInstalled": "0.11.17",
+  "blocks": 12,
+  "mentions": 3,
+  "checked": 2,
+  "checks": [
+    "实际桌面Schema类型和父子规则",
+    "Yjs原生模型恢复",
+    "生产exportSnapshot完整一致"
+  ],
+  "limits": [
+    "未操作桌面窗口或JSON文件导入菜单",
+    "最新版0.11.30仅静态产物对照，实际安装仍0.11.17"
+  ]
+}

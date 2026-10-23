@@ -1,0 +1,233 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: desktop block structures and attributes convert into editable nodes and survive local JSON
+00:00 +1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: inline objects and styles are converted at UTF16 object boundaries
+00:00 +2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: null fields and cleared mention formatting survive persistence without reviving old styles
+00:00 +3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: unknown plugins, duplicate ids and patch deltas fail instead of becoming opaque JSON
+00:00 +4: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:00 +5: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +6: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +7: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +8: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _TextWidgetFinder:<Found 0 widgets with text "2026年10月23日": []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart:167:5)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart line 167
+The test description was:
+  converted shape, columns, date, person and weather render in the actual editor
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +8 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +8 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor [E]
+  Test failed. See exception logs above.
+  The test description was: converted shape, columns, date, person and weather render in the actual editor
+
+00:01 +9 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +10 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +11 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +12 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +13 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +14 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +15 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +16 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +17 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +18 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +19 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +20 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +21 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +22 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +23 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +24 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +25 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +26 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +27 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +28 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +29 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +30 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +31 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +32 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +33 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +34 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +35 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +36 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +37 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +38 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +39 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +40 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +41 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +42 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +43 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +44 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +45 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +46 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +47 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +48 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +49 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +50 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +51 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +52 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +53 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +54 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +55 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +56 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +57 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +58 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +59 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +60 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +61 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +62 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +63 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +64 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +65 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +66 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +67 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +68 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +69 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +70 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +71 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +72 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +73 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +74 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +75 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +76 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +77 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +78 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +79 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +80 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +81 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +82 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +83 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +84 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +85 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +86 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +87 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +88 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +89 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +90 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +91 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +92 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +93 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +94 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +95 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +96 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +97 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +98 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +99 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +100 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +101 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +102 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +103 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +104 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +105 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +106 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +107 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +108 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +109 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +110 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +111 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +112 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +113 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +114 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +115 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +116 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +117 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:03 +118 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:03 +119 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:03 +120 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:03 +121 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:03 +122 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:03 +123 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:03 +124 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:03 +125 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:03 +126 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:03 +127 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:04 +128 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:04 +129 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:04 +130 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_image_test.dart: image shows layout caption and upload placeholder with readonly controls hidden
+00:04 +131 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: renders fractions matrices empty and invalid TeX at narrow large text
+00:04 +132 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: renders fractions matrices empty and invalid TeX at narrow large text
+00:04 +133 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: renders fractions matrices empty and invalid TeX at narrow large text
+00:04 +134 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: renders fractions matrices empty and invalid TeX at narrow large text
+00:05 +135 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: renders fractions matrices empty and invalid TeX at narrow large text
+00:05 +136 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: renders fractions matrices empty and invalid TeX at narrow large text
+00:05 +137 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: renders fractions matrices empty and invalid TeX at narrow large text
+00:05 +138 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: renders fractions matrices empty and invalid TeX at narrow large text
+00:05 +139 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: renders fractions matrices empty and invalid TeX at narrow large text
+00:05 +140 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_image_test.dart: image layout preserves captions and caption menu edits them separately
+00:06 +141 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: tapping body resolves through unrendered table rows
+00:06 +142 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: tapping body resolves through unrendered table rows
+00:06 +143 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: tapping body resolves through unrendered table rows
+00:07 +144 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: tapping body resolves through unrendered table rows
+00:07 +145 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: editing preview is local until save; cancel restores selected body
+00:07 +146 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: editing preview is local until save; cancel restores selected body
+00:07 +147 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: 2x2 table aligns with left content edge preview=false
+00:07 +148 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_image_test.dart: new caption from more menu handles readonly
+00:07 +149 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_image_test.dart: new caption from more menu handles readonly
+00:07 +150 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: remote edit conflict reload; permission revoke and deletion disable saving
+00:07 +151 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: remote edit conflict reload; permission revoke and deletion disable saving
+00:08 +152 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: table edge controls are hidden until clicked and hide outside
+00:08 +153 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: sheet delete last formula leaves editable paragraph and supports undo
+00:08 +154 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menus insert before/after and delete rows and columns atomically
+00:08 +155 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menus insert before/after and delete rows and columns atomically
+00:08 +156 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menus insert before/after and delete rows and columns atomically
+00:09 +157 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menus insert before/after and delete rows and columns atomically
+00:09 +158 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menus insert before/after and delete rows and columns atomically
+00:09 +159 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: copy preserves draft; dirty insertion cancels or saves then inserts as independent history
+00:09 +160 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: copy preserves draft; dirty insertion cancels or saves then inserts as independent history
+00:10 +161 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: copy preserves draft; dirty insertion cancels or saves then inserts as independent history
+00:10 +162 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: copy preserves draft; dirty insertion cancels or saves then inserts as independent history
+00:10 +163 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menu stays invalid after permission or content changes revoke=true
+00:10 +164 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: locked formula view and unlock permissions alice/false/false/false
+00:10 +165 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menu stays invalid after permission or content changes revoke=false
+00:10 +166 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: locked formula view and unlock permissions bob/false/false/false
+00:10 +167 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: merged cell spans rows/columns and more sheet only offers merge and split at 320px
+00:10 +168 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: merged cell spans rows/columns and more sheet only offers merge and split at 320px
+00:10 +169 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: merged cell spans rows/columns and more sheet only offers merge and split at 320px
+00:11 +170 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: merged cell spans rows/columns and more sheet only offers merge and split at 320px
+00:11 +171 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: locked formula view and unlock permissions alice/false/true/true
+00:11 +172 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: locked formula view and unlock permissions alice/false/true/true
+00:11 +173 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: locked formula view and unlock permissions alice/false/true/true
+00:11 +174 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: open table sheet rejects permission/remote changes revoke=true
+00:11 +175 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: open table sheet rejects permission/remote changes revoke=true
+00:11 +176 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: discard draft before insertion; remote change during dismiss prevents stale command
+00:11 +177 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: open table sheet rejects permission/remote changes revoke=false
+00:12 +178 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: dirty lock choice saves=true failure=false executes after dismissal
+00:12 +179 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: 320px table scrolls horizontally, preserves body and preview=true
+00:12 +180 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: dirty lock choice saves=false failure=false executes after dismissal
+00:12 +181 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: dirty lock choice saves=false failure=false executes after dismissal
+00:12 +182 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: dirty lock choice saves=true failure=true executes after dismissal
+DocCollab: 公式操作失败: Bad state: lock unavailable
+#0      main.<anonymous closure>.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart:747:23)
+#1      _FormulaSession.execute (package:cses_document_collab/src/editor/collab_formula_sheet.dart:856:43)
+#2      _presentFormulaInput (package:cses_document_collab/src/editor/collab_formula_sheet.dart:146:19)
+<asynchronous suspension>
+#3      showCollabFormulaEditor.<anonymous closure> (package:cses_document_collab/src/editor/collab_formula_sheet.dart:48:11)
+<asynchronous suspension>
+#4      runEditorHeaderAction (package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart:2333:12)
+<asynchronous suspension>
+#5      showCollabFormulaEditor (package:cses_document_collab/src/editor/collab_formula_sheet.dart:43:5)
+<asynchronous suspension>
+#6      _FormulaBlockState.build.<anonymous closure> (package:cses_document_collab/src/editor/collab_formula_block.dart:73:19)
+<asynchronous suspension>
+
+00:12 +183 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: deleted target restored with same ID cannot revive old panel
+00:12 +184 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: unified panel keeps header/actions reachable Size(390.0, 844.0)/1.0/0.0
+00:12 +185 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: unified panel keeps header/actions reachable Size(320.0, 568.0)/1.5/240.0
+00:12 +186 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: unified panel keeps header/actions reachable Size(780.0, 390.0)/1.0/130.0
+00:13 +187 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: (tearDownAll)
+00:13 +187 -1: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor

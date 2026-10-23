@@ -1,0 +1,32 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import '/System/Volumes/Data/workspace/cses-client/node_modules/@angular/compiler/fesm2022/compiler.mjs';
+import * as bc from '/System/Volumes/Data/workspace/cses-client/node_modules/@ccc/blockcraft/fesm2022/ccc-blockcraft.mjs';
+import * as Y from '/System/Volumes/Data/workspace/cses-client/node_modules/yjs/dist/yjs.mjs';
+const location = new URL('.', import.meta.url);
+const snapshot = JSON.parse(fs.readFileSync(new URL('converted-journal.json', location)));
+const schemas = new bc.SchemaManager(bc.BUNDLED_EDITOR_SCHEMAS);
+const document = new Y.Doc();
+const yBlockMap = document.getMap('blocks');
+let blocks = 0, mentions = 0, checked = 0;
+function install(block, parent) {
+  blocks++;
+  const schema = schemas.get(block.flavour);
+  assert.equal(block.nodeType, schema.nodeType);
+  if (parent) assert(schemas.isValidChildrenForInstance(block.flavour, parent.flavour, parent.meta));
+  const container = block.nodeType === 'root' || block.nodeType === 'block';
+  if (container) block.children.forEach(child => install(child, block));
+  else block.children.forEach(run => { if(run.insert?.mention) mentions++; });
+  if (block.flavour === 'todo' && block.props.checked === 1) checked++;
+  yBlockMap.set(block.id, bc.native2YBlock({...block, children: container ? block.children.map(child => child.id) : block.children}));
+}
+install(snapshot);
+const model = new bc.BlockModelGraph({yBlockMap});
+model.build(snapshot.id);
+const exported = bc.BlockCraftDoc.prototype.exportSnapshot.call({model, rootId:snapshot.id});
+assert.deepStrictEqual(exported, snapshot);
+model.destroy();
+document.destroy();
+const result = {status:'passed', desktopInstalled:'0.11.17', blocks, mentions, checked, checks:['实际桌面Schema类型和父子规则','Yjs原生模型恢复','生产exportSnapshot完整一致'], limits:['未操作桌面窗口或JSON文件导入菜单','最新版0.11.30仅静态产物对照，实际安装仍0.11.17']};
+fs.writeFileSync(new URL('desktop-model-validation.json',location), JSON.stringify(result,null,2)+'\n');
+process.stdout.write(JSON.stringify(result)+'\n');

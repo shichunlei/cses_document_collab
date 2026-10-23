@@ -10,6 +10,8 @@ import 'guidance_entries.dart';
 import 'guidance_people.dart';
 import 'journal_input.dart';
 import 'journal_store.dart';
+import 'journal_blockcraft_codec.dart';
+import 'journal_exchange_keys.dart';
 
 /// 单个日记路由拥有的正文与自动保存会话，借用存储，不创建网络或协同资源。
 ///
@@ -35,12 +37,22 @@ final class LocalJournalController extends ChangeNotifier {
   ) : _store = store,
       _draft = draft,
       _saveDelay = saveDelay {
+    final document = Document.fromJson(
+      jsonDecode(_draft.documentJson) as Map<String, dynamic>,
+    );
+    try {
+      JournalBlockCraftCodec.restoreIdentities(
+        document,
+        draft.blockCraftIdsJson,
+      );
+    } catch (_) {
+      document.dispose();
+      rethrow;
+    }
     editor = DocumentEditorController(
-      document: Document.fromJson(
-        jsonDecode(_draft.documentJson) as Map<String, dynamic>,
-      ),
+      document: document,
       commandContext: EditorCommandContext(
-        configuration: journalConfiguration,
+        configuration: journalEditorConfiguration(document),
         localOnly: true,
         services: services,
         pastePlainText: pasteFromClipboard,
@@ -104,6 +116,33 @@ final class LocalJournalController extends ChangeNotifier {
 
   /// 关闭开始后页面不可再向正文写入。
   bool get closed => _closing != null || _disposed;
+
+  /// 捕获当前已完成事务为独立桌面快照；不读取去抖磁盘稿，不建立网络或原生文档。
+  /// 关闭后抛StateError；调用者应先结束输入合成，再保存返回的JSON。
+  Map<String, dynamic> exportBlockCraftSnapshot() {
+    if (closed) throw StateError('日记已关闭');
+    return JournalBlockCraftCodec.exportDraft(_captureDraft());
+  }
+
+  /// 捕获已完成输入的独立草稿后在后台转换桌面JSON，避免大文档转换阻塞界面。
+  /// 关闭后抛StateError；完成值属于捕获时的修订，调用方异步返回后须复核账号和页面身份。
+  Future<Map<String, dynamic>> exportBlockCraftSnapshotAsync() {
+    if (closed) throw StateError('日记已关闭');
+    return compute(JournalBlockCraftCodec.exportDraft, _captureDraft());
+  }
+
+  /// 以实时正文创建独立保存值，不修改编辑树或已有草稿身份。
+  JournalDraft _captureDraft() => JournalDraft(
+    id: _draft.id,
+    date: date,
+    createdAt: _draft.createdAt,
+    updatedAt: DateTime.now().toUtc(),
+    timezoneOffsetMinutes: _draft.timezoneOffsetMinutes,
+    documentJson: jsonEncode(editor.editorState.document.toJson()),
+    blockCraftIdsJson: JournalBlockCraftCodec.captureIdentities(
+      editor.editorState.document,
+    ),
+  );
 
   /// 修改记录日期[value]并安排保存，格式必须为真实YYYY-MM-DD，否则抛ArgumentError。
   void setDate(String value) {
@@ -294,14 +333,7 @@ final class LocalJournalController extends ChangeNotifier {
     try {
       while (dirty) {
         final revision = _revision;
-        final snapshot = JournalDraft(
-          id: _draft.id,
-          date: date,
-          createdAt: _draft.createdAt,
-          updatedAt: DateTime.now().toUtc(),
-          timezoneOffsetMinutes: _draft.timezoneOffsetMinutes,
-          documentJson: jsonEncode(editor.editorState.document.toJson()),
-        );
+        final snapshot = _captureDraft();
         await _store.write(snapshot);
         _savedRevision = revision;
         _error = null;
@@ -320,6 +352,14 @@ final class LocalJournalController extends ChangeNotifier {
   /// 普通结构编辑只能在一个栏目内；栏目增删须携带根版本及关闭草稿更新，撤销同样校验。
   bool _allows(Transaction transaction) {
     if (closed) return false;
+    if (editor
+            .editorState
+            .document
+            .root
+            .attributes[journalDesktopImportAttribute] ==
+        true) {
+      return _allowsImported(transaction);
+    }
     normalizeJournalTextInput(editor.editorState, transaction);
     final sectionCommand = transaction.operations.any(
       (op) =>
@@ -356,6 +396,89 @@ final class LocalJournalController extends ChangeNotifier {
     final copy = Document.fromJson(
       jsonDecode(jsonEncode(editor.editorState.document.toJson()))
           as Map<String, dynamic>,
+    );
+    try {
+      for (final op in transaction.operations) {
+        final ok = switch (op) {
+          InsertOperation() => copy.insert(
+            op.path,
+            op.nodes.map((node) => node.copyWith()),
+          ),
+          DeleteOperation() => copy.delete(op.path, op.nodes.length),
+          UpdateOperation() => copy.update(op.path, op.attributes),
+          UpdateTextOperation() => copy.updateText(op.path, op.delta),
+        };
+        if (!ok) return false;
+      }
+      validateJournalDocument(copy);
+      return true;
+    } catch (_) {
+      return false;
+    } finally {
+      copy.dispose();
+    }
+  }
+
+  /// 对完整桌面转换树的[transaction]先预演再校验；锁定祖先及跨栏目编辑整次拒绝。
+  /// 正式块内部的文字、表格及对象事务可进入任意后代路径，不使用原日记叶块限制。
+  bool _allowsImported(Transaction transaction) {
+    final document = editor.editorState.document;
+    final ids = journalContentNodes([
+      document.root,
+    ]).map((node) => node.attributes['bc.id'] ?? node.id).toSet();
+    for (final operation
+        in transaction.operations.whereType<DeleteOperation>()) {
+      for (final node in journalContentNodes(operation.nodes)) {
+        ids.remove(node.attributes['bc.id'] ?? node.id);
+      }
+    }
+    for (final operation
+        in transaction.operations.whereType<InsertOperation>()) {
+      for (final node in journalContentNodes(operation.nodes)) {
+        final id = node.attributes['bc.id'] ?? node.id;
+        if (!ids.add(id)) {
+          node.updateAttributes({
+            'bc.id': node.id,
+            'cses_collab_block_id': node.id,
+          });
+          ids.add(node.id);
+        }
+      }
+    }
+    final sectionCommand = transaction.operations.any(
+      (op) =>
+          op is UpdateOperation &&
+          op.path.isEmpty &&
+          op.attributes.containsKey('guidance_section_revision'),
+    );
+    final sections = <int>{};
+    for (final op in transaction.operations) {
+      if (op.path.length < 2 && !sectionCommand) return false;
+      if (op.path.isNotEmpty) sections.add(op.path.first);
+      Node? node = document.nodeAtPath(op.path);
+      while (node != null) {
+        final lock = BlockCraftJsonCodec.properties(
+          node,
+          metadata: true,
+        )['lock'];
+        if (lock is String && lock.isNotEmpty) {
+          return false;
+        }
+        node = node.parent;
+      }
+      if (op is DeleteOperation) {
+        for (final child in journalContentNodes(op.nodes)) {
+          final lock = BlockCraftJsonCodec.properties(
+            child,
+            metadata: true,
+          )['lock'];
+          if (lock is String && lock.isNotEmpty) return false;
+        }
+      }
+    }
+    if (!sectionCommand && sections.length > 1) return false;
+    final copy = Document.fromJson(
+      jsonDecode(jsonEncode(document.toJson())) as Map<String, dynamic>,
     );
     try {
       for (final op in transaction.operations) {

@@ -1,0 +1,774 @@
+{
+  "id": "desktop-1",
+  "flavour": "root",
+  "nodeType": "root",
+  "meta": {
+    "createdTime": 1792754363632,
+    "lastModified": {
+      "time": 1792754363632,
+      "user": null
+    }
+  },
+  "props": {},
+  "children": [
+    {
+      "id": "desktop-2",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "meta": {},
+      "children": [
+        {
+          "insert": "桌面paragraph"
+        }
+      ]
+    },
+    {
+      "id": "desktop-3",
+      "flavour": "ordered",
+      "nodeType": "editable",
+      "props": {
+        "order": 0,
+        "depth": 0
+      },
+      "meta": {},
+      "children": [
+        {
+          "insert": "桌面ordered"
+        }
+      ]
+    },
+    {
+      "id": "desktop-4",
+      "flavour": "bullet",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "meta": {},
+      "children": [
+        {
+          "insert": "桌面bullet"
+        }
+      ]
+    },
+    {
+      "id": "desktop-5",
+      "flavour": "todo",
+      "nodeType": "editable",
+      "props": {
+        "created": 1792754363132,
+        "checked": 0,
+        "depth": 0
+      },
+      "meta": {},
+      "children": [
+        {
+          "insert": "桌面todo"
+        }
+      ]
+    },
+    {
+      "id": "desktop-6",
+      "flavour": "callout",
+      "nodeType": "block",
+      "props": {
+        "backColor": "#FFE6CD",
+        "color": "#333",
+        "borderColor": "transparent",
+        "prefix": "📢"
+      },
+      "meta": {},
+      "children": [
+        {
+          "id": "desktop-7",
+          "flavour": "paragraph",
+          "nodeType": "editable",
+          "props": {
+            "depth": 0
+          },
+          "meta": {},
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "desktop-8",
+      "flavour": "code",
+      "nodeType": "editable",
+      "props": {
+        "lang": "PlainText",
+        "depth": 0
+      },
+      "meta": {},
+      "children": [
+        {
+          "insert": "桌面code"
+        }
+      ]
+    },
+    {
+      "id": "desktop-9",
+      "flavour": "divider",
+      "nodeType": "void",
+      "props": {},
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "desktop-10",
+      "flavour": "page-divider",
+      "nodeType": "void",
+      "props": {},
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "desktop-11",
+      "flavour": "image",
+      "nodeType": "block",
+      "meta": {},
+      "props": {
+        "src": "https://example.com/sample.png",
+        "wr": 100,
+        "ar": 1.5
+      },
+      "children": [
+        {
+          "id": "desktop-12",
+          "flavour": "caption",
+          "nodeType": "editable",
+          "props": {
+            "textAlign": "center",
+            "depth": 0
+          },
+          "meta": {},
+          "children": [
+            {
+              "insert": "图片说明"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desktop-13",
+      "flavour": "sticker",
+      "nodeType": "void",
+      "props": {
+        "presetId": "sunburst",
+        "presetVersion": 1,
+        "width": 160,
+        "height": 160
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "desktop-14",
+      "flavour": "table",
+      "nodeType": "block",
+      "props": {
+        "colWidths": [
+          100,
+          100
+        ]
+      },
+      "meta": {},
+      "children": [
+        {
+          "id": "desktop-15",
+          "flavour": "table-row",
+          "nodeType": "block",
+          "props": {
+            "height": 60
+          },
+          "meta": {},
+          "children": [
+            {
+              "id": "desktop-16",
+              "flavour": "table-cell",
+              "nodeType": "block",
+              "props": {
+                "verticalAlign": "top"
+              },
+              "meta": {},
+              "children": [
+                {
+                  "id": "desktop-17",
+                  "flavour": "paragraph",
+                  "nodeType": "editable",
+                  "props": {
+                    "depth": 0
+                  },
+                  "meta": {},
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "desktop-18",
+              "flavour": "table-cell",
+              "nodeType": "block",
+              "props": {
+                "verticalAlign": "top"
+              },
+              "meta": {},
+              "children": [
+                {
+                  "id": "desktop-19",
+                  "flavour": "paragraph",
+                  "nodeType": "editable",
+                  "props": {
+                    "depth": 0
+                  },
+                  "meta": {},
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "desktop-20",
+          "flavour": "table-row",
+          "nodeType": "block",
+          "props": {
+            "height": 60
+          },
+          "meta": {},
+          "children": [
+            {
+              "id": "desktop-21",
+              "flavour": "table-cell",
+              "nodeType": "block",
+              "props": {
+                "verticalAlign": "top"
+              },
+              "meta": {},
+              "children": [
+                {
+                  "id": "desktop-22",
+                  "flavour": "paragraph",
+                  "nodeType": "editable",
+                  "props": {
+                    "depth": 0
+                  },
+                  "meta": {},
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "desktop-23",
+              "flavour": "table-cell",
+              "nodeType": "block",
+              "props": {
+                "verticalAlign": "top"
+              },
+              "meta": {},
+              "children": [
+                {
+                  "id": "desktop-24",
+                  "flavour": "paragraph",
+                  "nodeType": "editable",
+                  "props": {
+                    "depth": 0
+                  },
+                  "meta": {},
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desktop-25",
+      "flavour": "attachment",
+      "nodeType": "void",
+      "props": {
+        "name": "附件",
+        "url": "https://example.com/a.pdf",
+        "type": "pdf",
+        "size": 123,
+        "icon": "bc_file-unknown"
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "desktop-26",
+      "flavour": "bookmark",
+      "nodeType": "void",
+      "props": {
+        "url": "https://example.com"
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "desktop-27",
+      "flavour": "figma-embed",
+      "nodeType": "void",
+      "props": {
+        "url": "https://www.figma.com/file/Abcdefghijklmnopqrstuvwxyz/name",
+        "wr": 100,
+        "ar": 1.7777777777777777
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "desktop-28",
+      "flavour": "juejin-embed",
+      "nodeType": "void",
+      "props": {
+        "url": "https://juejin.cn/post/demo",
+        "wr": 100,
+        "ar": 1.7777777777777777
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "desktop-29",
+      "flavour": "embed",
+      "nodeType": "void",
+      "props": {
+        "url": "https://example.com/",
+        "wr": 100,
+        "ar": 1.7777777777777777
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "desktop-30",
+      "flavour": "mermaid",
+      "nodeType": "block",
+      "props": {
+        "mode": "graph LR\nA-->B"
+      },
+      "meta": {},
+      "children": [
+        {
+          "id": "desktop-31",
+          "flavour": "mermaid-textarea",
+          "nodeType": "editable",
+          "props": {
+            "depth": 0
+          },
+          "meta": {},
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "desktop-32",
+      "flavour": "blockquote",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "meta": {},
+      "children": [
+        {
+          "insert": "桌面blockquote"
+        }
+      ]
+    },
+    {
+      "id": "desktop-33",
+      "flavour": "columns",
+      "nodeType": "block",
+      "props": {
+        "columnCount": 2,
+        "columnWidths": [
+          50,
+          50
+        ]
+      },
+      "meta": {},
+      "children": [
+        {
+          "id": "desktop-34",
+          "flavour": "column",
+          "nodeType": "block",
+          "props": {},
+          "meta": {},
+          "children": [
+            {
+              "id": "desktop-35",
+              "flavour": "paragraph",
+              "nodeType": "editable",
+              "props": {
+                "depth": 0
+              },
+              "meta": {},
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "desktop-36",
+          "flavour": "column",
+          "nodeType": "block",
+          "props": {},
+          "meta": {},
+          "children": [
+            {
+              "id": "desktop-37",
+              "flavour": "paragraph",
+              "nodeType": "editable",
+              "props": {
+                "depth": 0
+              },
+              "meta": {},
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desktop-38",
+      "flavour": "formula",
+      "nodeType": "void",
+      "props": {
+        "latex": "x^2"
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "desktop-39",
+      "flavour": "video",
+      "nodeType": "void",
+      "props": {
+        "url": "https://example.com/a.mp4",
+        "sourceType": "link",
+        "type": "",
+        "wr": 100
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "desktop-40",
+      "flavour": "audio",
+      "nodeType": "void",
+      "props": {
+        "url": "https://example.com/a.mp3",
+        "name": "音频",
+        "sourceType": "link"
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "desktop-41",
+      "flavour": "shape",
+      "nodeType": "block",
+      "props": {
+        "shape": "diamond",
+        "width": 180,
+        "height": 100,
+        "rotation": 0,
+        "lockRatio": false
+      },
+      "meta": {},
+      "children": [
+        {
+          "id": "desktop-42",
+          "flavour": "shape-text",
+          "nodeType": "editable",
+          "props": {
+            "depth": 0
+          },
+          "meta": {},
+          "children": [
+            {
+              "insert": "形状文字"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desktop-43",
+      "flavour": "text-box",
+      "nodeType": "block",
+      "props": {
+        "width": 240,
+        "height": 120,
+        "lockRatio": false,
+        "shape": "rectangle"
+      },
+      "meta": {},
+      "children": [
+        {
+          "id": "desktop-44",
+          "flavour": "paragraph",
+          "nodeType": "editable",
+          "props": {
+            "depth": 0
+          },
+          "meta": {},
+          "children": [
+            {
+              "insert": "文本框正文"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desktop-45",
+      "flavour": "word-art",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0,
+        "width": 320,
+        "height": 96,
+        "rotation": 0,
+        "lockRatio": false
+      },
+      "meta": {},
+      "children": [
+        {
+          "insert": "艺术文字"
+        }
+      ]
+    },
+    {
+      "id": "desktop-46",
+      "flavour": "object-group",
+      "nodeType": "block",
+      "props": {
+        "width": 240,
+        "height": 140
+      },
+      "meta": {},
+      "children": [
+        {
+          "id": "desktop-47",
+          "flavour": "shape",
+          "nodeType": "block",
+          "props": {
+            "shape": "ellipse",
+            "width": 180,
+            "height": 100,
+            "rotation": 0,
+            "lockRatio": false,
+            "position": "10 10"
+          },
+          "meta": {},
+          "children": [
+            {
+              "id": "desktop-48",
+              "flavour": "shape-text",
+              "nodeType": "editable",
+              "props": {
+                "depth": 0
+              },
+              "meta": {},
+              "children": [
+                {
+                  "insert": "组合内容"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desktop-49",
+      "flavour": "placement-layout",
+      "nodeType": "block",
+      "props": {},
+      "meta": {},
+      "children": [
+        {
+          "id": "desktop-50",
+          "flavour": "text-box",
+          "nodeType": "block",
+          "props": {
+            "width": 200,
+            "height": 80,
+            "lockRatio": false,
+            "shape": "rectangle",
+            "position": "5 5"
+          },
+          "meta": {},
+          "children": [
+            {
+              "id": "desktop-51",
+              "flavour": "paragraph",
+              "nodeType": "editable",
+              "props": {
+                "depth": 0
+              },
+              "meta": {},
+              "children": [
+                {
+                  "insert": "定位文本"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desktop-52",
+      "flavour": "render-unit",
+      "nodeType": "block",
+      "props": {},
+      "meta": {
+        "0": "桌",
+        "1": "面",
+        "2": "r",
+        "3": "e",
+        "4": "n",
+        "5": "d",
+        "6": "e",
+        "7": "r",
+        "8": "-",
+        "9": "u",
+        "10": "n",
+        "11": "i",
+        "12": "t"
+      },
+      "children": [
+        {
+          "id": "desktop-53",
+          "flavour": "paragraph",
+          "nodeType": "editable",
+          "props": {
+            "depth": 0
+          },
+          "meta": {},
+          "children": [
+            {
+              "insert": "内容区域正文"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desktop-54",
+      "flavour": "weather",
+      "nodeType": "void",
+      "meta": {},
+      "props": {
+        "width": 160,
+        "height": 42,
+        "frozen": {
+          "temp": 23,
+          "condition": "晴",
+          "tone": "sunny",
+          "location": "示例城市",
+          "high": 25,
+          "low": 18
+        }
+      },
+      "children": []
+    },
+    {
+      "id": "desktop-55",
+      "flavour": "date-card",
+      "nodeType": "void",
+      "meta": {},
+      "props": {
+        "width": 168,
+        "height": 144.752,
+        "date": "2026-10-23"
+      },
+      "children": []
+    },
+    {
+      "id": "desktop-56",
+      "flavour": "person-card",
+      "nodeType": "void",
+      "meta": {},
+      "props": {
+        "width": 183,
+        "height": 40,
+        "sc": 1,
+        "frozen": {
+          "name": "示例人员",
+          "department": "示例部门"
+        }
+      },
+      "children": []
+    },
+    {
+      "id": "desktop-57",
+      "flavour": "task",
+      "nodeType": "void",
+      "props": {
+        "taskId": "task-demo",
+        "title": "示例任务"
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "desktop-58",
+      "flavour": "task-list",
+      "nodeType": "void",
+      "props": {
+        "itemsJson": "[{\"id\":\"t1\",\"title\":\"清单任务\",\"checked\":true}]"
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "desktop-59",
+      "flavour": "meeting",
+      "nodeType": "void",
+      "props": {
+        "meetingId": "meeting-demo"
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "desktop-60",
+      "flavour": "kr-list",
+      "nodeType": "void",
+      "props": {
+        "meetingId": "meeting-demo"
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "desktop-61",
+      "flavour": "mind-map",
+      "nodeType": "void",
+      "props": {
+        "data": {
+          "data": {
+            "text": "中心主题"
+          },
+          "children": [
+            {
+              "data": {
+                "text": "分支一"
+              }
+            }
+          ]
+        }
+      },
+      "meta": {},
+      "children": []
+    }
+  ]
+}

@@ -1,0 +1,303 @@
+{
+  "id": "root-journal-sample-20261023",
+  "flavour": "root",
+  "nodeType": "root",
+  "props": {
+    "fs": 16,
+    "lh": 2,
+    "color": "#3e4650"
+  },
+  "meta": {
+    "mobileGuidance": {
+      "version": 1,
+      "role": "document",
+      "plainDesktop": false,
+      "draft": {
+        "id": "journal-sample-20261023",
+        "date": "2026-10-23",
+        "createdAt": "2026-10-23T01:00:00.000Z",
+        "updatedAt": "2026-10-23T01:30:00.000Z",
+        "timezoneOffsetMinutes": 480
+      },
+      "sections": [
+        {
+          "key": "record"
+        },
+        {
+          "key": "reflection"
+        },
+        {
+          "key": "self-check"
+        }
+      ],
+      "closedSections": []
+    }
+  },
+  "children": [
+    {
+      "id": "section-Sfr29U",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "heading": 2,
+        "depth": 0
+      },
+      "meta": {
+        "mobileGuidance": {
+          "version": 1,
+          "role": "section",
+          "section": "record"
+        }
+      },
+      "children": [
+        {
+          "insert": "今日记录"
+        }
+      ]
+    },
+    {
+      "id": "vtqJ3B",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {},
+      "meta": {
+        "mobileGuidance": {
+          "version": 1,
+          "role": "content",
+          "section": "record",
+          "business": {}
+        }
+      },
+      "children": [
+        {
+          "insert": "今日成果：",
+          "attributes": {
+            "a:bold": true
+          }
+        },
+        {
+          "insert": "完成日导向编辑器的 JSON 导出验证。"
+        }
+      ]
+    },
+    {
+      "id": "1I9Wip",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {},
+      "meta": {
+        "mobileGuidance": {
+          "version": 1,
+          "role": "content",
+          "section": "record",
+          "business": {}
+        }
+      },
+      "children": [
+        {
+          "insert": "与 "
+        },
+        {
+          "insert": {
+            "mention": "张三"
+          },
+          "attributes": {
+            "mentionType": "user",
+            "mentionId": "user_demo_001"
+          }
+        },
+        {
+          "insert": " 确认明日计划。"
+        }
+      ]
+    },
+    {
+      "id": "f-8Ah1",
+      "flavour": "todo",
+      "nodeType": "editable",
+      "props": {
+        "checked": 1
+      },
+      "meta": {
+        "mobileGuidance": {
+          "version": 1,
+          "role": "content",
+          "section": "record",
+          "business": {}
+        }
+      },
+      "children": [
+        {
+          "insert": "整理项目进展并完成自检"
+        }
+      ]
+    },
+    {
+      "id": "8sM4rR",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {},
+      "meta": {
+        "mobileGuidance": {
+          "version": 1,
+          "role": "content",
+          "section": "record",
+          "business": {
+            "guidance_entry": "help",
+            "guidance_entry_id": "sample-help-001",
+            "guidance_done": false
+          }
+        }
+      },
+      "children": [
+        {
+          "insert": {
+            "mention": "李四"
+          },
+          "attributes": {
+            "mentionType": "user",
+            "mentionId": "user_demo_002"
+          }
+        },
+        {
+          "insert": " 协助检查提交接口字段。"
+        }
+      ]
+    },
+    {
+      "id": "51SOMu",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {},
+      "meta": {
+        "mobileGuidance": {
+          "version": 1,
+          "role": "content",
+          "section": "record",
+          "business": {
+            "guidance_entry": "pilot",
+            "guidance_entry_id": "sample-pilot-001",
+            "guidance_done": false
+          }
+        }
+      },
+      "children": [
+        {
+          "insert": {
+            "mention": "王五"
+          },
+          "attributes": {
+            "mentionType": "user",
+            "mentionId": "user_demo_003"
+          }
+        },
+        {
+          "insert": " 指导提交失败后的重试流程。"
+        }
+      ]
+    },
+    {
+      "id": "section-dNVpMJ",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "heading": 2,
+        "depth": 0
+      },
+      "meta": {
+        "mobileGuidance": {
+          "version": 1,
+          "role": "section",
+          "section": "reflection"
+        }
+      },
+      "children": [
+        {
+          "insert": "感悟"
+        }
+      ]
+    },
+    {
+      "id": "uD8Wvc",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {},
+      "meta": {
+        "mobileGuidance": {
+          "version": 1,
+          "role": "content",
+          "section": "reflection",
+          "business": {}
+        }
+      },
+      "children": [
+        {
+          "insert": "先明确数据结构，再接入业务提交，可以减少重复修改。"
+        }
+      ]
+    },
+    {
+      "id": "section-sLkWID",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "heading": 2,
+        "depth": 0
+      },
+      "meta": {
+        "mobileGuidance": {
+          "version": 1,
+          "role": "section",
+          "section": "self-check"
+        }
+      },
+      "children": [
+        {
+          "insert": "自检"
+        }
+      ]
+    },
+    {
+      "id": "Dh7oNC",
+      "flavour": "todo",
+      "nodeType": "editable",
+      "props": {
+        "checked": 1
+      },
+      "meta": {
+        "mobileGuidance": {
+          "version": 1,
+          "role": "content",
+          "section": "self-check",
+          "business": {}
+        }
+      },
+      "children": [
+        {
+          "insert": "今日记录完整，人员引用身份已保留"
+        }
+      ]
+    },
+    {
+      "id": "TCeKfL",
+      "flavour": "todo",
+      "nodeType": "editable",
+      "props": {
+        "checked": 0
+      },
+      "meta": {
+        "mobileGuidance": {
+          "version": 1,
+          "role": "content",
+          "section": "self-check",
+          "business": {}
+        }
+      },
+      "children": [
+        {
+          "insert": "明日完成真实提交接口联调"
+        }
+      ]
+    }
+  ]
+}

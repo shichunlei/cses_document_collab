@@ -1,0 +1,98 @@
+{
+  "date": "2026-10-23",
+  "status": "passed",
+  "tests": {
+    "host": {
+      "passed": 171,
+      "failed": 0,
+      "log": "host-final-complete-tests.txt"
+    },
+    "packageCore": {
+      "passed": 125,
+      "failed": 0,
+      "log": "package-final-verified-tests.txt"
+    },
+    "packageText": {
+      "passed": 117,
+      "failed": 0,
+      "log": "package-text-verified-tests.txt"
+    }
+  },
+  "testCounting": "packageCore和packageText重复执行5项Codec测试，共237个不同包内测试；宿主171项独立",
+  "analysis": {
+    "host": "host-analyze-complete.txt",
+    "package": "package-analyze-verified.txt",
+    "issues": 0
+  },
+  "desktop": "desktop-model-validation.json",
+  "version": "version-verification.json",
+  "android": {
+    "path": "build/app/outputs/flutter-apk/app-debug.apk",
+    "sha256": "09ee09fb4de39d7773ca4dfe7ffbd9e1700592a36502ed1f509e7c91f0d76b96",
+    "log": "android-complete-build.txt",
+    "sourceFiles": {
+      "lib/src/daily_guidance/journal_blockcraft_codec.dart": {
+        "sha256": "a6ea7d8a96015f33da5f8815a0eb6e077f9e71bdf902ef204e6ce227750922ae",
+        "exactSourceInKernel": true
+      },
+      "lib/src/daily_guidance/journal_exchange_keys.dart": {
+        "sha256": "03365bddc142e86885ef95c2f8a625baf86eba469ad43ddc44e92622974b173d",
+        "exactSourceInKernel": true
+      },
+      "lib/src/daily_guidance/journal_json_files.dart": {
+        "sha256": "1cc8e6e488f89d3771fe3e58afe4ae1424d93cdb4f3b3ff86b857fe2ac714537",
+        "exactSourceInKernel": true
+      },
+      "lib/src/daily_guidance/journal_draft.dart": {
+        "sha256": "c341f47763dffbc92551e34679908d89f7f029cb2c7a6a4c4a5d2a716f1c4f9f",
+        "exactSourceInKernel": true
+      },
+      "lib/src/daily_guidance/journal_surface.dart": {
+        "sha256": "4e657d8bf3094356852fa6d2f1afc841a9aa630edc9c687b4370ace54e4e383c",
+        "exactSourceInKernel": true
+      },
+      "lib/src/daily_guidance/local_journal_controller.dart": {
+        "sha256": "995705499375d4bb8ca74dfe1132716f6d58929535c1741f15eb2bc0ffdbf052",
+        "exactSourceInKernel": true
+      },
+      "lib/src/daily_guidance/local_journal_page.dart": {
+        "sha256": "e0275c4c1d2db7afbc996f8e52c2f8d3f55038ffa3d00d9fb541e45b94a689fe",
+        "exactSourceInKernel": true
+      },
+      "packages/cses_document_collab/lib/cses_document_collab.dart": {
+        "sha256": "ee2f3f82cbd41ff3ecd2d5ac38bcd05b66f4397d27dfe4e2f4a512592714f3fb",
+        "exactSourceInKernel": true
+      },
+      "packages/cses_document_collab/lib/src/editor/blockcraft_json_codec.dart": {
+        "sha256": "d8f8561714f82b9262fa865a8f75a253c0c4acc98a7200aa33fe2ce49e5ddef7",
+        "exactSourceInKernel": true
+      },
+      "packages/cses_document_collab/lib/src/editor/blockcraft_snapshot_view.dart": {
+        "sha256": "aa8653df1372e187c0041abeb94c6a6c7b80fc58114665f957afc8973e9d6b13",
+        "exactSourceInKernel": true
+      },
+      "packages/cses_document_collab/lib/src/editor/blockcraft_snapshot_presets.g.dart": {
+        "sha256": "8acc29ee8ccd48307457d01cdc0ab0df895d5fde2452f60184cad7af7e1e4a38",
+        "exactSourceInKernel": true
+      },
+      "packages/cses_document_collab/lib/src/editor/appflowy_block_editor_adapter.dart": {
+        "sha256": "f5ac8c12d67a1da92fef080350faa08bb60b778a672e9f5d937f810005c12008",
+        "exactSourceInKernel": true
+      },
+      "packages/cses_document_collab/lib/src/editor/document_editor_view.dart": {
+        "sha256": "24d4f9880bee9b123b164d92552c00238df394c7a6f2907ee79623725b900c85",
+        "exactSourceInKernel": true
+      }
+    }
+  },
+  "examples": {
+    "converted-journal.json": "afb9490fd397266559a83064a6441a18575045669f03fb42bb0a3b4be94206ad",
+    "restored-mobile.json": "dba332309b97b3348d1180205e48cb3353ecdc44173c0ea0b4a11eb7ea5a59ee"
+  },
+  "limits": [
+    "未新增真机系统文件框、iOS或真实在线双端验收",
+    "最新版0.11.30仅静态对照，模型运行验证使用实际安装0.11.17",
+    "完整高级对象工具/实时业务源/独立Vectra图正文见report.md，不能视为完整适配"
+  ],
+  "diffCheck": "git diff --check通过，未清理既有工作区变更"
+}

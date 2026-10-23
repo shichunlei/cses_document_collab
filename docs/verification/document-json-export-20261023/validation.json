@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-23",
+  "desktopInstalled": "0.11.17",
+  "desktopDeclared": "0.11.28",
+  "desktopYarnLocked": "0.11.28",
+  "historicalPnpmLocked": "0.2.78",
+  "registry": "http://npm.runtongqiuben.com/",
+  "latestReturnedThisRun": "0.11.23",
+  "latestArtifactIntegrity": "sha512-hGuC0Ank4stAQqbgfVdTYZaKtTi1dOHopT0Bt1YYQqleHkPBsFiXy6mnwf3E2OpEfcZ3UQaUhKeShArMuOtabw==",
+  "checks": [
+    "安装版Schema生成虚构块",
+    "生产模型exportSnapshot与输入树一致",
+    "JSON编码解码一致",
+    "0.11.23发布压缩包SHA-512与仓库返回一致"
+  ],
+  "limits": [
+    "未操作桌面UI下载",
+    "未验证JSON文件导入入口",
+    "未验证设备/HTTP/在线协同",
+    "未升级依赖或扩展移动端适配状态"
+  ]
+}

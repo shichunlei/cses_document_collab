@@ -18,6 +18,8 @@ export 'src/editor/core/editor_view_configuration.dart';
 export 'src/editor/core/editor_configuration.dart'
     show EditorConfiguration, EditorBlock, EditorInlineFormat, EditorKeyboardToolbarItem;
 export 'src/editor/document_editor_view.dart';
+export 'src/editor/blockcraft_json_codec.dart' show BlockCraftJsonCodec;
+export 'src/editor/blockcraft_snapshot_view.dart' show blockCraftSnapshotBuilders, blockCraftSnapshotRootStyle;
 export 'src/editor/editor_text_presentation.dart';
 export 'src/editor/document_editor_commands.dart' show handleDocumentParagraphEnter, applyDocumentBlockShortcut;
 export 'src/editor/editor_interaction_shell.dart' show EditorInteractionShell;

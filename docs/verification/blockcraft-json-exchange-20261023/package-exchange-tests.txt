@@ -1,0 +1,7 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart
+00:00 +0: desktop block structures and attributes convert into editable nodes and survive local JSON
+00:00 +1: inline objects and styles are converted at UTF16 object boundaries
+00:00 +2: null fields and cleared mention formatting survive persistence without reviving old styles
+00:00 +3: unknown plugins, duplicate ids and patch deltas fail instead of becoming opaque JSON
+00:00 +4: converted shape, columns, date, person and weather render in the actual editor
+00:01 +5: All tests passed!

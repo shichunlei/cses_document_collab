@@ -1,0 +1,142 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: desktop block structures and attributes convert into editable nodes and survive local JSON
+00:00 +1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: inline objects and styles are converted at UTF16 object boundaries
+00:00 +2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: null fields and cleared mention formatting survive persistence without reviving old styles
+00:00 +3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: unknown plugins, duplicate ids and patch deltas fail instead of becoming opaque JSON
+00:00 +4: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:00 +5: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:00 +6: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:00 +7: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:00 +8: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:00 +9: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:00 +10: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:00 +11: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:00 +12: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:00 +13: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +14: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +15: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +16: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +17: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +18: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +19: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +20: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +21: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +22: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +23: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +24: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +25: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +26: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +27: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +28: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +29: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +30: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +31: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +32: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +33: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +34: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +35: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +36: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +37: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +38: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +39: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +40: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +41: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +42: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +43: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +44: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +45: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +46: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +47: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +48: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +49: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +50: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +51: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:02 +52: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:02 +53: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:02 +54: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:02 +55: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:02 +56: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:02 +57: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:02 +58: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:02 +59: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: missing picker leaves IME trigger to ordinary input and preserves toolbar selection
+00:03 +60: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: missing picker leaves IME trigger to ordinary input and preserves toolbar selection
+00:03 +61: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: missing picker leaves IME trigger to ordinary input and preserves toolbar selection
+00:03 +62: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: missing picker leaves IME trigger to ordinary input and preserves toolbar selection
+00:03 +63: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_image_test.dart: image shows layout caption and upload placeholder with readonly controls hidden
+00:03 +64: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: renders fractions matrices empty and invalid TeX at narrow large text
+00:03 +65: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: renders fractions matrices empty and invalid TeX at narrow large text
+00:03 +66: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: renders fractions matrices empty and invalid TeX at narrow large text
+00:03 +67: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: renders fractions matrices empty and invalid TeX at narrow large text
+00:03 +68: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: renders fractions matrices empty and invalid TeX at narrow large text
+00:03 +69: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: renders fractions matrices empty and invalid TeX at narrow large text
+00:03 +70: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: renders fractions matrices empty and invalid TeX at narrow large text
+00:03 +71: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: renders fractions matrices empty and invalid TeX at narrow large text
+00:03 +72: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_image_test.dart: image layout preserves captions and caption menu edits them separately
+00:03 +73: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_image_test.dart: image layout preserves captions and caption menu edits them separately
+00:04 +74: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: tapping body resolves through unrendered table rows
+00:04 +75: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: tapping body resolves through unrendered table rows
+00:04 +76: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: tapping body resolves through unrendered table rows
+00:04 +77: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: tapping body resolves through unrendered table rows
+00:04 +78: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: tapping body resolves through unrendered table rows
+00:04 +79: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: tapping body resolves through unrendered table rows
+00:04 +80: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: tapping body resolves through unrendered table rows
+00:04 +81: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: tapping body resolves through unrendered table rows
+00:04 +82: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: editing preview is local until save; cancel restores selected body
+00:04 +83: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: editing preview is local until save; cancel restores selected body
+00:04 +84: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: platform IME @ inserts an atom and following typing stays ordinary
+00:04 +85: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: 2x2 table aligns with left content edge preview=false
+00:04 +86: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_image_test.dart: same node URL changes replace the network image provider
+00:04 +87: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: remote edit conflict reload; permission revoke and deletion disable saving
+00:04 +88: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: remote edit conflict reload; permission revoke and deletion disable saving
+00:05 +89: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: remote edit conflict reload; permission revoke and deletion disable saving
+00:05 +90: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: table edge controls are hidden until clicked and hide outside
+00:05 +91: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: sheet delete last formula leaves editable paragraph and supports undo
+00:05 +92: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menus insert before/after and delete rows and columns atomically
+00:05 +93: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menus insert before/after and delete rows and columns atomically
+00:05 +94: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menus insert before/after and delete rows and columns atomically
+00:05 +95: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menus insert before/after and delete rows and columns atomically
+00:06 +96: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menus insert before/after and delete rows and columns atomically
+00:06 +97: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: copy preserves draft; dirty insertion cancels or saves then inserts as independent history
+00:06 +98: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: copy preserves draft; dirty insertion cancels or saves then inserts as independent history
+00:06 +99: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: copy preserves draft; dirty insertion cancels or saves then inserts as independent history
+00:06 +100: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: copy preserves draft; dirty insertion cancels or saves then inserts as independent history
+00:06 +101: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menu stays invalid after permission or content changes revoke=true
+00:06 +102: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: locked formula view and unlock permissions alice/false/false/false
+00:07 +103: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menu stays invalid after permission or content changes revoke=false
+00:07 +104: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: locked formula view and unlock permissions bob/false/false/false
+00:07 +105: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: merged cell spans rows/columns and more sheet only offers merge and split at 320px
+00:07 +106: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: merged cell spans rows/columns and more sheet only offers merge and split at 320px
+00:07 +107: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: merged cell spans rows/columns and more sheet only offers merge and split at 320px
+00:07 +108: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: merged cell spans rows/columns and more sheet only offers merge and split at 320px
+00:07 +109: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: merged cell spans rows/columns and more sheet only offers merge and split at 320px
+00:07 +110: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: lock after dirty confirmation invalidates old session even after unlock
+00:07 +111: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: lock after dirty confirmation invalidates old session even after unlock
+00:07 +112: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: lock after dirty confirmation invalidates old session even after unlock
+00:07 +113: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: open table sheet rejects permission/remote changes revoke=true
+00:07 +114: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: discard draft before insertion; remote change during dismiss prevents stale command
+00:07 +115: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: open table sheet rejects permission/remote changes revoke=false
+00:08 +116: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: dirty lock choice saves=true failure=false executes after dismissal
+00:08 +117: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: 320px table scrolls horizontally, preserves body and preview=true
+00:08 +118: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: dirty lock choice saves=false failure=false executes after dismissal
+00:08 +119: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: dirty lock choice saves=false failure=false executes after dismissal
+00:08 +120: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: dirty lock choice saves=true failure=true executes after dismissal
+DocCollab: 公式操作失败: Bad state: lock unavailable
+#0      main.<anonymous closure>.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart:747:23)
+#1      _FormulaSession.execute (package:cses_document_collab/src/editor/collab_formula_sheet.dart:856:43)
+#2      _presentFormulaInput (package:cses_document_collab/src/editor/collab_formula_sheet.dart:146:19)
+<asynchronous suspension>
+#3      showCollabFormulaEditor.<anonymous closure> (package:cses_document_collab/src/editor/collab_formula_sheet.dart:48:11)
+<asynchronous suspension>
+#4      runEditorHeaderAction (package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart:2333:12)
+<asynchronous suspension>
+#5      showCollabFormulaEditor (package:cses_document_collab/src/editor/collab_formula_sheet.dart:43:5)
+<asynchronous suspension>
+#6      _FormulaBlockState.build.<anonymous closure> (package:cses_document_collab/src/editor/collab_formula_block.dart:73:19)
+<asynchronous suspension>
+
+00:08 +121: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: deleted target restored with same ID cannot revive old panel
+00:08 +122: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: unified panel keeps header/actions reachable Size(390.0, 844.0)/1.0/0.0
+00:08 +123: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: unified panel keeps header/actions reachable Size(320.0, 568.0)/1.5/240.0
+00:08 +124: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: unified panel keeps header/actions reachable Size(780.0, 390.0)/1.0/130.0
+00:08 +125: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_formula_test.dart: (tearDownAll)
+00:08 +125: All tests passed!

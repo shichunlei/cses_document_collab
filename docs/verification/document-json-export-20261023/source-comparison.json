@@ -1,0 +1,50 @@
+{
+  "installed-0.11.17": {
+    "root": "a58e76e0a69d643638764617737f2fe6492b96fa67356a302001a5a0babec83f",
+    "paragraph": "512a63152e67be5cf52a862eacae26586ba61f7c9765083cfe9a087a18601029",
+    "editableFactory": "77d83dafe4ce0fd21d68df1c32e714d1fa19937a5b334a1b649e2b5b8977c673",
+    "nativeSerializer": "e87e9dbe0a10c61b81bb18223bd7c1eb5ca4d8d97c630aa2d708f5e0d0a8f5d8",
+    "exportSnapshot": "a0bd39c42b7339934497fd699b7498788f6ac0bda893649e50e04edc9d8b1f68",
+    "jsonExport": "0c6eca2a017d8dfdbeb9d48cea934dceebd6a2b34f10451c0e9e94bd254e1045",
+    "exportManagerProjection": "12490702ce11ca1812285bd5f7805cabfb565ee82033c3056da42915466213a4",
+    "skills": {
+      "ai-skills/SKILL.md": "1bdaa3efdde9a455284810febaffb043cd3e59e8ef9a0babbb76c5c875140b0d",
+      "ai-skills/blockcraft.md": "15f256fc6e1ffb131d114371605feab0a4c58f1a6cc76b20bbba3011001f2dc1",
+      "ai-skills/blockcraft-data.md": "5e83cc2a8601f927f1842542f416c493dfeb68657986b7505d6546ee828fc240",
+      "ai-skills/blockcraft-adapter.md": "82dab68a6ff9e9e3e63589a94a05074fcdbc9c38b1d055c0cf15aef2a31f8077",
+      "ai-skills/MIGRATIONS.md": "4c87c528886aed39605183f6c6d812d04d94b600c4931f314bb611e689edf5dd"
+    }
+  },
+  "latest-0.11.23": {
+    "root": "a58e76e0a69d643638764617737f2fe6492b96fa67356a302001a5a0babec83f",
+    "paragraph": "512a63152e67be5cf52a862eacae26586ba61f7c9765083cfe9a087a18601029",
+    "editableFactory": "52b89c22f3cf2751c3ce8e477b5aecd25d123e1b045583f90857a8a1078d27cc",
+    "nativeSerializer": "e87e9dbe0a10c61b81bb18223bd7c1eb5ca4d8d97c630aa2d708f5e0d0a8f5d8",
+    "exportSnapshot": "a0bd39c42b7339934497fd699b7498788f6ac0bda893649e50e04edc9d8b1f68",
+    "jsonExport": "0c6eca2a017d8dfdbeb9d48cea934dceebd6a2b34f10451c0e9e94bd254e1045",
+    "exportManagerProjection": "12490702ce11ca1812285bd5f7805cabfb565ee82033c3056da42915466213a4",
+    "skills": {
+      "ai-skills/SKILL.md": "1bdaa3efdde9a455284810febaffb043cd3e59e8ef9a0babbb76c5c875140b0d",
+      "ai-skills/blockcraft.md": "cdd06a4977d936d1ca2619b2f3954b33786b602eac83b2eb2190ad4bdbc305f5",
+      "ai-skills/blockcraft-data.md": "1991bbd90bd3d19a413b0b50a4329d99ec5cba5212be4d827f333d82ce192752",
+      "ai-skills/blockcraft-adapter.md": "6400f92fb7d87b482686189d3bafad983ab3dfc7bad9ec09e5b972dad81f2d42",
+      "ai-skills/MIGRATIONS.md": "d98bc876263aa0120b06ebcd4ae77b9e7af2992bf537b755243575f1a9fe5151"
+    }
+  },
+  "declared-0.11.28": {
+    "root": "a58e76e0a69d643638764617737f2fe6492b96fa67356a302001a5a0babec83f",
+    "paragraph": "512a63152e67be5cf52a862eacae26586ba61f7c9765083cfe9a087a18601029",
+    "editableFactory": "52b89c22f3cf2751c3ce8e477b5aecd25d123e1b045583f90857a8a1078d27cc",
+    "nativeSerializer": "e87e9dbe0a10c61b81bb18223bd7c1eb5ca4d8d97c630aa2d708f5e0d0a8f5d8",
+    "exportSnapshot": "a0bd39c42b7339934497fd699b7498788f6ac0bda893649e50e04edc9d8b1f68",
+    "jsonExport": "0c6eca2a017d8dfdbeb9d48cea934dceebd6a2b34f10451c0e9e94bd254e1045",
+    "exportManagerProjection": "12490702ce11ca1812285bd5f7805cabfb565ee82033c3056da42915466213a4",
+    "skills": {
+      "ai-skills/SKILL.md": "1bdaa3efdde9a455284810febaffb043cd3e59e8ef9a0babbb76c5c875140b0d",
+      "ai-skills/blockcraft.md": "fd35128d50e0f4b68d3d60881e155a884027aaef497d9e6ed2731b01c268686e",
+      "ai-skills/blockcraft-data.md": "1991bbd90bd3d19a413b0b50a4329d99ec5cba5212be4d827f333d82ce192752",
+      "ai-skills/blockcraft-adapter.md": "6400f92fb7d87b482686189d3bafad983ab3dfc7bad9ec09e5b972dad81f2d42",
+      "ai-skills/MIGRATIONS.md": "d1bb5a6337b0e1ce0879099a34134b6e440891720386af9af4c20cdeba205ac2"
+    }
+  }
+}

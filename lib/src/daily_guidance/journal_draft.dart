@@ -4,6 +4,13 @@ import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';
 
 import 'guidance_entries.dart';
+import 'journal_exchange_keys.dart';
+
+/// 为借用的[document]选择日记或完整桌面转换能力；导入标记只控制本地功能，不启用协同。
+EditorConfiguration journalEditorConfiguration(Document document) =>
+    document.root.attributes[journalDesktopImportAttribute] == true
+    ? EditorConfiguration.document
+    : journalConfiguration;
 
 /// 宿主日记栏目的节点类型，仅用于本地文档，不是桌面BlockCraft协议。
 const journalSectionType = 'local-journal-section';
@@ -70,6 +77,7 @@ final class JournalDraft {
   /// [createdAt]/[updatedAt]为UTC时间，[timezoneOffsetMinutes]为建档地相对UTC的分钟偏移。
   /// [documentJson]为已通过validateJournalDocument校验的独立正文序列化值。
   /// [needsMigration]默认false；读取旧版后的true提示控制器安排原子升级保存。
+  /// [blockCraftIdsJson]为独立的路径到稳定块ID表，默认空对象；不混入正文业务属性。
   const JournalDraft({
     required this.id,
     required this.date,
@@ -78,6 +86,7 @@ final class JournalDraft {
     required this.timezoneOffsetMinutes,
     required this.documentJson,
     this.needsMigration = false,
+    this.blockCraftIdsJson = '{}',
   });
 
   /// 以本地[now]的日期创建仅含今日记录的空草稿；不分配编辑器或存储资源。
@@ -145,6 +154,9 @@ final class JournalDraft {
         timezoneOffsetMinutes: offset,
         documentJson: jsonEncode(document.toJson()),
         needsMigration: legacy,
+        blockCraftIdsJson: jsonEncode(
+          journalBlockIdentities(json['blockCraftIds'] ?? <String, String>{}),
+        ),
       );
     } catch (_) {
       throw const FormatException('日记正文损坏或包含不支持的内容');
@@ -174,6 +186,9 @@ final class JournalDraft {
   /// 独立正文JSON；本地节点不直接发送给桌面协同服务。
   final String documentJson;
 
+  /// 独立JSON身份表，键为点分隔节点路径，空键为根；不参与正文、格式或业务字段比较。
+  final String blockCraftIdsJson;
+
   /// 返回可交给JSON编码器的独立保存对象，不持有编辑器引用。
   Map<String, dynamic> toJson() => {
     'schemaVersion': 2,
@@ -185,6 +200,8 @@ final class JournalDraft {
     'updatedAt': updatedAt.toIso8601String(),
     'timezoneOffsetMinutes': timezoneOffsetMinutes,
     'document': jsonDecode(documentJson),
+    if (blockCraftIdsJson != '{}')
+      'blockCraftIds': jsonDecode(blockCraftIdsJson),
   };
 }
 
@@ -218,6 +235,8 @@ List<Node> closedJournalSections(Document document) {
 /// 校验借用的[document]的动态栏目、受控引用与总容量；非法时抛FormatException。
 /// 可见和关闭栏目共享稳定语义身份，今日记录必须位于可见内容首位且不可关闭。
 void validateJournalDocument(Document document) {
+  final imported =
+      document.root.attributes[journalDesktopImportAttribute] == true;
   final sections = document.root.children.toList();
   if (document.root.type != 'page' ||
       sections.isEmpty ||
@@ -238,8 +257,18 @@ void validateJournalDocument(Document document) {
         section.children.isEmpty) {
       throw const FormatException('日记栏目结构无效');
     }
-    for (final node in section.children) {
-      if (!isJournalTextNode(node)) throw const FormatException('日记包含不支持的正文');
+    if (imported) {
+      for (final child in section.children) {
+        BlockCraftJsonCodec.validate(
+          BlockCraftJsonCodec.encodeBlock(child),
+          root: false,
+        );
+      }
+    }
+    for (final node in journalContentNodes(section.children)) {
+      if (!imported && !isJournalTextNode(node)) {
+        throw const FormatException('日记包含不支持的正文');
+      }
       final entry = node.attributes[guidanceEntryAttribute];
       if (entry != null &&
           (!const {'task', 'help', 'pilot'}.contains(entry) ||
@@ -248,14 +277,24 @@ void validateJournalDocument(Document document) {
         throw const FormatException('业务条目无效');
       }
       count++;
-      length += node.delta!.length;
-      references += journalDeltaMentionCount(node.delta!);
+      length += node.delta?.length ?? 0;
+      if (node.delta != null) {
+        references += journalDeltaMentionCount(node.delta!);
+      }
     }
   }
   if (references > 500 ||
       count > journalConfiguration.maxBlocks ||
       length > journalConfiguration.maxCharacters) {
     throw const FormatException('日记正文超过容量');
+  }
+}
+
+/// 按前序遍历借用的[nodes]及全部已转换后代，不取得节点所有权。
+Iterable<Node> journalContentNodes(Iterable<Node> nodes) sync* {
+  for (final node in nodes) {
+    yield node;
+    yield* journalContentNodes(node.children);
   }
 }
 

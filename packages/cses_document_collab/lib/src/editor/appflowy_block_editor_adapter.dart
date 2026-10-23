@@ -28,6 +28,10 @@ import 'package:cses_document_collab/src/model/text_delta.dart' as collab;
 
 typedef LocalEditorBlocksChanged = void Function(List<CollabEditorBlock> blocks);
 
+/// 将已解析的[block]创建为正式渲染器使用的原生节点；返回节点由调用方文档持有。
+/// 仅包内快照转换复用，不创建同步绑定、原生文档或资源。
+Node createCollabSnapshotNode(CollabEditorBlock block) => AppFlowyBlockEditorAdapter._nodeFromBlock(block);
+
 const csesUnsupportedBlockType = 'unsupported';
 const csesCalloutBlockType = 'callout';
 const csesCalloutTargetAttribute = 'cses_callout_target';

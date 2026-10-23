@@ -1,6 +1,7 @@
 import 'package:cses_document_collab/src/ui/modal/collab_editor_display_scope.dart';
 import 'dart:async';
 import 'package:cses_document_collab/src/editor/collab_paragraph_text_style.dart';
+import 'package:cses_document_collab/src/editor/blockcraft_snapshot_view.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_attachment_block.dart';
@@ -330,7 +331,9 @@ class _DocumentEditorViewState extends State<DocumentEditorView> {
       cursorColor: const Color(0xFF5B5BD6),
       dragHandleColor: const Color(0xFF5B5BD6),
       selectionColor: const Color(0x335B5BD6),
-      textStyleConfiguration: const TextStyleConfiguration(text: TextStyle(fontSize: 16, color: Colors.black)),
+      textStyleConfiguration: TextStyleConfiguration(
+        text: blockCraftSnapshotRootStyle(state.document.root, const TextStyle(fontSize: 16, color: Colors.black)),
+      ),
       textSpanDecorator: decorateEditorTextSpan,
     );
     final editor = IgnorePointer(
@@ -505,6 +508,7 @@ EdgeInsets _listBlockPadding(Node node) {
 /// 再应用行内字号和倍率，避免丢失标题字号或重复乘算段落倍率。
 /// 行内公式、用户和三类业务实体提及使用单字符 WidgetSpan，保留文字颜色；
 /// 已校验用户复用公开装饰器并绑定当前实例的展示服务。
+/// 已转换的桌面行内对象使用原生对象视图；额外字重及艺术文字读取独立模型属性。
 /// 整段链接点击提供打开和三视图切换，混排正文维持原链接行为。
 ///
 /// ```dart
@@ -564,6 +568,8 @@ InlineSpan decorateEditorTextSpan(
     }
   }
   final attributes = text.attributes;
+  final snapshotSpan = decorateBlockCraftSnapshotText(node, text, decorated);
+  if (snapshotSpan != null) return snapshotSpan;
   final latex = attributes?[collabInlineLatexAttribute];
   final mention = attributes?[collabInlineMentionAttribute];
   if (EditorUserMention.tryRead(attributes) != null) {

@@ -1,0 +1,8 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart
+00:00 +0: journal formats, mentions, todo states, business ids and date survive both directions
+00:00 +1: all enabled formats, repeated objects and independent business/native checked state survive
+00:00 +2: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:03 +3: real controller export has no debounce delay and returns detached JSON
+00:03 +4: stable block ids survive saving and reopening without entering business attributes
+00:03 +5: desktop blocks outside journal capabilities are converted into real nested native nodes
+00:04 +6: All tests passed!

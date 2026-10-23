@@ -16,6 +16,7 @@
 
 ### 文档创建与文档信息
 
+- [document-json-export-20261023](document-json-export-20261023/)（[桌面文档 JSON 格式分析与示例](document-json-export-20261023/report.md)）
 
 - [host-service-migration-20261023](host-service-migration-20261023/)（[宿主服务目录迁移收尾](host-service-migration-20261023/report.md)）
 
@@ -28,6 +29,7 @@
 
 - [blockcraft-json-exchange-20261023](blockcraft-json-exchange-20261023/)（[今日导向与桌面JSON双向转换、原生渲染和示例验证](blockcraft-json-exchange-20261023/report.md)）
 
+- 今日导向导出：[转换为桌面BlockCraft JSON的保留范围与实施分析](offline-journal-20261023/blockcraft-export-analysis.md)（归属既有offline-journal-20261023目录）。
 
 - [selective-undo-prototype-20261022](selective-undo-prototype-20261022/)（[结构、格式与锁权限第二阶段](selective-undo-prototype-20261022/structure-format-locks.md)；[FRB、编辑器与选区第三阶段](selective-undo-prototype-20261022/frb-editor-history.md)；[第三阶段审查](selective-undo-prototype-20261022/review.md)；[2项P1与3项P2修复](selective-undo-prototype-20261022/review-fixes.md)）
 - [offline-journal-design-20261022](offline-journal-design-20261022/)

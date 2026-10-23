@@ -1,0 +1,7 @@
+Waiting for another flutter command to release the startup lock...
+Analyzing 6 items...
+
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/src/editor/blockcraft_json_codec.dart:554:15 • curly_braces_in_flow_control_structures
+   info • Use the null-aware marker '?' rather than a null check via an 'if'. Try using '?' • lib/src/editor/blockcraft_snapshot_view.dart:227:7 • use_null_aware_elements
+
+2 issues found. (ran in 19.8s)
