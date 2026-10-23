@@ -1,7 +1,7 @@
-import 'package:cses_document_collab/src/model/collab_host_services.dart';
 import 'package:cses_document_collab/src/editor/core/editor_configuration.dart';
 import 'package:cses_document_collab/src/image_composer/image_composer_controller.dart';
 import 'package:cses_document_collab/src/image_composer/image_composer_page.dart';
+import 'package:cses_document_collab/src/model/collab_host_services.dart';
 import 'package:cses_document_collab/src/model/collab_image_template.dart';
 import 'package:flutter/material.dart';
 

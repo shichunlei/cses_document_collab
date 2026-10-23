@@ -1,8 +1,8 @@
-import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/editor/collab_mention_tap_handler.dart';
 import 'package:cses_document_collab/src/editor/collab_task_card_view.dart';
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:cses_document_collab/src/model/collab_host_services.dart';
 import 'package:cses_document_collab/src/model/collab_mention_tap.dart';
 import 'package:cses_document_collab/src/model/collab_task_card.dart';

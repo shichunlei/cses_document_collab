@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math' as math;
+
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/core/document_editor_controller.dart';
 import 'package:cses_document_collab/src/editor/document_editor_view.dart';
