@@ -157,6 +157,9 @@ class _TodoListBlockComponentWidgetState
   bool get checked =>
       widget.node.attributes[TodoListBlockKeys.checked] ?? false;
 
+  /// Builds the native todo text and checkbox in [context].
+  /// [withBackgroundColor] controls the block background, defaulting to true.
+  /// Inline styles remain authoritative; checked text adds completion styling.
   @override
   Widget buildComponent(
     BuildContext context, {
@@ -195,7 +198,7 @@ class _TodoListBlockComponentWidgetState
               placeholderText: placeholderText,
               textDirection: textDirection,
               textSpanDecorator: (textSpan) => textSpan
-                  .updateTextStyle(textStyleWithTextSpan())
+                  .updateTextStyle(textStyleWithTextSpan(textSpan: textSpan))
                   .updateTextStyle(
                     widget.textStyleBuilder?.call(checked) ??
                         defaultTextStyle(),

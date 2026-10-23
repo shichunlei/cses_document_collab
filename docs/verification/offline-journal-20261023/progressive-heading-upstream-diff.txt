@@ -1,0 +1,104 @@
+---
+
++++
+
+@@ -30346,4 +30346,14 @@
+
+ }
+
++/** @internal Explicit user insertion only; never focus from block lifecycle/upload completion. */
++function focusAfterImageInsertion(doc, block) {
++    if (block.flavour !== 'image')
++        return false;
++    // SelectionManager falls back to object selection when placement has no gap.
++    doc.selection.setGapCursor(block.id, 'after', true);
++    doc.crud.undoManager.stopCapturing();
++    return true;
++}
++
+ function calcPositionByRect(e, rect, leftOrRight = false) {
+     const edge = Math.min(Math.max(10, rect.width / 6), 50);
+@@ -30993,5 +31003,7 @@
+
+             fileService.removeObjectURL(url);
+             this.doc.messageService.warn('图片插入失败');
+-        }
++            return;
++        }
++        focusAfterImageInsertion(this.doc, snapshot);
+     }
+     onInsertNewBlock(flavour, initProps, targetBlock, position, initMeta = {}) {
+@@ -31030,5 +31042,9 @@
+
+             void this.doc.chain()
+                 .insertSnapshots(currentParent.id, targetBlock.getIndexOfParent() + (position === 'after' ? 1 : 0), [snapshot])
+-                .setCursorAtBlock(snapshot.id, true)
++                .tap(() => {
++                if (!focusAfterImageInsertion(this.doc, snapshot)) {
++                    this.doc.selection.setCursorAtBlock(snapshot.id, true);
++                }
++            })
+                 .run()
+                 .catch(error => {
+@@ -46516,4 +46532,5 @@
+
+                 });
+                 this.uploadImage(url);
++                focusAfterImageInsertion(this.doc, this);
+             }
+             catch (e) {
+@@ -89267,5 +89284,7 @@
+
+             const snapshot = this.doc.schemas.createSnapshot(flavour, params);
+             await this.insertSnapshotsAtPlacement(placement, [snapshot]);
+-            this.doc.selection.selectOrSetCursorAtBlock(snapshot.id, true);
++            if (!focusAfterImageInsertion(this.doc, snapshot)) {
++                this.doc.selection.selectOrSetCursorAtBlock(snapshot.id, true);
++            }
+             this.syncToolbarState(this.doc.selection.value);
+             this.cdr.markForCheck();
+@@ -97055,7 +97074,11 @@
+
+         if (this.doc.isReadonly)
+             return;
+-        ctx.preventDefault();
+         const state = ctx.get("keyboardState");
+         const selection = state.selection;
++        // Gap input belongs to InputTransformer, which preserves its before/after
++        // side. This shortcut only owns the image/caption editing interaction.
++        if (selection.collapsed && selection.anchor.type === "gap")
++            return false;
++        ctx.preventDefault();
+         const blockId = selection.commonParent;
+         const block = this._getLiveBlockById(blockId);
+@@ -102244,10 +102267,16 @@
+
+         if (snapshots.some(snapshot => !this.doc.canInsertChild(parentId, snapshot.flavour)))
+             return;
+-        await this.doc.chain()
++        const chain = this.doc.chain()
+             .replaceWithSnapshots(block.id, snapshots)
+-            .nextTick()
+-            .selectOrSetCursorAtBlock(inserted.id, true)
+-            .recalculateSelection()
+-            .run();
++            .nextTick();
++        if (inserted.flavour === 'image') {
++            // Model-first gap projection can retry until its native anchor mounts.
++            // Sampling the DOM immediately would discard that pending model intent.
++            chain.tap(() => { focusAfterImageInsertion(this.doc, inserted); });
++        }
++        else {
++            chain.selectOrSetCursorAtBlock(inserted.id, true).recalculateSelection();
++        }
++        await chain.run();
+     }
+     createCommandRange(context) {
+@@ -105627,4 +105656,6 @@
+
+                 return true;
+             inserted = this._insertFileSnapshotsAtSelection(state.selection, snapshots);
++            if (inserted)
++                focusAfterImageInsertion(this.doc, snapshots[snapshots.length - 1]);
+             return true;
+         }

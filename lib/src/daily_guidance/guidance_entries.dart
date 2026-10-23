@@ -55,7 +55,7 @@ Delta guidanceMentionDelta(List<GuidancePerson> people) {
 }
 
 /// 使用[context]中的编辑比例渲染[node]在[index]处的[text]；[before]/[after]为默认格式结果。
-/// 旧业务引用沿用名称显示，原生用户提及使用编辑器本实例服务渲染；普通文本沿用[after]。
+/// 旧业务引用沿用名称显示，其他内容使用编辑器通用装饰器，保留标题、字色、背景及角标。
 /// 不创建业务资源或修改正文，原生头像及点击由所属会话的宿主服务决定。
 InlineSpan decorateGuidanceMention(
   BuildContext context,
@@ -65,9 +65,16 @@ InlineSpan decorateGuidanceMention(
   TextSpan before,
   TextSpan after,
 ) {
-  if (text.attributes?[guidanceMentionAttribute] == null) {
-    return decorateEditorUserMention(context, node, index, text, before, after);
-  }
+  final decorated = decorateEditorTextSpan(
+    context,
+    node,
+    index,
+    text,
+    before,
+    after,
+  );
+  if (text.attributes?[guidanceMentionAttribute] == null) return decorated;
+  final style = decorated.style ?? after.style;
   final person = readGuidanceMention(text.attributes!);
   return TextSpan(
     children: [
@@ -80,41 +87,60 @@ InlineSpan decorateGuidanceMention(
               textScaler: TextScaler.noScaling,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: (after.style ?? const TextStyle(fontSize: 16, height: 2))
+              style: (style ?? const TextStyle(fontSize: 16, height: 2))
                   .copyWith(color: const Color(0xff367cc0)),
             ),
           )
         else
-          TextSpan(text: String.fromCharCode(rune), style: after.style),
+          TextSpan(text: String.fromCharCode(rune), style: style),
     ],
   );
 }
 
-/// 为普通段落与业务行共享原生段落输入组件；业务标签不进入可编辑文字。
+/// 为文字块添加业务前缀，借用已配置的原生排版及输入组件。
 ///
 /// ```dart
+/// import 'package:appflowy_editor/appflowy_editor.dart';
 /// import 'package:cses_mobile_collab_demo/src/daily_guidance/guidance_entries.dart';
-/// final builder = GuidanceParagraphBuilder();
-/// // 在宿主 AppFlowyEditor 的 paragraph builder 中注册。
+/// final builder = GuidanceTextBlockBuilder(ParagraphBlockComponentBuilder());
+/// // 在宿主 AppFlowyEditor 的文字块 builders 中注册。
 /// ```
-class GuidanceParagraphBuilder extends ParagraphBlockComponentBuilder {
-  /// [configuration]提供与其他正文一致的字号、行距和留白。
-  GuidanceParagraphBuilder({super.configuration});
+class GuidanceTextBlockBuilder extends BlockComponentBuilder {
+  /// [standard]为已配置标题/对齐的原生构建器；只借用，不接管资源。
+  GuidanceTextBlockBuilder(this.standard)
+    : super(configuration: standard.configuration);
 
-  /// 使用借用的[context]生成段落；无业务属性时完整沿用原段落渲染。
+  /// 借用的原生文字构建器，负责输入、选区及具体列表标记。
+  final BlockComponentBuilder standard;
+
+  /// 沿用原生构建器的节点校验。
+  @override
+  BlockComponentValidate get validate => standard.validate;
+
+  /// 使用借用的[context]构建正文，业务属性存在时添加不进入编辑模型的前缀。
   @override
   BlockComponentWidget build(BlockComponentContext context) {
-    if (context.node.attributes[guidanceEntryAttribute] == null) {
-      return super.build(context);
-    }
-    return _GuidanceEntry(node: context.node, configuration: configuration);
+    final body = standard.build(context);
+    if (context.node.attributes[guidanceEntryAttribute] == null) return body;
+    return _GuidanceEntry(
+      node: context.node,
+      configuration: configuration,
+      body: body,
+    );
   }
 }
 
 /// 业务行外壳；唯一node.key由内部段落持有，确保选区和IME仍定位原生文字。
 class _GuidanceEntry extends BlockComponentStatelessWidget {
-  /// [node]为借用的业务行，[configuration]沿用同源纸张样式。
-  const _GuidanceEntry({required super.node, required super.configuration});
+  /// [node]为借用的业务行，[configuration]沿用同源纸张样式；[body]保留原生输入和选区。
+  const _GuidanceEntry({
+    required super.node,
+    required super.configuration,
+    required this.body,
+  });
+
+  /// 拥有唯一node.key的原生文字组件，外壳不得复用该Key。
+  final BlockComponentWidget body;
 
   /// 在[context]按正文首行高度放置圆环或业务标签；仅本地任务勾选可写。
   @override
@@ -126,8 +152,21 @@ class _GuidanceEntry extends BlockComponentStatelessWidget {
     final color = kind == 'help'
         ? const Color(0xffbb8a1d)
         : const Color(0xff367cc0);
+    final base = configuration.textStyle(node);
+    final first = node.delta?.whereType<TextInsert>().firstOrNull;
+    final decorated = first == null
+        ? null
+        : decorateEditorTextSpan(
+            context,
+            node,
+            0,
+            first,
+            TextSpan(style: base),
+            TextSpan(style: base),
+          );
+    final textStyle = decorated?.style ?? base;
     final marker = SizedBox(
-      height: 32 * scale,
+      height: (textStyle.fontSize ?? 16) * (textStyle.height ?? 2) * scale,
       child: Center(
         child: kind == 'task'
             ? Semantics(
@@ -174,13 +213,7 @@ class _GuidanceEntry extends BlockComponentStatelessWidget {
       children: [
         marker,
         const SizedBox(width: 4),
-        Expanded(
-          child: ParagraphBlockComponentWidget(
-            key: node.key,
-            node: node,
-            configuration: configuration,
-          ),
-        ),
+        Expanded(child: body),
       ],
     );
   }

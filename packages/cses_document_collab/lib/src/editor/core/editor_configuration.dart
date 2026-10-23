@@ -255,9 +255,14 @@ final class EditorConfiguration {
   /// [blocks] 为无重复的块集合，必须包含paragraph；类型菜单按此顺序，标题家族按级别排序。
   /// [headingLevels] 为1～9中的子集，默认全部级别，保留桌面/历史正文能力；移动菜单最多显示H6。
   /// 禁用heading时不产生标题入口。
+  /// [progressiveHeadingMenu]为true时T菜单从H1～H3逐级展开到H6；false直接展示允许的级别。
+  /// 默认true，离线与协同共用同一规则；不改变正文支持的标题级别。
   /// [inlineFormats] 为启用的字符格式，默认全部本地格式。
   /// [alignments] 为left/center/right/justify/distributed子集，空集合隐藏对齐命令。
   /// [fontSizes] 为字号菜单与命令允许的像素值，须为1～4096的整数且无重复。
+  /// [structuralIndentation]默认true；false禁止原生真实嵌套缩进，仍保留已配置的平面缩进。
+  /// [paragraphLayout]默认false；为纯文字场景开放平面缩进及块背景色，不开启复杂块。
+  /// [blockConversionPreservedAttributes]为类型转换时保留的宿主属性键，默认空；不得覆盖目标类型的内置属性。
   /// [nextParagraphStyle] 控制下一段样式入口，默认true。
   /// [lineHeight] 控制行高写入，默认true，允许1～3倍。
   /// [keyboardToolbarItems] 选择键盘顶部入口及顺序，默认原六项；不能重复，空列表隐藏整条工具栏。
@@ -265,18 +270,24 @@ final class EditorConfiguration {
   /// 菜单展示不改变块/格式能力、快捷输入或其他插入入口。
   /// [listConversionContainerTypes]显式允许无Delta结构容器中的同父扁平列表互换类型，默认空。
   /// 类型须为非空字符串；不注册块、不扩展Enter/Backspace或缩进范围，也不允许跨父容器转换。
+  /// [listIndentContainerTypes]独立授权无Delta父容器内同父扁平列表缩进、Enter及行首Backspace，默认空。
   /// [maxCharacters] 为不含段落分隔换行的正整数UTF-16正文上限，[maxBlocks] 为正整数正文节点上限（含结构子块）。
   /// 所有集合构造时复制；非法配置抛出ArgumentError，不创建编辑资源。
   factory EditorConfiguration({
     Iterable<EditorBlock> blocks = EditorBlock.values,
     Iterable<int> headingLevels = const {1, 2, 3, 4, 5, 6, 7, 8, 9},
+    bool progressiveHeadingMenu = true,
     Iterable<EditorInlineFormat> inlineFormats = EditorInlineFormat.values,
     Iterable<String> alignments = const {'left', 'center', 'right', 'justify', 'distributed'},
     Iterable<int> fontSizes = const [12, 16, 20, 24, 28, 32, 36],
+    bool paragraphLayout = false,
+    bool structuralIndentation = true,
+    Iterable<String> blockConversionPreservedAttributes = const {},
     bool nextParagraphStyle = true,
     bool lineHeight = true,
     Iterable<EditorKeyboardToolbarItem> keyboardToolbarItems = EditorKeyboardToolbarItem.defaults,
     Iterable<String> listConversionContainerTypes = const {},
+    Iterable<String> listIndentContainerTypes = const {},
     int maxCharacters = 100000,
     int maxBlocks = 500,
   }) {
@@ -287,6 +298,8 @@ final class EditorConfiguration {
     final formats = Set<EditorInlineFormat>.unmodifiable(inlineFormats);
     final toolbarItems = List<EditorKeyboardToolbarItem>.unmodifiable(keyboardToolbarItems);
     final listContainers = Set<String>.unmodifiable(listConversionContainerTypes);
+    final indentContainers = Set<String>.unmodifiable(listIndentContainerTypes);
+    final conversionAttributes = Set<String>.unmodifiable(blockConversionPreservedAttributes);
     if (toolbarItems.toSet().length != toolbarItems.length ||
         !selected.contains(EditorBlock.paragraph) ||
         selected.toSet().length != selected.length ||
@@ -297,6 +310,8 @@ final class EditorConfiguration {
         sizes.any((size) => size < 1 || size > 4096) ||
         (formats.contains(EditorInlineFormat.fontSize) && sizes.isEmpty) ||
         listContainers.any((type) => type.trim().isEmpty) ||
+        indentContainers.any((type) => type.trim().isEmpty) ||
+        conversionAttributes.any((key) => key.trim().isEmpty) ||
         maxCharacters < 1 ||
         maxBlocks < 1) {
       throw ArgumentError('编辑能力配置无效');
@@ -314,14 +329,23 @@ final class EditorConfiguration {
       false,
       keyboardToolbarItems: toolbarItems,
       listConversionContainerTypes: listContainers,
+      listIndentContainerTypes: indentContainers,
+      paragraphLayout: paragraphLayout,
+      structuralIndentation: structuralIndentation,
+      progressiveHeadingMenu: progressiveHeadingMenu,
+      blockConversionPreservedAttributes: conversionAttributes,
     );
   }
 
   /// 保存已冻结的[blocks]/[headingLevels]/[inlineFormats]/[alignments]/[fontSizes]。
+  /// [progressiveHeadingMenu]控制标题菜单逐级展示，默认true且不区分数据来源。
   /// [nextParagraphStyle]/[lineHeight]控制段落命令，[maxCharacters]/[maxBlocks]限制容量。
   /// [documentFeatures]仅用于保留原协同装配，不能由本地入口开启。
   /// [keyboardToolbarItems]为冻结的工具栏入口及顺序，默认原六项。
   /// [listConversionContainerTypes]为冻结的列表类型转换父容器集合，默认空，不转移任何编辑资源。
+  /// [listIndentContainerTypes]为冻结的平面列表编辑父容器集合，默认空。
+  /// [structuralIndentation]控制真实嵌套缩进，默认true。
+  /// [paragraphLayout]控制纯文字排版入口，[blockConversionPreservedAttributes]为冻结的宿主保留属性键。
   const EditorConfiguration._(
     this.blocks,
     this.headingLevels,
@@ -335,6 +359,11 @@ final class EditorConfiguration {
     this.documentFeatures, {
     this.keyboardToolbarItems = EditorKeyboardToolbarItem.defaults,
     this.listConversionContainerTypes = const {},
+    this.listIndentContainerTypes = const {},
+    this.paragraphLayout = false,
+    this.structuralIndentation = true,
+    this.progressiveHeadingMenu = true,
+    this.blockConversionPreservedAttributes = const {},
   });
 
   /// 原协同文档的兼容预设，不改变既有复杂块、上下标、布局和宿主命令。
@@ -381,6 +410,12 @@ final class EditorConfiguration {
   /// 是否包含非文字块，决定复杂编辑菜单和排版能力；不代表连接协同。
   bool get hasComplexBlocks => documentFeatures || blocks.any((block) => !EditorBlock.text.contains(block));
 
+  /// 标题菜单是否逐级展开；离线与协同均读取同一配置值。
+  bool get usesProgressiveHeadingMenu => progressiveHeadingMenu;
+
+  /// 是否显示缩进及块背景；纯文字场景可单独开启，不注册复杂块。
+  bool get hasParagraphLayout => hasComplexBlocks || paragraphLayout;
+
   /// 是否需要嵌套/行内对象的事务和渲染支持，具体块仍按blocks逐一校验。
   bool get usesRichDocument =>
       hasComplexBlocks || inlineFormats.any((format) => !EditorInlineFormat.text.contains(format));
@@ -390,6 +425,9 @@ final class EditorConfiguration {
 
   /// 启用的标题级别，支持1～9的非连续集合以保留正文能力；移动菜单只展示其中H1～H6。
   final Set<int> headingLevels;
+
+  /// T菜单逐级展示开关，默认true，不修改正文或允许的标题级别。
+  final bool progressiveHeadingMenu;
 
   /// 启用的字符格式；空集合不显示Aa入口。
   final Set<EditorInlineFormat> inlineFormats;
@@ -408,6 +446,18 @@ final class EditorConfiguration {
   /// 仅扩展同父扁平列表间的类型互换；根级和高亮容器沿用默认能力。
   /// 不注册自定义块，不扩展Enter、Backspace或缩进，也不允许有正文的真实嵌套父列表。
   final Set<String> listConversionContainerTypes;
+
+  /// 显式授权缩进、Enter和行首Backspace的无Delta父容器；仅同父扁平列表，默认空，不产生真实嵌套。
+  final Set<String> listIndentContainerTypes;
+
+  /// 是否允许原生真实嵌套缩进，默认true；false仍可使用获准的平面缩进。
+  final bool structuralIndentation;
+
+  /// 纯文字场景是否开放平面缩进及块背景，默认false；不改变正文结构能力。
+  final bool paragraphLayout;
+
+  /// 类型转换保留的宿主属性键；不可变副本，默认空，不覆盖目标类型的内置属性。
+  final Set<String> blockConversionPreservedAttributes;
 
   /// 是否开放下一段样式设置。
   final bool nextParagraphStyle;
@@ -471,5 +521,5 @@ final class EditorConfiguration {
   });
 
   /// 是否存在任何可显示的布局命令。
-  bool get hasLayout => hasComplexBlocks || alignments.isNotEmpty || nextParagraphStyle;
+  bool get hasLayout => hasParagraphLayout || alignments.isNotEmpty || nextParagraphStyle;
 }

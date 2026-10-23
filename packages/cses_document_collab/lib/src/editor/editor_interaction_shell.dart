@@ -29,6 +29,7 @@ import 'package:flutter/widgets.dart';
 class EditorInteractionShell extends StatelessWidget {
   /// [key]控制组件身份与状态复用；[editorState]和[scrollController]均由调用方拥有。
   /// [child]必须使用同一正文和滚动控制器；[enabled]默认true，false时直接显示正文。
+  /// [editable]默认true；false仅关闭编辑工具栏，保留只读选择和复制能力。
   /// [keyboardActions]默认空；宿主动作按给定顺序接在内建入口后，资源仍归宿主。
   const EditorInteractionShell({
     super.key,
@@ -36,6 +37,7 @@ class EditorInteractionShell extends StatelessWidget {
     required this.scrollController,
     required this.child,
     this.enabled = true,
+    this.editable = true,
     this.keyboardActions = const [],
   });
 
@@ -51,6 +53,9 @@ class EditorInteractionShell extends StatelessWidget {
   /// 是否挂载通用编辑交互，默认true；false不改变子组件或正文状态。
   final bool enabled;
 
+  /// 是否挂载编辑工具栏，默认true；不改变子编辑器的权限或选择服务。
+  final bool editable;
+
   /// 宿主业务快捷动作；默认空，稳定标识不得重复，回调由宿主管理异步写回。
   final List<EditorKeyboardAction> keyboardActions;
 
@@ -58,14 +63,13 @@ class EditorInteractionShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!enabled) return child;
-    return EditorShortcutToolbar(
+    final selection = CollabMobileSelectionMenu(
       editorState: editorState,
-      keyboardActions: keyboardActions,
-      child: CollabMobileSelectionMenu(
-        editorState: editorState,
-        scrollController: scrollController,
-        child: child,
-      ),
+      scrollController: scrollController,
+      child: child,
     );
+    return editable
+        ? EditorShortcutToolbar(editorState: editorState, keyboardActions: keyboardActions, child: selection)
+        : selection;
   }
 }

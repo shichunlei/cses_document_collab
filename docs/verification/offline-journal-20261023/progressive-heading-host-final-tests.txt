@@ -1,0 +1,64 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (320.0, 1.0)
+00:01 +1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (320.0, 1.0)
+00:02 +2: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (320.0, 1.0)
+00:02 +3: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (320.0, 1.0)
+00:02 +4: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (320.0, 1.0)
+00:02 +5: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (320.0, 1.0)
+00:02 +6: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (320.0, 1.0)
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _KeyWidgetFinder:<Found 0 widgets with key [<'editor-block-heading-6'>]: []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:260:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart line 260
+The test description was:
+  H1-H6 render and survive preview/reopen at (320.0, 1.0)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:02 +6 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: pilot native picker cancel resumes input without writing
+00:02 +6 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (320.0, 1.0) [E]
+  Test failed. See exception logs above.
+  The test description was: H1-H6 render and survive preview/reopen at (320.0, 1.0)
+
+00:03 +7 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart: T menu directly converts todo_list to bulleted_list in journal section
+00:03 +8 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (390.0, 2.0)
+00:03 +9 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (390.0, 2.0)
+00:03 +10 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (390.0, 2.0)
+00:03 +11 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (390.0, 2.0)
+00:03 +12 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (390.0, 2.0)
+00:04 +13 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (390.0, 2.0)
+00:04 +14 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (390.0, 2.0)
+00:04 +15 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: help native picker cancel resumes input without writing
+00:04 +16 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart: consecutive T list conversions keep independent undo and redo
+00:04 +17 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: text/background colors, code and scripts render and persist
+00:04 +18 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: text/background colors, code and scripts render and persist
+00:05 +19 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: text/background colors, code and scripts render and persist
+00:05 +20 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: native picker cannot restore input after account changes
+00:05 +21 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: font size uses real selection and keeps list marker centered
+00:05 +22 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: font size uses real selection and keeps list marker centered
+00:05 +23 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: review regression: native picker revokes a changed user permanently
+00:05 +24 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: review regression: native picker revokes a changed user permanently
+00:05 +25 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: paragraph alignment and flat indent preserve business identity
+00:06 +26 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: paragraph alignment and flat indent preserve business identity
+00:06 +27 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: paragraph alignment and flat indent preserve business identity
+00:06 +28 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: native mention and Todo survive preview and saving
+00:06 +29 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: heading alignment and flat indent preserve business identity
+00:07 +30 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: bulleted_list alignment and flat indent preserve business identity
+00:08 +31 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: numbered_list alignment and flat indent preserve business identity
+00:09 +32 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: todo_list alignment and flat indent preserve business identity
+00:09 +33 -1: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (320.0, 1.0)

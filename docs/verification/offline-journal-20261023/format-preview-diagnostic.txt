@@ -1,0 +1,41 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart
+00:00 +0: H1-H6 render and survive preview/reopen at (320.0, 1.0)
+format diagnostic: wait frame
+format diagnostic: close preview
+format diagnostic: cancel controller stream
+format diagnostic: before typing dispose
+format diagnostic: before state dispose
+format diagnostic: state disposed
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: not null
+  Actual: <null>
+preview switch completed
+
+When the exception was thrown, this was the stack:
+#4      _reopen (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:164:3)
+<asynchronous suspension>
+#5      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:222:10)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart line 164
+The test description was:
+  H1-H6 render and survive preview/reopen at (320.0, 1.0)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:02 +0 -1: H1-H6 render and survive preview/reopen at (320.0, 1.0) [E]
+  Test failed. See exception logs above.
+  The test description was: H1-H6 render and survive preview/reopen at (320.0, 1.0)
+
+format diagnostic: stream cancelled
+format diagnostic: closed preview
+00:02 +0 -1: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (320.0, 1.0)

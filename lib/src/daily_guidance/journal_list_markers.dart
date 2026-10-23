@@ -1,4 +1,5 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/cses_document_collab.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
@@ -100,12 +101,26 @@ Widget buildJournalTodoMarker(
 }
 
 /// 将[node]的标记[child]约束在正文第一行高度内；[context]与正文共用缩放。
-/// 宽度至少为原列表的26逻辑像素，长编号可扩宽；多行正文不改变标记的垂直位置。
+/// 宽度至少为原列表的26逻辑像素，长编号可扩宽；首段文字字号参与高度计算，多行不改变标记位置。
 Widget _marker(BuildContext context, Node node, Widget child) {
-  final scale = context.read<EditorState>().editorStyle.textScaleFactor;
+  final state = context.read<EditorState>();
+  final scale = state.editorStyle.textScaleFactor;
+  final base = state.editorStyle.textStyleConfiguration.text;
+  final first = node.delta?.whereType<TextInsert>().firstOrNull;
+  final decorated = first == null
+      ? null
+      : decorateEditorTextSpan(
+          context,
+          node,
+          0,
+          first,
+          TextSpan(style: base),
+          TextSpan(style: base),
+        );
+  final style = decorated?.style ?? base;
   return Container(
     key: ValueKey('journal-list-marker-${node.id}'),
-    height: 32 * scale,
+    height: (style.fontSize ?? 16) * (style.height ?? 2) * scale,
     constraints: BoxConstraints(minWidth: 26 * scale),
     padding: EdgeInsets.only(right: 4 * scale),
     alignment: Alignment.center,

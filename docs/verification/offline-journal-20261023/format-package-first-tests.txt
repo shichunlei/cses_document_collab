@@ -1,0 +1,50 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_configuration_test.dart
+00:00 +0 -1: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_paragraph_indent_test.dart [E]
+  Failed to load "/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_paragraph_indent_test.dart": Does not exist.
+00:00 +0 -2: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_editing_test.dart [E]
+  Failed to load "/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_editing_test.dart": Does not exist.
+00:00 +0 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_configuration_test.dart: configuration copies collections and rejects missing paragraph and invalid limits
+00:00 +1 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_configuration_test.dart: two configurations enforce blocks, nonconsecutive headings and undo independently
+00:00 +2 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_configuration_test.dart: disabled formats cannot enter by commands, defaults, delta or locks
+00:00 +3 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_configuration_test.dart: configured character and block limits reject paste atomically
+00:00 +4 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: (setUpAll)
+00:00 +4 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: empty paragraph converts to a heading and preserves block id
+00:00 +5 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: non-empty paragraph inserts a new list block after it
+00:00 +6 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: empty paragraph converts to an unchecked todo block
+00:00 +7 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: URL-backed blocks leave an editable paragraph caret after insertion
+00:00 +8 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: URL-backed insertion rejects unsafe or incomplete URLs
+00:00 +9 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:00 +10 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:00 +11 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:00 +12 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:00 +13 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:00 +14 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:00 +15 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:00 +16 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:01 +17 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus toolbar exposes H1 through H6 and applies H6
+00:01 +18 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:02 +19 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus selection focuses an inserted block after existing text
+00:02 +20 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts code from empty text and restores its caret
+00:02 +21 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts code from non-empty text and restores its caret
+00:02 +22 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus code entry follows its source after a remote insertion
+00:02 +23 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus code entry rejects permission revoked while the sheet is open
+00:03 +24 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: H menu converts the selected block to todo
+00:03 +25 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: menus stay above and close together with the keyboard
+00:03 +26 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: typing and newline keep the editor toolbar active
+00:03 +27 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: tapping a middle empty paragraph requests the Android keyboard
+00:03 +28 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: Aa owns color and H owns all block-list actions
+00:03 +29 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:04 +30 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: T reveals a deep current heading and its next level
+00:04 +31 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: Aa applies and displays an inline background color
+00:04 +32 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: Aa menu applies mutually exclusive superscript and subscript
+00:04 +33 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: inline style persists until manual toggle or paragraph switch
+00:04 +34 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: entering a paragraph initializes Aa from caret formatting
+00:04 +35 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: quote colors change independently and can be cleared and undone
+00:04 +36 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: block layout supports justify and distributed with undo
+00:04 +37 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: block layout menu aligns and indents list blocks
+00:04 +38 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: (tearDownAll)
+00:05 +38 -2: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_editing_test.dart: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_editing_test.dart
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_paragraph_indent_test.dart: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_paragraph_indent_test.dart

@@ -14,9 +14,11 @@ export 'src/controller/document_metadata_controller.dart';
 export 'src/editor/collaborative_editor_page.dart' show CollaborativeEditorPage;
 export 'src/editor/core/document_editor_controller.dart';
 export 'src/editor/core/editor_command_context.dart' show EditorCommandContext;
+export 'src/editor/core/editor_view_configuration.dart';
 export 'src/editor/core/editor_configuration.dart'
     show EditorConfiguration, EditorBlock, EditorInlineFormat, EditorKeyboardToolbarItem;
 export 'src/editor/document_editor_view.dart';
+export 'src/editor/editor_text_presentation.dart';
 export 'src/editor/document_editor_commands.dart' show handleDocumentParagraphEnter, applyDocumentBlockShortcut;
 export 'src/editor/editor_interaction_shell.dart' show EditorInteractionShell;
 export 'src/editor/editor_user_mentions.dart'

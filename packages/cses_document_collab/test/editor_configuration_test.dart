@@ -22,6 +22,80 @@ void main() {
     expect(() => EditorConfiguration(maxBlocks: 0), throwsArgumentError);
     expect(() => LocalEditorController(configuration: EditorConfiguration.document), throwsArgumentError);
   });
+  test('text paragraph layout and preserved metadata are opt-in immutable capabilities', () {
+    final keys = {'host_tag'};
+    final parents = {'host_section'};
+    final config = EditorConfiguration(
+      blocks: [EditorBlock.paragraph],
+      inlineFormats: {},
+      alignments: {},
+      nextParagraphStyle: false,
+      paragraphLayout: true,
+      blockConversionPreservedAttributes: keys,
+      listIndentContainerTypes: parents,
+    );
+    keys.clear();
+    parents.clear();
+    expect(config.hasComplexBlocks, isFalse);
+    expect(config.hasLayout, isTrue);
+    expect(config.hasParagraphLayout, isTrue);
+    expect(config.blockConversionPreservedAttributes, {'host_tag'});
+    expect(config.listIndentContainerTypes, {'host_section'});
+    expect(() => config.listIndentContainerTypes.clear(), throwsUnsupportedError);
+    expect(() => config.blockConversionPreservedAttributes.clear(), throwsUnsupportedError);
+    expect(EditorConfiguration(blocks: [EditorBlock.paragraph]).hasParagraphLayout, isFalse);
+    expect(() => EditorConfiguration(listIndentContainerTypes: [' ']), throwsArgumentError);
+    expect(() => EditorConfiguration(blockConversionPreservedAttributes: ['']), throwsArgumentError);
+  });
+  test('heading disclosure defaults agree for all editor capabilities', () {
+    final blocks = [EditorBlock.paragraph, EditorBlock.heading];
+    final legacy = EditorConfiguration(blocks: blocks);
+    final progressive = EditorConfiguration(blocks: blocks, progressiveHeadingMenu: true);
+    final expanded = EditorConfiguration(progressiveHeadingMenu: false);
+    expect(legacy.usesProgressiveHeadingMenu, isTrue);
+    expect(EditorConfiguration.document.usesProgressiveHeadingMenu, isTrue);
+    expect(progressive.usesProgressiveHeadingMenu, isTrue);
+    expect(progressive.hasComplexBlocks, isFalse);
+    expect(progressive.headingLevels, legacy.headingLevels);
+    expect(expanded.usesProgressiveHeadingMenu, isFalse);
+  });
+  for (final local in [true, false]) {
+    test('configured flat container uses shared empty-list Enter local=$local', () async {
+      final controller = DocumentEditorController(
+        document: Document(
+          root: Node(
+            type: 'page',
+            children: [
+              Node(
+                type: 'host-section',
+                children: [
+                  todoListNode(checked: true),
+                  paragraphNode(text: 'neighbor'),
+                ],
+              ),
+            ],
+          ),
+        ),
+        commandContext: EditorCommandContext(
+          localOnly: local,
+          configuration: EditorConfiguration(listIndentContainerTypes: {'host-section'}),
+        ),
+      );
+      final state = controller.editorState;
+      try {
+        state.selection = Selection.collapsed(Position(path: [0, 0]));
+        expect(await handleDocumentParagraphEnter(state), isTrue);
+        expect(state.getNodeAtPath([0, 0])!.type, ParagraphBlockKeys.type);
+        expect(state.document.root.children, hasLength(1));
+        expect(state.getNodeAtPath([0, 1])!.delta!.toPlainText(), 'neighbor');
+        state.undoManager.undo();
+        expect(state.getNodeAtPath([0, 0])!.type, TodoListBlockKeys.type);
+        expect(state.getNodeAtPath([0, 0])!.attributes[TodoListBlockKeys.checked], isTrue);
+      } finally {
+        await controller.close();
+      }
+    });
+  }
   test('two configurations enforce blocks, nonconsecutive headings and undo independently', () async {
     final first = LocalEditorController(
       initialText: 'Title',

@@ -310,10 +310,7 @@ class _EditorShortcutToolbarState extends State<EditorShortcutToolbar> {
     ),
     actionHandler: (_, state) => unawaited(
       _runKeyboardAction('待办列表', () async {
-        await _applyBlockStyle(
-          state,
-          const _BlockStyleAction(blockType: TodoListBlockKeys.type, label: '待办列表', icon: LucideIcons.squareCheck),
-        );
+        await applyEditorBlockStyle(state, TodoListBlockKeys.type);
       }),
     ),
   );
@@ -1172,7 +1169,7 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
       key: const ValueKey('editor-block-layout-menu'),
       scrollDirection: Axis.horizontal,
       children: [
-        if (EditorCommandContext.of(widget.editorState).configuration.hasComplexBlocks) ...[
+        if (EditorCommandContext.of(widget.editorState).configuration.hasParagraphLayout) ...[
           _PopupIconButton(
             key: const ValueKey('editor-block-outdent'),
             tooltip: '减少缩进',
@@ -1210,7 +1207,7 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
             ),
             const SizedBox(width: 5),
           ],
-        if (EditorCommandContext.of(widget.editorState).configuration.hasComplexBlocks) ...[
+        if (EditorCommandContext.of(widget.editorState).configuration.hasParagraphLayout) ...[
           _PopupIconButton(
             key: const ValueKey('editor-block-background-color'),
             tooltip: '块背景色',
@@ -1431,29 +1428,24 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
     return widget.editorState.getNodeAtPath(selection.start.path)?.id;
   }
 
-  /// 按当前标题推进一级菜单；普通正文从H1～H3开始，历史深标题也最多显示H6。
+  /// 按当前标题推进到下一个已启用级别，连续配置从H1～H3开始，最多显示H6。
+  /// 非连续级别跳过被禁用项；仅配置高等级标题时仍保留首个可用入口。
   int _headingLimitForSelection() {
+    final levels = _menuHeadingLevels(EditorCommandContext.of(widget.editorState).configuration);
+    final initial = math.max(3, levels.firstOrNull ?? 3);
     final selection = widget.editorState.selection;
-    if (selection == null) {
-      return 3;
-    }
+    if (selection == null) return initial;
     final node = widget.editorState.getNodeAtPath(selection.start.path);
-    if (node?.type != HeadingBlockKeys.type) {
-      return 3;
-    }
-
+    if (node?.type != HeadingBlockKeys.type) return initial;
     final storedLevel = node?.attributes[HeadingBlockKeys.level];
     final level = storedLevel is int ? storedLevel.clamp(1, _maxHeadingMenuLevel) : 1;
-    if (level < 3) {
-      return 3;
-    }
-
-    return math.min(level + 1, _maxHeadingMenuLevel);
+    final next = levels.where((candidate) => candidate > level).firstOrNull ?? level;
+    return math.max(initial, next);
   }
 
   /// 为借用的 [context] 构建类型菜单；高亮当前起点类型，按钮在点击时读取最新选区。
   /// 构建过程无编辑副作用，列表命令由统一事务执行，Heading 选项按当前披露上限显示。
-  /// 标题入口最多显示H6，使用对应Lucide图标；不改变已有标题数据。
+  /// 标题入口最多显示H6；按实例逐级展示配置控制披露，使用对应Lucide图标，不改变已有标题数据。
   @override
   Widget build(BuildContext context) {
     final selection = widget.editorState.selection;
@@ -1465,7 +1457,7 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
     final styles = <_BlockStyleAction>[
       _paragraphStyle,
       for (final level in _menuHeadingLevels(config))
-        if (level <= _maxHeadingLevel || !config.hasComplexBlocks)
+        if (level <= _maxHeadingLevel || !config.usesProgressiveHeadingMenu)
           _BlockStyleAction(
             blockType: HeadingBlockKeys.type,
             headingLevel: level,
@@ -1520,7 +1512,7 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
     if (nodes.isEmpty || nodes.any((node) => node.type == csesCalloutBlockType)) return;
     _applyingStyle = true;
     try {
-      final completion = _applyBlockStyle(state, style);
+      final completion = applyEditorBlockStyle(state, style.blockType, headingLevel: style.headingLevel);
       final range = CollabTextRange.capture(state);
       await completion;
       if (!mounted || widget.editorState != state || state.isDisposed) {
@@ -1529,11 +1521,8 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
       widget.onRangeChanged?.call(range);
       final level = style.headingLevel;
       setState(() {
-        if (level != null && level >= 3 && level < _maxHeadingMenuLevel) {
-          _maxHeadingLevel = math.max(_maxHeadingLevel, level + 1);
-        } else if (level == null || level < 3) {
-          _maxHeadingLevel = 3;
-        }
+        final limit = _headingLimitForSelection();
+        _maxHeadingLevel = level != null && level >= 3 ? math.max(_maxHeadingLevel, limit) : limit;
       });
     } catch (error, stackTrace) {
       _reportEditorError(state, '文档列表类型切换失败', error: error, stackTrace: stackTrace, tag: 'DocCollab');
@@ -1551,23 +1540,61 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
   }
 }
 
-/// 将[style]应用到借用[state]的实时选区；T菜单和原生待办一级入口共用此事务。
+/// 将[blockType]应用到借用[state]的实时选区；[headingLevel]仅用于标题，默认一级。
+/// T菜单、待办入口与键盘标题操作共用此事务，不按在线/离线划分。
 /// 能力关闭、只读、销毁、空选区或高亮容器不执行；列表与非列表混选由列表命令整批拒绝。
 /// 同类列表不重建或重置勾选，转换保留正文、格式、层级和焦点，异常交由调用边界报告。
-Future<void> _applyBlockStyle(EditorState state, _BlockStyleAction style) async {
+Future<void> applyEditorBlockStyle(EditorState state, String blockType, {int? headingLevel}) async {
   final capabilities = EditorCommandContext.of(state).configuration;
-  if (!capabilities.allowsBlock(style.blockType, level: style.headingLevel)) return;
+  if (!capabilities.allowsBlock(blockType, level: headingLevel)) return;
   final selection = state.selection;
   if (state.isDisposed || !state.editable || selection == null) return;
   final nodes = state.getNodesInSelection(selection);
   if (nodes.isEmpty || nodes.any((node) => node.type == csesCalloutBlockType)) return;
   const listTypes = {'numbered_list', 'bulleted_list', 'todo_list'};
-  if (listTypes.contains(style.blockType) && nodes.any((node) => listTypes.contains(node.type))) {
-    await changeCollabListType(state, style.blockType);
+  if (listTypes.contains(blockType) && nodes.any((node) => listTypes.contains(node.type))) {
+    await changeCollabListType(state, blockType);
   } else {
-    await state.formatNode(selection, (node) => _convertedNode(node, style.blockType, style.headingLevel));
+    await state.formatNode(
+      selection,
+      (node) => _convertedNode(
+        node,
+        blockType,
+        headingLevel,
+        preservedAttributes: capabilities.blockConversionPreservedAttributes,
+      ),
+    );
   }
 }
+
+/// 标题Markdown使用与T菜单相同的能力及属性转换，避免原生快捷输入丢失宿主元数据。
+/// 只处理可编辑文字叶子和已启用的1～6级标题；不持有会话或修改其他快捷键。
+final editorHeadingMarkdown = CharacterShortcutEvent(
+  key: 'editor-heading-markdown',
+  character: ' ',
+  handler: (state) {
+    final capabilities = EditorCommandContext.of(state).configuration;
+    return formatMarkdownSymbol(
+      state,
+      (node) => node.delta != null && node.children.isEmpty,
+      (_, text, selection) =>
+          text.isNotEmpty &&
+          text.length <= 6 &&
+          text.split('').every((character) => character == '#') &&
+          capabilities.allowsBlock(HeadingBlockKeys.type, level: text.length),
+      (text, node, delta) => [
+        _convertedNode(
+          node.copyWith(
+            attributes: {...node.attributes, blockComponentDelta: delta.compose(Delta()..delete(text.length)).toJson()},
+          ),
+          HeadingBlockKeys.type,
+          text.length,
+          preservedAttributes: capabilities.blockConversionPreservedAttributes,
+        ),
+      ],
+    );
+  },
+);
 
 /// 类型菜单的不可变命令描述；图标与标签不参与文档数据写入。
 class _BlockStyleAction {
@@ -1792,7 +1819,9 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
             label: const Text('字号'),
           ),
         const SizedBox(height: 8),
-        if (EditorCommandContext.of(widget.editorState).configuration.hasComplexBlocks)
+        if (_styles
+            .skip(5)
+            .any((style) => EditorCommandContext.of(widget.editorState).configuration.allowsFormat(style.key)))
           Row(
             children: [
               for (var i = 5; i < _styles.length; i++)
@@ -2734,7 +2763,15 @@ Future<bool> applyBlockShortcut(
   final text = node.delta?.toPlainText() ?? '';
   if (text.isEmpty) {
     final nodeSelection = Selection.single(path: targetPath, startOffset: 0);
-    await editorState.formatNode(nodeSelection, (node) => _convertedNode(node, blockType, headingLevel));
+    await editorState.formatNode(
+      nodeSelection,
+      (node) => _convertedNode(
+        node,
+        blockType,
+        headingLevel,
+        preservedAttributes: capabilities.blockConversionPreservedAttributes,
+      ),
+    );
     return true;
   }
 
@@ -2748,8 +2785,9 @@ Future<bool> applyBlockShortcut(
 
 /// 将借用 [node] 转为 [blockType]，[headingLevel] 仅标题使用，null 按一级。
 /// 保留正文及段落默认格式/下一段设置；代码使用独立输入规则，不继承段落字段。
+/// [preservedAttributes]指定额外保留的宿主属性键；目标内置属性优先，块背景默认保留。
 /// 返回新节点，身份由适配器类型转换链处理，不创建资源。
-Node _convertedNode(Node node, String blockType, int? headingLevel) {
+Node _convertedNode(Node node, String blockType, int? headingLevel, {Set<String> preservedAttributes = const {}}) {
   final collabBlockId = node.attributes['cses_collab_block_id'];
   final alignment = node.attributes[blockComponentAlign] as String? ?? 'left';
   final keepsIndent =
@@ -2757,6 +2795,13 @@ Node _convertedNode(Node node, String blockType, int? headingLevel) {
       blockType == NumberedListBlockKeys.type ||
       blockType == TodoListBlockKeys.type;
   final attributes = <String, Object>{
+    for (final key in {
+      ...preservedAttributes,
+      csesBlockBackgroundColorAttribute,
+      blockComponentBackgroundColor,
+      blockComponentTextDirection,
+    })
+      if (node.attributes[key] != null) key: node.attributes[key]!,
     if (blockType != 'code') ...{
       for (final key in collabParagraphKeys)
         if (key != 'heading' && node.attributes[paragraphPropertyAttribute(key)] is String)

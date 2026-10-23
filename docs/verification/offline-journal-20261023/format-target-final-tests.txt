@@ -1,0 +1,107 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart
+00:00 +0: H1-H6 render and survive preview/reopen at (320.0, 1.0)
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: no matching candidates
+  Actual: _TypeWidgetFinder:<Found 1 widget with type "LocalJournalPage": [
+            LocalJournalPage(dependencies: [_LocalizationsScope-[GlobalKey#9fb80]], state:
+_LocalJournalPageState#6a01b),
+          ]>
+   Which: means one was found but none were expected
+
+When the exception was thrown, this was the stack:
+#4      _reopen (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:165:3)
+<asynchronous suspension>
+#5      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:220:10)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart line 165
+The test description was:
+  H1-H6 render and survive preview/reopen at (320.0, 1.0)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:02 +0 -1: H1-H6 render and survive preview/reopen at (320.0, 1.0) [E]
+  Test failed. See exception logs above.
+  The test description was: H1-H6 render and survive preview/reopen at (320.0, 1.0)
+
+00:02 +0 -1: H1-H6 render and survive preview/reopen at (390.0, 2.0)
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: no matching candidates
+  Actual: _TypeWidgetFinder:<Found 1 widget with type "LocalJournalPage": [
+            LocalJournalPage(dependencies: [_LocalizationsScope-[GlobalKey#02ab7]], state:
+_LocalJournalPageState#416bc),
+          ]>
+   Which: means one was found but none were expected
+
+When the exception was thrown, this was the stack:
+#4      _reopen (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:165:3)
+<asynchronous suspension>
+#5      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:220:10)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart line 165
+The test description was:
+  H1-H6 render and survive preview/reopen at (390.0, 2.0)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:02 +0 -2: H1-H6 render and survive preview/reopen at (390.0, 2.0) [E]
+  Test failed. See exception logs above.
+  The test description was: H1-H6 render and survive preview/reopen at (390.0, 2.0)
+
+00:02 +0 -2: text/background colors, code and scripts render and persist
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: no matching candidates
+  Actual: _TypeWidgetFinder:<Found 1 widget with type "LocalJournalPage": [
+            LocalJournalPage(dependencies: [_LocalizationsScope-[GlobalKey#bcd80]], state:
+_LocalJournalPageState#f60f6),
+          ]>
+   Which: means one was found but none were expected
+
+When the exception was thrown, this was the stack:
+#4      _reopen (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:165:3)
+<asynchronous suspension>
+#5      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:282:13)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart line 165
+The test description was:
+  text/background colors, code and scripts render and persist
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:03 +0 -3: text/background colors, code and scripts render and persist [E]
+  Test failed. See exception logs above.
+  The test description was: text/background colors, code and scripts render and persist
+
+00:03 +0 -3: font size uses real selection and keeps list marker centered
+00:04 +1 -3: malformed/unsupported persisted heading levels are rejected
+00:04 +2 -3: paragraph alignment and flat indent preserve business identity
+00:04 +3 -3: heading alignment and flat indent preserve business identity
+00:05 +4 -3: bulleted_list alignment and flat indent preserve business identity
+00:06 +5 -3: numbered_list alignment and flat indent preserve business identity
+00:06 +6 -3: todo_list alignment and flat indent preserve business identity
+00:07 +7 -3: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (320.0, 1.0)
+  /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (390.0, 2.0)
+  /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: text/background colors, code and scripts render and persist

@@ -11,30 +11,47 @@ const journalSectionType = 'local-journal-section';
 /// 可添加栏目的稳定语义键；显示名称不用于恢复或识别正文。
 const journalSections = ['record', 'reflection', 'self-check'];
 
-/// 日记文字、列表与提及能力；栏目只作为列表互换的透明父容器，不开放列表真实嵌套。
+/// 日记标题、文字样式、排版与提及能力；栏目只作为列表互换的透明父容器，不开放真实嵌套。
 /// 宿主继续校验栏目边界、行内引用和业务属性。
 final journalConfiguration = EditorConfiguration(
   blocks: const [
     EditorBlock.paragraph,
+    EditorBlock.heading,
     EditorBlock.bulletedList,
     EditorBlock.numberedList,
     EditorBlock.todoList,
   ],
+  headingLevels: const {1, 2, 3, 4, 5, 6},
+  progressiveHeadingMenu: true,
   inlineFormats: const {
     EditorInlineFormat.bold,
     EditorInlineFormat.italic,
     EditorInlineFormat.underline,
     EditorInlineFormat.strikethrough,
+    EditorInlineFormat.code,
+    EditorInlineFormat.textColor,
+    EditorInlineFormat.backgroundColor,
+    EditorInlineFormat.fontSize,
+    EditorInlineFormat.superscript,
+    EditorInlineFormat.subscript,
     EditorInlineFormat.mention,
   },
-  alignments: const {},
-  fontSizes: const [],
+  alignments: const {'left', 'center', 'right', 'justify', 'distributed'},
+  paragraphLayout: true,
+  structuralIndentation: false,
+  blockConversionPreservedAttributes: const {
+    guidanceEntryAttribute,
+    'guidance_entry_id',
+    'guidance_done',
+  },
   lineHeight: false,
   nextParagraphStyle: false,
   listConversionContainerTypes: const [journalSectionType],
+  listIndentContainerTypes: const [journalSectionType],
   keyboardToolbarItems: const [
     EditorKeyboardToolbarItem.blockType,
     EditorKeyboardToolbarItem.textStyle,
+    EditorKeyboardToolbarItem.blockLayout,
     EditorKeyboardToolbarItem.mention,
     EditorKeyboardToolbarItem.todoList,
   ],
@@ -225,8 +242,7 @@ void validateJournalDocument(Document document) {
       if (!isJournalTextNode(node)) throw const FormatException('日记包含不支持的正文');
       final entry = node.attributes[guidanceEntryAttribute];
       if (entry != null &&
-          (node.type != ParagraphBlockKeys.type ||
-              !const {'task', 'help', 'pilot'}.contains(entry) ||
+          (!const {'task', 'help', 'pilot'}.contains(entry) ||
               node.attributes['guidance_entry_id'] is! String ||
               node.attributes['guidance_done'] is! bool)) {
         throw const FormatException('业务条目无效');
@@ -245,13 +261,20 @@ void validateJournalDocument(Document document) {
 
 /// 检查借用的[node]为受支持的文字叶子，已知提及占一个模型位置。
 bool isJournalTextNode(Node node) =>
-    journalConfiguration.allowsBlock(node.type) &&
+    (node.type != HeadingBlockKeys.type ||
+        node.attributes[HeadingBlockKeys.level] is int) &&
+    journalConfiguration.allowsBlock(
+      node.type,
+      level: node.attributes[HeadingBlockKeys.level] is int
+          ? node.attributes[HeadingBlockKeys.level] as int
+          : null,
+    ) &&
     node.children.isEmpty &&
     node.delta != null &&
     node.delta!.every((op) => op is TextInsert) &&
     validJournalDelta(node.delta!, complete: true);
 
-/// 检查[delta]只含基础格式、原生用户提及或旧业务引用；两种身份不得叠加。
+/// 检查[delta]只含已启用的文字样式、原生用户提及或旧业务引用；两种身份不得叠加。
 /// [complete]为true时同时验证对象和引用属性成对出现。
 /// 补丁可暂时只含格式retain，合成后的完整文字仍须再次校验。
 bool validJournalDelta(Delta delta, {bool complete = false}) {

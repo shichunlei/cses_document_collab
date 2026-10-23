@@ -23,13 +23,11 @@ import 'package:cses_document_collab/src/editor/collab_kr_block.dart';
 import 'package:cses_document_collab/src/editor/collab_link_actions.dart';
 import 'package:cses_document_collab/src/editor/collab_meeting_block.dart';
 import 'package:cses_document_collab/src/editor/collab_mermaid_block.dart';
-import 'package:cses_document_collab/src/editor/collab_mobile_selection_menu.dart';
 import 'package:cses_document_collab/src/editor/collab_ordered_marker.dart';
 import 'package:cses_document_collab/src/editor/collab_page_divider_block.dart';
 import 'package:cses_document_collab/src/editor/collab_paragraph_editing.dart';
 import 'package:cses_document_collab/src/editor/collab_paragraph_indent.dart';
-import 'package:cses_document_collab/src/editor/collab_paragraph_presentation.dart';
-import 'package:cses_document_collab/src/editor/collab_text_alignment.dart';
+import 'package:cses_document_collab/src/editor/editor_text_presentation.dart';
 import 'package:cses_document_collab/src/editor/collab_unsupported_block.dart';
 import 'package:cses_document_collab/src/editor/collab_video_block.dart';
 import 'package:cses_document_collab/src/editor/collab_web_embed_block.dart';
@@ -54,6 +52,8 @@ import 'collab_table_row_block.dart';
 import 'collab_task_card_block.dart';
 
 import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
+import 'package:cses_document_collab/src/editor/core/editor_view_configuration.dart';
+import 'package:cses_document_collab/src/editor/editor_interaction_shell.dart';
 
 /// 本地与协同共用的正文、快捷栏和划词菜单；只借用编辑会话。
 ///
@@ -71,6 +71,7 @@ class DocumentEditorView extends StatefulWidget {
   /// [padding] 为正文逻辑像素留白，[header]/[footer] 是文档外的可选滚动内容。
   /// [editorKey] 标识内部正文，[onUserMention] 可接管@，null不调用业务服务。
   /// [preview]默认false；true关闭选区、输入、浮栏及正文点击操作，仅显示内容。
+  /// [configuration]默认共用展示配置；宿主可注入结构渲染、样式及业务动作，不替换通用命令链。
   const DocumentEditorView({
     super.key,
     required this.editorState,
@@ -83,6 +84,7 @@ class DocumentEditorView extends StatefulWidget {
     this.footer,
     this.editorKey,
     this.onUserMention,
+    this.configuration = EditorViewConfiguration.standard,
   });
 
   /// 必填借用正文，视图不释放文档或同步资源。
@@ -115,6 +117,9 @@ class DocumentEditorView extends StatefulWidget {
   /// 可选@快捷命令，由所属业务页面提供。
   final Future<bool> Function(EditorState)? onUserMention;
 
+  /// 宿主展示和业务扩展，默认无扩展；生命周期由调用方持有。
+  final EditorViewConfiguration configuration;
+
   /// 创建正文视图的滚动与渲染配置，不接管编辑会话。
   @override
   State<DocumentEditorView> createState() => _DocumentEditorViewState();
@@ -125,9 +130,6 @@ class _DocumentEditorViewState extends State<DocumentEditorView> {
   late EditorScrollController _scroll;
   late Map<String, BlockComponentBuilder> _builders;
 
-  /// 当前宿主字体族，编辑和独立预览使用相同字体回退。
-  String? _fontFamily;
-
   /// 创建滚动和渲染资源；网络与存储由外部数据绑定管理。
   @override
   void initState() {
@@ -135,70 +137,45 @@ class _DocumentEditorViewState extends State<DocumentEditorView> {
     _bind();
   }
 
-  /// 为当前会话创建独立渲染配置；本地正文使用16像素文本基准并按配置筛选块。
+  /// 绑定当前会话的滚动资源；自建资源由视图释放，外部滚动控制器仅借用。
   void _bind() {
     _scroll = widget.scrollController ?? EditorScrollController(editorState: widget.editorState);
+    _configureBuilders();
+  }
+
+  /// 为所有数据来源创建同一组文字/块渲染器，能力过滤后再应用宿主结构和皮肤配置。
+  /// 配置不开放被禁止的编辑命令；宿主结构数据仍由宿主事务保护校验。
+  void _configureBuilders() {
     _builders = _createDocumentBlockBuilders();
-    if (EditorCommandContext.of(widget.editorState).localOnly &&
-        !EditorCommandContext.of(widget.editorState).configuration.usesRichDocument) {
-      final configuration = BlockComponentConfiguration(
-        padding: (_) => const EdgeInsets.symmetric(vertical: 4),
-        textStyle: (node, {textSpan}) => textSpan?.children != null
-            ? const TextStyle()
-            : collabParagraphTextStyle(
-                node,
-                TextStyle(fontFamily: _fontFamily, fontSize: 16, height: 1.5, color: const Color(0xff1f2937)),
-                node.delta?.isEmpty == true
-                    ? paragraphDefaultsToAttributes(readCollabParagraph(node).values['textDefaults'])
-                    : {},
-              ),
-        placeholderText: (_) => widget.preview ? '' : '输入文字…',
-        textAlign: (node) => switch (node.attributes[blockComponentAlign]) {
-          'center' => TextAlign.center,
-          'right' => TextAlign.right,
-          'justify' => TextAlign.justify,
-          _ => TextAlign.left,
-        },
-      );
-      _builders = {
-        PageBlockKeys.type: PageBlockComponentBuilder(minimumBodyHeight: 0),
-        ParagraphBlockKeys.type: ParagraphBlockComponentBuilder(configuration: configuration),
-        HeadingBlockKeys.type: ParagraphBlockComponentBuilder(configuration: configuration),
-        QuoteBlockKeys.type: QuoteBlockComponentBuilder(configuration: configuration),
-        BulletedListBlockKeys.type: BulletedListBlockComponentBuilder(configuration: configuration),
-        NumberedListBlockKeys.type: NumberedListBlockComponentBuilder(configuration: configuration),
-        TodoListBlockKeys.type: TodoListBlockComponentBuilder(configuration: configuration),
-      };
-      final config = EditorCommandContext.of(widget.editorState).configuration;
-      _builders.removeWhere(
-        (type, _) => type != PageBlockKeys.type && !config.allowsBlock(type, level: config.headingLevels.firstOrNull),
-      );
-    } else {
-      _builders[PageBlockKeys.type] = PageBlockComponentBuilder(minimumBodyHeight: widget.footer == null ? 0 : null);
-    }
+    _builders[PageBlockKeys.type] = PageBlockComponentBuilder(minimumBodyHeight: widget.footer == null ? 0 : null);
     final config = EditorCommandContext.of(widget.editorState).configuration;
-    if (EditorCommandContext.of(widget.editorState).localOnly) {
+    if (!config.documentFeatures) {
       _builders.removeWhere(
         (type, _) =>
             type != PageBlockKeys.type &&
             type != errorBlockComponentBuilderKey &&
             !config.allowsBlock(type, level: config.headingLevels.firstOrNull),
       );
-      if (widget.preview) {
-        for (final builder in _builders.values) {
-          builder.configuration = builder.configuration.copyWith(placeholderText: (_) => '');
-        }
+    }
+    if (widget.preview) {
+      for (final builder in _builders.values) {
+        builder.configuration = builder.configuration.copyWith(placeholderText: (_) => '');
       }
     }
+    _builders = widget.configuration.blockBuilders?.call(_builders) ?? _builders;
   }
 
-  /// 更换[oldWidget]的会话或滚动配置时成对迁移自有资源，借用资源由外部释放。
+  /// 更换[oldWidget]的会话或滚动配置时成对迁移自有资源；展示配置变化只重建渲染器，借用资源由外部释放。
   @override
   void didUpdateWidget(covariant DocumentEditorView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.editorState != widget.editorState || oldWidget.scrollController != widget.scrollController) {
       if (oldWidget.scrollController == null) _scroll.dispose();
       _bind();
+    } else if (oldWidget.configuration != widget.configuration ||
+        oldWidget.preview != widget.preview ||
+        oldWidget.footer != widget.footer) {
+      _configureBuilders();
     }
   }
 
@@ -223,13 +200,72 @@ class _DocumentEditorViewState extends State<DocumentEditorView> {
         return;
       }
       commandContext.services.report('粘贴失败', error, stack, 'DocEditor');
-      ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(content: Text('粘贴失败，请重试')));
+      ScaffoldMessenger.maybeOf(context)?.showSnackBar(const SnackBar(content: Text('粘贴失败，原文已保留，请检查内容或重试')));
+    }
+  }
+
+  /// 在当前借用会话复制或[cut]剪切；仅宿主端口成功后才允许删除，迟到错误不进入其他文档。
+  Future<void> _copy({required bool cut}) async {
+    final owner = widget.editorState;
+    final commandContext = EditorCommandContext.of(owner);
+    final selection = owner.selection;
+    if (selection == null || selection.isCollapsed) return;
+    try {
+      await commandContext.copySelection?.call(selection, cut: cut);
+    } catch (error, stack) {
+      if (!mounted ||
+          !identical(owner, widget.editorState) ||
+          owner.isDisposed ||
+          !identical(commandContext, EditorCommandContext.of(owner))) {
+        return;
+      }
+      commandContext.services.report('复制或剪切失败', error, stack, 'DocEditor');
+      ScaffoldMessenger.maybeOf(context)?.showSnackBar(SnackBar(content: Text(cut ? '剪切未删除原文，请重试' : '复制失败，请重试')));
+    }
+  }
+
+  /// 为[event]使用菜单相同的标题转换事务，保留能力边界、段落属性和宿主元数据。
+  CommandShortcutEvent _configureCommand(CommandShortcutEvent event) {
+    final level = switch (event.key) {
+      'toggle into Heading 1' => 1,
+      'toggle into Heading 2' => 2,
+      'toggle into Heading 3' => 3,
+      'toggle Body' => 0,
+      _ => null,
+    };
+    if (level == null) return event;
+    return CommandShortcutEvent(
+      key: event.key,
+      command: event.command,
+      getDescription: () => event.description ?? '切换标题',
+      handler: (state) {
+        final selection = state.selection;
+        if (selection == null || state.isDisposed || !state.editable) return KeyEventResult.ignored;
+        final node = state.getNodeAtPath(selection.start.path);
+        final body =
+            level == 0 || (node?.type == HeadingBlockKeys.type && node?.attributes[HeadingBlockKeys.level] == level);
+        unawaited(_applyHeading(state, body ? ParagraphBlockKeys.type : HeadingBlockKeys.type, level));
+        return KeyEventResult.handled;
+      },
+    );
+  }
+
+  /// 对借用的[state]应用[blockType]和[level]；统一报告异步命令错误，不保留页面资源。
+  Future<void> _applyHeading(EditorState state, String blockType, int level) async {
+    try {
+      await applyEditorBlockStyle(state, blockType, headingLevel: level == 0 ? null : level);
+    } catch (error, stack) {
+      EditorCommandContext.report(state, '切换标题失败', error: error, stackTrace: stack);
     }
   }
 
   /// 为[event]筛选会直接设置输入样式的快捷键，避免禁用格式污染后续输入。
   bool _allowsCommand(CommandShortcutEvent event) {
     final config = EditorCommandContext.of(widget.editorState).configuration;
+    if (!config.structuralIndentation && const {'indent', 'outdent'}.contains(event.key)) return false;
+    if (event.key.startsWith('toggle into Heading ')) {
+      return config.allowsBlock(HeadingBlockKeys.type, level: int.tryParse(event.key.split(' ').last));
+    }
     if (config.documentFeatures) return true;
     final attribute = <String, String>{
       'toggle bold': AppFlowyRichTextKeys.bold,
@@ -281,88 +317,112 @@ class _DocumentEditorViewState extends State<DocumentEditorView> {
   }
 
   /// 使用[context]构建共用正文；实例配置决定操作，preview禁用选区和输入服务。
-  /// 协同正文沿用移动编辑器的黑色缺省字色，字符和容器颜色优先；本地会话保留自身配置。
+  /// 所有数据来源共用黑色缺省字色、输入和菜单链；字符/容器样式及宿主展示配置优先。
   @override
   Widget build(BuildContext context) {
     final state = widget.editorState;
-    final local =
-        EditorCommandContext.of(widget.editorState).localOnly &&
-        !EditorCommandContext.of(widget.editorState).configuration.usesRichDocument;
-    final paste = EditorCommandContext.of(widget.editorState).pastePlainText;
-    _fontFamily = Theme.of(context).textTheme.bodyLarge?.fontFamily;
-    final editor = CollabMobileSelectionMenu(
-      key: ObjectKey(state),
-      editorState: state,
-      scrollController: _scroll,
-      enabled: widget.enabled && !widget.preview,
-      child: IgnorePointer(
-        ignoring: !widget.enabled,
-        child: Opacity(
-          opacity: widget.enabled ? 1 : .45,
-          child: AppFlowyEditor(
-            key: widget.editorKey,
-            editorState: state,
-            editorScrollController: _scroll,
-            header: widget.header,
-            footer: widget.footer,
-            editable: widget.editable && !widget.preview,
-            disableKeyboardService: !widget.editable || widget.preview,
-            disableSelectionService: widget.preview,
-            showMagnifier: !widget.preview,
-            blockComponentBuilders: _builders,
-            blockWrapper: widget.preview
-                ? (context, {required node, required child}) => IgnorePointer(child: ExcludeFocus(child: child))
-                : null,
-            characterShortcutEvents: [
-              collabParagraphEnter,
-              if (EditorCommandContext.of(state).configuration.allowsBlock(csesCodeBlockType)) collabCodeEnter,
-              if (widget.onUserMention != null)
-                CharacterShortcutEvent(key: 'cses-user-mention', character: '@', handler: widget.onUserMention!),
-              ...standardCharacterShortcutEvents.where(_allowsCharacter),
-            ],
-            commandShortcutEvents: [
-              if (paste != null)
-                for (final shortcut in ['ctrl+v', 'ctrl+shift+v'])
-                  CommandShortcutEvent(
-                    key: 'document-editor-$shortcut',
-                    getDescription: () => '粘贴纯文本',
-                    command: shortcut,
-                    macOSCommand: shortcut.replaceFirst('ctrl', 'cmd'),
-                    handler: (_) {
-                      unawaited(_paste(paste));
-                      return KeyEventResult.handled;
-                    },
-                  ),
-              collabBlockBackspaceCommand,
-              if (EditorCommandContext.of(state).configuration.hasComplexBlocks) ...[
-                collabParagraphTabCommand,
-                collabParagraphShiftTabCommand,
-              ],
-              ...standardCommandShortcutEvents.where(
-                (event) => (paste == null || !event.key.contains('paste')) && _allowsCommand(event),
-              ),
-            ],
-            shrinkWrap: false,
-            editorStyle: EditorStyle.mobile(
-              padding: widget.padding,
-              cursorColor: const Color(0xFF5B5BD6),
-              dragHandleColor: const Color(0xFF5B5BD6),
-              selectionColor: const Color(0x335B5BD6),
-              textStyleConfiguration: local
-                  ? const TextStyleConfiguration(text: TextStyle(fontSize: 16, height: 1.5, color: Color(0xff1f2937)))
-                  : EditorCommandContext.of(state).localOnly
-                  ? const TextStyleConfiguration(text: TextStyle(color: Color(0xff1f2937)))
-                  : null,
-              textSpanDecorator: _collabTextSpanDecorator,
+    final commandContext = EditorCommandContext.of(state);
+    final paste = commandContext.pastePlainText;
+    final copy = commandContext.copySelection;
+    final editable = widget.editable && state.editable && !widget.preview;
+    final standardStyle = EditorStyle.mobile(
+      padding: widget.padding,
+      cursorColor: const Color(0xFF5B5BD6),
+      dragHandleColor: const Color(0xFF5B5BD6),
+      selectionColor: const Color(0x335B5BD6),
+      textStyleConfiguration: const TextStyleConfiguration(text: TextStyle(fontSize: 16, color: Colors.black)),
+      textSpanDecorator: decorateEditorTextSpan,
+    );
+    final editor = IgnorePointer(
+      ignoring: !widget.enabled,
+      child: Opacity(
+        opacity: widget.enabled ? 1 : .45,
+        child: AppFlowyEditor(
+          key: widget.editorKey,
+          editorState: state,
+          editorScrollController: _scroll,
+          header: widget.header,
+          footer: widget.footer,
+          editable: editable,
+          disableKeyboardService: !editable,
+          disableSelectionService: widget.preview,
+          showMagnifier: !widget.preview,
+          blockComponentBuilders: _builders,
+          blockWrapper: widget.preview
+              ? (context, {required node, required child}) => IgnorePointer(child: ExcludeFocus(child: child))
+              : null,
+          characterShortcutEvents: [
+            ...widget.configuration.characterShortcuts,
+            collabParagraphEnter,
+            if (EditorCommandContext.of(state).configuration.allowsBlock(csesCodeBlockType)) collabCodeEnter,
+            if (commandContext.configuration.allowsBlock(
+              HeadingBlockKeys.type,
+              level: commandContext.configuration.headingLevels.firstOrNull,
+            ))
+              editorHeadingMarkdown,
+            if (widget.onUserMention != null)
+              CharacterShortcutEvent(key: 'cses-user-mention', character: '@', handler: widget.onUserMention!),
+            ...standardCharacterShortcutEvents.where(
+              (event) => event != formatSignToHeading && _allowsCharacter(event),
             ),
-          ),
+          ],
+          commandShortcutEvents: [
+            if (copy != null)
+              for (final cut in [false, true])
+                CommandShortcutEvent(
+                  key: cut ? 'document-editor-cut' : 'document-editor-copy',
+                  getDescription: () => cut ? '剪切' : '复制',
+                  command: cut ? 'ctrl+x' : 'ctrl+c',
+                  macOSCommand: cut ? 'cmd+x' : 'cmd+c',
+                  handler: (_) {
+                    if (state.selection == null || state.selection!.isCollapsed) return KeyEventResult.ignored;
+                    unawaited(_copy(cut: cut));
+                    return KeyEventResult.handled;
+                  },
+                ),
+            if (paste != null)
+              for (final shortcut in ['ctrl+v', 'ctrl+shift+v'])
+                CommandShortcutEvent(
+                  key: 'document-editor-$shortcut',
+                  getDescription: () => '粘贴纯文本',
+                  command: shortcut,
+                  macOSCommand: shortcut.replaceFirst('ctrl', 'cmd'),
+                  handler: (_) {
+                    unawaited(_paste(paste));
+                    return KeyEventResult.handled;
+                  },
+                ),
+            collabBlockBackspaceCommand,
+            if (commandContext.configuration.hasParagraphLayout) ...[
+              collabParagraphTabCommand,
+              collabParagraphShiftTabCommand,
+            ],
+            ...standardCommandShortcutEvents
+                .where(
+                  (event) =>
+                      (paste == null || !event.key.contains('paste')) &&
+                      (copy == null || (event.key != copyCommand.key && event.key != cutCommand.key)) &&
+                      _allowsCommand(event),
+                )
+                .map(_configureCommand),
+          ],
+          shrinkWrap: false,
+          editorStyle: widget.configuration.style?.call(context, standardStyle) ?? standardStyle,
         ),
       ),
     );
     return CollabEditorDisplayScope(
       services: EditorCommandContext.of(state).services,
       preview: widget.preview,
-      child: widget.editable && !widget.preview ? EditorShortcutToolbar(editorState: state, child: editor) : editor,
+      child: EditorInteractionShell(
+        key: ObjectKey(state),
+        editorState: state,
+        scrollController: _scroll,
+        enabled: widget.enabled && !widget.preview,
+        editable: widget.editable,
+        keyboardActions: widget.configuration.keyboardActions,
+        child: editor,
+      ),
     );
   }
 }
@@ -427,12 +487,7 @@ Map<String, BlockComponentBuilder> _createDocumentBlockBuilders() =>
         NumberedListBlockKeys.type,
         TodoListBlockKeys.type,
       };
-      return MapEntry(
-        type,
-        textTypes.contains(type)
-            ? CollabTextAlignmentBuilder(configureCollabParagraphPresentation(builder, type))
-            : builder,
-      );
+      return MapEntry(type, textTypes.contains(type) ? configureEditorTextBlock(builder, type) : builder);
     });
 
 /// [node]为布局回调中的当前段落，统一使用上下2逻辑像素留白且保留文字行高。
@@ -451,7 +506,14 @@ EdgeInsets _listBlockPadding(Node node) {
 /// 行内公式、用户和三类业务实体提及使用单字符 WidgetSpan，保留文字颜色；
 /// 已校验用户复用公开装饰器并绑定当前实例的展示服务。
 /// 整段链接点击提供打开和三视图切换，混排正文维持原链接行为。
-InlineSpan _collabTextSpanDecorator(
+///
+/// ```dart
+/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:cses_document_collab/cses_document_collab.dart';
+/// final style = EditorStyle.mobile(textSpanDecorator: decorateEditorTextSpan);
+/// // 交给借用现有 EditorState 的 AppFlowyEditor，不创建额外资源。
+/// ```
+InlineSpan decorateEditorTextSpan(
   BuildContext context,
   Node node,
   int index,

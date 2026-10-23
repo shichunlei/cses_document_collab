@@ -1,0 +1,132 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart
+00:00 +0: H1-H6 render and survive preview/reopen at (320.0, 1.0)
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: no matching candidates
+  Actual: _TypeWidgetFinder:<Found 1 widget with type "LocalJournalPage": [
+            LocalJournalPage(dependencies: [_LocalizationsScope-[GlobalKey#9ef4b]], state:
+_LocalJournalPageState#3b880),
+          ]>
+   Which: means one was found but none were expected
+
+When the exception was thrown, this was the stack:
+#4      _reopen (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:163:3)
+<asynchronous suspension>
+#5      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:218:10)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart line 163
+The test description was:
+  H1-H6 render and survive preview/reopen at (320.0, 1.0)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:02 +0 -1: H1-H6 render and survive preview/reopen at (320.0, 1.0) [E]
+  Test failed. See exception logs above.
+  The test description was: H1-H6 render and survive preview/reopen at (320.0, 1.0)
+
+00:02 +0 -1: H1-H6 render and survive preview/reopen at (390.0, 2.0)
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: no matching candidates
+  Actual: _TypeWidgetFinder:<Found 1 widget with type "LocalJournalPage": [
+            LocalJournalPage(dependencies: [_LocalizationsScope-[GlobalKey#0c40c]], state:
+_LocalJournalPageState#5ec28),
+          ]>
+   Which: means one was found but none were expected
+
+When the exception was thrown, this was the stack:
+#4      _reopen (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:163:3)
+<asynchronous suspension>
+#5      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:218:10)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart line 163
+The test description was:
+  H1-H6 render and survive preview/reopen at (390.0, 2.0)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:02 +0 -2: H1-H6 render and survive preview/reopen at (390.0, 2.0) [E]
+  Test failed. See exception logs above.
+  The test description was: H1-H6 render and survive preview/reopen at (390.0, 2.0)
+
+00:02 +0 -2: text/background colors, code and scripts render and persist
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: no matching candidates
+  Actual: _TypeWidgetFinder:<Found 1 widget with type "LocalJournalPage": [
+            LocalJournalPage(dependencies: [_LocalizationsScope-[GlobalKey#5ed4e]], state:
+_LocalJournalPageState#910fc),
+          ]>
+   Which: means one was found but none were expected
+
+When the exception was thrown, this was the stack:
+#4      _reopen (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:163:3)
+<asynchronous suspension>
+#5      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:280:13)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart line 163
+The test description was:
+  text/background colors, code and scripts render and persist
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:03 +0 -3: text/background colors, code and scripts render and persist [E]
+  Test failed. See exception logs above.
+  The test description was: text/background colors, code and scripts render and persist
+
+00:03 +0 -3: font size uses real selection and keeps list marker centered
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: <24>
+  Actual: <16.0>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:301:5)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart line 301
+The test description was:
+  font size uses real selection and keeps list marker centered
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:04 +0 -4: font size uses real selection and keeps list marker centered [E]
+  Test failed. See exception logs above.
+  The test description was: font size uses real selection and keeps list marker centered
+
+00:04 +0 -4: malformed/unsupported persisted heading levels are rejected
+00:04 +1 -4: paragraph alignment and flat indent preserve business identity
+00:05 +2 -4: heading alignment and flat indent preserve business identity
+00:06 +3 -4: bulleted_list alignment and flat indent preserve business identity
+00:06 +4 -4: numbered_list alignment and flat indent preserve business identity
+00:07 +5 -4: todo_list alignment and flat indent preserve business identity
+00:08 +6 -4: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (320.0, 1.0)
+  /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (390.0, 2.0)
+  /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: font size uses real selection and keeps list marker centered
+  /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: text/background colors, code and scripts render and persist

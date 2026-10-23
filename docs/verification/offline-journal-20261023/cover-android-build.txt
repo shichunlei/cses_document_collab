@@ -1,0 +1,10 @@
+Running Gradle task 'assembleDebug'...
+Warning: SDK processing. This version only understands SDK XML versions up to 3 but an SDK XML file of version 4 was encountered. This can happen if you use versions of Android Studio and the command-line tools that were released at different times.
+INFO: Precompiled binaries are disabled
+INFO: Building cses_collab_core for armv7-linux-androideabi
+INFO: Building cses_collab_core for aarch64-linux-android
+INFO: Building cses_collab_core for x86_64-linux-android
+INFO: Building cses_collab_core for i686-linux-android
+INFO: Building cses_collab_core for x86_64-linux-android
+Running Gradle task 'assembleDebug'...                             87.4s
+✓ Built build/app/outputs/flutter-apk/app-debug.apk

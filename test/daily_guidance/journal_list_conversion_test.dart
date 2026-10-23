@@ -82,7 +82,7 @@ Future<EditorState> _open(WidgetTester tester, String source) async {
   return state;
 }
 
-/// 在[tester]中展开真实T菜单并点击[target]类型，已展开时保留同一菜单会话。
+/// 在[tester]中展开真实T菜单，横向滚动后点击[target]类型；已展开时保留同一菜单会话。
 Future<void> _chooseType(WidgetTester tester, String target) async {
   if (find
       .byKey(const ValueKey('editor-block-style-menu'))
@@ -92,6 +92,13 @@ Future<void> _chooseType(WidgetTester tester, String target) async {
     await tester.pumpAndSettle();
   }
   final action = find.byKey(ValueKey('editor-block-$target-0'));
+  for (var i = 0; i < 10 && action.hitTestable().evaluate().isEmpty; i++) {
+    await tester.drag(
+      find.byKey(const ValueKey('editor-block-style-menu')),
+      const Offset(-130, 0),
+    );
+    await tester.pumpAndSettle();
+  }
   expect(action.hitTestable(), findsOneWidget);
   await tester.tap(action);
   await tester.pumpAndSettle();

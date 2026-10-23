@@ -1,0 +1,16 @@
+独立副本初始化失败摘录（保留原因，不包含工具自动附带的设备清单）：
+
+
+Oops; flutter has exited unexpectedly: "Bad state: No element".
+A crash report has been written to /private/tmp/shared-editor-check-20261023/flutter_01.log
+This crash may already be reported. Check GitHub for similar crashes.
+
+Flutter failed to read file at "/private/tmp/shared-editor-check-20261023/.dart_tool/package_graph.json". The file or directory could not be found.
+PathNotFoundException: Cannot open file, path = '/private/tmp/shared-editor-check-20261023/.dart_tool/package_graph.json' (OS Error: No such file or directory, errno = 2)
+This can sometimes happen if the file was deleted or moved while the tool was running. Try running "flutter clean" and try again.
+
+Resolving dependencies...
+Because cses_mobile_collab_demo depends on cses_common from path which doesn't exist (could not find package cses_common at "../cses/cses.common"), version solving failed.
+Failed to update packages.
+
+修正：副本包URI使用/private/tmp真实路径与目录尾斜线，补齐宿主package_graph.json；借用原依赖缓存，不升级源码依赖。最终测试通过，详见commit-scope-host-tests.txt和commit-scope-package-tests.txt。

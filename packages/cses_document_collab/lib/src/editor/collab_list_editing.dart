@@ -23,7 +23,7 @@ final collabListEnter = CharacterShortcutEvent(
 );
 
 /// 在借用的 [state] 处理当前折叠光标的有序/无序/Todo 列表 Enter，成功完成事务返回 true。
-/// 只接管根级或高亮容器内、无子节点的扁平列表；只读、销毁、Shift、无选区或其他类型返回 false，
+/// 只接管根级、高亮或显式配置的无Delta容器内、无子节点的扁平列表；只读、销毁、Shift、无选区或其他类型返回 false，
 /// 交由标准输入处理。文字拆分复用 insertNewLine，保留 Delta 格式和方向并继承层级/对齐。
 /// 空项退级原位修改 depth；有序项若显式重开编号，同时用既有编号命令恢复接续父层。
 /// 无序/待办项仅修改层级，不携带任何有序列表编号命令。待办拆分不改原项勾选，
@@ -67,13 +67,13 @@ Future<bool> handleCollabListEnter(EditorState state) async {
   return true;
 }
 
-/// 返回借用的 [state] 是否可在列表项开头退级；只接管折叠光标偏移 0 的根级或高亮块内扁平列表。
+/// 返回借用的 [state] 是否可在列表项开头退级；只接管折叠光标偏移 0 的默认或配置的无Delta父容器内扁平列表。
 /// 有正文和空项均支持；只读、销毁、范围选区、真正嵌套节点及非列表返回 false，无副作用。
 bool canOutdentCollabListAtStart(EditorState state) =>
     _editableFlatList(state) != null && state.selection?.start.offset == 0;
 
 /// 将借用的 [state] 中行首列表退一级，最外层转为普通段落；完成事务后返回 true。
-/// 非可编辑根级或高亮块内列表、非折叠选区或偏移不为 0 时返回 false。复用 Enter 与 Backspace，
+/// 非可编辑或未获准父容器中的列表、非折叠选区或偏移不为0时返回false。复用Enter与Backspace，
 /// 不删除正文、行内格式或相邻块，退级保留 Todo 勾选及块身份；转换使用既有类型身份链。
 /// 有序正起点通过既有编号命令接续目标层，逆操作恢复原始设置；每次操作独立可撤销。
 /// 选区保持原路径偏移 0，清空临时选区信息以继续附着输入连接。宿主拥有编辑器生命周期；
@@ -84,7 +84,7 @@ Future<bool> outdentCollabListAtStart(EditorState state) =>
     : Future.value(false);
 
 /// 返回借用 [state] 当前选区是否可整体升降列表层级；[delta] 仅接受 -1 或 1。
-/// 选区中每项必须是可编辑根级或高亮块内有序/无序/Todo 列表且无真实子节点。增加时任一项已到 6 级
+/// 选区中每项必须是可编辑默认或配置的无Delta父容器内有序/无序/Todo列表且无真实子节点。增加时任一项已到 6 级
 /// 则整体返回 false；减少允许 0 级转段落。支持项内光标、正反向范围和块选区；不修改状态。
 bool canChangeCollabListIndent(EditorState state, int delta) {
   if (delta != -1 && delta != 1) {
@@ -252,7 +252,7 @@ Future<bool> _applyListIndent(
 }
 
 /// 读取借用 [state] 当前选区中的全部扁平列表；只读/销毁、路径或偏移无效、包含非列表返回空。
-/// [allowConfiguredContainers]默认false；true仅为类型转换接受显式授权的结构父容器并要求同父。
+/// [allowConfiguredContainers]默认false使用菜单缩进授权；true使用独立类型转换授权，均要求同父。
 /// 保留选区遍历顺序和节点引用，不复制正文、不转移所有权、不修改编辑器；调用方同步构建事务。
 List<Node> _selectedFlatLists(
   EditorState state, {
@@ -269,15 +269,14 @@ List<Node> _selectedFlatLists(
   }
   final nodes = state.getNodesInSelection(selection);
   if (nodes.isEmpty ||
-      (allowConfiguredContainers &&
-          nodes.any((node) => !identical(node.parent, nodes.first.parent))) ||
+      nodes.any((node) => !identical(node.parent, nodes.first.parent)) ||
       nodes.any(
         (node) =>
             node.delta == null ||
             node.children.isNotEmpty ||
             !(allowConfiguredContainers
                 ? _isListTypeConversionParent(state, node)
-                : _isFlatListParent(node)) ||
+                : _isListIndentParent(state, node)) ||
             (node.type != NumberedListBlockKeys.type &&
                 node.type != BulletedListBlockKeys.type &&
                 node.type != TodoListBlockKeys.type),
@@ -313,7 +312,7 @@ Node? _editableFlatList(EditorState state) {
   }
   final node = state.getNodeAtPath(selection.start.path);
   if (node == null ||
-      !_isFlatListParent(node) ||
+      !_isListIndentParent(state, node) ||
       node.delta == null ||
       node.children.isNotEmpty ||
       (node.type != NumberedListBlockKeys.type &&
@@ -327,6 +326,17 @@ Node? _editableFlatList(EditorState state) {
 /// 判断借用[node]是否属于默认根级或高亮容器的扁平列表；层级仍保存在兄弟节点属性中。
 bool _isFlatListParent(Node node) =>
     node.path.length == 1 || node.parent?.type == csesCalloutBlockType;
+
+/// 判断借用[state]是否允许[node]所属无Delta父容器中的平面列表缩进、回车及行首退格。
+bool _isListIndentParent(EditorState state, Node node) {
+  if (_isFlatListParent(node)) return true;
+  final parent = node.parent;
+  return parent != null &&
+      parent.delta == null &&
+      EditorCommandContext.of(
+        state,
+      ).configuration.listIndentContainerTypes.contains(parent.type);
+}
 
 /// 判断借用[state]是否显式允许[node]的结构父容器进行列表类型转换。
 /// 默认父容器保留原规则；扩展父容器必须无Delta，仅借用实例配置，不授权其他列表命令。

@@ -16,6 +16,7 @@
 
 ### 文档创建与文档信息
 
+
 - [host-service-migration-20261023](host-service-migration-20261023/)（[宿主服务目录迁移收尾](host-service-migration-20261023/report.md)）
 
 - [document-cover-drag-20261016](document-cover-drag-20261016/)
@@ -25,9 +26,12 @@
 
 ### 编辑器架构、配置与离线能力
 
+- [blockcraft-json-exchange-20261023](blockcraft-json-exchange-20261023/)（[今日导向与桌面JSON双向转换、原生渲染和示例验证](blockcraft-json-exchange-20261023/report.md)）
+
+
 - [selective-undo-prototype-20261022](selective-undo-prototype-20261022/)（[结构、格式与锁权限第二阶段](selective-undo-prototype-20261022/structure-format-locks.md)；[FRB、编辑器与选区第三阶段](selective-undo-prototype-20261022/frb-editor-history.md)；[第三阶段审查](selective-undo-prototype-20261022/review.md)；[2项P1与3项P2修复](selective-undo-prototype-20261022/review-fixes.md)）
 - [offline-journal-design-20261022](offline-journal-design-20261022/)
-- [offline-journal-20261023](offline-journal-20261023/)（[菜单三项审查修复](offline-journal-20261023/review-fixes.md)、[业务行原生人员提及](offline-journal-20261023/native-business-mentions.md)、[JSON导出与独立业务提交分析](offline-journal-20261023/json-submit-analysis-20261023.md)）
+- [offline-journal-20261023](offline-journal-20261023/)（[菜单三项审查修复](offline-journal-20261023/review-fixes.md)、[业务行原生人员提及](offline-journal-20261023/native-business-mentions.md)、[JSON导出与独立业务提交分析](offline-journal-20261023/json-submit-analysis-20261023.md)、[顶部雪山封面](offline-journal-20261023/cover-header.md)、[恢复完整文字格式菜单](offline-journal-20261023/format-toolbar.md)、[标题逐级展开](offline-journal-20261023/progressive-heading.md)、[统一编辑器与配置](offline-journal-20261023/shared-editor.md)、[提交范围复核](offline-journal-20261023/commit-scope.md)）
 - [offline-journal-20261022](offline-journal-20261022/)（[审查](offline-journal-20261022/review.md)；[4项输入/行线修复](offline-journal-20261022/fixes.md)；[日期排版](offline-journal-20261022/date-layout.md)；[列表对齐](offline-journal-20261022/list-alignment.md)；[v6视频对照、宿主业务分层与后续方案](offline-journal-20261022/video-plan.md)；[宿主迁移与动态内容实施](offline-journal-20261022/host-implementation.md)；[动态引用审查](offline-journal-20261022/dynamic-review.md)；[引用输入与剪贴板修复](offline-journal-20261022/dynamic-fixes.md)；[键盘菜单方案](offline-journal-20261022/keyboard-toolbar-plan.md)；[菜单实施与验证](offline-journal-20261022/keyboard-toolbar-implementation.md)；[列表直接互转修复](offline-journal-20261022/list-conversion-fix.md)；[菜单与列表审查](offline-journal-20261022/toolbar-list-review.md)）
 - [editor-add-visibility-20261020](editor-add-visibility-20261020/)
 - [editor-add-visibility-device-20261021](editor-add-visibility-device-20261021/)

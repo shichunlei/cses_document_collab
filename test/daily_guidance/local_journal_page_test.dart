@@ -33,22 +33,27 @@ class _Store implements JournalStore {
 }
 
 /// 在测试界面打开借用[store]的独立路由，[scale]为系统字号缩放；返回后可恢复同一草稿。
-Widget _app(_Store store, {double scale = 1}) => MaterialApp(
-  builder: (context, child) => MediaQuery(
-    data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(scale)),
-    child: child!,
-  ),
-  home: Builder(
-    builder: (context) => Scaffold(
-      body: TextButton(
-        onPressed: () => Navigator.of(context).push<void>(
-          MaterialPageRoute(builder: (_) => LocalJournalPage(store: store)),
-        ),
-        child: const Text('打开日记'),
+/// [fontFamily]仅用于可选截图字体，null沿用Flutter测试默认字体。
+Widget _app(_Store store, {double scale = 1, String? fontFamily}) =>
+    MaterialApp(
+      theme: fontFamily == null ? null : ThemeData(fontFamily: fontFamily),
+      builder: (context, child) => MediaQuery(
+        data: MediaQuery.of(
+          context,
+        ).copyWith(textScaler: TextScaler.linear(scale)),
+        child: child!,
       ),
-    ),
-  ),
-);
+      home: Builder(
+        builder: (context) => Scaffold(
+          body: TextButton(
+            onPressed: () => Navigator.of(context).push<void>(
+              MaterialPageRoute(builder: (_) => LocalJournalPage(store: store)),
+            ),
+            child: const Text('打开日记'),
+          ),
+        ),
+      ),
+    );
 
 /// 从[tester]读取当前渲染中的编辑会话，仅借用不负责释放。
 EditorState _state(WidgetTester tester) =>
@@ -68,6 +73,17 @@ void main() {
         await tester.tap(find.text('打开日记'));
         await tester.pumpAndSettle();
         final state = _state(tester);
+        final editorWidth = tester.getSize(find.byType(JournalSurface)).width;
+        final cover = find.byKey(const ValueKey('journal-cover'));
+        final editCoverSize = tester.getSize(cover);
+        final image = tester.widget<Image>(
+          find.byKey(const ValueKey('journal-cover-image')),
+        );
+        expect(
+          (image.image as AssetImage).assetName,
+          'assets/images/daily_guidance_mountain.png',
+        );
+        expect(editCoverSize.width, editorWidth);
         final text = List.filled(
           6,
           '今天完成了重要目标，也记录下过程中值得坚持的方法。换一行继续书写，横线应始终跟随实际文字布局。',
@@ -92,7 +108,6 @@ void main() {
             .map((r) => r.debugLineOffsets)
             .toList();
         expect(editLines.any((lines) => lines.length > 1), isTrue);
-        final editorWidth = tester.getSize(find.byType(JournalSurface)).width;
         await tester.tap(find.byKey(const ValueKey('journal-preview')));
         await tester.pumpAndSettle();
         expect(_state(tester).editable, isFalse);
@@ -111,11 +126,17 @@ void main() {
             .toList();
         expect(previewLines, editLines);
         expect(tester.getSize(find.byType(JournalSurface)).width, editorWidth);
+        expect(tester.getSize(cover), editCoverSize);
         expect(tester.takeException(), isNull);
-        final before = tester.getTopLeft(find.text('今日成果')).dy;
+        final before = tester
+            .getTopLeft(find.byKey(const ValueKey('journal-cover')))
+            .dy;
         await tester.drag(find.byType(AppFlowyEditor), const Offset(0, -500));
         await tester.pumpAndSettle();
-        expect(tester.getTopLeft(find.text('今日成果')).dy, lessThan(before));
+        expect(
+          tester.getTopLeft(find.byKey(const ValueKey('journal-cover'))).dy,
+          lessThan(before),
+        );
         await tester.pumpWidget(const SizedBox.shrink());
         await tester.pumpAndSettle();
       },
@@ -182,7 +203,24 @@ void main() {
     addTearDown(() => tester.binding.setSurfaceSize(null));
     final store = _Store()..value = threeSectionDraft(DateTime(2026, 10, 22));
     const capture = GlobalObjectKey('journal-capture');
-    await tester.pumpWidget(RepaintBoundary(key: capture, child: _app(store)));
+    const saveScreenshot = bool.fromEnvironment('SAVE_JOURNAL_SCREENSHOTS');
+    if (saveScreenshot) {
+      await tester.runAsync(() async {
+        await ui.loadFontFromList(
+          await File('/System/Library/Fonts/STHeiti Medium.ttc').readAsBytes(),
+          fontFamily: 'JournalScreenshot',
+        );
+      });
+    }
+    await tester.pumpWidget(
+      RepaintBoundary(
+        key: capture,
+        child: _app(
+          store,
+          fontFamily: saveScreenshot ? 'JournalScreenshot' : null,
+        ),
+      ),
+    );
     await tester.tap(find.text('打开日记'));
     await tester.pumpAndSettle();
     final state = _state(tester);
@@ -196,7 +234,16 @@ void main() {
       );
     }
     await tester.pumpAndSettle();
-    if (const bool.fromEnvironment('SAVE_JOURNAL_SCREENSHOTS')) {
+    if (saveScreenshot) {
+      await tester.drag(find.byType(AppFlowyEditor), const Offset(0, 2000));
+      await tester.pumpAndSettle();
+      await tester.runAsync(() async {
+        await precacheImage(
+          const AssetImage('assets/images/daily_guidance_mountain.png'),
+          tester.element(find.byType(LocalJournalPage)),
+        );
+      });
+      await tester.pump();
       await tester.runAsync(() async {
         final image =
             await (capture.currentContext!.findRenderObject()!
@@ -206,9 +253,44 @@ void main() {
           format: ui.ImageByteFormat.png,
         ))!.buffer.asUint8List();
         await File(
-          'docs/verification/offline-journal-20261022/host-editor-layout.png',
+          'docs/verification/offline-journal-20261023/cover-editor-layout.png',
         ).writeAsBytes(bytes);
         image.dispose();
+      });
+      final renderedCover = tester.widget<SizedBox>(
+        find.byKey(const ValueKey('journal-cover')),
+      );
+      const coverCapture = GlobalObjectKey('cover-capture');
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: ThemeData(fontFamily: 'JournalScreenshot'),
+          home: Scaffold(
+            body: Align(
+              alignment: Alignment.topLeft,
+              child: RepaintBoundary(
+                key: coverCapture,
+                child: SizedBox(width: 390, child: renderedCover),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.runAsync(() async {
+        final image =
+            await (coverCapture.currentContext!.findRenderObject()!
+                    as RenderRepaintBoundary)
+                .toImage(pixelRatio: 2);
+        try {
+          final bytes = (await image.toByteData(
+            format: ui.ImageByteFormat.png,
+          ))!.buffer.asUint8List();
+          await File(
+            'docs/verification/offline-journal-20261023/cover-header-preview.png',
+          ).writeAsBytes(bytes);
+        } finally {
+          image.dispose();
+        }
       });
     }
     expect(tester.takeException(), isNull);

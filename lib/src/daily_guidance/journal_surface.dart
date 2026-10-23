@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +9,7 @@ import 'journal_editing.dart';
 import 'journal_list_markers.dart';
 import 'journal_ruled_content.dart';
 
-/// 日记编辑和预览共用的原生文字排版；借用会话，不创建或释放正文。
+/// 日记纸张展示配置；通过共用DocumentEditorView提供编辑和预览，借用会话，不释放正文。
 ///
 /// ```dart
 /// import 'package:flutter/material.dart';
@@ -20,7 +18,7 @@ import 'journal_ruled_content.dart';
 /// Widget journalBody(LocalJournalController journal) => JournalSurface(
 ///   editorState: journal.editor.editorState, preview: false, header: Text(journal.date));
 /// ```
-class JournalSurface extends StatefulWidget {
+class JournalSurface extends StatelessWidget {
   /// [key]控制身份，[editorState]由日记会话拥有，[preview]关闭输入、选区和工具栏。
   /// [header]为与正文一起滚动的纸张标题和日期，编辑与预览使用相同布局。
   /// [onCloseSection]接收可选栏目种类，由宿主持有且可空。
@@ -49,187 +47,97 @@ class JournalSurface extends StatefulWidget {
   /// 随纸张滚动的日期头部，不进入正文历史。
   final Widget header;
 
-  /// 创建本视图拥有的滚动控制器。
-  @override
-  createState() => _JournalSurfaceState();
-}
-
-/// 管理当前视图的滚动资源，正文与保存仍由上层会话持有。
-class _JournalSurfaceState extends State<JournalSurface> {
-  late final _scroll = EditorScrollController(editorState: widget.editorState);
-
-  /// 释放本视图的滚动控制器，不释放借用正文。
-  @override
-  void dispose() {
-    _scroll.dispose();
-    super.dispose();
-  }
-
-  /// 调用当前会话的原子纯文本粘贴端口；失败报告给宿主并在仍有效的页面显示提示。
-  Future<void> _paste() async {
-    final state = widget.editorState;
-    try {
-      await EditorCommandContext.of(state).pastePlainText?.call();
-    } catch (error, stack) {
-      EditorCommandContext.report(
-        state,
-        '日记粘贴失败',
-        error: error,
-        stackTrace: stack,
-      );
-      if (mounted && identical(widget.editorState, state)) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('粘贴失败，原文已保留，请检查内容或重试')));
-      }
-    }
-  }
-
-  /// 对当前选区执行宿主复制；[cut]为true时仅在剪贴板成功后删除，失败在有效页面提示。
-  Future<void> _copy({required bool cut}) async {
-    final state = widget.editorState;
-    final selection = state.selection;
-    if (selection == null || selection.isCollapsed) return;
-    try {
-      await EditorCommandContext.of(
-        state,
-      ).copySelection?.call(selection, cut: cut);
-    } catch (error, stack) {
-      EditorCommandContext.report(
-        state,
-        '日记复制或剪切失败',
-        error: error,
-        stackTrace: stack,
-      );
-      if (mounted && identical(widget.editorState, state)) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(cut ? '剪切未删除原文，请重试' : '复制失败，请重试')),
-        );
-      }
-    }
-  }
-
-  /// 在[context]按相同字体、宽度和行高构建编辑/预览；输入尊重借用会话的冻结权限。
-  /// 栏目内部不创建嵌套编辑器，重建不会重新启用宿主已暂时关闭的正文输入。
+  /// 在[context]注入纸张样式、栏目结构及业务动作；输入、菜单、选区和剪贴板均由共用视图维护。
+  /// 编辑/预览使用同一排版配置，正文与滚动资源由共享组件按公开契约管理。
   @override
   Widget build(BuildContext context) {
-    final state = widget.editorState;
-    final config = BlockComponentConfiguration(
-      padding: (_) => EdgeInsets.zero,
-      placeholderText: (_) => ' ',
-      textStyle: (node, {textSpan}) => textSpan?.children != null
-          ? const TextStyle()
-          : const TextStyle(fontSize: 16, height: 2, color: Color(0xff3e4650)),
-    );
-    final editor = AppFlowyEditor(
-      key: const ValueKey('journal-editor'),
-      editorState: state,
-      editorScrollController: _scroll,
-      header: widget.header,
-      editable: !widget.preview && state.editable,
-      disableKeyboardService: widget.preview,
-      disableSelectionService: widget.preview,
-      showMagnifier: !widget.preview,
-      blockComponentBuilders: {
-        PageBlockKeys.type: PageBlockComponentBuilder(minimumBodyHeight: 0),
-        journalSectionType: _JournalSectionBuilder(
-          onClose: widget.preview ? null : widget.onCloseSection,
-        ),
-        ParagraphBlockKeys.type: GuidanceParagraphBuilder(
-          configuration: config,
-        ),
-        BulletedListBlockKeys.type: BulletedListBlockComponentBuilder(
-          configuration: config,
-          iconBuilder: buildJournalBulletMarker,
-        ),
-        NumberedListBlockKeys.type: NumberedListBlockComponentBuilder(
-          configuration: config,
-          iconBuilder: buildJournalNumberMarker,
-        ),
-        TodoListBlockKeys.type: TodoListBlockComponentBuilder(
-          configuration: config,
-          iconBuilder: buildJournalTodoMarker,
-        ),
-      },
-      characterShortcutEvents: [
-        CharacterShortcutEvent(
-          key: 'journal-native-mention',
-          character: '@',
-          handler: (state) => handleEditorUserMentionTrigger(context, state),
-        ),
-        journalParagraphEnter,
-        formatAsteriskToBulletedList,
-        formatMinusToBulletedList,
-        formatNumberToNumberedList,
-        formatEmptyBracketsToUncheckedBox,
-        formatHyphenEmptyBracketsToUncheckedBox,
-        formatFilledBracketsToCheckedBox,
-        formatHyphenFilledBracketsToCheckedBox,
-        formatDoubleAsterisksToBold,
-        formatAsteriskToItalic,
-        formatDoubleUnderscoresToBold,
-        formatUnderscoreToItalic,
-        formatDoubleTilesToStrikethrough,
-      ],
-      commandShortcutEvents: [
-        for (final cut in [false, true])
-          CommandShortcutEvent(
-            key: cut ? 'journal-cut' : 'journal-copy',
-            getDescription: () => cut ? '剪切' : '复制',
-            command: cut ? 'ctrl+x' : 'ctrl+c',
-            macOSCommand: cut ? 'cmd+x' : 'cmd+c',
-            handler: (_) {
-              if (state.selection == null || state.selection!.isCollapsed) {
-                return KeyEventResult.ignored;
-              }
-              unawaited(_copy(cut: cut));
-              return KeyEventResult.handled;
-            },
-          ),
-        for (final shortcut in ['ctrl+v', 'ctrl+shift+v'])
-          CommandShortcutEvent(
-            key: 'journal-$shortcut',
-            getDescription: () => '粘贴纯文本',
-            command: shortcut,
-            macOSCommand: shortcut.replaceFirst('ctrl', 'cmd'),
-            handler: (_) {
-              unawaited(_paste());
-              return KeyEventResult.handled;
-            },
-          ),
-        ...standardCommandShortcutEvents.where(
-          (event) =>
-              !event.key.contains('heading') &&
-              !event.key.contains('indent') &&
-              !event.key.contains('paste') &&
-              event.key != copyCommand.key &&
-              event.key != cutCommand.key,
-        ),
-      ],
-      editorStyle: EditorStyle.mobile(
-        textSpanDecorator: decorateGuidanceMention,
-        textScaleFactor: MediaQuery.textScalerOf(context).scale(16) / 16,
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 40),
-        cursorColor: const Color(0xff8b6e63),
-        selectionColor: const Color(0x337e6257),
-        textStyleConfiguration: const TextStyleConfiguration(
-          text: TextStyle(fontSize: 16, height: 2, color: Color(0xff3e4650)),
-          lineHeight: 2,
-          applyHeightToFirstAscent: true,
-          applyHeightToLastDescent: true,
-        ),
-      ),
-    );
     return ColoredBox(
       color: const Color(0xfffaf8f0),
-      child: widget.preview
-          ? editor
-          : EditorInteractionShell(
-              editorState: state,
-              scrollController: _scroll,
-              keyboardActions: widget.keyboardActions,
-              child: editor,
+      child: DocumentEditorView(
+        editorState: editorState,
+        preview: preview,
+        header: header,
+        editorKey: const ValueKey('journal-editor'),
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 40),
+        onUserMention: (state) =>
+            handleEditorUserMentionTrigger(context, state),
+        configuration: EditorViewConfiguration(
+          keyboardActions: keyboardActions,
+          characterShortcuts: [journalParagraphEnter],
+          style: (context, style) => style.copyWith(
+            textSpanDecorator: decorateGuidanceMention,
+            textScaleFactor: MediaQuery.textScalerOf(context).scale(16) / 16,
+            cursorColor: const Color(0xff8b6e63),
+            selectionColor: const Color(0x337e6257),
+            textStyleConfiguration: const TextStyleConfiguration(
+              text: TextStyle(
+                fontSize: 16,
+                height: 2,
+                color: Color(0xff3e4650),
+              ),
+              lineHeight: 2,
+              applyHeightToFirstAscent: true,
+              applyHeightToLastDescent: true,
             ),
+          ),
+          blockBuilders: (builders) {
+            final config = BlockComponentConfiguration(
+              padding: (_) => EdgeInsets.zero,
+              placeholderText: (_) => ' ',
+              textStyle: (node, {textSpan}) => textSpan?.children != null
+                  ? const TextStyle()
+                  : const TextStyle(
+                      fontSize: 16,
+                      height: 2,
+                      color: Color(0xff3e4650),
+                    ),
+            );
+            final paperBuilders = <String, BlockComponentBuilder>{
+              PageBlockKeys.type: PageBlockComponentBuilder(
+                minimumBodyHeight: 0,
+              ),
+              journalSectionType: _JournalSectionBuilder(
+                onClose: preview ? null : onCloseSection,
+              ),
+              ParagraphBlockKeys.type: ParagraphBlockComponentBuilder(
+                configuration: config,
+              ),
+              HeadingBlockKeys.type: HeadingBlockComponentBuilder(
+                configuration: config,
+              ),
+              BulletedListBlockKeys.type: BulletedListBlockComponentBuilder(
+                configuration: config,
+                iconBuilder: buildJournalBulletMarker,
+              ),
+              NumberedListBlockKeys.type: NumberedListBlockComponentBuilder(
+                configuration: config,
+                iconBuilder: buildJournalNumberMarker,
+              ),
+              TodoListBlockKeys.type: TodoListBlockComponentBuilder(
+                configuration: config,
+                iconBuilder: buildJournalTodoMarker,
+              ),
+            };
+            return {
+              ...builders,
+              ...paperBuilders.map(
+                (type, builder) => MapEntry(
+                  type,
+                  type == PageBlockKeys.type || type == journalSectionType
+                      ? builder
+                      : GuidanceTextBlockBuilder(
+                          configureEditorTextBlock(
+                            builder,
+                            type,
+                            listIndentWidth: 28,
+                          ),
+                        ),
+                ),
+              ),
+            };
+          },
+        ),
+      ),
     );
   }
 }
@@ -318,7 +226,6 @@ class _JournalSection extends BlockComponentStatelessWidget {
                     ),
                   )
                 : null,
-
             textLines: false,
             minimumHeight: lineHeight * 3,
             lineHeight: lineHeight,

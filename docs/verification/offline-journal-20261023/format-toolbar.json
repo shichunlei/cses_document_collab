@@ -1,0 +1,103 @@
+{
+  "checkedAt": "2026-10-23T13:05:43.941932+08:00",
+  "scope": "日导向恢复原生文字格式菜单及共享排版API；业务仍在宿主；草稿schemaVersion/templateVersion均为2，无WS提交。",
+  "operations": [
+    "H1-H6",
+    "bold/italic/underline/strikethrough",
+    "inline code",
+    "text/background color",
+    "font size",
+    "superscript/subscript",
+    "left/center/right/justify/distributed",
+    "flat indent/outdent",
+    "block background"
+  ],
+  "dataSafety": [
+    "原有v1/v2草稿兼容",
+    "样式保存、预览、重开与独立历史",
+    "类型转换保留业务行身份及块背景",
+    "非法标题级别拒绝，不覆盖草稿",
+    "同栏目扁平缩进，不生成真实嵌套子块"
+  ],
+  "verification": {
+    "hostTests": 169,
+    "packageTests": 346,
+    "appflowyTests": 15,
+    "targetTestsIncludedInHostTotal": 10,
+    "analyze": [
+      "host: no issues",
+      "cses_document_collab: no issues",
+      "appflowy_editor: no issues"
+    ],
+    "physicalDevice": false,
+    "ios": false,
+    "onlineCollaboration": false
+  },
+  "android": {
+    "path": "build/app/outputs/flutter-apk/app-debug.apk",
+    "sha256": "62c75498850a0d0d0d725d5182737444687968e073cc876472c5de51598839f1",
+    "sourceBytesEmbedded": {
+      "lib/src/daily_guidance/guidance_entries.dart": true,
+      "lib/src/daily_guidance/journal_draft.dart": true,
+      "lib/src/daily_guidance/journal_list_markers.dart": true,
+      "lib/src/daily_guidance/journal_surface.dart": true,
+      "lib/src/daily_guidance/local_journal_page.dart": true,
+      "packages/appflowy_editor/lib/src/editor/block_component/todo_list_block_component/todo_list_block_component.dart": true,
+      "packages/cses_document_collab/lib/cses_document_collab.dart": true,
+      "packages/cses_document_collab/lib/src/editor/collab_list_editing.dart": true,
+      "packages/cses_document_collab/lib/src/editor/collab_text_alignment.dart": true,
+      "packages/cses_document_collab/lib/src/editor/core/editor_configuration.dart": true,
+      "packages/cses_document_collab/lib/src/editor/document_editor_view.dart": true,
+      "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart": true,
+      "packages/cses_document_collab/lib/src/editor/editor_text_presentation.dart": true
+    },
+    "coverAssetBytesMatch": true,
+    "installedOnDevice": false
+  },
+  "blockcraft": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.28",
+    "integrity": "sha512-KNVpgHHAY6ds1bo+EvtiQjS80aoS5kS6oSuJ9nIaJlA8y6yelew5H7F1wTK/bS3Rl9fVyoNAnydz/Si8y0EACg==",
+    "desktopDeclared": "0.11.28",
+    "desktopYarnLocked": "0.11.28",
+    "desktopInstalled": "0.11.17",
+    "historicalPnpmLocked": "0.2.78",
+    "dependencyUpgrade": false,
+    "readPublishedArtifacts": {
+      "ai-skills/blockcraft.md": "fd35128d50e0f4b68d3d60881e155a884027aaef497d9e6ed2731b01c268686e",
+      "ai-skills/blockcraft-plugins-formatting.md": "3ba55672869ae620692da8e11b7084fc520d67bed51c6f2146db85556b84c57d",
+      "ai-skills/MIGRATIONS.md": "d1bb5a6337b0e1ce0879099a34134b6e440891720386af9af4c20cdeba205ac2",
+      "fesm2022/ccc-blockcraft.mjs": "d045dd9ff8f17552ed9c15ba1c090fa77ec66bcdaf48a666db742a9f59e639f7"
+    },
+    "limitations": "沿用现有移动文字格式与段落协议；上游领先安装版，未宣布完整0.11.28兼容，历史差异待办保留。"
+  },
+  "sources": {
+    "lib/src/daily_guidance/guidance_entries.dart": "2fb6fc416a1a85e4515a65e9a589e389d7e653fccc13b59c494e9736e13a5a0e",
+    "lib/src/daily_guidance/journal_draft.dart": "0f31dff1a1e773c6c937f1c7a28b93146336d4f4d6e99bfc9ac5602f99fa13db",
+    "lib/src/daily_guidance/journal_list_markers.dart": "7f73a84f15e4950cd2dca9ff8414b7c2b72b3248e91f35c07b25ae9c61781b25",
+    "lib/src/daily_guidance/journal_surface.dart": "9c4d7d7cf72a4cbbe60e7378250cd1d743e25147f92e730c1b34e3cc40b63497",
+    "lib/src/daily_guidance/local_journal_page.dart": "a56c1a1c996746ac33d4271bee6294bad678d327f2c93fecf859b42c38e71cd3",
+    "packages/appflowy_editor/lib/src/editor/block_component/todo_list_block_component/todo_list_block_component.dart": "c98befc0086e2ed52b7cadcfa46805a30b07cb6807a97ca588657607e4580200",
+    "packages/cses_document_collab/lib/cses_document_collab.dart": "670b22da046f8553504db2f41524e4e11b4906f4abcf90eff30001202ce96614",
+    "packages/cses_document_collab/lib/src/editor/collab_list_editing.dart": "6e9156145bca332e646d2b406a0159e1470427a8166f54883d70319dc35368d4",
+    "packages/cses_document_collab/lib/src/editor/collab_text_alignment.dart": "8d8ed158df778102f8dc67926371645ba3a13f3af357f0e647a9e7e0d02db5ac",
+    "packages/cses_document_collab/lib/src/editor/core/editor_configuration.dart": "f061e34acab9c92d906fab0658879e076ff753b06927e7bd8a239f4cfdcb52da",
+    "packages/cses_document_collab/lib/src/editor/document_editor_view.dart": "336a3d0b9c857eaf610f42dcd541e0f4d9777bff7f3c3630eef9024666039469",
+    "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart": "0f8b9697879493733cdfdc71fc355cdedebcb3ad6e36a553eaad949e746beb66",
+    "test/daily_guidance/journal_list_conversion_test.dart": "31905c0142defb90cc9dc37dac7e885ccf7f47e63cf08f85f4ea2dc3be9c1ec3",
+    "test/daily_guidance/local_journal_page_test.dart": "a384e96ad3831c330492e37adbd76ed1c78b634e3d3b2664373fce59bf7c393f",
+    "packages/cses_document_collab/lib/src/editor/editor_text_presentation.dart": "7f90524d5fd85e3652218931dd7668c51e9832a89ce24be397d43e4669c06fe7",
+    "test/daily_guidance/journal_format_toolbar_test.dart": "85f232c6bc1f69dd57fe68d454acc4f4b4ac7c4b562865c7a8ca384a2a7e3fda"
+  },
+  "tests": {
+    "format-host-final-tests.txt": "169 passed",
+    "format-package-final-tests.txt": "346 passed",
+    "format-appflowy-tests.txt": "15 passed",
+    "format-target-verified-tests.txt": "10 passed (subset)"
+  },
+  "limitations": [
+    "本轮为Widget/单元渲染和Android构建，未安装手机，未新增iOS或在线双端验收",
+    "上下角标沿用共享编辑器的字体OpenType特性，实际字形仍依赖平台字体",
+    "日导向草稿独立JSON，不改变正式协同Schema和WS链路"
+  ]
+}

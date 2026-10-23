@@ -1,0 +1,5 @@
+Analyzing 11 items...
+
+warning • The '!' will have no effect because the receiver can't be null. Try removing the '!' operator • test/configured_editor_view_test.dart:248:41 • unnecessary_non_null_assertion
+
+1 issue found. (ran in 12.7s)

@@ -115,7 +115,9 @@ void main() {
             isEmpty,
           );
           final shortcut = commands.singleWhere(
-            (event) => event.key == (cut ? 'journal-cut' : 'journal-copy'),
+            (event) =>
+                event.key ==
+                (cut ? 'document-editor-cut' : 'document-editor-copy'),
           );
           expect(shortcut.handler(state), KeyEventResult.handled);
           await tester.pump();
@@ -129,7 +131,7 @@ void main() {
           );
           expect(
             commands
-                .singleWhere((event) => event.key == 'journal-ctrl+v')
+                .singleWhere((event) => event.key == 'document-editor-ctrl+v')
                 .handler(state),
             KeyEventResult.handled,
           );
@@ -190,7 +192,7 @@ void main() {
           endOffset: node.delta!.length,
         );
         _editor(tester).commandShortcutEvents
-            .singleWhere((event) => event.key == 'journal-cut')
+            .singleWhere((event) => event.key == 'document-editor-cut')
             .handler(state);
         await tester.pump();
         expect(jsonEncode(state.document.toJson()), before);

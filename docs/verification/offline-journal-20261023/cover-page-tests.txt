@@ -1,0 +1,6 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/local_journal_page_test.dart
+00:00 +0: same paper layout in edit and preview at 390.0/1.0
+00:01 +1: same paper layout in edit and preview at 280.0/2.0
+00:01 +2: date changes persist and back waits for save before restoring the same sections
+00:02 +3: paper screenshot with all three sections
+00:02 +4: All tests passed!

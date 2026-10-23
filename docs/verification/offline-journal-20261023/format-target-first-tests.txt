@@ -1,0 +1,186 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (320.0, 1.0)
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following UnsupportedError was thrown running a test:
+Unsupported operation: Cannot clear a fixed-length list
+
+When the exception was thrown, this was the stack:
+#0      FixedLengthListMixin.clear (dart:_internal/list.dart:55:5)
+#1      new _Store (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:20:24)
+#2      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:167:21)
+#3      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:29)
+<asynchronous suspension>
+#4      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  H1-H6 render and survive preview/reopen at (320.0, 1.0)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:00 +0 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart: T menu directly converts bulleted_list to numbered_list in journal section
+00:00 +0 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (320.0, 1.0) [E]
+  Test failed. See exception logs above.
+  The test description was: H1-H6 render and survive preview/reopen at (320.0, 1.0)
+
+00:00 +0 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (390.0, 2.0)
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following UnsupportedError was thrown running a test:
+Unsupported operation: Cannot clear a fixed-length list
+
+When the exception was thrown, this was the stack:
+#0      FixedLengthListMixin.clear (dart:_internal/list.dart:55:5)
+#1      new _Store (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:20:24)
+#2      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:167:21)
+#3      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:29)
+<asynchronous suspension>
+#4      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  H1-H6 render and survive preview/reopen at (390.0, 2.0)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:00 +0 -2: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart: T menu directly converts bulleted_list to numbered_list in journal section
+00:00 +0 -2: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (390.0, 2.0) [E]
+  Test failed. See exception logs above.
+  The test description was: H1-H6 render and survive preview/reopen at (390.0, 2.0)
+
+00:00 +0 -2: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: text/background colors, code and scripts render and persist
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following UnsupportedError was thrown running a test:
+Unsupported operation: Cannot clear a fixed-length list
+
+When the exception was thrown, this was the stack:
+#0      FixedLengthListMixin.clear (dart:_internal/list.dart:55:5)
+#1      new _Store (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:20:24)
+#2      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:222:19)
+#3      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:29)
+<asynchronous suspension>
+#4      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  text/background colors, code and scripts render and persist
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:00 +0 -3: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart: T menu directly converts bulleted_list to numbered_list in journal section
+00:00 +0 -3: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: text/background colors, code and scripts render and persist [E]
+  Test failed. See exception logs above.
+  The test description was: text/background colors, code and scripts render and persist
+
+00:00 +0 -3: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: paragraph alignment and flat indent preserve business identity
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following UnsupportedError was thrown running a test:
+Unsupported operation: Cannot clear a fixed-length list
+
+When the exception was thrown, this was the stack:
+#0      FixedLengthListMixin.clear (dart:_internal/list.dart:55:5)
+#1      new _Store (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:20:24)
+#2      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:288:21)
+#3      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:29)
+<asynchronous suspension>
+#4      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  paragraph alignment and flat indent preserve business identity
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:00 +0 -4: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart: T menu directly converts bulleted_list to numbered_list in journal section
+00:00 +0 -4: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: paragraph alignment and flat indent preserve business identity [E]
+  Test failed. See exception logs above.
+  The test description was: paragraph alignment and flat indent preserve business identity
+
+00:00 +0 -4: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: bulleted_list alignment and flat indent preserve business identity
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following UnsupportedError was thrown running a test:
+Unsupported operation: Cannot clear a fixed-length list
+
+When the exception was thrown, this was the stack:
+#0      FixedLengthListMixin.clear (dart:_internal/list.dart:55:5)
+#1      new _Store (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:20:24)
+#2      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:288:21)
+#3      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:29)
+<asynchronous suspension>
+#4      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  bulleted_list alignment and flat indent preserve business identity
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:00 +0 -5: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart: T menu directly converts bulleted_list to numbered_list in journal section
+00:00 +0 -5: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: bulleted_list alignment and flat indent preserve business identity [E]
+  Test failed. See exception logs above.
+  The test description was: bulleted_list alignment and flat indent preserve business identity
+
+00:00 +0 -5: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: numbered_list alignment and flat indent preserve business identity
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following UnsupportedError was thrown running a test:
+Unsupported operation: Cannot clear a fixed-length list
+
+When the exception was thrown, this was the stack:
+#0      FixedLengthListMixin.clear (dart:_internal/list.dart:55:5)
+#1      new _Store (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:20:24)
+#2      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:288:21)
+#3      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:29)
+<asynchronous suspension>
+#4      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  numbered_list alignment and flat indent preserve business identity
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:00 +0 -6: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart: T menu directly converts bulleted_list to numbered_list in journal section
+00:00 +0 -6: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: numbered_list alignment and flat indent preserve business identity [E]
+  Test failed. See exception logs above.
+  The test description was: numbered_list alignment and flat indent preserve business identity
+
+00:00 +0 -6: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: todo_list alignment and flat indent preserve business identity
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following UnsupportedError was thrown running a test:
+Unsupported operation: Cannot clear a fixed-length list
+
+When the exception was thrown, this was the stack:
+#0      FixedLengthListMixin.clear (dart:_internal/list.dart:55:5)
+#1      new _Store (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:20:24)
+#2      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart:288:21)
+#3      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:29)
+<asynchronous suspension>
+#4      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  todo_list alignment and flat indent preserve business identity
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:00 +0 -7: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart: T menu directly converts bulleted_list to numbered_list in journal section
+00:00 +0 -7: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: todo_list alignment and flat indent preserve business identity [E]
+  Test failed. See exception logs above.
+  The test description was: todo_list alignment and flat indent preserve business identity
+
+00:01 +1 -7: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart: T menu directly converts bulleted_list to todo_list in journal section
+00:02 +2 -7: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart: T menu directly converts numbered_list to bulleted_list in journal section
+00:02 +3 -7: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart: T menu directly converts numbered_list to todo_list in journal section
+00:02 +4 -7: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart: T menu directly converts todo_list to bulleted_list in journal section
+00:03 +5 -7: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart: T menu directly converts todo_list to numbered_list in journal section
+00:03 +6 -7: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart: direct Todo shortcut converts bulleted_list inside journal section
+00:03 +7 -7: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart: direct Todo shortcut converts numbered_list inside journal section
+00:03 +8 -7: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart: same Todo shortcut keeps checked state without extra history
+00:03 +9 -7: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart: consecutive T list conversions keep independent undo and redo
+00:04 +10 -7: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (320.0, 1.0)
+  /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (390.0, 2.0)
+  /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: bulleted_list alignment and flat indent preserve business identity
+  /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: numbered_list alignment and flat indent preserve business identity
+  ... and 3 more

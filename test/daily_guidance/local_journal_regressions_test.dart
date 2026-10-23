@@ -105,7 +105,9 @@ void main() {
             );
             expect(
               commands
-                  .singleWhere((event) => event.key == 'journal-$shortcut')
+                  .singleWhere(
+                    (event) => event.key == 'document-editor-$shortcut',
+                  )
                   .handler(state),
               KeyEventResult.handled,
             );
@@ -283,7 +285,7 @@ void main() {
           const AppFlowyClipboardData(text: '\uFFFC'),
         );
         _editor(tester).commandShortcutEvents
-            .singleWhere((event) => event.key == 'journal-ctrl+v')
+            .singleWhere((event) => event.key == 'document-editor-ctrl+v')
             .handler(state);
         await tester.pump();
         await tester.pump(const Duration(milliseconds: 600));

@@ -1,0 +1,64 @@
+{
+  "checkedAt": "2026-10-23T11:15:10.608492+08:00",
+  "scope": "宿主日导向本地雪山封面及标题叠层；草稿格式、栏目、输入与业务提交代码保持原实现。",
+  "asset": {
+    "path": "assets/images/daily_guidance_mountain.png",
+    "sha256": "987d823c026fccc2c15540026e63db049d76aebaee65abd79e669094ace4c0bb",
+    "bytes": 2375309,
+    "generatedBy": "image_gen",
+    "originalGenerationPath": "/Users/cses-1/.codex/generated_images/01a16272-a340-7cc1-8924-adf827eb91d2/exec-a59c620b-06e0-41d0-9155-10501233a40c.png",
+    "reference": "cover-reference.png",
+    "referenceSha256": "8ddb9495f5cd5c34ec10681834f7243e1a45c437610ea33e7503b9d2c71d5ed6",
+    "origin": "依据用户截图风格生成的独立摄影风格素材，不是原图裁切；无文字/界面/水印。",
+    "runtimeNetwork": false
+  },
+  "layout": {
+    "assetCrop": "BoxFit.cover, Alignment(0,-0.3)",
+    "width": "正文最大680，封面铺满当前纸张宽度",
+    "height": "宽度/2.1并限制184至260逻辑像素；根据系统标题字号增加空间",
+    "title": "今日导向",
+    "subtitle": "聚焦每日核心，做深做细各项成果",
+    "sameWidgetForEditPreview": true,
+    "darkBottomGradient": true,
+    "imageFailureFallback": "本地渐变，标题仍可读"
+  },
+  "verification": {
+    "hostTests": 159,
+    "pageGeometryCases": [
+      "390px/1.0字号",
+      "280px/2.0字号"
+    ],
+    "pageTargetTests": 4,
+    "screenshotTest": "1项通过，与完整套件相同截图用例，不与159相加",
+    "draftModelAndPersistenceUnchanged": true,
+    "physicalDevice": false
+  },
+  "android": {
+    "apkSha256": "5ffd17acb84d1437d720bca4e8ac92855ab67273ccafc8989b45fa00fb9127ff",
+    "normalEntry": true,
+    "pageSourceEmbedded": true,
+    "assetBytesMatch": true,
+    "installedOnDevice": false
+  },
+  "blockcraft": {
+    "latest": "0.11.28",
+    "registry": "http://npm.runtongqiuben.com/",
+    "integrity": "sha512-KNVpgHHAY6ds1bo+EvtiQjS80aoS5kS6oSuJ9nIaJlA8y6yelew5H7F1wTK/bS3Rl9fVyoNAnydz/Si8y0EACg==",
+    "desktopDeclared": "0.11.28",
+    "desktopYarnLocked": "0.11.28",
+    "desktopInstalled": "0.11.17",
+    "historicalPnpmLocked": "0.2.78",
+    "dependencyUpgrade": false,
+    "compatibility": "同版已读技能/MIGRATIONS与受影响实现哈希未变；只改宿主装饰，不改变正式块、数据、选择/菜单、剪贴板、输入/历史或协同协议；原上游差异保持待同步/待验收。"
+  },
+  "sources": {
+    "lib/src/daily_guidance/local_journal_page.dart": "a56c1a1c996746ac33d4271bee6294bad678d327f2c93fecf859b42c38e71cd3",
+    "pubspec.yaml": "0e5ade8a3ff5a94924f003d7ef911cd86c15143a36ef3a374306eb74a34aef29",
+    "test/daily_guidance/local_journal_page_test.dart": "a384e96ad3831c330492e37adbd76ed1c78b634e3d3b2664373fce59bf7c393f"
+  },
+  "limitations": [
+    "未覆盖Android/iOS真机和在线双端",
+    "完整测试截图使用中文替身字体，正文与图标字体不作为真机字体验收；封面单独截图仅展示生产组件",
+    "固定模板图片，不提供封面上传/更换和业务配置"
+  ]
+}

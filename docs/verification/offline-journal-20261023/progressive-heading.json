@@ -1,0 +1,51 @@
+{
+  "checkedAt": "2026-10-23T14:23:51.365509+08:00",
+  "behavior": "H1-H3 initial; choose H3 -> H4, H4 -> H5, H5 -> H6; reopening derives current level; moving to paragraph resets H1-H3",
+  "configuration": "host progressiveHeadingMenu=true; nullable default preserves existing text and complex-document presets",
+  "blockcraft": {
+    "latest": "0.11.29",
+    "registry": "http://npm.runtongqiuben.com/",
+    "integrity": "sha512-f3h37PmhSlyEibJVG3+VskYaCTdw3IElzUjQ1vLmlVHk8878T6qfg1wnUhHifViQ0bfdsZSAzXNkIKLIjjjpMg==",
+    "desktopDeclared": "0.11.28",
+    "desktopYarnLocked": "0.11.28",
+    "desktopInstalled": "0.11.17",
+    "historicalPnpmLocked": "0.2.78",
+    "dependencyUpgrade": false,
+    "difference": ".28->.29 release implementation differences only concern image insertion gap cursor; formatting and text-toolbar skills unchanged. Image change remains pending mobile adaptation/acceptance.",
+    "artifacts": {
+      "ai-skills/blockcraft.md": "ce561a3521f69aa7c7447219741b689d0f062c61f931c351a68a48937994c1e5",
+      "ai-skills/MIGRATIONS.md": "85205258ed3549f8c38c8aeff5d99ebf4162945e2fee2c41efbdf9e86ea61db8",
+      "ai-skills/blockcraft-plugins-formatting.md": "3ba55672869ae620692da8e11b7084fc520d67bed51c6f2146db85556b84c57d",
+      "ai-skills/blockcraft-toolbar.md": "b5a303411038495fc9298d503833585db4d7c7ba81a0e0129ee62dbd5ee5e9db",
+      "ai-skills/blockcraft-plugins-toolbar.md": "f2e3c91ed33052d320c48ffa7038941f62a838cae053973c7aab6730610dba50",
+      "ai-skills/blockcraft-plugins-block.md": "ac4aef6ac6d43b411bc0a032d9c9f604da22a74b0a3643cb79481135b63a950e",
+      "fesm2022/ccc-blockcraft.mjs": "860767d0ce5dabbc1d30ce9caae1cb2ce143c8166300183cb3f9807feaec3dbf"
+    }
+  },
+  "sources": {
+    "lib/src/daily_guidance/journal_draft.dart": "d0907f6b25c2ec449f96823c8335fab7b3fab137ec112c9c3614f9ee05964c8c",
+    "packages/cses_document_collab/lib/src/editor/core/editor_configuration.dart": "e2761d25c73f76bb3d690dd8d3be5bbb81d9796f631ced1b03ccf34219e98300",
+    "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart": "4afc94a398b347c7c4c81f67aaa3a94e8d7682c07dbb6204a64835ba2dc00c4c",
+    "packages/cses_document_collab/test/editor_configuration_test.dart": "02e71b9096eed56ad8216f969730cc79f70a607cd11ca0b38da3dbd05164f88e",
+    "test/daily_guidance/journal_format_toolbar_test.dart": "8079cd3924daaf6474b6c8127ece0f75e4060e9fcb9ec4917d766fe6f837d547"
+  },
+  "android": {
+    "apkSha256": "1b6a05707338ccfbea0e320494bbef3d1ddbb958f2c733d626649e429f31f866",
+    "currentSourcesEmbedded": {
+      "lib/src/daily_guidance/journal_draft.dart": true,
+      "packages/cses_document_collab/lib/src/editor/core/editor_configuration.dart": true,
+      "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart": true
+    },
+    "deviceInstalled": false
+  },
+  "verification": {
+    "hostTests": 34,
+    "packageTests": 33,
+    "hostAnalyze": "no issues",
+    "packageAnalyze": "no issues",
+    "physicalDevice": false,
+    "ios": false,
+    "onlineCollaboration": false
+  },
+  "milestone": "第一阶段宿主逐级配置；后续统一默认规则和当前产物以shared-editor.json为准"
+}

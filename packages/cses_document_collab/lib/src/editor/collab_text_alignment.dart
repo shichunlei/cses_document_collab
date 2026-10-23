@@ -17,7 +17,17 @@ TextAlign collabTextAlign(Node node) =>
     };
 
 /// 复用标准块的样式与操作，只有分散排版使用自定义文字外壳。
+/// 宿主通过公开排版入口取得包装器，不接管正文资源。
+///
+/// ```dart
+/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:cses_document_collab/cses_document_collab.dart';
+/// final builder = configureEditorTextBlock(
+///   ParagraphBlockComponentBuilder(), ParagraphBlockKeys.type);
+/// // 注册到借用 EditorState 的 AppFlowyEditor.blockComponentBuilders。
+/// ```
 class CollabTextAlignmentBuilder extends BlockComponentBuilder {
+  /// [standard]提供原生排版和可选列表标记，仅借用，不拥有编辑会话。
   CollabTextAlignmentBuilder(this.standard)
     : super(configuration: standard.configuration) {
     standard.configuration = standard.configuration.copyWith(
@@ -25,8 +35,11 @@ class CollabTextAlignmentBuilder extends BlockComponentBuilder {
     );
     validate = standard.validate;
   }
+
+  /// 借用的原生构建器，分散对齐仍保留其自定义列表标记。
   final BlockComponentBuilder standard;
 
+  /// 在借用的[context]中构建原生或分散文字，保留原构建器的列表图标和输入配置。
   @override
   BlockComponentWidget build(BlockComponentContext context) {
     if (context.node.attributes[blockComponentAlign] != 'distributed') {
@@ -35,6 +48,7 @@ class CollabTextAlignmentBuilder extends BlockComponentBuilder {
     final original = standard.build(context);
     return _DistributedTextBlock(
       key: context.node.key,
+      standard: standard,
       node: context.node,
       configuration: original.configuration,
       showActions: original.showActions,
@@ -45,14 +59,22 @@ class CollabTextAlignmentBuilder extends BlockComponentBuilder {
 }
 
 class _DistributedTextBlock extends BlockComponentStatefulWidget {
+  /// [key]维持组件身份，[node]和[configuration]为借用的正文及排版配置。
+  /// [standard]提供自定义标记，[showActions]/[actionBuilder]/[actionTrailingBuilder]沿用原生块动作。
   const _DistributedTextBlock({
     super.key,
     required super.node,
     required super.configuration,
+    required this.standard,
     super.showActions,
     super.actionBuilder,
     super.actionTrailingBuilder,
   });
+
+  /// 借用的原生构建器，不承担资源释放。
+  final BlockComponentBuilder standard;
+
+  /// 创建本块的原生选区与输入委托。
   @override
   createState() => _DistributedTextBlockState();
 }
@@ -77,7 +99,29 @@ class _DistributedTextBlockState extends State<_DistributedTextBlock>
   @override
   late final editorState = context.read<EditorState>();
 
+  /// 按[direction]复用宿主的列表标记；未自定义时保留原有默认标记。
   Widget? _marker(TextDirection direction) {
+    final standard = widget.standard;
+    if (standard is NumberedListBlockComponentBuilder &&
+        standard.iconBuilder != null) {
+      return standard.iconBuilder!(context, node, direction);
+    }
+    if (standard is BulletedListBlockComponentBuilder &&
+        standard.iconBuilder != null) {
+      return standard.iconBuilder!(context, node);
+    }
+    if (standard is TodoListBlockComponentBuilder &&
+        standard.iconBuilder != null) {
+      return standard.iconBuilder!(context, node, () async {
+        if (!editorState.editable || editorState.isDisposed) return;
+        await editorState.apply(
+          editorState.transaction..updateNode(node, {
+            TodoListBlockKeys.checked:
+                node.attributes[TodoListBlockKeys.checked] != true,
+          }),
+        );
+      });
+    }
     final scale = editorState.editorStyle.textScaleFactor;
     switch (node.type) {
       case NumberedListBlockKeys.type:

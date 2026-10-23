@@ -1,0 +1,12 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart
+00:00 +0: H1-H6 render and survive preview/reopen at (320.0, 1.0)
+00:02 +1: H1-H6 render and survive preview/reopen at (390.0, 2.0)
+00:02 +2: text/background colors, code and scripts render and persist
+00:03 +3: font size uses real selection and keeps list marker centered
+00:04 +4: malformed/unsupported persisted heading levels are rejected
+00:04 +5: paragraph alignment and flat indent preserve business identity
+00:04 +6: heading alignment and flat indent preserve business identity
+00:05 +7: bulleted_list alignment and flat indent preserve business identity
+00:06 +8: numbered_list alignment and flat indent preserve business identity
+00:06 +9: todo_list alignment and flat indent preserve business identity
+00:07 +10: All tests passed!

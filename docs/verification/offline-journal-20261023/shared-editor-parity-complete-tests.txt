@@ -1,0 +1,77 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: (setUpAll)
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: view extension collections are immutable copies
+00:00 +1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:00 +2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:00 +3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:00 +4: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:00 +5: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:00 +6: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +7: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:01 +8: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:01 +9: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import success respects transaction and lifecycle
+00:01 +10: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import success respects transaction and lifecycle
+00:01 +11: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import success respects transaction and lifecycle
+00:01 +12: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import success respects transaction and lifecycle
+00:01 +13: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import success respects transaction and lifecycle
+00:01 +14: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import success respects transaction and lifecycle
+00:02 +15: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import success respects transaction and lifecycle
+00:02 +16: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import success respects transaction and lifecycle
+00:02 +17: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import success respects transaction and lifecycle
+00:02 +18: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import success respects transaction and lifecycle
+00:03 +19: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import success respects transaction and lifecycle
+00:03 +20: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import success respects transaction and lifecycle
+00:03 +21: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import success respects transaction and lifecycle
+00:03 +22: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import success respects transaction and lifecycle
+00:03 +23: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import success respects transaction and lifecycle
+00:03 +24: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import success respects transaction and lifecycle
+00:03 +25: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import success respects transaction and lifecycle
+00:04 +26: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:04 +27: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:04 +28: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import invalid respects transaction and lifecycle
+00:04 +29: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import invalid respects transaction and lifecycle
+00:04 +30: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import invalid respects transaction and lifecycle
+00:04 +31: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import invalid respects transaction and lifecycle
+00:04 +32: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import invalid respects transaction and lifecycle
+00:04 +33: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import invalid respects transaction and lifecycle
+00:04 +34: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import invalid respects transaction and lifecycle
+00:05 +35: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import invalid respects transaction and lifecycle
+00:05 +36: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import invalid respects transaction and lifecycle
+MarkdownImport: Markdown 导入失败: FormatException: Markdown 文件为空
+#0      decodeMarkdownImport (package:cses_document_collab/src/editor/markdown_import.dart:20:30)
+#1      compute.<anonymous closure> (package:flutter/src/foundation/_isolates_io.dart:23:20)
+#2      _RemoteRunner._run (dart:isolate:1116:47)
+#3      _RemoteRunner._remoteExecute (dart:isolate:1110:12)
+#4      _delayEntrypointInvocation.<anonymous closure> (dart:isolate-patch/isolate_patch.dart:316:17)
+#5      _RawReceivePort._handleMessage (dart:isolate-patch/isolate_patch.dart:192:12)
+
+00:06 +37: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import revoked respects transaction and lifecycle
+00:06 +38: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import closed respects transaction and lifecycle
+00:07 +39: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: unrenderable video  uses the unified placeholder
+00:07 +40: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: unrenderable video blob:desktop-only uses the unified placeholder
+00:07 +41: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: unrenderable video file:///desktop/video.mp4 uses the unified placeholder
+00:07 +42: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: unrenderable video null uses the unified placeholder
+00:07 +43: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: unknown blocks stay opaque while surrounding text remains editable
+00:07 +44: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: desktop quote background and border render in edit and preview
+00:07 +45: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: alignment switches keep the live paragraph caret and text
+00:07 +46: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: paragraph renders justify and preserves selection in preview
+00:07 +47: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: heading_2 renders justify and preserves selection in preview
+00:07 +48: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: quote renders justify and preserves selection in preview
+00:07 +49: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: bulleted_list renders justify and preserves selection in preview
+00:08 +50: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: numbered_list renders justify and preserves selection in preview
+00:08 +51: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: todo_list renders justify and preserves selection in preview
+00:08 +52: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: paragraph renders distributed and preserves selection in preview
+00:08 +53: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: heading_2 renders distributed and preserves selection in preview
+00:08 +54: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: quote renders distributed and preserves selection in preview
+00:08 +55: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: bulleted_list renders distributed and preserves selection in preview
+00:08 +56: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: numbered_list renders distributed and preserves selection in preview
+00:08 +57: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: todo_list renders distributed and preserves selection in preview
+00:08 +58: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: paragraph rows stay compact in edit and preview
+00:08 +59: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: numbered_list rows stay compact in edit and preview
+00:08 +60: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: bulleted_list rows stay compact in edit and preview
+00:08 +61: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: todo_list rows stay compact in edit and preview
+00:08 +62: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: formal cover fills page width; centered controls overlay image and icon crosses its bottom
+00:09 +63: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: standalone page owns the full-screen editor UI
+00:09 +64: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: remote read-only capability disables all editing and preserves preview choice
+00:09 +65: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collaborative_editor_page_test.dart: (tearDownAll)
+00:09 +65: All tests passed!

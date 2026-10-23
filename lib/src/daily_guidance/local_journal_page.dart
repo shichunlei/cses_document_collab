@@ -604,6 +604,90 @@ class _LocalJournalPageState extends State<LocalJournalPage>
   }
 }
 
+/// 编辑和预览共用的雪山封面，素材随宿主打包，不进入草稿或发起网络请求。
+class _JournalCover extends StatelessWidget {
+  /// 构建固定封面，不持有编辑会话或外部图片资源。
+  const _JournalCover();
+
+  /// 使用[context]的可用宽度和字号安排图片与标题，底部渐变保证文字对比度。
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final scaledTitle = MediaQuery.textScalerOf(context).scale(22);
+        final extraHeight = (scaledTitle - 22).clamp(0.0, 44.0) * 1.4;
+        final height = (constraints.maxWidth / 2.1).clamp(184.0, 260.0);
+        return SizedBox(
+          key: const ValueKey('journal-cover'),
+          height: height + extraHeight,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Image.asset(
+                'assets/images/daily_guidance_mountain.png',
+                key: const ValueKey('journal-cover-image'),
+                fit: BoxFit.cover,
+                alignment: const Alignment(0, -.3),
+                excludeFromSemantics: true,
+                errorBuilder: (_, error, stackTrace) => const DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Color(0xffc6a9ad), Color(0xff26394c)],
+                    ),
+                  ),
+                ),
+              ),
+              const DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0x000b1726), Color(0xb30b1726)],
+                    stops: [.3, 1],
+                  ),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.fromLTRB(20, 20, 20, 18),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '今日导向',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 22,
+                        height: 1.2,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      '聚焦每日核心，做深做细各项成果',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 12,
+                        height: 1.4,
+                        color: Color(0xfff0edef),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
 /// 编辑与预览相同的纸张标题和日期，可在编辑态展开行内日历。
 class _JournalHeader extends StatelessWidget {
   /// [date]为YYYY-MM-DD，[chooseDate]控制日历，[onChoose]为空时只读，[onDate]提交所选日期。
@@ -648,24 +732,7 @@ class _JournalHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
-          color: const Color(0xffedddd8),
-          child: const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '今日成果',
-                style: TextStyle(fontSize: 26, color: Color(0xff3e4650)),
-              ),
-              SizedBox(height: 6),
-              Text(
-                '把每一天，写成自己的成长',
-                style: TextStyle(fontSize: 13, color: Color(0xff6e6c6b)),
-              ),
-            ],
-          ),
-        ),
+        const _JournalCover(),
         const SizedBox(height: 24),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),

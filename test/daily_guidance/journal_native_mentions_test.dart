@@ -397,7 +397,7 @@ void main() {
         final event = tester
             .widget<AppFlowyEditor>(find.byType(AppFlowyEditor))
             .characterShortcutEvents
-            .singleWhere((event) => event.key == 'journal-native-mention');
+            .singleWhere((event) => event.key == 'cses-user-mention');
         final pending = event.handler(state);
         await tester.pumpAndSettle();
         await tester.pump(const Duration(milliseconds: 400));
@@ -426,7 +426,14 @@ void main() {
           find.byKey(const ValueKey('avatar-picked-user')),
           findsOneWidget,
         );
-        expect(find.byType(EditorInteractionShell), findsNothing);
+        expect(
+          tester
+              .widget<EditorInteractionShell>(
+                find.byType(EditorInteractionShell),
+              )
+              .enabled,
+          isFalse,
+        );
         expect(tester.takeException(), isNull);
       } finally {
         await _unmount(tester, journal);

@@ -307,6 +307,33 @@ tool/verify_portable_package.sh ../appflowy_editor
 
 包保留已有块支持范围、未知数据保护和模型只读规则。正式正文（含代码块）出现未适配行内对象时，仅将所在段落投影为不可编辑占位，完整保留原始Y.Text与属性；其他已适配块继续编辑，含占位的父容器不可连带删除。未知类型仍保持保护，用户、会议、任务、文档四类提及的普通正文支持另见下文，锁、修订和图片题注等既有只读保护仍生效。上传、私有资源鉴权、业务元数据、服务端保存及租户权限由宿主/服务端提供，真实环境联调须单独验收。
 
+## 共用编辑视图与场景配置
+
+离线正文、协同正文、图片制图和宿主业务页面统一使用`DocumentEditorView`；菜单、字符装饰、快捷键、剪贴板、选区及预览规则由同一实现维护，不按在线状态另建分支。`EditorConfiguration`声明块、格式、标题级别、工具栏入口和嵌套能力；`EditorViewConfiguration`注入宿主皮肤、结构渲染和业务动作。业务模型/事务保护、草稿存储和协同绑定分别由宿主会话持有，视图只借用正文。
+
+标题菜单默认均逐级展示H1～H3→H4→H5→H6，重新打开按当前标题恢复，进入普通段落重置；非连续级别会跳到下一已启用项。确有需要时可显式设置`progressiveHeadingMenu: false`直接展开，不能再依赖编辑器种类隐式改变菜单。`structuralIndentation: false`关闭原生嵌套缩进；显式授权的文字/列表平面缩进仍走同一命令。
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:cses_document_collab/cses_document_collab.dart';
+
+final controller = LocalEditorController(configuration: EditorConfiguration(
+  blocks: [EditorBlock.paragraph, EditorBlock.heading, EditorBlock.todoList],
+  headingLevels: {1, 2, 3, 4, 5, 6},
+  paragraphLayout: true,
+  structuralIndentation: false,
+));
+final view = DocumentEditorView(
+  editorState: controller.editorState,
+  configuration: EditorViewConfiguration(
+    style: (context, style) => style.copyWith(cursorColor: Colors.brown),
+  ),
+);
+// 视图移除后 await controller.close()。
+```
+
+宿主可通过`blockBuilders`接收视图新建的私有渲染器并增加自己的结构块，不能复用跨文档可变builder；额外结构数据仍需宿主的事务和恢复校验。`characterShortcuts`只处理业务特例，未处理的输入交给通用链；`keyboardActions`追加业务菜单，不复制内建操作。仅更换展示配置会保留正文、滚动和撤销历史；借用控制器由创建者释放。实现和验证见[统一核心记录](../../docs/verification/offline-journal-20261023/shared-editor.md)。
+
 ## 人员提及端口
 
 人员头像和选择器由宿主创建，协同包不提供默认头像组件、图片URL规则或人员搜索界面。通过公开入口配置：
