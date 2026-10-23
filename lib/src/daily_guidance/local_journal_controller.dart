@@ -26,10 +26,12 @@ import 'journal_store.dart';
 /// ```
 final class LocalJournalController extends ChangeNotifier {
   /// 接管由[draft]恢复的文档与监听；[store]仍由宿主持有，[saveDelay]为去抖间隔。
+  /// [services]借用此页面的业务端口，不获取目录、认证或头像资源所有权。
   LocalJournalController._(
     JournalStore store,
     JournalDraft draft,
     Duration saveDelay,
+    CollabHostServices? services,
   ) : _store = store,
       _draft = draft,
       _saveDelay = saveDelay {
@@ -40,6 +42,7 @@ final class LocalJournalController extends ChangeNotifier {
       commandContext: EditorCommandContext(
         configuration: journalConfiguration,
         localOnly: true,
+        services: services,
         pastePlainText: pasteFromClipboard,
         copySelection: copySelection,
       ),
@@ -50,17 +53,19 @@ final class LocalJournalController extends ChangeNotifier {
 
   /// 从借用的[store]读取草稿后创建会话；无草稿以[now]或当前设备日期新建并安排保存。
   /// [saveDelay]默认500毫秒且不能为负。读取/校验失败直接抛错，不创建替代草稿。
+  /// [services]为可选页面实例服务；null使用空端口，关闭会话不会释放宿主资源。
   static Future<LocalJournalController> open({
     required JournalStore store,
     DateTime? now,
     Duration saveDelay = const Duration(milliseconds: 500),
+    CollabHostServices? services,
   }) async {
     if (saveDelay.isNegative) throw ArgumentError.value(saveDelay, 'saveDelay');
     final saved = await store.read();
     final draft = saved == null
         ? JournalDraft.blank(now ?? DateTime.now())
         : JournalDraft.fromJson(saved.toJson());
-    final result = LocalJournalController._(store, draft, saveDelay);
+    final result = LocalJournalController._(store, draft, saveDelay, services);
     if (saved == null || saved.needsMigration) result._changed();
     return result;
   }
@@ -515,21 +520,71 @@ final class LocalJournalController extends ChangeNotifier {
   }
 
   /// 在仍有效的[target]插入[people]；[kind]为空表示句内@，其余为task/help/pilot可写条目。
-  /// 一次多选生成一条；现有文字转任务保留正文，都来帮/领航员另起业务行。迟到结果抛StateError。
+  /// 一次多选生成一条；task保留旧格式，help/pilot仅接受人员并写原生@，拒绝组织。
+  /// 现有文字转任务保留正文，都来帮/领航员另起业务行。迟到结果抛StateError；
+  /// 人数不在1至100、无效类型或help/pilot含组织时抛ArgumentError，不修改正文。
   Future<void> insertPeople(
     GuidanceInsertionTarget target,
     List<GuidancePerson> people, {
     String? kind,
   }) async {
+    if (people.isEmpty || people.length > 100) {
+      throw ArgumentError('无效的人员数量');
+    }
+    if (kind == 'help' || kind == 'pilot') {
+      if (people.any((person) => person.type != 'user')) {
+        throw ArgumentError('都来帮和领航员仅支持人员提及');
+      }
+      final users = <String, GuidancePerson>{};
+      for (final person in people) {
+        users.putIfAbsent(person.id, () => person);
+      }
+      final mentions = Delta();
+      for (final person in users.values) {
+        mentions.addAll(
+          EditorUserMention.createDelta(
+            CollabMentionUser(id: person.id, name: person.name),
+          ),
+        );
+      }
+      await _insertMentions(target, mentions, kind: kind);
+      return;
+    }
+    await _insertMentions(target, guidanceMentionDelta(people), kind: kind);
+  }
+
+  /// 在仍有效的[target]后创建[kind]业务行，内容为[user]的原生人员提及和空格。
+  /// [kind]仅接受help/pilot；身份或类型非法抛ArgumentError，目标过期抛StateError。
+  /// 不替换来源正文，整条创建为一次可撤销事务；不接受组织或旧自定义对象。
+  Future<void> insertUserEntry(
+    GuidanceInsertionTarget target,
+    CollabMentionUser user, {
+    required String kind,
+  }) async {
+    if (kind != 'help' && kind != 'pilot') {
+      throw ArgumentError.value(kind, 'kind', '仅支持都来帮或领航员');
+    }
+    await _insertMentions(
+      target,
+      EditorUserMention.createDelta(user),
+      kind: kind,
+    );
+  }
+
+  /// 将独立的[mentions]写到[target]，以[kind]决定句内替换或业务行；校验修订及所属会话。
+  /// [kind]为空为句内@，否则仅接受task/help/pilot；拒绝过期或不可写目标并保留正文。
+  Future<void> _insertMentions(
+    GuidanceInsertionTarget target,
+    Delta mentions, {
+    String? kind,
+  }) async {
     if (closed ||
         !editor.editorState.editable ||
         target.revision != _revision ||
-        !identical(target._owner, _targetOwner) ||
-        people.isEmpty) {
+        !identical(target._owner, _targetOwner)) {
       throw StateError('正文已变化，请重新选择人员');
     }
-    if (people.length > 100 ||
-        (kind != null && !const {'task', 'help', 'pilot'}.contains(kind))) {
+    if (kind != null && !const {'task', 'help', 'pilot'}.contains(kind)) {
       throw ArgumentError('无效的业务条目');
     }
     final state = editor.editorState;
@@ -537,10 +592,9 @@ final class LocalJournalController extends ChangeNotifier {
     if (node?.id != target.nodeId || node?.parent?.type != journalSectionType) {
       throw StateError('插入位置已失效');
     }
-    final mentions = guidanceMentionDelta(people);
     // Delta.addAll会在合并相同格式时修改末尾run，先保存插入长度，避免后缀改变光标位置。
     final mentionLength = mentions.length;
-    final transaction = state.transaction;
+    final transaction = state.transaction..beforeSelection = target.selection;
     if (kind == null) {
       final range = target.selection.normalized;
       final replacement = Delta()
@@ -630,7 +684,7 @@ final class LocalJournalController extends ChangeNotifier {
   }
 }
 
-/// 组织选择期间保留的单段目标；不可用于其他会话或修订。
+/// 人员选择期间保留的单段目标；不可用于其他会话或修订。
 ///
 /// ```dart
 /// import 'package:cses_mobile_collab_demo/src/daily_guidance/local_journal_controller.dart';

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ui' show BoxHeightStyle;
 
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/cses_document_collab.dart';
 import 'package:cses_mobile_collab_demo/src/daily_guidance/guidance_entries.dart';
 import 'package:cses_mobile_collab_demo/src/daily_guidance/guidance_people.dart';
 import 'package:cses_mobile_collab_demo/src/daily_guidance/journal_draft.dart';
@@ -166,15 +167,39 @@ List<double> _geometry(WidgetTester tester, double scale, bool wrapped) {
   return result;
 }
 
+/// 在[tester]的横向工具栏中露出都来帮入口并真实点击，确保窄屏动作仍可达。
+Future<void> _tapHelp(WidgetTester tester) async {
+  final target = find.byKey(
+    const ValueKey('editor-keyboard-host-guidance-action-help'),
+  );
+  final list = find.descendant(
+    of: find.byKey(const ValueKey('editor-mobile-toolbar')),
+    matching: find.byType(ListView),
+  );
+  for (var i = 0; i < 12 && target.hitTestable().evaluate().isEmpty; i++) {
+    await tester.drag(list, const Offset(-140, 0));
+    await tester.pumpAndSettle();
+  }
+  expect(target.hitTestable(), findsOneWidget);
+  await tester.tap(target);
+}
+
 /// 在真实今日导向页面验证原子提及、三类业务行和预览在缩放/换行下保持同源布局。
 void main() {
-  testWidgets('真实页面工具栏选人确认后插入、保存、预览并取消下一次选择', (tester) async {
+  testWidgets('真实页面自定义都来帮确认后保留原文并插入、保存、预览和取消', (tester) async {
     await tester.binding.setSurfaceSize(const Size(390, 1000));
     addTearDown(() => tester.binding.setSurfaceSize(null));
+    tester.view.devicePixelRatio = 1;
+    tester.view.viewInsets = const FakeViewPadding(bottom: 260);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetViewInsets);
     final store = _Store(JournalDraft.blank(DateTime(2026, 10, 22)));
     await tester.pumpWidget(
       MaterialApp(
-        home: LocalJournalPage(store: store, directory: const _PageDirectory()),
+        home: LocalJournalPage(
+          store: store,
+          mentionDirectory: const _PageDirectory(),
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -186,47 +211,47 @@ void main() {
         Position(path: node.path, offset: 1),
       );
       await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const ValueKey('guidance-action-mention')));
+      await _tapHelp(tester);
       await tester.pumpAndSettle();
-      expect(find.text('选择用户和部门'), findsOneWidget);
-      await tester.tap(find.byKey(const ValueKey('guidance-select-user:u1')));
-      await tester.tap(
-        find.byKey(const ValueKey('guidance-select-department:d1')),
-      );
-      await tester.pump();
-      await tester.tap(find.byKey(const ValueKey('guidance-people-confirm')));
-      await tester.pumpAndSettle();
+      expect(find.text('@用户'), findsOneWidget);
       expect(find.text('选择用户和部门'), findsNothing);
+      await tester.tap(find.byKey(const ValueKey('mention-user-u1')));
+      await tester.pumpAndSettle();
+      expect(find.text('@用户'), findsNothing);
       expect(find.text('人员插入失败，原文已保留，请重试'), findsNothing);
-      expect(node.delta!.toPlainText(), '原\uFFFC \uFFFC 文');
-      final mentions = node.delta!.whereType<TextInsert>().where(
-        (op) => op.attributes?[guidanceMentionAttribute] != null,
+      expect(node.delta!.toPlainText(), '原文');
+      final business = state.document.root.children.single.children.last;
+      expect(business.attributes[guidanceEntryAttribute], 'help');
+      expect(business.delta!.toPlainText(), '\uFFFC ');
+      final mentions = business.delta!.whereType<TextInsert>().where(
+        (op) => EditorUserMention.tryRead(op.attributes) != null,
       );
-      expect(
-        mentions.map((op) => readGuidanceMention(op.attributes!).identity),
-        ['user:u1', 'department:d1'],
-      );
-      expect(find.text('@张三'), findsOneWidget);
-      expect(find.text('@研发'), findsOneWidget);
+      expect(mentions.map((op) => EditorUserMention.read(op.attributes!).id), [
+        'u1',
+      ]);
+      expect(find.text('张三'), findsOneWidget);
+      expect(find.text('@研发'), findsNothing);
       await tester.pump(const Duration(milliseconds: 600));
       final persisted = store.value.documentJson;
-      expect(persisted, contains(guidanceMentionAttribute));
-      await tester.tap(find.byKey(const ValueKey('guidance-action-help')));
+      expect(persisted, contains('cses_inline_mention'));
+      expect(persisted, isNot(contains(guidanceMentionAttribute)));
+      await _tapHelp(tester);
       await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const ValueKey('guidance-people-close')));
+      await tester.tap(find.byKey(const ValueKey('mention-close')));
       await tester.pumpAndSettle();
-      expect(state.document.root.children.single.children.length, 1);
-      expect(node.delta!.toPlainText(), '原\uFFFC \uFFFC 文');
+      expect(state.document.root.children.single.children.length, 2);
+      expect(node.delta!.toPlainText(), '原文');
+      expect(business.delta!.toPlainText(), '\uFFFC ');
       await tester.tap(find.byKey(const ValueKey('journal-preview')));
       await tester.pumpAndSettle();
       expect(_state(tester).editable, isFalse);
-      expect(find.text('@张三'), findsOneWidget);
-      expect(find.text('@研发'), findsOneWidget);
+      expect(find.text('张三'), findsOneWidget);
+      expect(find.text('@研发'), findsNothing);
       expect(
         _state(
           tester,
-        ).document.root.children.single.children.single.delta!.toPlainText(),
-        '原\uFFFC \uFFFC 文',
+        ).document.root.children.single.children.last.delta!.toPlainText(),
+        '\uFFFC ',
       );
       expect(tester.takeException(), isNull);
     } finally {
@@ -287,19 +312,17 @@ void main() {
 }
 
 /// 注入真实页面选人入口的无网络目录，使用测试身份验证完整 UI 确认/取消链路。
-class _PageDirectory implements GuidanceDirectory {
+class _PageDirectory implements CollabMentionDirectory {
   /// 创建无资源所有权的固定测试目录。
   const _PageDirectory();
 
-  /// 返回一个人员和一个部门，确认部门时不应展开其成员。
+  /// 为[keyword]提供原生人员对象，部门只作为人员资料而不是可选对象。
   @override
-  Future<List<GuidancePerson>> load() async => const [
-    GuidancePerson(id: 'u1', name: '张三'),
-    GuidancePerson(
-      id: 'd1',
-      name: '研发',
-      type: 'department',
-      children: [GuidancePerson(id: 'u2', name: '李四')],
-    ),
+  Future<List<CollabMentionUser>> search(String keyword) async => const [
+    CollabMentionUser(id: 'u1', name: '张三', department: '研发', avatarUrl: ''),
   ];
+
+  /// 本测试不读取详情；[userId]不会触发网络请求。
+  @override
+  Future<CollabMentionUser?> load(String userId) async => null;
 }

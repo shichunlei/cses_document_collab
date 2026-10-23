@@ -1,0 +1,184 @@
+Waiting for another flutter command to release the startup lock...
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: (setUpAll)
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public parser accepts legacy user snapshots and rejects mismatched identities
+00:00 +1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public factory produces the same native user atom as editor insertion
+00:00 +2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: bare document inserts and undoes native user atoms localOnly=false
+00:00 +3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: bare document inserts and undoes native user atoms localOnly=true
+00:00 +4: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: local user insertion exposes the actual atom to the first host guard
+00:00 +5: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: rejected replacement of the same existing user is not reported as inserted
+00:00 +6: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:02 +7: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:02 +8: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:02 +9: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:06 +10: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: missing picker leaves IME trigger to ordinary input and preserves toolbar selection
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: missing picker leaves IME trigger to ordinary input and preserves toolbar selection
+00:06 +12: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: missing picker leaves IME trigger to ordinary input and preserves toolbar selection
+00:06 +13: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: missing picker leaves IME trigger to ordinary input and preserves toolbar selection
+00:07 +14: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: review regression: pending host action synchronously blocks 块类型
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: review regression: pending host action synchronously blocks 块类型
+00:08 +16: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: review regression: pending host action synchronously blocks 块类型
+00:09 +17: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: host picker inserts at saved block after reorder; cancel restores backward selection
+00:09 +18: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: review regression: pending host action synchronously blocks 文字样式
+00:09 +19: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: remote text change or permission revocation prevents insertion
+00:10 +20: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: remote text change or permission revocation prevents insertion
+00:10 +21: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: review regression: pending host action invalidates an existing submenu callback
+00:10 +22: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: inline user card uses host avatar and click callback in edit and preview on narrow large text
+00:10 +23: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: host labels follow built-ins and disabled actions cannot execute
+00:10 +24: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: more menu uses host picker and preserves original insertion location
+00:11 +25: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: more menu uses host picker and preserves original insertion location
+00:11 +26: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: more menu uses host picker and preserves original insertion location
+00:11 +26: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: old editor completion cannot report into or unlock a new pending action
+执行感悟失败，动作所属会话已失效：Bad state: late failure
+dart:async/future_impl.dart 21:26                              _interceptError
+dart:async/future_impl.dart 52:23                              _interceptUserError
+dart:async/future_impl.dart 82:26                              _Completer.completeError
+test/editor_keyboard_actions_test.dart 188:18                  main.<fn>
+===== asynchronous gap ===========================
+dart:async/zone.dart 754:19                                    _CustomZone.registerUnaryCallback
+test/editor_keyboard_actions_test.dart 181:23                  main.<fn>
+package:flutter_test/src/widget_tester.dart 192:29             testWidgets.<fn>.<fn>
+===== asynchronous gap ===========================
+dart:async/zone.dart 754:19                                    _CustomZone.registerUnaryCallback
+package:flutter_test/src/widget_tester.dart 189:25             testWidgets.<fn>.<fn>
+package:flutter_test/src/binding.dart 1952:19                  TestWidgetsFlutterBinding._runTestBody
+===== asynchronous gap ===========================
+dart:async/zone.dart 754:19                                    _CustomZone.registerUnaryCallback
+package:flutter_test/src/binding.dart 1941:5                   TestWidgetsFlutterBinding._runTestBody
+dart:async/zone_root.dart 78:13                                _rootRunBinary
+dart:async/zone.dart 740:19                                    _CustomZone.runBinary
+package:flutter_test/src/binding.dart 1926:10                  TestWidgetsFlutterBinding._runTest
+package:flutter_test/src/binding.dart 2489:24                  AutomatedTestWidgetsFlutterBinding.runTest.<fn>
+package:fake_async/fake_async.dart 182:47                      FakeAsync.run.<fn>.<fn>
+dart:async/zone_root.dart 35:13                                _rootRun
+dart:async/zone.dart 726:19                                    _CustomZone.run
+dart:async/zone_api.dart 166:6                                 _runZoned
+dart:async/zone_api.dart 92:10                                 runZoned
+package:clock/src/default.dart 52:10                           withClock
+package:fake_async/fake_async.dart 182:15                      FakeAsync.run.<fn>
+dart:async/zone_root.dart 35:13                                _rootRun
+dart:async/zone.dart 726:19                                    _CustomZone.run
+dart:async/zone_api.dart 166:6                                 _runZoned
+dart:async/zone_api.dart 92:10                                 runZoned
+package:fake_async/fake_async.dart 181:52                      FakeAsync.run
+package:flutter_test/src/binding.dart 2486:15                  AutomatedTestWidgetsFlutterBinding.runTest
+package:flutter_test/src/widget_tester.dart 184:24             testWidgets.<fn>
+package:test_api/src/backend/declarer.dart 253:25              Declarer.test.<fn>.<fn>
+===== asynchronous gap ===========================
+dart:async/zone.dart 754:19                                    _CustomZone.registerUnaryCallback
+package:test_api/src/backend/declarer.dart 252:15              Declarer.test.<fn>.<fn>
+dart:async/zone_root.dart 35:13                                _rootRun
+dart:async/zone.dart 726:19                                    _CustomZone.run
+dart:async/zone_api.dart 166:6                                 _runZoned
+dart:async/zone_api.dart 92:10                                 runZoned
+package:test_api/src/backend/declarer.dart 250:17              Declarer.test.<fn>
+package:test_api/src/backend/invoker.dart 318:17               Invoker._waitForOutstandingCallbacks.<fn>
+dart:async/zone_root.dart 35:13                                _rootRun
+dart:async/zone.dart 726:19                                    _CustomZone.run
+dart:async/zone_api.dart 166:6                                 _runZoned
+dart:async/zone_api.dart 92:10                                 runZoned
+package:test_api/src/backend/invoker.dart 314:5                Invoker._waitForOutstandingCallbacks
+package:test_api/src/backend/invoker.dart 457:21               Invoker._onRun.<fn>.<fn>.<fn>
+===== asynchronous gap ===========================
+dart:async/zone.dart 754:19                                    _CustomZone.registerUnaryCallback
+package:test_api/src/backend/invoker.dart 455:15               Invoker._onRun.<fn>.<fn>.<fn>
+dart:async/zone_root.dart 35:13                                _rootRun
+dart:async/zone.dart 726:19                                    _CustomZone.run
+dart:async/zone_api.dart 166:6                                 _runZoned
+dart:async/zone_api.dart 92:10                                 runZoned
+package:test_api/src/backend/invoker.dart 445:11               Invoker._onRun.<fn>.<fn>
+package:test_api/src/backend/invoker.dart 500:15               Invoker._guardIfGuarded
+package:test_api/src/backend/invoker.dart 444:9                Invoker._onRun.<fn>
+package:stack_trace/src/chain.dart 97:24                       Chain.capture.<fn>
+dart:async/zone_root.dart 35:13                                _rootRun
+dart:async/zone.dart 726:19                                    _CustomZone.run
+dart:async/zone_api.dart 166:6                                 _runZoned
+dart:async/zone_api.dart 92:10                                 runZoned
+package:stack_trace/src/chain.dart 95:12                       Chain.capture
+package:test_api/src/backend/invoker.dart 442:11               Invoker._onRun
+package:test_api/src/backend/live_test_controller.dart 161:11  LiveTestController.run
+package:test_api/src/backend/remote_listener.dart 323:16       RemoteListener._runLiveTest.<fn>
+dart:async/zone_root.dart 35:13                                _rootRun
+dart:async/zone.dart 726:19                                    _CustomZone.run
+dart:async/zone_api.dart 166:6                                 _runZoned
+dart:async/zone_api.dart 92:10                                 runZoned
+package:test_api/src/backend/remote_listener.dart 322:5        RemoteListener._runLiveTest
+package:test_api/src/backend/remote_listener.dart 263:7        RemoteListener._serializeTest.<fn>
+dart:async/zone_root.dart 48:47                                _rootRunUnary
+dart:async/zone.dart 733:19                                    _CustomZone.runUnary
+dart:async/zone.dart 633:7                                     _CustomZone.runUnaryGuarded
+dart:async/stream_impl.dart 381:11                             _BufferingStreamSubscription._sendData
+dart:async/stream_impl.dart 312:7                              _BufferingStreamSubscription._add
+dart:async/stream_controller.dart 798:19                       _SyncStreamControllerDispatch._sendData
+dart:async/stream_controller.dart 663:7                        _StreamController._add
+dart:async/stream_controller.dart 618:5                        _StreamController.add
+dart:async/zone_root.dart 56:13                                _rootRunUnary
+dart:async/zone.dart 733:19                                    _CustomZone.runUnary
+dart:async/zone.dart 633:7                                     _CustomZone.runUnaryGuarded
+dart:async/stream_impl.dart 381:11                             _BufferingStreamSubscription._sendData
+dart:async/stream_impl.dart 312:7                              _BufferingStreamSubscription._add
+dart:async/stream_controller.dart 798:19                       _SyncStreamControllerDispatch._sendData
+dart:async/stream_controller.dart 663:7                        _StreamController._add
+dart:async/stream_controller.dart 618:5                        _StreamController.add
+dart:async/stream_controller.dart 898:13                       _StreamSinkWrapper.add
+package:stream_channel/src/guarantee_channel.dart 125:12       _GuaranteeSink.add
+package:stream_channel/src/multi_channel.dart 159:31           new _MultiChannel.<fn>
+dart:async/zone.dart 891:10                                    _RootZone.runUnaryGuarded
+dart:_internal/async_cast.dart 95:11                           CastStreamSubscription._onData
+dart:async/zone.dart 891:10                                    _RootZone.runUnaryGuarded
+dart:async/stream_impl.dart 381:11                             _BufferingStreamSubscription._sendData
+dart:async/stream_impl.dart 312:7                              _BufferingStreamSubscription._add
+dart:async/stream_controller.dart 798:19                       _SyncStreamControllerDispatch._sendData
+dart:async/stream_controller.dart 663:7                        _StreamController._add
+dart:async/stream_controller.dart 618:5                        _StreamController.add
+dart:async/zone.dart 891:10                                    _RootZone.runUnaryGuarded
+dart:async/stream_impl.dart 381:11                             _BufferingStreamSubscription._sendData
+dart:async/stream_impl.dart 312:7                              _BufferingStreamSubscription._add
+dart:async/stream_controller.dart 798:19                       _SyncStreamControllerDispatch._sendData
+dart:async/stream_controller.dart 663:7                        _StreamController._add
+dart:async/stream_controller.dart 618:5                        _StreamController.add
+dart:async/stream_controller.dart 898:13                       _StreamSinkWrapper.add
+dart:async/zone.dart 891:10                                    _RootZone.runUnaryGuarded
+dart:async/stream_impl.dart 381:11                             _BufferingStreamSubscription._sendData
+dart:async/stream_impl.dart 312:7                              _BufferingStreamSubscription._add
+dart:async/stream_pipe.dart 154:11                             _ForwardingStreamSubscription._add
+dart:async/stream_pipe.dart 252:10                             _MapStream._handleData
+dart:async/stream_pipe.dart 184:13                             _ForwardingStreamSubscription._handleData
+dart:async/zone.dart 891:10                                    _RootZone.runUnaryGuarded
+dart:async/stream_impl.dart 381:11                             _BufferingStreamSubscription._sendData
+dart:async/stream_impl.dart 312:7                              _BufferingStreamSubscription._add
+dart:async/stream_controller.dart 798:19                       _SyncStreamControllerDispatch._sendData
+dart:async/stream_controller.dart 663:7                        _StreamController._add
+dart:async/stream_controller.dart 618:5                        _StreamController.add
+dart:_http/websocket_impl.dart 1252:27                         new _WebSocketImpl._fromSocket.<fn>
+dart:async/zone.dart 891:10                                    _RootZone.runUnaryGuarded
+dart:async/stream_impl.dart 381:11                             _BufferingStreamSubscription._sendData
+dart:async/stream_impl.dart 312:7                              _BufferingStreamSubscription._add
+dart:async/stream_transformers.dart 67:11                      _SinkTransformerStreamSubscription._add
+dart:async/stream_transformers.dart 13:11                      _EventSinkWrapper.add
+dart:_http/websocket_impl.dart 348:23                          _WebSocketProtocolTransformer._messageFrameEnd
+dart:_http/websocket_impl.dart 238:46                          _WebSocketProtocolTransformer.add
+dart:async/stream_transformers.dart 115:24                     _SinkTransformerStreamSubscription._handleData
+dart:async/zone.dart 891:10                                    _RootZone.runUnaryGuarded
+dart:async/stream_impl.dart 381:11                             _BufferingStreamSubscription._sendData
+dart:async/stream_impl.dart 312:7                              _BufferingStreamSubscription._add
+dart:async/stream_controller.dart 798:19                       _SyncStreamControllerDispatch._sendData
+dart:async/stream_controller.dart 663:7                        _StreamController._add
+dart:async/stream_controller.dart 618:5                        _StreamController.add
+dart:io-patch/socket_patch.dart 2874:41                        _Socket._onData
+dart:async/zone.dart 891:10                                    _RootZone.runUnaryGuarded
+dart:async/stream_impl.dart 381:11                             _BufferingStreamSubscription._sendData
+dart:async/stream_impl.dart 312:7                              _BufferingStreamSubscription._add
+dart:async/stream_controller.dart 798:19                       _SyncStreamControllerDispatch._sendData
+dart:async/stream_controller.dart 663:7                        _StreamController._add
+dart:async/stream_controller.dart 618:5                        _StreamController.add
+dart:io-patch/socket_patch.dart 2312:31                        new _RawSocket.<fn>
+dart:io-patch/socket_patch.dart 1647:14                        _NativeSocket.issueReadEvent.issue
+dart:async/schedule_microtask.dart 40:35                       _microtaskLoop
+dart:async/schedule_microtask.dart 49:5                        _startMicrotaskLoop
+
+00:11 +27: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: old editor completion cannot report into or unlock a new pending action
+00:11 +28: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: platform IME @ inserts an atom and following typing stays ordinary
+00:12 +29: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: todo shortcut converts current text and preserves checked state on repeated selection
+00:12 +30: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: todo shortcut converts current text and preserves checked state on repeated selection
+00:13 +31: All tests passed!

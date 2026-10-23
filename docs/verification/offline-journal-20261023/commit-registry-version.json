@@ -1,0 +1,11 @@
+{
+  "dist-tags": {
+    "latest": "0.11.28",
+    "alpha": "0.3.0-alpha.34"
+  },
+  "dist": {
+    "integrity": "sha512-KNVpgHHAY6ds1bo+EvtiQjS80aoS5kS6oSuJ9nIaJlA8y6yelew5H7F1wTK/bS3Rl9fVyoNAnydz/Si8y0EACg==",
+    "shasum": "e0931912aa14dad0cac628d1e1b069e20c484827",
+    "tarball": "http://npm.runtongqiuben.com/@ccc/blockcraft/-/blockcraft-0.11.28.tgz"
+  }
+}

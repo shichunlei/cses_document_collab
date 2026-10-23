@@ -1,0 +1,176 @@
+import 'dart:io';
+import 'dart:ui' as ui;
+
+import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_common/runtime/context/context.dart';
+import 'package:cses_document_collab/cses_document_collab.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/guidance_people.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/journal_draft.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/journal_store.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/local_journal_page.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+/// 独立往返快照存储；不访问真实账号、文件或网络。
+class _Store implements JournalStore {
+  /// 最近成功保存的草稿，初始仅有今日记录。
+  JournalDraft value = JournalDraft.blank(DateTime(2026, 10, 22));
+
+  /// 返回独立恢复值，避免编辑树共享。
+  @override
+  Future<JournalDraft?> read() async => JournalDraft.fromJson(value.toJson());
+
+  /// 对[draft]执行真实草稿校验后保存。
+  @override
+  Future<void> write(JournalDraft draft) async =>
+      value = JournalDraft.fromJson(draft.toJson());
+}
+
+/// 原生提及目录固定返回虚构人员，不依赖组织或认证接口。
+class _MentionDirectory implements CollabMentionDirectory {
+  /// 搜索[keyword]时返回虚构匹配项。
+  @override
+  Future<List<CollabMentionUser>> search(String keyword) async => const [
+    CollabMentionUser(id: 'toolbar-user', name: '测试同事', avatarUrl: ''),
+  ];
+
+  /// 本用例不加载详情；借用[userId]不产生网络请求。
+  @override
+  Future<CollabMentionUser?> load(String userId) async => null;
+}
+
+/// 自定义业务动作使用独立的虚构人员树。
+class _Directory implements GuidanceDirectory {
+  /// 返回可选择的虚构人员。
+  @override
+  Future<List<GuidancePerson>> load() async => const [
+    GuidancePerson(id: 'custom-user', name: '自定义同事'),
+  ];
+}
+
+/// 用[store]构建可正常返回保存的路由，[scale]控制系统字号。
+Widget _app(_Store store, double scale) => MaterialApp(
+  theme: ThemeData(fontFamily: 'ToolbarPreview'),
+  builder: (context, child) => MediaQuery(
+    data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(scale)),
+    child: child!,
+  ),
+  home: Builder(
+    builder: (context) => Scaffold(
+      body: TextButton(
+        onPressed: () async {
+          await Navigator.of(context).push<void>(
+            MaterialPageRoute(
+              builder: (_) => LocalJournalPage(
+                store: store,
+                directory: _Directory(),
+                mentionDirectory: _MentionDirectory(),
+              ),
+            ),
+          );
+        },
+        child: const Text('打开'),
+      ),
+    ),
+  ),
+);
+
+/// 在[tester]中打开[store]对应页面；[width]为逻辑宽度，[scale]为字号倍率。
+Future<EditorState> _open(
+  WidgetTester tester,
+  _Store store, {
+  double width = 390,
+  double scale = 1,
+}) async {
+  await tester.binding.setSurfaceSize(Size(width, 1000));
+  addTearDown(() => tester.binding.setSurfaceSize(null));
+  tester.view.devicePixelRatio = 1;
+  tester.view.viewInsets = const FakeViewPadding(bottom: 260);
+  addTearDown(tester.view.resetDevicePixelRatio);
+  addTearDown(tester.view.resetViewInsets);
+  await tester.pumpWidget(_app(store, scale));
+  await tester.tap(find.text('打开'));
+  await tester.pumpAndSettle();
+  final state = tester
+      .widget<AppFlowyEditor>(find.byType(AppFlowyEditor))
+      .editorState;
+  state.selection = Selection.collapsed(Position(path: [0, 0]));
+  await tester.pumpAndSettle();
+  return state;
+}
+
+/// 在[tester]里找到工具栏自己的横向列表，不匹配正文滚动区。
+Finder _toolbarList(WidgetTester tester) => find.descendant(
+  of: find.byKey(const ValueKey('editor-mobile-toolbar')),
+  matching: find.byType(ListView),
+);
+
+/// 横向移动[tester]中的工具栏直到[target]可点击，拒绝静默忽略不可达入口。
+Future<void> _reveal(WidgetTester tester, Finder target) async {
+  for (var i = 0; i < 12 && target.hitTestable().evaluate().isEmpty; i++) {
+    await tester.drag(_toolbarList(tester), const Offset(-140, 0));
+    await tester.pumpAndSettle();
+  }
+  expect(target.hitTestable(), findsOneWidget);
+}
+
+/// 可选地导出[tester]当前工具栏；[name]为固定测试名，只包含虚构内容。
+Future<void> _capture(WidgetTester tester, String name) async {
+  final output = Platform.environment['KEYBOARD_TOOLBAR_PREVIEW_DIR'];
+  if (output == null || output.isEmpty) return;
+  final element = find
+      .byKey(const ValueKey('editor-mobile-toolbar'))
+      .evaluate()
+      .single;
+  RenderObject? object = element.renderObject;
+  while (object != null && object is! RenderRepaintBoundary) {
+    object = object.parent;
+  }
+  expect(object, isA<RenderRepaintBoundary>());
+  if (object is! RenderRepaintBoundary) return;
+  final boundary = object;
+  await tester.runAsync(() async {
+    final image = await boundary.toImage(pixelRatio: 2);
+    try {
+      final bytes = (await image.toByteData(
+        format: ui.ImageByteFormat.png,
+      ))!.buffer.asUint8List();
+      await Directory(output).create(recursive: true);
+      await File('$output/$name.png').writeAsBytes(bytes);
+    } finally {
+      image.dispose();
+    }
+  });
+}
+
+/// 完整页面验证原生入口、自定义动作、窄屏滚动和预览隔离。
+
+void main() {
+  testWidgets('native picker permanently rejects an intervening account session', (tester) async {
+    final originalCookie = ctx.cookieId;
+    addTearDown(() => ctx.cookieId = originalCookie);
+    final state = await _open(tester, _Store());
+    await state.apply(state.transaction..insertText(state.getNodeAtPath([0, 0])!, 0, '原文'));
+    state.selection = Selection.collapsed(Position(path: [0, 0], offset: 2));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('@用户'));
+    await tester.pumpAndSettle();
+    ctx.cookieId = 'different-session-probe';
+    await tester.pump(const Duration(milliseconds: 450));
+    ctx.cookieId = originalCookie;
+    await tester.pump();
+    await tester.tap(find.byKey(const ValueKey('mention-user-toolbar-user')));
+    await tester.pumpAndSettle();
+    await tester.pump(const Duration(milliseconds: 500));
+    await tester.pumpAndSettle();
+    final actual = state.getNodeAtPath([0, 0])!.delta!.toPlainText();
+    print('REVIEW account cycle actual=$actual expected=原文 editable=${state.editable}');
+    await tester.tap(find.byKey(const ValueKey('journal-back')));
+    await tester.pumpAndSettle();
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpAndSettle();
+    expect(actual, '原文');
+  });
+}

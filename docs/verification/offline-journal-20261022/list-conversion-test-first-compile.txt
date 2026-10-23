@@ -1,0 +1,18 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart
+test/daily_guidance/journal_list_conversion_test.dart:118:48: Error: The getter 'length' isn't defined for the type 'FixedSizeStack'.
+ - 'FixedSizeStack' is from 'package:appflowy_editor/src/history/undo_manager.dart' ('packages/appflowy_editor/lib/src/history/undo_manager.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'length'.
+            expect(state.undoManager.undoStack.length, 1);
+                                               ^^^^^^
+00:00 +0 -1: loading /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart [E]
+  Failed to load "/Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart":
+  Compilation failed for testPath=/Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart: test/daily_guidance/journal_list_conversion_test.dart:118:48: Error: The getter 'length' isn't defined for the type 'FixedSizeStack'.
+   - 'FixedSizeStack' is from 'package:appflowy_editor/src/history/undo_manager.dart' ('packages/appflowy_editor/lib/src/history/undo_manager.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'length'.
+              expect(state.undoManager.undoStack.length, 1);
+                                                 ^^^^^^
+  .
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart: loading /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart

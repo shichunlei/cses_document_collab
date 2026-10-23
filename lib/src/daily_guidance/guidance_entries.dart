@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/cses_document_collab.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -54,7 +55,8 @@ Delta guidanceMentionDelta(List<GuidancePerson> people) {
 }
 
 /// 使用[context]中的编辑比例渲染[node]在[index]处的[text]；[before]/[after]为默认格式结果。
-/// 仅识别已校验的原子对象，其他文本沿用[after]；不创建点击业务或修改正文。
+/// 旧业务引用沿用名称显示，原生用户提及使用编辑器本实例服务渲染；普通文本沿用[after]。
+/// 不创建业务资源或修改正文，原生头像及点击由所属会话的宿主服务决定。
 InlineSpan decorateGuidanceMention(
   BuildContext context,
   Node node,
@@ -63,7 +65,9 @@ InlineSpan decorateGuidanceMention(
   TextSpan before,
   TextSpan after,
 ) {
-  if (text.attributes?[guidanceMentionAttribute] == null) return after;
+  if (text.attributes?[guidanceMentionAttribute] == null) {
+    return decorateEditorUserMention(context, node, index, text, before, after);
+  }
   final person = readGuidanceMention(text.attributes!);
   return TextSpan(
     children: [
@@ -194,8 +198,11 @@ String journalSelectionPlainText(List<Node> nodes, Selection selection) {
     final text = StringBuffer();
     for (final op in delta.whereType<TextInsert>()) {
       if (op.text.contains('\uFFFC')) {
-        final person = readGuidanceMention(op.attributes ?? {});
-        text.write(op.text.replaceAll('\uFFFC', '@${person.name}'));
+        final attributes = op.attributes ?? {};
+        final name = attributes[guidanceMentionAttribute] == null
+            ? EditorUserMention.read(attributes).name
+            : readGuidanceMention(attributes).name;
+        text.write(op.text.replaceAll('\uFFFC', '@$name'));
       } else {
         text.write(op.text);
       }

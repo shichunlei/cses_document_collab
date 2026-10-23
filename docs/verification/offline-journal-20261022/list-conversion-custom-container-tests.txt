@@ -1,0 +1,16 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/custom_container_list_type_test.dart
+00:00 +0: container configuration is copied frozen and rejects empty type names
+00:00 +1: configured custom container converts bulleted_list to numbered_list atomically
+00:00 +2: configured custom container converts bulleted_list to todo_list atomically
+00:00 +3: configured custom container converts numbered_list to bulleted_list atomically
+00:00 +4: configured custom container converts numbered_list to todo_list atomically
+00:00 +5: configured custom container converts todo_list to bulleted_list atomically
+00:00 +6: configured custom container converts todo_list to numbered_list atomically
+00:00 +7: same parent multi-item conversions preserve reverse=false range and three history steps
+00:00 +8: same parent multi-item conversions preserve reverse=true range and three history steps
+00:00 +9: unconfigured containers and cross-container selections reject the entire conversion
+00:00 +10: configured names never authorize text parents or genuinely nested list nodes
+00:00 +11: container permission does not expand enter backspace or indentation
+00:00 +12: default root and callout conversion remain available callout=false
+00:00 +13: default root and callout conversion remain available callout=true
+00:00 +14: All tests passed!

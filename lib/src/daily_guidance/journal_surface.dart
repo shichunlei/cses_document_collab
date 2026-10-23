@@ -23,14 +23,15 @@ import 'journal_ruled_content.dart';
 class JournalSurface extends StatefulWidget {
   /// [key]控制身份，[editorState]由日记会话拥有，[preview]关闭输入、选区和工具栏。
   /// [header]为与正文一起滚动的纸张标题和日期，编辑与预览使用相同布局。
-  /// [onCloseSection]接收可选栏目种类，[onMention]接管@；均由宿主持有且可空。
+  /// [onCloseSection]接收可选栏目种类，由宿主持有且可空。
+  /// [keyboardActions]为宿主自定义快捷项，默认空；工具栏等待每个动作完成，模态输入恢复由宿主负责。
   const JournalSurface({
     super.key,
     required this.editorState,
     required this.preview,
     required this.header,
     this.onCloseSection,
-    this.onMention,
+    this.keyboardActions = const [],
   });
 
   /// 借用的唯一正文会话，调用方必须在视图移除后释放。
@@ -42,8 +43,8 @@ class JournalSurface extends StatefulWidget {
   /// 可选栏目关闭回调；null时不显示关闭按钮，回调由业务页面持有。
   final ValueChanged<String>? onCloseSection;
 
-  /// 输入@时打开宿主选人；null不拦截字符，选择完成后由宿主写入受控引用。
-  final VoidCallback? onMention;
+  /// 宿主提供的自定义工具栏动作；预览不显示，回调及其业务资源由宿主持有。
+  final List<EditorKeyboardAction> keyboardActions;
 
   /// 随纸张滚动的日期头部，不进入正文历史。
   final Widget header;
@@ -108,7 +109,8 @@ class _JournalSurfaceState extends State<JournalSurface> {
     }
   }
 
-  /// 在[context]按相同字体、宽度和行高构建编辑/预览；栏目内部不创建嵌套编辑器。
+  /// 在[context]按相同字体、宽度和行高构建编辑/预览；输入尊重借用会话的冻结权限。
+  /// 栏目内部不创建嵌套编辑器，重建不会重新启用宿主已暂时关闭的正文输入。
   @override
   Widget build(BuildContext context) {
     final state = widget.editorState;
@@ -124,7 +126,7 @@ class _JournalSurfaceState extends State<JournalSurface> {
       editorState: state,
       editorScrollController: _scroll,
       header: widget.header,
-      editable: !widget.preview,
+      editable: !widget.preview && state.editable,
       disableKeyboardService: widget.preview,
       disableSelectionService: widget.preview,
       showMagnifier: !widget.preview,
@@ -150,15 +152,11 @@ class _JournalSurfaceState extends State<JournalSurface> {
         ),
       },
       characterShortcutEvents: [
-        if (widget.onMention != null)
-          CharacterShortcutEvent(
-            key: 'guidance-at',
-            character: '@',
-            handler: (_) async {
-              widget.onMention!();
-              return true;
-            },
-          ),
+        CharacterShortcutEvent(
+          key: 'journal-native-mention',
+          character: '@',
+          handler: (state) => handleEditorUserMentionTrigger(context, state),
+        ),
         journalParagraphEnter,
         formatAsteriskToBulletedList,
         formatMinusToBulletedList,
@@ -229,6 +227,7 @@ class _JournalSurfaceState extends State<JournalSurface> {
           : EditorInteractionShell(
               editorState: state,
               scrollController: _scroll,
+              keyboardActions: widget.keyboardActions,
               child: editor,
             ),
     );

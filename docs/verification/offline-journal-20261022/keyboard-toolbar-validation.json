@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-22",
+  "packageSuite": {
+    "passed": 1645,
+    "skipped": 1,
+    "failed": 0,
+    "skippedTestRerun": {
+      "passed": 3,
+      "failed": 0,
+      "node": "24.14.0",
+      "publishedBlockCraft": "0.11.28"
+    }
+  },
+  "dailyGuidanceSuite": {
+    "passed": 126,
+    "failed": 0
+  },
+  "finalPageScenarios": {
+    "passed": 6,
+    "failed": 0,
+    "overlapsDailyGuidanceSuite": true
+  },
+  "nativeRelated": {
+    "passed": 68,
+    "failed": 0
+  },
+  "toolbarRelated": {
+    "passed": 49,
+    "failed": 0
+  },
+  "flutterScreenshots": {
+    "passed": 2,
+    "mockKeyboardInsets": true
+  },
+  "analysis": "host, final page test and 15 package targets: no issues",
+  "androidDebugBuild": "passed",
+  "apkProductionSourceMatches": 18,
+  "physicalDeviceVerification": "not run: previous Android device not found by adb",
+  "iosDeviceVerification": "not run",
+  "scope": "24 handwritten Dart files; no Rust source, generated interface or dependency changes; existing video change preserved"
+}

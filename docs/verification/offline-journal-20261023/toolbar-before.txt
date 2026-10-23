@@ -1,0 +1,155 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart
+00:00 +0: review regression: pending host action synchronously blocks 块类型
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: no matching candidates
+  Actual: _KeyWidgetFinder:<Found 1 widget with key [<'editor-toolbar-popup'>]: [
+            Container-[<'editor-toolbar-popup'>](padding: EdgeInsets(8.0, 6.0, 8.0, 6.0),
+clipBehavior: Clip.antiAlias, bg:
+              BoxDecoration(color: Color(alpha: 1.0000, red: 1.0000, green: 1.0000, blue: 1.0000,
+colorSpace: ColorSpace.sRGB), border: Border.all(BorderSide(color: Color(alpha: 1.0000, red: 0.8980,
+green: 0.9059, blue: 0.9216, colorSpace: ColorSpace.sRGB))), borderRadius:
+BorderRadius.circular(14.0),
+                boxShadow: [BoxShadow(Color(alpha: 0.1333, red: 0.0000, green:
+                  0.0000, blue: 0.0000, colorSpace: ColorSpace.sRGB), Offset(0.0,
+                  4.0), 12.0, 0.0, BlurStyle.normal)]
+                )
+            , constraints: BoxConstraints(0.0<=w<=Infinity, h=64.0), margin: EdgeInsets(16.0, 0.0,
+16.0, 8.0), dependencies: [Directionality]),
+          ]>
+   Which: means one was found but none were expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart:31:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart line 31
+The test description was:
+  review regression: pending host action synchronously blocks 块类型
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:03 +0 -1: review regression: pending host action synchronously blocks 块类型 [E]
+  Test failed. See exception logs above.
+  The test description was: review regression: pending host action synchronously blocks 块类型
+
+00:03 +0 -1: review regression: pending host action synchronously blocks 文字样式
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: no matching candidates
+  Actual: _KeyWidgetFinder:<Found 1 widget with key [<'editor-toolbar-popup'>]: [
+            Container-[<'editor-toolbar-popup'>](padding: EdgeInsets(8.0, 6.0, 8.0, 6.0),
+clipBehavior: Clip.antiAlias, bg:
+              BoxDecoration(color: Color(alpha: 1.0000, red: 1.0000, green: 1.0000, blue: 1.0000,
+colorSpace: ColorSpace.sRGB), border: Border.all(BorderSide(color: Color(alpha: 1.0000, red: 0.8980,
+green: 0.9059, blue: 0.9216, colorSpace: ColorSpace.sRGB))), borderRadius:
+BorderRadius.circular(14.0),
+                boxShadow: [BoxShadow(Color(alpha: 0.1333, red: 0.0000, green:
+                  0.0000, blue: 0.0000, colorSpace: ColorSpace.sRGB), Offset(0.0,
+                  4.0), 12.0, 0.0, BlurStyle.normal)]
+                )
+            , constraints: BoxConstraints(0.0<=w<=Infinity, h=64.0), margin: EdgeInsets(16.0, 0.0,
+16.0, 8.0), dependencies: [Directionality]),
+          ]>
+   Which: means one was found but none were expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart:31:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart line 31
+The test description was:
+  review regression: pending host action synchronously blocks 文字样式
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:04 +0 -2: review regression: pending host action synchronously blocks 文字样式 [E]
+  Test failed. See exception logs above.
+  The test description was: review regression: pending host action synchronously blocks 文字样式
+
+00:04 +0 -2: review regression: pending host action synchronously blocks 对齐与缩进
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: no matching candidates
+  Actual: _KeyWidgetFinder:<Found 1 widget with key [<'editor-toolbar-popup'>]: [
+            Container-[<'editor-toolbar-popup'>](padding: EdgeInsets(8.0, 6.0, 8.0, 6.0),
+clipBehavior: Clip.antiAlias, bg:
+              BoxDecoration(color: Color(alpha: 1.0000, red: 1.0000, green: 1.0000, blue: 1.0000,
+colorSpace: ColorSpace.sRGB), border: Border.all(BorderSide(color: Color(alpha: 1.0000, red: 0.8980,
+green: 0.9059, blue: 0.9216, colorSpace: ColorSpace.sRGB))), borderRadius:
+BorderRadius.circular(14.0),
+                boxShadow: [BoxShadow(Color(alpha: 0.1333, red: 0.0000, green:
+                  0.0000, blue: 0.0000, colorSpace: ColorSpace.sRGB), Offset(0.0,
+                  4.0), 12.0, 0.0, BlurStyle.normal)]
+                )
+            , constraints: BoxConstraints(0.0<=w<=Infinity, h=64.0), margin: EdgeInsets(16.0, 0.0,
+16.0, 8.0), dependencies: [Directionality]),
+          ]>
+   Which: means one was found but none were expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart:31:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart line 31
+The test description was:
+  review regression: pending host action synchronously blocks 对齐与缩进
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:04 +0 -3: review regression: pending host action synchronously blocks 对齐与缩进 [E]
+  Test failed. See exception logs above.
+  The test description was: review regression: pending host action synchronously blocks 对齐与缩进
+
+00:04 +0 -3: review regression: pending host action invalidates an existing submenu callback
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'paragraph'
+  Actual: 'todo_list'
+   Which: is different.
+          Expected: paragraph
+            Actual: todo_list
+                    ^
+           Differ at offset 0
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart:62:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart line 62
+The test description was:
+  review regression: pending host action invalidates an existing submenu callback
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:05 +0 -4: review regression: pending host action invalidates an existing submenu callback [E]
+  Test failed. See exception logs above.
+  The test description was: review regression: pending host action invalidates an existing submenu callback
+
+00:05 +0 -4: Some tests failed.
+
+Failing tests:
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: review regression: pending host action invalidates an existing submenu callback
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: review regression: pending host action synchronously blocks 块类型
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: review regression: pending host action synchronously blocks 对齐与缩进
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: review regression: pending host action synchronously blocks 文字样式

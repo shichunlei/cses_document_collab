@@ -1,0 +1,371 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_configuration_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_configuration_test.dart: configuration copies collections and rejects missing paragraph and invalid limits
+00:00 +1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_configuration_test.dart: two configurations enforce blocks, nonconsecutive headings and undo independently
+00:00 +2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_configuration_test.dart: disabled formats cannot enter by commands, defaults, delta or locks
+00:00 +3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_configuration_test.dart: configured character and block limits reject paste atomically
+00:02 +4: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to numbered_list depth=0 empty=false
+00:02 +5: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to numbered_list depth=0 empty=true
+00:02 +6: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to numbered_list depth=1 empty=false
+00:02 +7: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to numbered_list depth=1 empty=true
+00:02 +8: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to numbered_list depth=2 empty=false
+00:02 +9: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to numbered_list depth=2 empty=true
+00:02 +10: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to numbered_list depth=3 empty=false
+00:02 +11: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to numbered_list depth=3 empty=true
+00:02 +12: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to numbered_list depth=4 empty=false
+00:02 +13: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to numbered_list depth=4 empty=true
+00:02 +14: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to numbered_list depth=5 empty=false
+00:02 +15: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to numbered_list depth=5 empty=true
+00:02 +16: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to numbered_list depth=6 empty=false
+00:02 +17: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to numbered_list depth=6 empty=true
+00:02 +18: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to bulleted_list depth=0 empty=false
+00:02 +19: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to bulleted_list depth=0 empty=true
+00:02 +20: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to bulleted_list depth=1 empty=false
+00:02 +21: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to bulleted_list depth=1 empty=true
+00:02 +22: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to bulleted_list depth=2 empty=false
+00:02 +23: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to bulleted_list depth=2 empty=true
+00:02 +24: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to bulleted_list depth=3 empty=false
+00:02 +25: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to bulleted_list depth=3 empty=true
+00:02 +26: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to bulleted_list depth=4 empty=false
+00:02 +27: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to bulleted_list depth=4 empty=true
+00:02 +28: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to bulleted_list depth=5 empty=false
+00:02 +29: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to bulleted_list depth=5 empty=true
+00:02 +30: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to bulleted_list depth=6 empty=false
+00:02 +31: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to bulleted_list depth=6 empty=true
+00:02 +32: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to todo_list depth=0 empty=false
+00:02 +33: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to todo_list depth=0 empty=true
+00:02 +34: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to todo_list depth=1 empty=false
+00:02 +35: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to todo_list depth=1 empty=true
+00:02 +36: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to todo_list depth=2 empty=false
+00:02 +37: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to todo_list depth=2 empty=true
+00:02 +38: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to todo_list depth=3 empty=false
+00:02 +39: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to todo_list depth=3 empty=true
+00:02 +40: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to todo_list depth=4 empty=false
+00:02 +41: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to todo_list depth=4 empty=true
+00:02 +42: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to todo_list depth=5 empty=false
+00:02 +43: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to todo_list depth=5 empty=true
+00:02 +44: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to todo_list depth=6 empty=false
+00:02 +45: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to todo_list depth=6 empty=true
+00:02 +46: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to numbered_list depth=0 empty=false
+00:02 +47: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to numbered_list depth=0 empty=true
+00:02 +48: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to numbered_list depth=1 empty=false
+00:02 +49: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to numbered_list depth=1 empty=true
+00:02 +50: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to numbered_list depth=2 empty=false
+00:02 +51: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to numbered_list depth=2 empty=true
+00:02 +52: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to numbered_list depth=3 empty=false
+00:02 +53: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to numbered_list depth=3 empty=true
+00:03 +54: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to numbered_list depth=4 empty=false
+00:03 +55: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to numbered_list depth=4 empty=true
+00:03 +56: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to numbered_list depth=5 empty=false
+00:03 +57: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to numbered_list depth=5 empty=true
+00:03 +58: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to numbered_list depth=6 empty=false
+00:03 +59: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to numbered_list depth=6 empty=true
+00:03 +60: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to bulleted_list depth=0 empty=false
+00:03 +61: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to bulleted_list depth=0 empty=true
+00:03 +62: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to bulleted_list depth=1 empty=false
+00:03 +63: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to bulleted_list depth=1 empty=true
+00:03 +64: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to bulleted_list depth=2 empty=false
+00:03 +65: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to bulleted_list depth=2 empty=true
+00:03 +66: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to bulleted_list depth=3 empty=false
+00:03 +67: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to bulleted_list depth=3 empty=true
+00:03 +68: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to bulleted_list depth=4 empty=false
+00:03 +69: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to bulleted_list depth=4 empty=true
+00:03 +70: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to bulleted_list depth=5 empty=false
+00:03 +71: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to bulleted_list depth=5 empty=true
+00:03 +72: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to bulleted_list depth=6 empty=false
+00:03 +73: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to bulleted_list depth=6 empty=true
+00:03 +74: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to todo_list depth=0 empty=false
+00:03 +75: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to todo_list depth=0 empty=true
+00:03 +76: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to todo_list depth=1 empty=false
+00:03 +77: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to todo_list depth=1 empty=true
+00:03 +78: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to todo_list depth=2 empty=false
+00:03 +79: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to todo_list depth=2 empty=true
+00:03 +80: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to todo_list depth=3 empty=false
+00:03 +81: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to todo_list depth=3 empty=true
+00:03 +82: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to todo_list depth=4 empty=false
+00:03 +83: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to todo_list depth=4 empty=true
+00:03 +84: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to todo_list depth=5 empty=false
+00:03 +85: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to todo_list depth=5 empty=true
+00:03 +86: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to todo_list depth=6 empty=false
+00:03 +87: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to todo_list depth=6 empty=true
+00:03 +88: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to numbered_list depth=0 empty=false
+00:03 +89: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to numbered_list depth=0 empty=true
+00:03 +90: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list actual child structure is disabled for toolbar indentation
+00:03 +91: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list actual child structure is disabled for toolbar indentation
+00:03 +92: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list actual child structure is disabled for toolbar indentation
+00:03 +93: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list actual child structure is disabled for toolbar indentation
+00:03 +94: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list actual child structure is disabled for toolbar indentation
+00:03 +95: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to numbered_list depth=3 empty=false
+00:03 +96: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=0 delta=-1 keeps mid-item caret and history
+00:03 +97: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=0 delta=-1 keeps mid-item caret and history
+00:03 +98: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=0 delta=-1 keeps mid-item caret and history
+00:03 +99: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=0 delta=-1 keeps mid-item caret and history
+00:03 +100: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=0 delta=-1 keeps mid-item caret and history
+00:03 +101: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=0 delta=-1 keeps mid-item caret and history
+00:03 +102: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=0 delta=-1 keeps mid-item caret and history
+00:03 +103: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=0 delta=-1 keeps mid-item caret and history
+00:03 +104: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=0 delta=-1 keeps mid-item caret and history
+00:03 +105: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=0 delta=-1 keeps mid-item caret and history
+00:03 +106: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=0 delta=-1 keeps mid-item caret and history
+00:03 +107: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=0 delta=-1 keeps mid-item caret and history
+00:03 +108: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=0 delta=-1 keeps mid-item caret and history
+00:03 +109: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=0 delta=-1 keeps mid-item caret and history
+00:03 +110: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=0 delta=-1 keeps mid-item caret and history
+00:03 +111: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=0 delta=-1 keeps mid-item caret and history
+00:03 +112: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=0 delta=-1 keeps mid-item caret and history
+00:03 +113: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=0 delta=-1 keeps mid-item caret and history
+00:03 +114: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to bulleted_list depth=5 empty=false
+00:03 +115: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=0 delta=1 keeps mid-item caret and history
+00:03 +116: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=0 delta=1 keeps mid-item caret and history
+00:03 +117: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to bulleted_list depth=6 empty=false
+00:03 +118: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=1 delta=-1 keeps mid-item caret and history
+00:03 +119: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=1 delta=-1 keeps mid-item caret and history
+00:03 +120: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to todo_list depth=0 empty=false
+00:03 +121: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=1 delta=1 keeps mid-item caret and history
+00:03 +122: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=1 delta=1 keeps mid-item caret and history
+00:04 +123: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=1 delta=1 keeps mid-item caret and history
+00:04 +124: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to todo_list depth=1 empty=true
+00:04 +125: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=2 delta=-1 keeps mid-item caret and history
+00:04 +126: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=2 delta=-1 keeps mid-item caret and history
+00:04 +127: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=2 delta=-1 keeps mid-item caret and history
+00:04 +128: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to todo_list depth=3 empty=false
+00:04 +129: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=2 delta=1 keeps mid-item caret and history
+00:04 +130: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=2 delta=1 keeps mid-item caret and history
+00:04 +131: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=2 delta=1 keeps mid-item caret and history
+00:04 +132: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to todo_list depth=4 empty=true
+00:04 +133: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=3 delta=-1 keeps mid-item caret and history
+00:04 +134: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=3 delta=-1 keeps mid-item caret and history
+00:04 +135: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=3 delta=-1 keeps mid-item caret and history
+00:04 +136: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to todo_list depth=6 empty=false
+00:04 +137: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=3 delta=1 keeps mid-item caret and history
+00:04 +138: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=3 delta=1 keeps mid-item caret and history
+00:04 +139: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: batch to numbered_list reverse=false selection=SelectionType.inline
+00:04 +140: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=4 delta=-1 keeps mid-item caret and history
+00:04 +141: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: batch to numbered_list reverse=false selection=SelectionType.block
+00:04 +142: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=4 delta=1 keeps mid-item caret and history
+00:04 +143: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: batch to numbered_list reverse=true selection=SelectionType.inline
+00:04 +144: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=5 delta=-1 keeps mid-item caret and history
+00:04 +145: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: batch to numbered_list reverse=true selection=SelectionType.block
+00:04 +146: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=5 delta=1 keeps mid-item caret and history
+00:04 +147: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: batch to bulleted_list reverse=false selection=SelectionType.inline
+00:04 +148: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=6 delta=-1 keeps mid-item caret and history
+00:04 +149: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: batch to bulleted_list reverse=false selection=SelectionType.block
+00:04 +150: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth=6 delta=1 keeps mid-item caret and history
+00:04 +151: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: batch to bulleted_list reverse=true selection=SelectionType.inline
+00:04 +152: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list empty item increases then outdents to paragraph with one-step undo
+00:04 +153: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: batch to bulleted_list reverse=true selection=SelectionType.block
+00:04 +154: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth history does not restore remote text, checked or formatting
+00:04 +155: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth history does not restore remote text, checked or formatting
+00:04 +156: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth history does not restore remote text, checked or formatting
+00:04 +157: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: numbered_list depth history does not restore remote text, checked or formatting
+00:04 +158: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: batch to todo_list reverse=true selection=SelectionType.block
+00:04 +159: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: bulleted_list actual child structure is disabled for toolbar indentation
+00:04 +160: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: invalid target, range, read-only, disposed and mixed blocks do not mutate
+00:04 +161: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: bulleted_list depth=0 delta=-1 keeps mid-item caret and history
+00:04 +162: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: bulleted_list depth=0 delta=1 keeps mid-item caret and history
+00:04 +163: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: bulleted_list depth=1 delta=-1 keeps mid-item caret and history
+00:04 +164: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: bulleted_list depth=1 delta=1 keeps mid-item caret and history
+00:04 +165: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: bulleted_list depth=2 delta=-1 keeps mid-item caret and history
+00:04 +166: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: bulleted_list depth=2 delta=1 keeps mid-item caret and history
+00:04 +167: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: bulleted_list depth=3 delta=-1 keeps mid-item caret and history
+00:04 +168: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: bulleted_list depth=3 delta=1 keeps mid-item caret and history
+00:04 +169: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: bulleted_list depth=4 delta=-1 keeps mid-item caret and history
+00:04 +170: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: bulleted_list depth=4 delta=1 keeps mid-item caret and history
+00:04 +171: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: bulleted_list depth=5 delta=-1 keeps mid-item caret and history
+00:04 +172: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: bulleted_list depth=5 delta=1 keeps mid-item caret and history
+00:04 +173: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: bulleted_list depth=6 delta=-1 keeps mid-item caret and history
+00:04 +174: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: bulleted_list depth=6 delta=1 keeps mid-item caret and history
+00:04 +175: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: bulleted_list empty item increases then outdents to paragraph with one-step undo
+00:04 +176: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: bulleted_list depth history does not restore remote text, checked or formatting
+00:04 +177: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: todo_list actual child structure is disabled for toolbar indentation
+00:04 +178: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: todo_list depth=0 delta=-1 keeps mid-item caret and history
+00:04 +179: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: todo_list depth=0 delta=1 keeps mid-item caret and history
+00:04 +180: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: todo_list depth=1 delta=-1 keeps mid-item caret and history
+00:04 +181: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: todo_list depth=1 delta=1 keeps mid-item caret and history
+00:04 +182: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: todo_list depth=2 delta=-1 keeps mid-item caret and history
+00:04 +183: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: todo_list depth=2 delta=1 keeps mid-item caret and history
+00:04 +184: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: todo_list depth=3 delta=-1 keeps mid-item caret and history
+00:04 +185: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: todo_list depth=3 delta=1 keeps mid-item caret and history
+00:04 +186: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: todo_list depth=4 delta=-1 keeps mid-item caret and history
+00:04 +187: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: todo_list depth=4 delta=1 keeps mid-item caret and history
+00:04 +188: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: todo_list depth=5 delta=-1 keeps mid-item caret and history
+00:04 +189: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: todo_list depth=5 delta=1 keeps mid-item caret and history
+00:04 +190: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: todo_list depth=6 delta=-1 keeps mid-item caret and history
+00:04 +191: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: todo_list depth=6 delta=1 keeps mid-item caret and history
+00:04 +192: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: todo_list empty item increases then outdents to paragraph with one-step undo
+00:05 +193: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: todo_list depth history does not restore remote text, checked or formatting
+00:05 +194: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: mixed list range reverse=false type=SelectionType.inline is one atomic history item
+00:05 +195: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: mixed list range reverse=false type=SelectionType.block is one atomic history item
+00:05 +196: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: mixed list range reverse=true type=SelectionType.inline is one atomic history item
+00:05 +197: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: mixed list range reverse=true type=SelectionType.block is one atomic history item
+00:05 +198: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: batch increase changes all three list types and a single undo restores all
+00:05 +199: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_indent_test.dart: one maximum-depth item prevents partial increase; invalid and readonly selections do nothing
+00:05 +200: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list partial undo keeps consecutive redo and independent undo boundaries
+00:05 +201: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list new input after undoing every command invalidates pending redo
+00:05 +202: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list consecutive empty Enter exits each ancestor then becomes a paragraph
+00:05 +203: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list typing after outdent makes the next Enter create a same-level item
+00:05 +204: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list unselected readonly and ranged selections defer without edits
+00:05 +205: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list Shift Enter defers to soft line break handling
+00:06 +206: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list Shift Enter defers to soft line break handling
+00:06 +207: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: numbered_list IME distinguishes prefix Backspace from forward and composing deletion
+00:06 +208: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: numbered_list IME distinguishes prefix Backspace from forward and composing deletion
+00:06 +209: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: numbered_list IME distinguishes prefix Backspace from forward and composing deletion
+00:06 +210: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: numbered_list IME distinguishes prefix Backspace from forward and composing deletion
+00:06 +211: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list Enter at 0 preserves depth 1 and splits formatted text
+00:06 +212: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: numbered_list Backspace depth=0 text= preserves content and caret
+00:06 +213: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: numbered_list Backspace depth=0 text= preserves content and caret
+00:06 +214: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list Enter at 7 preserves depth 1 and splits formatted text
+00:06 +215: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: numbered_list Backspace depth=0 text=正文🙂 preserves content and caret
+00:06 +216: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list Enter at 0 preserves depth 2 and splits formatted text
+00:06 +217: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: numbered_list Backspace depth=1 text= preserves content and caret
+00:06 +218: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list Enter at 3 preserves depth 2 and splits formatted text
+00:06 +219: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: numbered_list Backspace depth=1 text=正文🙂 preserves content and caret
+00:06 +220: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list Enter at 7 preserves depth 2 and splits formatted text
+00:06 +221: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: numbered_list Backspace depth=2 text= preserves content and caret
+00:06 +222: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list Enter at 0 preserves depth 3 and splits formatted text
+00:06 +223: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: numbered_list Backspace depth=2 text=正文🙂 preserves content and caret
+00:06 +224: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list Enter at 3 preserves depth 3 and splits formatted text
+00:06 +225: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list Enter at 3 preserves depth 3 and splits formatted text
+00:06 +226: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: numbered_list Backspace depth=3 text=正文🙂 preserves content and caret
+00:06 +227: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: numbered_list Backspace depth=3 text=正文🙂 preserves content and caret
+00:06 +228: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list Enter at 0 preserves depth 4 and splits formatted text
+00:06 +229: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: numbered_list Backspace depth=4 text= preserves content and caret
+00:06 +230: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list Enter at 3 preserves depth 4 and splits formatted text
+00:06 +231: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: numbered_list Backspace depth=4 text=正文🙂 preserves content and caret
+00:06 +232: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list Enter at 7 preserves depth 4 and splits formatted text
+00:06 +233: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: numbered_list Backspace depth=5 text= preserves content and caret
+00:06 +234: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list Enter at 0 preserves depth 5 and splits formatted text
+00:06 +235: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: numbered_list Backspace depth=5 text=正文🙂 preserves content and caret
+00:06 +236: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list Enter at 3 preserves depth 5 and splits formatted text
+00:06 +237: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: numbered_list Backspace depth=6 text= preserves content and caret
+00:06 +238: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list Enter at 7 preserves depth 5 and splits formatted text
+00:06 +239: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: numbered_list Backspace depth=6 text=正文🙂 preserves content and caret
+00:06 +240: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list Enter at 0 preserves depth 6 and splits formatted text
+00:06 +241: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: numbered_list list outdent takes priority after paragraph
+00:06 +242: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list Enter at 3 preserves depth 6 and splits formatted text
+00:06 +243: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: numbered_list list outdent takes priority after quote
+00:06 +244: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list Enter at 7 preserves depth 6 and splits formatted text
+00:06 +245: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: numbered_list list outdent takes priority after image
+00:06 +246: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list empty depth 1 exits one level without inserting a node
+00:06 +247: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: numbered_list consecutive Backspace, undo and redo preserve each depth and content
+00:06 +248: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: numbered_list consecutive Backspace, undo and redo preserve each depth and content
+00:06 +249: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: numbered_list consecutive Backspace, undo and redo preserve each depth and content
+00:07 +250: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: numbered_list consecutive Backspace, undo and redo preserve each depth and content
+00:07 +251: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: numbered_list consecutive Backspace, undo and redo preserve each depth and content
+00:07 +252: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: numbered_list consecutive Backspace, undo and redo preserve each depth and content
+00:07 +253: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list each empty outdent and paragraph conversion undo redo separately
+00:07 +254: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list each empty outdent and paragraph conversion undo redo separately
+00:07 +255: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list each empty outdent and paragraph conversion undo redo separately
+00:07 +256: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: numbered_list each empty outdent and paragraph conversion undo redo separately
+00:07 +257: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: bulleted_list Backspace depth=0 text= preserves content and caret
+00:07 +258: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list partial undo keeps consecutive redo and independent undo boundaries
+00:07 +259: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list partial undo keeps consecutive redo and independent undo boundaries
+00:07 +260: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list partial undo keeps consecutive redo and independent undo boundaries
+00:07 +261: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list partial undo keeps consecutive redo and independent undo boundaries
+00:07 +262: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list partial undo keeps consecutive redo and independent undo boundaries
+00:07 +263: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list partial undo keeps consecutive redo and independent undo boundaries
+00:07 +264: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list partial undo keeps consecutive redo and independent undo boundaries
+00:07 +265: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list partial undo keeps consecutive redo and independent undo boundaries
+00:07 +266: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list partial undo keeps consecutive redo and independent undo boundaries
+00:07 +267: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list partial undo keeps consecutive redo and independent undo boundaries
+00:07 +268: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list partial undo keeps consecutive redo and independent undo boundaries
+00:07 +269: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list partial undo keeps consecutive redo and independent undo boundaries
+00:07 +270: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list partial undo keeps consecutive redo and independent undo boundaries
+00:07 +271: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list partial undo keeps consecutive redo and independent undo boundaries
+00:07 +272: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list partial undo keeps consecutive redo and independent undo boundaries
+00:07 +273: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list partial undo keeps consecutive redo and independent undo boundaries
+00:07 +274: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list partial undo keeps consecutive redo and independent undo boundaries
+00:07 +275: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: bulleted_list consecutive Backspace, undo and redo preserve each depth and content
+00:07 +276: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: bulleted_list consecutive Backspace, undo and redo preserve each depth and content
+00:07 +277: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list consecutive empty Enter exits each ancestor then becomes a paragraph
+00:07 +278: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: bulleted_list range, middle caret, readonly and disposed states defer without edits
+00:07 +279: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list typing after outdent makes the next Enter create a same-level item
+00:07 +280: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list typing after outdent makes the next Enter create a same-level item
+00:07 +281: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: todo_list IME distinguishes prefix Backspace from forward and composing deletion
+00:07 +282: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list unselected readonly and ranged selections defer without edits
+00:07 +283: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: todo_list Backspace depth=0 text= preserves content and caret
+00:07 +284: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Shift Enter defers to soft line break handling
+00:07 +285: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Shift Enter defers to soft line break handling
+00:07 +286: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: todo_list Backspace depth=1 text= preserves content and caret
+00:07 +287: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 0 preserves depth 0 and splits formatted text
+00:07 +288: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: todo_list Backspace depth=1 text=正文🙂 preserves content and caret
+00:07 +289: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: todo_list Backspace depth=1 text=正文🙂 preserves content and caret
+00:07 +290: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 7 preserves depth 0 and splits formatted text
+00:07 +291: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: todo_list Backspace depth=2 text= preserves content and caret
+00:07 +292: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 0 preserves depth 1 and splits formatted text
+00:07 +293: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: todo_list Backspace depth=2 text=正文🙂 preserves content and caret
+00:07 +294: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 3 preserves depth 1 and splits formatted text
+00:07 +295: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: todo_list Backspace depth=3 text= preserves content and caret
+00:07 +296: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 7 preserves depth 1 and splits formatted text
+00:07 +297: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: todo_list Backspace depth=3 text=正文🙂 preserves content and caret
+00:07 +298: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 0 preserves depth 2 and splits formatted text
+00:07 +299: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: todo_list Backspace depth=4 text= preserves content and caret
+00:07 +300: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 3 preserves depth 2 and splits formatted text
+00:07 +301: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: todo_list Backspace depth=4 text=正文🙂 preserves content and caret
+00:07 +302: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 7 preserves depth 2 and splits formatted text
+00:07 +303: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 7 preserves depth 2 and splits formatted text
+00:07 +304: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: todo_list Backspace depth=5 text=正文🙂 preserves content and caret
+00:07 +305: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 0 preserves depth 3 and splits formatted text
+00:07 +306: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: todo_list Backspace depth=6 text= preserves content and caret
+00:07 +307: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 3 preserves depth 3 and splits formatted text
+00:07 +308: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: todo_list Backspace depth=6 text=正文🙂 preserves content and caret
+00:07 +309: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 7 preserves depth 3 and splits formatted text
+00:07 +310: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 7 preserves depth 3 and splits formatted text
+00:07 +311: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: todo_list list outdent takes priority after quote
+00:07 +312: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 0 preserves depth 4 and splits formatted text
+00:07 +313: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: todo_list list outdent takes priority after image
+00:07 +314: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 3 preserves depth 4 and splits formatted text
+00:07 +315: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: todo_list consecutive Backspace, undo and redo preserve each depth and content
+00:07 +316: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: todo_list consecutive Backspace, undo and redo preserve each depth and content
+00:07 +317: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 0 preserves depth 5 and splits formatted text
+00:07 +318: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: todo_list range, middle caret, readonly and disposed states defer without edits
+00:07 +319: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 3 preserves depth 5 and splits formatted text
+00:07 +320: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: unchecked Todo stays unchecked through outdent, conversion and history
+00:07 +321: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_test.dart: unchecked Todo stays unchecked through outdent, conversion and history
+00:07 +322: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 0 preserves depth 6 and splits formatted text
+00:07 +323: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 3 preserves depth 6 and splits formatted text
+00:07 +324: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 7 preserves depth 6 and splits formatted text
+00:07 +325: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list empty depth 1 exits one level without inserting a node
+00:07 +326: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list empty depth 2 exits one level without inserting a node
+00:07 +327: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list empty depth 3 exits one level without inserting a node
+00:07 +328: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list empty depth 4 exits one level without inserting a node
+00:07 +329: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list empty depth 5 exits one level without inserting a node
+00:07 +330: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list empty depth 6 exits one level without inserting a node
+00:07 +331: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list each empty outdent and paragraph conversion undo redo separately
+00:07 +332: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list partial undo keeps consecutive redo and independent undo boundaries
+00:07 +333: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list new input after undoing every command invalidates pending redo
+00:07 +334: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list consecutive empty Enter exits each ancestor then becomes a paragraph
+00:07 +335: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list typing after outdent makes the next Enter create a same-level item
+00:07 +336: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list unselected readonly and ranged selections defer without edits
+00:07 +337: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list Shift Enter defers to soft line break handling
+00:07 +338: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list Enter at 0 preserves depth 0 and splits formatted text
+00:07 +339: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list Enter at 3 preserves depth 0 and splits formatted text
+00:07 +340: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list Enter at 7 preserves depth 0 and splits formatted text
+00:07 +341: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list Enter at 0 preserves depth 1 and splits formatted text
+00:07 +342: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list Enter at 3 preserves depth 1 and splits formatted text
+00:07 +343: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list Enter at 7 preserves depth 1 and splits formatted text
+00:07 +344: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list Enter at 0 preserves depth 2 and splits formatted text
+00:07 +345: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list Enter at 3 preserves depth 2 and splits formatted text
+00:07 +346: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list Enter at 7 preserves depth 2 and splits formatted text
+00:07 +347: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list Enter at 0 preserves depth 3 and splits formatted text
+00:07 +348: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list Enter at 3 preserves depth 3 and splits formatted text
+00:08 +349: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list Enter at 7 preserves depth 3 and splits formatted text
+00:08 +350: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list Enter at 0 preserves depth 4 and splits formatted text
+00:08 +351: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list Enter at 3 preserves depth 4 and splits formatted text
+00:08 +352: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list Enter at 7 preserves depth 4 and splits formatted text
+00:08 +353: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list Enter at 0 preserves depth 5 and splits formatted text
+00:08 +354: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list Enter at 3 preserves depth 5 and splits formatted text
+00:08 +355: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list Enter at 7 preserves depth 5 and splits formatted text
+00:08 +356: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list Enter at 0 preserves depth 6 and splits formatted text
+00:08 +357: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list Enter at 3 preserves depth 6 and splits formatted text
+00:08 +358: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list Enter at 7 preserves depth 6 and splits formatted text
+00:08 +359: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list empty depth 1 exits one level without inserting a node
+00:08 +360: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list empty depth 2 exits one level without inserting a node
+00:08 +361: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list empty depth 3 exits one level without inserting a node
+00:08 +362: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list empty depth 4 exits one level without inserting a node
+00:08 +363: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list empty depth 5 exits one level without inserting a node
+00:08 +364: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list empty depth 6 exits one level without inserting a node
+00:08 +365: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: todo_list each empty outdent and paragraph conversion undo redo separately
+00:08 +366: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: Todo checked=false survives split and empty outdent history
+00:08 +367: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: Todo checked=true survives split and empty outdent history
+00:08 +368: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_enter_test.dart: outdent and original restart setting undo redo independently
+00:08 +369: All tests passed!

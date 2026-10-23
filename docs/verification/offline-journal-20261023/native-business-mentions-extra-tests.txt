@@ -1,0 +1,37 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/dynamic_journal_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/dynamic_journal_test.dart: legacy help organization references remain readable without migration
+00:00 +1: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/dynamic_journal_test.dart: help uses native people only and preserves history and saved drafts
+00:00 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/dynamic_journal_test.dart: legacy pilot organization references remain readable without migration
+00:00 +3: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/dynamic_journal_test.dart: pilot uses native people only and preserves history and saved drafts
+00:00 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/dynamic_journal_test.dart: a fresh draft shows only record and optional sections follow add order without duplicates
+00:00 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/dynamic_journal_test.dart: first-time section addition has an independent undo and redo
+00:00 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/dynamic_journal_test.dart: closing a filled section preserves its text and formatting through undo and reopening
+00:00 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/dynamic_journal_test.dart: inline mentions replace the captured range and deduplicate by type and id with undo and redo
+00:00 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/dynamic_journal_test.dart: mention identity and name snapshots survive save and reopen without organization children
+00:00 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/dynamic_journal_test.dart: task conversion preserves existing rich text as one editable entry and supports undo
+00:00 +10: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/dynamic_journal_test.dart: tasks, help and pilot entries stay inside reflection and each help or pilot appends a row
+00:00 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/dynamic_journal_test.dart: Enter ends a task entry without inheriting business attributes and is undoable
+00:00 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/dynamic_journal_test.dart: Enter ends a help entry without inheriting business attributes and is undoable
+00:00 +13: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/dynamic_journal_test.dart: Enter ends a pilot entry without inheriting business attributes and is undoable
+00:00 +14: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/dynamic_journal_test.dart: late mention targets reject text changes, date changes, another session and closure
+00:00 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/dynamic_journal_test.dart: bare objects, unknown inline attributes and invalid mention objects are atomic rejections
+00:01 +16: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/dynamic_journal_test.dart: the 500-reference budget accepts the last reference and rejects the next atomically
+00:02 +17: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/dynamic_journal_test.dart: references in closed sections remain part of the total budget
+00:02 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: toolbar is reachable at 320.0/1.0
+00:02 +19: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: toolbar is reachable at 320.0/1.0
+00:03 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: toolbar is reachable at 320.0/1.0
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: toolbar is reachable at 390.0/2.0
+00:09 +22: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: pilot native picker cancel resumes input without writing
+00:11 +23: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: pilot native picker rejects account round trips
+00:12 +24: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: custom pilot action preserves source and resumes input
+00:13 +25: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: help native picker cancel resumes input without writing
+00:15 +26: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: help native picker rejects account round trips
+00:16 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: custom help action preserves source and resumes input
+00:16 +28: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: native picker cannot restore input after account changes
+00:17 +29: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: review regression: native picker revokes a changed cookie permanently
+00:18 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: review regression: native picker revokes a changed user permanently
+00:18 +31: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: review regression: native picker revokes a changed company permanently
+00:18 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: native picker releases its permission watch on cancel and page removal
+00:19 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: native mention and Todo survive preview and saving
+00:20 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: (tearDownAll)
+00:20 +34: All tests passed!

@@ -1,0 +1,243 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:02 +1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:05 +2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:06 +3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: host labels follow built-ins and disabled actions cannot execute
+00:06 +4: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: host labels follow built-ins and disabled actions cannot execute
+00:08 +5: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: host labels follow built-ins and disabled actions cannot execute
+00:08 +6: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: host labels follow built-ins and disabled actions cannot execute
+00:09 +7: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: host labels follow built-ins and disabled actions cannot execute
+00:09 +8: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to todo_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:09 +9: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to todo_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:09 +10: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to todo_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:10 +11: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to todo_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:10 +12: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to todo_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:10 +13: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to todo_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:10 +14: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to todo_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:11 +15: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to todo_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:11 +16: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to todo_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:11 +17: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to todo_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:11 +18: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: current host failure is reported and the action becomes available again
+00:11 +19: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: current host failure is reported and the action becomes available again
+00:11 +20: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: current host failure is reported and the action becomes available again
+00:11 +21: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: current host failure is reported and the action becomes available again
+00:11 +22: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: current host failure is reported and the action becomes available again
+00:11 +23: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch bulleted_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:12 +24: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch bulleted_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:12 +25: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch bulleted_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:12 +26: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch bulleted_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:12 +27: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch bulleted_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:12 +28: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch bulleted_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:12 +28: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: old editor completion cannot report into or unlock a new pending action
+执行感悟失败，动作所属会话已失效：Bad state: late failure
+dart:async/future_impl.dart 21:26                              _interceptError
+dart:async/future_impl.dart 52:23                              _interceptUserError
+dart:async/future_impl.dart 82:26                              _Completer.completeError
+test/editor_keyboard_actions_test.dart 127:18                  main.<fn>
+===== asynchronous gap ===========================
+dart:async/zone.dart 754:19                                    _CustomZone.registerUnaryCallback
+test/editor_keyboard_actions_test.dart 120:23                  main.<fn>
+package:flutter_test/src/widget_tester.dart 192:29             testWidgets.<fn>.<fn>
+===== asynchronous gap ===========================
+dart:async/zone.dart 754:19                                    _CustomZone.registerUnaryCallback
+package:flutter_test/src/widget_tester.dart 189:25             testWidgets.<fn>.<fn>
+package:flutter_test/src/binding.dart 1952:19                  TestWidgetsFlutterBinding._runTestBody
+===== asynchronous gap ===========================
+dart:async/zone.dart 754:19                                    _CustomZone.registerUnaryCallback
+package:flutter_test/src/binding.dart 1941:5                   TestWidgetsFlutterBinding._runTestBody
+dart:async/zone_root.dart 78:13                                _rootRunBinary
+dart:async/zone.dart 740:19                                    _CustomZone.runBinary
+package:flutter_test/src/binding.dart 1926:10                  TestWidgetsFlutterBinding._runTest
+package:flutter_test/src/binding.dart 2489:24                  AutomatedTestWidgetsFlutterBinding.runTest.<fn>
+package:fake_async/fake_async.dart 182:47                      FakeAsync.run.<fn>.<fn>
+dart:async/zone_root.dart 35:13                                _rootRun
+dart:async/zone.dart 726:19                                    _CustomZone.run
+dart:async/zone_api.dart 166:6                                 _runZoned
+dart:async/zone_api.dart 92:10                                 runZoned
+package:clock/src/default.dart 52:10                           withClock
+package:fake_async/fake_async.dart 182:15                      FakeAsync.run.<fn>
+dart:async/zone_root.dart 35:13                                _rootRun
+dart:async/zone.dart 726:19                                    _CustomZone.run
+dart:async/zone_api.dart 166:6                                 _runZoned
+dart:async/zone_api.dart 92:10                                 runZoned
+package:fake_async/fake_async.dart 181:52                      FakeAsync.run
+package:flutter_test/src/binding.dart 2486:15                  AutomatedTestWidgetsFlutterBinding.runTest
+package:flutter_test/src/widget_tester.dart 184:24             testWidgets.<fn>
+package:test_api/src/backend/declarer.dart 253:25              Declarer.test.<fn>.<fn>
+===== asynchronous gap ===========================
+dart:async/zone.dart 754:19                                    _CustomZone.registerUnaryCallback
+package:test_api/src/backend/declarer.dart 252:15              Declarer.test.<fn>.<fn>
+dart:async/zone_root.dart 35:13                                _rootRun
+dart:async/zone.dart 726:19                                    _CustomZone.run
+dart:async/zone_api.dart 166:6                                 _runZoned
+dart:async/zone_api.dart 92:10                                 runZoned
+package:test_api/src/backend/declarer.dart 250:17              Declarer.test.<fn>
+package:test_api/src/backend/invoker.dart 318:17               Invoker._waitForOutstandingCallbacks.<fn>
+dart:async/zone_root.dart 35:13                                _rootRun
+dart:async/zone.dart 726:19                                    _CustomZone.run
+dart:async/zone_api.dart 166:6                                 _runZoned
+dart:async/zone_api.dart 92:10                                 runZoned
+package:test_api/src/backend/invoker.dart 314:5                Invoker._waitForOutstandingCallbacks
+package:test_api/src/backend/invoker.dart 457:21               Invoker._onRun.<fn>.<fn>.<fn>
+===== asynchronous gap ===========================
+dart:async/zone.dart 754:19                                    _CustomZone.registerUnaryCallback
+package:test_api/src/backend/invoker.dart 455:15               Invoker._onRun.<fn>.<fn>.<fn>
+dart:async/zone_root.dart 35:13                                _rootRun
+dart:async/zone.dart 726:19                                    _CustomZone.run
+dart:async/zone_api.dart 166:6                                 _runZoned
+dart:async/zone_api.dart 92:10                                 runZoned
+package:test_api/src/backend/invoker.dart 445:11               Invoker._onRun.<fn>.<fn>
+package:test_api/src/backend/invoker.dart 500:15               Invoker._guardIfGuarded
+package:test_api/src/backend/invoker.dart 444:9                Invoker._onRun.<fn>
+package:stack_trace/src/chain.dart 97:24                       Chain.capture.<fn>
+dart:async/zone_root.dart 35:13                                _rootRun
+dart:async/zone.dart 726:19                                    _CustomZone.run
+dart:async/zone_api.dart 166:6                                 _runZoned
+dart:async/zone_api.dart 92:10                                 runZoned
+package:stack_trace/src/chain.dart 95:12                       Chain.capture
+package:test_api/src/backend/invoker.dart 442:11               Invoker._onRun
+package:test_api/src/backend/live_test_controller.dart 161:11  LiveTestController.run
+package:test_api/src/backend/remote_listener.dart 323:16       RemoteListener._runLiveTest.<fn>
+dart:async/zone_root.dart 35:13                                _rootRun
+dart:async/zone.dart 726:19                                    _CustomZone.run
+dart:async/zone_api.dart 166:6                                 _runZoned
+dart:async/zone_api.dart 92:10                                 runZoned
+package:test_api/src/backend/remote_listener.dart 322:5        RemoteListener._runLiveTest
+package:test_api/src/backend/remote_listener.dart 263:7        RemoteListener._serializeTest.<fn>
+dart:async/zone_root.dart 48:47                                _rootRunUnary
+dart:async/zone.dart 733:19                                    _CustomZone.runUnary
+dart:async/zone.dart 633:7                                     _CustomZone.runUnaryGuarded
+dart:async/stream_impl.dart 381:11                             _BufferingStreamSubscription._sendData
+dart:async/stream_impl.dart 312:7                              _BufferingStreamSubscription._add
+dart:async/stream_controller.dart 798:19                       _SyncStreamControllerDispatch._sendData
+dart:async/stream_controller.dart 663:7                        _StreamController._add
+dart:async/stream_controller.dart 618:5                        _StreamController.add
+dart:async/zone_root.dart 56:13                                _rootRunUnary
+dart:async/zone.dart 733:19                                    _CustomZone.runUnary
+dart:async/zone.dart 633:7                                     _CustomZone.runUnaryGuarded
+dart:async/stream_impl.dart 381:11                             _BufferingStreamSubscription._sendData
+dart:async/stream_impl.dart 312:7                              _BufferingStreamSubscription._add
+dart:async/stream_controller.dart 798:19                       _SyncStreamControllerDispatch._sendData
+dart:async/stream_controller.dart 663:7                        _StreamController._add
+dart:async/stream_controller.dart 618:5                        _StreamController.add
+dart:async/stream_controller.dart 898:13                       _StreamSinkWrapper.add
+package:stream_channel/src/guarantee_channel.dart 125:12       _GuaranteeSink.add
+package:stream_channel/src/multi_channel.dart 159:31           new _MultiChannel.<fn>
+dart:async/zone.dart 891:10                                    _RootZone.runUnaryGuarded
+dart:_internal/async_cast.dart 95:11                           CastStreamSubscription._onData
+dart:async/zone.dart 891:10                                    _RootZone.runUnaryGuarded
+dart:async/stream_impl.dart 381:11                             _BufferingStreamSubscription._sendData
+dart:async/stream_impl.dart 312:7                              _BufferingStreamSubscription._add
+dart:async/stream_controller.dart 798:19                       _SyncStreamControllerDispatch._sendData
+dart:async/stream_controller.dart 663:7                        _StreamController._add
+dart:async/stream_controller.dart 618:5                        _StreamController.add
+dart:async/zone.dart 891:10                                    _RootZone.runUnaryGuarded
+dart:async/stream_impl.dart 381:11                             _BufferingStreamSubscription._sendData
+dart:async/stream_impl.dart 312:7                              _BufferingStreamSubscription._add
+dart:async/stream_controller.dart 798:19                       _SyncStreamControllerDispatch._sendData
+dart:async/stream_controller.dart 663:7                        _StreamController._add
+dart:async/stream_controller.dart 618:5                        _StreamController.add
+dart:async/stream_controller.dart 898:13                       _StreamSinkWrapper.add
+dart:async/zone.dart 891:10                                    _RootZone.runUnaryGuarded
+dart:async/stream_impl.dart 381:11                             _BufferingStreamSubscription._sendData
+dart:async/stream_impl.dart 312:7                              _BufferingStreamSubscription._add
+dart:async/stream_pipe.dart 154:11                             _ForwardingStreamSubscription._add
+dart:async/stream_pipe.dart 252:10                             _MapStream._handleData
+dart:async/stream_pipe.dart 184:13                             _ForwardingStreamSubscription._handleData
+dart:async/zone.dart 891:10                                    _RootZone.runUnaryGuarded
+dart:async/stream_impl.dart 381:11                             _BufferingStreamSubscription._sendData
+dart:async/stream_impl.dart 312:7                              _BufferingStreamSubscription._add
+dart:async/stream_controller.dart 798:19                       _SyncStreamControllerDispatch._sendData
+dart:async/stream_controller.dart 663:7                        _StreamController._add
+dart:async/stream_controller.dart 618:5                        _StreamController.add
+dart:_http/websocket_impl.dart 1252:27                         new _WebSocketImpl._fromSocket.<fn>
+dart:async/zone.dart 891:10                                    _RootZone.runUnaryGuarded
+dart:async/stream_impl.dart 381:11                             _BufferingStreamSubscription._sendData
+dart:async/stream_impl.dart 312:7                              _BufferingStreamSubscription._add
+dart:async/stream_transformers.dart 67:11                      _SinkTransformerStreamSubscription._add
+dart:async/stream_transformers.dart 13:11                      _EventSinkWrapper.add
+dart:_http/websocket_impl.dart 348:23                          _WebSocketProtocolTransformer._messageFrameEnd
+dart:_http/websocket_impl.dart 238:46                          _WebSocketProtocolTransformer.add
+dart:async/stream_transformers.dart 115:24                     _SinkTransformerStreamSubscription._handleData
+dart:async/zone.dart 891:10                                    _RootZone.runUnaryGuarded
+dart:async/stream_impl.dart 381:11                             _BufferingStreamSubscription._sendData
+dart:async/stream_impl.dart 312:7                              _BufferingStreamSubscription._add
+dart:async/stream_controller.dart 798:19                       _SyncStreamControllerDispatch._sendData
+dart:async/stream_controller.dart 663:7                        _StreamController._add
+dart:async/stream_controller.dart 618:5                        _StreamController.add
+dart:io-patch/socket_patch.dart 2874:41                        _Socket._onData
+dart:async/zone.dart 891:10                                    _RootZone.runUnaryGuarded
+dart:async/stream_impl.dart 381:11                             _BufferingStreamSubscription._sendData
+dart:async/stream_impl.dart 312:7                              _BufferingStreamSubscription._add
+dart:async/stream_controller.dart 798:19                       _SyncStreamControllerDispatch._sendData
+dart:async/stream_controller.dart 663:7                        _StreamController._add
+dart:async/stream_controller.dart 618:5                        _StreamController.add
+dart:io-patch/socket_patch.dart 2312:31                        new _RawSocket.<fn>
+dart:io-patch/socket_patch.dart 1647:14                        _NativeSocket.issueReadEvent.issue
+dart:async/schedule_microtask.dart 40:35                       _microtaskLoop
+dart:async/schedule_microtask.dart 49:5                        _startMicrotaskLoop
+
+00:13 +29: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch bulleted_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:13 +30: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: old editor completion cannot report into or unlock a new pending action
+00:14 +31: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: old editor completion cannot report into or unlock a new pending action
+00:14 +32: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/ordered_numbering_native_test.dart: numbered_list toolbar indent preserves native numbering, checked and mid-item caret
+00:14 +33: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/ordered_numbering_native_test.dart: numbered_list toolbar indent preserves native numbering, checked and mid-item caret
+00:14 +34: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch bulleted_list to bulleted_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:14 +35: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch bulleted_list to bulleted_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:14 +36: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch bulleted_list to bulleted_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:14 +37: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch bulleted_list to bulleted_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:14 +38: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: todo shortcut converts current text and preserves checked state on repeated selection
+00:14 +39: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: todo shortcut converts current text and preserves checked state on repeated selection
+00:15 +40: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: todo shortcut converts current text and preserves checked state on repeated selection
+00:15 +41: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: todo shortcut converts current text and preserves checked state on repeated selection
+00:15 +42: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: todo shortcut converts current text and preserves checked state on repeated selection
+00:15 +43: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_keyboard_actions_test.dart: todo shortcut converts current text and preserves checked state on repeated selection
+00:15 +44: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch bulleted_list to todo_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:15 +45: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/ordered_numbering_native_test.dart: bulleted_list toolbar indent preserves native numbering, checked and mid-item caret
+00:16 +46: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/ordered_numbering_native_test.dart: bulleted_list toolbar indent preserves native numbering, checked and mid-item caret
+00:16 +47: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch todo_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:16 +48: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables spreadsheet
+00:16 +49: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/ordered_numbering_native_test.dart: todo_list multi-level Enter keeps Rust projection, undo and SQLite restoration consistent
+00:16 +50: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/ordered_numbering_native_test.dart: todo_list multi-level Enter keeps Rust projection, undo and SQLite restoration consistent
+00:16 +51: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/ordered_numbering_native_test.dart: todo_list multi-level Enter keeps Rust projection, undo and SQLite restoration consistent
+00:16 +52: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/ordered_numbering_native_test.dart: todo_list multi-level Enter keeps Rust projection, undo and SQLite restoration consistent
+00:16 +53: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/ordered_numbering_native_test.dart: todo_list multi-level Enter keeps Rust projection, undo and SQLite restoration consistent
+00:17 +54: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: dismiss stays at the right edge while long menus scroll and closes the toolbar
+00:17 +55: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: dismiss stays at the right edge while long menus scroll and closes the toolbar
+00:17 +56: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: dismiss stays at the right edge while long menus scroll and closes the toolbar
+00:17 +57: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: dismiss stays at the right edge while long menus scroll and closes the toolbar
+00:17 +58: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: dismiss stays at the right edge while long menus scroll and closes the toolbar
+00:17 +59: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type menu batch to numbered_list reverse=false retains selection and focus (variant: TargetPlatform.android)
+00:17 +60: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type menu batch to numbered_list reverse=false retains selection and focus (variant: TargetPlatform.android)
+00:17 +61: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type menu batch to numbered_list reverse=false retains selection and focus (variant: TargetPlatform.android)
+00:18 +62: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type menu batch to numbered_list reverse=false retains selection and focus (variant: TargetPlatform.android)
+00:18 +63: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct table inserts without more sheet and has undo
+00:18 +64: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type menu batch to numbered_list reverse=true retains selection and focus (variant: TargetPlatform.android)
+00:18 +65: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type menu batch to numbered_list reverse=true retains selection and focus (variant: TargetPlatform.android)
+00:18 +66: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type menu batch to numbered_list reverse=true retains selection and focus (variant: TargetPlatform.android)
+00:19 +67: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct formula cancellation and creation share the original input sheet
+00:19 +68: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct formula cancellation and creation share the original input sheet
+00:20 +69: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct formula cancellation and creation share the original input sheet
+00:20 +70: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type menu batch to todo_list reverse=false retains selection and focus (variant: TargetPlatform.android)
+00:20 +71: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct link uses existing source validation and inserts a link block
+00:21 +72: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct link uses existing source validation and inserts a link block
+00:21 +73: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: numbered_list toolbar at offset=0 keeps content, checked state and focus (variant: TargetPlatform.android)
+00:21 +74: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: numbered_list toolbar at offset=0 keeps content, checked state and focus (variant: TargetPlatform.android)
+00:21 +75: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: numbered_list toolbar at offset=0 keeps content, checked state and focus (variant: TargetPlatform.android)
+00:22 +76: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: numbered_list toolbar at offset=0 keeps content, checked state and focus (variant: TargetPlatform.android)
+00:22 +77: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: heading menus stop at H6 and retain existing H9 with limited config: false
+00:22 +78: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: heading menus stop at H6 and retain existing H9 with limited config: false
+00:23 +79: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: bulleted_list toolbar at offset=0 keeps content, checked state and focus (variant: TargetPlatform.android)
+00:23 +80: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: heading menus stop at H6 and retain existing H9 with limited config: true
+00:23 +81: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: bulleted_list toolbar at offset=2 keeps content, checked state and focus (variant: TargetPlatform.android)
+00:23 +82: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: bulleted_list toolbar at offset=2 keeps content, checked state and focus (variant: TargetPlatform.android)
+00:23 +83: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: bulleted_list toolbar at offset=2 keeps content, checked state and focus (variant: TargetPlatform.android)
+00:24 +84: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: bulleted_list toolbar at offset=2 keeps content, checked state and focus (variant: TargetPlatform.android)
+00:24 +85: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard add button visibility: false
+00:24 +86: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: todo_list toolbar at offset=0 keeps content, checked state and focus (variant: TargetPlatform.android)
+00:25 +87: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: todo_list toolbar at offset=0 keeps content, checked state and focus (variant: TargetPlatform.android)
+00:25 +88: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: todo_list toolbar at offset=2 keeps content, checked state and focus (variant: TargetPlatform.android)
+00:27 +89: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: toolbar mixed range reverse=false keeps range and focus through conversion (variant: TargetPlatform.android)
+00:28 +90: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: toolbar mixed range reverse=true keeps range and focus through conversion (variant: TargetPlatform.android)
+00:29 +91: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: toolbar maximum depth disables increase and preserves unchecked Todo (variant: TargetPlatform.android)
+00:30 +92: All tests passed!

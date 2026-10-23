@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/cses_document_collab.dart';
 import 'package:cses_mobile_collab_demo/src/daily_guidance/guidance_entries.dart';
 import 'package:cses_mobile_collab_demo/src/daily_guidance/guidance_people.dart';
 import 'package:cses_mobile_collab_demo/src/daily_guidance/journal_draft.dart';
@@ -53,15 +54,20 @@ Node _section(LocalJournalController journal, String kind) => journal
     .singleWhere((node) => node.attributes['section'] == kind);
 
 /// 从借用的[node]读取所有原子引用快照，保留在正文中的顺序。
-List<GuidancePerson> _mentions(Node node) => node.delta!
-    .whereType<TextInsert>()
-    .where((insert) => insert.attributes?[guidanceMentionAttribute] != null)
-    .expand(
-      (insert) => insert.text.runes
-          .where((rune) => rune == 0xfffc)
-          .map((_) => readGuidanceMention(insert.attributes!)),
-    )
-    .toList();
+List<GuidancePerson> _mentions(Node node) =>
+    node.delta!.whereType<TextInsert>().expand((insert) {
+      final native = EditorUserMention.tryRead(insert.attributes);
+      final person = native != null
+          ? GuidancePerson(id: native.id, name: native.name)
+          : insert.attributes?[guidanceMentionAttribute] != null
+          ? readGuidanceMention(insert.attributes!)
+          : null;
+      return person == null
+          ? <GuidancePerson>[]
+          : insert.text.runes
+                .where((rune) => rune == 0xfffc)
+                .map((_) => person);
+    }).toList();
 
 /// 为借用的[journal]在[selection]处捕获真实目标，拒绝意外的空或跨段目标。
 GuidanceInsertionTarget _target(
@@ -130,6 +136,96 @@ Delta _referenceDelta(int count) {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   const person = GuidancePerson(id: 'u1', name: '张三', department: '研发');
+
+  for (final kind in ['help', 'pilot']) {
+    test(
+      'legacy $kind organization references remain readable without migration',
+      () async {
+        final store = _MemoryJournalStore()
+          ..saved = _seed(
+            record: [
+              paragraphNode(
+                delta: guidanceMentionDelta(const [
+                  GuidancePerson(id: 'd1', name: '历史部门', type: 'department'),
+                ]),
+                attributes: {
+                  guidanceEntryAttribute: kind,
+                  'guidance_entry_id': 'legacy-$kind',
+                  'guidance_done': false,
+                },
+              ),
+            ],
+          );
+        final journal = await _open(store: store);
+        try {
+          expect(
+            _mentions(
+              _section(journal, 'record').children.single,
+            ).single.identity,
+            'department:d1',
+          );
+          await journal.flush();
+          expect(store.saved!.documentJson, contains(guidanceMentionAttribute));
+        } finally {
+          await journal.close();
+        }
+      },
+    );
+
+    test(
+      '$kind uses native people only and preserves history and saved drafts',
+      () async {
+        final store = _MemoryJournalStore();
+        final journal = await _open(store: store);
+        final state = journal.editor.editorState;
+        try {
+          final source = _section(journal, 'record').children.single;
+          await state.apply(state.transaction..insertText(source, 0, '原文'));
+          final target = _endTarget(journal, source);
+          await expectLater(
+            journal.insertPeople(target, const [
+              GuidancePerson(id: 'd1', name: '组织', type: 'department'),
+            ], kind: kind),
+            throwsArgumentError,
+          );
+          expect(_section(journal, 'record').children, hasLength(1));
+          await journal.insertUserEntry(
+            target,
+            const CollabMentionUser(id: 'u1', name: '张三', department: '研发'),
+            kind: kind,
+          );
+          final row = _section(journal, 'record').children.last;
+          expect(row.attributes[guidanceEntryAttribute], kind);
+          expect(source.delta!.toPlainText(), '原文');
+          final atom = row.delta!.whereType<TextInsert>().first;
+          expect(EditorUserMention.read(atom.attributes!).name, '张三');
+          expect(
+            atom.attributes!.containsKey(guidanceMentionAttribute),
+            isFalse,
+          );
+          state.undoManager.undo();
+          expect(_section(journal, 'record').children, hasLength(1));
+          expect(state.selection, target.selection);
+          state.undoManager.redo();
+          expect(
+            _section(journal, 'record').children.last.delta!.toPlainText(),
+            '\uFFFC ',
+          );
+          await journal.flush();
+        } finally {
+          await journal.close();
+        }
+        final reopened = await _open(store: store);
+        try {
+          final row = _section(reopened, 'record').children.last;
+          expect(row.attributes[guidanceEntryAttribute], kind);
+          expect(_mentions(row).single.identity, 'user:u1');
+        } finally {
+          await reopened.close();
+        }
+      },
+    );
+  }
 
   test(
     'a fresh draft shows only record and optional sections follow add order without duplicates',

@@ -1,0 +1,51 @@
+{
+  "date": "2026-10-23",
+  "scope": "都来帮/领航员原生人员提及",
+  "checks": {
+    "host_suite": {
+      "passed": 152,
+      "failed": 0,
+      "skipped": 0,
+      "log": "native-business-mentions-host-tests.txt"
+    },
+    "host_final_targets": {
+      "passed": 34,
+      "failed": 0,
+      "skipped": 0,
+      "log": "native-business-mentions-extra-tests.txt"
+    },
+    "package_targets": {
+      "passed": 31,
+      "failed": 0,
+      "skipped": 0,
+      "log": "native-business-mentions-package-tests.txt"
+    },
+    "host_analyze": {
+      "passed": true,
+      "log": "native-business-mentions-host-analyze.txt"
+    },
+    "package_analyze": {
+      "passed": true,
+      "log": "native-business-mentions-package-analyze.txt"
+    }
+  },
+  "format": {
+    "files": 9,
+    "changed": 0,
+    "line_widths": [
+      80,
+      120
+    ]
+  },
+  "source_hashes_matched": 9,
+  "diff_check": true,
+  "legacy_page_picker_removed": true,
+  "public_api_consumers_verified": true,
+  "overlap_note": "host_final_targets与host_suite有重叠；其中6项取消/账号/历史组织回归为之后新增，不累加展示总数。",
+  "not_run": [
+    "本轮App构建/安装",
+    "Android/iOS真机",
+    "真实在线双端"
+  ],
+  "history": "首次工厂测试夹具与mounted静态提示已修，首次日志保留；其他工作区改动保留。"
+}

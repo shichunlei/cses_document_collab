@@ -1,0 +1,1018 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart: T menu directly converts bulleted_list to numbered_list in journal section
+00:06 +1: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart: T menu directly converts bulleted_list to numbered_list in journal section
+00:07 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart: T menu directly converts bulleted_list to numbered_list in journal section
+00:07 +3: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart: 真实页面自定义都来帮确认后保留原文并插入、保存、预览和取消
+00:09 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart: 真实页面自定义都来帮确认后保留原文并插入、保存、预览和取消
+00:11 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart: 真实页面自定义都来帮确认后保留原文并插入、保存、预览和取消
+00:12 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart: 真实页面自定义都来帮确认后保留原文并插入、保存、预览和取消
+00:13 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart: 真实页面自定义都来帮确认后保留原文并插入、保存、预览和取消
+00:14 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_entries_layout_test.dart: 真实页面自定义都来帮确认后保留原文并插入、保存、预览和取消
+00:14 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_page_test.dart: same paper layout in edit and preview at 280.0/2.0
+00:15 +10: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_page_test.dart: same paper layout in edit and preview at 280.0/2.0
+00:15 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_page_test.dart: same paper layout in edit and preview at 280.0/2.0
+00:16 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: toolbar is reachable at 320.0/1.0
+00:16 +13: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: toolbar is reachable at 320.0/1.0
+00:16 +14: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: toolbar is reachable at 320.0/1.0
+00:17 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: toolbar is reachable at 320.0/1.0
+00:18 +16: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: toolbar is reachable at 320.0/1.0
+00:18 +17: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: toolbar is reachable at 320.0/1.0
+00:18 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: toolbar is reachable at 320.0/1.0
+00:19 +19: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: toolbar is reachable at 320.0/1.0
+00:19 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: toolbar is reachable at 320.0/1.0
+00:20 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: toolbar is reachable at 320.0/1.0
+00:20 +22: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: toolbar is reachable at 320.0/1.0
+00:21 +23: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: toolbar is reachable at 320.0/1.0
+00:21 +24: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: toolbar is reachable at 390.0/2.0
+00:24 +25: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: custom pilot action preserves source and resumes input
+00:26 +26: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: custom pilot action preserves source and resumes input
+00:27 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: custom pilot action preserves source and resumes input
+00:27 +28: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: custom pilot action preserves source and resumes input
+00:27 +29: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: custom pilot action preserves source and resumes input
+00:27 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: custom pilot action preserves source and resumes input
+00:27 +31: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: custom pilot action preserves source and resumes input
+00:27 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: custom pilot action preserves source and resumes input
+00:29 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_mention_input_test.dart: IME insertion beside mention preserves identity and inherited style: bold=false
+00:29 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_mention_input_test.dart: IME insertion beside mention preserves identity and inherited style: bold=false
+00:30 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 真实组织目录 保留真实部门树、同名不同 ID 与跨类型同 ID，缓存同会话结果
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES-LOG] [JSON] [2026-10-23 07:48:30.778] package:cses_common/runtime/config/config.dart:53
+│ {
+│   "applicationId": "app.wehanyu.hanyu_bct",
+│   "iosAppId": "1509209672",
+│   "policyUrl": "https://www.jinqidongli.com/policy",
+│   "userLicenseUrl": "https://www.jinqidongli.com/user-license",
+│   "appName": "智慧之道",
+│   "logoUrl": "https://jqdl-image.oss-cn-zhangjiakou.aliyuncs.com/bct.png",
+│   "jPushAppKey": "315789445ad3577f2bfe2139",
+│   "wxAppId": "wxf7445f9246590229",
+│   "universalLink": "https://jinqidongli.com/app"
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES-LOG] [JSON] [2026-10-23 07:48:30.961] package:cses_common/runtime/config/config.dart:53
+│ {
+│   "applicationId": "app.wehanyu.hanyu_bct",
+│   "iosAppId": "1509209672",
+│   "policyUrl": "https://www.jinqidongli.com/policy",
+│   "userLicenseUrl": "https://www.jinqidongli.com/user-license",
+│   "appName": "智慧之道",
+│   "logoUrl": "https://jqdl-image.oss-cn-zhangjiakou.aliyuncs.com/bct.png",
+│   "jPushAppKey": "315789445ad3577f2bfe2139",
+│   "wxAppId": "wxf7445f9246590229",
+│   "universalLink": "https://jinqidongli.com/app"
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES-LOG] [DEBUG] [2026-10-23 07:48:31.047] package:cses_common/network/http/interceptors/http_interceptor.dart:757
+│ 🚀 curl 'https://api-pre.jinqidongli.com/User/login' \
+│   -X 'POST' \
+│   -H 'content-type: application/json; charset=utf-8' \
+│   -H 'device: Android' \
+│   -H 'appType: bct' \
+│   -H 'appVersion: 1.0.0' \
+│   -H 'versionCode: 1' \
+│   -H 'osVersion: unKnow' \
+│   -H 'deviceId: native-device' \
+│   -H 'language: zh' \
+│   -H 'companyId: ' \
+│   -H 'timeZone: Asia/Shanghai' \
+│   -H 'envType: pre' \
+│   -H 'cpuVersion: unKnow' \
+│   --data-raw '{"userName":"account","password":"password"}'
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+╔╣ Request ║ POST
+║  https://api-pre.jinqidongli.com/User/login
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Headers
+╟ content-type: application/json; charset=utf-8
+╟ cookieId: null
+╟ device: Android
+╟ appType: bct
+╟ appVersion: 1.0.0
+╟ versionCode: 1
+╟ osVersion: unKnow
+╟ deviceId: native-device
+╟ language: zh
+╟ companyId:
+╟ timeZone: Asia/Shanghai
+╟ envType: pre
+╟ cpuVersion: unKnow
+╟ contentType: application/json; charset=utf-8
+╟ responseType: ResponseType.json
+╟ followRedirects: true
+╟ connectTimeout: 0:01:00.000000
+╟ receiveTimeout: 0:01:00.000000
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Extras
+╟ client_probe.http_metric_started_at: 2026-10-23 07:48:31.036780
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Body
+╟ userName: account
+╟ password: password
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+║ {userName: account, password: password}
+
+╔╣ Response ║ POST ║ Status: 200 null  ║ Time: 415 ms
+║  https://api-pre.jinqidongli.com/User/login
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Headers
+╟ content-type: [application/json; charset=utf-8]
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Body
+║
+║    {
+║         "isSuccess": true,
+║         "cookieId": "server-cookie",
+║         "userId": "server-user",
+║         "userName": "server-account",
+║         "companyId": "server-company",
+║         "organizes": [{companyId: server-company, companyName: 测试企业}]
+║         "name": "测试用户",
+║         "site": "jqdl",
+║         "yrsSocket": "",
+║         "pictureDomain": "https://picture.example.test/KEY",
+║         "videoDomain": "https://video.example.test/KEY",
+║         "attachmentDomain": "https://attachment.example.test/KEY",
+║         "webConfig": {websocketHost: wss://example.test/deployment/ws}
+║    }
+║
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [游客或访客] [DEBUG] [2026-10-23 07:48:31.699] package:cses_common/network/http/client/http_manager.dart:168
+│ 🚀 null
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES-LOG] [JSON] [2026-10-23 07:48:31.733] package:cses_common/runtime/session/user.dart:169
+│ {
+│   "userId": null,
+│   "userName": null,
+│   "orgId": null,
+│   "orgName": null,
+│   "deptId": null,
+│   "deptName": null,
+│   "companyId": "server-company",
+│   "companyName": "测试企业",
+│   "lastModified": 0,
+│   "state": 0,
+│   "companyAliasName": null,
+│   "companyGuide": null,
+│   "orgType": "Member",
+│   "isCourse": false
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [Context] [JSON] [2026-10-23 07:48:31.814] package:cses_common/runtime/context/context.dart:227
+│ {
+│   "isSuccess": true,
+│   "cookieId": "server-cookie",
+│   "userId": "server-user",
+│   "userName": "server-account",
+│   "companyId": "server-company",
+│   "organizes": [
+│     {
+│       "companyId": "server-company",
+│       "companyName": "测试企业"
+│     }
+│   ],
+│   "name": "测试用户",
+│   "site": "jqdl",
+│   "yrsSocket": "",
+│   "pictureDomain": "https://picture.example.test/KEY",
+│   "videoDomain": "https://video.example.test/KEY",
+│   "attachmentDomain": "https://attachment.example.test/KEY",
+│   "webConfig": {
+│     "websocketHost": "wss://example.test/deployment/ws"
+│   },
+│   "appVersion": "1.0.0",
+│   "osVersion": "unKnow",
+│   "deviceId": "native-device",
+│   "cpuVersion": "unKnow",
+│   "language": "zh",
+│   "timeZone": "Asia/Shanghai",
+│   "orgRole": "Member",
+│   "sloganDarkLogo": null,
+│   "sloganLightLogo": null,
+│   "env": "pre",
+│   "appType": "bct",
+│   "deviceType": "Android"
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES-LOG] [DEBUG] [2026-10-23 07:48:31.863] package:cses_common/runtime/context/context.dart:229
+│ 🚀 获取小程序引擎版本信息null,null
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES-LOG] [DEBUG] [2026-10-23 07:48:31.881] package:cses_common/network/http/interceptors/http_interceptor.dart:757
+│ 🚀 curl 'https://api-pre.jinqidongli.com/Company/readAllChildren' \
+│   -X 'POST' \
+│   -H 'content-type: application/json; charset=utf-8' \
+│   -H 'cookieId: server-cookie' \
+│   -H 'device: Android' \
+│   -H 'appType: bct' \
+│   -H 'appVersion: 1.0.0' \
+│   -H 'versionCode: 1' \
+│   -H 'osVersion: unKnow' \
+│   -H 'deviceId: native-device' \
+│   -H 'language: zh' \
+│   -H 'companyId: server-company' \
+│   -H 'timeZone: Asia/Shanghai' \
+│   -H 'envType: pre' \
+│   -H 'cpuVersion: unKnow' \
+│   --data-raw '{"orgId":"server-company","isReadUser":true}'
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+╔╣ Request ║ POST
+║  https://api-pre.jinqidongli.com/Company/readAllChildren
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Headers
+╟ content-type: application/json; charset=utf-8
+╟ cookieId: server-cookie
+╟ device: Android
+╟ appType: bct
+╟ appVersion: 1.0.0
+╟ versionCode: 1
+╟ osVersion: unKnow
+╟ deviceId: native-device
+╟ language: zh
+╟ companyId: server-company
+╟ timeZone: Asia/Shanghai
+╟ envType: pre
+╟ cpuVersion: unKnow
+╟ contentType: application/json; charset=utf-8
+╟ responseType: ResponseType.json
+╟ followRedirects: true
+╟ connectTimeout: 0:01:00.000000
+╟ receiveTimeout: 0:01:00.000000
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Extras
+╟ client_probe.http_metric_started_at: 2026-10-23 07:48:31.880791
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Body
+╟ orgId: server-company
+╟ isReadUser: true
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+║ {orgId: server-company, isReadUser: true}
+
+╔╣ Response ║ POST ║ Status: 200 null  ║ Time: 23 ms
+║  https://api-pre.jinqidongli.com/Company/readAllChildren
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Headers
+╟ content-type: [application/json; charset=utf-8]
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Body
+║
+║    {
+║         "isSuccess": true,
+║         "items": [
+║            {
+║                 "id": "company",
+║                 "name": "企业",
+║                 "isUser": false,
+║                 "children": [{id: same, name: 研发, isUser: false, children: [{id: same, name: 张三, isUser: true}, {id: same, name: 重复人员, isUser: true}, {id: u2, name: 张三, isUser: true, deptName: 技术}]}]
+║            }
+║         ]
+║    }
+║
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+00:31 +35: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_mention_input_test.dart: IME insertion beside mention preserves identity and inherited style: bold=false
+00:31 +35: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 真实组织目录 失败与非法子树不缓存，重试重新请求
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES-LOG] [JSON] [2026-10-23 07:48:32.097] package:cses_common/runtime/config/config.dart:53
+│ {
+│   "applicationId": "app.wehanyu.hanyu_bct",
+│   "iosAppId": "1509209672",
+│   "policyUrl": "https://www.jinqidongli.com/policy",
+│   "userLicenseUrl": "https://www.jinqidongli.com/user-license",
+│   "appName": "智慧之道",
+│   "logoUrl": "https://jqdl-image.oss-cn-zhangjiakou.aliyuncs.com/bct.png",
+│   "jPushAppKey": "315789445ad3577f2bfe2139",
+│   "wxAppId": "wxf7445f9246590229",
+│   "universalLink": "https://jinqidongli.com/app"
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES-LOG] [JSON] [2026-10-23 07:48:32.108] package:cses_common/runtime/config/config.dart:53
+│ {
+│   "applicationId": "app.wehanyu.hanyu_bct",
+│   "iosAppId": "1509209672",
+│   "policyUrl": "https://www.jinqidongli.com/policy",
+│   "userLicenseUrl": "https://www.jinqidongli.com/user-license",
+│   "appName": "智慧之道",
+│   "logoUrl": "https://jqdl-image.oss-cn-zhangjiakou.aliyuncs.com/bct.png",
+│   "jPushAppKey": "315789445ad3577f2bfe2139",
+│   "wxAppId": "wxf7445f9246590229",
+│   "universalLink": "https://jinqidongli.com/app"
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES-LOG] [DEBUG] [2026-10-23 07:48:32.123] package:cses_common/network/http/interceptors/http_interceptor.dart:757
+│ 🚀 curl 'https://api-pre.jinqidongli.com/User/login' \
+│   -X 'POST' \
+│   -H 'content-type: application/json; charset=utf-8' \
+│   -H 'device: Android' \
+│   -H 'appType: bct' \
+│   -H 'appVersion: 1.0.0' \
+│   -H 'versionCode: 1' \
+│   -H 'osVersion: unKnow' \
+│   -H 'deviceId: native-device' \
+│   -H 'language: zh' \
+│   -H 'companyId: ' \
+│   -H 'timeZone: Asia/Shanghai' \
+│   -H 'envType: pre' \
+│   -H 'cpuVersion: unKnow' \
+│   --data-raw '{"userName":"account","password":"password"}'
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+╔╣ Request ║ POST
+║  https://api-pre.jinqidongli.com/User/login
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Headers
+╟ content-type: application/json; charset=utf-8
+╟ cookieId: null
+╟ device: Android
+╟ appType: bct
+╟ appVersion: 1.0.0
+╟ versionCode: 1
+╟ osVersion: unKnow
+╟ deviceId: native-device
+╟ language: zh
+╟ companyId:
+╟ timeZone: Asia/Shanghai
+╟ envType: pre
+╟ cpuVersion: unKnow
+╟ contentType: application/json; charset=utf-8
+╟ responseType: ResponseType.json
+╟ followRedirects: true
+╟ connectTimeout: 0:01:00.000000
+╟ receiveTimeout: 0:01:00.000000
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Extras
+╟ client_probe.http_metric_started_at: 2026-10-23 07:48:32.122744
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Body
+╟ userName: account
+╟ password: password
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+║ {userName: account, password: password}
+
+╔╣ Response ║ POST ║ Status: 200 null  ║ Time: 18 ms
+║  https://api-pre.jinqidongli.com/User/login
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Headers
+╟ content-type: [application/json; charset=utf-8]
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Body
+║
+║    {
+║         "isSuccess": true,
+║         "cookieId": "server-cookie",
+║         "userId": "server-user",
+║         "userName": "server-account",
+║         "companyId": "server-company",
+║         "organizes": [{companyId: server-company, companyName: 测试企业}]
+║         "name": "测试用户",
+║         "site": "jqdl",
+║         "yrsSocket": "",
+║         "pictureDomain": "https://picture.example.test/KEY",
+║         "videoDomain": "https://video.example.test/KEY",
+║         "attachmentDomain": "https://attachment.example.test/KEY",
+║         "webConfig": {websocketHost: wss://example.test/deployment/ws}
+║    }
+║
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [游客或访客] [DEBUG] [2026-10-23 07:48:32.163] package:cses_common/network/http/client/http_manager.dart:168
+│ 🚀 null
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES-LOG] [JSON] [2026-10-23 07:48:32.166] package:cses_common/runtime/session/user.dart:169
+│ {
+│   "userId": null,
+│   "userName": null,
+│   "orgId": null,
+│   "orgName": null,
+│   "deptId": null,
+│   "deptName": null,
+│   "companyId": "server-company",
+│   "companyName": "测试企业",
+│   "lastModified": 0,
+│   "state": 0,
+│   "companyAliasName": null,
+│   "companyGuide": null,
+│   "orgType": "Member",
+│   "isCourse": false
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [Context] [JSON] [2026-10-23 07:48:32.238] package:cses_common/runtime/context/context.dart:227
+│ {
+│   "isSuccess": true,
+│   "cookieId": "server-cookie",
+│   "userId": "server-user",
+│   "userName": "server-account",
+│   "companyId": "server-company",
+│   "organizes": [
+│     {
+│       "companyId": "server-company",
+│       "companyName": "测试企业"
+│     }
+│   ],
+│   "name": "测试用户",
+│   "site": "jqdl",
+│   "yrsSocket": "",
+│   "pictureDomain": "https://picture.example.test/KEY",
+│   "videoDomain": "https://video.example.test/KEY",
+│   "attachmentDomain": "https://attachment.example.test/KEY",
+│   "webConfig": {
+│     "websocketHost": "wss://example.test/deployment/ws"
+│   },
+│   "appVersion": "1.0.0",
+│   "osVersion": "unKnow",
+│   "deviceId": "native-device",
+│   "cpuVersion": "unKnow",
+│   "language": "zh",
+│   "timeZone": "Asia/Shanghai",
+│   "orgRole": "Member",
+│   "sloganDarkLogo": null,
+│   "sloganLightLogo": null,
+│   "env": "pre",
+│   "appType": "bct",
+│   "deviceType": "Android"
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES-LOG] [DEBUG] [2026-10-23 07:48:32.317] package:cses_common/runtime/context/context.dart:229
+│ 🚀 获取小程序引擎版本信息null,null
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES-LOG] [DEBUG] [2026-10-23 07:48:32.328] package:cses_common/network/http/interceptors/http_interceptor.dart:757
+│ 🚀 curl 'https://api-pre.jinqidongli.com/Company/readAllChildren' \
+│   -X 'POST' \
+│   -H 'content-type: application/json; charset=utf-8' \
+│   -H 'cookieId: server-cookie' \
+│   -H 'device: Android' \
+│   -H 'appType: bct' \
+│   -H 'appVersion: 1.0.0' \
+│   -H 'versionCode: 1' \
+│   -H 'osVersion: unKnow' \
+│   -H 'deviceId: native-device' \
+│   -H 'language: zh' \
+│   -H 'companyId: server-company' \
+│   -H 'timeZone: Asia/Shanghai' \
+│   -H 'envType: pre' \
+│   -H 'cpuVersion: unKnow' \
+│   --data-raw '{"orgId":"server-company","isReadUser":true}'
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+╔╣ Request ║ POST
+║  https://api-pre.jinqidongli.com/Company/readAllChildren
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Headers
+╟ content-type: application/json; charset=utf-8
+╟ cookieId: server-cookie
+╟ device: Android
+╟ appType: bct
+╟ appVersion: 1.0.0
+╟ versionCode: 1
+╟ osVersion: unKnow
+╟ deviceId: native-device
+╟ language: zh
+╟ companyId: server-company
+╟ timeZone: Asia/Shanghai
+╟ envType: pre
+╟ cpuVersion: unKnow
+╟ contentType: application/json; charset=utf-8
+╟ responseType: ResponseType.json
+╟ followRedirects: true
+╟ connectTimeout: 0:01:00.000000
+╟ receiveTimeout: 0:01:00.000000
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Extras
+╟ client_probe.http_metric_started_at: 2026-10-23 07:48:32.328131
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Body
+╟ orgId: server-company
+╟ isReadUser: true
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+║ {orgId: server-company, isReadUser: true}
+
+╔╣ Response ║ POST ║ Status: 200 null  ║ Time: 18 ms
+║  https://api-pre.jinqidongli.com/Company/readAllChildren
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Headers
+╟ content-type: [application/json; charset=utf-8]
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Body
+║
+║    {
+║         "isSuccess": false
+║    }
+║
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [API 接口错误] [ERROR] [2026-10-23 07:48:32.364] package:cses_common/network/http/client/http_manager.dart:173
+│ 🚀 null
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES-LOG] [DEBUG] [2026-10-23 07:48:32.382] package:cses_common/network/http/interceptors/http_interceptor.dart:757
+│ 🚀 curl 'https://api-pre.jinqidongli.com/Company/readAllChildren' \
+│   -X 'POST' \
+│   -H 'content-type: application/json; charset=utf-8' \
+│   -H 'cookieId: server-cookie' \
+│   -H 'device: Android' \
+│   -H 'appType: bct' \
+│   -H 'appVersion: 1.0.0' \
+│   -H 'versionCode: 1' \
+│   -H 'osVersion: unKnow' \
+│   -H 'deviceId: native-device' \
+│   -H 'language: zh' \
+│   -H 'companyId: server-company' \
+│   -H 'timeZone: Asia/Shanghai' \
+│   -H 'envType: pre' \
+│   -H 'cpuVersion: unKnow' \
+│   --data-raw '{"orgId":"server-company","isReadUser":true}'
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+╔╣ Request ║ POST
+║  https://api-pre.jinqidongli.com/Company/readAllChildren
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Headers
+╟ content-type: application/json; charset=utf-8
+╟ cookieId: server-cookie
+╟ device: Android
+╟ appType: bct
+╟ appVersion: 1.0.0
+╟ versionCode: 1
+╟ osVersion: unKnow
+╟ deviceId: native-device
+╟ language: zh
+╟ companyId: server-company
+╟ timeZone: Asia/Shanghai
+╟ envType: pre
+╟ cpuVersion: unKnow
+╟ contentType: application/json; charset=utf-8
+╟ responseType: ResponseType.json
+╟ followRedirects: true
+╟ connectTimeout: 0:01:00.000000
+╟ receiveTimeout: 0:01:00.000000
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Extras
+╟ client_probe.http_metric_started_at: 2026-10-23 07:48:32.380739
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Body
+╟ orgId: server-company
+╟ isReadUser: true
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+║ {orgId: server-company, isReadUser: true}
+
+╔╣ Response ║ POST ║ Status: 200 null  ║ Time: 17 ms
+║  https://api-pre.jinqidongli.com/Company/readAllChildren
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Headers
+╟ content-type: [application/json; charset=utf-8]
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Body
+║
+║    {
+║         "isSuccess": true,
+║         "items": [{id: d, name: 研发, children: bad}]
+║    }
+║
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES-LOG] [DEBUG] [2026-10-23 07:48:32.420] package:cses_common/network/http/interceptors/http_interceptor.dart:757
+│ 🚀 curl 'https://api-pre.jinqidongli.com/Company/readAllChildren' \
+│   -X 'POST' \
+│   -H 'content-type: application/json; charset=utf-8' \
+│   -H 'cookieId: server-cookie' \
+│   -H 'device: Android' \
+│   -H 'appType: bct' \
+│   -H 'appVersion: 1.0.0' \
+│   -H 'versionCode: 1' \
+│   -H 'osVersion: unKnow' \
+│   -H 'deviceId: native-device' \
+│   -H 'language: zh' \
+│   -H 'companyId: server-company' \
+│   -H 'timeZone: Asia/Shanghai' \
+│   -H 'envType: pre' \
+│   -H 'cpuVersion: unKnow' \
+│   --data-raw '{"orgId":"server-company","isReadUser":true}'
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+╔╣ Request ║ POST
+║  https://api-pre.jinqidongli.com/Company/readAllChildren
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Headers
+╟ content-type: application/json; charset=utf-8
+╟ cookieId: server-cookie
+╟ device: Android
+╟ appType: bct
+╟ appVersion: 1.0.0
+╟ versionCode: 1
+╟ osVersion: unKnow
+╟ deviceId: native-device
+╟ language: zh
+╟ companyId: server-company
+╟ timeZone: Asia/Shanghai
+╟ envType: pre
+╟ cpuVersion: unKnow
+╟ contentType: application/json; charset=utf-8
+╟ responseType: ResponseType.json
+╟ followRedirects: true
+╟ connectTimeout: 0:01:00.000000
+╟ receiveTimeout: 0:01:00.000000
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Extras
+╟ client_probe.http_metric_started_at: 2026-10-23 07:48:32.419766
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Body
+╟ orgId: server-company
+╟ isReadUser: true
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+║ {orgId: server-company, isReadUser: true}
+
+╔╣ Response ║ POST ║ Status: 200 null  ║ Time: 63 ms
+║  https://api-pre.jinqidongli.com/Company/readAllChildren
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Headers
+╟ content-type: [application/json; charset=utf-8]
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Body
+║
+║    {
+║         "isSuccess": true,
+║         "items": []
+║    }
+║
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+00:31 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_mention_input_test.dart: IME insertion beside mention preserves identity and inherited style: bold=false
+00:31 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 真实组织目录 会话切换拒绝缓存与请求迟到结果
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES-LOG] [JSON] [2026-10-23 07:48:32.591] package:cses_common/runtime/config/config.dart:53
+│ {
+│   "applicationId": "app.wehanyu.hanyu_bct",
+│   "iosAppId": "1509209672",
+│   "policyUrl": "https://www.jinqidongli.com/policy",
+│   "userLicenseUrl": "https://www.jinqidongli.com/user-license",
+│   "appName": "智慧之道",
+│   "logoUrl": "https://jqdl-image.oss-cn-zhangjiakou.aliyuncs.com/bct.png",
+│   "jPushAppKey": "315789445ad3577f2bfe2139",
+│   "wxAppId": "wxf7445f9246590229",
+│   "universalLink": "https://jinqidongli.com/app"
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES-LOG] [JSON] [2026-10-23 07:48:32.596] package:cses_common/runtime/config/config.dart:53
+│ {
+│   "applicationId": "app.wehanyu.hanyu_bct",
+│   "iosAppId": "1509209672",
+│   "policyUrl": "https://www.jinqidongli.com/policy",
+│   "userLicenseUrl": "https://www.jinqidongli.com/user-license",
+│   "appName": "智慧之道",
+│   "logoUrl": "https://jqdl-image.oss-cn-zhangjiakou.aliyuncs.com/bct.png",
+│   "jPushAppKey": "315789445ad3577f2bfe2139",
+│   "wxAppId": "wxf7445f9246590229",
+│   "universalLink": "https://jinqidongli.com/app"
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES-LOG] [DEBUG] [2026-10-23 07:48:32.609] package:cses_common/network/http/interceptors/http_interceptor.dart:757
+│ 🚀 curl 'https://api-pre.jinqidongli.com/User/login' \
+│   -X 'POST' \
+│   -H 'content-type: application/json; charset=utf-8' \
+│   -H 'device: Android' \
+│   -H 'appType: bct' \
+│   -H 'appVersion: 1.0.0' \
+│   -H 'versionCode: 1' \
+│   -H 'osVersion: unKnow' \
+│   -H 'deviceId: native-device' \
+│   -H 'language: zh' \
+│   -H 'companyId: ' \
+│   -H 'timeZone: Asia/Shanghai' \
+│   -H 'envType: pre' \
+│   -H 'cpuVersion: unKnow' \
+│   --data-raw '{"userName":"account","password":"password"}'
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+╔╣ Request ║ POST
+║  https://api-pre.jinqidongli.com/User/login
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Headers
+╟ content-type: application/json; charset=utf-8
+╟ cookieId: null
+╟ device: Android
+╟ appType: bct
+╟ appVersion: 1.0.0
+╟ versionCode: 1
+╟ osVersion: unKnow
+╟ deviceId: native-device
+╟ language: zh
+╟ companyId:
+╟ timeZone: Asia/Shanghai
+╟ envType: pre
+╟ cpuVersion: unKnow
+╟ contentType: application/json; charset=utf-8
+╟ responseType: ResponseType.json
+╟ followRedirects: true
+╟ connectTimeout: 0:01:00.000000
+╟ receiveTimeout: 0:01:00.000000
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Extras
+╟ client_probe.http_metric_started_at: 2026-10-23 07:48:32.607954
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Body
+╟ userName: account
+╟ password: password
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+║ {userName: account, password: password}
+
+╔╣ Response ║ POST ║ Status: 200 null  ║ Time: 26 ms
+║  https://api-pre.jinqidongli.com/User/login
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Headers
+╟ content-type: [application/json; charset=utf-8]
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Body
+║
+║    {
+║         "isSuccess": true,
+║         "cookieId": "server-cookie",
+║         "userId": "server-user",
+║         "userName": "server-account",
+║         "companyId": "server-company",
+║         "organizes": [{companyId: server-company, companyName: 测试企业}]
+║         "name": "测试用户",
+║         "site": "jqdl",
+║         "yrsSocket": "",
+║         "pictureDomain": "https://picture.example.test/KEY",
+║         "videoDomain": "https://video.example.test/KEY",
+║         "attachmentDomain": "https://attachment.example.test/KEY",
+║         "webConfig": {websocketHost: wss://example.test/deployment/ws}
+║    }
+║
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [游客或访客] [DEBUG] [2026-10-23 07:48:32.662] package:cses_common/network/http/client/http_manager.dart:168
+│ 🚀 null
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES-LOG] [JSON] [2026-10-23 07:48:32.664] package:cses_common/runtime/session/user.dart:169
+│ {
+│   "userId": null,
+│   "userName": null,
+│   "orgId": null,
+│   "orgName": null,
+│   "deptId": null,
+│   "deptName": null,
+│   "companyId": "server-company",
+│   "companyName": "测试企业",
+│   "lastModified": 0,
+│   "state": 0,
+│   "companyAliasName": null,
+│   "companyGuide": null,
+│   "orgType": "Member",
+│   "isCourse": false
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [Context] [JSON] [2026-10-23 07:48:32.799] package:cses_common/runtime/context/context.dart:227
+│ {
+│   "isSuccess": true,
+│   "cookieId": "server-cookie",
+│   "userId": "server-user",
+│   "userName": "server-account",
+│   "companyId": "server-company",
+│   "organizes": [
+│     {
+│       "companyId": "server-company",
+│       "companyName": "测试企业"
+│     }
+│   ],
+│   "name": "测试用户",
+│   "site": "jqdl",
+│   "yrsSocket": "",
+│   "pictureDomain": "https://picture.example.test/KEY",
+│   "videoDomain": "https://video.example.test/KEY",
+│   "attachmentDomain": "https://attachment.example.test/KEY",
+│   "webConfig": {
+│     "websocketHost": "wss://example.test/deployment/ws"
+│   },
+│   "appVersion": "1.0.0",
+│   "osVersion": "unKnow",
+│   "deviceId": "native-device",
+│   "cpuVersion": "unKnow",
+│   "language": "zh",
+│   "timeZone": "Asia/Shanghai",
+│   "orgRole": "Member",
+│   "sloganDarkLogo": null,
+│   "sloganLightLogo": null,
+│   "env": "pre",
+│   "appType": "bct",
+│   "deviceType": "Android"
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES-LOG] [DEBUG] [2026-10-23 07:48:32.817] package:cses_common/runtime/context/context.dart:229
+│ 🚀 获取小程序引擎版本信息null,null
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES-LOG] [DEBUG] [2026-10-23 07:48:32.848] package:cses_common/network/http/interceptors/http_interceptor.dart:757
+│ 🚀 curl 'https://api-pre.jinqidongli.com/Company/readAllChildren' \
+│   -X 'POST' \
+│   -H 'content-type: application/json; charset=utf-8' \
+│   -H 'cookieId: server-cookie' \
+│   -H 'device: Android' \
+│   -H 'appType: bct' \
+│   -H 'appVersion: 1.0.0' \
+│   -H 'versionCode: 1' \
+│   -H 'osVersion: unKnow' \
+│   -H 'deviceId: native-device' \
+│   -H 'language: zh' \
+│   -H 'companyId: server-company' \
+│   -H 'timeZone: Asia/Shanghai' \
+│   -H 'envType: pre' \
+│   -H 'cpuVersion: unKnow' \
+│   --data-raw '{"orgId":"server-company","isReadUser":true}'
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+╔╣ Request ║ POST
+║  https://api-pre.jinqidongli.com/Company/readAllChildren
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Headers
+╟ content-type: application/json; charset=utf-8
+╟ cookieId: server-cookie
+╟ device: Android
+╟ appType: bct
+╟ appVersion: 1.0.0
+╟ versionCode: 1
+╟ osVersion: unKnow
+╟ deviceId: native-device
+╟ language: zh
+╟ companyId: server-company
+╟ timeZone: Asia/Shanghai
+╟ envType: pre
+╟ cpuVersion: unKnow
+╟ contentType: application/json; charset=utf-8
+╟ responseType: ResponseType.json
+╟ followRedirects: true
+╟ connectTimeout: 0:01:00.000000
+╟ receiveTimeout: 0:01:00.000000
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Extras
+╟ client_probe.http_metric_started_at: 2026-10-23 07:48:32.847180
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Body
+╟ orgId: server-company
+╟ isReadUser: true
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+║ {orgId: server-company, isReadUser: true}
+
+╔╣ Response ║ POST ║ Status: 200 null  ║ Time: 29 ms
+║  https://api-pre.jinqidongli.com/Company/readAllChildren
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Headers
+╟ content-type: [application/json; charset=utf-8]
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Body
+║
+║    {
+║         "isSuccess": true,
+║         "items": []
+║    }
+║
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+00:32 +37: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_mention_input_test.dart: IME insertion beside mention preserves identity and inherited style: bold=false
+00:34 +38: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_mention_input_test.dart: IME insertion beside mention preserves identity and inherited style: bold=false
+00:36 +39: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_mention_input_test.dart: IME insertion beside mention preserves identity and inherited style: bold=false
+00:37 +40: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:38 +41: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:39 +42: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:39 +43: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:39 +44: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:40 +45: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:40 +46: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:41 +47: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:41 +48: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:41 +49: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:41 +50: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:42 +51: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:43 +52: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:43 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:44 +54: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:44 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:45 +56: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:45 +57: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 组织钻取和面包屑、多选部门和同名人员，一次返回多个引用
+00:45 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_native_mentions_test.dart: review regression: native mention scales once at 2.0
+00:45 +59: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: native mention and Todo survive preview and saving
+00:45 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: native mention and Todo survive preview and saving
+00:45 +61: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: native mention and Todo survive preview and saving
+00:47 +62: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: native mention and Todo survive preview and saving
+00:47 +63: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: native mention and Todo survive preview and saving
+00:48 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: native mention and Todo survive preview and saving
+00:48 +65: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 搜索部门后钻取恢复完整组织面包屑
+00:49 +66: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_native_mentions_test.dart: typing @ uses native services and preview preserves the same user
+00:49 +67: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 空目录、加载失败与显式重试均有真实状态
+00:49 +68: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_clipboard_test.dart: mention copy yields readable names, ordinary Unicode and no model mutation
+00:50 +69: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 权限撤销使选择失效，恢复后仍需重开
+00:50 +70: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 权限撤销使选择失效，恢复后仍需重开
+00:50 +71: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 权限撤销使选择失效，恢复后仍需重开
+00:50 +72: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_clipboard_test.dart: multiline cut keeps readable references and supports one undo
+00:50 +73: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 确认后等待退场，退场期间会话切换返回 null
+00:50 +74: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 确认后等待退场，退场期间会话切换返回 null
+00:50 +75: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 确认后等待退场，退场期间会话切换返回 null
+00:50 +76: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 确认后等待退场，退场期间会话切换返回 null
+00:51 +77: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 确认后等待退场，退场期间会话切换返回 null
+00:51 +78: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 确认后等待退场，退场期间会话切换返回 null
+00:51 +79: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 确认后等待退场，退场期间会话切换返回 null
+00:51 +80: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 确认后等待退场，退场期间会话切换返回 null
+00:51 +81: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 确认后等待退场，退场期间会话切换返回 null
+00:51 +82: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 确认后等待退场，退场期间会话切换返回 null
+00:51 +83: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 确认后等待退场，退场期间会话切换返回 null
+00:51 +84: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 确认后等待退场，退场期间会话切换返回 null
+00:51 +85: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 确认后等待退场，退场期间会话切换返回 null
+00:51 +86: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 确认后等待退场，退场期间会话切换返回 null
+00:52 +87: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/guidance_people_test.dart: 关闭后迟到加载不更新面板，大字和键盘约束不溢出
+00:55 +88: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+00:58 +89: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+00:58 +90: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+00:58 +91: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+00:59 +92: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+00:59 +93: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+00:59 +94: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+00:59 +95: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+00:59 +96: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+00:59 +97: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+00:59 +98: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+00:59 +99: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+00:59 +100: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+00:59 +101: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+00:59 +102: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+01:00 +103: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+01:01 +104: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+01:01 +105: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+01:01 +106: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+01:01 +107: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+01:01 +108: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+01:01 +109: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+01:01 +110: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+01:02 +111: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+01:02 +112: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+01:03 +113: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_markers_test.dart: list markers align with first text line at scale 1.0 / wrap false
+01:03 +114: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_clipboard_ui_test.dart: production copy shortcut expands mention and the result pastes as valid text
+01:04 +115: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_clipboard_ui_test.dart: production copy shortcut expands mention and the result pastes as valid text
+01:05 +116: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_clipboard_ui_test.dart: production copy shortcut expands mention and the result pastes as valid text
+01:06 +117: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_clipboard_ui_test.dart: production copy shortcut expands mention and the result pastes as valid text
+01:06 +118: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_clipboard_ui_test.dart: production cut shortcut expands mention and the result pastes as valid text
+01:07 +119: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: ctrl+v pastes plain text atomically, saves and supports undo: https://example.com
+01:07 +119: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_clipboard_ui_test.dart: production cut shortcut reports a failed clipboard write and keeps the saved mention
+null: 日记复制或剪切失败: PlatformException(clipboard-unavailable, null, null, null)
+#0      JSONMethodCodec.decodeEnvelope (package:flutter/src/services/message_codecs.dart:168:7)
+#1      MethodChannel._invokeMethod (package:flutter/src/services/platform_channel.dart:366:18)
+<asynchronous suspension>
+#2      Clipboard.setData (package:flutter/src/services/clipboard.dart:36:5)
+<asynchronous suspension>
+#3      LocalJournalController.copySelection (package:cses_mobile_collab_demo/src/daily_guidance/local_journal_controller.dart:164:7)
+<asynchronous suspension>
+#4      _JournalSurfaceState._copy (package:cses_mobile_collab_demo/src/daily_guidance/journal_surface.dart:94:7)
+<asynchronous suspension>
+
+01:07 +120: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: ctrl+v pastes plain text atomically, saves and supports undo: https://example.com
+01:09 +121: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: ctrl+v pastes plain text atomically, saves and supports undo: 13800138000
+01:10 +122: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: ctrl+v pastes plain text atomically, saves and supports undo: 甲
+乙
+丙
+01:10 +123: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: ctrl+shift+v pastes plain text atomically, saves and supports undo: https://example.com
+01:11 +124: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: ctrl+shift+v pastes plain text atomically, saves and supports undo: 13800138000
+01:11 +125: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: ctrl+shift+v pastes plain text atomically, saves and supports undo: 甲
+乙
+丙
+01:12 +126: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: paste port rejects overflow, objects and cross-section replacement without changing content or history
+01:12 +127: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: multi-paragraph paste retains outer formatting and restores the whole range with one undo
+01:12 +128: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: rejected shortcut paste shows a retry message and keeps the saved original
+null: 日记粘贴失败: Bad state: 粘贴内容超出日记支持的格式或容量
+#0      LocalJournalController.pasteFromClipboard (package:cses_mobile_collab_demo/src/daily_guidance/local_journal_controller.dart:218:7)
+<asynchronous suspension>
+#1      _JournalSurfaceState._paste (package:cses_mobile_collab_demo/src/daily_guidance/journal_surface.dart:72:7)
+<asynchronous suspension>
+
+01:12 +129: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: fixed-section guard allows inline formatting across sections
+01:12 +130: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: pending clipboard read cannot overwrite after edit
+01:12 +131: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: pending clipboard read cannot overwrite after selection
+01:12 +132: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: pending clipboard read cannot overwrite after close
+01:12 +133: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: backspace preserves fixed section boundaries and allows same-section merge
+01:13 +134: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: delete preserves fixed section boundaries and allows same-section merge
+01:13 +135: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: ime preserves fixed section boundaries and allows same-section merge
+01:14 +136: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: empty todo_list Enter returns to paragraph and supports undo/redo
+01:14 +137: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: empty bulleted_list Enter returns to paragraph and supports undo/redo
+01:14 +138: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: empty numbered_list Enter returns to paragraph and supports undo/redo
+01:15 +139: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: all soft lines remain ruled in edit and preview: "第一行\n" / 1.0
+01:15 +140: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: all soft lines remain ruled in edit and preview: "第一行\n\n\n" / 1.0
+01:15 +141: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: all soft lines remain ruled in edit and preview: "\n\n" / 1.0
+01:16 +142: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: all soft lines remain ruled in edit and preview: "首行\n\n末行" / 1.0
+01:16 +143: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: all soft lines remain ruled in edit and preview: "第一行\n" / 2.0
+01:16 +144: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: all soft lines remain ruled in edit and preview: "第一行\n\n\n" / 2.0
+01:17 +145: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: all soft lines remain ruled in edit and preview: "\n\n" / 2.0
+01:17 +146: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/local_journal_regressions_test.dart: all soft lines remain ruled in edit and preview: "首行\n\n末行" / 2.0
+01:17 +147: All tests passed!

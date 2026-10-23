@@ -1,0 +1,46 @@
+import 'dart:async';
+import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/cses_document_collab.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_test/flutter_test.dart';
+void main() {
+  testWidgets('review probe uses two real taps before next frame', (tester) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.viewInsets = const FakeViewPadding(bottom: 260);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetViewInsets);
+    final pending = Completer<void>();
+    final local = LocalEditorController(initialText: '正文', configuration: EditorConfiguration(
+      blocks: const [EditorBlock.paragraph, EditorBlock.bulletedList, EditorBlock.numberedList, EditorBlock.todoList],
+      keyboardToolbarItems: const [EditorKeyboardToolbarItem.blockType]));
+    final state = local.editorState;
+    final scroll = EditorScrollController(editorState: state);
+    await tester.pumpWidget(MaterialApp(localizationsDelegates: const [GlobalMaterialLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate, GlobalWidgetsLocalizations.delegate, AppFlowyEditorLocalizations.delegate],
+      home: Scaffold(body: EditorInteractionShell(editorState: state, scrollController: scroll,
+        keyboardActions: [EditorKeyboardAction(id: 'host', label: '宿主', icon: Icons.person, onPressed: () => pending.future)],
+        child: AppFlowyEditor(editorState: state, editorScrollController: scroll)))));
+    state.selection = Selection.single(path: [0], startOffset: 1);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('宿主'));
+    await tester.tap(find.byTooltip('块类型'));
+    await tester.pumpAndSettle();
+    expect(pending.isCompleted, isFalse);
+    expect(tester.widget<IconButton>(find.ancestor(of: find.byTooltip('块类型'), matching: find.byType(IconButton))).onPressed, isNull);
+    expect(find.byKey(const ValueKey('editor-block-style-menu')), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('editor-block-todo_list-0')));
+    await tester.pumpAndSettle();
+    expect(pending.isCompleted, isFalse);
+    expect(state.document.root.children.single.type, TodoListBlockKeys.type);
+    print('REAL TAP PROBE: pending=true, top-level T disabled=true, submenu changed document to=${state.document.root.children.single.type}');
+    pending.complete();
+    await tester.pumpAndSettle();
+    state.selection = null;
+    await tester.pumpWidget(const SizedBox.shrink());
+    tester.testTextInput.unregister();
+    await tester.pump(const Duration(milliseconds: 500));
+    scroll.dispose();
+    await tester.runAsync(local.close);
+  });
+}

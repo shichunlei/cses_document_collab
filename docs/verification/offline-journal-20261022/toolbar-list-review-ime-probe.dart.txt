@@ -1,0 +1,69 @@
+import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/cses_document_collab.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/journal_draft.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/journal_store.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/journal_surface.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/local_journal_controller.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+class _Store implements JournalStore {
+  JournalDraft? value;
+  Future<JournalDraft?> read() async => value;
+  Future<void> write(JournalDraft draft) async {value = JournalDraft.fromJson(draft.toJson());}
+}
+Future<CollabMentionUser?> _pick(BuildContext context, {required String keyword, required ValueListenable<bool> canEdit}) async {
+  ModalRoute<CollabMentionUser>? route;
+  final result = await showModalBottomSheet<CollabMentionUser>(context: context, builder:(context){route=ModalRoute.of(context); return Row(children:[TextButton(key:const ValueKey('choose'),onPressed:()=>Navigator.pop(context,const CollabMentionUser(id:'u1',name:'张三')),child:const Text('choose')),TextButton(key:const ValueKey('cancel'),onPressed:()=>Navigator.pop(context),child:const Text('cancel'))]);});
+  await route?.completed;
+  return canEdit.value?result:null;
+}
+TextEditingValue _platform(WidgetTester tester) => TextEditingValue.fromJSON(tester.testTextInput.editingState!);
+Future<void> _type(WidgetTester tester, String text) async {
+ final value = _platform(tester); final caret=value.selection.extentOffset;
+ tester.testTextInput.updateEditingValue(value.copyWith(text:value.text.replaceRange(caret,caret,text),selection:TextSelection.collapsed(offset:caret+text.length),composing:TextRange.empty));
+ await tester.pump(const Duration(milliseconds:20));
+ await tester.pumpAndSettle();
+}
+void main(){
+ TestWidgetsFlutterBinding.ensureInitialized();
+ setUpAll((){TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockStreamHandler(const EventChannel('keyboardHeightEventChannel'),MockStreamHandler.inline(onListen:(_,events)=>events.success(0.0)));});
+ for(final cancel in [false,true]){
+ testWidgets('real IME at select cancel=$cancel then continue',(tester)async{
+  final journal=await LocalJournalController.open(store:_Store(),services:CollabHostServices(pickMentionUser:_pick)); final state=journal.editor.editorState;
+  final node=state.getNodeAtPath([0,0])!; await state.apply(state.transaction..insertText(node,0,'前后'));
+  await tester.pumpWidget(MaterialApp(home:Scaffold(body:JournalSurface(editorState:state,preview:false,header:const SizedBox()))));
+  final set=state.updateSelectionWithReason(Selection.single(path:[0,0],startOffset:1),reason:SelectionUpdateReason.uiEvent); await tester.pump(); await set; await tester.pump(const Duration(milliseconds:150));
+  expect(tester.testTextInput.hasAnyClients,isTrue);
+  await _type(tester,'@');
+  expect(find.byKey(const ValueKey('choose')),findsOneWidget);
+  await tester.tap(find.byKey(ValueKey(cancel?'cancel':'choose')));
+  await tester.pumpAndSettle(); await tester.pump(const Duration(milliseconds:700)); await tester.pumpAndSettle();
+  expect(tester.testTextInput.hasAnyClients,isTrue);
+  await _type(tester,'新');
+  expect(node.delta!.toPlainText(),cancel?'前@新后':'前\uFFFC 新后');
+  expect(tester.testTextInput.hasAnyClients,isTrue);
+  expect(tester.takeException(),isNull);
+  await tester.pumpWidget(const SizedBox()); await tester.pumpAndSettle(); await tester.runAsync(journal.close);
+ });}
+ testWidgets('composition replaced with at must not preserve old composing text',(tester)async{
+  final journal=await LocalJournalController.open(store:_Store(),services:CollabHostServices(pickMentionUser:_pick)); final state=journal.editor.editorState;
+  final node=state.getNodeAtPath([0,0])!; await state.apply(state.transaction..insertText(node,0,'前后'));
+  await tester.pumpWidget(MaterialApp(home:Scaffold(body:JournalSurface(editorState:state,preview:false,header:const SizedBox()))));
+  final set=state.updateSelectionWithReason(Selection.single(path:[0,0],startOffset:1),reason:SelectionUpdateReason.uiEvent); await tester.pump(); await set; await tester.pump(const Duration(milliseconds:150));
+  var value=_platform(tester); final start=value.selection.extentOffset;
+  tester.testTextInput.updateEditingValue(value.copyWith(text:value.text.replaceRange(start,start,'xin'),selection:TextSelection.collapsed(offset:start+3),composing:TextRange(start:start,end:start+3)));
+  await tester.pump(const Duration(milliseconds:20)); await tester.pumpAndSettle();
+  expect(node.delta!.toPlainText(),'前xin后');
+  value=value.copyWith(text:value.text.replaceRange(start,start,'xin'),selection:TextSelection.collapsed(offset:start+3),composing:TextRange(start:start,end:start+3));
+  tester.testTextInput.updateEditingValue(value.copyWith(text:value.text.replaceRange(start,start+3,'@'),selection:TextSelection.collapsed(offset:start+1),composing:TextRange.empty));
+  await tester.pump(const Duration(milliseconds:20)); await tester.pumpAndSettle();
+  expect(find.byKey(const ValueKey('choose')),findsOneWidget);
+  await tester.tap(find.byKey(const ValueKey('choose'))); await tester.pumpAndSettle(); await tester.pump(const Duration(milliseconds:700)); await tester.pumpAndSettle();
+  expect(node.delta!.toPlainText(),'前\uFFFC 后');
+  await tester.pumpWidget(const SizedBox()); await tester.pumpAndSettle(); await tester.runAsync(journal.close);
+ });
+
+}

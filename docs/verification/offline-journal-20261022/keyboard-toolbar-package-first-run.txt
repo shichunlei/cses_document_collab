@@ -1,0 +1,257 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/inline_formula_native_integration_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/inline_formula_native_integration_test.dart: (setUpAll)
+00:00 +0 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/inline_formula_native_integration_test.dart: (setUpAll) [E]
+  Bad state: Content hash on Dart side (182732725) is different from Rust side (1588999200), indicating out-of-sync code. This may happen when, for example, the Dart code is hot-restarted/hot-reloaded without recompiling Rust code. (Note: This is just a sanity check. Even if content hash does not change, the code may still change and needs to be recompiled)
+  package:flutter_rust_bridge/src/main_components/entrypoint.dart 137:7  BaseEntrypoint._sanityCheckContentHash
+  package:flutter_rust_bridge/src/main_components/entrypoint.dart 60:5   BaseEntrypoint.initImpl
+  package:cses_document_collab/src/native/frb_generated.dart 30:20       RustLib.init
+  test/inline_formula_native_integration_test.dart 21:19                 main.<fn>
+
+00:00 +0 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/inline_formula_native_integration_test.dart: (tearDownAll)
+00:03 +0 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_media_source_sheet_test.dart: SVG upload is supported for document icons while body images keep their format boundary
+00:03 +1 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_media_source_sheet_test.dart: source sheet has tabs and preserves a link while changing source
+00:05 +2 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_media_source_sheet_test.dart: source sheet has tabs and preserves a link while changing source
+00:05 +3 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_media_source_sheet_test.dart: source sheet has tabs and preserves a link while changing source
+00:05 +4 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_media_source_sheet_test.dart: source sheet has tabs and preserves a link while changing source
+00:05 +5 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_media_source_sheet_test.dart: source sheet has tabs and preserves a link while changing source
+00:06 +6 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_media_source_sheet_test.dart: source sheet has tabs and preserves a link while changing source
+00:07 +6 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_media_source_sheet_test.dart: source sheet has tabs and preserves a link while changing source
+00:07 +6 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mermaid_native_integration_test.dart: (setUpAll) [E]
+  Bad state: Content hash on Dart side (182732725) is different from Rust side (1588999200), indicating out-of-sync code. This may happen when, for example, the Dart code is hot-restarted/hot-reloaded without recompiling Rust code. (Note: This is just a sanity check. Even if content hash does not change, the code may still change and needs to be recompiled)
+  package:flutter_rust_bridge/src/main_components/entrypoint.dart 137:7  BaseEntrypoint._sanityCheckContentHash
+  package:flutter_rust_bridge/src/main_components/entrypoint.dart 60:5   BaseEntrypoint.initImpl
+  package:cses_document_collab/src/native/frb_generated.dart 30:20       RustLib.init
+  test/mermaid_native_integration_test.dart 27:19                        main.<fn>
+
+00:07 +6 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_media_source_sheet_test.dart: source sheet has tabs and preserves a link while changing source
+00:07 +7 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:08 +8 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:10 +9 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:12 +10 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:13 +11 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:13 +12 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:13 +13 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:13 +14 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:14 +15 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:14 +16 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:15 +17 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:15 +18 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:16 +19 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:16 +20 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:16 +21 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:16 +22 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:16 +23 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:17 +24 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:17 +25 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:17 +26 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:17 +27 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:17 +28 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:18 +29 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:18 +30 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:18 +31 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:18 +32 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:19 +33 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:20 +34 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:20 +35 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:21 +36 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:21 +37 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:22 +38 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:22 +39 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:22 +40 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:22 +41 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:22 +42 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:22 +43 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:22 +44 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:22 +45 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:22 +46 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:22 +47 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:22 +48 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:22 +49 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:22 +50 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:22 +50 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_emoji_catalog_test.dart: failed emoji save remains visible and permits retry
+DocCollab: 表情设置失败: Bad state: fixture offline
+#0      main.<anonymous closure>.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_emoji_catalog_test.dart:344:30)
+#1      _CollabEmojiPickerState._select (package:cses_document_collab/src/ui/modal/collab_emoji_picker.dart:193:32)
+#2      _CollabEmojiPickerState._button.<anonymous closure> (package:cses_document_collab/src/ui/modal/collab_emoji_picker.dart:680:25)
+#3      _InkResponseState.handleTap (package:flutter/src/material/ink_well.dart:1224:21)
+#4      GestureRecognizer.invokeCallback (package:flutter/src/gestures/recognizer.dart:345:24)
+#5      TapGestureRecognizer.handleTapUp (package:flutter/src/gestures/tap.dart:758:11)
+#6      BaseTapGestureRecognizer._checkUp (package:flutter/src/gestures/tap.dart:383:5)
+#7      BaseTapGestureRecognizer.acceptGesture (package:flutter/src/gestures/tap.dart:353:7)
+#8      GestureArenaManager.sweep (package:flutter/src/gestures/arena.dart:173:27)
+#9      GestureBinding.handleEvent (package:flutter/src/gestures/binding.dart:532:20)
+#10     GestureBinding.dispatchEvent (package:flutter/src/gestures/binding.dart:498:22)
+#11     RendererBinding.dispatchEvent (package:flutter/src/rendering/binding.dart:473:11)
+#12     GestureBinding._handlePointerEventImmediately (package:flutter/src/gestures/binding.dart:437:7)
+#13     GestureBinding.handlePointerEvent (package:flutter/src/gestures/binding.dart:394:5)
+#14     TestWidgetsFlutterBinding.handlePointerEventForSource.<anonymous closure> (package:flutter_test/src/binding.dart:1570:42)
+#15     TestWidgetsFlutterBinding.withPointerEventSource (package:flutter_test/src/binding.dart:1580:11)
+#16     TestWidgetsFlutterBinding.handlePointerEventForSource (package:flutter_test/src/binding.dart:1570:5)
+#17     WidgetTester.sendEventToBinding.<anonymous closure> (package:flutter_test/src/widget_tester.dart:869:15)
+#18     _rootRun (dart:async/zone_root.dart:35:13)
+#19     _CustomZone.run (dart:async/zone.dart:726:19)
+#20     TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#21     WidgetTester.sendEventToBinding (package:flutter_test/src/widget_tester.dart:868:27)
+#22     TestGesture.up.<anonymous closure> (package:flutter_test/src/test_pointer.dart:587:26)
+#23     _rootRun (dart:async/zone_root.dart:35:13)
+#24     _CustomZone.run (dart:async/zone.dart:726:19)
+#25     TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#26     TestGesture.up (package:flutter_test/src/test_pointer.dart:580:27)
+#27     WidgetController.tapAt.<anonymous closure> (package:flutter_test/src/controller.dart:1155:21)
+<asynchronous suspension>
+#28     TestAsyncUtils.guard.<anonymous closure> (package:flutter_test/src/test_async_utils.dart:130:27)
+<asynchronous suspension>
+#29     main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_emoji_catalog_test.dart:351:5)
+<asynchronous suspension>
+#30     testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#31     TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+#32     StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+
+00:22 +51 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:23 +52 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:23 +53 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:24 +54 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:24 +55 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:24 +56 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:24 +57 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:25 +58 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:26 +59 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:28 +60 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:29 +61 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:29 +62 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:29 +63 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:29 +64 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:29 +65 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:29 +66 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:29 +67 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:29 +68 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:30 +69 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:30 +70 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:30 +71 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:30 +72 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:30 +73 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:30 +74 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:30 +75 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:30 +76 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:30 +77 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:31 +78 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:32 +78 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:32 +79 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:32 +79 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/callout_native_integration_test.dart: (setUpAll) [E]
+  Bad state: Content hash on Dart side (182732725) is different from Rust side (1588999200), indicating out-of-sync code. This may happen when, for example, the Dart code is hot-restarted/hot-reloaded without recompiling Rust code. (Note: This is just a sanity check. Even if content hash does not change, the code may still change and needs to be recompiled)
+  package:flutter_rust_bridge/src/main_components/entrypoint.dart 137:7  BaseEntrypoint._sanityCheckContentHash
+  package:flutter_rust_bridge/src/main_components/entrypoint.dart 60:5   BaseEntrypoint.initImpl
+  package:cses_document_collab/src/native/frb_generated.dart 30:20       RustLib.init
+  test/callout_native_integration_test.dart 37:21                        main.<fn>
+
+00:32 +79 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:33 +80 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:33 +81 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:34 +82 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:34 +83 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:34 +84 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:34 +85 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:35 +86 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:35 +87 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:35 +88 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:35 +89 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:35 +90 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:36 +91 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:36 +92 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:36 +93 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:36 +94 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:36 +95 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:37 +96 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:37 +97 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:37 +98 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:37 +99 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:37 +100 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:37 +101 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:38 +102 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:38 +103 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:39 +104 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:39 +105 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:40 +106 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:40 +107 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:40 +108 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:41 +109 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:41 +110 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:43 +111 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:44 +112 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+00:46 +113 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public decorator uses only the local instance avatar service
+unhandled error during finalization of test:
+/Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_focus_test.dart
+TestDeviceException(Shell subprocess terminated by ^C (SIGINT, -2).)
+#0      FlutterTesterTestDevice.finished (package:flutter_tools/src/test/flutter_tester_device.dart:255:5)
+<asynchronous suspension>
+#1      FlutterTesterTestDevice.kill (package:flutter_tools/src/test/flutter_tester_device.dart:237:5)
+<asynchronous suspension>
+#2      FlutterPlatform._startTest.<anonymous closure> (package:flutter_tools/src/test/flutter_platform.dart:690:9)
+<asynchronous suspension>
+#3      FlutterPlatform._startTest.finalize (package:flutter_tools/src/test/flutter_platform.dart:592:11)
+<asynchronous suspension>
+#4      asyncGuard.<anonymous closure> (package:flutter_tools/src/base/async_guard.dart:108:24)
+<asynchronous suspension>
+
+unhandled error during finalization of test:
+/Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_backspace_focus_test.dart
+PathNotFoundException: Deletion failed, path = '/var/folders/sx/qjydrwp90_99lm16z_rld7n00000gn/T/flutter_tools.IaYBQB/flutter_test_listener.rcl5Gb' (OS Error: No such file or directory, errno = 2)
+#0      _Directory._deleteSync (dart:io/directory_impl.dart:216:7)
+#1      FileSystemEntity.deleteSync (dart:io/file_system_entity.dart:425:7)
+#2      ForwardingFileSystemEntity.deleteSync (package:file/src/forwarding/forwarding_file_system_entity.dart:70:16)
+#3      ErrorHandlingDirectory.deleteSync.<anonymous closure> (package:flutter_tools/src/base/error_handling_io.dart:715:22)
+#4      _runSync (package:flutter_tools/src/base/error_handling_io.dart:1116:16)
+#5      ErrorHandlingDirectory.deleteSync (package:flutter_tools/src/base/error_handling_io.dart:714:12)
+#6      FlutterPlatform._createListenerDart.<anonymous closure> (package:flutter_tools/src/test/flutter_platform.dart:787:15)
+#7      FlutterPlatform._startTest.finalize (package:flutter_tools/src/test/flutter_platform.dart:592:26)
+<asynchronous suspension>
+#8      asyncGuard.<anonymous closure> (package:flutter_tools/src/base/async_guard.dart:108:24)
+<asynchronous suspension>
+
+00:47 +113 -4: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart [E]
+  Bad state: Cannot close sink while adding stream.
+  package:stream_channel/src/guarantee_channel.dart 180:7      _GuaranteeSink.close
+  package:flutter_tools/src/test/flutter_platform.dart 766:43  FlutterPlatform._startTest
+
+00:47 +113 -5: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/document_header_test.dart [E]
+  Bad state: Cannot close sink while adding stream.
+  package:stream_channel/src/guarantee_channel.dart 180:7      _GuaranteeSink.close
+  package:flutter_tools/src/test/flutter_platform.dart 766:43  FlutterPlatform._startTest
+
+unhandled error during finalization of test:
+/Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_lock_layout_test.dart
+TestDeviceException(Shell subprocess terminated by ^C (SIGINT, -2).)
+#0      FlutterTesterTestDevice.finished (package:flutter_tools/src/test/flutter_tester_device.dart:255:5)
+<asynchronous suspension>
+#1      FlutterTesterTestDevice.kill (package:flutter_tools/src/test/flutter_tester_device.dart:237:5)
+<asynchronous suspension>
+#2      FlutterPlatform._startTest.<anonymous closure> (package:flutter_tools/src/test/flutter_platform.dart:690:9)
+<asynchronous suspension>
+#3      FlutterPlatform._startTest.finalize (package:flutter_tools/src/test/flutter_platform.dart:592:11)
+<asynchronous suspension>
+#4      asyncGuard.<anonymous closure> (package:flutter_tools/src/base/async_guard.dart:108:24)
+<asynchronous suspension>
+
+unhandled error during finalization of test:
+/Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_lock_layout_test.dart
+PathNotFoundException: Deletion failed, path = '/var/folders/sx/qjydrwp90_99lm16z_rld7n00000gn/T/flutter_tools.IaYBQB/flutter_test_listener.hvQVKl' (OS Error: No such file or directory, errno = 2)
+#0      _Directory._deleteSync (dart:io/directory_impl.dart:216:7)
+#1      FileSystemEntity.deleteSync (dart:io/file_system_entity.dart:425:7)
+#2      ForwardingFileSystemEntity.deleteSync (package:file/src/forwarding/forwarding_file_system_entity.dart:70:16)
+#3      ErrorHandlingDirectory.deleteSync.<anonymous closure> (package:flutter_tools/src/base/error_handling_io.dart:715:22)
+#4      _runSync (package:flutter_tools/src/base/error_handling_io.dart:1116:16)
+#5      ErrorHandlingDirectory.deleteSync (package:flutter_tools/src/base/error_handling_io.dart:714:12)
+#6      FlutterPlatform._createListenerDart.<anonymous closure> (package:flutter_tools/src/test/flutter_platform.dart:787:15)
+#7      FlutterPlatform._startTest.finalize (package:flutter_tools/src/test/flutter_platform.dart:592:26)
+<asynchronous suspension>
+#8      asyncGuard.<anonymous closure> (package:flutter_tools/src/base/async_guard.dart:108:24)
+<asynchronous suspension>
+
+One or more uncaught errors occurred shutting down:
+  Bad state: Cannot add event while adding stream.
+  Bad state: Cannot add event while adding stream.
+Waiting for current test(s) to finish.
+Press Control-C again to terminate immediately.

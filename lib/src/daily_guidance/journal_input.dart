@@ -1,4 +1,6 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/cses_document_collab.dart';
+import 'package:flutter/foundation.dart';
 
 import 'guidance_entries.dart';
 
@@ -44,7 +46,7 @@ void normalizeJournalTextInput(EditorState state, Transaction transaction) {
         !after.any(
           (run) =>
               run is TextInsert &&
-              run.attributes?[guidanceMentionAttribute] != null &&
+              _mentionIdentity(run.attributes).isNotEmpty &&
               run.text.runes.any((rune) => rune != 0xfffc),
         )) {
       return;
@@ -71,12 +73,14 @@ void normalizeJournalTextInput(EditorState state, Transaction transaction) {
     }
     final insertionOffset = deletionStart ?? sourceOffset;
     final attributes = {...?run.attributes};
-    final identity = attributes[guidanceMentionAttribute];
-    if (identity != null &&
+    final identity = _mentionIdentity(attributes);
+    if (identity.isNotEmpty &&
         !run.text.contains('\uFFFC') &&
         _matchesInputRange(delta, selection, insertionOffset) &&
         _inheritsMention(source, insertionOffset, identity)) {
-      attributes.remove(guidanceMentionAttribute);
+      for (final key in identity.keys) {
+        attributes.remove(key);
+      }
       normalized.insert(run.text, attributes: attributes);
       changed = true;
     } else {
@@ -121,19 +125,33 @@ bool _matchesInputRange(Delta delta, Selection selection, int offset) {
   return false;
 }
 
-/// 检查[source]在[offset]左侧或当前位置的真实对象是否带有同一[identity]。
+/// 从[attributes]提取旧业务或原生用户身份，保留原始值用于边界匹配。
+/// 混合身份仍交给严格模型校验，不将伪造对象归一化为普通文字。
+Map<String, dynamic> _mentionIdentity(Map<String, dynamic>? attributes) => {
+  if (attributes?[guidanceMentionAttribute] != null)
+    guidanceMentionAttribute: attributes![guidanceMentionAttribute],
+  for (final key in EditorUserMention.attributeKeys)
+    if (attributes?[key] != null) key: attributes![key],
+};
+
+/// 检查[source]在[offset]左侧或当前位置的真实对象是否带有同一[identity]属性集。
 /// 仅接受已能解析的提及，不为伪造普通字符或未知对象移除失败证据。
-bool _inheritsMention(Delta source, int offset, Object identity) {
+bool _inheritsMention(Delta source, int offset, Map<String, dynamic> identity) {
   for (final index in [if (offset > 0) offset - 1, offset]) {
     if (index < 0 || index >= source.length) continue;
     final run = source.slice(index, index + 1).single;
     if (run is! TextInsert ||
         run.text != '\uFFFC' ||
-        run.attributes?[guidanceMentionAttribute] != identity) {
+        !mapEquals(_mentionIdentity(run.attributes), identity)) {
       continue;
     }
     try {
-      readGuidanceMention(run.attributes!);
+      if (identity.containsKey(guidanceMentionAttribute)) {
+        if (identity.length != 1) continue;
+        readGuidanceMention(run.attributes!);
+      } else {
+        EditorUserMention.read(run.attributes!);
+      }
       return true;
     } on FormatException {
       continue;

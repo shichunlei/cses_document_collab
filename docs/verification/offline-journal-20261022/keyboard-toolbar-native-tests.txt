@@ -1,0 +1,72 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: (setUpAll)
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: public parser accepts legacy user snapshots and rejects mismatched identities
+00:00 +1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: bare document inserts and undoes native user atoms localOnly=false
+00:00 +2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: bare document inserts and undoes native user atoms localOnly=true
+00:00 +3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: local user insertion exposes the actual atom to the first host guard
+00:00 +4: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: rejected replacement of the same existing user is not reported as inserted
+00:00 +5: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:01 +6: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:02 +7: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:02 +8: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:02 +9: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:02 +10: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:02 +11: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:02 +12: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:02 +13: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:02 +14: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:02 +15: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:03 +16: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:03 +17: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:03 +18: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_user_mentions_test.dart: native picker preserves local undo redo caret and input connection
+00:04 +19: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: missing picker leaves IME trigger to ordinary input and preserves toolbar selection
+00:04 +20: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: missing picker leaves IME trigger to ordinary input and preserves toolbar selection
+00:04 +21: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: missing picker leaves IME trigger to ordinary input and preserves toolbar selection
+00:04 +22: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: missing picker leaves IME trigger to ordinary input and preserves toolbar selection
+00:06 +23: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: missing picker leaves IME trigger to ordinary input and preserves toolbar selection
+00:06 +24: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: missing picker leaves IME trigger to ordinary input and preserves toolbar selection
+00:06 +25: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: missing picker leaves IME trigger to ordinary input and preserves toolbar selection
+00:06 +26: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: missing picker leaves IME trigger to ordinary input and preserves toolbar selection
+00:06 +27: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: missing picker leaves IME trigger to ordinary input and preserves toolbar selection
+00:06 +28: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: missing picker leaves IME trigger to ordinary input and preserves toolbar selection
+00:06 +29: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: missing picker leaves IME trigger to ordinary input and preserves toolbar selection
+00:06 +30: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_user_mention_test.dart: missing picker leaves IME trigger to ordinary input and preserves toolbar selection
+00:07 +31: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_entity_mention_test.dart: meeting name renders in narrow large text and preview prevents delete
+00:07 +32: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_entity_mention_test.dart: meeting name renders in narrow large text and preview prevents delete
+00:08 +33: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_entity_mention_test.dart: meeting name renders in narrow large text and preview prevents delete
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_entity_mention_test.dart: meeting name renders in narrow large text and preview prevents delete
+00:10 +35: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_entity_mention_test.dart: meeting name renders in narrow large text and preview prevents delete
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_entity_mention_test.dart: meeting name renders in narrow large text and preview prevents delete
+00:10 +37: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_entity_mention_test.dart: meeting name renders in narrow large text and preview prevents delete
+00:10 +38: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_entity_mention_test.dart: meeting name renders in narrow large text and preview prevents delete
+00:10 +39: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_entity_mention_test.dart: meeting name renders in narrow large text and preview prevents delete
+00:10 +40: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_entity_mention_test.dart: meeting name renders in narrow large text and preview prevents delete
+00:11 +41: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/entity_mention_actions_test.dart: meeting menu does not notify host; card conversion preserves surrounding content
+00:11 +42: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/entity_mention_actions_test.dart: meeting menu does not notify host; card conversion preserves surrounding content
+00:11 +43: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/entity_mention_actions_test.dart: meeting menu does not notify host; card conversion preserves surrounding content
+00:11 +44: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/entity_mention_actions_test.dart: meeting menu does not notify host; card conversion preserves surrounding content
+00:11 +45: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/entity_mention_actions_test.dart: meeting menu does not notify host; card conversion preserves surrounding content
+00:11 +46: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/entity_mention_actions_test.dart: meeting menu does not notify host; card conversion preserves surrounding content
+00:11 +47: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/entity_mention_actions_test.dart: meeting menu does not notify host; card conversion preserves surrounding content
+00:11 +48: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/entity_mention_actions_test.dart: meeting menu does not notify host; card conversion preserves surrounding content
+00:12 +49: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/entity_mention_actions_test.dart: meeting menu does not notify host; card conversion preserves surrounding content
+00:12 +50: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/entity_mention_actions_test.dart: meeting menu does not notify host; card conversion preserves surrounding content
+00:12 +51: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/entity_mention_actions_test.dart: meeting menu does not notify host; card conversion preserves surrounding content
+00:12 +52: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_inline_formula_test.dart: mixed paragraph renders formulas inline, saves edits and empty input deletes one
+00:12 +53: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_inline_formula_test.dart: mixed paragraph renders formulas inline, saves edits and empty input deletes one
+00:12 +54: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_inline_formula_test.dart: mixed paragraph renders formulas inline, saves edits and empty input deletes one
+00:12 +55: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_inline_formula_test.dart: mixed paragraph renders formulas inline, saves edits and empty input deletes one
+00:13 +56: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_inline_formula_test.dart: mixed paragraph renders formulas inline, saves edits and empty input deletes one
+00:13 +57: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_inline_formula_test.dart: mixed paragraph renders formulas inline, saves edits and empty input deletes one
+00:14 +58: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_inline_formula_test.dart: mixed paragraph renders formulas inline, saves edits and empty input deletes one
+00:14 +59: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_inline_formula_test.dart: mixed paragraph renders formulas inline, saves edits and empty input deletes one
+00:15 +60: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_inline_formula_test.dart: mixed paragraph renders formulas inline, saves edits and empty input deletes one
+00:15 +61: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_inline_formula_test.dart: mixed paragraph renders formulas inline, saves edits and empty input deletes one
+00:16 +62: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_inline_formula_test.dart: mixed paragraph renders formulas inline, saves edits and empty input deletes one
+00:16 +63: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_inline_formula_test.dart: mixed paragraph renders formulas inline, saves edits and empty input deletes one
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_inline_formula_test.dart: remote formula conflict reloads; surrounding text changes disable stale editing
+00:17 +65: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/inline_formula_native_integration_test.dart: mixed formulas survive FRB edits and reopen with native Y.Text positions
+00:17 +66: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_inline_formula_test.dart: long and consecutive formulas fit narrow large-text layout and remain editable
+00:19 +67: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_inline_formula_test.dart: more inserts inside original paragraph and restores one-character caret
+00:20 +68: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_inline_formula_test.dart: (tearDownAll)
+00:20 +68: All tests passed!

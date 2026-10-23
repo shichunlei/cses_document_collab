@@ -1,0 +1,7 @@
+Dart format --output=none --set-exit-if-changed：120列3文件、80列6文件；9文件均0变化，退出0。
+宿主5文件分析与包4文件分析：No issues found。
+源码SHA-256：9/9一致。
+旧页面showGuidancePeoplePicker、GuidanceDirectory、this.directory：均已移除；新公共选择/业务插入调用存在。
+全局检索LocalJournalPage调用方已更新；包公开入口导出pickEditorMentionUser，宿主仅通过包公开入口调用。
+记录涉及5份Markdown的本地链接：无缺失。
+git diff --check：退出0，无输出。

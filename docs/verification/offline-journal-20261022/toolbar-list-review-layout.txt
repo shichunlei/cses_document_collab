@@ -1,0 +1,46 @@
+00:00 +0: loading /private/tmp/host_native_layout_review_probe.dart
+00:00 +0: plain mention keeps ruled line height at 1.0
+REVIEW kind=plain scale=1.0 bodyHeight=32.0 expected=32.0 bodyFont=16.0 bodyTextScaler=16.0
+00:02 +1: legacy mention keeps ruled line height at 1.0
+REVIEW kind=legacy scale=1.0 bodyHeight=32.0 expected=32.0 bodyFont=16.0 bodyTextScaler=16.0
+REVIEW kind=legacy scale=1.0 nameFont=16.0 nameTextScalerAt16=16.0 nameLocalSize=Size(48.8, 32.0) nameTransformToBody=1.0
+00:02 +2: native mention keeps ruled line height at 1.0
+REVIEW kind=native scale=1.0 bodyHeight=32.0 expected=32.0 bodyFont=16.0 bodyTextScaler=16.0
+REVIEW kind=native scale=1.0 nameFont=16.0 nameTextScalerAt16=16.0 nameLocalSize=Size(32.5, 19.0) nameTransformToBody=1.0
+00:02 +3: plain mention keeps ruled line height at 2.0
+REVIEW kind=plain scale=2.0 bodyHeight=64.0 expected=64.0 bodyFont=16.0 bodyTextScaler=32.0
+00:02 +4: legacy mention keeps ruled line height at 2.0
+REVIEW kind=legacy scale=2.0 bodyHeight=64.0 expected=64.0 bodyFont=16.0 bodyTextScaler=32.0
+REVIEW kind=legacy scale=2.0 nameFont=16.0 nameTextScalerAt16=16.0 nameLocalSize=Size(48.8, 32.0) nameTransformToBody=2.0
+00:02 +5: native mention keeps ruled line height at 2.0
+REVIEW kind=native scale=2.0 bodyHeight=80.0 expected=64.0 bodyFont=16.0 bodyTextScaler=32.0
+REVIEW kind=native scale=2.0 nameFont=16.0 nameTextScalerAt16=32.0 nameLocalSize=Size(64.5, 38.0) nameTransformToBody=2.0
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: a numeric value within <0.1> of <64.0>
+  Actual: <80.0>
+   Which:  differs by <16.0>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///private/tmp/host_native_layout_review_probe.dart:50:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///private/tmp/host_native_layout_review_probe.dart line 50
+The test description was:
+  native mention keeps ruled line height at 2.0
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:02 +5 -1: native mention keeps ruled line height at 2.0 [E]
+  Test failed. See exception logs above.
+  The test description was: native mention keeps ruled line height at 2.0
+
+00:02 +5 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/host_native_layout_review_probe.dart: native mention keeps ruled line height at 2.0

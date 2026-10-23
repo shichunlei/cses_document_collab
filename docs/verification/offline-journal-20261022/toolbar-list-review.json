@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-22",
+  "scope": "uncommitted keyboard toolbar, native user mention and journal list conversion changes; existing unrelated video change excluded",
+  "productionSourcesMatchApk": 19,
+  "handwrittenSourcesMatchLatestRecordedChecks": 27,
+  "findings": [
+    {
+      "id": "R1",
+      "priority": 2,
+      "topic": "intervening account session not permanently revoked",
+      "file": "lib/src/daily_guidance/local_journal_page.dart",
+      "lines": [
+        297,
+        301
+      ],
+      "evidence": "toolbar-list-review-account.txt"
+    },
+    {
+      "id": "R2",
+      "priority": 2,
+      "topic": "native user label scales twice inside journal WidgetSpan",
+      "file": "packages/cses_document_collab/lib/src/editor/editor_user_mentions.dart",
+      "lines": [
+        126,
+        132
+      ],
+      "evidence": "toolbar-list-review-layout.txt"
+    },
+    {
+      "id": "R3",
+      "priority": 2,
+      "topic": "same-frame taps bypass pending host action exclusion",
+      "file": "packages/cses_document_collab/lib/src/editor/stable_mobile_toolbar.dart",
+      "lines": [
+        217,
+        219
+      ],
+      "evidence": "toolbar-list-review-pending.txt"
+    }
+  ],
+  "blockCraft": {
+    "latest": "0.11.28",
+    "declared": "0.11.28",
+    "yarnLocked": "0.11.28",
+    "installed": "0.11.21",
+    "publishedIntegrity": "sha512-KNVpgHHAY6ds1bo+EvtiQjS80aoS5kS6oSuJ9nIaJlA8y6yelew5H7F1wTK/bS3Rl9fVyoNAnydz/Si8y0EACg==",
+    "freshRegistryQuery": true
+  },
+  "functionalCodeChanges": false,
+  "formalTestChanges": false,
+  "excludedHistoricalImeIssue": "composition replaced by @ leaves old text in both git HEAD and reviewed state; not a new finding",
+  "pendingProbeSource": "restored verbatim from original execution record and independently rerun before archiving"
+}

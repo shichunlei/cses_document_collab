@@ -1,0 +1,38 @@
+00:00 +0: loading /private/tmp/host_account_review_probe.dart
+00:00 +0: native picker permanently rejects an intervening account session
+REVIEW account cycle actual=原文￼  expected=原文 editable=true
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: '原文'
+  Actual: '原文￼ '
+   Which: is different. Both strings start the same, but the actual value also has the following
+trailing characters: ￼
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///private/tmp/host_account_review_probe.dart:174:5)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///private/tmp/host_account_review_probe.dart line 174
+The test description was:
+  native picker permanently rejects an intervening account session
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:04 +0 -1: native picker permanently rejects an intervening account session [E]
+  Test failed. See exception logs above.
+  The test description was: native picker permanently rejects an intervening account session
+
+Warning: At least one test in this suite creates an HttpClient. When running a test suite that uses
+TestWidgetsFlutterBinding, all HTTP requests will return status code 400, and no network request
+will actually be made. Any test expecting a real network connection and status code will fail.
+To test code that needs an HttpClient, provide your own HttpClient implementation to the code under
+test, so that your test can consistently provide a testable response to the code under test.
+00:05 +0 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/host_account_review_probe.dart: native picker permanently rejects an intervening account session

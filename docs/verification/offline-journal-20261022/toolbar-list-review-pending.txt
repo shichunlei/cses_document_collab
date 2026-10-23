@@ -1,0 +1,4 @@
+00:00 +0: loading /private/tmp/review-toolbar-host-pending-real-taps-probe.dart
+00:00 +0: review probe uses two real taps before next frame
+REAL TAP PROBE: pending=true, top-level T disabled=true, submenu changed document to=todo_list
+00:03 +1: All tests passed!

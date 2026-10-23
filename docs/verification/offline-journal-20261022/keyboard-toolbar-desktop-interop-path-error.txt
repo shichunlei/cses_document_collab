@@ -1,0 +1,22 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/document_bootstrapper_native_test.dart
+00:00 +0: (setUpAll)
+00:00 +0: prepare reuses CRDT and opens editable with an empty initial undo stack
+00:00 +1: preparation cannot replace another active controller
+00:00 +2: published desktop Yjs reads mobile root and returns an editable update
+00:00 +2 -1: published desktop Yjs reads mobile root and returns an editable update [E]
+  ProcessException: No such file or directory
+    Command: /usr/local/Cellar/node/24.14.0/bin/node tool/verify_document_bootstrap.mjs /Users/shichunlei/workspace/cses-client /private/tmp/keyboard-shortcut-plan-blockcraft-0.11.28/package /var/folders/sx/qjydrwp90_99lm16z_rld7n00000gn/T/bootstrap-interop-KqWJxx
+  dart:io                                            Process.run
+  test/document_bootstrapper_native_test.dart 87:38  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:io                                            Process.run
+  test/document_bootstrapper_native_test.dart 87:38  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                         _CustomZone.registerUnaryCallback
+  test/document_bootstrapper_native_test.dart 74:19  main.<fn>
+
+00:00 +2 -1: (tearDownAll)
+00:00 +2 -1: Some tests failed.
+
+Failing tests:
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/document_bootstrapper_native_test.dart: published desktop Yjs reads mobile root and returns an editable update

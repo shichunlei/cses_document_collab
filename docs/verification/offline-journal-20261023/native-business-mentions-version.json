@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-23",
+  "latest": "0.11.28",
+  "latest_source": "本轮在桌面项目配置仓库以独立缓存执行 npm view @ccc/blockcraft dist-tags dist --json --prefer-online --fetch-retries=0 --fetch-timeout=20000 --update-notifier=false；成功退出0",
+  "desktop": {
+    "root": "/Users/shichunlei/workspace/cses-client",
+    "declared": "0.11.28",
+    "yarn_locked": "0.11.28",
+    "installed": "0.11.21",
+    "upgraded": false
+  },
+  "package_integrity": "sha512-KNVpgHHAY6ds1bo+EvtiQjS80aoS5kS6oSuJ9nIaJlA8y6yelew5H7F1wTK/bS3Rl9fVyoNAnydz/Si8y0EACg==",
+  "inspected": {
+    "/private/tmp/keyboard-shortcut-plan-blockcraft-0.11.28/package": {
+      "ai-skills/SKILL.md": "1bdaa3efdde9a455284810febaffb043cd3e59e8ef9a0babbb76c5c875140b0d",
+      "ai-skills/MIGRATIONS.md": "d1bb5a6337b0e1ce0879099a34134b6e440891720386af9af4c20cdeba205ac2",
+      "ai-skills/blockcraft.md": "fd35128d50e0f4b68d3d60881e155a884027aaef497d9e6ed2731b01c268686e",
+      "ai-skills/blockcraft-plugins-inline.md": "b7751c72cdbd7dd4813ba75d880887cf6eb5ba218ec4d5b60b0255ca133e7d17",
+      "fesm2022/ccc-blockcraft.mjs": "d045dd9ff8f17552ed9c15ba1c090fa77ec66bcdaf48a666db742a9f59e639f7"
+    },
+    "/Users/shichunlei/workspace/cses-client/node_modules/@ccc/blockcraft": {
+      "ai-skills/SKILL.md": "1bdaa3efdde9a455284810febaffb043cd3e59e8ef9a0babbb76c5c875140b0d",
+      "ai-skills/MIGRATIONS.md": "800f55f39a3cfb8f389a1dd6a0053d0f40dfca7b9c564b6abb0b08206ad29c37",
+      "ai-skills/blockcraft.md": "b06ea795f5210df0bce65d2cde5f35fb5039e2eb085b29417e84504444d71967",
+      "ai-skills/blockcraft-plugins-inline.md": "446da3c910ab6a95caeb08e6f6eb4e24fcc036cb60109e3fcecea654fbd5d400",
+      "fesm2022/ccc-blockcraft.mjs": "037b9b0325f164baac79bf0416dc400a4d2787214d0a3a6e4bdc0cf4514fa4b9"
+    }
+  },
+  "native_insert_fragment_sha256": "6f0ea0dcdefa0c3f857c8dd2f2a25f8708688c88ba2aef4cb88d356aee06a1b4",
+  "conclusion": "两版确认后原生mention插入片段一致；用户类型/ID与尾随空格保持，复用移动端原生人员选择与原子格式。其他既有动画、字重、右键/只读UI及设备/双端待办未验收。"
+}

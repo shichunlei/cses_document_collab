@@ -1,0 +1,54 @@
+
+import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/cses_document_collab.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/guidance_entries.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/guidance_people.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/journal_draft.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/journal_surface.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+void main() {
+  for (final scale in [1.0, 2.0]) {
+    for (final kind in ['plain', 'legacy', 'native']) {
+      testWidgets('$kind mention keeps ruled line height at $scale', (tester) async {
+        final delta = kind == 'plain'
+            ? (Delta()..insert('张三甲'))
+            : kind == 'legacy'
+            ? (guidanceMentionDelta([const GuidancePerson(id: 'probe-user', name: '张三')])..insert('甲'))
+            : (Delta()
+              ..insert('\uFFFC', attributes: {
+                'cses_inline_mention': '张三',
+                'cses_mention_id': 'probe-user',
+                'cses_mention_attributes': '{"mentionType":"user","mentionId":"probe-user"}',
+              })
+              ..insert('甲'));
+        final controller = DocumentEditorController(
+          document: Document(root: Node(type: 'page', children: [
+            Node(type: journalSectionType, attributes: {'section': 'record'}, children: [paragraphNode(delta: delta)]),
+          ])),
+          commandContext: EditorCommandContext(configuration: journalConfiguration, localOnly: true),
+        );
+        await tester.pumpWidget(MaterialApp(
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(scale)),
+            child: child!,
+          ),
+          home: Scaffold(body: JournalSurface(editorState: controller.editorState, preview: false, header: const SizedBox())),
+        ));
+        await tester.pumpAndSettle();
+        final body = tester.renderObjectList<RenderParagraph>(find.byType(RichText)).singleWhere((p) => p.text.toPlainText() == delta.toPlainText());
+        print('REVIEW kind=$kind scale=$scale bodyHeight=${body.size.height} expected=${32 * scale} bodyFont=${body.text.style?.fontSize} bodyTextScaler=${body.textScaler.scale(16)}');
+        if (kind != 'plain') {
+          final child = tester.renderObjectList<RenderParagraph>(find.byType(RichText)).singleWhere((p) => p.text.toPlainText() == (kind == 'legacy' ? '@张三' : '张三'));
+          print('REVIEW kind=$kind scale=$scale nameFont=${child.text.style?.fontSize} nameTextScalerAt16=${child.textScaler.scale(16)} nameLocalSize=${child.size} nameTransformToBody=${child.getTransformTo(body).getMaxScaleOnAxis()}');
+        }
+        final height = body.size.height;
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.runAsync(controller.close);
+        expect(height, closeTo(32 * scale, .1));
+      });
+    }
+  }
+}

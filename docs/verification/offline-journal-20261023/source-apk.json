@@ -1,0 +1,82 @@
+{
+  "apkPath": "/Users/shichunlei/workspace/mobile-collab-demo/build/app/outputs/flutter-apk/app-debug.apk",
+  "apkSha256": "30379c26e551028b5f8b0840787936206a70a4bb937e49c1ffb5cf320bef0c7f",
+  "sources": {
+    "lib/src/daily_guidance/guidance_entries.dart": {
+      "sha256": "8e5ba09b9f5a2a1f346a03e72ad59b96045a8d31e8cd1e996816ffbb3add6c74",
+      "sourceEmbedded": true
+    },
+    "lib/src/daily_guidance/journal_draft.dart": {
+      "sha256": "d54b1995d962680f441eb96e7d0d231c73ac96a5b45a5ec392da2359624a581c",
+      "sourceEmbedded": true
+    },
+    "lib/src/daily_guidance/journal_input.dart": {
+      "sha256": "1298f166501e81085d9ef5f3c7aeeacb9b5c2fc38421b25cb4789b801dd2ab46",
+      "sourceEmbedded": true
+    },
+    "lib/src/daily_guidance/journal_surface.dart": {
+      "sha256": "bf7ab7b44ca60a69d7b0ebff8006f5148c93c6daccbd453b7c9a17d76275817e",
+      "sourceEmbedded": true
+    },
+    "lib/src/daily_guidance/local_journal_controller.dart": {
+      "sha256": "39941c1f65815ea778a1394079972bdfc7ac0214b0f3ca4d1c673fa23b5a1afd",
+      "sourceEmbedded": true
+    },
+    "lib/src/daily_guidance/local_journal_page.dart": {
+      "sha256": "db5f3d632f7427d69a99139cc8c63d6778680e6bba26f1c6e95709416b2badf5",
+      "sourceEmbedded": true
+    },
+    "packages/cses_document_collab/lib/cses_document_collab.dart": {
+      "sha256": "c6ca9f605ea874c7fe5c0f1a9ea008e574a8ddb4b135a0e899c37b19422304c9",
+      "sourceEmbedded": true
+    },
+    "packages/cses_document_collab/lib/src/editor/appflowy_block_editor_adapter.dart": {
+      "sha256": "68960829556e3e8c7545f54efcf10550918ce7133406254efc893583aa7e3314",
+      "sourceEmbedded": true
+    },
+    "packages/cses_document_collab/lib/src/editor/collab_list_editing.dart": {
+      "sha256": "0e543c9eeff95104e6f59f095ad9a4cf71a20841362a13ef713edf80aaef501b",
+      "sourceEmbedded": true
+    },
+    "packages/cses_document_collab/lib/src/editor/core/document_editor_controller.dart": {
+      "sha256": "0f5003f08cc9c66160a81c170674638e6ee262c902ae68eab00cac88f2c03225",
+      "sourceEmbedded": true
+    },
+    "packages/cses_document_collab/lib/src/editor/core/editor_configuration.dart": {
+      "sha256": "fcef7622d25a11b7161e6bf11742ea04a5c9b59693751bc002bd32947a14bcfb",
+      "sourceEmbedded": true
+    },
+    "packages/cses_document_collab/lib/src/editor/document_editor_view.dart": {
+      "sha256": "365188229b77d77be29ab4210d22b556c7448824757aac4e31c2e245f274e258",
+      "sourceEmbedded": true
+    },
+    "packages/cses_document_collab/lib/src/editor/editor_interaction_shell.dart": {
+      "sha256": "f6d58c7ac1aaef3172288b1728c6715c59957d086757061133dbefec29a7a495",
+      "sourceEmbedded": true
+    },
+    "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart": {
+      "sha256": "87db8be2a5d734dd7b9aa1a94f2f840ce66e2f3ab78087845c204f547a360e55",
+      "sourceEmbedded": true
+    },
+    "packages/cses_document_collab/lib/src/editor/editor_user_mentions.dart": {
+      "sha256": "25fe0d369e7ef62acae91fcb5a3bc24134e307aff6e4d621b5c0157b17eb83fa",
+      "sourceEmbedded": true
+    },
+    "packages/cses_document_collab/lib/src/editor/stable_mobile_toolbar.dart": {
+      "sha256": "b1874a44a96b67258cb5865e0e11a336362625a710926eee345cb7f39b0f9fbd",
+      "sourceEmbedded": true
+    },
+    "packages/cses_document_collab/lib/src/model/collab_inline_formula.dart": {
+      "sha256": "13166f361743c17851ec96416e95be6f769bc4ec236e9e17f6efcd2b1437c1f0",
+      "sourceEmbedded": true
+    },
+    "packages/cses_document_collab/lib/src/model/collab_user_mention.dart": {
+      "sha256": "3d9da0ff5da0c5d6bf21ccb13f4e37161d6b3a8f4f32f706b34173cac24e7073",
+      "sourceEmbedded": true
+    },
+    "packages/cses_document_collab/lib/src/model/editor_keyboard_action.dart": {
+      "sha256": "ebf3950932e12a0e2ba3f36d43d7456d6728ad8cee4df6900f686156d5a6d7ea",
+      "sourceEmbedded": true
+    }
+  }
+}

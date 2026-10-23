@@ -11,7 +11,8 @@ const journalSectionType = 'local-journal-section';
 /// 可添加栏目的稳定语义键；显示名称不用于恢复或识别正文。
 const journalSections = ['record', 'reflection', 'self-check'];
 
-/// 日记文字、列表与基本格式；宿主另外校验自己的行内引用和业务属性。
+/// 日记文字、列表与提及能力；栏目只作为列表互换的透明父容器，不开放列表真实嵌套。
+/// 宿主继续校验栏目边界、行内引用和业务属性。
 final journalConfiguration = EditorConfiguration(
   blocks: const [
     EditorBlock.paragraph,
@@ -24,14 +25,18 @@ final journalConfiguration = EditorConfiguration(
     EditorInlineFormat.italic,
     EditorInlineFormat.underline,
     EditorInlineFormat.strikethrough,
+    EditorInlineFormat.mention,
   },
   alignments: const {},
   fontSizes: const [],
   lineHeight: false,
   nextParagraphStyle: false,
+  listConversionContainerTypes: const [journalSectionType],
   keyboardToolbarItems: const [
     EditorKeyboardToolbarItem.blockType,
     EditorKeyboardToolbarItem.textStyle,
+    EditorKeyboardToolbarItem.mention,
+    EditorKeyboardToolbarItem.todoList,
   ],
 );
 
@@ -246,21 +251,42 @@ bool isJournalTextNode(Node node) =>
     node.delta!.every((op) => op is TextInsert) &&
     validJournalDelta(node.delta!, complete: true);
 
-/// 检查[delta]只含基础格式或受控提及；[complete]为true时同时验证对象和引用属性成对出现。
+/// 检查[delta]只含基础格式、原生用户提及或旧业务引用；两种身份不得叠加。
+/// [complete]为true时同时验证对象和引用属性成对出现。
 /// 补丁可暂时只含格式retain，合成后的完整文字仍须再次校验。
 bool validJournalDelta(Delta delta, {bool complete = false}) {
   try {
     for (final op in delta) {
       final attributes = {...?op.attributes};
       final mention = attributes.remove(guidanceMentionAttribute);
+      final nativeAttributes = <String, dynamic>{
+        for (final key in EditorUserMention.attributeKeys)
+          if (attributes.containsKey(key)) key: attributes.remove(key),
+      };
+      final native = nativeAttributes.values.any((value) => value != null);
       if (!journalConfiguration.allowsTextAttributes(attributes)) return false;
+      if (native) {
+        if (mention != null) return false;
+        final user = EditorUserMention.read(nativeAttributes);
+        if (user.id.length > 256 ||
+            user.name.length > 200 ||
+            utf8.encode(jsonEncode(nativeAttributes)).length > 1024) {
+          return false;
+        }
+        if (op is TextInsert && op.text.runes.any((rune) => rune != 0xfffc)) {
+          return false;
+        }
+      }
       if (mention != null) {
         readGuidanceMention({guidanceMentionAttribute: mention});
         if (op is TextInsert && op.text.runes.any((rune) => rune != 0xfffc)) {
           return false;
         }
       }
-      if (op is TextInsert && op.text.contains('\uFFFC') && mention == null) {
+      if (op is TextInsert &&
+          op.text.contains('\uFFFC') &&
+          mention == null &&
+          !native) {
         return false;
       }
       if (complete && op is! TextInsert) return false;

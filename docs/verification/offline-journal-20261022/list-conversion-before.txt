@@ -1,0 +1,189 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart
+00:00 +0: T menu directly converts bulleted_list to numbered_list in journal section
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'numbered_list'
+  Actual: 'bulleted_list'
+   Which: is different.
+          Expected: numbered_l ...
+            Actual: bulleted_l ...
+                    ^
+           Differ at offset 0
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart:110:13)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart line 110
+The test description was:
+  T menu directly converts bulleted_list to numbered_list in journal section
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:03 +0 -1: T menu directly converts bulleted_list to numbered_list in journal section [E]
+  Test failed. See exception logs above.
+  The test description was: T menu directly converts bulleted_list to numbered_list in journal section
+
+00:03 +0 -1: T menu directly converts bulleted_list to todo_list in journal section
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'todo_list'
+  Actual: 'bulleted_list'
+   Which: is different.
+          Expected: todo_list
+            Actual: bulleted_l ...
+                    ^
+           Differ at offset 0
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart:110:13)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart line 110
+The test description was:
+  T menu directly converts bulleted_list to todo_list in journal section
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:04 +0 -2: T menu directly converts bulleted_list to todo_list in journal section [E]
+  Test failed. See exception logs above.
+  The test description was: T menu directly converts bulleted_list to todo_list in journal section
+
+00:04 +0 -2: T menu directly converts numbered_list to bulleted_list in journal section
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'bulleted_list'
+  Actual: 'numbered_list'
+   Which: is different.
+          Expected: bulleted_l ...
+            Actual: numbered_l ...
+                    ^
+           Differ at offset 0
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart:110:13)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart line 110
+The test description was:
+  T menu directly converts numbered_list to bulleted_list in journal section
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:05 +0 -3: T menu directly converts numbered_list to bulleted_list in journal section [E]
+  Test failed. See exception logs above.
+  The test description was: T menu directly converts numbered_list to bulleted_list in journal section
+
+00:05 +0 -3: T menu directly converts numbered_list to todo_list in journal section
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'todo_list'
+  Actual: 'numbered_list'
+   Which: is different.
+          Expected: todo_list
+            Actual: numbered_l ...
+                    ^
+           Differ at offset 0
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart:110:13)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart line 110
+The test description was:
+  T menu directly converts numbered_list to todo_list in journal section
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:05 +0 -4: T menu directly converts numbered_list to todo_list in journal section [E]
+  Test failed. See exception logs above.
+  The test description was: T menu directly converts numbered_list to todo_list in journal section
+
+00:05 +0 -4: T menu directly converts todo_list to bulleted_list in journal section
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'bulleted_list'
+  Actual: 'todo_list'
+   Which: is different.
+          Expected: bulleted_l ...
+            Actual: todo_list
+                    ^
+           Differ at offset 0
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart:110:13)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart line 110
+The test description was:
+  T menu directly converts todo_list to bulleted_list in journal section
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:06 +0 -5: T menu directly converts todo_list to bulleted_list in journal section [E]
+  Test failed. See exception logs above.
+  The test description was: T menu directly converts todo_list to bulleted_list in journal section
+
+00:06 +0 -5: T menu directly converts todo_list to numbered_list in journal section
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'numbered_list'
+  Actual: 'todo_list'
+   Which: is different.
+          Expected: numbered_l ...
+            Actual: todo_list
+                    ^
+           Differ at offset 0
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart:110:13)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart line 110
+The test description was:
+  T menu directly converts todo_list to numbered_list in journal section
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:06 +0 -6: T menu directly converts todo_list to numbered_list in journal section [E]
+  Test failed. See exception logs above.
+  The test description was: T menu directly converts todo_list to numbered_list in journal section
+
+00:07 +0 -6: Some tests failed.
+
+Failing tests:
+  /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart: T menu directly converts bulleted_list to numbered_list in journal section
+  /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart: T menu directly converts bulleted_list to todo_list in journal section
+  /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart: T menu directly converts numbered_list to bulleted_list in journal section
+  /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart: T menu directly converts numbered_list to todo_list in journal section
+  ... and 2 more

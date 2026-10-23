@@ -1,0 +1,12 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_list_conversion_test.dart
+00:00 +0: T menu directly converts bulleted_list to numbered_list in journal section
+00:03 +1: T menu directly converts bulleted_list to todo_list in journal section
+00:04 +2: T menu directly converts numbered_list to bulleted_list in journal section
+00:05 +3: T menu directly converts numbered_list to todo_list in journal section
+00:05 +4: T menu directly converts todo_list to bulleted_list in journal section
+00:06 +5: T menu directly converts todo_list to numbered_list in journal section
+00:07 +6: direct Todo shortcut converts bulleted_list inside journal section
+00:07 +7: direct Todo shortcut converts numbered_list inside journal section
+00:08 +8: same Todo shortcut keeps checked state without extra history
+00:08 +9: consecutive T list conversions keep independent undo and redo
+00:09 +10: All tests passed!

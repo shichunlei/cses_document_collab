@@ -1,0 +1,10 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart
+00:00 +0: (setUpAll)
+00:02 +0: toolbar is reachable at 320.0/1.0
+00:22 +1: toolbar is reachable at 390.0/2.0
+00:28 +2: custom pilot action preserves source and resumes input
+00:31 +3: custom help action preserves source and resumes input
+00:33 +4: native picker cannot restore input after account changes
+00:34 +5: native mention and Todo survive preview and saving
+00:36 +6: (tearDownAll)
+00:37 +6: All tests passed!

@@ -1,0 +1,5 @@
+Analyzing 5 items...
+
+   info • Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check • lib/src/daily_guidance/local_journal_page.dart:400:11 • use_build_context_synchronously
+
+1 issue found. (ran in 24.6s)

@@ -1,0 +1,6 @@
+00:00 +0: loading /tmp/native_ime_review_probe_test.dart
+00:00 +0: (setUpAll)
+00:00 +0: real IME at select cancel=false then continue
+00:04 +1: real IME at select cancel=true then continue
+00:04 +2: (tearDownAll)
+00:04 +2: All tests passed!

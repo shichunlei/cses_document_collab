@@ -5,12 +5,15 @@ import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_common/runtime/context/context.dart';
 import 'package:cses_common/runtime/session/user.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';
+import 'package:cses_mobile_collab_demo/src/demo/cses_mention_directory.dart';
+import 'package:cses_mobile_collab_demo/src/demo/mention_avatar.dart';
+import 'package:cses_mobile_collab_demo/src/demo/mention_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import 'journal_draft.dart';
-import 'guidance_people.dart';
 import 'journal_store.dart';
 import 'journal_surface.dart';
 import 'local_journal_controller.dart';
@@ -29,11 +32,15 @@ import 'local_journal_controller.dart';
 class LocalJournalPage extends StatefulWidget {
   /// [key]控制页面身份；[store]是当前账号独占的本地草稿端口，由宿主持有。
   /// 同一store只能打开一个日记页面，读取失败不会新建覆盖原记录。
-  /// [directory]可注入组织树，null使用当前登录企业，不转移目录资源所有权。
-  const LocalJournalPage({super.key, required this.store, this.directory});
+  /// [mentionDirectory]可注入原生用户目录，null创建本页账号绑定目录；仅查询人员，不包含部门引用。
+  const LocalJournalPage({
+    super.key,
+    required this.store,
+    this.mentionDirectory,
+  });
 
-  /// 可选宿主组织目录；null在本页创建账号绑定的真实企业目录，不生成演示人员。
-  final GuidanceDirectory? directory;
+  /// 原生用户提及的可选宿主查询端口；由调用方持有，null时本页创建独立会话目录。
+  final CollabMentionDirectory? mentionDirectory;
 
   /// 页面借用的单写入者存储，路由关闭时不释放宿主资源。
   final JournalStore store;
@@ -56,11 +63,20 @@ class _LocalJournalPageState extends State<LocalJournalPage>
   bool _chooseDate = false;
   Selection? _selection;
 
-  /// 本页创建或借用的组织目录，缓存生命周期随页面结束。
-  late final GuidanceDirectory _directory;
+  /// 本页原生提及专用目录；不与其他文档或账号共享缓存，不拥有HTTP连接。
+  late final CollabMentionDirectory _mentionDirectory;
 
-  /// 组织选择期间阻止重复选择、预览和页面退场。
+  /// 借给正文和预览的实例服务；页面销毁后不接受选人写回，头像资源由Flutter管理。
+  late final CollabHostServices _services;
+
+  /// 缓存可选栏目的存在状态，只在结构变化时重建快捷项，普通输入不重建整个正文视图。
+  String _sectionActionsSignature = '';
+
+  /// 人员选择期间阻止重复选择、预览和页面退场。
   bool _picking = false;
+
+  /// 当前原生选择会话的失效回调；页面销毁时停表并禁用面板，信号在完整退场后释放。
+  VoidCallback? _revokeMentionSelection;
 
   /// 此业务页面绑定的账号与企业，会话变化后不再接收异步选人写回。
   final String? _userId = User().userId;
@@ -81,7 +97,11 @@ class _LocalJournalPageState extends State<LocalJournalPage>
   @override
   void initState() {
     super.initState();
-    _directory = widget.directory ?? CsesGuidanceDirectory();
+    _mentionDirectory = widget.mentionDirectory ?? CsesMentionDirectory();
+    _services = CollabHostServices(
+      mentionAvatarBuilder: buildDemoMentionAvatar,
+      pickMentionUser: _pickMentionUser,
+    );
     WidgetsBinding.instance.addObserver(this);
     unawaited(_load());
   }
@@ -94,11 +114,16 @@ class _LocalJournalPageState extends State<LocalJournalPage>
       _loadError = null;
     });
     try {
-      final journal = await LocalJournalController.open(store: widget.store);
+      final journal = await LocalJournalController.open(
+        store: widget.store,
+        services: _services,
+      );
       if (!mounted) {
         await journal.close();
         return;
       }
+      _sectionActionsSignature = _sectionSignature(journal);
+      journal.addListener(_refreshSectionActions);
       setState(() => _journal = journal);
     } catch (_) {
       if (mounted) setState(() => _loadError = '日记读取失败，请重试。原记录不会被覆盖。');
@@ -119,6 +144,9 @@ class _LocalJournalPageState extends State<LocalJournalPage>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _journal?.removeListener(_refreshSectionActions);
+    _revokeMentionSelection?.call();
+    _revokeMentionSelection = null;
     unawaited(_release());
     super.dispose();
   }
@@ -127,6 +155,19 @@ class _LocalJournalPageState extends State<LocalJournalPage>
   Future<void> _release() async {
     await _preview?.close();
     await _journal?.close();
+  }
+
+  /// 读取[journal]可见的可选栏目身份，不读取正文内容或序列化文档。
+  String _sectionSignature(LocalJournalController journal) =>
+      '${journal.hasSection('reflection')}:${journal.hasSection('self-check')}';
+
+  /// 响应新增、关闭及撤销重做造成的栏目变化，普通文字和保存状态变化只刷新原有局部视图。
+  void _refreshSectionActions() {
+    final journal = _journal;
+    if (!mounted || journal == null) return;
+    final next = _sectionSignature(journal);
+    if (next == _sectionActionsSignature) return;
+    setState(() => _sectionActionsSignature = next);
   }
 
   /// 正常退出前冻结输入并等待最新修订落盘；失败留在当前页供重试，不丢失内存正文。
@@ -174,6 +215,7 @@ class _LocalJournalPageState extends State<LocalJournalPage>
           commandContext: EditorCommandContext(
             configuration: journalConfiguration,
             localOnly: true,
+            services: _services,
           ),
         );
         preview.editorState.editable = false;
@@ -221,9 +263,97 @@ class _LocalJournalPageState extends State<LocalJournalPage>
     }
   }
 
-  /// 在当前光标选择人员；[kind]为空插入句内@，否则创建对应业务行。
-  /// 模态期间冻结正文，退场后复核页面/会话与目标修订，取消时只恢复原选区。
-  Future<void> _pickPeople({String? kind}) async {
+  /// 使用借用的[context]为原生提及单选用户；[keyword]为初始搜索词。
+  /// [canEdit]由编辑器持有，本页额外复核账号、正文、预览和退场状态。
+  /// 等待选择界面完全退出后返回；取消或页面会话失效返回null，不写正文。
+  /// Common身份字段没有变更通知，面板期间每200毫秒采样，并在返回前同步复核。
+  /// 一旦观测到账号或权限失效便永久禁用该选择会话；账号变化同时冻结旧正文。
+  /// 本方法拥有权限信号和定时器，页面销毁时先停表，面板完整退场后解除监听并释放信号。
+  Future<CollabMentionUser?> _pickMentionUser(
+    BuildContext context, {
+    required String keyword,
+    required ValueListenable<bool> canEdit,
+  }) async {
+    final journal = _journal;
+    if (!_sameAccount && journal != null && !journal.closed) {
+      journal.editor.editorState.editable = false;
+    }
+    if (!mounted ||
+        journal == null ||
+        journal.closed ||
+        _picking ||
+        _leaving ||
+        _switching ||
+        _preview != null ||
+        !_sameAccount ||
+        !canEdit.value) {
+      return null;
+    }
+    setState(() => _picking = true);
+    final allowed = ValueNotifier<bool>(true);
+    Timer? permissionTimer;
+    var revoked = false;
+    var accountRevoked = false;
+
+    /// 永久撤销当前选择权限并停止采样；页面销毁可调用，不提前释放面板借用的信号。
+    void revoke() {
+      if (revoked) return;
+      revoked = true;
+      permissionTimer?.cancel();
+      allowed.value = false;
+    }
+
+    /// 同步复核本页身份及借用权限；失效后恢复原身份也不重新启用旧选择结果。
+    void checkPermission() {
+      if (!_sameAccount) accountRevoked = true;
+      if (!mounted ||
+          accountRevoked ||
+          !identical(_journal, journal) ||
+          journal.closed ||
+          _leaving ||
+          _switching ||
+          _preview != null ||
+          !canEdit.value) {
+        revoke();
+      }
+      if (accountRevoked && !journal.closed) {
+        journal.editor.editorState.editable = false;
+      }
+    }
+
+    _revokeMentionSelection = revoke;
+    canEdit.addListener(checkPermission);
+    checkPermission();
+    if (!revoked) {
+      permissionTimer = Timer.periodic(
+        const Duration(milliseconds: 200),
+        (_) => checkPermission(),
+      );
+    }
+    try {
+      final user = await showDemoMentionPicker(
+        context,
+        canEdit: allowed,
+        directory: _mentionDirectory,
+        keyword: keyword,
+      );
+      checkPermission();
+      return revoked ? null : user;
+    } finally {
+      permissionTimer?.cancel();
+      canEdit.removeListener(checkPermission);
+      checkPermission();
+      if (identical(_revokeMentionSelection, revoke)) {
+        _revokeMentionSelection = null;
+      }
+      allowed.dispose();
+      if (mounted) setState(() => _picking = false);
+    }
+  }
+
+  /// 复用原生@人员选择，为[kind]创建领航员或都来帮行，保留来源正文。
+  /// 临时暂停本地事务而不撤销编辑权限；完整退场后复核会话、目标修订并恢复输入。
+  Future<void> _pickPeople({required String kind}) async {
     final journal = _journal;
     if (journal == null ||
         _picking ||
@@ -233,88 +363,95 @@ class _LocalJournalPageState extends State<LocalJournalPage>
         !_sameAccount) {
       return;
     }
+    final state = journal.editor.editorState;
+    if (!state.canAcceptLocalTransactions) return;
     final target = journal.captureInsertionTarget();
     if (target == null) return;
-    setState(() => _picking = true);
-    final state = journal.editor.editorState;
+    final wasPaused = state.localTransactionsPaused;
+
+    /// 仅允许仍属本页且可写的同一日记会话接收结果或恢复输入。
+    bool current() =>
+        mounted &&
+        _sameAccount &&
+        identical(_journal, journal) &&
+        !journal.closed &&
+        !state.isDisposed &&
+        state.editable &&
+        !_leaving &&
+        !_switching &&
+        _preview == null;
+
     state.service.keyboardService?.closeKeyboard();
     FocusManager.instance.primaryFocus?.unfocus();
-    state.editable = false;
+    state.localTransactionsPaused = true;
     try {
-      final people = await showGuidancePeoplePicker(
-        context,
-        directory: _directory,
-        canEdit: () =>
-            mounted &&
-            _sameAccount &&
-            identical(_journal, journal) &&
-            !journal.closed &&
-            !_leaving &&
-            _preview == null,
-      );
-      if (!mounted ||
-          !_sameAccount ||
-          !identical(_journal, journal) ||
-          journal.closed) {
-        return;
-      }
-      state.editable = true;
-      if (people != null && people.isNotEmpty) {
-        await journal.insertPeople(target, people, kind: kind);
-      } else {
+      final user = await pickEditorMentionUser(context, state);
+      if (!current()) return;
+      state.localTransactionsPaused = wasPaused;
+      if (user != null) {
+        await journal.insertUserEntry(target, user, kind: kind);
+      } else if (state.getNodeAtPath(target.selection.start.path)?.id ==
+          target.nodeId) {
         state.selection = target.selection;
       }
     } catch (_) {
-      if (mounted) {
+      if (mounted && current()) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('人员插入失败，原文已保留，请重试')));
       }
     } finally {
-      if (mounted &&
-          _sameAccount &&
-          identical(_journal, journal) &&
-          !journal.closed &&
-          !_leaving &&
-          !_switching &&
-          _preview == null) {
-        state.editable = true;
+      if (!state.isDisposed) state.localTransactionsPaused = wasPaused;
+      await WidgetsBinding.instance.endOfFrame;
+      if (current()) {
+        final selection = state.selection;
+        if (selection != null && state.canInputAt(selection)) {
+          await state.updateSelectionWithReason(
+            selection,
+            reason: SelectionUpdateReason.uiEvent,
+          );
+        }
       }
-      if (mounted) setState(() => _picking = false);
     }
   }
 
-  /// 为[journal]构建随屏幕换行的业务工具栏；焦点仍由同一正文会话持有。
-  Widget _actions(LocalJournalController journal) => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-    child: Wrap(
-      spacing: 2,
-      runSpacing: 0,
-      alignment: WrapAlignment.center,
-      children: [
-        for (final item in [
-          (null, '@用户'),
-          ('task', '待办'),
-          ('help', '都来帮'),
-          ('pilot', '领航员'),
-        ])
-          TextButton(
-            key: ValueKey('guidance-action-${item.$1 ?? 'mention'}'),
-            onPressed: _picking
-                ? null
-                : () => unawaited(_pickPeople(kind: item.$1)),
-            child: Text(item.$2),
-          ),
-        for (final item in [('reflection', '感悟'), ('self-check', '自检')])
-          if (!journal.hasSection(item.$1))
-            TextButton(
-              key: ValueKey('guidance-add-${item.$1}'),
-              onPressed: _picking ? null : () => unawaited(_section(item.$1)),
-              child: Text(item.$2),
-            ),
-      ],
-    ),
-  );
+  /// 为[journal]构建键盘上方的四个宿主动作，已存在的可选栏目不重复提供添加入口。
+  /// 各动作的Future包含选人、写入及输入恢复，外壳据此串行化其他工具栏操作。
+  List<EditorKeyboardAction> _keyboardActions(LocalJournalController journal) {
+    final enabled = !_picking && !_leaving && !_switching && _sameAccount;
+    return [
+      if (!journal.hasSection('reflection'))
+        EditorKeyboardAction(
+          id: 'guidance-add-reflection',
+          label: '感悟',
+          icon: LucideIcons.lightbulb,
+          enabled: enabled,
+          onPressed: () => _section('reflection'),
+        ),
+      EditorKeyboardAction(
+        id: 'guidance-action-pilot',
+        label: '领航员',
+        icon: LucideIcons.compass,
+        enabled: enabled,
+        onPressed: () => _pickPeople(kind: 'pilot'),
+      ),
+      EditorKeyboardAction(
+        id: 'guidance-action-help',
+        label: '都来帮',
+        icon: LucideIcons.users,
+        enabled: enabled,
+        onPressed: () => _pickPeople(kind: 'help'),
+      ),
+      if (!journal.hasSection('self-check'))
+        EditorKeyboardAction(
+          id: 'guidance-add-self-check',
+          label: '自检',
+          icon: LucideIcons.listChecks,
+          enabled: enabled,
+          onPressed: () => _section('self-check'),
+        ),
+    ];
+  }
 
   /// 在[context]构建独立路由，保存状态与页面纸张分离，预览使用同样的栏目和日期头部。
   @override
@@ -437,9 +574,7 @@ class _LocalJournalPageState extends State<LocalJournalPage>
                                   ? null
                                   : (kind) =>
                                         unawaited(_section(kind, close: true)),
-                              onMention: _preview != null || _leaving
-                                  ? null
-                                  : () => unawaited(_pickPeople()),
+                              keyboardActions: _keyboardActions(journal),
                               header: ListenableBuilder(
                                 listenable: journal,
                                 builder: (context, _) => _JournalHeader(
@@ -460,11 +595,6 @@ class _LocalJournalPageState extends State<LocalJournalPage>
                           ),
                         ),
                       ),
-                      if (_preview == null && !_leaving)
-                        ListenableBuilder(
-                          listenable: journal,
-                          builder: (context, _) => _actions(journal),
-                        ),
                     ],
                   ),
                 ),

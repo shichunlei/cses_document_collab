@@ -1,0 +1,11 @@
+{
+  "lib/src/daily_guidance/local_journal_controller.dart": "a2767edf9bd8d8fc104c08eee207dd2363c7cc32e4f5a56fba3926d0a4f1069c",
+  "lib/src/daily_guidance/local_journal_page.dart": "1c915f59d27aec0451c8a8611ed863ca48cbd8211bbcb361bd2414da1d2c908d",
+  "packages/cses_document_collab/lib/cses_document_collab.dart": "1afa7a233ceb7ec7d049edae72c33a88e3373071e72feb84f861ed844130d262",
+  "packages/cses_document_collab/lib/src/editor/editor_user_mentions.dart": "531c0622462efca36ec941a4d5cb4b026e3bd9d6b1b927710d8fedc998cd77cd",
+  "packages/cses_document_collab/lib/src/model/collab_user_mention.dart": "775f67329860290f37145de21458aa7aee659d29f8398c5eb5227974312a75ce",
+  "packages/cses_document_collab/test/editor_user_mentions_test.dart": "4ceb2505b50d14b87ca90ba4735af8623203f9c7aa168ae119927acf8182f83d",
+  "test/daily_guidance/dynamic_journal_test.dart": "44cc714e1099b8f55ae5d3bafefbc2437c82608832f06ba652271ff1cfd3a5f8",
+  "test/daily_guidance/guidance_entries_layout_test.dart": "8364b68be912734863f4dac6e81df4140d9a2deb116d9542a0a2946862e1795b",
+  "test/daily_guidance/journal_keyboard_toolbar_test.dart": "98b91e624fa87c3479d04e1f312ed9a68bb7d28d67412a56d3ff07c9eb64026d"
+}
