@@ -34,6 +34,7 @@ import 'package:cses_document_collab/src/editor/collab_unsupported_block.dart';
 import 'package:cses_document_collab/src/editor/collab_video_block.dart';
 import 'package:cses_document_collab/src/editor/collab_web_embed_block.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
+import 'package:cses_document_collab/src/editor/editor_user_mentions.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
 import 'package:cses_document_collab/src/model/collab_formula.dart';
@@ -448,6 +449,7 @@ EdgeInsets _listBlockPadding(Node node) {
 /// [before] 是内置字符格式，[after] 已应用段落/标题样式；段落族保留后者，
 /// 再应用行内字号和倍率，避免丢失标题字号或重复乘算段落倍率。
 /// 行内公式、用户和三类业务实体提及使用单字符 WidgetSpan，保留文字颜色；
+/// 已校验用户复用公开装饰器并绑定当前实例的展示服务。
 /// 整段链接点击提供打开和三视图切换，混排正文维持原链接行为。
 InlineSpan _collabTextSpanDecorator(
   BuildContext context,
@@ -502,6 +504,9 @@ InlineSpan _collabTextSpanDecorator(
   final attributes = text.attributes;
   final latex = attributes?[collabInlineLatexAttribute];
   final mention = attributes?[collabInlineMentionAttribute];
+  if (EditorUserMention.tryRead(attributes) != null) {
+    return decorateEditorUserMention(context, node, index, text, before, decorated);
+  }
   if (latex is String || mention is String) {
     var offset = index;
     final spans = <InlineSpan>[];

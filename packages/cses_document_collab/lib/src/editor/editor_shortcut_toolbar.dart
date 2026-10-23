@@ -30,6 +30,7 @@ import 'package:cses_document_collab/src/model/collab_table.dart';
 import 'package:cses_document_collab/src/model/collab_text_range.dart';
 import 'package:cses_document_collab/src/model/collab_user_mention.dart';
 import 'package:cses_document_collab/src/model/editor_media_upload.dart';
+import 'package:cses_document_collab/src/model/editor_keyboard_action.dart';
 import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:cses_document_collab/src/editor/core/editor_configuration.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_bottom_sheet.dart';
@@ -60,6 +61,23 @@ const _headingMenuIcons = [
 List<int> _menuHeadingLevels(EditorConfiguration config) =>
     (config.headingLevels.where((level) => level <= _maxHeadingMenuLevel).toList()..sort());
 
+/// 为同一工具栏的子菜单借用同步执行权限；闭包读取实时互斥状态，不接管正文或业务资源。
+class _ToolbarCommandScope extends InheritedWidget {
+  /// [canExecute]同步返回当前会话是否接受菜单命令；[child]为借用的工具栏及菜单子树。
+  const _ToolbarCommandScope({required this.canExecute, required super.child});
+
+  /// 查询由上层持有的实时权限，回调不得产生正文副作用。
+  final bool Function() canExecute;
+
+  /// 在借用[context]中检查权限；范围外的独立面板保留原行为，已卸载上下文拒绝执行。
+  static bool allows(BuildContext context) =>
+      context.mounted && (context.getInheritedWidgetOfExactType<_ToolbarCommandScope>()?.canExecute() ?? true);
+
+  /// 当[oldWidget]的借用查询被替换时通知依赖者，不缓存查询结果。
+  @override
+  bool updateShouldNotify(_ToolbarCommandScope oldWidget) => oldWidget.canExecute != canExecute;
+}
+
 /// 移动键盘工具栏，借用正文编辑器并隔离添加面板的输入与选区。
 /// ```dart
 /// import 'package:flutter/material.dart';
@@ -75,13 +93,22 @@ List<int> _menuHeadingLevels(EditorConfiguration config) =>
 /// without silently creating local-only nodes that Rust/Yrs cannot preserve.
 class EditorShortcutToolbar extends StatefulWidget {
   /// [key] 控制身份与状态复用，[editorState] 为借用编辑器，[child] 为必填正文。
-  const EditorShortcutToolbar({super.key, required this.editorState, required this.child});
+  /// [keyboardActions]默认空，宿主动作按顺序接在内建入口后；其标识必须唯一。
+  const EditorShortcutToolbar({
+    super.key,
+    required this.editorState,
+    required this.child,
+    this.keyboardActions = const [],
+  });
 
   /// 必填借用编辑器；本组件管理工具栏状态，不释放它。
   final EditorState editorState;
 
   /// 必填正文组件，工具栏随键盘在其下方显示。
   final Widget child;
+
+  /// 宿主拥有的业务动作，工具栏只借用并管理点击互斥，不接管其异步写回。
+  final List<EditorKeyboardAction> keyboardActions;
 
   /// 创建并持有工具栏控制器与键盘拦截器。
   @override
@@ -98,6 +125,18 @@ class _EditorShortcutToolbarState extends State<EditorShortcutToolbar> {
   AppFlowyKeyboardService? _interceptedKeyboardService;
   int _emptyParagraphKeyboardRequestGeneration = 0;
 
+  /// 当前直达事务或宿主动作的互斥令牌；更换会话后旧Future不能清除新动作状态。
+  Object? _pendingActionToken;
+
+  /// 检查借用的预期[state]仍是本实例且可执行快捷命令；闭包同步查询以覆盖重建前的连点。
+  bool _canExecuteKeyboardCommand(EditorState state) =>
+      mounted &&
+      identical(widget.editorState, state) &&
+      !state.isDisposed &&
+      state.editable &&
+      state.selection != null &&
+      _pendingActionToken == null;
+
   /// 创建所属控制器/拦截器并订阅选区，首帧服务挂载后注册；资源在 dispose 中成对释放。
   @override
   void initState() {
@@ -110,11 +149,12 @@ class _EditorShortcutToolbarState extends State<EditorShortcutToolbar> {
   }
 
   /// [oldWidget] 提供旧编辑器；编辑器更换时先注销旧服务/选区监听并释放旧样式控制器，
-  /// 再绑定当前编辑器。键盘服务和 EditorState 均由外部持有，不在此关闭。
+  /// 再绑定当前编辑器并作废旧动作令牌。键盘服务和 EditorState 均由外部持有，不在此关闭。
   @override
   void didUpdateWidget(covariant EditorShortcutToolbar oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.editorState != widget.editorState) {
+      _pendingActionToken = null;
       _unregisterBackspaceInterceptor();
       oldWidget.editorState.selectionNotifier.removeListener(_onSelectionMayNeedEmptyParagraphKeyboard);
       _inlineStyleController.dispose();
@@ -124,9 +164,10 @@ class _EditorShortcutToolbarState extends State<EditorShortcutToolbar> {
     }
   }
 
-  /// 注销借用服务上的退格拦截器及选区监听，释放所属样式控制器；外部编辑器保持有效。
+  /// 作废当前动作令牌，注销退格拦截器及选区监听，释放样式控制器；外部编辑器保持有效。
   @override
   void dispose() {
+    _pendingActionToken = null;
     _unregisterBackspaceInterceptor();
     widget.editorState.selectionNotifier.removeListener(_onSelectionMayNeedEmptyParagraphKeyboard);
     _inlineStyleController.dispose();
@@ -207,26 +248,120 @@ class _EditorShortcutToolbarState extends State<EditorShortcutToolbar> {
     await SystemChannels.textInput.invokeMethod<void>('TextInput.show');
   }
 
-  /// 在借用[context]中按实例入口集合显示原工具栏；菜单与块/格式能力取交集。
+  /// 在当前会话执行借用[run]，用[actionLabel]报告未捕获的失败。
+  /// 操作期间禁用其他快捷入口；会话更换、视图卸载或关闭后不刷新旧界面或恢复输入。
+  /// 宿主继续负责自己的账号、权限、目标快照和异步结果失效，不由此边界重放回调。
+  Future<void> _runKeyboardAction(String actionLabel, Future<void> Function() run) async {
+    final state = widget.editorState;
+    if (_pendingActionToken != null || state.isDisposed || !state.editable || state.selection == null) return;
+    final owner = EditorCommandContext.of(state);
+    final token = Object();
+    setState(() => _pendingActionToken = token);
+    try {
+      await run();
+    } catch (error, stack) {
+      if (!mounted ||
+          !identical(widget.editorState, state) ||
+          state.isDisposed ||
+          !identical(EditorCommandContext.of(state), owner)) {
+        debugPrint('执行$actionLabel失败，动作所属会话已失效：$error\n$stack');
+        return;
+      }
+      owner.services.report('执行$actionLabel失败', error, stack, 'DocCollab');
+      ScaffoldMessenger.maybeOf(context)?.showSnackBar(SnackBar(content: Text('$actionLabel失败，请重试')));
+    } finally {
+      if (mounted && identical(_pendingActionToken, token)) {
+        setState(() => _pendingActionToken = null);
+      }
+    }
+  }
+
+  /// 为借用[action]构建图标和可见标签，不保存业务状态；禁用由外层工具栏统一处理。
+  MobileToolbarItem _hostKeyboardItem(EditorKeyboardAction action) => MobileToolbarItem.action(
+    itemIconBuilder: (_, _, _) => Tooltip(
+      message: action.label,
+      child: KeyedSubtree(
+        key: ValueKey('editor-keyboard-host-${action.id}'),
+        child: Builder(
+          builder: (context) => Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(action.icon, size: 20),
+                const SizedBox(width: 4),
+                Text(action.label, maxLines: 1, style: TextStyle(fontSize: 12, color: IconTheme.of(context).color)),
+              ],
+            ),
+          ),
+        ),
+      ),
+    ),
+    actionHandler: (_, _) {
+      if (action.enabled) unawaited(_runKeyboardAction(action.label, action.onPressed));
+    },
+  );
+
+  /// 构建原生待办直达入口，复用T菜单的类型转换，不打开面板或重新建立输入连接。
+  MobileToolbarItem _todoKeyboardItem() => MobileToolbarItem.action(
+    itemIconBuilder: (_, _, _) => const Tooltip(
+      message: '待办列表',
+      child: KeyedSubtree(key: ValueKey('editor-keyboard-todoList'), child: Icon(LucideIcons.squareCheck)),
+    ),
+    actionHandler: (_, state) => unawaited(
+      _runKeyboardAction('待办列表', () async {
+        await _applyBlockStyle(
+          state,
+          const _BlockStyleAction(blockType: TodoListBlockKeys.type, label: '待办列表', icon: LucideIcons.squareCheck),
+        );
+      }),
+    ),
+  );
+
+  /// 在借用[context]中按实例入口集合显示工具栏；内建入口与能力取交集，宿主动作随后排列。
   @override
   Widget build(BuildContext context) {
     if (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS) {
       return widget.child;
     }
-    final config = EditorCommandContext.of(widget.editorState).configuration;
-    return StableMobileToolbar(
-      key: ObjectKey(widget.editorState),
-      editorState: widget.editorState,
-      toolbarHeight: 52,
-      buttonHeight: 42,
-      buttonSpacing: 6,
-      itemOutlineColor: const Color(0xFFE5E7EB),
-      primaryColor: const Color(0xFF2563EB),
-      toolbarItems: [
-        for (final item in config.keyboardToolbarItems)
-          if (_keyboardItemAllowed(config, item)) _buildKeyboardItem(item, _inlineStyleController, context),
-      ],
-      child: widget.child,
+    final state = widget.editorState;
+    final config = EditorCommandContext.of(state).configuration;
+    final actionIds = widget.keyboardActions.map((action) => action.id).toList();
+    if (actionIds.toSet().length != actionIds.length) {
+      throw ArgumentError.value(actionIds, 'keyboardActions', '宿主快捷动作标识不得重复');
+    }
+    final builtInItems = [
+      for (final item in config.keyboardToolbarItems)
+        if (_keyboardItemAllowed(config, item))
+          item == EditorKeyboardToolbarItem.todoList
+              ? _todoKeyboardItem()
+              : _buildKeyboardItem(item, _inlineStyleController, context),
+    ];
+    final items = [...builtInItems, for (final action in widget.keyboardActions) _hostKeyboardItem(action)];
+    return _ToolbarCommandScope(
+      canExecute: () => _canExecuteKeyboardCommand(state),
+      child: StableMobileToolbar(
+        key: ObjectKey(widget.editorState),
+        editorState: widget.editorState,
+        toolbarHeight: 52,
+        buttonHeight: 42,
+        buttonSpacing: 6,
+        itemOutlineColor: const Color(0xFFE5E7EB),
+        primaryColor: const Color(0xFF2563EB),
+        toolbarItems: items,
+        canExecuteItem: (index) =>
+            _canExecuteKeyboardCommand(state) &&
+            (index < builtInItems.length ||
+                (index - builtInItems.length < widget.keyboardActions.length &&
+                    widget.keyboardActions[index - builtInItems.length].enabled)),
+        disabledItemIndices: {
+          for (var index = 0; index < items.length; index++)
+            if (_pendingActionToken != null ||
+                (index >= builtInItems.length && !widget.keyboardActions[index - builtInItems.length].enabled))
+              index,
+        },
+        child: widget.child,
+      ),
     );
   }
 }
@@ -473,6 +608,7 @@ bool _keyboardItemAllowed(EditorConfiguration config, EditorKeyboardToolbarItem 
   EditorKeyboardToolbarItem.textStyle => config.inlineFormats.isNotEmpty,
   EditorKeyboardToolbarItem.blockLayout => config.hasLayout,
   EditorKeyboardToolbarItem.addBlock || EditorKeyboardToolbarItem.blockType => true,
+  EditorKeyboardToolbarItem.todoList => config.allowsBlock(TodoListBlockKeys.type),
   _ => _commonInsertionAllowed(config, _commonInsertion(item)!),
 };
 
@@ -989,7 +1125,9 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
 
   /// 将用户选择的 CSS [value] 写入实时选区；null 恢复默认，其他既有颜色不变。
   /// 正文块背景另投影为 AppFlowy ARGB，保存失败交给共用选择器报告。
+  /// 工具栏有等待中的宿主动作时拒绝旧颜色面板回调。
   Future<void> _setBlockColor(String? value) async {
+    if (!_ToolbarCommandScope.allows(context)) return;
     final state = widget.editorState;
     final selection = state.selection;
     final attribute = _colorAttribute;
@@ -1115,7 +1253,9 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
   }
 
   /// 设置实时选区的下一段 [style]，null 恢复默认；失败由共用诊断边界报告。
+  /// 所属工具栏等待宿主动作时拒绝旧面板回调。
   Future<void> _setNextParagraphStyle(String? style) async {
+    if (!_ToolbarCommandScope.allows(context)) return;
     final state = widget.editorState;
     try {
       await setCollabNextParagraphStyle(state, style);
@@ -1138,7 +1278,9 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
   /// 不缓存 build 时选区，失效/只读或上限条件不执行。等待事务完成后检查 mounted 和编辑器
   /// 身份及存活状态再刷新；非预期异常保留错误/堆栈上报 Log.e，并交 FlutterError，不重复用户提示。
   /// 列表零级退为段落时，将同步结果快照交还格式面板，以接续其后操作。
+  /// 所属工具栏等待宿主动作时拒绝旧回调，不影响独立格式面板。
   Future<void> _changeIndent(int delta) async {
+    if (!_ToolbarCommandScope.allows(context)) return;
     final state = widget.editorState;
     try {
       final completion = changeCollabBlockIndent(state, delta);
@@ -1161,8 +1303,9 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
     }
   }
 
-  /// 将[alignment]写入当前正文对齐；制图模式拒绝尚未支持的分散对齐。
+  /// 复核工具栏互斥后将[alignment]写入当前正文对齐；制图模式拒绝尚未支持的分散对齐。
   Future<void> _setAlignment(String alignment) async {
+    if (!_ToolbarCommandScope.allows(context)) return;
     final state = widget.editorState;
     final selection = state.selection;
     if (state.isDisposed || !state.editable || selection == null) return;
@@ -1365,26 +1508,19 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
   /// 借用 EditorState，await 后检查菜单仍挂载且编辑器未更换，避免迟到刷新。失败由本边界
   /// 记录原始异常和堆栈并交给 Flutter 错误报告；Future 在事务与菜单刷新结束后完成。
   /// 命令同步应用文档后立即捕获范围，异步结束只交付该快照，不接受等待期间的远端变化。
+  /// 所属工具栏等待宿主动作时拒绝执行，不让已关闭菜单的旧回调绕过互斥。
   Future<void> _apply(_BlockStyleAction style) async {
+    if (!_ToolbarCommandScope.allows(context)) return;
     final state = widget.editorState;
     final capabilities = EditorCommandContext.of(state).configuration;
-    if (!capabilities.allowsBlock(style.blockType, level: style.headingLevel)) {
-      return;
-    }
+    if (!capabilities.allowsBlock(style.blockType, level: style.headingLevel)) return;
     final selection = state.selection;
-    if (_applyingStyle || state.isDisposed || !state.editable || selection == null) {
-      return;
-    }
+    if (_applyingStyle || state.isDisposed || !state.editable || selection == null) return;
     final nodes = state.getNodesInSelection(selection);
-    if (nodes.isEmpty || nodes.any((node) => node.type == csesCalloutBlockType)) {
-      return;
-    }
+    if (nodes.isEmpty || nodes.any((node) => node.type == csesCalloutBlockType)) return;
     _applyingStyle = true;
     try {
-      const listTypes = {'numbered_list', 'bulleted_list', 'todo_list'};
-      final completion = listTypes.contains(style.blockType) && nodes.any((node) => listTypes.contains(node.type))
-          ? changeCollabListType(state, style.blockType)
-          : state.formatNode(selection, (node) => _convertedNode(node, style.blockType, style.headingLevel));
+      final completion = _applyBlockStyle(state, style);
       final range = CollabTextRange.capture(state);
       await completion;
       if (!mounted || widget.editorState != state || state.isDisposed) {
@@ -1412,6 +1548,24 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
     } finally {
       _applyingStyle = false;
     }
+  }
+}
+
+/// 将[style]应用到借用[state]的实时选区；T菜单和原生待办一级入口共用此事务。
+/// 能力关闭、只读、销毁、空选区或高亮容器不执行；列表与非列表混选由列表命令整批拒绝。
+/// 同类列表不重建或重置勾选，转换保留正文、格式、层级和焦点，异常交由调用边界报告。
+Future<void> _applyBlockStyle(EditorState state, _BlockStyleAction style) async {
+  final capabilities = EditorCommandContext.of(state).configuration;
+  if (!capabilities.allowsBlock(style.blockType, level: style.headingLevel)) return;
+  final selection = state.selection;
+  if (state.isDisposed || !state.editable || selection == null) return;
+  final nodes = state.getNodesInSelection(selection);
+  if (nodes.isEmpty || nodes.any((node) => node.type == csesCalloutBlockType)) return;
+  const listTypes = {'numbered_list', 'bulleted_list', 'todo_list'};
+  if (listTypes.contains(style.blockType) && nodes.any((node) => listTypes.contains(node.type))) {
+    await changeCollabListType(state, style.blockType);
+  } else {
+    await state.formatNode(selection, (node) => _convertedNode(node, style.blockType, style.headingLevel));
   }
 }
 
@@ -1718,8 +1872,11 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
     );
   }
 
-  /// 将字号选择交给稳定的工具栏/格式面板上下文，子菜单卸载不取消已打开的面板。
-  Future<void> _chooseFontSize() => showEditorFontSizeSheet(widget.modalContext ?? context, widget.editorState);
+  /// 校验实时执行权限后使用稳定的工具栏/格式面板上下文，子菜单卸载不取消已打开的字号面板。
+  Future<void> _chooseFontSize() async {
+    if (!_ToolbarCommandScope.allows(context)) return;
+    await showEditorFontSizeSheet(widget.modalContext ?? context, widget.editorState);
+  }
 
   /// 用 [selection] 回显颜色；[target] 决定字色或浅色，共用选择器保留自定义色。
   Widget _buildColorPicker(Selection selection, _InlineColorTarget target) {
@@ -1807,8 +1964,9 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
   });
 
   /// 校验借用编辑器和实时选区后等待 [action]；允许界面显式不等待此完整错误处理边界。
-  /// 当前只读/关闭/无选区时不执行，异常上报并显示重试提示，迟到结果不刷新新编辑器。
+  /// 当前只读/关闭/无选区或工具栏等待宿主动作时不执行；异常反馈，迟到结果不刷新新编辑器。
   Future<void> _runFormatAction(Future<void> Function(EditorState state, Selection selection) action) async {
+    if (!_ToolbarCommandScope.allows(context)) return;
     final state = widget.editorState;
     final selection = state.selection;
     if (state.isDisposed || !state.editable || selection == null) return;
@@ -1861,7 +2019,7 @@ class _PopupIconButton extends StatelessWidget {
   /// 是否允许点击，默认true，禁用时保留占位和说明。
   final bool enabled;
 
-  /// 根据借用 [context] 是否位于底部面板内选择对应外观，不修改业务状态。
+  /// 根据借用 [context] 选择外观；执行点击前复核所属工具栏的同步互斥，不修改业务状态。
   @override
   Widget build(BuildContext context) {
     final inModal = context.findAncestorWidgetOfExactType<CollabBottomSheet>() != null;
@@ -1879,7 +2037,11 @@ class _PopupIconButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           child: InkWell(
             borderRadius: BorderRadius.circular(10),
-            onTap: enabled ? onPressed : null,
+            onTap: enabled
+                ? () {
+                    if (_ToolbarCommandScope.allows(context)) onPressed();
+                  }
+                : null,
             child: Container(
               width: 48,
               height: inModal ? 44 : 48,

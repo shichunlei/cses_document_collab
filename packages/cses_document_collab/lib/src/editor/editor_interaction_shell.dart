@@ -1,6 +1,7 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_mobile_selection_menu.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
+import 'package:cses_document_collab/src/model/editor_keyboard_action.dart';
 import 'package:flutter/widgets.dart';
 
 /// 为宿主自定义正文复用移动划词菜单和键盘快捷栏，不接管正文布局或业务模型。
@@ -28,12 +29,14 @@ import 'package:flutter/widgets.dart';
 class EditorInteractionShell extends StatelessWidget {
   /// [key]控制组件身份与状态复用；[editorState]和[scrollController]均由调用方拥有。
   /// [child]必须使用同一正文和滚动控制器；[enabled]默认true，false时直接显示正文。
+  /// [keyboardActions]默认空；宿主动作按给定顺序接在内建入口后，资源仍归宿主。
   const EditorInteractionShell({
     super.key,
     required this.editorState,
     required this.scrollController,
     required this.child,
     this.enabled = true,
+    this.keyboardActions = const [],
   });
 
   /// 借用的正文会话；命令使用其能力配置、选区和当前编辑权限。
@@ -48,12 +51,16 @@ class EditorInteractionShell extends StatelessWidget {
   /// 是否挂载通用编辑交互，默认true；false不改变子组件或正文状态。
   final bool enabled;
 
+  /// 宿主业务快捷动作；默认空，稳定标识不得重复，回调由宿主管理异步写回。
+  final List<EditorKeyboardAction> keyboardActions;
+
   /// 在[context]组合既有菜单与快捷栏；禁用时不创建相应监听和键盘拦截器。
   @override
   Widget build(BuildContext context) {
     if (!enabled) return child;
     return EditorShortcutToolbar(
       editorState: editorState,
+      keyboardActions: keyboardActions,
       child: CollabMobileSelectionMenu(
         editorState: editorState,
         scrollController: scrollController,

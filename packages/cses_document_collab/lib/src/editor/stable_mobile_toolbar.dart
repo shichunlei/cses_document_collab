@@ -25,6 +25,8 @@ class StableMobileToolbar extends StatefulWidget {
   /// [toolbarHeight]为主工具栏逻辑像素高度，默认52；[buttonHeight]为按钮高度，默认42。
   /// [buttonSpacing]为主题按钮间距，默认6逻辑像素；[itemOutlineColor]为边线颜色。
   /// [primaryColor]为工具栏主题主色；没有入口时仅展示正文，存在入口时自动附加右侧收起按钮。
+  /// [disabledItemIndices]为禁用入口的零基下标，默认空；不禁用固定的收起键盘按钮。
+  /// [canExecuteItem]可提供实时执行校验，按零基下标查询；null只检查现有禁用集合和正文权限。
   const StableMobileToolbar({
     super.key,
     required this.editorState,
@@ -35,6 +37,8 @@ class StableMobileToolbar extends StatefulWidget {
     this.buttonSpacing = 6,
     this.itemOutlineColor = const Color(0xFFE5E7EB),
     this.primaryColor = const Color(0xFF2563EB),
+    this.disabledItemIndices = const {},
+    this.canExecuteItem,
   });
 
   /// 借用的编辑器，本组件不释放它。
@@ -61,10 +65,18 @@ class StableMobileToolbar extends StatefulWidget {
   /// 工具栏的主题主色。
   final Color primaryColor;
 
+  /// 禁用点击的入口零基下标，默认空；调用方负责与[toolbarItems]保持一致。
+  final Set<int> disabledItemIndices;
+
+  /// 可选的同步权限查询，执行点击时再次调用；回调和状态由调用方持有，不得在查询中修改正文。
+  final bool Function(int index)? canExecuteItem;
+
   @override
   createState() => _StableMobileToolbarState();
 }
 
+/// 持有当前子菜单与键盘可见状态，注册并在销毁时解除窗口指标观察。
+/// 正文和入口回调均由外部拥有；点击时同步复核权限，禁用或移除入口时清理选中菜单。
 class _StableMobileToolbarState extends State<StableMobileToolbar>
     with WidgetsBindingObserver
     implements MobileToolbarWidgetService {
@@ -83,6 +95,26 @@ class _StableMobileToolbarState extends State<StableMobileToolbar>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
   }
+
+  /// 在[oldWidget]更新后清理已禁用或移除的子菜单，避免等待中的操作仍保留可交互面板。
+  @override
+  void didUpdateWidget(covariant StableMobileToolbar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final selected = _selectedMenuIndex;
+    if (selected != null && !_canExecuteItem(selected)) {
+      _selectedMenuIndex = null;
+    }
+  }
+
+  /// 同步校验[index]对应的入口；旧回调在重建前也必须遵守实时权限和编辑器生命周期。
+  bool _canExecuteItem(int index) =>
+      mounted &&
+      !widget.editorState.isDisposed &&
+      widget.editorState.editable &&
+      index >= 0 &&
+      index < widget.toolbarItems.length &&
+      !widget.disabledItemIndices.contains(index) &&
+      (widget.canExecuteItem?.call(index) ?? true);
 
   @override
   void didChangeDependencies() {
@@ -118,12 +150,16 @@ class _StableMobileToolbarState extends State<StableMobileToolbar>
     });
   }
 
-  /// 使用[context]构建正文；有可用入口且键盘可见时才占用工具栏高度。
+  /// 使用[context]构建正文；允许编辑、有可用入口且键盘可见时才占用工具栏高度。
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<Selection?>(
-      valueListenable: widget.editorState.selectionNotifier,
-      builder: (context, selection, _) {
+    return ListenableBuilder(
+      listenable: Listenable.merge([
+        widget.editorState.selectionNotifier,
+        widget.editorState.editableNotifier,
+      ]),
+      builder: (context, _) {
+        final selection = widget.editorState.selection;
         final toolbarDisabled =
             widget
                 .editorState
@@ -131,6 +167,7 @@ class _StableMobileToolbarState extends State<StableMobileToolbar>
             true;
         final showToolbar =
             selection != null &&
+            widget.editorState.editable &&
             !toolbarDisabled &&
             _keyboardVisible &&
             widget.toolbarItems.isNotEmpty;
@@ -156,13 +193,15 @@ class _StableMobileToolbarState extends State<StableMobileToolbar>
     );
   }
 
+  /// 在借用[context]中展示仍获准执行的子菜单和固定工具栏；失效菜单不再保留可点击区域。
   Widget _buildToolbarAndMenu(BuildContext context) {
     final selectedIndex = _selectedMenuIndex;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (selectedIndex != null) _buildSelectedMenu(context, selectedIndex),
+        if (selectedIndex != null && _canExecuteItem(selectedIndex))
+          _buildSelectedMenu(context, selectedIndex),
         _buildToolbarRow(context),
       ],
     );
@@ -204,7 +243,9 @@ class _StableMobileToolbarState extends State<StableMobileToolbar>
                         : Colors.transparent,
                   ),
                   icon: icon,
-                  onPressed: () => _handleToolbarItem(index, item),
+                  onPressed: _canExecuteItem(index)
+                      ? () => _handleToolbarItem(index, item)
+                      : null,
                 );
               },
             ),
@@ -252,7 +293,9 @@ class _StableMobileToolbarState extends State<StableMobileToolbar>
     );
   }
 
+  /// 执行[index]的[item]前同步复核权限，拒绝同帧连点或异步等待后的旧入口回调。
   void _handleToolbarItem(int index, MobileToolbarItem item) {
+    if (!_canExecuteItem(index)) return;
     if (item.hasMenu) {
       if (_selectedMenuIndex == index) {
         closeItemMenu();

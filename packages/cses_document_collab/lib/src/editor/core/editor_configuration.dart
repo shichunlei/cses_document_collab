@@ -171,6 +171,9 @@ enum EditorKeyboardToolbarItem {
   /// @用户，需宿主选择服务。
   mention,
 
+  /// 将当前正文或列表转换为原生待办列表，与T菜单共用事务。
+  todoList,
+
   /// 链接卡片来源入口。
   link,
 
@@ -243,6 +246,7 @@ enum EditorKeyboardToolbarItem {
 ///   headingLevels: {1, 3},
 ///   inlineFormats: {EditorInlineFormat.bold},
 ///   keyboardToolbarItems: [EditorKeyboardToolbarItem.blockType],
+///   listConversionContainerTypes: {'custom-section'},
 /// );
 /// final editor = LocalEditorController(configuration: config);
 /// await editor.close();
@@ -259,6 +263,8 @@ final class EditorConfiguration {
   /// [keyboardToolbarItems] 选择键盘顶部入口及顺序，默认原六项；不能重复，空列表隐藏整条工具栏。
   /// 有实际可显示的菜单时自动在最右侧附加收起键盘，不由列表配置。
   /// 菜单展示不改变块/格式能力、快捷输入或其他插入入口。
+  /// [listConversionContainerTypes]显式允许无Delta结构容器中的同父扁平列表互换类型，默认空。
+  /// 类型须为非空字符串；不注册块、不扩展Enter/Backspace或缩进范围，也不允许跨父容器转换。
   /// [maxCharacters] 为不含段落分隔换行的正整数UTF-16正文上限，[maxBlocks] 为正整数正文节点上限（含结构子块）。
   /// 所有集合构造时复制；非法配置抛出ArgumentError，不创建编辑资源。
   factory EditorConfiguration({
@@ -270,6 +276,7 @@ final class EditorConfiguration {
     bool nextParagraphStyle = true,
     bool lineHeight = true,
     Iterable<EditorKeyboardToolbarItem> keyboardToolbarItems = EditorKeyboardToolbarItem.defaults,
+    Iterable<String> listConversionContainerTypes = const {},
     int maxCharacters = 100000,
     int maxBlocks = 500,
   }) {
@@ -279,6 +286,7 @@ final class EditorConfiguration {
     final aligns = Set<String>.unmodifiable(alignments);
     final formats = Set<EditorInlineFormat>.unmodifiable(inlineFormats);
     final toolbarItems = List<EditorKeyboardToolbarItem>.unmodifiable(keyboardToolbarItems);
+    final listContainers = Set<String>.unmodifiable(listConversionContainerTypes);
     if (toolbarItems.toSet().length != toolbarItems.length ||
         !selected.contains(EditorBlock.paragraph) ||
         selected.toSet().length != selected.length ||
@@ -288,6 +296,7 @@ final class EditorConfiguration {
         sizes.toSet().length != sizes.length ||
         sizes.any((size) => size < 1 || size > 4096) ||
         (formats.contains(EditorInlineFormat.fontSize) && sizes.isEmpty) ||
+        listContainers.any((type) => type.trim().isEmpty) ||
         maxCharacters < 1 ||
         maxBlocks < 1) {
       throw ArgumentError('编辑能力配置无效');
@@ -304,6 +313,7 @@ final class EditorConfiguration {
       maxBlocks,
       false,
       keyboardToolbarItems: toolbarItems,
+      listConversionContainerTypes: listContainers,
     );
   }
 
@@ -311,6 +321,7 @@ final class EditorConfiguration {
   /// [nextParagraphStyle]/[lineHeight]控制段落命令，[maxCharacters]/[maxBlocks]限制容量。
   /// [documentFeatures]仅用于保留原协同装配，不能由本地入口开启。
   /// [keyboardToolbarItems]为冻结的工具栏入口及顺序，默认原六项。
+  /// [listConversionContainerTypes]为冻结的列表类型转换父容器集合，默认空，不转移任何编辑资源。
   const EditorConfiguration._(
     this.blocks,
     this.headingLevels,
@@ -323,6 +334,7 @@ final class EditorConfiguration {
     this.maxBlocks,
     this.documentFeatures, {
     this.keyboardToolbarItems = EditorKeyboardToolbarItem.defaults,
+    this.listConversionContainerTypes = const {},
   });
 
   /// 原协同文档的兼容预设，不改变既有复杂块、上下标、布局和宿主命令。
@@ -391,6 +403,11 @@ final class EditorConfiguration {
   /// 键盘顶部可显示的入口及顺序，默认原六项；本实例拥有不可变副本，空列表隐藏整条工具栏。
   /// 实际展示须满足块/格式能力；非空时自动在最右侧附加收起键盘，全部被过滤时隐藏整条。
   final List<EditorKeyboardToolbarItem> keyboardToolbarItems;
+
+  /// 显式获准参与列表类型转换的无Delta父容器类型，默认空且由本实例持有不可变副本。
+  /// 仅扩展同父扁平列表间的类型互换；根级和高亮容器沿用默认能力。
+  /// 不注册自定义块，不扩展Enter、Backspace或缩进，也不允许有正文的真实嵌套父列表。
+  final Set<String> listConversionContainerTypes;
 
   /// 是否开放下一段样式设置。
   final bool nextParagraphStyle;

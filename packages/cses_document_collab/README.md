@@ -190,8 +190,8 @@ Future<void> editLocal(BuildContext context) => showCollabImageComposer(
 
 字符格式可分别启停加粗、斜体、下划线、删除线、行内代码、字号、颜色、字体/字距/倍率、上下标、链接、行内公式和提及。
 字号菜单及命令使用`fontSizes`，默认12/16/20/24/28/32/36像素；对齐、下一段样式、行高写入及正文容量分别配置。
-`keyboardToolbarItems`是完整的键盘入口列表，按配置顺序显示。收起键盘不参与配置：只要存在可显示的菜单，就自动在最右侧显示；所有入口均被能力配置过滤时也隐藏整条。默认使用`EditorKeyboardToolbarItem.defaults`，保留原六个菜单入口及自动附加的收起按钮；传空列表`[]`隐藏整条工具栏，不留高度或分隔线。列表构造时冻结，重复项会抛出`ArgumentError`。
-可选原入口：`addBlock`（加号）、`blockType`（T）、`textStyle`（Aa）、`blockLayout`、`image`、`mention`。
+`keyboardToolbarItems`配置内建键盘入口及顺序。收起键盘不参与配置：有内建或宿主自定义入口时自动固定在最右侧，其余入口单行横向滚动。默认使用`EditorKeyboardToolbarItem.defaults`，保留原六个菜单入口及收起按钮；传空列表`[]`隐藏内建入口，没有宿主动作时隐藏整条，不留高度或分隔线。列表构造时冻结，重复项会抛出`ArgumentError`。
+可选原入口：`addBlock`（加号）、`blockType`（T）、`textStyle`（Aa）、`blockLayout`、`image`、`mention`；`todoList`提供原生待办直达按钮，与T菜单共用类型转换，保留正文、格式和选区，已是Todo时不重置勾选状态。
 “更多→常用”可直接放到键盘上：`link`、`video`、`attachment`、`audio`、`bookmark`、`embed`、`juejin`、`figma`、`table`、`callout`、`meeting`、`formula`、`mermaid`、`inlineFormula`、`divider`、`pageDivider`，图片与@用户也可直接配置。
 `spreadsheet`、`multiTable`、`mindMap`保留原常用面板的占位行为，只提示“暂未支持”，不创建正文；能配置展示不代表这些块已适配。
 键盘直达动作与更多面板复用同一目录和插入流程，包括模态隔离、稳定位置、取消/失效拒绝写入和焦点恢复。入口仍与块/格式能力取交集，例如未启用图片块，即使列表包含`image`也不会显示图片按钮。
@@ -219,6 +219,12 @@ Future<void> editLocal(BuildContext context) => showCollabImageComposer(
 `EditorCommandContext.copySelection`可选接管移动菜单的复制/剪切，接收调用时捕获的选区与`cut`意图。宿主负责内容序列化、等待剪贴板写入成功后删除，以及正文、选区、权限和关闭的异步失效检查；回调完成后菜单不再重复写入或删除。未配置时沿用原有行为。自定义键盘命令需显式复用同一端口；通用包不解释宿主业务对象。
 
 今日导向页面、草稿模型、本地存储和业务块已迁到宿主`lib/src/daily_guidance/`；本包不再导出日记业务API。包仅提供通用编辑与共享数据协同，业务扩展不应反向加入包内。宿主实现与迁移验证见[实施记录](../../docs/verification/offline-journal-20261022/host-implementation.md)。
+
+自定义正文可通过`EditorInteractionShell.keyboardActions`注入`EditorKeyboardAction`（稳定唯一id、名称、图标、enabled与异步onPressed），按顺序接在内建项后，保留标签与禁用态。工具栏在同一动作执行期间同步拦截其他快捷入口和旧子菜单回调，并关闭禁用子菜单，完成后恢复；宿主负责业务资源、账号/权限/目标失效保护，以及模态退场和输入恢复。原生工具栏不认识感悟或领航员等业务名称。默认空动作不改变其他消费者。
+
+自定义栏目中的扁平列表需在`EditorConfiguration(listConversionContainerTypes: {'host-section'})`显式声明结构父节点类型，才能在有序、无序和Todo之间直接互转。集合复制后冻结，默认空；授权父节点必须没有Delta，所选列表必须为同一父节点下的无子项叶子。该配置不注册自定义块，不绕过宿主事务保护，也不扩大Enter、Backspace或缩进范围；根层与高亮块仍沿用原有支持。宿主负责自己的栏目渲染和边界校验。
+
+自定义渲染器可组合`decorateEditorUserMention`并用`EditorUserMention.read/tryRead`校验或读取原生用户对象；普通文字不得携带对象身份属性。用户WidgetSpan内部不重复继承系统字号，由正文统一缩放姓名及头像。键入@可调用`handleEditorUserMentionTrigger`，显式入口可用`showEditorUserMention`，均借用本实例`EditorCommandContext.services`。宿主业务行可通过`pickEditorMentionUser(context, state)`复用同一人员选择及权限保护（不自动插入），并将`EditorUserMention.createDelta(user)`返回的原生人员对象和空格放入自有原子事务；调用方负责保存、复核目标及恢复键盘。独立正文控制器复用原生对象事务；`localOnly`会话使用可被宿主事务保护直接校验的局部文字增量，支持本地撤销重做，不创建同步连接。
 
 ## 图片点击
 

@@ -141,8 +141,33 @@ final class CollabUserMentionTarget {
   }
 }
 
+/// 为[user]创建独立的原生人员对象Delta并追加一个空格，不写入编辑器。
+/// 身份或姓名为空白、超出正文限制时抛ArgumentError；头像、部门和职位不写正文。
+Delta collabUserMentionDelta(CollabMentionUser user) {
+  if (user.id.trim().isEmpty ||
+      utf8.encode(user.id).length > 512 ||
+      user.name.trim().isEmpty ||
+      user.name.length > 20000) {
+    throw ArgumentError('无效的用户提及');
+  }
+  return Delta()
+    ..insert(
+      collabInlineFormulaCharacter,
+      attributes: {
+        collabInlineMentionAttribute: user.name,
+        collabMentionIdAttribute: user.id,
+        collabMentionAttributesAttribute: jsonEncode({
+          'mentionType': 'user',
+          'mentionId': user.id,
+        }),
+      },
+    )
+    ..insert(' ');
+}
+
 /// 在借用 [state] 的同块 [selection] 插入真实 [user] 并追加空格，返回对象后的光标。
-/// 范围被替换；代码块/只读/无效身份返回null，不恢复焦点；异常透传。
+/// 范围被替换；代码块、只读、无效身份或宿主拒绝提交返回null，不恢复焦点；异常透传。
+/// 本地历史显式保存[selection]及对象后落点，模态隐藏实时选区时撤销/重做仍能恢复光标。
 Future<Selection?> insertCollabUserMention(
   EditorState state,
   Selection selection,
@@ -151,9 +176,9 @@ Future<Selection?> insertCollabUserMention(
   if (state.isDisposed ||
       !state.editable ||
       !selection.isSingle ||
-      user.id.isEmpty ||
+      user.id.trim().isEmpty ||
       utf8.encode(user.id).length > 512 ||
-      user.name.isEmpty ||
+      user.name.trim().isEmpty ||
       user.name.length > 20000) {
     return null;
   }
@@ -170,27 +195,26 @@ Future<Selection?> insertCollabUserMention(
       end > delta.length) {
     return null;
   }
-  final after = Delta()
-    ..insert(
-      collabInlineFormulaCharacter,
-      attributes: {
-        collabInlineMentionAttribute: user.name,
-        collabMentionIdAttribute: user.id,
-        collabMentionAttributesAttribute: jsonEncode({
-          'mentionType': 'user',
-          'mentionId': user.id,
-        }),
-      },
-    )
-    ..insert(' ');
+  final after = collabUserMentionDelta(user);
+  final blockId = node.attributes['cses_collab_block_id'] as String? ?? node.id;
+  final landing = Selection.single(path: node.path, startOffset: start + 2);
+  final expected = delta.compose(
+    Delta()
+      ..retain(start)
+      ..delete(end - start)
+      ..addAll(Delta.fromJson(after.toJson())),
+  );
   await applyCollabInlineCommand(
     state,
     node,
     start,
     delta.slice(start, end),
     after,
+    historyBeforeSelection: selection,
+    historyAfterSelection: landing,
   );
-  return Selection.single(path: node.path, startOffset: start + 2);
+  final applied = findCollabInlineTextNode(state, blockId)?.delta;
+  return applied == expected ? landing : null;
 }
 
 /// 删除借用 [state] 的稳定 [target]，保留周围文字；只读/目标变化返回false。

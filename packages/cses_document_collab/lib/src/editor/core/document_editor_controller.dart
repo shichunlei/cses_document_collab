@@ -5,6 +5,7 @@ import 'package:cses_document_collab/src/editor/collab_paragraph_typing.dart';
 import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:cses_document_collab/src/editor/editor_text_attributes.dart';
 import 'package:cses_document_collab/src/model/collab_paragraph_style.dart';
+import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
 import 'package:flutter/foundation.dart';
 
 /// 数据适配器的事务阶段回调；[event] 借用当前事务，不得异步修改它。
@@ -106,11 +107,13 @@ class DocumentEditorController extends ChangeNotifier {
   void transferHistory(UpdateOperation source, UpdateOperation target) => _typing.transferHistory(source, target);
 
   /// 根据 [event] 的阶段执行共同编辑行为，数据绑定只观察本地事务。
+  /// 准备后统一解析行内对象历史，使未绑定同步的正文也可执行同一对象命令。
   void _onTransaction(EditorTransactionValue event) {
     if (_closed || _projectionDepth != 0) return;
     final binding = _binding;
     if (event.$1 == TransactionTime.before) {
       binding?.prepare?.call(event);
+      resolveCollabInlineFormulaCommands(editorState, event.$2);
       if (event.$3.recordUndo && !event.$3.isRedo) synchronizeParagraphDefaults(editorState, event.$2);
       binding?.validate?.call(event);
       _typing.before(event.$2, event.$3);

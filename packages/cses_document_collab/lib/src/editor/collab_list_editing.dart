@@ -1,5 +1,6 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:cses_document_collab/src/model/collab_ordered.dart';
 import 'package:flutter/services.dart';
 
@@ -109,6 +110,8 @@ Future<bool> changeCollabListIndent(EditorState state, int delta) =>
     );
 
 /// 将借用 [state] 当前选区中的扁平列表切为 [targetType]，仅接受有序/无序/Todo 三种类型。
+/// 接受根级、高亮容器或实例listConversionContainerTypes显式授权的无Delta父容器；
+/// 所选列表必须同父，跨容器整次拒绝，不扩大Enter、Backspace或缩进的适用范围。
 /// 保留每项的 depth、完整 Delta、对齐及选区路径/偏移/方向/类型；真正嵌套、非列表混选、
 /// 无效选区、只读或销毁时返回 false。相同类型的项目不重建、不重置勾选或编号；全部相同
 /// 返回 false 且不产生历史/协同消息。进入 Todo 默认未勾选，离开 Todo 删除勾选属性。
@@ -120,7 +123,7 @@ Future<bool> changeCollabListType(EditorState state, String targetType) async {
   if (!_isListType(targetType)) {
     return false;
   }
-  final nodes = _selectedFlatLists(state);
+  final nodes = _selectedFlatLists(state, allowConfiguredContainers: true);
   final changed = nodes.where((node) => node.type != targetType).toList();
   if (changed.isEmpty) {
     return false;
@@ -249,8 +252,12 @@ Future<bool> _applyListIndent(
 }
 
 /// 读取借用 [state] 当前选区中的全部扁平列表；只读/销毁、路径或偏移无效、包含非列表返回空。
+/// [allowConfiguredContainers]默认false；true仅为类型转换接受显式授权的结构父容器并要求同父。
 /// 保留选区遍历顺序和节点引用，不复制正文、不转移所有权、不修改编辑器；调用方同步构建事务。
-List<Node> _selectedFlatLists(EditorState state) {
+List<Node> _selectedFlatLists(
+  EditorState state, {
+  bool allowConfiguredContainers = false,
+}) {
   if (state.isDisposed || !state.editable) {
     return const [];
   }
@@ -262,11 +269,15 @@ List<Node> _selectedFlatLists(EditorState state) {
   }
   final nodes = state.getNodesInSelection(selection);
   if (nodes.isEmpty ||
+      (allowConfiguredContainers &&
+          nodes.any((node) => !identical(node.parent, nodes.first.parent))) ||
       nodes.any(
         (node) =>
             node.delta == null ||
             node.children.isNotEmpty ||
-            !_isFlatListParent(node) ||
+            !(allowConfiguredContainers
+                ? _isListTypeConversionParent(state, node)
+                : _isFlatListParent(node)) ||
             (node.type != NumberedListBlockKeys.type &&
                 node.type != BulletedListBlockKeys.type &&
                 node.type != TodoListBlockKeys.type),
@@ -313,6 +324,18 @@ Node? _editableFlatList(EditorState state) {
   return node;
 }
 
-// Depth is a prop within each sibling list, including lists inside a callout.
+/// 判断借用[node]是否属于默认根级或高亮容器的扁平列表；层级仍保存在兄弟节点属性中。
 bool _isFlatListParent(Node node) =>
     node.path.length == 1 || node.parent?.type == csesCalloutBlockType;
+
+/// 判断借用[state]是否显式允许[node]的结构父容器进行列表类型转换。
+/// 默认父容器保留原规则；扩展父容器必须无Delta，仅借用实例配置，不授权其他列表命令。
+bool _isListTypeConversionParent(EditorState state, Node node) {
+  if (_isFlatListParent(node)) return true;
+  final parent = node.parent;
+  return parent != null &&
+      parent.delta == null &&
+      EditorCommandContext.of(
+        state,
+      ).configuration.listConversionContainerTypes.contains(parent.type);
+}

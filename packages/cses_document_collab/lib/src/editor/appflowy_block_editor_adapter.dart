@@ -876,6 +876,7 @@ final class AppFlowyBlockEditorAdapter {
   }
 
   /// 在本地 [value] 的默认格式处理前重定位稳定身份与历史，不负责输入状态。
+  /// 通用行内对象命令随后由正文会话统一解析，本适配器只准备自身命令。
   void _prepareTransaction(EditorTransactionValue value) {
     if (_disposed || _applyingRemote) return;
     resolveCollabLinkViewCommand(editorState, value.$2, (id) {
@@ -886,7 +887,6 @@ final class AppFlowyBlockEditorAdapter {
       return id;
     });
     resolveCollabMentionCardCommand(editorState, value.$2);
-    resolveCollabInlineFormulaCommands(editorState, value.$2);
     _resolveNumberingTargets(value.$2);
     onTransactionPreparing?.call(value.$2);
   }

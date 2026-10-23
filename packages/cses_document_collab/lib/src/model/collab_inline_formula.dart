@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/model/collab_formula.dart';
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 
 /// AppFlowy 单字符投影上的 LaTeX 属性；不会作为格式属性写入桌面 Y.Text。
 const collabInlineLatexAttribute = 'cses_inline_latex';
@@ -142,8 +143,11 @@ Future<bool> changeCollabInlineFormula(
 }
 
 /// 为公式或四类提及对象在借用 [state]/[node] 的 [offset] 生成正反命令，替换 [before] 为 [after]。
-/// 只记录该区间；真正的 Delta 在适配器 before 阶段据最新节点计算，避免历史覆盖其他属性。
-/// 必须在已安装命令解析的适配器中调用，事务完成后返回，异常透传；不恢复焦点。
+/// 只记录该区间；同步正文在会话before阶段据最新节点计算Delta，避免历史覆盖其他属性。
+/// 本地会话直接提交局部文字增量，令宿主保护在首次校验时看见真实正文；
+/// 同步会话由DocumentEditorController统一解析稳定身份命令。事务完成后返回，异常透传；不恢复焦点。
+/// [historyBeforeSelection]和[historyAfterSelection]可为模态期间的本地历史保存源选区及落点；
+/// 默认沿用当前选区，均不在本次提交中恢复实时焦点。
 /// ```dart
 /// import 'package:appflowy_editor/appflowy_editor.dart';
 /// import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
@@ -162,8 +166,30 @@ Future<bool> changeCollabInlineFormula(
 ///   }
 /// }
 /// ```
-Future<void> applyCollabInlineCommand(EditorState state, Node node, int offset, Delta before, Delta after) async {
+Future<void> applyCollabInlineCommand(
+  EditorState state,
+  Node node,
+  int offset,
+  Delta before,
+  Delta after, {
+  Selection? historyBeforeSelection,
+  Selection? historyAfterSelection,
+}) async {
   final base = node.delta!;
+  if (EditorCommandContext.of(state).localOnly) {
+    if (state.undoManager.undoStack.isNonEmpty) {
+      state.undoManager.undoStack.last.seal();
+    }
+    final change = Delta()
+      ..retain(offset)
+      ..delete(before.length)
+      ..addAll(after);
+    final transaction = state.transaction..add(UpdateTextOperation(node.path, change, change.invert(base)));
+    transaction.beforeSelection = historyBeforeSelection ?? transaction.beforeSelection;
+    transaction.afterSelection = historyAfterSelection ?? state.selection;
+    await state.apply(transaction, withUpdateSelection: false, skipHistoryDebounce: true);
+    return;
+  }
   final next = base.compose(
     Delta()
       ..retain(offset)

@@ -19,6 +19,13 @@ export 'src/editor/core/editor_configuration.dart'
 export 'src/editor/document_editor_view.dart';
 export 'src/editor/document_editor_commands.dart' show handleDocumentParagraphEnter, applyDocumentBlockShortcut;
 export 'src/editor/editor_interaction_shell.dart' show EditorInteractionShell;
+export 'src/editor/editor_user_mentions.dart'
+    show
+        EditorUserMention,
+        decorateEditorUserMention,
+        showEditorUserMention,
+        pickEditorMentionUser,
+        handleEditorUserMentionTrigger;
 export 'src/editor/local_editor_controller.dart' show LocalEditorController;
 export 'src/image_composer/show_image_composer.dart' show showCollabImageComposer;
 export 'src/model/collab_block_lock.dart' show CollabBlockLockState, CollabBlockUnlockContext;
@@ -37,6 +44,7 @@ export 'src/model/collab_task_card_data.dart'
 export 'src/model/collab_user_mention.dart' show CollabMentionUser, CollabMentionDirectory;
 export 'src/model/document_metadata.dart';
 export 'src/model/editor_media_upload.dart';
+export 'src/model/editor_keyboard_action.dart' show EditorKeyboardAction;
 export 'src/model/prepared_document.dart';
 export 'src/sync/cses_collab_gateway.dart';
 export 'src/sync/cses_doc_collaboration_session.dart' show CsesCollabState;
