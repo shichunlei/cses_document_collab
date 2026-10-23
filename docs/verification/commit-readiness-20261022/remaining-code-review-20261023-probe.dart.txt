@@ -1,0 +1,10 @@
+import 'package:flutter/widgets.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/local_journal_page.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/journal_surface.dart';
+import 'package:cses_mobile_collab_demo/src/demo/document_creation/document_creation_page.dart';
+import 'package:cses_mobile_collab_demo/src/demo/document_creation/document_space_list.dart';
+
+State<LocalJournalPage> pageState(LocalJournalPage page) => page.createState();
+State<JournalSurface> journalState(JournalSurface page) => page.createState();
+State<DocumentCreationPage> creationState(DocumentCreationPage page) => page.createState();
+State<DocumentSpaceList> listState(DocumentSpaceList page) => page.createState();

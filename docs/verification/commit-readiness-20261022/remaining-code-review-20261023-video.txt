@@ -1,0 +1,38 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_video_update_test.dart
+00:00 +0: video corner lock remains visible at 320.0/1.0 ready
+00:03 +1: video corner lock remains visible at 320.0/1.0 loading
+00:04 +2: video corner lock remains visible at 320.0/1.0 failed
+00:04 +3: video corner lock remains visible at 280.0/2.2 ready
+00:04 +4: video corner lock remains visible at 280.0/2.2 loading
+00:04 +5: video corner lock remains visible at 280.0/2.2 failed
+00:05 +6: video corner lock remains visible at 390.0/1.5 ready
+00:05 +7: video corner lock remains visible at 390.0/1.5 loading
+00:05 +8: video corner lock remains visible at 390.0/1.5 failed
+00:05 +9: video gestures suppress body focus on TargetPlatform.android editable=true (variant: TargetPlatform.android)
+00:06 +10: video gestures suppress body focus on TargetPlatform.android editable=false (variant: TargetPlatform.android)
+00:07 +11: video gestures suppress body focus on TargetPlatform.iOS editable=true (variant: TargetPlatform.iOS)
+00:07 +12: video gestures suppress body focus on TargetPlatform.iOS editable=false (variant: TargetPlatform.iOS)
+00:07 +13: video gestures suppress body focus on TargetPlatform.macOS editable=true (variant: TargetPlatform.macOS)
+00:08 +14: video gestures suppress body focus on TargetPlatform.macOS editable=false (variant: TargetPlatform.macOS)
+00:08 +15: video placeholder suppresses focus while failed=false
+00:08 +16: video placeholder suppresses focus while failed=true
+00:08 +17: 16:9 video frame keeps geometry for Size(1920.0, 1080.0) failure=false
+00:08 +18: 16:9 video frame keeps geometry for Size(1080.0, 1920.0) failure=false
+00:08 +19: 16:9 video frame keeps geometry for Size(2560.0, 1080.0) failure=false
+00:09 +20: 16:9 video frame keeps geometry for Size(100.0, 100.0) failure=true
+00:09 +21: same node video source replacement releases controllers (pending=false)
+00:09 +22: same node video source replacement releases controllers (pending=true)
+00:09 +23: video deletion is undoable and releases its player (pending=false, nested=false)
+00:09 +24: video deletion is undoable and releases its player (pending=false, nested=true)
+00:10 +25: video deletion is undoable and releases its player (pending=true, nested=false)
+00:10 +26: video deletion is undoable and releases its player (pending=true, nested=true)
+00:10 +27: open video delete menu rejects stale target after permission
+00:11 +28: open video delete menu rejects stale target after source
+00:11 +29: open video delete menu rejects stale target after deleted
+00:11 +30: video timeline supports edit safely
+00:11 +31: video timeline supports preview safely
+00:12 +32: video timeline supports zero safely
+00:12 +33: video timeline supports error safely
+00:12 +34: video timeline supports stale safely
+00:12 +35: video timeline supports narrow safely
+00:12 +36: All tests passed!

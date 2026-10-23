@@ -143,7 +143,7 @@
 
 - [native-bridge-sync-20261022](native-bridge-sync-20261022/)
 - [block-class-audit-20261017](block-class-audit-20261017/)
-- [commit-readiness-20261022](commit-readiness-20261022/)
+- [commit-readiness-20261022](commit-readiness-20261022/)（[2026-10-23未提交代码复核](commit-readiness-20261022/remaining-code-review-20261023.md)）
 - [package-review-20261017](package-review-20261017/)
 - [saas-package-compatibility-20261022](saas-package-compatibility-20261022/)
 
