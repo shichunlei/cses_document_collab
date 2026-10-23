@@ -45,7 +45,7 @@ class DocumentSpaceList extends StatefulWidget {
 
   /// 创建仅持有列表元数据和在途请求版本的状态。
   @override
-  State<DocumentSpaceList> createState() => _DocumentSpaceListState();
+  createState() => _DocumentSpaceListState();
 }
 
 /// 持有分页快照及请求版本；关闭或切换空间后忽略迟到响应。

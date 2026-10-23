@@ -49,7 +49,7 @@ class DocumentCreationPage extends StatefulWidget {
 
   /// 创建只持有位置及按钮状态的页面状态。
   @override
-  State<DocumentCreationPage> createState() => _DocumentCreationPageState();
+  createState() => _DocumentCreationPageState();
 }
 
 /// 管理位置异步读取；创建结果归协调器记录，离开路由不取消已发送的建档请求。
