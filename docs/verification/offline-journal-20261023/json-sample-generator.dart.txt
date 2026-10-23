@@ -1,0 +1,136 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/cses_document_collab.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/guidance_entries.dart';
+import 'package:cses_mobile_collab_demo/src/daily_guidance/journal_draft.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+/// 用生产模型和原生提及工厂生成虚构草稿示例，并验证编码恢复保持所有内容。
+/// 不读取用户草稿、不创建网络或原生协同会话；临时文档由此过程释放。
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  test('export synthetic journal JSON with production serializers', () async {
+    final mention = Delta()
+      ..insert('与 ')
+      ..addAll(
+        EditorUserMention.createDelta(
+          const CollabMentionUser(id: 'user_demo_001', name: '张三'),
+        ),
+      )
+      ..insert('确认明日计划。');
+    final document = Document(
+      root: Node(
+        type: 'page',
+        children: [
+          _section('record', [
+            paragraphNode(
+              delta: Delta()
+                ..insert('今日成果：', attributes: {'bold': true})
+                ..insert('完成日导向编辑器的 JSON 导出验证。'),
+            ),
+            paragraphNode(delta: mention),
+            todoListNode(checked: true, text: '整理项目进展并完成自检'),
+            _entry(
+              'help',
+              'sample-help-001',
+              const CollabMentionUser(id: 'user_demo_002', name: '李四'),
+              '协助检查提交接口字段。',
+            ),
+            _entry(
+              'pilot',
+              'sample-pilot-001',
+              const CollabMentionUser(id: 'user_demo_003', name: '王五'),
+              '指导提交失败后的重试流程。',
+            ),
+          ]),
+          _section('reflection', [
+            paragraphNode(text: '先明确数据结构，再接入业务提交，可以减少重复修改。'),
+          ]),
+          _section('self-check', [
+            todoListNode(checked: true, text: '今日记录完整，人员引用身份已保留'),
+            todoListNode(checked: false, text: '明日完成真实提交接口联调'),
+          ]),
+        ],
+      ),
+    );
+    try {
+      validateJournalDocument(document);
+      final draft = JournalDraft(
+        id: 'journal-sample-20261023',
+        date: '2026-10-23',
+        createdAt: DateTime.utc(2026, 10, 23, 1),
+        updatedAt: DateTime.utc(2026, 10, 23, 1, 30),
+        timezoneOffsetMinutes: 480,
+        documentJson: jsonEncode(document.toJson()),
+      );
+      final json = draft.toJson();
+      final restored = JournalDraft.fromJson(
+        jsonDecode(jsonEncode(json)) as Map<String, dynamic>,
+      );
+      expect(restored.toJson(), json);
+      final restoredDocument = Document.fromJson(
+        json['document'] as Map<String, dynamic>,
+      );
+      try {
+        validateJournalDocument(restoredDocument);
+        final nodes = restoredDocument.root.children
+            .expand((section) => section.children)
+            .toList();
+        expect(nodes.length, 8);
+        expect(
+          nodes
+              .where(
+                (node) => node.attributes[guidanceEntryAttribute] == 'help',
+              )
+              .length,
+          1,
+        );
+        expect(
+          nodes
+              .where(
+                (node) => node.attributes[guidanceEntryAttribute] == 'pilot',
+              )
+              .length,
+          1,
+        );
+        final users = nodes
+            .expand((node) => node.delta!.whereType<TextInsert>())
+            .map((run) => EditorUserMention.tryRead(run.attributes))
+            .whereType<EditorUserMention>()
+            .toList();
+        expect(users.map((user) => user.id), [
+          'user_demo_001',
+          'user_demo_002',
+          'user_demo_003',
+        ]);
+      } finally {
+        restoredDocument.dispose();
+      }
+      await File(
+        'docs/verification/offline-journal-20261023/daily-guidance-sample.json',
+      ).writeAsString("${const JsonEncoder.withIndent('  ').convert(json)}\n");
+    } finally {
+      document.dispose();
+    }
+  });
+}
+
+/// 创建[kind]栏目的真实模型，接管[children]所有权并交给最终文档统一释放。
+Node _section(String kind, List<Node> children) => Node(
+  type: journalSectionType,
+  attributes: {'section': kind},
+  children: children,
+);
+
+/// 创建[kind]业务行，[id]为虚构稳定条目ID；[user]由原生工厂序列化，[text]为示例正文。
+Node _entry(String kind, String id, CollabMentionUser user, String text) =>
+    paragraphNode(
+      delta: EditorUserMention.createDelta(user)..insert(text),
+      attributes: {
+        guidanceEntryAttribute: kind,
+        'guidance_entry_id': id,
+        'guidance_done': false,
+      },
+    );

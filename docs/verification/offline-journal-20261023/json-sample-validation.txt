@@ -1,0 +1,5 @@
+Analyzing json_sample_export_test.dart...                       
+No issues found! (ran in 5.5s)
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/json_sample_export_test.dart
+00:00 +0: export synthetic journal JSON with production serializers
+00:00 +1: All tests passed!

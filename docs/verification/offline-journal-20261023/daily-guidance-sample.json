@@ -1,0 +1,163 @@
+{
+  "schemaVersion": 2,
+  "templateId": "ruled-daily",
+  "templateVersion": 2,
+  "id": "journal-sample-20261023",
+  "date": "2026-10-23",
+  "createdAt": "2026-10-23T01:00:00.000Z",
+  "updatedAt": "2026-10-23T01:30:00.000Z",
+  "timezoneOffsetMinutes": 480,
+  "document": {
+    "document": {
+      "type": "page",
+      "children": [
+        {
+          "type": "local-journal-section",
+          "children": [
+            {
+              "type": "paragraph",
+              "data": {
+                "delta": [
+                  {
+                    "insert": "今日成果：",
+                    "attributes": {
+                      "bold": true
+                    }
+                  },
+                  {
+                    "insert": "完成日导向编辑器的 JSON 导出验证。"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "paragraph",
+              "data": {
+                "delta": [
+                  {
+                    "insert": "与 "
+                  },
+                  {
+                    "insert": "￼",
+                    "attributes": {
+                      "cses_inline_mention": "张三",
+                      "cses_mention_id": "user_demo_001",
+                      "cses_mention_attributes": "{\"mentionType\":\"user\",\"mentionId\":\"user_demo_001\"}"
+                    }
+                  },
+                  {
+                    "insert": " 确认明日计划。"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "todo_list",
+              "data": {
+                "checked": true,
+                "delta": [
+                  {
+                    "insert": "整理项目进展并完成自检"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "paragraph",
+              "data": {
+                "delta": [
+                  {
+                    "insert": "￼",
+                    "attributes": {
+                      "cses_inline_mention": "李四",
+                      "cses_mention_id": "user_demo_002",
+                      "cses_mention_attributes": "{\"mentionType\":\"user\",\"mentionId\":\"user_demo_002\"}"
+                    }
+                  },
+                  {
+                    "insert": " 协助检查提交接口字段。"
+                  }
+                ],
+                "guidance_entry": "help",
+                "guidance_entry_id": "sample-help-001",
+                "guidance_done": false
+              }
+            },
+            {
+              "type": "paragraph",
+              "data": {
+                "delta": [
+                  {
+                    "insert": "￼",
+                    "attributes": {
+                      "cses_inline_mention": "王五",
+                      "cses_mention_id": "user_demo_003",
+                      "cses_mention_attributes": "{\"mentionType\":\"user\",\"mentionId\":\"user_demo_003\"}"
+                    }
+                  },
+                  {
+                    "insert": " 指导提交失败后的重试流程。"
+                  }
+                ],
+                "guidance_entry": "pilot",
+                "guidance_entry_id": "sample-pilot-001",
+                "guidance_done": false
+              }
+            }
+          ],
+          "data": {
+            "section": "record"
+          }
+        },
+        {
+          "type": "local-journal-section",
+          "children": [
+            {
+              "type": "paragraph",
+              "data": {
+                "delta": [
+                  {
+                    "insert": "先明确数据结构，再接入业务提交，可以减少重复修改。"
+                  }
+                ]
+              }
+            }
+          ],
+          "data": {
+            "section": "reflection"
+          }
+        },
+        {
+          "type": "local-journal-section",
+          "children": [
+            {
+              "type": "todo_list",
+              "data": {
+                "checked": true,
+                "delta": [
+                  {
+                    "insert": "今日记录完整，人员引用身份已保留"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "todo_list",
+              "data": {
+                "checked": false,
+                "delta": [
+                  {
+                    "insert": "明日完成真实提交接口联调"
+                  }
+                ]
+              }
+            }
+          ],
+          "data": {
+            "section": "self-check"
+          }
+        }
+      ]
+    }
+  }
+}

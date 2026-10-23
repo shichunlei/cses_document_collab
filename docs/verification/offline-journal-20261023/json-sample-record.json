@@ -1,0 +1,54 @@
+{
+  "checkedAt": "2026-10-23T10:32:06.261582+08:00",
+  "type": "production-model synthetic JSON example",
+  "sample": "daily-guidance-sample.json",
+  "sampleSha256": "457e8975ae2d0f0f110cb85f24cdfbcacb0efe95de9dd0451175161ac45c6fac",
+  "generator": "json-sample-generator.dart.txt",
+  "validation": "json-sample-validation.txt",
+  "dataOrigin": "虚构正文、人员ID和姓名，不读取设备或用户草稿，不进行HTTP/WS请求。",
+  "fields": "JournalDraft.toJson原始v2封套与AppFlowy Document树；不是后端提交合同。",
+  "contents": {
+    "sections": 3,
+    "textBlocks": 8,
+    "nativeUserMentions": 3,
+    "todoBlocks": 3,
+    "helpEntries": 1,
+    "pilotEntries": 1
+  },
+  "checks": [
+    "生产validateJournalDocument通过",
+    "JournalDraft.fromJson编码恢复后与原快照完全一致",
+    "3个原生用户ID与help/pilot属性完整",
+    "生成器目标分析无问题，模型读取恢复校验1项通过",
+    "临时活动测试文件已移除，生成源码作为文本证据保留"
+  ],
+  "blockcraft": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.28",
+    "integrity": "sha512-KNVpgHHAY6ds1bo+EvtiQjS80aoS5kS6oSuJ9nIaJlA8y6yelew5H7F1wTK/bS3Rl9fVyoNAnydz/Si8y0EACg==",
+    "sameVerifiedPublishedArtifact": true,
+    "desktopDeclared": "0.11.28",
+    "desktopYarnLocked": "0.11.28",
+    "desktopInstalled": "0.11.17",
+    "historicalPnpmLocked": "0.2.78",
+    "dependencyUpgrade": false,
+    "bundledReadSources": {
+      "ai-skills/SKILL.md": "1bdaa3efdde9a455284810febaffb043cd3e59e8ef9a0babbb76c5c875140b0d",
+      "ai-skills/blockcraft.md": "fd35128d50e0f4b68d3d60881e155a884027aaef497d9e6ed2731b01c268686e",
+      "ai-skills/blockcraft-adapter.md": "6400f92fb7d87b482686189d3bafad983ab3dfc7bad9ec09e5b972dad81f2d42",
+      "ai-skills/MIGRATIONS.md": "d1bb5a6337b0e1ce0879099a34134b6e440891720386af9af4c20cdeba205ac2",
+      "fesm2022/ccc-blockcraft.mjs": "d045dd9ff8f17552ed9c15ba1c090fa77ec66bcdaf48a666db742a9f59e639f7"
+    }
+  },
+  "productionHashes": {
+    "lib/src/daily_guidance/journal_draft.dart": "d54b1995d962680f441eb96e7d0d231c73ac96a5b45a5ec392da2359624a581c",
+    "lib/src/daily_guidance/guidance_entries.dart": "8e5ba09b9f5a2a1f346a03e72ad59b96045a8d31e8cd1e996816ffbb3add6c74",
+    "packages/cses_document_collab/lib/src/editor/editor_user_mentions.dart": "531c0622462efca36ec941a4d5cb4b026e3bd9d6b1b927710d8fedc998cd77cd",
+    "packages/appflowy_editor/lib/src/core/document/document.dart": "e73588878b5442d78a81bd13494b783bf794d9afc98847192c15b439ef5d5c01",
+    "packages/appflowy_editor/lib/src/core/document/node.dart": "b86313ec17c3bcb810eab337c30c11ff02a98b17f4840e313f85a9efe475d40a"
+  },
+  "limits": [
+    "未改应用功能、未构建或安装手机应用",
+    "没有执行真实业务提交，示例不能作为后端接受该JSON的依据"
+  ]
+}

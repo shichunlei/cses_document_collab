@@ -1,0 +1,53 @@
+{
+  "checkedAt": "2026-10-23T10:12:42.955917+08:00",
+  "userFacingDate": "2026-10-23",
+  "scope": "仅分析今日导向JSON序列化与独立HTTP业务提交；未实现提交、未发请求、未改运行时源码。",
+  "blockcraft": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": "0.11.28",
+    "integrity": "sha512-KNVpgHHAY6ds1bo+EvtiQjS80aoS5kS6oSuJ9nIaJlA8y6yelew5H7F1wTK/bS3Rl9fVyoNAnydz/Si8y0EACg==",
+    "sameVerifiedPublishedArtifact": true,
+    "desktopDeclared": "0.11.28",
+    "desktopYarnLocked": "0.11.28",
+    "desktopInstalled": "0.11.17",
+    "historicalPnpmLocked": "0.2.78",
+    "dependencyUpgrade": false,
+    "bundledReadSources": {
+      "ai-skills/SKILL.md": "1bdaa3efdde9a455284810febaffb043cd3e59e8ef9a0babbb76c5c875140b0d",
+      "ai-skills/blockcraft.md": "fd35128d50e0f4b68d3d60881e155a884027aaef497d9e6ed2731b01c268686e",
+      "ai-skills/blockcraft-adapter.md": "6400f92fb7d87b482686189d3bafad983ab3dfc7bad9ec09e5b972dad81f2d42",
+      "ai-skills/MIGRATIONS.md": "d1bb5a6337b0e1ce0879099a34134b6e440891720386af9af4c20cdeba205ac2",
+      "fesm2022/ccc-blockcraft.mjs": "d045dd9ff8f17552ed9c15ba1c090fa77ec66bcdaf48a666db742a9f59e639f7"
+    }
+  },
+  "mobileSources": {
+    "packages/cses_document_collab/lib/src/editor/core/document_editor_controller.dart": "0f5003f08cc9c66160a81c170674638e6ee262c902ae68eab00cac88f2c03225",
+    "packages/appflowy_editor/lib/src/core/document/document.dart": "e73588878b5442d78a81bd13494b783bf794d9afc98847192c15b439ef5d5c01",
+    "packages/appflowy_editor/lib/src/core/document/node.dart": "b86313ec17c3bcb810eab337c30c11ff02a98b17f4840e313f85a9efe475d40a",
+    "lib/src/daily_guidance/journal_draft.dart": "d54b1995d962680f441eb96e7d0d231c73ac96a5b45a5ec392da2359624a581c",
+    "lib/src/daily_guidance/local_journal_controller.dart": "a2767edf9bd8d8fc104c08eee207dd2363c7cc32e4f5a56fba3926d0a4f1069c",
+    "lib/src/daily_guidance/guidance_entries.dart": "8e5ba09b9f5a2a1f346a03e72ad59b96045a8d31e8cd1e996816ffbb3add6c74",
+    "lib/src/daily_guidance/local_journal_page.dart": "1c915f59d27aec0451c8a8611ed863ca48cbd8211bbcb361bd2414da1d2c908d",
+    "packages/cses_document_collab/lib/src/editor/editor_user_mentions.dart": "531c0622462efca36ec941a4d5cb4b026e3bd9d6b1b927710d8fedc998cd77cd"
+  },
+  "desktopSources": {
+    "src/app/orientation-host/drawers/results/addDayResultsOrientedDrawer/add-results-oriented.drawer.ts": "4206d51271c888578ed89df24d88d9578e53ffe7d89edf896a96ba139b560352",
+    "packages/orientation/src/services/daily-orient.adapter.ts": "7975924a433334f1ca39382c1b94339368ea70992718e2e94d11d8c8680275e4",
+    "package.json": "0311a6b6bc6f6544c3701459228a469d4ce78fd5428e9aa46908d2312efa4339",
+    "yarn.lock": "dc8a15291b7f8ab771bd9fafc0181b3acef27bc8ef20dc6e7b745ce679fe5863",
+    "node_modules/@ccc/blockcraft/package.json": "fb139ff2aee88165cbe2a3ae6b289120f87e9868d88da564f252e13311883be4"
+  },
+  "confirmed": [
+    "正文Document.toJson与Document.fromJson已有",
+    "JournalDraft.toJson已有版本/日期/正文保存封套",
+    "当前日记纯内存会话未挂载WS协同绑定",
+    "导出公共业务快照/JSON提交按钮/网络服务尚未实现",
+    "桌面表单submitPayload data/extras经context.save提交，需对接实际接口契约，不能假定接受移动端私有树",
+    "原生EditorUserMention对象与历史guidance_mention并存；提交适配应保存实体身份，不按cses_前缀整体过滤"
+  ],
+  "notVerified": [
+    "未确认服务端最终保存路由及完整字段校验/返回版本契约",
+    "未做真实HTTP提交/真实业务派单或通知",
+    "未新增单元测试/构建/设备验收，现有历史测试不作提交能力已通过依据"
+  ]
+}
