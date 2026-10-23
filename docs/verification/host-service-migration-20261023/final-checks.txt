@@ -1,0 +1,8 @@
+活动源码、测试、示例及当前文档的六个旧服务路径：0处。
+服务目录与document_host跨目录相对import/export：0处。
+服务业务体与HEAD旧位置比较：6/6一致（排除导入、DartDoc与空白）。
+Dart format复核：100列5文件、120列5文件、80列3文件，均0变化。
+目标Flutter analyze：No issues found。
+最终8文件串行测试：109 passed，0 failed，0 skipped。
+源码与pubspec指纹：14/14一致。
+git diff --check：通过；暂存检查随迁移整体执行。

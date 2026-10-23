@@ -16,7 +16,7 @@ import 'package:mime/mime.dart';
 /// 文件选择与上传分开，等待期间检查取消和账号/企业/会话变化；仅稳定URL进入协同或头部业务。
 ///
 /// ```dart
-/// import 'package:cses_mobile_collab_demo/src/demo/cses_editor_media_upload_service.dart';
+/// import 'package:cses_mobile_collab_demo/src/service/cses_editor_media_upload_service.dart';
 /// import 'package:dio/dio.dart';
 /// Future<void> uploadIcon() async {
 ///   const service = CsesEditorMediaUploadService();

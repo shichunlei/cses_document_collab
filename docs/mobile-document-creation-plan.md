@@ -367,7 +367,7 @@ HTTP 快照重试也不能默认重复 `Insert` 安全。结果不明时先回�
 
 | 范围 | 代码 |
 |---|---|
-| 业务接口 | [CsesDocumentCreationService](../lib/src/demo/document_creation/cses_document_creation_service.dart) |
+| 业务接口 | [CsesDocumentCreationService](../lib/src/service/cses_document_creation_service.dart) |
 | 创建编排及恢复阶段 | [DocumentCreationCoordinator](../lib/src/demo/document_creation/document_creation_coordinator.dart)、[操作记录](../lib/src/demo/document_creation/document_creation_operation.dart) |
 | 账号隔离持久化 | [FileDocumentCreationStore](../lib/src/demo/document_creation/document_creation_store.dart) |
 | 手机创建页面 | [DocumentCreationPage](../lib/src/demo/document_creation/document_creation_page.dart) |

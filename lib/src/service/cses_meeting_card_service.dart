@@ -6,7 +6,7 @@ import 'package:cses_document_collab/cses_document_collab.dart' show CollabMeeti
 /// 通过Common的同源会议详情接口提供卡片展示数据；不写协同文档，也不持有HTTP连接。
 /// 实例绑定创建时的账号/企业/会话，切换后拒绝旧响应；宿主负责文档及认证生命周期。
 /// ```dart
-/// import 'package:cses_mobile_collab_demo/src/demo/cses_meeting_card_service.dart';
+/// import 'package:cses_mobile_collab_demo/src/service/cses_meeting_card_service.dart';
 /// import 'package:cses_document_collab/cses_document_collab.dart';
 /// CollabHostServices servicesAfterLogin() => CollabHostServices(
 ///   loadMeetingCard: CsesMeetingCardService().load,

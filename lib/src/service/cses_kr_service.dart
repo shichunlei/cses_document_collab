@@ -5,7 +5,7 @@ import 'package:cses_document_collab/cses_document_collab.dart';
 
 /// 将桌面同源KR响应映射为协同包公开契约；不拥有HTTP客户端。
 /// ```dart
-/// import 'package:cses_mobile_collab_demo/src/demo/cses_kr_service.dart';
+/// import 'package:cses_mobile_collab_demo/src/service/cses_kr_service.dart';
 /// import 'package:cses_document_collab/cses_document_collab.dart';
 /// final services = CollabHostServices(kr: CsesKrService());
 /// ```

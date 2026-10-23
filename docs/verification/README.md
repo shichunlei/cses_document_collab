@@ -16,6 +16,8 @@
 
 ### 文档创建与文档信息
 
+- [host-service-migration-20261023](host-service-migration-20261023/)（[宿主服务目录迁移收尾](host-service-migration-20261023/report.md)）
+
 - [document-cover-drag-20261016](document-cover-drag-20261016/)
 - [document-creation-20261022](document-creation-20261022/)（[文档列表与今日导向合并验证](document-creation-20261022/journal-merge.md)）
 - [document-feedback-20261015](document-feedback-20261015/)

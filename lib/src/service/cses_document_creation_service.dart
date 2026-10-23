@@ -1,18 +1,19 @@
 import 'dart:convert';
+
 import 'package:crypto/crypto.dart';
 import 'package:cses_common/network/http/client/http_manager.dart';
 import 'package:cses_common/runtime/context/context.dart';
 import 'package:cses_common/runtime/session/user.dart';
 import 'package:cses_document_collab/cses_document_collab.dart' show PreparedDocument;
 import 'package:dio/dio.dart';
-import 'document_creation_api.dart';
-import 'document_creation_operation.dart';
-import 'document_list_page.dart';
+import 'package:cses_mobile_collab_demo/src/demo/document_creation/document_creation_api.dart';
+import 'package:cses_mobile_collab_demo/src/demo/document_creation/document_creation_operation.dart';
+import 'package:cses_mobile_collab_demo/src/demo/document_creation/document_list_page.dart';
 
 /// 绑定Common账号的新建HTTP适配器，不创建或释放HTTP客户端及主连接。
 ///
 /// ```dart
-/// import 'package:cses_mobile_collab_demo/src/demo/document_creation/cses_document_creation_service.dart';
+/// import 'package:cses_mobile_collab_demo/src/service/cses_document_creation_service.dart';
 /// Future<void> inspectCreation() async {
 ///   final service = CsesDocumentCreationService(); // Common登录完成后创建。
 ///   final targets = await service.loadTargets();

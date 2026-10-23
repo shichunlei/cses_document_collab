@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:cses_common/runtime/context/context.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';
 import 'package:cses_mobile_collab_demo/src/demo/cses_account_login.dart';
-import 'package:cses_mobile_collab_demo/src/demo/cses_meeting_card_service.dart';
+import 'package:cses_mobile_collab_demo/src/service/cses_meeting_card_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'support/common_login_harness.dart';

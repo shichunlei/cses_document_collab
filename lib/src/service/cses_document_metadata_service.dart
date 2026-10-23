@@ -8,7 +8,7 @@ import 'package:cses_document_collab/cses_document_collab.dart'
 /// 实例绑定创建时的账号、企业与cookie；不拥有HTTP客户端，登录切换前由宿主等待请求结束。
 ///
 /// ```dart
-/// import 'package:cses_mobile_collab_demo/src/demo/cses_document_metadata_service.dart';
+/// import 'package:cses_mobile_collab_demo/src/service/cses_document_metadata_service.dart';
 /// import 'package:cses_document_collab/cses_document_collab.dart' show DocumentMetadataPatch;
 /// Future<void> renameAfterCommonLogin(String id) async {
 ///   final service = CsesDocumentMetadataService();

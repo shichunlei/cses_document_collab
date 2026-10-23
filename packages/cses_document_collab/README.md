@@ -414,7 +414,7 @@ CollabHostServices meetingServices(
 
 `loadMeetingCard(meetingId)`返回`Future<CollabMeetingCardData?>`，`state`使用公开`CollabMeetingCardState`；可用`fromValue`映射服务端原始状态。宿主拥有认证/HTTP，包不释放它们。仅在卡片挂载、会议ID或宿主变化、手动失败重试时读取详情；加入/查看按钮只调用宿主回调，执行前后均不额外请求详情，同一卡片重建复用请求，换ID/会话或销毁后忽略迟到结果，不把业务状态写入协同文档。
 
-未配置加载器时保留共享引用并显示“状态未知”；明确返回null表示会议不存在，`Delete`表示已删除，二者均禁用主按钮。未知状态不伪造未开始；加载中或失败也禁用主按钮，失败显示重试并向原宿主报告。Demo通过`lib/src/demo/cses_meeting_card_service.dart`及Common的`POST /meeting/getDetail`加载详情，前后校验账号、企业和会话。
+未配置加载器时保留共享引用并显示“状态未知”；明确返回null表示会议不存在，`Delete`表示已删除，二者均禁用主按钮。未知状态不伪造未开始；加载中或失败也禁用主按钮，失败显示重试并向原宿主报告。Demo通过`lib/src/service/cses_meeting_card_service.dart`及Common的`POST /meeting/getDetail`加载详情，前后校验账号、企业和会话。
 
 新增引用的宿主端口如下，宿主页面自行处理会议搜索/创建及认证，返回引用值并等待退场；取消返回null。`canEdit`仅在本次调用期间借用，false后不得确认，不保留或释放它。包拒绝撤权、关闭、会话替换与插入位置失效的迟到结果。
 
