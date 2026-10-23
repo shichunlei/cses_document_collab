@@ -1,9 +1,10 @@
-import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
-import 'collab_host_mention_ui.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
-import 'collab_mention_tap_handler.dart';
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'collab_host_mention_ui.dart';
+import 'collab_mention_tap_handler.dart';
 
 /// 正文单字符用户提及，显示头像与原始姓名，不附加@字符。
 /// 点击仅通知宿主统一回调，未配置时不响应；预览允许点击，不创建人员资料界面。

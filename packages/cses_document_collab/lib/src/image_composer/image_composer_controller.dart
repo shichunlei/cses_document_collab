@@ -1,10 +1,11 @@
-import 'package:cses_document_collab/src/model/collab_host_services.dart';
 import 'dart:convert';
+
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/core/document_editor_controller.dart';
 import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:cses_document_collab/src/editor/core/editor_configuration.dart';
 import 'package:cses_document_collab/src/editor/local_editor_controller.dart';
+import 'package:cses_document_collab/src/model/collab_host_services.dart';
 import 'package:cses_document_collab/src/model/collab_image_template.dart';
 
 /// 单个离线页面拥有的编辑与预览会话，不创建协同、锁服务或图片编码任务。

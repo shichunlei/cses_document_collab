@@ -1,5 +1,5 @@
-import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:cses_document_collab/src/model/collab_meeting_reference.dart';
 import 'package:flutter/material.dart';
 

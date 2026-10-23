@@ -1,0 +1,1032 @@
+Failed to clean up asset directory build/unit_test_assets: FileSystemException: Deletion failed, path = 'build/unit_test_assets' (OS Error: Directory not empty, errno = 66)
+To clean build artifacts, use the command "flutter clean".
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: existing document preflight uses authorized view and rejects missing or foreign ids
+00:01 +1: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:01 +1: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: space documents use parent id and totalCount pagination without requiring hasMore
+00:01 +1: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:01 +1: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: space documents use parent id and totalCount pagination without requiring hasMore
+00:01 +1: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:01 +1: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: space documents use parent id and totalCount pagination without requiring hasMore
+00:01 +1: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:01 +1: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: space documents use parent id and totalCount pagination without requiring hasMore
+00:01 +1: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:01 +1: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: space documents use parent id and totalCount pagination without requiring hasMore
+00:01 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:01 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document list rejects invalid metadata, request bounds and stale account results
+00:01 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:01 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document list rejects invalid metadata, request bounds and stale account results
+00:01 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:01 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document list rejects invalid metadata, request bounds and stale account results
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document list rejects invalid metadata, request bounds and stale account results
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document list rejects invalid metadata, request bounds and stale account results
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document list rejects invalid metadata, request bounds and stale account results
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document list rejects invalid metadata, request bounds and stale account results
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document list rejects invalid metadata, request bounds and stale account results
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document list rejects invalid metadata, request bounds and stale account results
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document list rejects invalid metadata, request bounds and stale account results
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document list rejects invalid metadata, request bounds and stale account results
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document list rejects invalid metadata, request bounds and stale account results
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document list rejects invalid metadata, request bounds and stale account results
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document list rejects invalid metadata, request bounds and stale account results
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document list rejects invalid metadata, request bounds and stale account results
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document list rejects invalid metadata, request bounds and stale account results
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document list rejects invalid metadata, request bounds and stale account results
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document list rejects invalid metadata, request bounds and stale account results
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document list rejects invalid metadata, request bounds and stale account results
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document list rejects invalid metadata, request bounds and stale account results
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document list rejects invalid metadata, request bounds and stale account results
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document list rejects invalid metadata, request bounds and stale account results
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document list rejects invalid metadata, request bounds and stale account results
+00:02 +3: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:02 +3: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: document metadata preserves immutable pages and uses the most recent available timestamp
+00:02 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:02 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:02 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:02 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:02 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:02 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:02 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:02 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:02 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:02 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:02 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: first use initializes personal space then reloads real IDs
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:03 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:03 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:03 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: view and permission use real Common headers; preserve desktop fields
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: createChild permission is required; role alone does not grant creation
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: create uses empty title and formal text type; snapshot has two Insert blocks
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: create uses empty title and formal text type; snapshot has two Insert blocks
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: create uses empty title and formal text type; snapshot has two Insert blocks
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: create uses empty title and formal text type; snapshot has two Insert blocks
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: create uses empty title and formal text type; snapshot has two Insert blocks
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: create uses empty title and formal text type; snapshot has two Insert blocks
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: create uses empty title and formal text type; snapshot has two Insert blocks
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: create uses empty title and formal text type; snapshot has two Insert blocks
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: create uses empty title and formal text type; snapshot has two Insert blocks
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: create uses empty title and formal text type; snapshot has two Insert blocks
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: create uses empty title and formal text type; snapshot has two Insert blocks
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: create uses empty title and formal text type; snapshot has two Insert blocks
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: create uses empty title and formal text type; snapshot has two Insert blocks
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:05 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: create uses empty title and formal text type; snapshot has two Insert blocks
+00:05 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:05 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: create uses empty title and formal text type; snapshot has two Insert blocks
+00:05 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: create uses empty title and formal text type; snapshot has two Insert blocks
+00:05 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: create uses empty title and formal text type; snapshot has two Insert blocks
+00:05 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: create uses empty title and formal text type; snapshot has two Insert blocks
+00:05 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: create uses empty title and formal text type; snapshot has two Insert blocks
+00:05 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: create uses empty title and formal text type; snapshot has two Insert blocks
+00:05 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: create uses empty title and formal text type; snapshot has two Insert blocks
+00:05 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: create uses empty title and formal text type; snapshot has two Insert blocks
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: known create ID remains available when account changes during response
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: known create ID remains available when account changes during response
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: known create ID remains available when account changes during response
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: known create ID remains available when account changes during response
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: known create ID remains available when account changes during response
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: known create ID remains available when account changes during response
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: known create ID remains available when account changes during response
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: known create ID remains available when account changes during response
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: known create ID remains available when account changes during response
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: known create ID remains available when account changes during response
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: known create ID remains available when account changes during response
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: known create ID remains available when account changes during response
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: block unlock grants match desktop manager role and revoke after failed reload
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +10: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:05 +10: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: missing ID and failed business result never count as success
+00:05 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps NotStarted through Common headers without changing wire state
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps InProgress through Common headers without changing wire state
+00:06 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps InProgress through Common headers without changing wire state
+00:06 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps InProgress through Common headers without changing wire state
+00:06 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps InProgress through Common headers without changing wire state
+00:06 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps InProgress through Common headers without changing wire state
+00:06 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps InProgress through Common headers without changing wire state
+00:06 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps InProgress through Common headers without changing wire state
+00:06 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps InProgress through Common headers without changing wire state
+00:06 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps InProgress through Common headers without changing wire state
+00:06 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps InProgress through Common headers without changing wire state
+00:06 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps InProgress through Common headers without changing wire state
+00:06 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps InProgress through Common headers without changing wire state
+00:06 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: single-field updates and dedicated remove routes match desktop contract
+00:06 +13: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: transport failures stay unknown while explicit HTTP permission denials are rejected
+00:06 +14: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps InProgress through Common headers without changing wire state
+00:06 +14: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename omitted; save uses Common while preserving other header fields
+00:06 +14: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: real Common timeout persists unknown create and never repeats the HTTP create
+00:06 +14: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps InProgress through Common headers without changing wire state
+00:06 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename omitted; save uses Common while preserving other header fields
+00:06 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Pause through Common headers without changing wire state
+00:06 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename omitted; save uses Common while preserving other header fields
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Pause through Common headers without changing wire state
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename omitted; save uses Common while preserving other header fields
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Pause through Common headers without changing wire state
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: real Common timeout persists unknown create and never repeats the HTTP create
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Pause through Common headers without changing wire state
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: real Common timeout persists unknown create and never repeats the HTTP create
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Pause through Common headers without changing wire state
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename omitted; save uses Common while preserving other header fields
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Pause through Common headers without changing wire state
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename omitted; save uses Common while preserving other header fields
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Pause through Common headers without changing wire state
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename omitted; save uses Common while preserving other header fields
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Pause through Common headers without changing wire state
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename omitted; save uses Common while preserving other header fields
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Pause through Common headers without changing wire state
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename omitted; save uses Common while preserving other header fields
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Pause through Common headers without changing wire state
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename omitted; save uses Common while preserving other header fields
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Pause through Common headers without changing wire state
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename omitted; save uses Common while preserving other header fields
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Pause through Common headers without changing wire state
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: real Common timeout persists unknown create and never repeats the HTTP create
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename omitted; save uses Common while preserving other header fields
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: real Common timeout persists unknown create and never repeats the HTTP create
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename omitted; save uses Common while preserving other header fields
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: real Common timeout persists unknown create and never repeats the HTTP create
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename omitted; save uses Common while preserving other header fields
+00:07 +16: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename omitted; save uses Common while preserving other header fields
+00:07 +16: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Pause through Common headers without changing wire state
+00:07 +16: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename omitted; save uses Common while preserving other header fields
+00:07 +16: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +17: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: reads desktop detail contract through Common and maps full screenshot fields
+00:07 +17: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Pause through Common headers without changing wire state
+00:07 +17: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +17: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +17: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +17: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +17: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +17: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +17: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +17: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Pause through Common headers without changing wire state
+00:07 +17: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +17: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Pause through Common headers without changing wire state
+00:07 +17: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +17: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Pause through Common headers without changing wire state
+00:07 +17: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +17: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Pause through Common headers without changing wire state
+00:07 +17: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +17: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Pause through Common headers without changing wire state
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: reads desktop detail contract through Common and maps full screenshot fields
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Completed through Common headers without changing wire state
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Completed through Common headers without changing wire state
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Completed through Common headers without changing wire state
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Completed through Common headers without changing wire state
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Completed through Common headers without changing wire state
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: reads desktop detail contract through Common and maps full screenshot fields
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Completed through Common headers without changing wire state
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Completed through Common headers without changing wire state
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Completed through Common headers without changing wire state
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Completed through Common headers without changing wire state
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Completed through Common headers without changing wire state
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Completed through Common headers without changing wire state
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Completed through Common headers without changing wire state
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Completed through Common headers without changing wire state
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Completed through Common headers without changing wire state
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Completed through Common headers without changing wire state
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Completed through Common headers without changing wire state
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Completed through Common headers without changing wire state
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Completed through Common headers without changing wire state
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Completed through Common headers without changing wire state
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Completed through Common headers without changing wire state
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Completed through Common headers without changing wire state
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: snapshot recovery distinguishes missing, exact match and changed content
+00:07 +19: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: reads desktop detail contract through Common and maps full screenshot fields
+00:07 +19: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +19: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Completed through Common headers without changing wire state
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: reads desktop detail contract through Common and maps full screenshot fields
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when rename null; save uses Common while preserving other header fields
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:07 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: reads desktop detail contract through Common and maps full screenshot fields
+00:07 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:07 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:07 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:07 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:07 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:07 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:07 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:07 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:07 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:07 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:07 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:07 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:07 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: reads desktop detail contract through Common and maps full screenshot fields
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: reads desktop detail contract through Common and maps full screenshot fields
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: reads desktop detail contract through Common and maps full screenshot fields
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: reads desktop detail contract through Common and maps full screenshot fields
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: reads desktop detail contract through Common and maps full screenshot fields
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: reads desktop detail contract through Common and maps full screenshot fields
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: reads desktop detail contract through Common and maps full screenshot fields
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: reads desktop detail contract through Common and maps full screenshot fields
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: reads desktop detail contract through Common and maps full screenshot fields
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Canceled through Common headers without changing wire state
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: reads desktop detail contract through Common and maps full screenshot fields
+00:08 +22: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: reads desktop detail contract through Common and maps full screenshot fields
+00:08 +22: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:08 +22: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:08 +22: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:08 +22: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: editing needs server editor role and honors explicit modify denial
+00:08 +22: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:08 +23: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: reads desktop detail contract through Common and maps full screenshot fields
+00:08 +23: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:08 +23: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Delete through Common headers without changing wire state
+00:08 +23: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:08 +23: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Delete through Common headers without changing wire state
+00:08 +23: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: reads desktop detail contract through Common and maps full screenshot fields
+00:08 +23: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:08 +23: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Delete through Common headers without changing wire state
+00:08 +23: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: scope is stable across cookie rotations but service refuses stale identity
+00:08 +23: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:08 +23: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_creation_service_test.dart: scope is stable across cookie rotations but service refuses stale identity
+00:08 +24: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: reads desktop detail contract through Common and maps full screenshot fields
+00:08 +24: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps Delete through Common headers without changing wire state
+00:08 +25: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: reads desktop detail contract through Common and maps full screenshot fields
+00:08 +25: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:08 +25: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps FutureState through Common headers without changing wire state
+00:08 +25: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:08 +25: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps FutureState through Common headers without changing wire state
+00:08 +25: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner can rename when abilities omitted; save uses Common while preserving other header fields
+00:08 +25: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps FutureState through Common headers without changing wire state
+00:08 +26: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: reads desktop detail contract through Common and maps full screenshot fields
+00:08 +26: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: detail maps FutureState through Common headers without changing wire state
+00:08 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: reads desktop detail contract through Common and maps full screenshot fields
+00:08 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:08 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: reads desktop detail contract through Common and maps full screenshot fields
+00:08 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:08 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: reads desktop detail contract through Common and maps full screenshot fields
+00:08 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:08 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: wrapped detail and explicit missing item/data are supported
+00:09 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:09 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: wrapped detail and explicit missing item/data are supported
+00:09 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:09 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: wrapped detail and explicit missing item/data are supported
+00:09 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:09 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: wrapped detail and explicit missing item/data are supported
+00:09 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:09 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: wrapped detail and explicit missing item/data are supported
+00:09 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:09 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: wrapped detail and explicit missing item/data are supported
+00:09 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:09 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: wrapped detail and explicit missing item/data are supported
+00:09 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:09 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: wrapped detail and explicit missing item/data are supported
+00:09 +28: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:09 +28: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: wrapped detail and explicit missing item/data are supported
+00:09 +28: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:09 +28: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +28: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:09 +28: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +28: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:09 +28: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +28: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:09 +28: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +28: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:09 +28: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +28: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:09 +28: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +28: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:09 +28: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +28: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:09 +28: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: wrapped detail and explicit missing item/data are supported
+00:09 +28: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: owner identity, owner role and rename ability follow desktop restrictions
+00:09 +29: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: wrapped detail and explicit missing item/data are supported
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: optional metadata can be omitted and memberCount is used when members are absent
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: optional metadata can be omitted and memberCount is used when members are absent
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: optional metadata can be omitted and memberCount is used when members are absent
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: optional metadata can be omitted and memberCount is used when members are absent
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: optional metadata can be omitted and memberCount is used when members are absent
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: optional metadata can be omitted and memberCount is used when members are absent
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: optional metadata can be omitted and memberCount is used when members are absent
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: optional metadata can be omitted and memberCount is used when members are absent
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: optional metadata can be omitted and memberCount is used when members are absent
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: optional metadata can be omitted and memberCount is used when members are absent
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: optional metadata can be omitted and memberCount is used when members are absent
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: optional metadata can be omitted and memberCount is used when members are absent
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: optional metadata can be omitted and memberCount is used when members are absent
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: optional metadata can be omitted and memberCount is used when members are absent
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: optional metadata can be omitted and memberCount is used when members are absent
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: business failure never acts as a successful ACK
+00:09 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +31: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +31: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: optional metadata can be omitted and memberCount is used when members are absent
+00:09 +31: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +31: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: optional metadata can be omitted and memberCount is used when members are absent
+00:09 +31: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +31: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: optional metadata can be omitted and memberCount is used when members are absent
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: optional data stays unknown, explicit empty item means missing
+00:09 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:09 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:09 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:09 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:09 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:09 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:09 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:09 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:09 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:09 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:09 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:09 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:09 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:09 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:09 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:09 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:09 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_document_metadata_service_test.dart: changed login prevents requests and rejects late responses
+00:09 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:09 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: rejects mismatched identity, malformed metadata and business failure
+00:10 +35: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress -2 -> 0.0
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: stale session refuses requests and late responses
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress 101 -> 100.0
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: stale session refuses requests and late responses
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress 101 -> 100.0
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: stale session refuses requests and late responses
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress 101 -> 100.0
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: stale session refuses requests and late responses
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress 101 -> 100.0
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: stale session refuses requests and late responses
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress 101 -> 100.0
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: stale session refuses requests and late responses
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress 101 -> 100.0
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: stale session refuses requests and late responses
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress 101 -> 100.0
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: stale session refuses requests and late responses
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress 101 -> 100.0
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: stale session refuses requests and late responses
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress 101 -> 100.0
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: stale session refuses requests and late responses
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress 101 -> 100.0
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: stale session refuses requests and late responses
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress 101 -> 100.0
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: stale session refuses requests and late responses
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress 101 -> 100.0
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: stale session refuses requests and late responses
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress 101 -> 100.0
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: stale session refuses requests and late responses
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress 101 -> 100.0
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: stale session refuses requests and late responses
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress 101 -> 100.0
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: stale session refuses requests and late responses
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress 101 -> 100.0
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: stale session refuses requests and late responses
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress 101 -> 100.0
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: stale session refuses requests and late responses
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress 101 -> 100.0
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_meeting_card_service_test.dart: stale session refuses requests and late responses
+00:10 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress 101 -> 100.0
+00:10 +37: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress 101 -> 100.0
+00:10 +38: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress 18.888 -> 18.89
+00:10 +39: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress invalid -> 0.0
+00:10 +40: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: normalizes desktop progress  -> 0.0
+00:11 +41: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: malformed identity, tags, leaders, dates and counts are rejected
+00:12 +42: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_task_card_service_test.dart: stale session prevents requests and rejects late successful response
+00:16 +43: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: create persists stages before writes; one doc and one prepared paragraph
+00:16 +44: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: existing document open only verifies, releases and opens without changing a pending record
+00:16 +45: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: existing document access rejection preserves current document and allows retry
+00:16 +46: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: existing document open rejects another target and creation during a pending switch
+00:16 +47: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: account change or close during access verification prevents releasing and opening
+00:16 +48: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: failed existing open leaves journal unchanged and can retry without bootstrap
+00:16 +49: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: double click shares in-flight create and does not duplicate shell
+00:16 +50: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: concurrent restore shares one read and does not overwrite an active create
+00:16 +51: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: failed restore can retry after storage recovery
+00:16 +52: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: unknown create outcome never automatically creates again
+00:16 +53: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: journal failure before HTTP permits a fresh attempt after storage recovers
+00:16 +54: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: reviewed unknown operation persists before allowing a separate new creation
+00:16 +55: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: account change cannot resolve an unknown operation or retain a busy lock
+00:16 +56: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: in-flight create cannot be ended as a reviewed unknown result
+00:16 +57: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: explicit shell rejection allows a new operation
+00:16 +58: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: native failure resumes the same doc and stable paragraph
+00:16 +59: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: receipt write failure retains known ID in memory and retries storage before native work
+00:16 +60: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: account change during native preparation prevents initial HTTP write and navigation
+00:16 +61: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: uncertain snapshot reads first; missing never re-inserts
+00:16 +62: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: explicit snapshot rejection remains safely retryable
+00:16 +63: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: accepted snapshot survives editor failure without re-sending
+00:16 +64: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: late create after account switch preserves old receipt without preparing
+00:16 +65: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: close joins in-flight create and only saves its late receipt
+00:16 +66: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: restore converts a crashed creating request to unknown
+00:16 +67: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: corrupted records cannot silently become a fresh create
+00:16 +68: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: atomic account files reopen; different scopes cannot see pending IDs
+00:16 +69: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: real creation page selects a location and returns created doc ID
+00:19 +70: /Users/shichunlei/workspace/mobile-collab-demo/test/document_space_list_test.dart: document rows dispatch their entry and respect disabled opening state
+00:19 +71: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: new document opens above the list and back returns to the selected space
+00:20 +72: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: new document opens above the list and back returns to the selected space
+00:20 +73: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: new document opens above the list and back returns to the selected space
+00:20 +74: /Users/shichunlei/workspace/mobile-collab-demo/test/document_space_list_test.dart: failed next page keeps existing rows and retries the same page
+00:20 +75: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: app bar creates in the selected space even when its document list fails
+00:20 +76: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: app bar creates in the selected space even when its document list fails
+00:21 +77: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: app bar creates in the selected space even when its document list fails
+00:21 +78: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: app bar creates in the selected space even when its document list fails
+00:21 +79: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: app bar creates in the selected space even when its document list fails
+00:21 +80: /Users/shichunlei/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: connection page scrolls and exposes only the document list route
+00:21 +81: /Users/shichunlei/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: connection page scrolls and exposes only the document list route
+00:22 +82: /Users/shichunlei/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: connection page scrolls and exposes only the document list route
+00:22 +83: /Users/shichunlei/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: connection page scrolls and exposes only the document list route
+00:22 +84: /Users/shichunlei/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: connection page scrolls and exposes only the document list route
+00:22 +85: /Users/shichunlei/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: connection page scrolls and exposes only the document list route
+00:22 +86: /Users/shichunlei/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: connection page scrolls and exposes only the document list route
+00:22 +87: /Users/shichunlei/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: connection page scrolls and exposes only the document list route
+00:23 +88: /Users/shichunlei/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: connection page scrolls and exposes only the document list route
+00:23 +89: /Users/shichunlei/workspace/mobile-collab-demo/test/document_creation_coordinator_test.dart: completed restoration retains its target after late spaces (retry=true)
+00:23 +90: /Users/shichunlei/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: offline entry works during loading and after storage failure
+00:23 +91: /Users/shichunlei/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: offline entry works during loading and after storage failure
+00:23 +92: /Users/shichunlei/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: offline entry works during loading and after storage failure
+00:23 +93: /Users/shichunlei/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: offline entry works during loading and after storage failure
+00:23 +94: /Users/shichunlei/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: offline entry works during loading and after storage failure
+00:24 +95: /Users/shichunlei/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: offline entry works during loading and after storage failure
+00:24 +96: /Users/shichunlei/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: offline entry works during loading and after storage failure
+00:25 +97: /Users/shichunlei/workspace/mobile-collab-demo/test/collab_demo_page_test.dart: (tearDownAll)
+00:25 +97: All tests passed!

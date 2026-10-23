@@ -47,7 +47,7 @@ class LocalJournalPage extends StatefulWidget {
 
   /// 创建管理异步加载、退场保存和预览资源的状态。
   @override
-  State<LocalJournalPage> createState() => _LocalJournalPageState();
+  createState() => _LocalJournalPageState();
 }
 
 /// 拥有日记控制器和独立预览，应用进入后台时尽早持久化当前修订。

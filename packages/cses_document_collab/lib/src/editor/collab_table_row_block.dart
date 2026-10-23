@@ -1,6 +1,7 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'collab_table_children.dart';
 
 /// 独立渲染表格行节点，布局、正文和协同状态由编辑器持有。

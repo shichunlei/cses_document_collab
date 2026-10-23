@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-23",
+  "scope": "宿主六个服务目录迁移收尾",
+  "services": [
+    {
+      "from": "lib/src/demo/document_creation/cses_document_creation_service.dart",
+      "to": "lib/src/service/cses_document_creation_service.dart",
+      "business_body_unchanged": true,
+      "sha256": "23d17fa9a3da8d3dc70b0aa5cf116d6da4fbf8e3f3282a2cbe9a8145337b1985"
+    },
+    {
+      "from": "lib/src/demo/cses_document_metadata_service.dart",
+      "to": "lib/src/service/cses_document_metadata_service.dart",
+      "business_body_unchanged": true,
+      "sha256": "14ed12c355e7a5b3c10576edd5fc733ad365f6c1073a91c49f5acb55d33d6e55"
+    },
+    {
+      "from": "lib/src/demo/cses_editor_media_upload_service.dart",
+      "to": "lib/src/service/cses_editor_media_upload_service.dart",
+      "business_body_unchanged": true,
+      "sha256": "b7dbcd5e661ae90c107758065824716c6ff15cde74e8ab00c2c24dfcc885fe87"
+    },
+    {
+      "from": "lib/src/demo/cses_kr_service.dart",
+      "to": "lib/src/service/cses_kr_service.dart",
+      "business_body_unchanged": true,
+      "sha256": "fa7d4500b1265388767f79b72e8a3c9d47911980f14eab9a1c08ee37f5131bd6"
+    },
+    {
+      "from": "lib/src/demo/cses_meeting_card_service.dart",
+      "to": "lib/src/service/cses_meeting_card_service.dart",
+      "business_body_unchanged": true,
+      "sha256": "34c824ae755c4156641ecb90fb018e5d1732713e0813912f5e8ede443e334402"
+    },
+    {
+      "from": "lib/src/demo/cses_task_card_service.dart",
+      "to": "lib/src/service/cses_task_card_service.dart",
+      "business_body_unchanged": true,
+      "sha256": "703b592793f1f293dc122c7e19f7d76c2b139e7d7dd058ced6a11548ef1131f1"
+    }
+  ],
+  "validation": {
+    "flutter_analyze": "No issues found",
+    "consumer_and_host_native_tests": {
+      "passed": 109,
+      "failed": 0,
+      "skipped": 0,
+      "files": 8,
+      "concurrency": 1,
+      "native_library": "packages/cses_document_collab/rust/target/debug"
+    },
+    "dart_format": {
+      "files": 13,
+      "changed_in_final_check": 0,
+      "width_groups": {
+        "100": 5,
+        "120": 5,
+        "80": 3
+      }
+    },
+    "old_active_paths": 0,
+    "cross_directory_relative_imports_in_services_and_host": 0
+  },
+  "dependencies": {
+    "file_picker": {
+      "version": "13.1.0",
+      "change": "transitive -> direct main"
+    },
+    "mime": {
+      "version": "2.1.0",
+      "change": "transitive -> direct main"
+    },
+    "version_upgrades": false,
+    "pubspec_lock": "仓库既有ignore规则排除，本地锁定标记已更新，未强行纳入版本控制。"
+  },
+  "first_run": {
+    "consumer_passed": 97,
+    "native_failed": 12,
+    "cause": "首次未设置FRB库路径；两个Flutter测试进程共用产物目录出现清理冲突，改按README指定库路径串行执行后109项通过。",
+    "logs_preserved": true
+  },
+  "not_run": [
+    "真实OSS上传/在线业务服务",
+    "设备/平台构建"
+  ],
+  "source_manifest": "source-sha256.json"
+}

@@ -51,7 +51,7 @@ class JournalSurface extends StatefulWidget {
 
   /// 创建本视图拥有的滚动控制器。
   @override
-  State<JournalSurface> createState() => _JournalSurfaceState();
+  createState() => _JournalSurfaceState();
 }
 
 /// 管理当前视图的滚动资源，正文与保存仍由上层会话持有。

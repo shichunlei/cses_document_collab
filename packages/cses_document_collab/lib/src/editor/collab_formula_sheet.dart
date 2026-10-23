@@ -1,23 +1,23 @@
-import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'dart:convert';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
-import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
+import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'package:cses_document_collab/src/editor/collab_paragraph_links.dart';
-import 'package:cses_document_collab/src/model/collab_block_lock.dart';
-import 'package:cses_document_collab/src/model/collab_host_services.dart';
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
+import 'package:cses_document_collab/src/model/collab_block_lock.dart';
 import 'package:cses_document_collab/src/model/collab_formula.dart';
+import 'package:cses_document_collab/src/model/collab_host_services.dart';
 import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_bottom_sheet.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_dialog.dart';
-import 'package:cses_document_collab/src/ui/modal/collab_menu_row.dart';
-import 'package:cses_document_collab/src/ui/modal/collab_switch_row.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_formula_visual.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_menu_row.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_modal_colors.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_modal_field.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_switch_row.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 

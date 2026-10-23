@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:cses_common/runtime/session/user.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';
 import 'package:cses_mobile_collab_demo/src/demo/cses_account_login.dart';
-import 'package:cses_mobile_collab_demo/src/demo/document_creation/cses_document_creation_service.dart';
+import 'package:cses_mobile_collab_demo/src/service/cses_document_creation_service.dart';
 import 'package:cses_mobile_collab_demo/src/demo/document_creation/document_creation_api.dart';
 import 'package:cses_mobile_collab_demo/src/demo/document_creation/document_creation_coordinator.dart';
 import 'package:cses_mobile_collab_demo/src/demo/document_creation/document_creation_operation.dart';

@@ -1,7 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
-import 'package:cses_document_collab/src/model/collab_host_services.dart';
 import 'package:cses_document_collab/src/editor/core/editor_configuration.dart';
+import 'package:cses_document_collab/src/model/collab_host_services.dart';
+import 'package:flutter/foundation.dart';
 
 /// 一个编辑实例的业务端口与能力，不持有网络或数据库资源。
 /// 未绑定的历史组件沿用兼容端口，新独立会话显式绑定空服务。

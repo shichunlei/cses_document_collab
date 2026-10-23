@@ -2,11 +2,12 @@ import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart'
     show csesEmbedUrlAttribute;
 import 'package:cses_document_collab/src/model/collab_resource.dart';
-import 'package:flutter/material.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_card_frame.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_card_header.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_embedded_page.dart';
+import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+
 import 'collab_link_actions.dart';
 import 'collab_resource_block_base.dart';
 import 'collab_unsupported_block.dart';

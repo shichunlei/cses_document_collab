@@ -1,8 +1,8 @@
-import 'package:cses_document_collab/src/ui/modal/collab_editor_display_scope.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:cses_document_collab/src/model/collab_user_mention.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
-import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_editor_display_scope.dart';
 import 'package:flutter/material.dart';
 
 /// 在借用 [context] 中构建宿主头像槽；[userId]/[name] 为当前位置的人员，

@@ -1,17 +1,17 @@
-import 'package:provider/provider.dart';
-import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart' show csesEmbedUrlAttribute;
 import 'package:cses_document_collab/src/editor/collab_resource_block_base.dart';
 import 'package:cses_document_collab/src/editor/collab_unsupported_block.dart';
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_card_frame.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_card_header.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_media_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
 /// 音频块的独立构建器，只接受无正文的audio资源；不拥有编辑器或播放器。

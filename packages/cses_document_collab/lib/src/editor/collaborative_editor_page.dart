@@ -1,7 +1,7 @@
-import 'package:cses_document_collab/src/editor/document_editor_view.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/controller/collab_controller.dart';
 import 'package:cses_document_collab/src/editor/collab_block_lock_chrome.dart';
+import 'package:cses_document_collab/src/editor/document_editor_view.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_dialog.dart';

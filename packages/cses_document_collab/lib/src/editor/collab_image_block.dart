@@ -1,4 +1,3 @@
-import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'dart:async';
 import 'dart:math' as math;
 
@@ -7,6 +6,7 @@ import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.da
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/editor/collab_image_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_media_block_base.dart';
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_image.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_cached_image.dart';

@@ -1,12 +1,12 @@
-import 'package:cses_document_collab/src/ui/modal/collab_editor_display_scope.dart';
-import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'dart:convert';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'package:cses_document_collab/src/editor/collab_paragraph_links.dart';
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_bottom_sheet.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_editor_display_scope.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_menu_row.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_modal_colors.dart';

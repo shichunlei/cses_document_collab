@@ -6,7 +6,7 @@ import 'package:cses_document_collab/cses_document_collab.dart'
 
 /// 通过Common读取任务卡片详情，绑定创建时账号/企业/会话，不拥有共享HTTP客户端。
 /// ```dart
-/// import 'package:cses_mobile_collab_demo/src/demo/cses_task_card_service.dart';
+/// import 'package:cses_mobile_collab_demo/src/service/cses_task_card_service.dart';
 /// import 'package:cses_document_collab/cses_document_collab.dart';
 /// CollabHostServices servicesAfterLogin() => CollabHostServices(
 ///   loadTaskCard: CsesTaskCardService().load,

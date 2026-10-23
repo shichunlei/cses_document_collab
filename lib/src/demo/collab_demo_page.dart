@@ -8,13 +8,13 @@ import 'package:cses_document_collab/cses_document_collab.dart';
 import 'package:cses_mobile_collab_demo/src/daily_guidance/file_journal_store.dart';
 import 'package:cses_mobile_collab_demo/src/daily_guidance/local_journal_page.dart';
 import 'package:cses_mobile_collab_demo/src/demo/cses_connection_panel.dart';
+import 'package:cses_mobile_collab_demo/src/demo/document_creation/document_creation_page.dart';
 import 'package:cses_mobile_collab_demo/src/demo/document_host.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import 'markdown_file_picker.dart';
-import 'package:cses_mobile_collab_demo/src/demo/document_creation/document_creation_page.dart';
 
 /// 登录后的连接首页；通过列表选择协同文档，并提供独立离线编辑与今日导向入口。
 ///

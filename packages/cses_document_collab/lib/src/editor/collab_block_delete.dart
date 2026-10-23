@@ -1,17 +1,17 @@
-import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
-import 'package:cses_document_collab/src/model/collab_kr.dart';
-import 'package:cses_document_collab/src/model/collab_task_card.dart';
-import 'package:cses_document_collab/src/model/collab_meeting.dart';
-import 'package:cses_document_collab/src/model/collab_divider.dart';
-import 'package:cses_document_collab/src/model/collab_page_divider.dart';
-import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'dart:async';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
-import 'package:cses_document_collab/src/model/collab_table.dart';
-import 'package:cses_document_collab/src/model/collab_formula.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_list_editing.dart';
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
+import 'package:cses_document_collab/src/model/collab_divider.dart';
+import 'package:cses_document_collab/src/model/collab_formula.dart';
+import 'package:cses_document_collab/src/model/collab_kr.dart';
+import 'package:cses_document_collab/src/model/collab_meeting.dart';
+import 'package:cses_document_collab/src/model/collab_page_divider.dart';
+import 'package:cses_document_collab/src/model/collab_resource.dart';
+import 'package:cses_document_collab/src/model/collab_table.dart';
+import 'package:cses_document_collab/src/model/collab_task_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
