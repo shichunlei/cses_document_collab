@@ -1,0 +1,20 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_review_2_probe_test.dart
+test/blockcraft_review_2_probe_test.dart:33:56: Error: Undefined name 'KeyEventResult'.
+      expect(collabParagraphTabCommand.execute(state), KeyEventResult.ignored);
+                                                       ^^^^^^^^^^^^^^
+test/blockcraft_review_2_probe_test.dart:34:44: Error: Undefined name 'KeyEventResult'.
+      expect(indentCommand.execute(state), KeyEventResult.handled);
+                                           ^^^^^^^^^^^^^^
+00:00 +0 -1: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_review_2_probe_test.dart [E]
+  Failed to load "/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_review_2_probe_test.dart":
+  Compilation failed for testPath=/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_review_2_probe_test.dart: test/blockcraft_review_2_probe_test.dart:33:56: Error: Undefined name 'KeyEventResult'.
+        expect(collabParagraphTabCommand.execute(state), KeyEventResult.ignored);
+                                                         ^^^^^^^^^^^^^^
+  test/blockcraft_review_2_probe_test.dart:34:44: Error: Undefined name 'KeyEventResult'.
+        expect(indentCommand.execute(state), KeyEventResult.handled);
+                                             ^^^^^^^^^^^^^^
+  .
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_review_2_probe_test.dart: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_review_2_probe_test.dart

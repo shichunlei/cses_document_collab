@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-23",
+  "reason": "本轮首次全量验证沿用旧GENERATE_BLOCKCRAFT_EXAMPLES开关，旧测试重新生成三份前轮示例；已将本轮新测试改为独立开关",
+  "historicalValidationPreserved": true,
+  "historicalOriginalBytesRecovered": false,
+  "currentFilesMustNotBeUsedAsHistoricalOriginals": true,
+  "affected": [
+    {
+      "file": "fixes-converted-journal.json",
+      "originalRecordedSha256": "f684397aee77109296992e679cd2971763f57229e7b1eb87a113489ee650f555",
+      "currentRegeneratedSha256": "2113759eed1d0a5080ef6f570344a586e6247ab65cd9136dc0bf889a35435811",
+      "regeneratedCopy": "p1-regenerated-fixes-converted-journal.json",
+      "originalBytesRecovered": false
+    },
+    {
+      "file": "fixes-restored-mobile.json",
+      "originalRecordedSha256": "88d61836daaa81be2f8e0434d5fe3431de87f548983ac291bc00bc312c606262",
+      "currentRegeneratedSha256": "303e2340abec64e1a8c5a461053b3704bd538a1948b36db35d62cc1fb85ad91c",
+      "regeneratedCopy": "p1-regenerated-fixes-restored-mobile.json",
+      "originalBytesRecovered": false
+    },
+    {
+      "file": "fixed-journal-roundtrip.json",
+      "originalRecordedSha256": "62bdb1402c03a0d1bb9befed7009757806505725cc57e1cff33cded4f45065f7",
+      "currentRegeneratedSha256": "98b99c5e267cee9cf1ae570d2187db12942d4756de363a2d01089a19bd59ce3b",
+      "regeneratedCopy": "p1-regenerated-fixed-journal-roundtrip.json",
+      "originalBytesRecovered": false
+    }
+  ],
+  "p1ValidationUses": "p1-fixed-*专用示例及p1-fixes-*校验记录"
+}

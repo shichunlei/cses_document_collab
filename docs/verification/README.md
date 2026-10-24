@@ -27,7 +27,7 @@
 
 ### 编辑器架构、配置与离线能力
 
-- [blockcraft-json-exchange-20261023](blockcraft-json-exchange-20261023/)（[今日导向与桌面JSON双向转换、原生渲染和示例验证](blockcraft-json-exchange-20261023/report.md)）
+- [blockcraft-json-exchange-20261023](blockcraft-json-exchange-20261023/)（[今日导向与桌面JSON双向转换、原生渲染和示例验证](blockcraft-json-exchange-20261023/report.md)；[189ffad审查与6项缺陷](blockcraft-json-exchange-20261023/review.md)；[六项修复与双向验证](blockcraft-json-exchange-20261023/fixes.md)；[再次审查与2项遗漏](blockcraft-json-exchange-20261023/review-2.md)；[两项P1修复与文件往返验证](blockcraft-json-exchange-20261023/p1-fixes.md)）
 
 - 今日导向导出：[转换为桌面BlockCraft JSON的保留范围与实施分析](offline-journal-20261023/blockcraft-export-analysis.md)（归属既有offline-journal-20261023目录）。
 

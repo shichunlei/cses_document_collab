@@ -1,0 +1,189 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/blockcraft_review_2_probe_test.dart
+00:00 +0: empty heading Enter preserves business metadata and stable identity
+00:00 +0 -1: empty heading Enter preserves business metadata and stable identity [E]
+  Expected: contains pair 'audit' => 'demo'
+    Actual: {
+              'mobileGuidance': {'version': 1, 'role': 'content', 'section': 'record', 'business': {}}
+            }
+     Which:  doesn't contain key 'audit'
+
+  package:matcher                                               expect
+  package:flutter_test/src/widget_tester.dart 473:18            expect
+  test/daily_guidance/blockcraft_review_2_probe_test.dart 96:7  main.<fn>
+
+00:00 +0 -1: mixed text/list hardware indentation preserves both selected blocks in JSON
+00:00 +0 -2: mixed text/list hardware indentation preserves both selected blocks in JSON [E]
+  Expected: contains 'body'
+    Actual: '{"id":"root","flavour":"root","nodeType":"root","props":{},"meta":{"mobileGuidance":{"version":1,"role":"document","plainDesktop":true,"draft":{"id":"import-1792684800000000","date":"2026-10-23","createdAt":"2026-10-22T16:00:00.000Z","updatedAt":"2026-10-23T12:47:57.514919Z","timezoneOffsetMinutes":480},"sections":[{"key":"record"}],"closedSections":[]}},"children":[{"id":"first","flavour":"paragraph","nodeType":"editable","props":{},"meta":{"mobileGuidance":{"version":1,"role":"content","section":"record","business":{}}},"children":[{"insert":"anchor"}]}]}'
+     Which: does not contain 'body'
+
+  package:matcher                                                expect
+  package:flutter_test/src/widget_tester.dart 473:18             expect
+  test/daily_guidance/blockcraft_review_2_probe_test.dart 112:7  main.<fn>
+
+00:00 +0 -2: duplicated imported container retains fresh identities across undo redo
+00:00 +0 -3: duplicated imported container retains fresh identities across undo redo [E]
+  Expected: {
+              'id': 'root',
+              'flavour': 'root',
+              'nodeType': 'root',
+              'props': {},
+              'meta': {
+                'mobileGuidance': {
+                  'version': 1,
+                  'role': 'document',
+                  'plainDesktop': true,
+                  'draft': {
+                    'id': 'import-1792684800000000',
+                    'date': '2026-10-23',
+                    'createdAt': '2026-10-22T16:00:00.000Z',
+                    'updatedAt': '2026-10-23T12:47:57.530664Z',
+                    'timezoneOffsetMinutes': 480
+                  },
+                  'sections': [{'key': 'record'}],
+                  'closedSections': []
+                }
+              },
+              'children': [
+                {
+                  'id': 'callout',
+                  'flavour': 'callout',
+                  'nodeType': 'block',
+                  'props': {},
+                  'meta': {
+                    'mobileGuidance': {'version': 1, 'role': 'content', 'section': 'record', 'business': {}}
+                  },
+                  'children': [
+                    {
+                      'id': 'paragraph',
+                      'flavour': 'paragraph',
+                      'nodeType': 'editable',
+                      'props': {},
+                      'meta': {
+                        'mobileGuidance': {
+                          'version': 1,
+                          'role': 'content',
+                          'section': 'record',
+                          'business': {}
+                        }
+                      },
+                      'children': []
+                    }
+                  ]
+                },
+                {
+                  'id': 'BTSxNk-4',
+                  'flavour': 'callout',
+                  'nodeType': 'block',
+                  'props': {},
+                  'meta': {
+                    'mobileGuidance': {'version': 1, 'role': 'content', 'section': 'record', 'business': {}}
+                  },
+                  'children': [
+                    {
+                      'id': 'kmgyay-5',
+                      'flavour': 'paragraph',
+                      'nodeType': 'editable',
+                      'props': {},
+                      'meta': {
+                        'mobileGuidance': {
+                          'version': 1,
+                          'role': 'content',
+                          'section': 'record',
+                          'business': {}
+                        }
+                      },
+                      'children': []
+                    }
+                  ]
+                }
+              ]
+            }
+    Actual: {
+              'id': 'root',
+              'flavour': 'root',
+              'nodeType': 'root',
+              'props': {},
+              'meta': {
+                'mobileGuidance': {
+                  'version': 1,
+                  'role': 'document',
+                  'plainDesktop': true,
+                  'draft': {
+                    'id': 'import-1792684800000000',
+                    'date': '2026-10-23',
+                    'createdAt': '2026-10-22T16:00:00.000Z',
+                    'updatedAt': '2026-10-23T12:47:57.538543Z',
+                    'timezoneOffsetMinutes': 480
+                  },
+                  'sections': [{'key': 'record'}],
+                  'closedSections': []
+                }
+              },
+              'children': [
+                {
+                  'id': 'callout',
+                  'flavour': 'callout',
+                  'nodeType': 'block',
+                  'props': {},
+                  'meta': {
+                    'mobileGuidance': {'version': 1, 'role': 'content', 'section': 'record', 'business': {}}
+                  },
+                  'children': [
+                    {
+                      'id': 'paragraph',
+                      'flavour': 'paragraph',
+                      'nodeType': 'editable',
+                      'props': {},
+                      'meta': {
+                        'mobileGuidance': {
+                          'version': 1,
+                          'role': 'content',
+                          'section': 'record',
+                          'business': {}
+                        }
+                      },
+                      'children': []
+                    }
+                  ]
+                },
+                {
+                  'id': 'BTSxNk-4',
+                  'flavour': 'callout',
+                  'nodeType': 'block',
+                  'props': {},
+                  'meta': {
+                    'mobileGuidance': {'version': 1, 'role': 'content', 'section': 'record', 'business': {}}
+                  },
+                  'children': [
+                    {
+                      'id': 'kmgyay-5',
+                      'flavour': 'paragraph',
+                      'nodeType': 'editable',
+                      'props': {},
+                      'meta': {
+                        'mobileGuidance': {
+                          'version': 1,
+                          'role': 'content',
+                          'section': 'record',
+                          'business': {}
+                        }
+                      },
+                      'children': []
+                    }
+                  ]
+                }
+              ]
+            }
+     Which: at location ['meta']['mobileGuidance']['draft']['updatedAt'] is '2026-10-23T12:47:57.538543Z' instead of '2026-10-23T12:47:57.530664Z'
+
+  package:matcher                                                expect
+  package:flutter_test/src/widget_tester.dart 473:18             expect
+  test/daily_guidance/blockcraft_review_2_probe_test.dart 127:7  main.<fn>
+
+00:00 +0 -3: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/blockcraft_review_2_probe_test.dart: duplicated imported container retains fresh identities across undo redo
+  /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/blockcraft_review_2_probe_test.dart: empty heading Enter preserves business metadata and stable identity
+  /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/blockcraft_review_2_probe_test.dart: mixed text/list hardware indentation preserves both selected blocks in JSON

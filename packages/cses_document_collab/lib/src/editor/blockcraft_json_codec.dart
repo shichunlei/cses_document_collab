@@ -8,12 +8,14 @@ import 'package:cses_document_collab/src/model/collab_code.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
 import 'package:cses_document_collab/src/model/collab_formula.dart';
 import 'package:cses_document_collab/src/model/collab_image.dart';
+import 'package:cses_document_collab/src/model/collab_kr.dart';
 import 'package:cses_document_collab/src/model/collab_meeting.dart';
 import 'package:cses_document_collab/src/model/collab_mermaid.dart';
 import 'package:cses_document_collab/src/model/collab_ordered.dart';
 import 'package:cses_document_collab/src/model/collab_paragraph_style.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/model/collab_table.dart';
+import 'package:cses_document_collab/src/model/collab_task_card.dart';
 
 /// 将桌面快照转换为实际编辑树；每块/行内对象均转换，不保存原始JSON快照兜底。
 /// props/meta分别成为独立本地属性，未知插件类型直接报错，不生成占位块。
@@ -151,13 +153,16 @@ abstract final class BlockCraftJsonCodec {
   static String flavour(Node node) => switch (node.type) {
     'paragraph' when {'caption', 'shape-text', 'word-art'}.contains(node.attributes['bc.flavour']) =>
       node.attributes['bc.flavour'] as String,
+    'paragraph' => 'paragraph',
     'page' => 'root',
     'heading' => 'paragraph',
     'bulleted_list' => 'bullet',
     'numbered_list' => 'ordered',
     'todo_list' => 'todo',
     'quote' => 'blockquote',
-    _ => node.attributes['bc.flavour'] as String? ?? node.type,
+    _ when node.type.startsWith('snapshot-') =>
+      node.attributes['bc.flavour'] as String? ?? node.type.substring('snapshot-'.length),
+    _ => node.type,
   };
 
   /// 返回[node]的已转换独立属性，不含原始块JSON；[metadata]默认false，true读取meta。
@@ -354,8 +359,12 @@ abstract final class BlockCraftJsonCodec {
   }
 
   /// 将借用的[node]及后代重新编码；内容读取实时编辑树，不回放旧快照或编辑历史。
+  /// 文字叶块带真实子块时抛FormatException，不输出遗漏后代的快照；宿主可在事务预检调用。
   static Map<String, dynamic> encodeBlock(Node node) {
     final kind = flavour(node);
+    if (node.delta != null && node.children.isNotEmpty) {
+      throw const FormatException('桌面文字叶块不能包含真实子块，请使用平面缩进');
+    }
     final props = properties(node);
     final original = node.attributes['bc.flavour'];
     if (kind != original) {
@@ -429,6 +438,30 @@ abstract final class BlockCraftJsonCodec {
           }
         }
       }
+    }
+    if (kind == csesCalloutBlockType) {
+      for (final entry in const {
+        'prefix': csesCalloutPrefixAttribute,
+        'color': csesBlockTextColorAttribute,
+        'backColor': csesBlockBackgroundColorAttribute,
+        'borderColor': csesBlockBorderColorAttribute,
+      }.entries) {
+        final value = node.attributes[entry.value];
+        if (value == null) {
+          props.remove(entry.key);
+        } else {
+          props[entry.key] = value;
+        }
+      }
+    }
+    if (kind == collabTaskCardType || kind == collabKrType) {
+      props
+        ..clear()
+        ..addAll(
+          kind == collabTaskCardType
+              ? CollabTaskCard.read(node.attributes).values
+              : readCollabKr(node.attributes).values,
+        );
     }
     if ({'video', ...collabResourceTypes}.contains(kind)) {
       props.addAll(CollabResource.fromAttributes(node.attributes).values);

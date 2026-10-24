@@ -1,0 +1,84 @@
+{
+  "id": "root",
+  "flavour": "root",
+  "nodeType": "root",
+  "props": {},
+  "meta": {
+    "audit": "root-demo",
+    "mobileGuidance": {
+      "version": 1,
+      "role": "document",
+      "plainDesktop": true,
+      "draft": {
+        "id": "import-1792684800000000",
+        "date": "2026-10-23",
+        "createdAt": "2026-10-22T16:00:00.000Z",
+        "updatedAt": "2026-10-23T13:34:43.138501Z",
+        "timezoneOffsetMinutes": 480
+      },
+      "sections": [
+        {
+          "key": "record"
+        }
+      ],
+      "closedSections": []
+    }
+  },
+  "children": [
+    {
+      "id": "anchor",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {},
+      "meta": {
+        "mobileGuidance": {
+          "version": 1,
+          "role": "content",
+          "section": "record",
+          "business": {}
+        }
+      },
+      "children": [
+        {
+          "insert": "anchor"
+        }
+      ]
+    },
+    {
+      "id": "todo",
+      "flavour": "todo",
+      "nodeType": "editable",
+      "props": {
+        "checked": 1,
+        "depth": 1
+      },
+      "meta": {
+        "audit": "todo-demo",
+        "mobileGuidance": {
+          "version": 1,
+          "role": "content",
+          "section": "record",
+          "business": {}
+        }
+      },
+      "children": [
+        {
+          "insert": "格式待办",
+          "attributes": {
+            "a:bold": true,
+            "t:px": 22
+          }
+        },
+        {
+          "insert": {
+            "mention": "测试人员"
+          },
+          "attributes": {
+            "mentionId": "user-demo",
+            "mentionType": "user"
+          }
+        }
+      ]
+    }
+  ]
+}

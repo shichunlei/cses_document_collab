@@ -1,0 +1,12 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_editing_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_editing_test.dart: R1 actual imported journal retains business identity through public heading conversion
+HOST R1 {"type":"heading","entryId":"entry-demo","exported":[{"id":"-Tm951-3","flavour":"paragraph","nodeType":"editable","props":{"heading":2},"meta":{"mobileGuidance":{"version":1,"role":"content","section":"record","business":{"guidance_entry":"help","guidance_entry_id":"entry-demo","guidance_done":false}}},"children":[]}]}
+00:00 +1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_editing_test.dart: R5 appending into a locked imported container must be rejected
+HOST R5 lockedContainerChildren=1
+00:00 +2: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: journal formats, mentions, todo states, business ids and date survive both directions
+00:00 +3: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: all enabled formats, repeated objects and independent business/native checked state survive
+00:00 +4: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:06 +5: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: real controller export has no debounce delay and returns detached JSON
+00:06 +6: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: stable block ids survive saving and reopening without entering business attributes
+00:06 +7: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: desktop blocks outside journal capabilities are converted into real nested native nodes
+00:06 +8: All tests passed!

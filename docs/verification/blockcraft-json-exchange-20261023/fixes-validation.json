@@ -1,0 +1,74 @@
+{
+  "date": "2026-10-23",
+  "reviewedCommit": "189ffad",
+  "status": "passed",
+  "resolved": [
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "R5",
+    "R6"
+  ],
+  "addedRegressions": {
+    "host": 10,
+    "package": 19,
+    "total": 29
+  },
+  "tests": {
+    "host": {
+      "passed": 181,
+      "log": "fixes-host-all-tests.txt",
+      "command": "flutter test --no-pub --dart-define=GENERATE_BLOCKCRAFT_EXAMPLES=true test/daily_guidance"
+    },
+    "packageFull": {
+      "passed": 1698,
+      "skippedInitially": 1,
+      "log": "fixes-package-all-tests.txt",
+      "command": "flutter test --no-pub --dart-define=GENERATE_BLOCKCRAFT_EXAMPLES=true (packages/cses_document_collab)"
+    },
+    "desktopNative": {
+      "passed": 3,
+      "previouslySkippedNowPassed": 1,
+      "uniqueTotalPackageTestsPassed": 1699,
+      "log": "fixes-desktop-native-tests.txt",
+      "command": "flutter test --no-pub --dart-define=BOOTSTRAP_DESKTOP_ROOT=/System/Volumes/Data/workspace/cses-client --dart-define=BOOTSTRAP_PACKAGE_ROOT=/System/Volumes/Data/workspace/cses-client/node_modules/@ccc/blockcraft test/document_bootstrapper_native_test.dart"
+    },
+    "exampleGeneration": {
+      "passed": 6,
+      "log": "fixes-examples-tests.txt"
+    }
+  },
+  "analysis": [
+    "fixes-package-analyze.txt",
+    "fixes-host-final-analyze.txt",
+    "fixes-examples-analyze.txt"
+  ],
+  "android": "fixes-build-validation.json",
+  "desktopModel": "fixes-desktop-model-validation.json",
+  "examples": {
+    "fixes-converted-journal.json": "f684397aee77109296992e679cd2971763f57229e7b1eb87a113489ee650f555",
+    "fixes-restored-mobile.json": "88d61836daaa81be2f8e0434d5fe3431de87f548983ac291bc00bc312c606262",
+    "fixed-journal-roundtrip.json": "62bdb1402c03a0d1bb9befed7009757806505725cc57e1cff33cded4f45065f7",
+    "fixed-task-card.json": "ac1d2af5d9503899721413aeeef446222102ec0b269ac77c6954194afda13a17"
+  },
+  "historicalExamplesUnchanged": true,
+  "version": {
+    "latest": "0.11.30",
+    "integrity": "sha512-rx488SxuPm4FqjL88B4c0V5balNRL1h+gJ79IgYr84lfL68lCQdH/m11Dx0LvzdBnvQE/fgJDLscWlnogKlMPQ==",
+    "query": "npm view @ccc/blockcraft dist-tags dist.integrity --json --fetch-retries=0 --fetch-timeout=15000，桌面配置仓库实时返回",
+    "declaration": "0.11.30",
+    "yarn": "0.11.30",
+    "installed": "0.11.17",
+    "historicalPnpm": "0.2.78",
+    "upgradedByTask": false,
+    "latestArtifactHashesMatchPrior": true
+  },
+  "limits": [
+    "桌面模型和FRB/Yjs互通用实际安装0.11.17；0.11.30仅静态核对",
+    "未新增真机系统文件框/iOS/真实线上双端或业务服务验收",
+    "原高级对象工具、实时业务源及独立Vectra图正文限制保持"
+  ],
+  "archive": "终端日志仅清除行尾空格，保留早期失败与诊断结果",
+  "diffCheck": "git diff --check通过"
+}

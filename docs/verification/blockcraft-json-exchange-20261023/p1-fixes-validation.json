@@ -1,0 +1,81 @@
+{
+  "date": "2026-10-23",
+  "baseCommit": "189ffad",
+  "review": "review-2.md",
+  "status": "passed",
+  "resolved": [
+    "RR1",
+    "RR2"
+  ],
+  "committed": false,
+  "changes": [
+    "平面列表Tab/Shift+Tab及depth双字段同步",
+    "导入宿主关闭原生结构缩进回退",
+    "Codec/事务前拒绝文字叶块真实后代，禁止静默删减",
+    "空标题/引用原位转换与菜单共享业务/身份/元数据保留合同"
+  ],
+  "newRegressions": {
+    "package": 13,
+    "host": 9,
+    "total": 22
+  },
+  "testSourceSha256": {
+    "packages/cses_document_collab/test/blockcraft_json_integrity_test.dart": "41a5cc4cf3d857c063b7866456d2329ac58e42601aee5b08eaf8485e75831f26",
+    "test/daily_guidance/journal_blockcraft_integrity_test.dart": "5bdcad775896f20315b32836682da5baf5a9d80aacd8da90fdcbf8e57193c108"
+  },
+  "checks": {
+    "host": {
+      "passed": 190,
+      "skipped": 0,
+      "log": "p1-fixes-host-all-tests.txt"
+    },
+    "package": {
+      "passed": 1712,
+      "skipped": 0,
+      "desktopDirectoryProvided": true,
+      "nativeHistoryIncluded": true,
+      "log": "p1-fixes-package-all-tests.txt"
+    },
+    "examplesFinal": {
+      "passed": 9,
+      "log": "p1-fixes-examples-tests.txt",
+      "flag": "GENERATE_BLOCKCRAFT_P1_EXAMPLES"
+    },
+    "analysis": [
+      "p1-fixes-host-analyze.txt",
+      "p1-fixes-host-final-analyze.txt",
+      "p1-fixes-package-analyze.txt"
+    ],
+    "android": "p1-fixes-build-validation.json",
+    "desktopModel": "p1-fixes-desktop-model-validation.json",
+    "diffCheck": "passed"
+  },
+  "validatedChains": [
+    "生产JournalSurface注册的Tab/Shift+Tab命令，栏目/高亮两种父容器",
+    "help/pilot/task × 空H2/空引用的业务及稳定身份",
+    "Undo/Redo后完整正文children一致",
+    "桌面JSON→手机→编辑→桌面JSON→手机独立文件再导入→关闭/重开",
+    "原稿FileJournalStore后台编解码、flush/rename、关闭/重开",
+    "格式/原生人员提及/checked/depth/props/meta/ID完整比较",
+    "异常原生命令直接嵌套及混合选区事务整次拒绝且历史不变"
+  ],
+  "exampleSha256": {
+    "p1-fixed-heading-help.json": "8f811dc599a5108cb960daca61b464ac838d7400a7c195f877ad0f208e4d57ae",
+    "p1-fixed-quote-help.json": "8f601a1c74020ba0e6bf2d8e293822d250ba3ff2a6e38bc2f8ce8c5832a322ac",
+    "p1-fixed-todo-tab.json": "e75bd7c0598917216498f94bd253cd0d091eea4443d90510e4ad1f15d0b611f6"
+  },
+  "version": "p1-fixes-version-verification.json",
+  "sourceCountInApk": 19,
+  "archiveNotes": {
+    "transcripts": "仅清理行尾空白，中间编译、depth回归和测试名诊断保留",
+    "oldExamplesRegenerated": "p1-fixes-regenerated-artifacts.json",
+    "oldOriginalBytesRecovered": false,
+    "currentExamplesIndependent": true
+  },
+  "limits": [
+    "0.11.30仅静态核对，实际桌面模型及FRB互通使用已安装0.11.17",
+    "未新增真机/iOS/真实线上双端验收",
+    "异常历史嵌套稿不静默降级，未新增历史修复迁移",
+    "既有高级对象/Vectra及上游组合域/gap/输入/历史协同差异待办保持"
+  ]
+}

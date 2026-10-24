@@ -1,0 +1,37 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/blockcraft_review_2_probe_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/blockcraft_review_2_probe_test.dart: empty heading Enter preserves business metadata and stable identity
+00:00 +0 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/blockcraft_review_2_probe_test.dart: empty heading Enter preserves business metadata and stable identity [E]
+  Expected: contains pair 'guidance_entry_id' => 'entry-demo'
+    Actual: {}
+     Which:  doesn't contain key 'guidance_entry_id'
+
+  package:matcher                                                expect
+  package:flutter_test/src/widget_tester.dart 473:18             expect
+  test/daily_guidance/blockcraft_review_2_probe_test.dart 123:9  main.<fn>
+
+00:00 +0 -1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/blockcraft_review_2_probe_test.dart: todo hardware indentation preserves the selected block in JSON
+00:00 +0 -2: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/blockcraft_review_2_probe_test.dart: todo hardware indentation preserves the selected block in JSON [E]
+  Expected: contains 'todo'
+    Actual: '{"id":"root","flavour":"root","nodeType":"root","props":{},"meta":{"mobileGuidance":{"version":1,"role":"document","plainDesktop":true,"draft":{"id":"import-1792684800000000","date":"2026-10-23","createdAt":"2026-10-22T16:00:00.000Z","updatedAt":"2026-10-23T12:53:46.240003Z","timezoneOffsetMinutes":480},"sections":[{"key":"record"}],"closedSections":[]}},"children":[{"id":"first","flavour":"paragraph","nodeType":"editable","props":{},"meta":{"mobileGuidance":{"version":1,"role":"content","section":"record","business":{}}},"children":[{"insert":"anchor"}]},{"id":"second","flavour":"paragraph","nodeType":"editable","props":{},"meta":{"mobileGuidance":{"version":1,"role":"content","section":"record","business":{}}},"children":[{"insert":"body"}]}]}'
+     Which: does not contain 'todo'
+
+  package:matcher                                                expect
+  package:flutter_test/src/widget_tester.dart 473:18             expect
+  test/daily_guidance/blockcraft_review_2_probe_test.dart 186:9  main.<fn>
+
+00:00 +0 -2: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/blockcraft_review_2_probe_test.dart: duplicated imported container retains fresh identities across undo redo
+00:00 +1 -2: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_editing_test.dart: R1 imported help survives heading conversion, save/reopen and both JSON directions
+00:00 +2 -2: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_editing_test.dart: R1 imported pilot survives heading conversion, save/reopen and both JSON directions
+00:00 +3 -2: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_editing_test.dart: R1 imported task survives heading conversion, save/reopen and both JSON directions
+00:00 +4 -2: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_editing_test.dart: R3 an imported top-level todo exits and stays a paragraph on reverse import
+00:00 +5 -2: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_editing_test.dart: R5 text, append and subtree deletion respect an imported ancestor lock
+00:00 +6 -2: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_editing_test.dart: R5 inserting before a locked sibling is allowed and preserves sibling lock
+00:00 +7 -2: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_editing_test.dart: R5 a prefix deletion cannot hide a shifted locked insertion target
+00:00 +8 -2: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_editing_test.dart: R5 locking then appending in one transaction is rejected atomically
+00:00 +9 -2: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_editing_test.dart: R5 rejected insertion leaves source identities and detached operation nodes untouched
+00:00 +10 -2: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_editing_test.dart: inserted copies receive new ids while ordinary text edits retain existing ids
+00:00 +11 -2: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/blockcraft_review_2_probe_test.dart: empty heading Enter preserves business metadata and stable identity
+  /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/blockcraft_review_2_probe_test.dart: todo hardware indentation preserves the selected block in JSON

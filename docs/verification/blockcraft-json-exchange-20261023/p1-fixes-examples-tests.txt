@@ -1,0 +1,11 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_integrity_test.dart
+00:00 +0: empty heading help retains business and stable id across Enter, history, JSON and file reopen
+00:00 +1: empty quote help retains business and stable id across Enter, history, JSON and file reopen
+00:00 +2: empty heading pilot retains business and stable id across Enter, history, JSON and file reopen
+00:00 +3: empty quote pilot retains business and stable id across Enter, history, JSON and file reopen
+00:00 +4: empty heading task retains business and stable id across Enter, history, JSON and file reopen
+00:00 +5: empty quote task retains business and stable id across Enter, history, JSON and file reopen
+00:00 +6: production journal Tab stays flat in section through history and exchange
+00:01 +7: production journal Tab stays flat in callout through history and exchange
+00:01 +8: host rejects direct and mixed structural nesting atomically and preserves the saved source
+00:01 +9: All tests passed!

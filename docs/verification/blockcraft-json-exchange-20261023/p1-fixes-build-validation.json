@@ -1,0 +1,87 @@
+{
+  "apk": "build/app/outputs/flutter-apk/app-debug.apk",
+  "sha256": "6057d45812eefc3d32c936d228e273bf96a9fe8e69cd42293cb15b814e993ebf",
+  "sourceFiles": {
+    "lib/src/daily_guidance/journal_blockcraft_codec.dart": {
+      "sha256": "a6ea7d8a96015f33da5f8815a0eb6e077f9e71bdf902ef204e6ce227750922ae",
+      "exactSourceInKernel": true
+    },
+    "lib/src/daily_guidance/journal_draft.dart": {
+      "sha256": "3ef30f67620613c694dfb62445e71cb8d4c98692df782be98a90e4bfa2e833c9",
+      "exactSourceInKernel": true
+    },
+    "lib/src/daily_guidance/journal_exchange_keys.dart": {
+      "sha256": "03365bddc142e86885ef95c2f8a625baf86eba469ad43ddc44e92622974b173d",
+      "exactSourceInKernel": true
+    },
+    "lib/src/daily_guidance/journal_json_files.dart": {
+      "sha256": "1cc8e6e488f89d3771fe3e58afe4ae1424d93cdb4f3b3ff86b857fe2ac714537",
+      "exactSourceInKernel": true
+    },
+    "lib/src/daily_guidance/journal_surface.dart": {
+      "sha256": "4e657d8bf3094356852fa6d2f1afc841a9aa630edc9c687b4370ace54e4e383c",
+      "exactSourceInKernel": true
+    },
+    "lib/src/daily_guidance/local_journal_controller.dart": {
+      "sha256": "7dd23c485660e126d07ee86d7a2bbd67f082e2e722af85cebfea41ecc56e09f6",
+      "exactSourceInKernel": true
+    },
+    "lib/src/daily_guidance/local_journal_page.dart": {
+      "sha256": "e0275c4c1d2db7afbc996f8e52c2f8d3f55038ffa3d00d9fb541e45b94a689fe",
+      "exactSourceInKernel": true
+    },
+    "packages/cses_document_collab/lib/cses_document_collab.dart": {
+      "sha256": "ee2f3f82cbd41ff3ecd2d5ac38bcd05b66f4397d27dfe4e2f4a512592714f3fb",
+      "exactSourceInKernel": true
+    },
+    "packages/cses_document_collab/lib/src/editor/appflowy_block_editor_adapter.dart": {
+      "sha256": "f5ac8c12d67a1da92fef080350faa08bb60b778a672e9f5d937f810005c12008",
+      "exactSourceInKernel": true
+    },
+    "packages/cses_document_collab/lib/src/editor/blockcraft_json_codec.dart": {
+      "sha256": "868c8ee935b3892a73000beb335bbe919891e9b2ba3d91b5cf1aedaa3d712857",
+      "exactSourceInKernel": true
+    },
+    "packages/cses_document_collab/lib/src/editor/blockcraft_snapshot_presets.g.dart": {
+      "sha256": "8acc29ee8ccd48307457d01cdc0ab0df895d5fde2452f60184cad7af7e1e4a38",
+      "exactSourceInKernel": true
+    },
+    "packages/cses_document_collab/lib/src/editor/blockcraft_snapshot_view.dart": {
+      "sha256": "d5d4ce8ee85563facb0c94bdaada57538b35e8bb00d593acc586455b245fabd5",
+      "exactSourceInKernel": true
+    },
+    "packages/cses_document_collab/lib/src/editor/collab_list_editing.dart": {
+      "sha256": "d15ed8650954fa09d448d61b9545db5135024eb9af4d39b98fba19d4d3558a9e",
+      "exactSourceInKernel": true
+    },
+    "packages/cses_document_collab/lib/src/editor/collab_paragraph_editing.dart": {
+      "sha256": "7424410c2fc67a7efcafb5d97c4b9c161e9b523ecfc9283601c0a9afd09e4741",
+      "exactSourceInKernel": true
+    },
+    "packages/cses_document_collab/lib/src/editor/collab_paragraph_indent.dart": {
+      "sha256": "9fbda998b16ed7f4c94ac825b476048813ec719efaefaf3439970d58f9b5c86d",
+      "exactSourceInKernel": true
+    },
+    "packages/cses_document_collab/lib/src/editor/core/editor_configuration.dart": {
+      "sha256": "ecf279499e162b53ad71dd97d5ce339901bccabf4ee61b78ac7fc477dbd5a294",
+      "exactSourceInKernel": true
+    },
+    "packages/cses_document_collab/lib/src/editor/document_editor_view.dart": {
+      "sha256": "bdab3645d4d1808ad0ed6854bc54d57d2353e59cf92db4f07817422387082727",
+      "exactSourceInKernel": true
+    },
+    "packages/cses_document_collab/lib/src/editor/editor_block_conversion.dart": {
+      "sha256": "d5269f40d72c5afb63f1692f2280d6efbb481d6ae3fd92b3f42a5350e50f603d",
+      "exactSourceInKernel": true
+    },
+    "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart": {
+      "sha256": "db1adf5cc4f998539598eab8c185da58a8bbec71f39261135177e39a7abfb534",
+      "exactSourceInKernel": true
+    }
+  },
+  "sourceCount": 19,
+  "allExactSourcesInKernel": true,
+  "limits": [
+    "仅构建未安装或新增设备验收"
+  ]
+}

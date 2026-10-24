@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-23",
+  "latest": "0.11.30",
+  "integrity": "sha512-rx488SxuPm4FqjL88B4c0V5balNRL1h+gJ79IgYr84lfL68lCQdH/m11Dx0LvzdBnvQE/fgJDLscWlnogKlMPQ==",
+  "registryQuery": "npm view @ccc/blockcraft dist-tags dist.integrity --json --fetch-retries=0 --fetch-timeout=15000",
+  "registryResult": "桌面配置仓库实时查询成功；沙箱内首次查询ENOTFOUND，获准的只读查询成功",
+  "desktop": {
+    "rootDeclaration": "0.11.30",
+    "yarn": "0.11.30",
+    "installed": "0.11.17",
+    "historicalPnpm": "0.2.78",
+    "docsPackageDeclaration": "^0.11.0-alpha",
+    "upgraded": false
+  },
+  "hashesSha256": {
+    "0.11.17": {
+      "package.json": "fb139ff2aee88165cbe2a3ae6b289120f87e9868d88da564f252e13311883be4",
+      "ai-skills/blockcraft.md": "15f256fc6e1ffb131d114371605feab0a4c58f1a6cc76b20bbba3011001f2dc1",
+      "ai-skills/blockcraft-data.md": "5e83cc2a8601f927f1842542f416c493dfeb68657986b7505d6546ee828fc240",
+      "ai-skills/blockcraft-adapter.md": "82dab68a6ff9e9e3e63589a94a05074fcdbc9c38b1d055c0cf15aef2a31f8077",
+      "ai-skills/MIGRATIONS.md": "4c87c528886aed39605183f6c6d812d04d94b600c4931f314bb611e689edf5dd",
+      "fesm2022/ccc-blockcraft.mjs": "c08ce485e4fce072ceea7958b5568001799083fe448807a541117984f29aeeea"
+    },
+    "0.11.30": {
+      "package.json": "bb23a46c4af5586e1ada4614ffcf4a5e32dfc6b0f7ac525bba310ff37342214e",
+      "ai-skills/blockcraft.md": "f8b0ed3c2afcb2e03334b9bd6bedb1f7a2c502a303472447367701cdbac39ffd",
+      "ai-skills/blockcraft-data.md": "0f4b5993447ffcef96a0759bf17b40c0bb558726a264db19fa8c0bb3bcb2929e",
+      "ai-skills/blockcraft-adapter.md": "6400f92fb7d87b482686189d3bafad983ab3dfc7bad9ec09e5b972dad81f2d42",
+      "ai-skills/MIGRATIONS.md": "33f0840c7d98f89407e7237fa41aacfbc8b8d29eb826c1aeecbe318c509ec867",
+      "fesm2022/ccc-blockcraft.mjs": "11cf88de81ec375b2866d1d9b18adc7f9df43c9ad40837ca8776b795cf768b7c"
+    }
+  },
+  "hashesMatchPrior": true,
+  "scope": [
+    "复读技能L0、adapter、数据指南/MIGRATIONS及快照源码受影响分支",
+    "toSnapshot/exportSnapshot与editable.children Delta契约",
+    "最新版本仍静态核对；本轮不新增桌面运行、FRB或真机验收"
+  ],
+  "remaining": "沿用原上游组合内容域、图片gap、菜单输入/历史协同差异和设备待办"
+}

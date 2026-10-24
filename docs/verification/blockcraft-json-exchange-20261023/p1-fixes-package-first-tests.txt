@@ -1,0 +1,102 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_integrity_test.dart
+lib/src/editor/editor_block_conversion.dart:31:7: Error: Undefined name 'csesBlockBackgroundColorAttribute'.
+      csesBlockBackgroundColorAttribute,
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+00:00 +0 -1: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_integrity_test.dart [E]
+  Failed to load "/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_integrity_test.dart":
+  Compilation failed for testPath=/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_integrity_test.dart: lib/src/editor/editor_block_conversion.dart:31:7: Error: Undefined name 'csesBlockBackgroundColorAttribute'.
+        csesBlockBackgroundColorAttribute,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  .
+  Error: The Dart compiler exited unexpectedly.
+  package:flutter_tools/src/base/common.dart 34:3  throwToolExit
+  package:flutter_tools/src/compile.dart 1009:11   DefaultResidentCompiler._compile.<fn>
+  dart:async/zone_root.dart 48:47                  _rootRunUnary
+  dart:async/zone.dart 733:19                      _CustomZone.runUnary
+  dart:async/future_impl.dart 948:45               Future._propagateToListeners.handleValueCallback
+  dart:async/future_impl.dart 977:13               Future._propagateToListeners
+  dart:async/future_impl.dart 862:9                Future._propagateToListeners
+  dart:async/future_impl.dart 720:5                Future._completeWithValue
+  dart:async/future_impl.dart 804:7                Future._asyncCompleteWithValue.<fn>
+  dart:async/zone_root.dart 35:13                  _rootRun
+  dart:async/zone.dart 726:19                      _CustomZone.run
+  dart:async/zone.dart 625:7                       _CustomZone.runGuarded
+  dart:async/zone.dart 666:23                      _CustomZone.bindCallbackGuarded.<fn>
+  dart:async/schedule_microtask.dart 40:35         _microtaskLoop
+  dart:async/schedule_microtask.dart 49:5          _startMicrotaskLoop
+  dart:isolate-patch/isolate_patch.dart 127:13     _runPendingImmediateCallback
+  dart:isolate-patch/isolate_patch.dart 193:5      _RawReceivePort._handleMessage
+
+lib/src/editor/editor_block_conversion.dart:31:7: Error: Undefined name 'csesBlockBackgroundColorAttribute'.
+      csesBlockBackgroundColorAttribute,
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+00:00 +0 -2: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart [E]
+  Failed to load "/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart":
+  Compilation failed for testPath=/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: lib/src/editor/editor_block_conversion.dart:31:7: Error: Undefined name 'csesBlockBackgroundColorAttribute'.
+        csesBlockBackgroundColorAttribute,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  .
+00:00 +0 -2: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_integrity_test.dart [E]
+  Error: The Dart compiler exited unexpectedly.
+  package:flutter_tools/src/base/common.dart 34:3  throwToolExit
+  package:flutter_tools/src/compile.dart 1009:11   DefaultResidentCompiler._compile.<fn>
+  dart:async/zone_root.dart 48:47                  _rootRunUnary
+  dart:async/zone.dart 733:19                      _CustomZone.runUnary
+  dart:async/future_impl.dart 948:45               Future._propagateToListeners.handleValueCallback
+  dart:async/future_impl.dart 977:13               Future._propagateToListeners
+  dart:async/future_impl.dart 862:9                Future._propagateToListeners
+  dart:async/future_impl.dart 720:5                Future._completeWithValue
+  dart:async/future_impl.dart 804:7                Future._asyncCompleteWithValue.<fn>
+  dart:async/zone_root.dart 35:13                  _rootRun
+  dart:async/zone.dart 726:19                      _CustomZone.run
+  dart:async/zone.dart 625:7                       _CustomZone.runGuarded
+  dart:async/zone.dart 666:23                      _CustomZone.bindCallbackGuarded.<fn>
+  dart:async/schedule_microtask.dart 40:35         _microtaskLoop
+  dart:async/schedule_microtask.dart 49:5          _startMicrotaskLoop
+  dart:isolate-patch/isolate_patch.dart 127:13     _runPendingImmediateCallback
+  dart:isolate-patch/isolate_patch.dart 193:5      _RawReceivePort._handleMessage
+
+lib/src/editor/editor_block_conversion.dart:31:7: Error: Undefined name 'csesBlockBackgroundColorAttribute'.
+      csesBlockBackgroundColorAttribute,
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+00:00 +0 -3: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart [E]
+  Failed to load "/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart":
+  Compilation failed for testPath=/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: lib/src/editor/editor_block_conversion.dart:31:7: Error: Undefined name 'csesBlockBackgroundColorAttribute'.
+        csesBlockBackgroundColorAttribute,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  .
+00:00 +0 -3: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_integrity_test.dart [E]
+  Error: The Dart compiler exited unexpectedly.
+  package:flutter_tools/src/base/common.dart 34:3  throwToolExit
+  package:flutter_tools/src/compile.dart 1009:11   DefaultResidentCompiler._compile.<fn>
+  dart:async/zone_root.dart 48:47                  _rootRunUnary
+  dart:async/zone.dart 733:19                      _CustomZone.runUnary
+  dart:async/future_impl.dart 948:45               Future._propagateToListeners.handleValueCallback
+  dart:async/future_impl.dart 977:13               Future._propagateToListeners
+  dart:async/future_impl.dart 862:9                Future._propagateToListeners
+  dart:async/future_impl.dart 720:5                Future._completeWithValue
+  dart:async/future_impl.dart 804:7                Future._asyncCompleteWithValue.<fn>
+  dart:async/zone_root.dart 35:13                  _rootRun
+  dart:async/zone.dart 726:19                      _CustomZone.run
+  dart:async/zone.dart 625:7                       _CustomZone.runGuarded
+  dart:async/zone.dart 666:23                      _CustomZone.bindCallbackGuarded.<fn>
+  dart:async/schedule_microtask.dart 40:35         _microtaskLoop
+  dart:async/schedule_microtask.dart 49:5          _startMicrotaskLoop
+  dart:isolate-patch/isolate_patch.dart 127:13     _runPendingImmediateCallback
+  dart:isolate-patch/isolate_patch.dart 193:5      _RawReceivePort._handleMessage
+
+00:00 +0 -3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_indent_test.dart: paragraph changes depth and preserves text, type and selection through history
+00:00 +1 -3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_indent_test.dart: heading_3 changes depth and preserves text, type and selection through history
+00:00 +2 -3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_indent_test.dart: quote changes depth and preserves text, type and selection through history
+00:00 +3 -3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_indent_test.dart: first sibling is limited to depth one; zero outdent is a no-op
+00:00 +4 -3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_indent_test.dart: eight-level and previous sibling caps reject entire reversed range
+00:00 +5 -3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_indent_test.dart: eight and legacy over-cap values remain intact until explicit outdent
+00:00 +6 -3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_indent_test.dart: undo follows stable target after remote reorder and preserves remote appearance
+00:00 +7 -3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_indent_test.dart: hardware Tab uses flat depth; table navigation and code are untouched
+00:00 +8 -3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_indent_test.dart: readonly and mixed code/text selections do not write
+00:00 +9 -3: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_integrity_test.dart: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_integrity_test.dart
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart

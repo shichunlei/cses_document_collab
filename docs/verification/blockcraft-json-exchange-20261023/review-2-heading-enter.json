@@ -1,0 +1,43 @@
+{
+  "currentNode": {
+    "type": "paragraph",
+    "data": {
+      "delta": [],
+      "cses_paragraph_textDefaults": "{\"value\":null}",
+      "cses_paragraph_nextParagraphStyle": "{\"value\":null}",
+      "cses_paragraph_heading": "{\"value\":null}",
+      "cses_paragraph_depth": "{\"value\":0}",
+      "cses_paragraph_fs": "{\"value\":null}",
+      "cses_paragraph_pfs": "{\"value\":null}",
+      "cses_paragraph_lh": "{\"value\":null}",
+      "cses_paragraph_psb": "{\"value\":null}",
+      "cses_paragraph_psa": "{\"value\":null}",
+      "cses_paragraph_decoration": "{\"value\":null}"
+    }
+  },
+  "exportedBlock": {
+    "id": "OWEHkT",
+    "flavour": "paragraph",
+    "nodeType": "editable",
+    "props": {
+      "textDefaults": null,
+      "nextParagraphStyle": null,
+      "depth": 0,
+      "fs": null,
+      "pfs": null,
+      "lh": null,
+      "psb": null,
+      "psa": null,
+      "decoration": null
+    },
+    "meta": {
+      "mobileGuidance": {
+        "version": 1,
+        "role": "content",
+        "section": "record",
+        "business": {}
+      }
+    },
+    "children": []
+  }
+}

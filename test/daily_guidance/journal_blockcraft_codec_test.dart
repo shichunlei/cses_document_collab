@@ -135,12 +135,12 @@ void main() {
       expect(jsonEncode(again), contains('user_demo_003'));
       if (const bool.fromEnvironment('GENERATE_BLOCKCRAFT_EXAMPLES')) {
         File(
-          'docs/verification/blockcraft-json-exchange-20261023/converted-journal.json',
+          'docs/verification/blockcraft-json-exchange-20261023/fixes-converted-journal.json',
         ).writeAsStringSync(
           '${const JsonEncoder.withIndent('  ').convert(snapshot)}\n',
         );
         File(
-          'docs/verification/blockcraft-json-exchange-20261023/restored-mobile.json',
+          'docs/verification/blockcraft-json-exchange-20261023/fixes-restored-mobile.json',
         ).writeAsStringSync(
           '${const JsonEncoder.withIndent('  ').convert(roundTrip.toJson())}\n',
         );

@@ -1,0 +1,88 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_commit_review_probe_test.dart
+00:00 +0: R1 block conversion preserves imported identity, metadata and business fields
+R1 {"type":"heading","business":null,"bc.id":null,"meta":{}}
+00:00 +0 -1: R1 block conversion preserves imported identity, metadata and business fields [E]
+  Expected: 'entry-demo'
+    Actual: <null>
+     Which: not an <Instance of 'String'>
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/blockcraft_commit_review_probe_test.dart 58:7  main.<fn>
+
+00:00 +0 -1: R2 callout appearance edits are exported from current state
+R2 {"nativeColor":"#112233","nativePrefix":"新","exportedProps":{"prefix":"旧","backColor":"#ffe6cd"}}
+00:00 +0 -2: R2 callout appearance edits are exported from current state [E]
+  Expected: '#112233'
+    Actual: '#ffe6cd'
+     Which: is different.
+            Expected: #112233
+              Actual: #ffe6cd
+                       ^
+             Differ at offset 1
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/blockcraft_commit_review_probe_test.dart 91:7  main.<fn>
+
+00:00 +0 -2: R3 exiting an imported todo exports a paragraph
+R3 {"nativeType":"paragraph","exportedFlavour":"todo","props":{"checked":1,"depth":0}}
+00:00 +0 -3: R3 exiting an imported todo exports a paragraph [E]
+  Expected: 'paragraph'
+    Actual: 'todo'
+     Which: is different.
+            Expected: paragraph
+              Actual: todo
+                      ^
+             Differ at offset 0
+
+  package:matcher                                      expect
+  package:flutter_test/src/widget_tester.dart 473:18   expect
+  test/blockcraft_commit_review_probe_test.dart 110:7  main.<fn>
+
+00:00 +0 -3: R6 a newly converted task card exports its actual task reference
+R6 {"nativeResource":{"taskId":"task-demo","title":"任务探针"},"exportedProps":{}}
+00:00 +0 -4: R6 a newly converted task card exports its actual task reference [E]
+  Expected: 'task-demo'
+    Actual: <null>
+     Which: not an <Instance of 'String'>
+
+  package:matcher                                      expect
+  package:flutter_test/src/widget_tester.dart 473:18   expect
+  test/blockcraft_commit_review_probe_test.dart 139:7  main.<fn>
+
+00:00 +0 -4: R4 explicit font weight retains the native mention widget
+R4 visibleMentions=0
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: a value greater than <0>
+  Actual: <0>
+   Which: is not a value greater than <0>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_commit_review_probe_test.dart:174:5)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_commit_review_probe_test.dart line 174
+The test description was:
+  R4 explicit font weight retains the native mention widget
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +0 -5: R4 explicit font weight retains the native mention widget [E]
+  Test failed. See exception logs above.
+  The test description was: R4 explicit font weight retains the native mention widget
+
+00:01 +0 -5: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_commit_review_probe_test.dart: R1 block conversion preserves imported identity, metadata and business fields
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_commit_review_probe_test.dart: R2 callout appearance edits are exported from current state
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_commit_review_probe_test.dart: R3 exiting an imported todo exports a paragraph
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_commit_review_probe_test.dart: R4 explicit font weight retains the native mention widget
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_commit_review_probe_test.dart: R6 a newly converted task card exports its actual task reference

@@ -1,0 +1,18 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_commit_review_probe_test.dart
+test/blockcraft_commit_review_probe_test.dart:137:26: Error: The method 'updateText' isn't defined for the type 'Transaction'.
+ - 'Transaction' is from 'package:appflowy_editor/src/core/transform/transaction.dart' ('../appflowy_editor/lib/src/core/transform/transaction.dart').
+Try correcting the name to the name of an existing method, or defining a method named 'updateText'.
+      state.transaction..updateText(node, Delta()..retain(1, attributes: {'bc.a:s:fontWeight': '600'})),
+                         ^^^^^^^^^^
+00:00 +0 -1: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_commit_review_probe_test.dart [E]
+  Failed to load "/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_commit_review_probe_test.dart":
+  Compilation failed for testPath=/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_commit_review_probe_test.dart: test/blockcraft_commit_review_probe_test.dart:137:26: Error: The method 'updateText' isn't defined for the type 'Transaction'.
+   - 'Transaction' is from 'package:appflowy_editor/src/core/transform/transaction.dart' ('../appflowy_editor/lib/src/core/transform/transaction.dart').
+  Try correcting the name to the name of an existing method, or defining a method named 'updateText'.
+        state.transaction..updateText(node, Delta()..retain(1, attributes: {'bc.a:s:fontWeight': '600'})),
+                           ^^^^^^^^^^
+  .
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_commit_review_probe_test.dart: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_commit_review_probe_test.dart

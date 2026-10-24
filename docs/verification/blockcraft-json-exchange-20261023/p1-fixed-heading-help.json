@@ -1,0 +1,60 @@
+{
+  "id": "root",
+  "flavour": "root",
+  "nodeType": "root",
+  "props": {},
+  "meta": {
+    "audit": "root-demo",
+    "mobileGuidance": {
+      "version": 1,
+      "role": "document",
+      "plainDesktop": true,
+      "draft": {
+        "id": "import-1792684800000000",
+        "date": "2026-10-23",
+        "createdAt": "2026-10-22T16:00:00.000Z",
+        "updatedAt": "2026-10-23T13:34:42.093602Z",
+        "timezoneOffsetMinutes": 480
+      },
+      "sections": [
+        {
+          "key": "record"
+        }
+      ],
+      "closedSections": []
+    }
+  },
+  "children": [
+    {
+      "id": "entry-block",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "fs": null,
+        "custom": "keep",
+        "textDefaults": null,
+        "nextParagraphStyle": null,
+        "depth": 0,
+        "pfs": null,
+        "lh": null,
+        "psb": null,
+        "psa": null,
+        "decoration": null
+      },
+      "meta": {
+        "audit": "entry-demo",
+        "mobileGuidance": {
+          "version": 1,
+          "role": "content",
+          "section": "record",
+          "business": {
+            "guidance_entry": "help",
+            "guidance_entry_id": "entry-demo",
+            "guidance_done": true
+          }
+        }
+      },
+      "children": []
+    }
+  ]
+}

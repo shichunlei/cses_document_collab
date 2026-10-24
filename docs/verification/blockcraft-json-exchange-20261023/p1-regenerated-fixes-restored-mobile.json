@@ -1,0 +1,469 @@
+{
+  "schemaVersion": 2,
+  "templateId": "ruled-daily",
+  "templateVersion": 2,
+  "id": "journal-sample-20261023",
+  "date": "2026-10-23",
+  "createdAt": "2026-10-23T01:00:00.000Z",
+  "updatedAt": "2026-10-23T01:30:00.000Z",
+  "timezoneOffsetMinutes": 480,
+  "document": {
+    "document": {
+      "type": "page",
+      "children": [
+        {
+          "type": "local-journal-section",
+          "children": [
+            {
+              "type": "paragraph",
+              "data": {
+                "delta": [
+                  {
+                    "insert": "今日成果：",
+                    "attributes": {
+                      "bold": true
+                    }
+                  },
+                  {
+                    "insert": "完成日导向编辑器的 JSON 导出验证。"
+                  }
+                ],
+                "cses_paragraph_textDefaults": "{}",
+                "cses_paragraph_nextParagraphStyle": "{}",
+                "cses_paragraph_heading": "{}",
+                "cses_paragraph_depth": "{}",
+                "cses_paragraph_fs": "{}",
+                "cses_paragraph_pfs": "{}",
+                "cses_paragraph_lh": "{}",
+                "cses_paragraph_psb": "{}",
+                "cses_paragraph_psa": "{}",
+                "cses_paragraph_decoration": "{}",
+                "cses_paragraph_target": "7C1Nma",
+                "cses_collab_block_id": "7C1Nma",
+                "align": "left",
+                "cses_collab_indent": 0,
+                "bc.id": "7C1Nma",
+                "bc.flavour": "paragraph",
+                "bc.nodeType": "editable",
+                "bc.m:mobileGuidance": {
+                  "v": {
+                    "version": 1,
+                    "role": "content",
+                    "section": "record",
+                    "business": {}
+                  }
+                }
+              }
+            },
+            {
+              "type": "paragraph",
+              "data": {
+                "delta": [
+                  {
+                    "insert": "与 "
+                  },
+                  {
+                    "insert": "￼",
+                    "attributes": {
+                      "cses_inline_mention": "张三",
+                      "cses_mention_id": "user_demo_001",
+                      "cses_mention_attributes": "{\"mentionType\":\"user\",\"mentionId\":\"user_demo_001\"}"
+                    }
+                  },
+                  {
+                    "insert": " 确认明日计划。"
+                  }
+                ],
+                "cses_paragraph_textDefaults": "{}",
+                "cses_paragraph_nextParagraphStyle": "{}",
+                "cses_paragraph_heading": "{}",
+                "cses_paragraph_depth": "{}",
+                "cses_paragraph_fs": "{}",
+                "cses_paragraph_pfs": "{}",
+                "cses_paragraph_lh": "{}",
+                "cses_paragraph_psb": "{}",
+                "cses_paragraph_psa": "{}",
+                "cses_paragraph_decoration": "{}",
+                "cses_paragraph_target": "UqERkv",
+                "cses_collab_block_id": "UqERkv",
+                "align": "left",
+                "cses_collab_indent": 0,
+                "bc.id": "UqERkv",
+                "bc.flavour": "paragraph",
+                "bc.nodeType": "editable",
+                "bc.m:mobileGuidance": {
+                  "v": {
+                    "version": 1,
+                    "role": "content",
+                    "section": "record",
+                    "business": {}
+                  }
+                }
+              }
+            },
+            {
+              "type": "todo_list",
+              "data": {
+                "delta": [
+                  {
+                    "insert": "整理项目进展并完成自检"
+                  }
+                ],
+                "cses_paragraph_textDefaults": "{}",
+                "cses_paragraph_nextParagraphStyle": "{}",
+                "cses_paragraph_heading": "{}",
+                "cses_paragraph_depth": "{}",
+                "cses_paragraph_fs": "{}",
+                "cses_paragraph_pfs": "{}",
+                "cses_paragraph_lh": "{}",
+                "cses_paragraph_psb": "{}",
+                "cses_paragraph_psa": "{}",
+                "cses_paragraph_decoration": "{}",
+                "cses_paragraph_target": "3ynk6f",
+                "cses_collab_block_id": "3ynk6f",
+                "align": "left",
+                "cses_collab_indent": 0,
+                "checked": true,
+                "bc.id": "3ynk6f",
+                "bc.flavour": "todo",
+                "bc.nodeType": "editable",
+                "bc.p:checked": {
+                  "v": 1
+                },
+                "bc.m:mobileGuidance": {
+                  "v": {
+                    "version": 1,
+                    "role": "content",
+                    "section": "record",
+                    "business": {}
+                  }
+                }
+              }
+            },
+            {
+              "type": "paragraph",
+              "data": {
+                "delta": [
+                  {
+                    "insert": "￼",
+                    "attributes": {
+                      "cses_inline_mention": "李四",
+                      "cses_mention_id": "user_demo_002",
+                      "cses_mention_attributes": "{\"mentionType\":\"user\",\"mentionId\":\"user_demo_002\"}"
+                    }
+                  },
+                  {
+                    "insert": " 协助检查提交接口字段。"
+                  }
+                ],
+                "cses_paragraph_textDefaults": "{}",
+                "cses_paragraph_nextParagraphStyle": "{}",
+                "cses_paragraph_heading": "{}",
+                "cses_paragraph_depth": "{}",
+                "cses_paragraph_fs": "{}",
+                "cses_paragraph_pfs": "{}",
+                "cses_paragraph_lh": "{}",
+                "cses_paragraph_psb": "{}",
+                "cses_paragraph_psa": "{}",
+                "cses_paragraph_decoration": "{}",
+                "cses_paragraph_target": "IgAzrm",
+                "cses_collab_block_id": "IgAzrm",
+                "align": "left",
+                "cses_collab_indent": 0,
+                "bc.id": "IgAzrm",
+                "bc.flavour": "paragraph",
+                "bc.nodeType": "editable",
+                "bc.m:mobileGuidance": {
+                  "v": {
+                    "version": 1,
+                    "role": "content",
+                    "section": "record",
+                    "business": {
+                      "guidance_entry": "help",
+                      "guidance_entry_id": "sample-help-001",
+                      "guidance_done": false
+                    }
+                  }
+                },
+                "guidance_entry": "help",
+                "guidance_entry_id": "sample-help-001",
+                "guidance_done": false
+              }
+            },
+            {
+              "type": "paragraph",
+              "data": {
+                "delta": [
+                  {
+                    "insert": "￼",
+                    "attributes": {
+                      "cses_inline_mention": "王五",
+                      "cses_mention_id": "user_demo_003",
+                      "cses_mention_attributes": "{\"mentionType\":\"user\",\"mentionId\":\"user_demo_003\"}"
+                    }
+                  },
+                  {
+                    "insert": " 指导提交失败后的重试流程。"
+                  }
+                ],
+                "cses_paragraph_textDefaults": "{}",
+                "cses_paragraph_nextParagraphStyle": "{}",
+                "cses_paragraph_heading": "{}",
+                "cses_paragraph_depth": "{}",
+                "cses_paragraph_fs": "{}",
+                "cses_paragraph_pfs": "{}",
+                "cses_paragraph_lh": "{}",
+                "cses_paragraph_psb": "{}",
+                "cses_paragraph_psa": "{}",
+                "cses_paragraph_decoration": "{}",
+                "cses_paragraph_target": "FShFiu",
+                "cses_collab_block_id": "FShFiu",
+                "align": "left",
+                "cses_collab_indent": 0,
+                "bc.id": "FShFiu",
+                "bc.flavour": "paragraph",
+                "bc.nodeType": "editable",
+                "bc.m:mobileGuidance": {
+                  "v": {
+                    "version": 1,
+                    "role": "content",
+                    "section": "record",
+                    "business": {
+                      "guidance_entry": "pilot",
+                      "guidance_entry_id": "sample-pilot-001",
+                      "guidance_done": false
+                    }
+                  }
+                },
+                "guidance_entry": "pilot",
+                "guidance_entry_id": "sample-pilot-001",
+                "guidance_done": false
+              }
+            }
+          ],
+          "data": {
+            "section": "record",
+            "bc.id": "g5Sutp",
+            "guidance_heading_id": "section-g5Sutp",
+            "guidance_heading_props": {
+              "heading": 2,
+              "depth": 0
+            },
+            "guidance_heading_delta": [
+              {
+                "insert": "今日记录"
+              }
+            ]
+          }
+        },
+        {
+          "type": "local-journal-section",
+          "children": [
+            {
+              "type": "paragraph",
+              "data": {
+                "delta": [
+                  {
+                    "insert": "先明确数据结构，再接入业务提交，可以减少重复修改。"
+                  }
+                ],
+                "cses_paragraph_textDefaults": "{}",
+                "cses_paragraph_nextParagraphStyle": "{}",
+                "cses_paragraph_heading": "{}",
+                "cses_paragraph_depth": "{}",
+                "cses_paragraph_fs": "{}",
+                "cses_paragraph_pfs": "{}",
+                "cses_paragraph_lh": "{}",
+                "cses_paragraph_psb": "{}",
+                "cses_paragraph_psa": "{}",
+                "cses_paragraph_decoration": "{}",
+                "cses_paragraph_target": "56f4eC",
+                "cses_collab_block_id": "56f4eC",
+                "align": "left",
+                "cses_collab_indent": 0,
+                "bc.id": "56f4eC",
+                "bc.flavour": "paragraph",
+                "bc.nodeType": "editable",
+                "bc.m:mobileGuidance": {
+                  "v": {
+                    "version": 1,
+                    "role": "content",
+                    "section": "reflection",
+                    "business": {}
+                  }
+                }
+              }
+            }
+          ],
+          "data": {
+            "section": "reflection",
+            "bc.id": "qQi1k6",
+            "guidance_heading_id": "section-qQi1k6",
+            "guidance_heading_props": {
+              "heading": 2,
+              "depth": 0
+            },
+            "guidance_heading_delta": [
+              {
+                "insert": "感悟"
+              }
+            ]
+          }
+        },
+        {
+          "type": "local-journal-section",
+          "children": [
+            {
+              "type": "todo_list",
+              "data": {
+                "delta": [
+                  {
+                    "insert": "今日记录完整，人员引用身份已保留"
+                  }
+                ],
+                "cses_paragraph_textDefaults": "{}",
+                "cses_paragraph_nextParagraphStyle": "{}",
+                "cses_paragraph_heading": "{}",
+                "cses_paragraph_depth": "{}",
+                "cses_paragraph_fs": "{}",
+                "cses_paragraph_pfs": "{}",
+                "cses_paragraph_lh": "{}",
+                "cses_paragraph_psb": "{}",
+                "cses_paragraph_psa": "{}",
+                "cses_paragraph_decoration": "{}",
+                "cses_paragraph_target": "QLR0En",
+                "cses_collab_block_id": "QLR0En",
+                "align": "left",
+                "cses_collab_indent": 0,
+                "checked": true,
+                "bc.id": "QLR0En",
+                "bc.flavour": "todo",
+                "bc.nodeType": "editable",
+                "bc.p:checked": {
+                  "v": 1
+                },
+                "bc.m:mobileGuidance": {
+                  "v": {
+                    "version": 1,
+                    "role": "content",
+                    "section": "self-check",
+                    "business": {}
+                  }
+                }
+              }
+            },
+            {
+              "type": "todo_list",
+              "data": {
+                "delta": [
+                  {
+                    "insert": "明日完成真实提交接口联调"
+                  }
+                ],
+                "cses_paragraph_textDefaults": "{}",
+                "cses_paragraph_nextParagraphStyle": "{}",
+                "cses_paragraph_heading": "{}",
+                "cses_paragraph_depth": "{}",
+                "cses_paragraph_fs": "{}",
+                "cses_paragraph_pfs": "{}",
+                "cses_paragraph_lh": "{}",
+                "cses_paragraph_psb": "{}",
+                "cses_paragraph_psa": "{}",
+                "cses_paragraph_decoration": "{}",
+                "cses_paragraph_target": "J1LCgJ",
+                "cses_collab_block_id": "J1LCgJ",
+                "align": "left",
+                "cses_collab_indent": 0,
+                "checked": false,
+                "bc.id": "J1LCgJ",
+                "bc.flavour": "todo",
+                "bc.nodeType": "editable",
+                "bc.p:checked": {
+                  "v": 0
+                },
+                "bc.m:mobileGuidance": {
+                  "v": {
+                    "version": 1,
+                    "role": "content",
+                    "section": "self-check",
+                    "business": {}
+                  }
+                }
+              }
+            }
+          ],
+          "data": {
+            "section": "self-check",
+            "bc.id": "uw7Po3",
+            "guidance_heading_id": "section-uw7Po3",
+            "guidance_heading_props": {
+              "heading": 2,
+              "depth": 0
+            },
+            "guidance_heading_delta": [
+              {
+                "insert": "自检"
+              }
+            ]
+          }
+        }
+      ],
+      "data": {
+        "bc.id": "root-journal-sample-20261023",
+        "bc.flavour": "root",
+        "bc.nodeType": "root",
+        "bc.p:fs": {
+          "v": 16
+        },
+        "bc.p:lh": {
+          "v": 2
+        },
+        "bc.p:color": {
+          "v": "#3e4650"
+        },
+        "bc.m:mobileGuidance": {
+          "v": {
+            "version": 1,
+            "role": "document",
+            "plainDesktop": false,
+            "draft": {
+              "id": "journal-sample-20261023",
+              "date": "2026-10-23",
+              "createdAt": "2026-10-23T01:00:00.000Z",
+              "updatedAt": "2026-10-23T01:30:00.000Z",
+              "timezoneOffsetMinutes": 480
+            },
+            "sections": [
+              {
+                "key": "record"
+              },
+              {
+                "key": "reflection"
+              },
+              {
+                "key": "self-check"
+              }
+            ],
+            "closedSections": []
+          }
+        },
+        "guidance_desktop_import": true,
+        "guidance_plain_desktop": false
+      }
+    }
+  },
+  "blockCraftIds": {
+    "": "root-journal-sample-20261023",
+    "0": "g5Sutp",
+    "0.0": "7C1Nma",
+    "0.1": "UqERkv",
+    "0.2": "3ynk6f",
+    "0.3": "IgAzrm",
+    "0.4": "FShFiu",
+    "1": "qQi1k6",
+    "1.0": "56f4eC",
+    "2": "uw7Po3",
+    "2.0": "QLR0En",
+    "2.1": "J1LCgJ"
+  }
+}

@@ -419,32 +419,11 @@ final class LocalJournalController extends ChangeNotifier {
     }
   }
 
-  /// 对完整桌面转换树的[transaction]先预演再校验；锁定祖先及跨栏目编辑整次拒绝。
-  /// 正式块内部的文字、表格及对象事务可进入任意后代路径，不使用原日记叶块限制。
+  /// 按[transaction]的真实操作顺序在独立副本预演，检查每一步的实际父容器和祖先/后代锁。
+  /// 插入检查父节点而非尚不存在的落点；后续路径按前序操作后的树解释，失败不修改正文或插入参数。
+  /// 允许的插入副本仅在完整校验通过后分配冲突身份，不重写已有节点或跨栏目应用事务。
   bool _allowsImported(Transaction transaction) {
     final document = editor.editorState.document;
-    final ids = journalContentNodes([
-      document.root,
-    ]).map((node) => node.attributes['bc.id'] ?? node.id).toSet();
-    for (final operation
-        in transaction.operations.whereType<DeleteOperation>()) {
-      for (final node in journalContentNodes(operation.nodes)) {
-        ids.remove(node.attributes['bc.id'] ?? node.id);
-      }
-    }
-    for (final operation
-        in transaction.operations.whereType<InsertOperation>()) {
-      for (final node in journalContentNodes(operation.nodes)) {
-        final id = node.attributes['bc.id'] ?? node.id;
-        if (!ids.add(id)) {
-          node.updateAttributes({
-            'bc.id': node.id,
-            'cses_collab_block_id': node.id,
-          });
-          ids.add(node.id);
-        }
-      }
-    }
     final sectionCommand = transaction.operations.any(
       (op) =>
           op is UpdateOperation &&
@@ -452,48 +431,134 @@ final class LocalJournalController extends ChangeNotifier {
           op.attributes.containsKey('guidance_section_revision'),
     );
     final sections = <int>{};
-    for (final op in transaction.operations) {
-      if (op.path.length < 2 && !sectionCommand) return false;
-      if (op.path.isNotEmpty) sections.add(op.path.first);
-      Node? node = document.nodeAtPath(op.path);
+    final copy = Document.fromJson(
+      jsonDecode(jsonEncode(document.toJson())) as Map<String, dynamic>,
+    );
+    final pendingIds = <Node, String>{};
+
+    /// 检查借用副本中的[node]及其当前祖先，不把插入位置的已有兄弟当作祖先。
+    bool locked(Node? node) {
       while (node != null) {
         final lock = BlockCraftJsonCodec.properties(
           node,
           metadata: true,
         )['lock'];
-        if (lock is String && lock.isNotEmpty) {
-          return false;
-        }
+        if (lock is String && lock.isNotEmpty) return true;
         node = node.parent;
       }
-      if (op is DeleteOperation) {
-        for (final child in journalContentNodes(op.nodes)) {
-          final lock = BlockCraftJsonCodec.properties(
-            child,
-            metadata: true,
-          )['lock'];
-          if (lock is String && lock.isNotEmpty) return false;
+      return false;
+    }
+
+    /// 返回借用[node]的桌面身份，尚未导出的本地节点使用运行时身份。
+    String identity(Node node) =>
+        node.attributes['bc.id'] as String? ?? node.id;
+
+    try {
+      JournalBlockCraftCodec.restoreIdentities(
+        copy,
+        JournalBlockCraftCodec.captureIdentities(document),
+      );
+      final counts = <String, int>{};
+      final deletions = <String, int>{};
+      for (final node in journalContentNodes([copy.root])) {
+        counts.update(identity(node), (count) => count + 1, ifAbsent: () => 1);
+      }
+      for (final operation
+          in transaction.operations.whereType<DeleteOperation>()) {
+        for (final node in journalContentNodes(operation.nodes)) {
+          deletions.update(
+            identity(node),
+            (count) => count + 1,
+            ifAbsent: () => 1,
+          );
         }
       }
-    }
-    if (!sectionCommand && sections.length > 1) return false;
-    final copy = Document.fromJson(
-      jsonDecode(jsonEncode(document.toJson())) as Map<String, dynamic>,
-    );
-    try {
       for (final op in transaction.operations) {
-        final ok = switch (op) {
-          InsertOperation() => copy.insert(
-            op.path,
-            op.nodes.map((node) => node.copyWith()),
-          ),
-          DeleteOperation() => copy.delete(op.path, op.nodes.length),
-          UpdateOperation() => copy.update(op.path, op.attributes),
-          UpdateTextOperation() => copy.updateText(op.path, op.delta),
-        };
-        if (!ok) return false;
+        if (op.path.length < 2 && !sectionCommand) return false;
+        if (op.path.isNotEmpty) sections.add(op.path.first);
+        if (!sectionCommand && sections.length > 1) return false;
+        if (op is InsertOperation) {
+          if (op.path.isEmpty) return false;
+          final parent = copy.nodeAtPath(op.path.parent);
+          if (parent == null ||
+              op.path.last < 0 ||
+              op.path.last > parent.children.length ||
+              locked(parent)) {
+            return false;
+          }
+          final inserted = op.nodes.map((node) => node.copyWith()).toList();
+          final originals = journalContentNodes(op.nodes).toList();
+          final clones = journalContentNodes(inserted).toList();
+          for (var index = 0; index < originals.length; index++) {
+            final source = originals[index];
+            final clone = clones[index];
+            final originalId = identity(source);
+            clone.id = source.id;
+            final count = counts[originalId] ?? 0;
+            if (count == 0 || count <= (deletions[originalId] ?? 0)) {
+              counts[originalId] = count + 1;
+              continue;
+            }
+            if (identical(document.nodeAtPath(source.path), source)) {
+              return false;
+            }
+            var suffix = counts.length;
+            var id = '${source.id}-$suffix';
+            while (counts.containsKey(id)) {
+              id = '${source.id}-${++suffix}';
+            }
+            counts[id] = 1;
+            clone.updateAttributes({'bc.id': id, 'cses_collab_block_id': id});
+            pendingIds[source] = id;
+          }
+          if (!copy.insert(op.path, inserted)) return false;
+        } else if (op is DeleteOperation) {
+          final parent = copy.nodeAtPath(op.path.parent);
+          if (parent == null ||
+              op.path.last < 0 ||
+              op.path.last + op.nodes.length > parent.children.length) {
+            return false;
+          }
+          final removed = parent.children
+              .skip(op.path.last)
+              .take(op.nodes.length)
+              .toList();
+          for (final node in journalContentNodes(removed)) {
+            if (locked(node)) return false;
+            final id = identity(node);
+            final count = counts[id] ?? 0;
+            if (count <= 1) {
+              counts.remove(id);
+            } else {
+              counts[id] = count - 1;
+            }
+            deletions[id] = (deletions[id] ?? 1) - 1;
+          }
+          if (!copy.delete(op.path, op.nodes.length)) return false;
+        } else {
+          final target = copy.nodeAtPath(op.path);
+          if (target == null || locked(target)) return false;
+          final ok = switch (op) {
+            UpdateOperation() => copy.update(op.path, op.attributes),
+            UpdateTextOperation() => copy.updateText(op.path, op.delta),
+            _ => false,
+          };
+          if (!ok) return false;
+        }
+      }
+      final finalIds = <String>{};
+      if (journalContentNodes([
+        copy.root,
+      ]).any((node) => !finalIds.add(identity(node)))) {
+        return false;
       }
       validateJournalDocument(copy);
+      for (final entry in pendingIds.entries) {
+        entry.key.updateAttributes({
+          'bc.id': entry.value,
+          'cses_collab_block_id': entry.value,
+        });
+      }
       return true;
     } catch (_) {
       return false;

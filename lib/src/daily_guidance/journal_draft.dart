@@ -6,10 +6,10 @@ import 'package:cses_document_collab/cses_document_collab.dart';
 import 'guidance_entries.dart';
 import 'journal_exchange_keys.dart';
 
-/// 为借用的[document]选择日记或完整桌面转换能力；导入标记只控制本地功能，不启用协同。
+/// 为借用的[document]选择日记或完整桌面转换能力；导入配置延续业务字段和透明栏目合同，不启用协同。
 EditorConfiguration journalEditorConfiguration(Document document) =>
     document.root.attributes[journalDesktopImportAttribute] == true
-    ? EditorConfiguration.document
+    ? _importedJournalConfiguration
     : journalConfiguration;
 
 /// 宿主日记栏目的节点类型，仅用于本地文档，不是桌面BlockCraft协议。
@@ -62,6 +62,14 @@ final journalConfiguration = EditorConfiguration(
     EditorKeyboardToolbarItem.mention,
     EditorKeyboardToolbarItem.todoList,
   ],
+);
+
+/// 导入文档保留完整块能力及同栏目列表约定，仅用平面depth缩进，禁用真实嵌套快捷键。
+final _importedJournalConfiguration = EditorConfiguration.document.withHost(
+  preservedAttributes: journalConfiguration.blockConversionPreservedAttributes,
+  listContainers: const [journalSectionType],
+  listIndentContainers: const [journalSectionType],
+  structuralIndentation: false,
 );
 
 /// 单份本地日记的不可变保存快照，正文JSON与编辑会话不共享可变对象。

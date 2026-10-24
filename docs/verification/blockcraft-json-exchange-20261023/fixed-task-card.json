@@ -1,0 +1,30 @@
+{
+  "id": "root",
+  "flavour": "root",
+  "nodeType": "root",
+  "props": {},
+  "meta": {},
+  "children": [
+    {
+      "id": "paragraph",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "textDefaults": null
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "a7mNyK",
+      "flavour": "task",
+      "nodeType": "void",
+      "props": {
+        "taskId": "task-demo",
+        "title": "任务探针"
+      },
+      "meta": {},
+      "children": []
+    }
+  ]
+}

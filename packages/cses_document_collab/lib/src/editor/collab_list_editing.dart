@@ -2,6 +2,7 @@ import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:cses_document_collab/src/model/collab_ordered.dart';
+import 'package:cses_document_collab/src/model/collab_paragraph_style.dart';
 import 'package:flutter/services.dart';
 
 /// 扁平协同有序/无序/Todo 列表的 Enter 入口，放在标准字符快捷键之前，供软键盘和硬件键盘共用。
@@ -169,6 +170,7 @@ bool _isListType(String type) =>
 
 /// 向借用 [state] 应用 [delta] 指定的 -1/+1 层级事务；[selectionType] 决定恢复的选区展示类型。
 /// 先完整校验当前选区，再构建属性更新和必要的逐项类型替换；结构替换的删除/插入净块数为 0，
+/// 同步平面层级及段落depth投影，逆操作恢复原始包装以保留缺失/null与旧深度的区别。
 /// 所有路径基于同一原文档，关闭重复路径变换以避免批量/反向选区错位。类型转换必须通过结构
 /// 操作触发现有 Rust 身份链；深度变化使用最小属性逆操作。调用方负责异常与编辑器生命周期。
 Future<bool> _applyListIndent(
@@ -206,10 +208,15 @@ Future<bool> _applyListIndent(
       );
       continue;
     }
+    final depthKey = paragraphPropertyAttribute('depth');
     final attributes = <String, dynamic>{
       csesBlockIndentAttribute: depth + delta,
+      depthKey: '{"value":${depth + delta}}',
     };
-    final previous = <String, dynamic>{csesBlockIndentAttribute: depth};
+    final previous = <String, dynamic>{
+      csesBlockIndentAttribute: depth,
+      depthKey: node.attributes[depthKey],
+    };
     final projection = node.attributes[csesOrderedAttribute];
     if (delta < 0 &&
         node.type == NumberedListBlockKeys.type &&

@@ -250,6 +250,9 @@ enum EditorKeyboardToolbarItem {
 /// );
 /// final editor = LocalEditorController(configuration: config);
 /// await editor.close();
+/// final imported = EditorConfiguration.document.withHost(
+///   preservedAttributes: {'entryId'}, listContainers: {'custom-section'},
+/// );
 /// ```
 final class EditorConfiguration {
   /// [blocks] 为无重复的块集合，必须包含paragraph；类型菜单按此顺序，标题家族按级别排序。
@@ -398,6 +401,44 @@ final class EditorConfiguration {
 
   /// 默认离线全部块能力；不创建同步、块锁或全局业务服务。
   static final local = EditorConfiguration();
+
+  /// 返回延续当前全部能力的宿主配置副本，不修改本实例或创建编辑资源。
+  /// [preservedAttributes]合并类型转换须保留的业务字段；[listContainers]合并获准同父列表转换的结构容器。
+  /// [listIndentContainers]合并获准平面列表缩进、Enter及Backspace的结构容器。
+  /// [structuralIndentation]为null时沿用当前值；false可为仅接受文字叶块的宿主关闭真实嵌套快捷键。
+  /// 三个集合均复制并冻结；空白键抛ArgumentError，其余格式、容量与协同兼容开关保持。
+  EditorConfiguration withHost({
+    Iterable<String> preservedAttributes = const {},
+    Iterable<String> listContainers = const {},
+    Iterable<String> listIndentContainers = const {},
+    bool? structuralIndentation,
+  }) {
+    final attributes = Set<String>.unmodifiable({...blockConversionPreservedAttributes, ...preservedAttributes});
+    final containers = Set<String>.unmodifiable({...listConversionContainerTypes, ...listContainers});
+    final indentContainers = Set<String>.unmodifiable({...listIndentContainerTypes, ...listIndentContainers});
+    if ([...attributes, ...containers, ...indentContainers].any((key) => key.trim().isEmpty)) {
+      throw ArgumentError('宿主字段和结构容器类型不能为空');
+    }
+    return EditorConfiguration._(
+      blocks,
+      headingLevels,
+      inlineFormats,
+      alignments,
+      fontSizes,
+      nextParagraphStyle,
+      lineHeight,
+      maxCharacters,
+      maxBlocks,
+      documentFeatures,
+      keyboardToolbarItems: keyboardToolbarItems,
+      listConversionContainerTypes: containers,
+      listIndentContainerTypes: indentContainers,
+      paragraphLayout: paragraphLayout,
+      structuralIndentation: structuralIndentation ?? this.structuralIndentation,
+      progressiveHeadingMenu: progressiveHeadingMenu,
+      blockConversionPreservedAttributes: attributes,
+    );
+  }
 
   /// 兼容原文字场景的可选预设，调用方可显式保留六类文字块与H1～H4。
   static final text = EditorConfiguration(

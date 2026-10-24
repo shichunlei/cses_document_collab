@@ -1,0 +1,18 @@
+Waiting for another flutter command to release the startup lock...
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R1 block conversion preserves imported identity, metadata and business fields
+R1 {"type":"heading","business":"help","bc.id":"paragraph","meta":{"audit":"demo"}}
+00:00 +1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R2 callout appearance edits are exported from current state
+R2 {"nativeColor":"#112233","nativePrefix":"新","exportedProps":{"prefix":"新","backColor":"#112233"}}
+00:00 +2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R3 exiting an imported todo exports a paragraph
+R3 {"nativeType":"paragraph","exportedFlavour":"paragraph","props":{"depth":0}}
+00:00 +3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R6 a newly converted task card exports its actual task reference
+R6 {"nativeResource":{"taskId":"task-demo","title":"任务探针"},"exportedProps":{"taskId":"task-demo","title":"任务探针"}}
+00:00 +4: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 explicit font weight retains the native mention widget
+00:00 +5: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 explicit font weight retains the native mention widget
+00:00 +6: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 explicit font weight retains the native mention widget
+00:00 +7: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 explicit font weight retains the native mention widget
+00:00 +8: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 explicit font weight retains the native mention widget
+R4 visibleMentions=1
+00:00 +9: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +10: All tests passed!

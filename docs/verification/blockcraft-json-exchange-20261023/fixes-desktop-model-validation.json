@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-23",
+  "status": "passed",
+  "installed": "0.11.17",
+  "typescript": "5.9.3",
+  "taskSchema": {
+    "source": "/System/Volumes/Data/workspace/cses-client/packages/docs/src/editor/embedded-references/task-card/index.ts",
+    "sha256": "702c519b46f5884318a1cb0e8b09547955abdc6aaa808f011e48016ad9a01a7e",
+    "component": "仅Angular组件引用替身，Schema对象与createSnapshot来自实际桌面源声明"
+  },
+  "results": [
+    {
+      "file": "fixes-converted-journal.json",
+      "sha256": "f684397aee77109296992e679cd2971763f57229e7b1eb87a113489ee650f555",
+      "blocks": 12,
+      "schemaAndModel": "passed"
+    },
+    {
+      "file": "fixed-journal-roundtrip.json",
+      "sha256": "62bdb1402c03a0d1bb9befed7009757806505725cc57e1cff33cded4f45065f7",
+      "blocks": 2,
+      "schemaAndModel": "passed"
+    },
+    {
+      "file": "fixed-task-card.json",
+      "sha256": "ac1d2af5d9503899721413aeeef446222102ec0b269ac77c6954194afda13a17",
+      "blocks": 3,
+      "schemaAndModel": "passed"
+    }
+  ],
+  "limits": [
+    "未操作桌面窗口/系统文件框",
+    "0.11.30只做静态核对，未安装或运行新版",
+    "未新增真机/iOS/线上双端验收"
+  ]
+}

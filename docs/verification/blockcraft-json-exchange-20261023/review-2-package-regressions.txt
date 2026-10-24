@@ -1,0 +1,21 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart
+00:00 +0: host configuration copies contracts without changing document capabilities
+00:00 +1: R1 converting imported content preserves identity, metadata and custom properties through undo
+00:00 +2: R1 live code, quote and list types override imported flavour while retaining identity
+00:00 +3: R2 all callout appearance values and clears survive reverse conversion and undo
+00:00 +4: R3 exiting todo exports a paragraph and undo restores its original type
+00:00 +5: R3 exiting bullet exports a paragraph and undo restores its original type
+00:00 +6: R3 exiting ordered exports a paragraph and undo restores its original type
+00:00 +7: explicit body conversion removes the special word-art text role
+00:00 +8: R6 a newly converted task card keeps its reference across both JSON directions and undo
+00:00 +9: R4 paragraph user remains a styled native atom after explicit font weight
+00:00 +10: R4 paragraph meeting remains a styled native atom after explicit font weight
+00:00 +11: R4 paragraph task remains a styled native atom after explicit font weight
+00:00 +12: R4 paragraph doc remains a styled native atom after explicit font weight
+00:00 +13: R4 paragraph latex remains a styled native atom after explicit font weight
+00:01 +14: R4 word-art user remains a styled native atom after explicit font weight
+00:01 +15: R4 word-art meeting remains a styled native atom after explicit font weight
+00:01 +16: R4 word-art task remains a styled native atom after explicit font weight
+00:01 +17: R4 word-art doc remains a styled native atom after explicit font weight
+00:01 +18: R4 word-art latex remains a styled native atom after explicit font weight
+00:01 +19: All tests passed!

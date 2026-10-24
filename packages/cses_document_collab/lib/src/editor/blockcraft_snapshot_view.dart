@@ -41,9 +41,9 @@ Map<String, BlockComponentBuilder> blockCraftSnapshotBuilders(Map<String, BlockC
   if (builders['image'] != null) 'image': _SnapshotChildrenBuilder(builders['image']!),
 };
 
-/// 为已转换的[text]绘制桌面行内对象及额外文字外观；[node]为借用节点，[span]为通用格式结果。
-/// 无相关字段返回null交给原装饰器；不保存对象原始JSON或创建网络会话。
-InlineSpan? decorateBlockCraftSnapshotText(Node node, TextInsert text, TextSpan span) {
+/// 合成借用[node]/[text]的桌面字重及艺术字外观到[span]，保留原子对象供后续装饰器渲染。
+/// 返回不改变原节点的TextSpan；不消费提及/公式或创建编辑会话。
+TextSpan blockCraftSnapshotTextStyle(Node node, TextInsert text, TextSpan span) {
   final attrs = text.attributes ?? {};
   final weight = int.tryParse('${attrs['bc.a:s:fontWeight']}');
   var style = span.style ?? const TextStyle();
@@ -55,6 +55,14 @@ InlineSpan? decorateBlockCraftSnapshotText(Node node, TextInsert text, TextSpan 
       color: parseCollabBlockColor('${props['fill'] ?? props['color'] ?? '#224c91'}'),
     );
   }
+  return span.copyWith(style: style);
+}
+
+/// 为已转换的[text]绘制桌面行内对象；[node]为借用节点，[span]已合成文字外观。
+/// 无对象返回null继续通用人员/实体/公式装饰；不保存原始JSON或创建网络会话。
+InlineSpan? decorateBlockCraftSnapshotText(Node node, TextInsert text, TextSpan span) {
+  final attrs = text.attributes ?? {};
+  final style = span.style ?? const TextStyle();
   if (attrs['cses_mention_type'] == 'department') {
     return TextSpan(
       text: text.text.replaceAll('\uFFFC', '@${attrs['cses_inline_mention']}'),
@@ -66,7 +74,7 @@ InlineSpan? decorateBlockCraftSnapshotText(Node node, TextInsert text, TextSpan 
       if (entry.key.startsWith('bc.e:')) entry.key.substring(5): entry.value,
   };
   if (embedded.isEmpty) {
-    return weight == null && BlockCraftJsonCodec.flavour(node) != 'word-art' ? null : span.copyWith(style: style);
+    return null;
   }
   final key = embedded.keys.single;
   final raw = embedded[key];

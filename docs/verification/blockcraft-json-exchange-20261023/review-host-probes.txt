@@ -1,0 +1,27 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/blockcraft_commit_review_probe_test.dart
+00:00 +0: R1 actual imported journal retains business identity through public heading conversion
+HOST R1 {"type":"heading","entryId":null,"exported":[{"id":"gadyPY","flavour":"paragraph","nodeType":"editable","props":{"heading":2},"meta":{"mobileGuidance":{"version":1,"role":"content","section":"record","business":{}}},"children":[]}]}
+00:00 +0 -1: R1 actual imported journal retains business identity through public heading conversion [E]
+  Expected: 'entry-demo'
+    Actual: <null>
+     Which: not an <Instance of 'String'>
+
+  package:matcher                                                    expect
+  package:flutter_test/src/widget_tester.dart 473:18                 expect
+  test/daily_guidance/blockcraft_commit_review_probe_test.dart 97:9  main.<fn>
+
+00:00 +0 -1: R5 appending into a locked imported container must be rejected
+HOST R5 lockedContainerChildren=2
+00:00 +0 -2: R5 appending into a locked imported container must be rejected [E]
+  Expected: <1>
+    Actual: <2>
+
+  package:matcher                                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18                  expect
+  test/daily_guidance/blockcraft_commit_review_probe_test.dart 129:9  main.<fn>
+
+00:00 +0 -2: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/blockcraft_commit_review_probe_test.dart: R1 actual imported journal retains business identity through public heading conversion
+  /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/blockcraft_commit_review_probe_test.dart: R5 appending into a locked imported container must be rejected

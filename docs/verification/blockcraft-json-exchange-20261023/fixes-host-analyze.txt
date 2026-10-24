@@ -1,0 +1,7 @@
+Waiting for another flutter command to release the startup lock...
+Analyzing 2 items...
+
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/src/daily_guidance/local_journal_controller.dart:503:15 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/src/daily_guidance/local_journal_controller.dart:552:9 • curly_braces_in_flow_control_structures
+
+2 issues found. (ran in 23.2s)

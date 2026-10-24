@@ -508,7 +508,7 @@ EdgeInsets _listBlockPadding(Node node) {
 /// 再应用行内字号和倍率，避免丢失标题字号或重复乘算段落倍率。
 /// 行内公式、用户和三类业务实体提及使用单字符 WidgetSpan，保留文字颜色；
 /// 已校验用户复用公开装饰器并绑定当前实例的展示服务。
-/// 已转换的桌面行内对象使用原生对象视图；额外字重及艺术文字读取独立模型属性。
+/// 已转换的桌面行内对象使用原生对象视图；字重及艺术字外观先合成，再继续提及/公式渲染。
 /// 整段链接点击提供打开和三视图切换，混排正文维持原链接行为。
 ///
 /// ```dart
@@ -568,6 +568,7 @@ InlineSpan decorateEditorTextSpan(
     }
   }
   final attributes = text.attributes;
+  decorated = blockCraftSnapshotTextStyle(node, text, decorated);
   final snapshotSpan = decorateBlockCraftSnapshotText(node, text, decorated);
   if (snapshotSpan != null) return snapshotSpan;
   final latex = attributes?[collabInlineLatexAttribute];

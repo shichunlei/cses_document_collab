@@ -1,0 +1,163 @@
+{
+  "currentSection": {
+    "type": "local-journal-section",
+    "children": [
+      {
+        "type": "paragraph",
+        "data": {
+          "delta": [
+            {
+              "insert": "anchor"
+            }
+          ],
+          "cses_paragraph_textDefaults": "{}",
+          "cses_paragraph_nextParagraphStyle": "{}",
+          "cses_paragraph_heading": "{}",
+          "cses_paragraph_depth": "{}",
+          "cses_paragraph_fs": "{}",
+          "cses_paragraph_pfs": "{}",
+          "cses_paragraph_lh": "{}",
+          "cses_paragraph_psb": "{}",
+          "cses_paragraph_psa": "{}",
+          "cses_paragraph_decoration": "{}",
+          "cses_paragraph_target": "first",
+          "cses_collab_block_id": "first",
+          "align": "left",
+          "cses_collab_indent": 0,
+          "bc.id": "first",
+          "bc.flavour": "paragraph",
+          "bc.nodeType": "editable"
+        }
+      },
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "type": "todo_list",
+            "data": {
+              "delta": [
+                {
+                  "insert": "todo"
+                }
+              ],
+              "cses_paragraph_textDefaults": "{}",
+              "cses_paragraph_nextParagraphStyle": "{}",
+              "cses_paragraph_heading": "{}",
+              "cses_paragraph_depth": "{}",
+              "cses_paragraph_fs": "{}",
+              "cses_paragraph_pfs": "{}",
+              "cses_paragraph_lh": "{}",
+              "cses_paragraph_psb": "{}",
+              "cses_paragraph_psa": "{}",
+              "cses_paragraph_decoration": "{}",
+              "cses_paragraph_target": "third",
+              "cses_collab_block_id": "third",
+              "align": "left",
+              "cses_collab_indent": 0,
+              "checked": true,
+              "bc.id": "third",
+              "bc.flavour": "todo",
+              "bc.nodeType": "editable",
+              "bc.p:checked": {
+                "v": 1
+              }
+            }
+          }
+        ],
+        "data": {
+          "delta": [
+            {
+              "insert": "body"
+            }
+          ],
+          "cses_paragraph_textDefaults": "{}",
+          "cses_paragraph_nextParagraphStyle": "{}",
+          "cses_paragraph_heading": "{}",
+          "cses_paragraph_depth": "{}",
+          "cses_paragraph_fs": "{}",
+          "cses_paragraph_pfs": "{}",
+          "cses_paragraph_lh": "{}",
+          "cses_paragraph_psb": "{}",
+          "cses_paragraph_psa": "{}",
+          "cses_paragraph_decoration": "{}",
+          "cses_paragraph_target": "second",
+          "cses_collab_block_id": "second",
+          "align": "left",
+          "cses_collab_indent": 0,
+          "bc.id": "second",
+          "bc.flavour": "paragraph",
+          "bc.nodeType": "editable"
+        }
+      }
+    ],
+    "data": {
+      "section": "record"
+    }
+  },
+  "exported": {
+    "id": "root",
+    "flavour": "root",
+    "nodeType": "root",
+    "props": {},
+    "meta": {
+      "mobileGuidance": {
+        "version": 1,
+        "role": "document",
+        "plainDesktop": true,
+        "draft": {
+          "id": "import-1792684800000000",
+          "date": "2026-10-23",
+          "createdAt": "2026-10-22T16:00:00.000Z",
+          "updatedAt": "2026-10-23T12:53:46.240003Z",
+          "timezoneOffsetMinutes": 480
+        },
+        "sections": [
+          {
+            "key": "record"
+          }
+        ],
+        "closedSections": []
+      }
+    },
+    "children": [
+      {
+        "id": "first",
+        "flavour": "paragraph",
+        "nodeType": "editable",
+        "props": {},
+        "meta": {
+          "mobileGuidance": {
+            "version": 1,
+            "role": "content",
+            "section": "record",
+            "business": {}
+          }
+        },
+        "children": [
+          {
+            "insert": "anchor"
+          }
+        ]
+      },
+      {
+        "id": "second",
+        "flavour": "paragraph",
+        "nodeType": "editable",
+        "props": {},
+        "meta": {
+          "mobileGuidance": {
+            "version": 1,
+            "role": "content",
+            "section": "record",
+            "business": {}
+          }
+        },
+        "children": [
+          {
+            "insert": "body"
+          }
+        ]
+      }
+    ]
+  }
+}

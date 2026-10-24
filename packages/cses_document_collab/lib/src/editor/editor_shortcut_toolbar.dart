@@ -15,6 +15,7 @@ import 'package:cses_document_collab/src/editor/collab_mermaid_sheet.dart';
 import 'package:cses_document_collab/src/editor/collab_paragraph_indent.dart';
 import 'package:cses_document_collab/src/editor/collab_paragraph_typing.dart';
 import 'package:cses_document_collab/src/editor/editor_media_source_sheet.dart';
+import 'package:cses_document_collab/src/editor/editor_block_conversion.dart';
 import 'package:cses_document_collab/src/editor/stable_mobile_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
 import 'package:cses_document_collab/src/model/collab_color_palette.dart';
@@ -2786,6 +2787,7 @@ Future<bool> applyBlockShortcut(
 /// 将借用 [node] 转为 [blockType]，[headingLevel] 仅标题使用，null 按一级。
 /// 保留正文及段落默认格式/下一段设置；代码使用独立输入规则，不继承段落字段。
 /// [preservedAttributes]指定额外保留的宿主属性键；目标内置属性优先，块背景默认保留。
+/// 已转换桌面节点的身份、独立props/meta及扩展字段随替换延续；显式正文转换解除特殊文本角色。
 /// 返回新节点，身份由适配器类型转换链处理，不创建资源。
 Node _convertedNode(Node node, String blockType, int? headingLevel, {Set<String> preservedAttributes = const {}}) {
   final collabBlockId = node.attributes['cses_collab_block_id'];
@@ -2795,13 +2797,7 @@ Node _convertedNode(Node node, String blockType, int? headingLevel, {Set<String>
       blockType == NumberedListBlockKeys.type ||
       blockType == TodoListBlockKeys.type;
   final attributes = <String, Object>{
-    for (final key in {
-      ...preservedAttributes,
-      csesBlockBackgroundColorAttribute,
-      blockComponentBackgroundColor,
-      blockComponentTextDirection,
-    })
-      if (node.attributes[key] != null) key: node.attributes[key]!,
+    ...preservedEditorBlockAttributes(node, preservedAttributes: preservedAttributes),
     if (blockType != 'code') ...{
       for (final key in collabParagraphKeys)
         if (key != 'heading' && node.attributes[paragraphPropertyAttribute(key)] is String)
@@ -2819,6 +2815,10 @@ Node _convertedNode(Node node, String blockType, int? headingLevel, {Set<String>
   };
   if (collabBlockId != null) {
     attributes['cses_collab_block_id'] = collabBlockId;
+  }
+  if (blockType == ParagraphBlockKeys.type &&
+      const {'caption', 'shape-text', 'word-art'}.contains(attributes['bc.flavour'])) {
+    attributes['bc.flavour'] = 'paragraph';
   }
   return Node(type: blockType, attributes: attributes);
 }

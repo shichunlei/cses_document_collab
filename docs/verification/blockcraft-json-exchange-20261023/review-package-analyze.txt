@@ -1,0 +1,9 @@
+Analyzing blockcraft_commit_review_probe_test.dart...
+
+   info • Don't invoke 'print' in production code. Try using a logging framework • test/blockcraft_commit_review_probe_test.dart:54:7 • avoid_print
+   info • Don't invoke 'print' in production code. Try using a logging framework • test/blockcraft_commit_review_probe_test.dart:87:7 • avoid_print
+   info • Don't invoke 'print' in production code. Try using a logging framework • test/blockcraft_commit_review_probe_test.dart:106:7 • avoid_print
+   info • Don't invoke 'print' in production code. Try using a logging framework • test/blockcraft_commit_review_probe_test.dart:135:7 • avoid_print
+   info • Don't invoke 'print' in production code. Try using a logging framework • test/blockcraft_commit_review_probe_test.dart:169:5 • avoid_print
+
+5 issues found. (ran in 5.7s)

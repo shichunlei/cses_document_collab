@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-23",
+  "status": "passed",
+  "installed": "0.11.17",
+  "typescript": "5.9.3",
+  "taskSchema": {
+    "source": "/System/Volumes/Data/workspace/cses-client/packages/docs/src/editor/embedded-references/task-card/index.ts",
+    "sha256": "702c519b46f5884318a1cb0e8b09547955abdc6aaa808f011e48016ad9a01a7e",
+    "component": "仅Angular组件引用替身，Schema对象与createSnapshot来自实际桌面源声明"
+  },
+  "results": [
+    {
+      "file": "p1-fixed-heading-help.json",
+      "sha256": "8f811dc599a5108cb960daca61b464ac838d7400a7c195f877ad0f208e4d57ae",
+      "blocks": 2,
+      "schemaAndModel": "passed"
+    },
+    {
+      "file": "p1-fixed-quote-help.json",
+      "sha256": "8f601a1c74020ba0e6bf2d8e293822d250ba3ff2a6e38bc2f8ce8c5832a322ac",
+      "blocks": 2,
+      "schemaAndModel": "passed"
+    },
+    {
+      "file": "p1-fixed-todo-tab.json",
+      "sha256": "e75bd7c0598917216498f94bd253cd0d091eea4443d90510e4ad1f15d0b611f6",
+      "blocks": 3,
+      "schemaAndModel": "passed"
+    }
+  ],
+  "limits": [
+    "未操作桌面窗口/系统文件框",
+    "0.11.30只做静态核对，未安装或运行新版",
+    "未新增真机/iOS/线上双端验收"
+  ]
+}

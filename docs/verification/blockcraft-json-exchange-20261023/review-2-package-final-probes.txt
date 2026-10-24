@@ -1,0 +1,15 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_review_2_probe_test.dart
+00:00 +0: hardware Tab command fallback must not create unexportable todo nesting
+00:00 +0 -1: hardware Tab command fallback must not create unexportable todo nesting [E]
+  Expected: contains 'todo'
+    Actual: '{"id":"root","flavour":"root","nodeType":"root","props":{},"meta":{},"children":[{"id":"paragraph","flavour":"paragraph","nodeType":"editable","props":{},"meta":{},"children":[{"insert":"anchor"}]}]}'
+     Which: does not contain 'todo'
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/blockcraft_review_2_probe_test.dart 57:7       main.<fn>
+
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_review_2_probe_test.dart: hardware Tab command fallback must not create unexportable todo nesting

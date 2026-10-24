@@ -1,0 +1,37 @@
+Waiting for another flutter command to release the startup lock...
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: host configuration copies contracts without changing document capabilities
+00:00 +0 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: host configuration copies contracts without changing document capabilities [E]
+  Expected: <true>
+    Actual: <false>
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/blockcraft_json_editing_test.dart 69:5         main.<fn>
+
+00:00 +0 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R1 converting imported content preserves identity, metadata and custom properties through undo
+00:00 +1 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R2 all callout appearance values and clears survive reverse conversion and undo
+00:00 +2 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R3 exiting todo exports a paragraph and undo restores its original type
+00:00 +3 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R3 exiting bullet exports a paragraph and undo restores its original type
+00:00 +4 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R3 exiting ordered exports a paragraph and undo restores its original type
+00:00 +5 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: explicit body conversion removes the special word-art text role
+00:00 +6 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R6 a newly converted task card keeps its reference across both JSON directions and undo
+00:00 +7 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 paragraph user remains a styled native atom after explicit font weight
+00:00 +8 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 paragraph user remains a styled native atom after explicit font weight
+00:00 +9 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 paragraph user remains a styled native atom after explicit font weight
+00:00 +10 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 paragraph user remains a styled native atom after explicit font weight
+00:00 +11 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 paragraph user remains a styled native atom after explicit font weight
+00:00 +12 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +13 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +14 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +15 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +16 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +17 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +18 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +19 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +20 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +21 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +22 -1: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: host configuration copies contracts without changing document capabilities

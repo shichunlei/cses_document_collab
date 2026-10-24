@@ -1,5 +1,7 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/collab_list_editing.dart';
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
+import 'package:cses_document_collab/src/editor/editor_block_conversion.dart';
 import 'package:cses_document_collab/src/model/collab_paragraph_style.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +24,7 @@ final collabParagraphEnter = CharacterShortcutEvent(
 /// 标题/引用默认 body，正文/列表默认 same；空列表复用逐级退出规则，新待办未勾选。
 /// 行首插入空同型段落并留在原正文；空标题默认原位转正文。Shift、代码、特殊块、
 /// 非叶块及跨父容器选区交给原输入处理；同父段落范围替换在一次事务中完成。
+/// 空标题/引用原位转正文时沿用宿主业务字段、桌面身份/元数据与块背景；段尾新增正文不继承原身份。
 /// 成功应用事务返回 true；只读、销毁或不适用返回 false，错误向调用边界传播。
 Future<bool> handleCollabParagraphEnter(EditorState state) async {
   final selection = state.selection?.normalized;
@@ -121,14 +124,21 @@ Future<bool> handleCollabParagraphEnter(EditorState state) async {
     transaction.add(
       InsertOperation(node.path, [
         paragraphNode(
-          attributes: continuing
-              ? attributes
-              : {
-                  for (final key in collabParagraphKeys)
-                    paragraphPropertyAttribute(key): key == 'depth'
-                        ? '{"value":0}'
-                        : '{"value":null}',
-                },
+          attributes: {
+            ...preservedEditorBlockAttributes(
+              node,
+              preservedAttributes: EditorCommandContext.of(
+                state,
+              ).configuration.blockConversionPreservedAttributes,
+            ),
+            if (continuing)
+              ...attributes
+            else
+              for (final key in collabParagraphKeys)
+                paragraphPropertyAttribute(key): key == 'depth'
+                    ? '{"value":0}'
+                    : '{"value":null}',
+          },
         ),
       ]),
       transform: false,

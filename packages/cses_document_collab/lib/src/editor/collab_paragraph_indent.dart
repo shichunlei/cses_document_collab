@@ -83,7 +83,7 @@ Future<bool> changeCollabBlockIndent(EditorState state, int delta) async {
   return true;
 }
 
-/// 普通文本段的硬件Tab入口，放在标准结构缩进前；不处理表格导航或代码Tab。
+/// 普通文本段与平面列表的硬件Tab入口，放在标准结构缩进前；不处理表格导航或代码Tab。
 /// 借用编辑器，异步事务在诊断边界等待，不创建监听或可释放资源。
 final collabParagraphTabCommand = CommandShortcutEvent(
   key: 'cses-text-tab',
@@ -92,7 +92,7 @@ final collabParagraphTabCommand = CommandShortcutEvent(
   handler: (state) => _handleTab(state, 1),
 );
 
-/// 普通文本段的Shift+Tab入口，零级保持原块类型，不改为正文或嵌套子块。
+/// 普通文本段与平面列表的Shift+Tab入口；正文零级保持类型，列表零级按既有规则退出正文。
 final collabParagraphShiftTabCommand = CommandShortcutEvent(
   key: 'cses-text-shift-tab',
   command: 'shift+tab',
@@ -100,12 +100,17 @@ final collabParagraphShiftTabCommand = CommandShortcutEvent(
   handler: (state) => _handleTab(state, -1),
 );
 
-/// 在借用 [state] 的普通文本段消费 [delta] 对应Tab；表格内文字留给表格命令。
+/// 在借用[state]的普通文本段或获准平面列表消费[delta]对应Tab；表格内文字留给导航。
+/// 达到上限仍消费事件，避免回退到会建立真实子块的标准缩进。
 KeyEventResult _handleTab(EditorState state, int delta) {
   final nodes = _textTargets(state);
-  if (nodes.isEmpty) return KeyEventResult.ignored;
+  // 退级能力只用于识别合法列表选区；真正执行仍按delta检查容量和权限。
+  final list = nodes.isEmpty && canChangeCollabListIndent(state, -1);
+  if (nodes.isEmpty && !list) return KeyEventResult.ignored;
+  final first =
+      nodes.firstOrNull ?? state.getNodeAtPath(state.selection!.start.path)!;
   for (
-    Node? ancestor = nodes.first.parent;
+    Node? ancestor = first.parent;
     ancestor != null;
     ancestor = ancestor.parent
   ) {
