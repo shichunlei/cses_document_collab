@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/model/collab_meeting.dart';
@@ -102,61 +104,79 @@ void main() {
     }
   });
 
-  testWidgets('default offline adds a table through the original menu and previews it', (tester) async {
+  testWidgets('default offline adds a table through the shared view and previews it', (tester) async {
     await tester.binding.setSurfaceSize(const Size(390, 844));
     addTearDown(() => tester.binding.setSurfaceSize(null));
     tester.view.devicePixelRatio = 1;
     tester.view.viewInsets = const FakeViewPadding(bottom: 260);
     addTearDown(tester.view.resetDevicePixelRatio);
     addTearDown(tester.view.resetViewInsets);
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Builder(
-          builder: (context) => Scaffold(
-            body: TextButton(
-              onPressed: () => showCollabImageComposer(context: context, initialText: 'Anchor'),
-              child: const Text('Open'),
+    final local = LocalEditorController(initialText: 'Anchor');
+    DocumentEditorController? preview;
+    try {
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: const [AppFlowyEditorLocalizations.delegate],
+          home: Scaffold(body: DocumentEditorView(editorState: local.editorState)),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final source = local.editorState;
+      source.selection = Selection.collapsed(Position(path: [0], offset: 6));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('editor-shortcut-add')));
+      await tester.pumpAndSettle();
+      for (final type in [
+        'code-block',
+        'image-block',
+        'table',
+        'formula',
+        'mermaid',
+        'divider',
+        'page-divider',
+        'callout',
+      ]) {
+        expect(find.byKey(ValueKey('editor-shortcut-$type')), findsOneWidget);
+      }
+      await tester.ensureVisible(find.byKey(const ValueKey('editor-shortcut-table')));
+      await tester.tap(find.byKey(const ValueKey('editor-shortcut-table')));
+      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pumpAndSettle();
+      expect(source.document.root.children.any((node) => node.type == 'table'), isTrue);
+      preview = DocumentEditorController(
+        document: Document.fromJson(jsonDecode(jsonEncode(source.document.toJson())) as Map<String, dynamic>),
+        commandContext: EditorCommandContext(configuration: local.configuration, localOnly: true),
+      )..editorState.editable = false;
+      tester.view.viewInsets = const FakeViewPadding();
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: const [AppFlowyEditorLocalizations.delegate],
+          home: Scaffold(
+            body: DocumentEditorView(
+              key: ObjectKey(preview),
+              editorState: preview.editorState,
+              preview: true,
+              editable: false,
             ),
           ),
         ),
-      ),
-    );
-    await tester.tap(find.text('Open'));
-    await tester.pumpAndSettle();
-    final source = tester.widget<AppFlowyEditor>(find.byType(AppFlowyEditor)).editorState;
-    source.selection = Selection.collapsed(Position(path: [0], offset: 6));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey('editor-shortcut-add')));
-    await tester.pumpAndSettle();
-    for (final type in [
-      'code-block',
-      'image-block',
-      'table',
-      'formula',
-      'mermaid',
-      'divider',
-      'page-divider',
-      'callout',
-    ]) {
-      expect(find.byKey(ValueKey('editor-shortcut-$type')), findsOneWidget);
+      );
+      await tester.pumpAndSettle();
+      final view = tester.widget<AppFlowyEditor>(find.byType(AppFlowyEditor));
+      expect(view.editorState.document.root.children.any((node) => node.type == 'table'), isTrue);
+      expect(view.disableSelectionService, isTrue);
+      expect(find.byTooltip('更多操作'), findsNothing);
+      expect(CollabBlockLocks.of(source), isNull);
+      expect(CollabBlockLocks.of(preview.editorState), isNull);
+      expect(tester.takeException(), isNull);
+    } finally {
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.runAsync(() async {
+        await preview?.close();
+        await local.close();
+      });
     }
-    await tester.ensureVisible(find.byKey(const ValueKey('editor-shortcut-table')));
-    await tester.tap(find.byKey(const ValueKey('editor-shortcut-table')));
-    await tester.pumpAndSettle();
-    await tester.pump(const Duration(milliseconds: 500));
-    await tester.pumpAndSettle();
-    expect(source.document.root.children.any((node) => node.type == 'table'), isTrue);
-    tester.view.viewInsets = const FakeViewPadding();
-    await tester.tap(find.byKey(const ValueKey('image-composer-preview-toggle')));
-    await tester.pumpAndSettle();
-    final preview = tester.widget<AppFlowyEditor>(find.byType(AppFlowyEditor));
-    expect(preview.editorState.document.root.children.any((node) => node.type == 'table'), isTrue);
-    expect(preview.disableSelectionService, isTrue);
-    expect(find.byTooltip('更多操作'), findsNothing);
-    expect(CollabBlockLocks.of(source), isNull);
-    await tester.tap(find.byKey(const ValueKey('image-composer-back')));
-    await tester.pumpAndSettle();
-    expect(tester.takeException(), isNull);
   });
 
   testWidgets('offline media modal explicitly disables global upload fallback', (tester) async {

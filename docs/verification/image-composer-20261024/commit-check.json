@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-24",
+  "scope": "image_composer迁移、测试、规范及完整证据",
+  "verifiedSourceSha256MatchesIndex": true,
+  "markdownLinksPresentInIndex": 39,
+  "sourceAndDocumentWhitespaceCheck": "passed",
+  "rawLogWhitespaceCheckExitCode": 2,
+  "preservedRawLogPaddingLines": 49,
+  "rawLogPaddingFiles": [
+    "docs/verification/image-composer-20261024/host-analyze-final.log",
+    "docs/verification/image-composer-20261024/host-analyze.log",
+    "docs/verification/image-composer-20261024/host-tests.log",
+    "docs/verification/image-composer-20261024/package-analyze-targets.log",
+    "docs/verification/image-composer-20261024/package-analyze.log",
+    "docs/verification/image-composer-20261024/package-tests.log",
+    "docs/verification/image-composer-20261024/shared-view-probe.log"
+  ],
+  "rawLogHandling": "原始工具日志保持原字节，行尾填充不作为源代码空白错误；*.log通过显式暂存纳入提交",
+  "priorValidation": {
+    "hostTests": 197,
+    "packageTests": 58,
+    "nativeIsolationRetest": 1,
+    "sourceChangedSinceTests": false
+  },
+  "reviewReportRestoredBeforeCommit": true
+}

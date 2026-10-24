@@ -1,0 +1,27 @@
+{
+  "checkedDate": "2026-10-24",
+  "stage": "image_composer宿主迁移",
+  "registry": "http://npm.runtongqiuben.com/",
+  "queries": [
+    "npm view @ccc/blockcraft dist-tags --json --fetch-retries=0 --fetch-timeout=15000 --cache /private/tmp/cses-composer-migration-npm-cache --prefer-online --update-notifier=false",
+    "npm view @ccc/blockcraft@0.11.30 dist --json --fetch-retries=0 --fetch-timeout=15000 --cache /private/tmp/cses-composer-migration-npm-cache --prefer-online --update-notifier=false"
+  ],
+  "latest": "0.11.30",
+  "desktopDeclaration": "0.11.28",
+  "yarnLocked": "0.11.28",
+  "installed": "0.11.21",
+  "historicalPnpmLocked": "0.2.78",
+  "registryShasum": "abedbde54c71e81db525aec73f86cceb77f4cb4b",
+  "cachedArtifactSha1": "abedbde54c71e81db525aec73f86cceb77f4cb4b",
+  "integrity": "sha512-rx488SxuPm4FqjL88B4c0V5balNRL1h+gJ79IgYr84lfL68lCQdH/m11Dx0LvzdBnvQE/fgJDLscWlnogKlMPQ==",
+  "readAgain": [
+    "安装0.11.21/最新0.11.30的ai-skills/SKILL.md、blockcraft.md、MIGRATIONS.md及blockcraft-app.md相关段落",
+    "最新fesm2022/ccc-blockcraft.mjs中的DocExportManager实现；位图路径宿主归属保持"
+  ],
+  "artifactSources": {
+    "installed": "/Users/shichunlei/workspace/cses-client/node_modules/@ccc/blockcraft",
+    "latest": "/private/tmp/cses-blockcraft-image-composer-0.11.30/package"
+  },
+  "noUpgrade": true,
+  "remaining": "未重新覆盖Schema/属性、块与行内对象、选区/菜单、剪贴板、输入、历史及协同全部版本差异；既有待同步/待验收保持。"
+}

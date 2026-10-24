@@ -1,11 +1,11 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';
-import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
+import 'package:cses_mobile_collab_demo/src/image_composer/show_image_composer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// 公开入口的编辑、无编辑装饰预览、返回编辑及退出释放回归。
+/// 宿主功能入口的编辑、无编辑装饰预览、返回编辑及退出释放回归。
 void main() {
   testWidgets('preview uses an isolated noninteractive document and has no export', (tester) async {
     await tester.binding.setSurfaceSize(const Size(390, 844));
@@ -18,7 +18,7 @@ void main() {
           builder: (context) => Scaffold(
             body: TextButton(
               onPressed: () async {
-                routeTask = showCollabImageComposer(
+                routeTask = showImageComposer(
                   context: context,
                   initialText: '本地标题\n正文',
                   editorConfig: EditorConfiguration(
@@ -38,7 +38,6 @@ void main() {
     await tester.tap(find.text('Open'));
     await tester.pumpAndSettle();
     final source = tester.widget<AppFlowyEditor>(find.byType(AppFlowyEditor)).editorState;
-    expect(CollabBlockLocks.of(source), isNull);
     source.selection = Selection.single(path: [0], startOffset: 0, endOffset: 4);
     await tester.pumpAndSettle();
     await SystemChannels.textInput.invokeMethod<void>('TextInput.show');
@@ -52,7 +51,6 @@ void main() {
     expect(preview.editable, isFalse);
     expect(preview.disableSelectionService, isTrue);
     expect(preview.disableKeyboardService, isTrue);
-    expect(CollabBlockLocks.of(preview.editorState), isNull);
     expect(tester.widget<DocumentEditorView>(find.byType(DocumentEditorView)).preview, isTrue);
     expect(find.byKey(const ValueKey('editor-mobile-toolbar')), findsNothing);
     expect(find.byKey(const ValueKey('editor-selection-menu')), findsNothing);
@@ -94,7 +92,7 @@ void main() {
         home: Builder(
           builder: (context) => Scaffold(
             body: TextButton(
-              onPressed: () => showCollabImageComposer(context: context),
+              onPressed: () => showImageComposer(context: context),
               child: const Text('Open'),
             ),
           ),
@@ -118,10 +116,8 @@ void main() {
         home: Builder(
           builder: (context) => Scaffold(
             body: TextButton(
-              onPressed: () => showCollabImageComposer(
-                context: context,
-                initialText: List.generate(60, (index) => '第$index段').join('\n'),
-              ),
+              onPressed: () =>
+                  showImageComposer(context: context, initialText: List.generate(60, (index) => '第$index段').join('\n')),
               child: const Text('Open'),
             ),
           ),

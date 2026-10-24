@@ -1,6 +1,6 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/local_editor_controller.dart';
-import 'package:cses_document_collab/src/editor/local_editor_view.dart';
+import 'package:cses_document_collab/src/editor/document_editor_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -28,8 +28,8 @@ void main() {
               AppFlowyEditorLocalizations.delegate,
             ],
             home: Scaffold(
-              body: LocalEditorView(
-                controller: local,
+              body: DocumentEditorView(
+                editorState: local.editorState,
                 padding: const EdgeInsets.all(24),
               ),
             ),

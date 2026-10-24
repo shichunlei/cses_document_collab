@@ -1,0 +1,71 @@
+Waiting for another flutter command to release the startup lock...
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_controller_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_controller_test.dart: clipboard cut waits for system success and is independently undoable
+00:00 +1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_controller_test.dart: late clipboard success never cuts a changed document
+00:00 +2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_controller_test.dart: local sessions preserve independent input, formatting and history
+00:00 +3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_controller_test.dart: empty paragraph typing style survives input and paragraph Enter
+00:00 +4: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_controller_test.dart: plain paste replaces a multi paragraph range atomically and keeps literal syntax
+00:00 +5: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_controller_test.dart: block conversion and undo retain text, and unsupported insert is rejected
+00:02 +6: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:07 +7: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:07 +8: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:07 +9: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:07 +10: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:07 +11: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:07 +12: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:07 +13: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:07 +14: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:07 +16: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:07 +17: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:07 +18: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:07 +19: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:07 +20: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:07 +21: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:07 +22: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:07 +23: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:07 +24: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:08 +25: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:08 +26: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:12 +27: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:13 +28: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:13 +29: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:13 +30: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:13 +31: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:15 +32: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it
+00:17 +33: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it
+00:19 +34: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it
+00:19 +35: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it
+00:19 +36: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it
+00:19 +37: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it
+00:19 +38: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it
+00:19 +39: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it
+00:19 +40: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it
+00:19 +41: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it
+00:22 +42: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it
+00:22 +43: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it
+00:22 +44: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it
+00:22 +45: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it
+00:22 +46: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it
+00:22 +47: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it
+00:22 +48: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it
+00:22 +49: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it
+00:22 +50: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it
+00:22 +51: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it
+00:23 +52: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it
+00:23 +53: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it
+00:23 +54: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it
+00:23 +55: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it
+02:25 +55 -1: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart [E]
+  Bad state: Cannot close sink while adding stream.
+  package:stream_channel/src/guarantee_channel.dart 180:7      _GuaranteeSink.close
+  package:flutter_tools/src/test/flutter_platform.dart 766:43  FlutterPlatform._startTest
+  
+One or more uncaught errors occurred shutting down:
+  Bad state: Cannot add event while adding stream.
+02:26 +55 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it - did not complete [E]
+02:26 +55 -1: Some tests failed.
+
+Failing tests:
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it (did not complete)
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart

@@ -1,9 +1,9 @@
-import 'package:cses_document_collab/src/editor/core/editor_configuration.dart';
-import 'package:cses_document_collab/src/image_composer/image_composer_controller.dart';
-import 'package:cses_document_collab/src/image_composer/image_composer_page.dart';
-import 'package:cses_document_collab/src/model/collab_host_services.dart';
-import 'package:cses_document_collab/src/model/collab_image_template.dart';
+import 'package:cses_document_collab/cses_document_collab.dart';
 import 'package:flutter/material.dart';
+
+import 'image_composer_controller.dart';
+import 'image_composer_page.dart';
+import 'image_composer_template.dart';
 
 /// 打开纯本地编辑与模板预览，不导出图片、不启用块锁或同步。
 ///
@@ -16,22 +16,23 @@ import 'package:flutter/material.dart';
 /// ```dart
 /// import 'package:flutter/material.dart';
 /// import 'package:cses_document_collab/cses_document_collab.dart';
-/// Future<void> edit(BuildContext context) => showCollabImageComposer(
+/// import 'package:cses_mobile_collab_demo/src/image_composer/show_image_composer.dart';
+/// Future<void> edit(BuildContext context) => showImageComposer(
 ///   context: context,
 ///   editorConfig: EditorConfiguration(blocks: [EditorBlock.paragraph, EditorBlock.quote]),
 /// );
 /// ```
-Future<void> showCollabImageComposer({
+Future<void> showImageComposer({
   required BuildContext context,
   String initialText = '',
-  List<CollabImageTemplate>? templates,
+  List<ImageComposerTemplate>? templates,
   EditorConfiguration? editorConfig,
   CollabHostServices? services,
 }) async {
   final navigator = Navigator.of(context);
   final controller = ImageComposerController(
     initialText: initialText,
-    templates: templates ?? collabImageTemplates,
+    templates: templates ?? imageComposerTemplates,
     configuration: editorConfig,
     services: services,
   );

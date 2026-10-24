@@ -1,0 +1,61 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_controller_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_controller_test.dart: clipboard cut waits for system success and is independently undoable
+00:00 +1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_controller_test.dart: late clipboard success never cuts a changed document
+00:00 +2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_controller_test.dart: local sessions preserve independent input, formatting and history
+00:00 +3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_controller_test.dart: empty paragraph typing style survives input and paragraph Enter
+00:00 +4: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_controller_test.dart: plain paste replaces a multi paragraph range atomically and keeps literal syntax
+00:00 +5: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_controller_test.dart: block conversion and undo retain text, and unsupported insert is rejected
+00:02 +6: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:05 +7: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:05 +10: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:05 +11: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:05 +12: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:05 +13: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:05 +14: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:05 +15: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:05 +16: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:05 +17: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:05 +18: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:05 +19: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:05 +20: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:05 +21: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:05 +22: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +23: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +24: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +25: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +26: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:09 +27: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:09 +28: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it
+00:10 +29: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it
+00:10 +30: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/offline_all_blocks_test.dart: default offline adds a table through the shared view and previews it
+00:10 +31: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:10 +32: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:10 +33: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:10 +34: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:11 +35: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:11 +36: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:13 +37: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:13 +38: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:13 +39: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:13 +40: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:13 +41: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:13 +42: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:13 +43: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:13 +44: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:13 +45: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:13 +46: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:14 +47: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:14 +48: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:14 +49: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:14 +50: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:14 +51: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:14 +52: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:14 +53: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:14 +54: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: progressive headings skip disabled levels without hiding enabled commands
+00:14 +55: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: read-only and preview share rules local=true
+00:14 +56: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: read-only and preview share rules local=false
+00:14 +57: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: skin update preserves borrowed scroll, document and history
+00:14 +58: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: (tearDownAll)
+00:14 +58: All tests passed!

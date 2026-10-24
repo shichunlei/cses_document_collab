@@ -1,0 +1,75 @@
+{
+  "reviewDate": "2026-10-24",
+  "scope": "当前image_composer迁移差异、未跟踪新文件及其文档/测试；文档头尾、会议、KR、任务按用户要求保留包内",
+  "findings": [],
+  "normalizedComparisons": [
+    {
+      "before": "packages/cses_document_collab/lib/src/image_composer/image_composer_controller.dart",
+      "after": "lib/src/image_composer/image_composer_controller.dart",
+      "executableTokenMatchAfterExpectedReplacements": true
+    },
+    {
+      "before": "packages/cses_document_collab/lib/src/image_composer/show_image_composer.dart",
+      "after": "lib/src/image_composer/show_image_composer.dart",
+      "executableTokenMatchAfterExpectedReplacements": true
+    },
+    {
+      "before": "packages/cses_document_collab/lib/src/model/collab_image_template.dart",
+      "after": "lib/src/image_composer/image_composer_template.dart",
+      "executableTokenMatchAfterExpectedReplacements": true
+    },
+    {
+      "before": "packages/cses_document_collab/lib/src/image_composer/image_composer_page.dart",
+      "after": "lib/src/image_composer/image_composer_page.dart",
+      "executableTokenMatchAfterExpectedReplacements": true
+    },
+    {
+      "before": "packages/cses_document_collab/test/image_composer_operations_test.dart",
+      "after": "packages/cses_document_collab/test/local_editor_operations_test.dart",
+      "executableTokenMatchAfterExpectedReplacements": true
+    }
+  ],
+  "preexistingPageEditExcludedFromRegression": "原工作区已省略createState显式返回类型，迁移保留，非本次引入",
+  "verifiedSourceHashes": {
+    "lib/src/image_composer/image_composer_template.dart": "8e7a3e12700e20fc455af80c69b371cf183cb71f50508fb34c91535e14789efa",
+    "lib/src/image_composer/image_composer_page.dart": "b61d60fda25abfaa88e9be51e6d374750dc823eaced34b797d69524c2ed56572",
+    "lib/src/image_composer/show_image_composer.dart": "d28d252bde5c28ebd1392a4095e74d01946fb3ce543f8f7777606285d161dc3d",
+    "lib/src/image_composer/image_composer_controller.dart": "462c8698b1b49a1e7a4baf4be43ad0885ac59bac1ce34307e70938150fd2f4f3",
+    "test/image_composer/image_composer_page_test.dart": "a5dee97021dae21fd2b9579bb934ea257ea4c463f8aa8e653f8bfc91be8bd451",
+    "lib/src/demo/collab_demo_page.dart": "157bc1c06d2705c774f04db147b480d6a9ad3eb838fe7bd41f42bab8035c1918",
+    "packages/cses_document_collab/lib/cses_document_collab.dart": "b23371d309cb394d48921f2339e07a267fa616c87e36f25e3e5710e9168a03bb",
+    "packages/cses_document_collab/test/local_editor_input_test.dart": "664c30b5a2fe4cc1b749bdeb79cf4d34c54233261fae051e64e67c4d129713aa",
+    "packages/cses_document_collab/test/local_editor_native_isolation_test.dart": "e8f242a70b5609c532e834eaddfdcb7fb5d16791c20309334e8e83c69441b996",
+    "packages/cses_document_collab/test/local_editor_operations_test.dart": "d04d18d8cd766de8a862138352f51db09b9f726b64bf24646f8f4ebf105cc78e",
+    "packages/cses_document_collab/test/offline_all_blocks_test.dart": "7ece87f7f6340857d9a78a35cbe4e757e859dd004535b8171cb4706df371a5a9"
+  },
+  "priorTestEvidence": {
+    "host": 197,
+    "packageTargets": 58,
+    "sourceHashesUnchanged": true
+  },
+  "knownSaasConsumer": {
+    "repository": "/Users/shichunlei/workspace/cses/cses.saas",
+    "filesScanned": 3023,
+    "references": []
+  },
+  "versions": {
+    "latest": "0.11.30",
+    "desktopDeclaration": "0.11.28",
+    "yarnLocked": "0.11.28",
+    "installed": "0.11.21"
+  },
+  "upstreamArtifactMatchesCurrentRegistryShasum": true,
+  "skillsAndMigrations": "沿用同会话已读安装版与最新随包技能、MIGRATIONS和相关实现；发布产物指纹未变，未升级",
+  "limitations": [
+    "本轮没有重跑255项目标集，只核对同源码指纹与完整成功标志；另单独重跑原生隔离用例",
+    "没有新增平台构建、物理设备或在线双端验收",
+    "包全量21条既有info仍保留"
+  ],
+  "freshNativeIsolation": {
+    "passed": 1,
+    "failed": 0,
+    "log": "review-native-isolation.log"
+  },
+  "reviewLinksValid": true
+}

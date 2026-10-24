@@ -1,27 +1,26 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:cses_document_collab/cses_document_collab.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
-import 'package:cses_document_collab/src/editor/core/document_editor_controller.dart';
-import 'package:cses_document_collab/src/editor/document_editor_view.dart';
-import 'package:cses_document_collab/src/editor/local_editor_view.dart';
-import 'package:cses_document_collab/src/image_composer/image_composer_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
+import 'image_composer_controller.dart';
+
 /// 借用独立本地会话的编辑/模板预览页，不提供图片导出或块锁。
 ///
 /// ```dart
-/// import 'package:cses_document_collab/cses_document_collab.dart';
-/// import 'package:cses_document_collab/src/image_composer/image_composer_controller.dart';
-/// import 'package:cses_document_collab/src/image_composer/image_composer_page.dart';
-/// final controller = ImageComposerController(initialText: '正文', templates: collabImageTemplates);
+/// import 'package:cses_mobile_collab_demo/src/image_composer/image_composer_template.dart';
+/// import 'package:cses_mobile_collab_demo/src/image_composer/image_composer_controller.dart';
+/// import 'package:cses_mobile_collab_demo/src/image_composer/image_composer_page.dart';
+/// final controller = ImageComposerController(initialText: '正文', templates: imageComposerTemplates);
 /// final page = ImageComposerPage(controller: controller);
-/// // page卸载后 await controller.close()；宿主使用showCollabImageComposer。
+/// // page卸载后 await controller.close()；宿主使用showImageComposer。
 /// ```
 class ImageComposerPage extends StatefulWidget {
-  /// [key]控制页面身份，[controller]由路由入口创建并在完整退场后关闭。
+  /// [key]控制页面身份与状态复用，[controller]由路由入口创建并在完整退场后关闭。
   const ImageComposerPage({super.key, required this.controller});
 
   /// 借用的本地会话，页面仅管理展示状态。
@@ -29,7 +28,7 @@ class ImageComposerPage extends StatefulWidget {
 
   /// 创建串行切换与预览状态。
   @override
-  State<ImageComposerPage> createState() => _ImageComposerPageState();
+  createState() => _ImageComposerPageState();
 }
 
 /// 持有预览借用引用；编辑和预览文档均由页面控制器释放。
@@ -160,9 +159,10 @@ class _ImageComposerPageState extends State<ImageComposerPage> {
                     child: SizedBox(
                       width: math.min(600, constraints.maxWidth),
                       child: preview == null
-                          ? LocalEditorView(
+                          ? DocumentEditorView(
                               key: ObjectKey(composer.editor),
-                              controller: composer.editor,
+                              editorState: composer.editor.editorState,
+                              editorKey: const ValueKey('image-composer-editor'),
                               padding: EdgeInsets.symmetric(
                                 horizontal: template.outerPadding + template.innerPadding + 12,
                               ),

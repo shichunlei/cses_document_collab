@@ -1,0 +1,77 @@
+{
+  "checkedDate": "2026-10-24",
+  "scope": "image_composer 的功能装配与共享编辑器边界，只读版本和发布产物核对",
+  "desktopRepository": "/Users/shichunlei/workspace/cses-client",
+  "registry": "http://npm.runtongqiuben.com/",
+  "registrySource": "/Users/shichunlei/workspace/cses-client/.npmrc:3",
+  "commands": [
+    "npm view @ccc/blockcraft dist-tags --json --fetch-retries=0 --fetch-timeout=20000 --cache /private/tmp/cses-blockcraft-image-composer-npm-cache --prefer-online --update-notifier=false",
+    "npm view @ccc/blockcraft@0.11.30 dist --json --fetch-retries=0 --fetch-timeout=20000 --cache /private/tmp/cses-blockcraft-image-composer-npm-cache --prefer-online --update-notifier=false",
+    "curl --fail --location --max-time 30 --silent --show-error http://npm.runtongqiuben.com/@ccc/blockcraft/-/blockcraft-0.11.30.tgz --output /private/tmp/cses-blockcraft-image-composer-0.11.30.tgz"
+  ],
+  "versions": {
+    "latest": "0.11.30",
+    "alpha": "0.3.0-alpha.34",
+    "desktopDeclaration": "0.11.28",
+    "yarnLocked": "0.11.28",
+    "installed": "0.11.21",
+    "historicalPnpmLocked": "0.2.78"
+  },
+  "versionSources": [
+    "/Users/shichunlei/workspace/cses-client/package.json:274",
+    "/Users/shichunlei/workspace/cses-client/yarn.lock:1790",
+    "/Users/shichunlei/workspace/cses-client/node_modules/@ccc/blockcraft/package.json",
+    "/Users/shichunlei/workspace/cses-client/pnpm-lock.yaml:47"
+  ],
+  "upstreamArtifact": {
+    "path": "/private/tmp/cses-blockcraft-image-composer-0.11.30.tgz",
+    "unpackedRoot": "/private/tmp/cses-blockcraft-image-composer-0.11.30/package",
+    "registryDistShasum": "abedbde54c71e81db525aec73f86cceb77f4cb4b",
+    "downloadedSha1": "abedbde54c71e81db525aec73f86cceb77f4cb4b",
+    "integrity": "sha512-rx488SxuPm4FqjL88B4c0V5balNRL1h+gJ79IgYr84lfL68lCQdH/m11Dx0LvzdBnvQE/fgJDLscWlnogKlMPQ=="
+  },
+  "readEvidence": {
+    "installedRoot": "/Users/shichunlei/workspace/cses-client/node_modules/@ccc/blockcraft",
+    "declaredVersionCachedRoot": "/private/tmp/keyboard-shortcut-plan-blockcraft-0.11.28/package",
+    "latestRoot": "/private/tmp/cses-blockcraft-image-composer-0.11.30/package",
+    "skillsAndMigrations": [
+      "安装版和最新版 ai-skills/SKILL.md、blockcraft.md、MIGRATIONS.md、blockcraft-app.md 相关段落",
+      "声明版0.11.28缓存的 package.json、blockcraft.md、MIGRATIONS.md、blockcraft-app.md 相关段落"
+    ],
+    "latestImplementation": [
+      "framework/ports/index.d.ts:9 — DocFilePort 由宿主实现上传、预览、文件选择及 ObjectURL 能力",
+      "fesm2022/ccc-blockcraft.mjs:30643 — DocFileService 默认文件选择/下载",
+      "fesm2022/ccc-blockcraft.mjs:47377 — ImageBlockSchema",
+      "fesm2022/ccc-blockcraft.mjs:128569 — DocExportManager",
+      "ai-skills/blockcraft-app.md:1038 — 位图截图的应用特定渲染路径归宿主",
+      "ai-skills/MIGRATIONS.md:12090 — 删除 exportToJpeg、_toCanvas 与 dom-to-image-more 依赖"
+    ],
+    "installedImplementation": [
+      "framework/ports/index.d.ts:9 — 与 latest 文件字节一致",
+      "fesm2022/ccc-blockcraft.mjs:30264 — DocFileService",
+      "fesm2022/ccc-blockcraft.mjs:46422 — ImageBlockSchema",
+      "ai-skills/blockcraft-app.md:1020 — 同样明确位图截图归宿主"
+    ]
+  },
+  "comparison": {
+    "filePort": "安装0.11.21与latest0.11.30声明字节一致",
+    "imageSchema": "ImageBlockSchema完整片段SHA-256均为36ca1825267ef725fe9a864ce6c62bbdf1903df8e9956cc5003e3d9230de9a5f",
+    "upstreamChangesObserved": [
+      "图片插入后的gap光标",
+      "共享文档与独立区域内容组合DocumentCompositionSession",
+      "斜杠菜单触发、查询长度与删除行为",
+      "对象动画、工具栏个人配置及相关UI peer差异"
+    ],
+    "architectureImplication": "通用编辑、快照及宿主Port留能力包，具体制图流程由宿主组合。当前image_composer无图片导出，上游位图归属仅作为未来边界参考。"
+  },
+  "failuresAndRecovery": [
+    "首次默认沙箱npm view连接本机代理127.0.0.1:7897被EPERM，npm返回stale latest=0.11.27；该结果弃用。随后隔离缓存联网查询成功，latest=0.11.30。",
+    "旧npm不支持--pack-destination，将/private/tmp误识别为本地包并ENOLOCAL；改用registry返回的精确tarball URL下载，SHA-1核验一致。"
+  ],
+  "scopeAndLimitations": [
+    "未修改桌面或移动源码、依赖及锁文件；本轮只新增分析/版本证据并同步文档。",
+    "未做升级、移动端能力适配或构建/测试/真机验收。",
+    "Schema/属性、块与行内对象、选区/菜单、剪贴板、输入、历史及协同全链路未完整审计；上游新增行为仍待同步或验收。",
+    "发布包迁移文档仍含未发布标题，不能仅按标题推断各行为首次发布版本。"
+  ]
+}

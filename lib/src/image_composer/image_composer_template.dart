@@ -4,16 +4,17 @@ import 'package:flutter/material.dart';
 ///
 /// ```dart
 /// import 'package:flutter/material.dart';
-/// import 'package:cses_document_collab/cses_document_collab.dart';
-/// final template = CollabImageTemplate(
+/// import 'package:cses_mobile_collab_demo/src/image_composer/image_composer_template.dart';
+/// final template = ImageComposerTemplate(
 ///   id: 'blue', name: '蓝色', colors: const [Colors.blue, Colors.cyan]);
 /// ```
-final class CollabImageTemplate {
+final class ImageComposerTemplate {
   /// [id] 为非空唯一标识，[name] 为选择器名称。
-  /// [colors] 为至少一个渐变色，构造时复制；单色按纯色绘制。
+  /// [colors] 为1～8个渐变色，构造时复制；单色按纯色绘制。
   /// [outerPadding] 是背景边距，[innerPadding] 是正文内边距，单位为逻辑像素。
   /// [cardRadius] 是卡片圆角；边距和圆角必须有限且在0～48之间。
-  CollabImageTemplate({
+  /// 标识、名称或尺寸不合法时抛出ArgumentError。
+  ImageComposerTemplate({
     required this.id,
     required this.name,
     required List<Color> colors,
@@ -54,28 +55,28 @@ final class CollabImageTemplate {
 }
 
 /// 无网络资源的内置模板；模板仅改变外观，不更改正文或撤销历史。
-final List<CollabImageTemplate> collabImageTemplates = List.unmodifiable([
-  CollabImageTemplate(
+final List<ImageComposerTemplate> imageComposerTemplates = List.unmodifiable([
+  ImageComposerTemplate(
     id: 'violet',
     name: '紫光',
     colors: const [Color(0xff22c9da), Color(0xff7843e9), Color(0xffc64edd)],
   ),
-  CollabImageTemplate(
+  ImageComposerTemplate(
     id: 'sunset',
     name: '暖阳',
     colors: const [Color(0xffffd180), Color(0xffff8a80)],
   ),
-  CollabImageTemplate(
+  ImageComposerTemplate(
     id: 'ocean',
     name: '晴空',
     colors: const [Color(0xff80deea), Color(0xff5c8ee6)],
   ),
-  CollabImageTemplate(
+  ImageComposerTemplate(
     id: 'mint',
     name: '薄荷',
     colors: const [Color(0xffb2dfdb), Color(0xffdcedc8)],
   ),
-  CollabImageTemplate(
+  ImageComposerTemplate(
     id: 'plain',
     name: '简约',
     colors: const [Color(0xffe5e7eb)],

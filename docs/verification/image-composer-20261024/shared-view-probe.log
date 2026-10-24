@@ -1,0 +1,31 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/docs/verification/image-composer-20261024/shared-view-probe.dart
+00:00 +0: default offline adds a table through the shared view and previews it
+migration-probe stage 1: await tester.binding.setSurfaceSize
+migration-probe stage 2: await tester.pumpWidget
+migration-probe stage 3: await tester.pumpAndSettle
+migration-probe stage 4: await tester.pumpAndSettle
+migration-probe stage 5: await tester.tap
+migration-probe stage 6: await tester.pumpAndSettle
+migration-probe stage 7: await tester.ensureVisible
+migration-probe stage 8: await tester.tap
+migration-probe stage 9: await tester.pumpAndSettle
+migration-probe stage 10: await tester.pump
+migration-probe stage 11: await tester.pumpAndSettle
+migration-probe stage 12: await tester.pumpWidget
+migration-probe stage 13: await tester.pumpAndSettle
+migration-probe stage 14: await tester.pumpWidget
+migration-probe stage 15: await preview?.close
+migration-probe stage 16: await local.close
+01:32 +0 -1: loading /Users/shichunlei/workspace/mobile-collab-demo/docs/verification/image-composer-20261024/shared-view-probe.dart [E]
+  Bad state: Cannot close sink while adding stream.
+  package:stream_channel/src/guarantee_channel.dart 180:7      _GuaranteeSink.close
+  package:flutter_tools/src/test/flutter_platform.dart 766:43  FlutterPlatform._startTest
+  
+One or more uncaught errors occurred shutting down:
+  Bad state: Cannot add event while adding stream.
+01:32 +0 -1: default offline adds a table through the shared view and previews it - did not complete [E]
+01:32 +0 -1: Some tests failed.
+
+Failing tests:
+  /Users/shichunlei/workspace/mobile-collab-demo/docs/verification/image-composer-20261024/shared-view-probe.dart: default offline adds a table through the shared view and previews it (did not complete)
+  /Users/shichunlei/workspace/mobile-collab-demo/docs/verification/image-composer-20261024/shared-view-probe.dart: loading /Users/shichunlei/workspace/mobile-collab-demo/docs/verification/image-composer-20261024/shared-view-probe.dart

@@ -10,6 +10,7 @@ import 'package:cses_mobile_collab_demo/src/daily_guidance/local_journal_page.da
 import 'package:cses_mobile_collab_demo/src/demo/cses_connection_panel.dart';
 import 'package:cses_mobile_collab_demo/src/demo/document_creation/document_creation_page.dart';
 import 'package:cses_mobile_collab_demo/src/demo/document_host.dart';
+import 'package:cses_mobile_collab_demo/src/image_composer/show_image_composer.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -22,7 +23,7 @@ import 'markdown_file_picker.dart';
 /// import 'package:cses_mobile_collab_demo/src/demo/collab_demo_page.dart';
 /// import 'package:flutter/material.dart';
 /// const app = MaterialApp(home: CollabDemoPage());
-/// // 页面卸载时释放协同资源，离线制图会话由包的路由入口释放。
+/// // 页面卸载时释放协同资源，离线制图会话由宿主功能路由释放。
 /// ```
 class CollabDemoPage extends StatefulWidget {
   /// 创建连接首页；账号主连接随本页释放，文档控制器由列表选择后创建。
@@ -187,14 +188,14 @@ class _CollabDemoPageState extends State<CollabDemoPage> {
     }
   }
 
-  /// 打开包内本地编辑与模板预览；返回首页不导出图片，失败在首页提示。
+  /// 打开宿主本地编辑与模板预览；返回首页不导出图片，失败在首页提示。
   /// 等待每个路由退出后再解锁入口，页面卸载后忽略迟到的结果。
   Future<void> _openOfflineImageComposer() async {
     if (_openingImageComposer) return;
     setState(() => _openingImageComposer = true);
     FocusManager.instance.primaryFocus?.unfocus();
     try {
-      await showCollabImageComposer(context: context);
+      await showImageComposer(context: context);
     } catch (error, stack) {
       debugPrint('离线本地编辑失败：$error\n$stack');
       if (mounted && ModalRoute.of(context)?.isCurrent == true) {

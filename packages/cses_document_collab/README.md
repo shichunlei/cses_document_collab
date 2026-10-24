@@ -1,5 +1,7 @@
 # cses_document_collab
 
+职责限定为核心编辑器与协同同步；文档头尾、会议、KR、任务等按编辑器类型块或扩展保留包内。制图等应用功能的页面、路由、模板目录、业务草稿和产品工作流由宿主组合；宿主只通过公开 API 使用编辑器。制图功能现位于宿主 `lib/src/image_composer/`，不再由本包提供入口或模板类型。
+
 ## BlockCraft JSON 的独立编辑
 
 `BlockCraftJsonCodec.decode(snapshot)`将桌面根快照转换成实际AppFlowy节点树，`encode(document)`读取当前编辑结果重新导出。原生渲染通过`EditorViewConfiguration(blockBuilders: blockCraftSnapshotBuilders)`补充对象/分栏/卡片组件，资源、表格、代码、公式等沿用正式组件。创建者在视图卸载后关闭控制器，不创建WS、SQLite或原生全局文档。
@@ -172,22 +174,21 @@ final view = DocumentEditorView(editorState: editor.editorState);
 本地事务依次执行身份准备、默认格式、模型校验、输入继承及同步发布；远端投影不回送。
 投影隔离只覆盖AppFlowy同步改树阶段，不延长到Future收尾微任务；同步回放后的立即本地输入仍正常发布。
 同步适配器解绑后，外部持有的编辑会话仍可编辑；外部会话由创建方释放。
-既有`CollaborativeEditorPage(collab: ...)`调用方式不变；本地入口的返回值变化见下节。
+既有`CollaborativeEditorPage(collab: ...)`调用方式不变；本地正文通过下节公开API由宿主装配。
 历史裸EditorState/适配器保留原宿主服务解析兼容入口，新的独立会话显式隔离服务。
 
 ## 离线本地编辑与能力配置
 
-`showCollabImageComposer`目前提供本地块编辑与模板预览，返回`Future<void>`；已移除PNG生成、图片结果类型和输出尺寸参数，不接入截图导出。
-无需创建`CollabController`、登录、SQLite或网关，不初始化Rust文档；可与已有协同文档同时使用。
+`LocalEditorController`提供独立内存正文，`DocumentEditorView`提供共用编辑界面。
+宿主创建会话、装配页面和导航，在视图卸载后等待`close()`；无需创建`CollabController`、登录、SQLite或网关，不初始化Rust文档，可与已有协同文档同时使用。
 
 ```dart
 import 'package:flutter/material.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';
 
-Future<void> editLocal(BuildContext context) => showCollabImageComposer(
-  context: context,
+LocalEditorController createLocalEditor() => LocalEditorController(
   initialText: '本地正文',
-  editorConfig: EditorConfiguration(
+  configuration: EditorConfiguration(
     blocks: [EditorBlock.paragraph, EditorBlock.heading, EditorBlock.quote, EditorBlock.table, EditorBlock.formula],
     headingLevels: {1, 3},
     inlineFormats: {EditorInlineFormat.bold, EditorInlineFormat.textColor},
@@ -202,6 +203,10 @@ Future<void> editLocal(BuildContext context) => showCollabImageComposer(
     maxBlocks: 100,
   ),
 );
+
+Widget localBody(LocalEditorController editor) =>
+    DocumentEditorView(editorState: editor.editorState);
+// 视图卸载后 await editor.close();
 ```
 
 `EditorConfiguration`在构造时复制并冻结集合，每个编辑器独立持有，创建后不支持热替换。
@@ -228,12 +233,9 @@ Future<void> editLocal(BuildContext context) => showCollabImageComposer(
 资源链接的实际加载遵循平台和网络条件，不会因此启动文档协同。
 本地不创建块锁管理器，不提供锁定/解锁菜单，锁属性写入被拒绝；原协同文档的锁服务和协议保持。
 
-预览深复制正文并复用同一块组件；关闭输入、选区服务和正文点击，不显示光标、选区、工具栏、更多按钮、锁标或空白输入提示。
-返回编辑保留原正文及历史；再次预览捕获新快照。内置五款本地渐变模板，或传入ID唯一的`List<CollabImageTemplate>`；模板切换不进入正文历史。
-预览正文使用独立可滚动视图，尚未实现完整长图截图或导出。
-
-路由完整退场后释放本地编辑与预览资源；内容只保留在本次会话内，不自动保存、不访问相册或服务端。
-`LocalEditorController(configuration: ...)`及`DocumentEditorView`可通过公开入口用于自行装配；创建者在视图卸载后等待`close()`。
+宿主可为独立正文快照创建`DocumentEditorController`，通过`DocumentEditorView(preview: true, editable: false)`关闭输入、选区服务和正文点击，不显示光标、选区、工具栏、更多按钮、锁标或空白输入提示。
+正文与预览会话分别由创建者持有，视图卸载后关闭；原正文和历史不因展示快照而替换。业务模板、预览切换流程、导航、持久化和图片导出由宿主决定。
+`LocalEditorController(configuration: ...)`及`DocumentEditorView`通过公开入口使用，本包不创建业务路由。
 现有协同会话默认`EditorConfiguration.document`兼容预设，完整块及复杂业务端口保持，不受本地配置影响；该预设不能用于本地控制器。
 
 ## 宿主自定义编辑表面
@@ -333,7 +335,7 @@ tool/verify_portable_package.sh ../appflowy_editor
 
 ## 共用编辑视图与场景配置
 
-离线正文、协同正文、图片制图和宿主业务页面统一使用`DocumentEditorView`；菜单、字符装饰、快捷键、剪贴板、选区及预览规则由同一实现维护，不按在线状态另建分支。`EditorConfiguration`声明块、格式、标题级别、工具栏入口和嵌套能力；`EditorViewConfiguration`注入宿主皮肤、结构渲染和业务动作。业务模型/事务保护、草稿存储和协同绑定分别由宿主会话持有，视图只借用正文。
+离线正文、协同正文及宿主功能页面统一使用`DocumentEditorView`；菜单、字符装饰、快捷键、剪贴板、选区及预览规则由同一实现维护，不按在线状态另建分支。`EditorConfiguration`声明块、格式、标题级别、工具栏入口和嵌套能力；`EditorViewConfiguration`注入宿主皮肤、结构渲染和业务动作。业务模型/事务保护、草稿存储和协同绑定分别由宿主会话持有，视图只借用正文。
 
 标题菜单默认均逐级展示H1～H3→H4→H5→H6，重新打开按当前标题恢复，进入普通段落重置；非连续级别会跳到下一已启用项。确有需要时可显式设置`progressiveHeadingMenu: false`直接展开，不能再依赖编辑器种类隐式改变菜单。`structuralIndentation: false`关闭原生嵌套缩进；显式授权的文字/列表平面缩进仍走同一命令。
 

@@ -1,0 +1,25 @@
+Analyzing cses_document_collab...                               
+
+   info • Dangling library doc comment. Add a 'library' directive after the library comment • cargokit/build_tool/bin/build_tool.dart:1:1 • dangling_library_doc_comments
+   info • Dangling library doc comment. Add a 'library' directive after the library comment • cargokit/build_tool/lib/build_tool.dart:1:1 • dangling_library_doc_comments
+   info • Dangling library doc comment. Add a 'library' directive after the library comment • cargokit/build_tool/lib/src/android_environment.dart:1:1 • dangling_library_doc_comments
+   info • Dangling library doc comment. Add a 'library' directive after the library comment • cargokit/build_tool/lib/src/artifacts_provider.dart:1:1 • dangling_library_doc_comments
+   info • Dangling library doc comment. Add a 'library' directive after the library comment • cargokit/build_tool/lib/src/build_cmake.dart:1:1 • dangling_library_doc_comments
+   info • Dangling library doc comment. Add a 'library' directive after the library comment • cargokit/build_tool/lib/src/build_gradle.dart:1:1 • dangling_library_doc_comments
+   info • Dangling library doc comment. Add a 'library' directive after the library comment • cargokit/build_tool/lib/src/build_pod.dart:1:1 • dangling_library_doc_comments
+   info • Dangling library doc comment. Add a 'library' directive after the library comment • cargokit/build_tool/lib/src/build_tool.dart:1:1 • dangling_library_doc_comments
+   info • Dangling library doc comment. Add a 'library' directive after the library comment • cargokit/build_tool/lib/src/builder.dart:1:1 • dangling_library_doc_comments
+   info • Dangling library doc comment. Add a 'library' directive after the library comment • cargokit/build_tool/lib/src/cargo.dart:1:1 • dangling_library_doc_comments
+   info • Dangling library doc comment. Add a 'library' directive after the library comment • cargokit/build_tool/lib/src/crate_hash.dart:1:1 • dangling_library_doc_comments
+   info • Dangling library doc comment. Add a 'library' directive after the library comment • cargokit/build_tool/lib/src/environment.dart:1:1 • dangling_library_doc_comments
+   info • Dangling library doc comment. Add a 'library' directive after the library comment • cargokit/build_tool/lib/src/logging.dart:1:1 • dangling_library_doc_comments
+   info • Dangling library doc comment. Add a 'library' directive after the library comment • cargokit/build_tool/lib/src/options.dart:1:1 • dangling_library_doc_comments
+   info • Dangling library doc comment. Add a 'library' directive after the library comment • cargokit/build_tool/lib/src/precompile_binaries.dart:1:1 • dangling_library_doc_comments
+   info • Dangling library doc comment. Add a 'library' directive after the library comment • cargokit/build_tool/lib/src/rustup.dart:1:1 • dangling_library_doc_comments
+   info • Dangling library doc comment. Add a 'library' directive after the library comment • cargokit/build_tool/lib/src/target.dart:1:1 • dangling_library_doc_comments
+   info • Dangling library doc comment. Add a 'library' directive after the library comment • cargokit/build_tool/lib/src/util.dart:1:1 • dangling_library_doc_comments
+   info • Dangling library doc comment. Add a 'library' directive after the library comment • cargokit/build_tool/lib/src/verify_binaries.dart:1:1 • dangling_library_doc_comments
+   info • Missing an 'await' for the 'Future' computed by this expression. Try adding an 'await' or wrapping the expression with 'unawaited' • lib/src/editor/collab_video_block.dart:265:21 • unawaited_futures
+   info • Unclosed instance of 'Sink'. Try invoking 'close' in the function in which the 'Sink' was created • test/collab_controller_native_test.dart:186:9 • close_sinks
+
+21 issues found. (ran in 13.7s)

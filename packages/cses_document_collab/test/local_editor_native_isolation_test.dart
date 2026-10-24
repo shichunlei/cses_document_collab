@@ -1,14 +1,14 @@
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'dart:io';
+import 'dart:convert';
 import 'package:cses_document_collab/cses_document_collab.dart';
-import 'package:cses_document_collab/src/image_composer/image_composer_controller.dart';
 import 'package:cses_document_collab/src/native/api/collab.dart' as native;
 import 'package:cses_document_collab/src/native/collab_runtime.dart';
 import 'package:cses_document_collab/src/native/frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// 真实原生文档保持活动时本地编辑和预览，验证唯一引擎/宿主服务/正文不被制图占用或关闭。
+/// 真实原生文档保持活动时本地编辑和预览，验证唯一引擎/宿主服务/正文不被本地编辑占用或关闭。
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   setUpAll(() async {
@@ -25,12 +25,13 @@ void main() {
     (tester) async {
       await tester.runAsync(() async {
         final directory = await Directory.systemTemp.createTemp(
-          'image-composer-isolation-',
+          'local-editor-isolation-',
         );
         final document = CollabController.localDraft(
           databasePath: '${directory.path}/doc.sqlite',
         );
-        ImageComposerController? composer;
+        LocalEditorController? local;
+        DocumentEditorController? preview;
         try {
           await document.initialize();
           final state = document.editorState;
@@ -46,19 +47,29 @@ void main() {
               .map((b) => (b.id, b.text))
               .toList();
           final services = CollabRuntime.services;
-          composer = ImageComposerController(
-            initialText: 'Independent image',
-            templates: collabImageTemplates,
+          local = LocalEditorController(
+            initialText: 'Independent local document',
           );
-          final preview = composer.prepare();
+          preview = DocumentEditorController(
+            document: Document.fromJson(
+              jsonDecode(jsonEncode(local.editorState.document.toJson()))
+                  as Map<String, dynamic>,
+            ),
+            commandContext: EditorCommandContext(
+              configuration: local.configuration,
+              localOnly: true,
+              services: local.commandContext.services,
+            ),
+          )..editorState.editable = false;
           expect(
             preview.editorState.document.root.children.single.delta!
                 .toPlainText(),
-            'Independent image',
+            'Independent local document',
           );
           expect(preview.editorState.selection, isNull);
           expect(preview.editorState.editable, isFalse);
-          await composer.close();
+          await preview.close();
+          await local.close();
           expect(CollabRuntime.owns(document), isTrue);
           expect(identical(CollabRuntime.services, services), isTrue);
           expect(native.currentBlocks().map((b) => (b.id, b.text)), before);
@@ -69,7 +80,8 @@ void main() {
           );
           expect(native.currentBlocks().single.text, startsWith('!Existing'));
         } finally {
-          await composer?.close();
+          await preview?.close();
+          await local?.close();
           await document.close();
           await directory.delete(recursive: true);
         }

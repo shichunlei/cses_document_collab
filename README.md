@@ -2,6 +2,16 @@
 
 一个独立运行的 Flutter + Rust/Yrs 离线协同实验。协同核心位于 `packages/cses_document_collab`；根 App 装配登录、Common 主连接、上传与缓存路径。
 
+本地编辑与模板预览由宿主 `lib/src/image_composer/` 装配，入口为 `showImageComposer`，模板为 `ImageComposerTemplate` / `imageComposerTemplates`。页面仅提供内存编辑与预览，不保存正文或导出图片。共享包提供核心编辑器与协同同步能力，文档头尾、会议、KR、任务等按编辑器类型块或扩展保留包内；制图等应用功能的页面、产品模板和业务流程留在宿主。
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:cses_mobile_collab_demo/src/image_composer/show_image_composer.dart';
+
+Future<void> openLocalEditor(BuildContext context) =>
+    showImageComposer(context: context, initialText: '本地正文');
+```
+
 桌面块的完整移动端适配进度见 [块适配表](docs/block-adaptation.md)。每完成一个块的适配，都须同步更新该表的状态、支持范围及验证记录。
 
 ## 已实现
