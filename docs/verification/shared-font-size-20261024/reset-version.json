@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-24",
+  "registry": "http://npm.runtongqiuben.com/",
+  "latest": "0.11.30",
+  "desktopDeclaration": "0.11.28",
+  "yarnLocked": "0.11.28",
+  "installed": "0.11.21",
+  "historicalPnpmLocked": "0.2.78",
+  "latestDistSha1": "abedbde54c71e81db525aec73f86cceb77f4cb4b",
+  "cachedArtifactSha1": "abedbde54c71e81db525aec73f86cceb77f4cb4b",
+  "queries": [
+    "npm view @ccc/blockcraft dist-tags --json --fetch-retries=0 --fetch-timeout=15000 --cache /private/tmp/cses-font-reset-npm-cache --prefer-online --update-notifier=false",
+    "npm view @ccc/blockcraft@0.11.30 dist --json --fetch-retries=0 --fetch-timeout=15000 --cache /private/tmp/cses-font-reset-npm-cache --prefer-online --update-notifier=false"
+  ],
+  "readScope": [
+    "沿用同会话已读且发布指纹一致的技能/MIGRATIONS与字号实现，复核本地段落字体计算、输入格式与原生历史/字段清除链路。"
+  ],
+  "change": "横向菜单固定默认项，同一公共事务清除t:px和旧s:fontSize，不强写固定正文像素值，不改标题级别、其他格式或原生Schema。",
+  "remaining": "完整字体设置、实际px倍率反算、全部Schema/块与行内对象、选区/菜单、剪贴板、输入、历史及在线协同版本差异仍按原清单待同步/验收。",
+  "stage": "恢复默认字号"
+}

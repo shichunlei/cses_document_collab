@@ -26,7 +26,13 @@ void main() {
     );
   });
 
-  for (final mode in ['paragraph', 'typography', 'href', 'formula']) {
+  for (final mode in [
+    'paragraph',
+    'typography',
+    'typography-reset',
+    'href',
+    'formula',
+  ]) {
     test(
       '$mode-only changes persist, reopen and project remotely without echo',
       () async {
@@ -35,10 +41,34 @@ void main() {
         try {
           final vector = native.encodeStateVector();
           final beforeText = native.currentBlocks().first.text;
+          final beforeTypography = native
+              .currentBlocks()
+              .first
+              .segments
+              .map((segment) => segment.typography)
+              .toList();
           await _editSnapshot(source.controller.editorState, mode);
           await Future<void>.delayed(Duration.zero);
           _expectNative(mode);
           expect(native.currentBlocks().first.text, beforeText);
+          if (mode == 'typography') {
+            expect(source.controller.canUndo, isTrue);
+            await source.controller.undo();
+            expect(
+              native.currentBlocks().first.segments.map(
+                (segment) => segment.typography,
+              ),
+              beforeTypography,
+            );
+            await source.controller.redo();
+            _expectNative(mode);
+          } else if (mode == 'typography-reset') {
+            expect(source.controller.canUndo, isTrue);
+            await source.controller.undo();
+            _expectNative('typography');
+            await source.controller.redo();
+            _expectNative(mode);
+          }
           update = native.encodeDocumentDiff(stateVector: vector);
           expect(update, isNot([0, 0]));
           await source.reopen();
@@ -75,7 +105,7 @@ void main() {
   }
 }
 
-/// 在借用的[state]中仅修改[mode]指定的元数据，保留文字和分段范围。
+/// 在借用的[state]中按[mode]修改元数据；字号设置与恢复默认复用公共格式命令，保留文字和分段范围。
 Future<void> _editSnapshot(EditorState state, String mode) async {
   final node = state.document.first!;
   state.selection = Selection.single(
@@ -99,10 +129,25 @@ Future<void> _editSnapshot(EditorState state, String mode) async {
       ),
       isTrue,
     );
+  } else if (mode == 'typography-reset') {
+    await formatCollabParagraphSelection(state, state.selection!, {
+      't:px': 28,
+      's:fontSize': '30px',
+    });
+    await Future<void>.delayed(Duration.zero);
+    _expectNative('typography');
+    if (state.undoManager.undoStack.isNonEmpty) {
+      state.undoManager.undoStack.last.seal();
+    }
+    await formatCollabParagraphSelection(state, state.selection!, {
+      't:px': null,
+      's:fontSize': null,
+    });
+  } else if (mode == 'typography') {
+    await formatCollabParagraphSelection(state, state.selection!, {'t:px': 28});
   } else {
     await state.apply(
       state.transaction..formatText(node, 0, node.delta!.length, {
-        if (mode == 'typography') 't:px': 28,
         if (mode == 'href')
           AppFlowyRichTextKeys.href: 'https://review.example/',
       }),
@@ -123,6 +168,15 @@ void _expectNative(String mode) {
       );
     case 'typography':
       expect(jsonDecode(block.segments.first.typography!)['t:px'], 28);
+    case 'typography-reset':
+      expect(
+        block.segments.every((segment) {
+          final attributes =
+              jsonDecode(segment.typography ?? '{}') as Map<String, dynamic>;
+          return attributes['t:px'] == null && attributes['s:fontSize'] == null;
+        }),
+        isTrue,
+      );
     case 'href':
       expect(block.segments.first.href, 'https://review.example/');
     case 'formula':
@@ -141,6 +195,14 @@ void _expectEditor(EditorState state, String mode) {
       expect(readCollabParagraph(node).values['nextParagraphStyle'], 'same');
     case 'typography':
       expect(node.delta!.first.attributes!['t:px'], 28);
+    case 'typography-reset':
+      expect(
+        node.delta!.everyAttributes(
+          (attributes) =>
+              attributes['t:px'] == null && attributes['s:fontSize'] == null,
+        ),
+        isTrue,
+      );
     case 'href':
       expect(
         node.delta!.first.attributes![AppFlowyRichTextKeys.href],

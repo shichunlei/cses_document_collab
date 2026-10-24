@@ -49,6 +49,8 @@
 
 ### 键盘工具栏与添加菜单
 
+- [paragraph-layout-spacing-20261024](paragraph-layout-spacing-20261024/)（[段落布局按钮间距恢复](paragraph-layout-spacing-20261024/report.md)）
+
 - [heading-menu-h6-20261021](heading-menu-h6-20261021/)
 - [heading-menu-icons-20261021](heading-menu-icons-20261021/)
 - [keyboard-toolbar-configuration-20261021](keyboard-toolbar-configuration-20261021/)
@@ -56,6 +58,8 @@
 - [toolbar-icons-20261017](toolbar-icons-20261017/)
 
 ### 文字格式、标题与选区
+
+- [shared-font-size-20261024](shared-font-size-20261024/)（[协同默认字号入口与公共配置修复](shared-font-size-20261024/report.md)；[横向字号子菜单](shared-font-size-20261024/horizontal-menu.md)；[恢复默认字号](shared-font-size-20261024/reset-default.md)；[字号与间距审查](shared-font-size-20261024/review.md)）
 
 - [default-text-color-20261021](default-text-color-20261021/)
 - [default-text-color-device-20261021](default-text-color-device-20261021/)

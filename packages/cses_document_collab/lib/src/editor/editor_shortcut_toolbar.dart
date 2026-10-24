@@ -35,7 +35,6 @@ import 'package:cses_document_collab/src/model/editor_keyboard_action.dart';
 import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:cses_document_collab/src/editor/core/editor_configuration.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_bottom_sheet.dart';
-import 'package:cses_document_collab/src/ui/modal/collab_menu_row.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_color_picker.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_modal_colors.dart';
@@ -333,7 +332,7 @@ class _EditorShortcutToolbarState extends State<EditorShortcutToolbar> {
         if (_keyboardItemAllowed(config, item))
           item == EditorKeyboardToolbarItem.todoList
               ? _todoKeyboardItem()
-              : _buildKeyboardItem(item, _inlineStyleController, context),
+              : _buildKeyboardItem(item, _inlineStyleController),
     ];
     final items = [...builtInItems, for (final action in widget.keyboardActions) _hostKeyboardItem(action)];
     return _ToolbarCommandScope(
@@ -610,16 +609,12 @@ bool _keyboardItemAllowed(EditorConfiguration config, EditorKeyboardToolbarItem 
   _ => _commonInsertionAllowed(config, _commonInsertion(item)!),
 };
 
-/// 为[item]构建原工具菜单或常用直达按钮，[styles]与[context]由所属工具栏借用。
+/// 为[item]构建原工具菜单或常用直达按钮，[styles]由所属工具栏借用。
 /// 直达按钮仍走稳定书签、模态隔离及退场后恢复，不展示中间的更多网格。
-MobileToolbarItem _buildKeyboardItem(
-  EditorKeyboardToolbarItem item,
-  _InlineStyleController styles,
-  BuildContext context,
-) => switch (item) {
+MobileToolbarItem _buildKeyboardItem(EditorKeyboardToolbarItem item, _InlineStyleController styles) => switch (item) {
   EditorKeyboardToolbarItem.addBlock => _addBlockToolbarItem,
   EditorKeyboardToolbarItem.blockType => _blockStyleToolbarItem,
-  EditorKeyboardToolbarItem.textStyle => _textDecorationToolbarItem(styles, context),
+  EditorKeyboardToolbarItem.textStyle => _textDecorationToolbarItem(styles),
   EditorKeyboardToolbarItem.blockLayout => _blockLayoutToolbarItem,
   EditorKeyboardToolbarItem.image => _imageToolbarItem,
   EditorKeyboardToolbarItem.mention => _mentionToolbarItem,
@@ -909,18 +904,15 @@ Future<void> showEditorUserMentionSheet(
 }
 
 /// 以Lucide文字样式图标构建菜单入口，借用 [inlineStyleController] 回显格式。
-/// [modalContext]借用工具栏的稳定上下文，控制器由所属工具栏释放。
-MobileToolbarItem _textDecorationToolbarItem(_InlineStyleController inlineStyleController, BuildContext modalContext) =>
+/// 控制器由所属工具栏释放，颜色与字号子菜单均在原行内切换。
+MobileToolbarItem _textDecorationToolbarItem(_InlineStyleController inlineStyleController) =>
     MobileToolbarItem.withMenu(
       itemIconBuilder: (_, _, _) => const KeyedSubtree(
         key: ValueKey('editor-shortcut-inline-style'),
         child: Tooltip(message: '文字样式', child: Icon(LucideIcons.caseSensitive, size: 27)),
       ),
-      itemMenuBuilder: (_, editorState, service) => _InlineStyleMenu(
-        editorState: editorState,
-        inlineStyleController: inlineStyleController,
-        modalContext: modalContext,
-      ),
+      itemMenuBuilder: (_, editorState, service) =>
+          _InlineStyleMenu(editorState: editorState, inlineStyleController: inlineStyleController),
     );
 
 /// 为借用 [context]/[editorState] 中的文字范围打开格式面板，复用键盘工具栏的 T、Aa 和布局控件。
@@ -1046,7 +1038,6 @@ class _SelectionFormatSheetState extends State<_SelectionFormatSheet> {
                             editorState: widget.editorState,
                             inlineStyleController: _styles,
                             expanded: true,
-                            modalContext: context,
                           ),
                           const SizedBox(height: 20),
                           const Text('段落布局', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
@@ -1155,6 +1146,7 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
 
   /// 使用 [context] 渲染布局按钮；文本段遵守8级及兄弟深度约束，0级列表仍可退为段落。
   /// 对齐、缩进与颜色入口统一使用Lucide图标，保持既有选中及禁用状态。
+  /// 布局按钮间隔保持5逻辑像素，缩进组之后沿用10逻辑像素。
   @override
   Widget build(BuildContext context) {
     final selection = widget.editorState.selection;
@@ -1217,7 +1209,8 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
             icon: const Icon(LucideIcons.paintBucket, size: 28),
             onPressed: () => setState(() => _colorAttribute = csesBlockBackgroundColorAttribute),
           ),
-          if (nodes.any((n) => n.type == QuoteBlockKeys.type))
+          const SizedBox(width: 5),
+          if (nodes.any((n) => n.type == QuoteBlockKeys.type)) ...[
             _PopupIconButton(
               key: const ValueKey('editor-block-border-color'),
               tooltip: '左侧线条颜色',
@@ -1225,13 +1218,15 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
               icon: const Icon(LucideIcons.panelLeft, size: 28),
               onPressed: () => setState(() => _colorAttribute = csesBlockBorderColorAttribute),
             ),
+            const SizedBox(width: 5),
+          ],
         ],
         if (EditorCommandContext.of(widget.editorState).configuration.nextParagraphStyle)
           for (final option in const [
             (null, '下一段：默认', LucideIcons.rotateCcw),
             ('same', '下一段：延续样式', LucideIcons.cornerDownRight),
             ('body', '下一段：正文', LucideIcons.textAlignStart),
-          ])
+          ]) ...[
             _PopupIconButton(
               key: ValueKey('editor-next-paragraph-${option.$1 ?? 'default'}'),
               tooltip: option.$2,
@@ -1246,6 +1241,8 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
               icon: Icon(option.$3, size: 28),
               onPressed: () => unawaited(_setNextParagraphStyle(option.$1)),
             ),
+            const SizedBox(width: 5),
+          ],
       ],
     );
   }
@@ -1627,16 +1624,7 @@ class _BlockStyleAction {
 /// 借用编辑器和输入样式控制器，工具栏采用单行模式，弹窗采用展开模式。
 class _InlineStyleMenu extends StatefulWidget {
   /// [editorState]和[inlineStyleController]为借用对象；[expanded]默认false，true展开样式和色板。
-  /// [modalContext]来自仍挂载的工具栏/格式面板，避免收起子菜单时使字号任务失效。
-  const _InlineStyleMenu({
-    required this.editorState,
-    required this.inlineStyleController,
-    this.expanded = false,
-    this.modalContext,
-  });
-
-  /// 不随键盘菜单隐藏而卸载的弹窗来源；null使用当前菜单，仅供不打开弹窗的历史用例。
-  final BuildContext? modalContext;
+  const _InlineStyleMenu({required this.editorState, required this.inlineStyleController, this.expanded = false});
 
   /// 借用的当前文档编辑器，不由菜单释放。
   final EditorState editorState;
@@ -1652,7 +1640,7 @@ class _InlineStyleMenu extends StatefulWidget {
   createState() => _InlineStyleMenuState();
 }
 
-/// 持有颜色面板状态；格式命令读取实时选区并处理完整异步错误，不拥有编辑器。
+/// 持有颜色与字号子菜单状态；格式命令读取实时选区，不拥有编辑器。
 class _InlineStyleMenuState extends State<_InlineStyleMenu> {
   // The two color entries are inserted after the five boolean text styles.
   // Keeping explicit indices makes the visual order stable while `_styles`
@@ -1662,6 +1650,18 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
   // palette choice updates the glyph color (`font_color`) or the inline
   // highlight behind the glyph (`bg_color`).
   _InlineColorTarget? _colorPicker;
+
+  /// 字号选项替换当前文字菜单，不打开新路由或结束输入。
+  bool _fontSizesOpen = false;
+
+  /// 进入字号菜单时借用的命令上下文；切换所属会话后拒绝旧菜单写入。
+  EditorCommandContext? _fontSizeOwner;
+
+  /// 字号菜单打开期间一旦撤权，重新授权也须返回后重新打开。
+  bool _fontSizeRevoked = false;
+
+  /// 当前字号事务尚未完成，阻止重复点击和提前离开菜单。
+  bool _fontSizeSaving = false;
 
   /// 格式键与Lucide图标的映射，顺序供普通和展开样式菜单共用。
   static final _styles = <_InlineStyleAction>[
@@ -1674,12 +1674,15 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
     _InlineStyleAction(key: csesSubscriptAttribute, label: '下标', icon: LucideIcons.subscript),
   ];
 
+  /// 订阅借用的格式与权限状态，所属菜单销毁时成对注销。
   @override
   void initState() {
     super.initState();
     widget.inlineStyleController.addListener(_onInlineStyleChanged);
+    widget.editorState.editableNotifier.addListener(_onFontSizePermissionChanged);
   }
 
+  /// 替换[oldWidget]的借用资源时迁移监听；换文档关闭字号会话，不释放正文。
   @override
   void didUpdateWidget(covariant _InlineStyleMenu oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -1687,14 +1690,25 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
       oldWidget.inlineStyleController.removeListener(_onInlineStyleChanged);
       widget.inlineStyleController.addListener(_onInlineStyleChanged);
     }
+    if (!identical(oldWidget.editorState, widget.editorState)) {
+      oldWidget.editorState.editableNotifier.removeListener(_onFontSizePermissionChanged);
+      widget.editorState.editableNotifier.addListener(_onFontSizePermissionChanged);
+      _fontSizesOpen = false;
+      _fontSizeOwner = null;
+      _fontSizeRevoked = false;
+      _fontSizeSaving = false;
+    }
   }
 
+  /// 注销格式与权限监听，借用的正文和样式控制器仍由创建者释放。
   @override
   void dispose() {
     widget.inlineStyleController.removeListener(_onInlineStyleChanged);
+    widget.editorState.editableNotifier.removeListener(_onFontSizePermissionChanged);
     super.dispose();
   }
 
+  /// 在仍挂载时刷新当前文字格式及字号选中标记。
   void _onInlineStyleChanged() {
     if (mounted) {
       setState(() {});
@@ -1710,6 +1724,7 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
       return const SizedBox.shrink();
     }
 
+    if (_fontSizesOpen) return _buildFontSizePicker(selection);
     if (widget.expanded) return _buildExpanded(selection);
 
     final colorPicker = _colorPicker;
@@ -1756,7 +1771,7 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
           tooltip: '字号',
           selected: false,
           icon: const Icon(LucideIcons.aLargeSmall, size: 28),
-          onPressed: () => unawaited(_chooseFontSize()),
+          onPressed: _openFontSizes,
         ),
       for (final style in _styles.skip(5))
         if (config.allowsFormat(style.key)) _compactStyle(selection, style),
@@ -1785,7 +1800,7 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
   );
 
   /// 用借用的 [selection] 构建设计稿中的文字样式与圆形色板，所有写入复用既有命令。
-  /// 字符格式和颜色入口按实例配置筛选；原文档预设保留上下标第二行及完整九色。
+  /// 字符格式和颜色入口按实例配置筛选；字号切换同一横向子菜单，不再叠加弹窗。
   Widget _buildExpanded(Selection selection) {
     final c = CollabModalColors.of(context);
     const icons = [
@@ -1815,7 +1830,7 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
         if (EditorCommandContext.of(widget.editorState).configuration.allowsFormat('t:px'))
           TextButton.icon(
             key: const ValueKey('editor-inline-font-size'),
-            onPressed: () => unawaited(_chooseFontSize()),
+            onPressed: _openFontSizes,
             icon: const Icon(LucideIcons.aLargeSmall),
             label: const Text('字号'),
           ),
@@ -1902,10 +1917,157 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
     );
   }
 
-  /// 校验实时执行权限后使用稳定的工具栏/格式面板上下文，子菜单卸载不取消已打开的字号面板。
-  Future<void> _chooseFontSize() async {
+  /// 进入行内字号菜单，借用当前命令上下文并重新开始权限有效期。
+  void _openFontSizes() {
     if (!_ToolbarCommandScope.allows(context)) return;
-    await showEditorFontSizeSheet(widget.modalContext ?? context, widget.editorState);
+    final state = widget.editorState;
+    final owner = EditorCommandContext.of(state);
+    if (state.isDisposed || !state.editable || !owner.configuration.allowsFormat('t:px')) return;
+    if (CollabTextRange.capture(state, allowCollapsed: true) == null) return;
+    setState(() {
+      _fontSizesOpen = true;
+      _fontSizeOwner = owner;
+      _fontSizeRevoked = false;
+    });
+  }
+
+  /// 返回原文字菜单，释放字号会话引用，不提交格式或关闭键盘。
+  void _closeFontSizes() {
+    if (_fontSizeSaving) return;
+    setState(() {
+      _fontSizesOpen = false;
+      _fontSizeOwner = null;
+      _fontSizeRevoked = false;
+    });
+  }
+
+  /// 打开字号菜单后发生撤权就失效，快速重新授权不恢复旧菜单。
+  void _onFontSizePermissionChanged() {
+    if (_fontSizesOpen && !widget.editorState.editable) {
+      _fontSizeRevoked = true;
+      if (mounted) setState(() {});
+    }
+  }
+
+  /// 返回[selection]的共同字号及默认状态；混合字号不选中默认或数字预设。
+  /// 旧CSS字号也视为显式覆盖；光标位置读取后续输入样式。
+  ({num? value, bool isDefault}) _currentFontSize(Selection selection) {
+    if (selection.isCollapsed) {
+      final value = widget.inlineStyleController.value('t:px');
+      final legacy = widget.inlineStyleController.value('s:fontSize');
+      return (value: value is num ? value : null, isDefault: value == null && legacy == null);
+    }
+    Object? value;
+    var found = false;
+    var mixed = false;
+    var inherited = true;
+    for (final node in widget.editorState.getNodesInSelection(selection)) {
+      final delta = node.delta;
+      if (delta == null) continue;
+      final start = node.path.equals(selection.start.path) ? selection.start.offset : 0;
+      final end = node.path.equals(selection.end.path) ? selection.end.offset : delta.length;
+      for (final operation in delta.slice(start, end)) {
+        final next = operation.attributes?['t:px'];
+        if (found && value != next) mixed = true;
+        if (next != null || operation.attributes?['s:fontSize'] != null) inherited = false;
+        value = next;
+        found = true;
+      }
+    }
+    return (value: !mixed && value is num ? value : null, isDefault: found && inherited);
+  }
+
+  /// 从[selection]构建固定返回/默认项与横向数字区，选择后保留菜单与编辑焦点。
+  Widget _buildFontSizePicker(Selection selection) {
+    final state = widget.editorState;
+    final owner = EditorCommandContext.of(state);
+    final enabled = !_fontSizeRevoked && !_fontSizeSaving && state.editable && identical(owner, _fontSizeOwner);
+    final selected = _currentFontSize(selection.normalized);
+    return Row(
+      children: [
+        IconButton(
+          key: const ValueKey('editor-font-size-back'),
+          tooltip: '返回',
+          onPressed: _fontSizeSaving ? null : _closeFontSizes,
+          icon: const Icon(LucideIcons.arrowLeft),
+        ),
+        _fontSizeOption(null, selected: selected.isDefault, enabled: enabled),
+        Expanded(
+          child: SingleChildScrollView(
+            key: const ValueKey('editor-font-size-menu'),
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                for (final size in owner.configuration.fontSizes)
+                  _fontSizeOption(size, selected: selected.value == size, enabled: enabled),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// 构建[size]字号项，null显示恢复默认；[selected]回显当前格式，[enabled]控制可操作性。
+  /// 只借用菜单状态，点击后由所属编辑器提交一个完整格式事务。
+  Widget _fontSizeOption(int? size, {required bool selected, required bool enabled}) {
+    final colors = CollabModalColors.of(context);
+    return Semantics(
+      key: ValueKey(size == null ? 'editor-font-size-default' : 'editor-font-size-$size'),
+      button: true,
+      selected: selected,
+      enabled: enabled,
+      label: size == null ? '默认字号' : '字号 $size',
+      child: ExcludeSemantics(
+        child: TextButton(
+          style: TextButton.styleFrom(
+            minimumSize: const Size(44, 44),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            foregroundColor: selected ? colors.accent : colors.text,
+            backgroundColor: selected ? colors.soft : null,
+            side: BorderSide(color: selected ? colors.accent : Colors.transparent),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+          onPressed: enabled ? () => unawaited(_applyFontSize(size)) : null,
+          child: Text(size == null ? '默认' : '$size'),
+        ),
+      ),
+    );
+  }
+
+  /// 在点击时应用[size]像素；null清除t:px及旧CSS字号，恢复段落或标题继承。
+  /// 保留其他字符格式，等待完整格式事务后刷新默认或数字选中态。
+  /// 拒绝失效会话、撤权及配置外值，连续选择各自封存历史；失败由公共边界提示。
+  Future<void> _applyFontSize(int? size) async {
+    if (!_ToolbarCommandScope.allows(context) || _fontSizeSaving || _fontSizeRevoked) return;
+    final state = widget.editorState;
+    final owner = _fontSizeOwner;
+    setState(() => _fontSizeSaving = true);
+    try {
+      await _runFormatAction((current, selection) async {
+        final context = EditorCommandContext.of(current);
+        if (!identical(current, state) ||
+            !identical(context, owner) ||
+            _fontSizeRevoked ||
+            !context.configuration.allowsFormat('t:px') ||
+            (size != null && !context.configuration.fontSizes.contains(size))) {
+          return;
+        }
+        final range = CollabTextRange.capture(current, allowCollapsed: true);
+        final target = range?.resolve(current);
+        if (target == null) return;
+        if (current.undoManager.undoStack.isNonEmpty) current.undoManager.undoStack.last.seal();
+        final attributes = <String, dynamic>{'t:px': size, if (size == null) 's:fontSize': null};
+        if (target.isCollapsed) {
+          await setCollabTypingAttributes(current, attributes);
+        } else {
+          widget.inlineStyleController.clearAll();
+          await formatCollabParagraphSelection(current, target, attributes);
+        }
+      });
+    } finally {
+      if (mounted && identical(state, widget.editorState)) setState(() => _fontSizeSaving = false);
+    }
   }
 
   /// 用 [selection] 回显颜色；[target] 决定字色或浅色，共用选择器保留自定义色。
@@ -2946,75 +3108,4 @@ void _reportEditorError(
 }) {
   if (editor.isDisposed) return;
   EditorCommandContext.of(editor).services.report(message, error, stackTrace, tag);
-}
-
-/// 在借用[context]/[state]中选择局部字号，弹窗退场后验证原文、权限及所属会话。
-/// 取消或来源失效不写正文；错误由此边界报告，不依赖已隐藏的键盘子菜单。
-Future<void> showEditorFontSizeSheet(BuildContext context, EditorState state) async {
-  final range = CollabTextRange.capture(state, allowCollapsed: true);
-  if (range == null || !state.editable) return;
-  final owner = EditorCommandContext.of(state);
-  if (!owner.configuration.allowsFormat('t:px')) return;
-  var permissionRevoked = false;
-
-  /// 撤权一旦发生，重新授权也不能提交旧字号面板。
-  void trackPermission() {
-    if (!state.editable) permissionRevoked = true;
-  }
-
-  state.editableNotifier.addListener(trackPermission);
-  try {
-    await runEditorHeaderAction<void>(
-      context,
-      state,
-      () async {
-        final size = await showCollabBottomSheet<int>(
-          context: context,
-          builder: (context) => CollabBottomSheet(
-            title: const Text('字号'),
-            icon: LucideIcons.aLargeSmall,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                for (final size in owner.configuration.fontSizes)
-                  CollabMenuRow(
-                    key: ValueKey('editor-font-size-$size'),
-                    title: Text('$size'),
-                    onTap: () => Navigator.pop(context, size),
-                  ),
-              ],
-            ),
-          ),
-        );
-        if (!context.mounted ||
-            state.isDisposed ||
-            !state.editable ||
-            permissionRevoked ||
-            size == null ||
-            !identical(owner, EditorCommandContext.of(state))) {
-          return;
-        }
-        final current = range.resolve(state);
-        if (current == null) return;
-        state.selection = current;
-        if (state.undoManager.undoStack.isNonEmpty) state.undoManager.undoStack.last.seal();
-        if (current.isCollapsed) {
-          await setCollabTypingAttributes(state, {'t:px': size});
-        } else {
-          await formatCollabParagraphSelection(state, current, {'t:px': size});
-        }
-      },
-      canRestore: () =>
-          !permissionRevoked &&
-          range.resolve(state, checkFormatting: false) != null &&
-          identical(owner, EditorCommandContext.of(state)),
-      selectionAfterAction: () => state.selection,
-    );
-  } catch (error, stack) {
-    if (state.isDisposed || !context.mounted || !identical(owner, EditorCommandContext.of(state))) return;
-    owner.services.report('字号设置失败', error, stack, 'DocEditor');
-    _showToolbarMessage(context, '字号设置失败，请重试');
-  } finally {
-    state.editableNotifier.removeListener(trackPermission);
-  }
 }

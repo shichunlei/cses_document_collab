@@ -1,0 +1,203 @@
+Waiting for another flutter command to release the startup lock...
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: (setUpAll)
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=true
+00:03 +1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=true
+00:03 +2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=true
+00:03 +3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=true
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=true
+00:03 +5: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=true
+00:08 +6: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:08 +7: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:08 +8: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:08 +9: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:08 +10: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:08 +11: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:08 +12: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:09 +13: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:09 +14: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:10 +15: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:12 +16: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:12 +17: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:13 +18: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:13 +19: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:13 +20: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:14 +21: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:15 +22: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:15 +23: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:16 +24: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:16 +25: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:16 +26: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:17 +27: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:19 +28: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:19 +29: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:19 +30: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:19 +31: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:19 +32: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:19 +33: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:19 +34: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:19 +35: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:19 +36: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:19 +37: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:19 +38: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:19 +39: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:19 +40: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:19 +41: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:19 +42: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:19 +43: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:19 +44: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:19 +45: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:19 +46: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:19 +47: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:19 +48: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:19 +49: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:19 +50: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:19 +51: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:19 +52: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +53: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +54: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +55: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +56: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +57: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +58: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +59: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +60: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +61: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +62: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +63: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +64: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +65: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +66: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +67: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +68: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +69: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +70: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +71: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +72: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +73: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +74: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +75: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +76: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +77: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +78: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +79: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +80: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +81: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +82: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +83: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +84: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +85: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +86: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +87: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +88: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +89: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +90: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +91: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +92: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +93: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +94: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +95: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +96: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +97: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +98: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +99: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +100: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +101: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +102: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +103: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +104: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +105: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +106: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +107: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +108: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +109: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +110: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +111: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +112: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +113: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:20 +114: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:21 +115: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: multiline paste replaces a range in one undo and preserves surrounding styles (variant: TargetPlatform.android)
+00:21 +116: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus toolbar exposes H1 through H6 and applies H6
+00:22 +117: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus toolbar exposes H1 through H6 and applies H6
+00:23 +118: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: link tracks original block after remote reorder (variant: TargetPlatform.android)
+00:24 +119: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:25 +120: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:25 +121: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:25 +122: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:25 +123: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:26 +124: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:26 +125: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:27 +126: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:27 +127: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:28 +128: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:28 +129: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:29 +130: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:29 +131: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: link rejects text while dialog is open (variant: TargetPlatform.android)
+00:29 +132: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus code entry rejects permission revoked while the sheet is open
+00:29 +133: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus code entry rejects permission revoked while the sheet is open
+00:29 +134: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus code entry rejects permission revoked while the sheet is open
+00:29 +135: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: link rejects readonly while dialog is open (variant: TargetPlatform.android)
+00:30 +136: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left quote uses published 32px layout steps
+00:30 +137: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left quote uses published 32px layout steps
+00:30 +138: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: link rejects format while dialog is open (variant: TargetPlatform.android)
+00:30 +139: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: menus stay above and close together with the keyboard
+00:31 +140: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: menus stay above and close together with the keyboard
+00:31 +141: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: formula prefills selected text and atom undo restores styled UTF16 text (variant: TargetPlatform.android)
+00:31 +142: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: final heading sizes left preserve mixed run overrides
+00:31 +143: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: final heading sizes left preserve mixed run overrides
+00:31 +144: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: final heading sizes left preserve mixed run overrides
+00:32 +145: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: final heading sizes left preserve mixed run overrides
+00:32 +146: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: Aa owns color and H owns all block-list actions
+00:33 +147: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: Aa owns color and H owns all block-list actions
+00:33 +148: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel reuses bold, colors, heading and alignment controls without keyboard (variant: TargetPlatform.android)
+00:33 +149: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel reuses bold, colors, heading and alignment controls without keyboard (variant: TargetPlatform.android)
+00:34 +150: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel reuses bold, colors, heading and alignment controls without keyboard (variant: TargetPlatform.android)
+00:34 +151: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel reuses bold, colors, heading and alignment controls without keyboard (variant: TargetPlatform.android)
+00:34 +152: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel reuses bold, colors, heading and alignment controls without keyboard (variant: TargetPlatform.android)
+00:35 +153: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel reuses bold, colors, heading and alignment controls without keyboard (variant: TargetPlatform.android)
+00:35 +154: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel reuses bold, colors, heading and alignment controls without keyboard (variant: TargetPlatform.android)
+00:35 +155: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel reuses bold, colors, heading and alignment controls without keyboard (variant: TargetPlatform.android)
+00:35 +156: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: final heading sizes center preserve mixed run overrides
+00:36 +157: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: Aa applies and displays an inline background color
+00:36 +158: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:36 +159: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:36 +160: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:37 +161: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:37 +162: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:37 +163: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:37 +164: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:37 +165: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:38 +166: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:38 +167: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:39 +168: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:39 +169: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:39 +170: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:40 +171: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:40 +172: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:40 +173: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:40 +174: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:41 +175: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:41 +176: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:41 +177: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:42 +178: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:42 +179: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:42 +180: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: empty heading sizes justify match placeholders and defaults
+00:42 +181: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel continues after zero-depth list outdent (variant: TargetPlatform.android)
+00:43 +182: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel continues after zero-depth list outdent (variant: TargetPlatform.android)
+00:44 +183: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel continues after zero-depth list outdent (variant: TargetPlatform.android)
+00:44 +184: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth distributed quote uses published 32px layout steps
+00:44 +185: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel validates remote type after a local conversion (variant: TargetPlatform.android)
+00:45 +186: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: final heading sizes distributed follow published defaults
+00:45 +187: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel validates remote delete after a local conversion (variant: TargetPlatform.android)
+00:46 +188: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel validates remote delete after a local conversion (variant: TargetPlatform.android)
+00:46 +189: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: legacy font sizes distributed follow published parsing
+00:46 +190: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel validates remote readonly after a local conversion (variant: TargetPlatform.android)
+00:46 +191: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel validates remote readonly after a local conversion (variant: TargetPlatform.android)
+00:47 +192: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel validates remote text after a local conversion (variant: TargetPlatform.android)
+00:48 +193: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel validates remote reorder after a local conversion (variant: TargetPlatform.android)
+00:49 +194: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format action checks live range after remote reorder (variant: TargetPlatform.android)
+00:49 +195: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format action checks live range after remote text (variant: TargetPlatform.android)
+00:50 +196: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: cross paragraph menu allows formats but hides link and formula (variant: TargetPlatform.android)
+00:50 +197: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: stable snapshot follows reorder, rejects insertion inside range and object conversion
+00:50 +198: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: (tearDownAll)
+00:51 +198: All tests passed!

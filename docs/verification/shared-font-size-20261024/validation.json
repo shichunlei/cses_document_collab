@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-24",
+  "baseCommit": "d9056368d8c36645403518cea0f227d22d145f4e",
+  "cause": "协同默认预设未包含fontSize且fontSizes为空，公共UI按能力隐藏入口",
+  "change": "协同启用fontSize，两种默认预设共用同一私有默认字号常量；不改面板与格式写入语义",
+  "regressionBeforeFix": {
+    "localPassed": 1,
+    "documentFailed": 1,
+    "log": "before-fix-confirmed.txt"
+  },
+  "tests": {
+    "package": 198,
+    "host": 193,
+    "failures": 0
+  },
+  "coverage": [
+    "离线和协同默认Aa字号菜单",
+    "24字号写入与撤销重做",
+    "撤权后重新授权拒绝旧面板",
+    "真实原生字号/历史/SQLite重开",
+    "测试网关远端投影无回送",
+    "宿主制图及今日导向消费者"
+  ],
+  "analysis": {
+    "packageTargets": "No issues found",
+    "hostTargets": "No issues found"
+  },
+  "sourceSha256": {
+    "packages/cses_document_collab/lib/src/editor/core/editor_configuration.dart": "9201e99f1d47f85ef6209b9cd82e421f7560090a97a51d15d2071bdb34bce30b",
+    "packages/cses_document_collab/test/shared_font_size_test.dart": "18d58a69f5667b1db5afa78aabcba3f6ec6e3d320ace3d0d6e78a0aa243c1333",
+    "packages/cses_document_collab/test/collab_controller_snapshot_test.dart": "7f1976a8649a74f5f0e97d9ea31d9f6947afad79b8f9c556b8d86bb9173872ed"
+  },
+  "nativeSourceChanged": false,
+  "newDeviceOrRealOnlineValidation": false,
+  "formatting": "修改的3份手写Dart已按既有120/80列执行dart format",
+  "firstFixtureFailures": [
+    "before-fix.txt",
+    "before-fix-scrolled.txt",
+    "menu-probe.txt"
+  ],
+  "reportLinksValid": 10,
+  "gitDiffCheck": "passed",
+  "stage": "默认字号能力补齐阶段的历史验证",
+  "supersededBy": "horizontal-validation.json"
+}

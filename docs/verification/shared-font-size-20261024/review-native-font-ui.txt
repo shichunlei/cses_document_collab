@@ -1,0 +1,6 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/docs/verification/shared-font-size-20261024/review-native-font-ui-probe.dart
+00:00 +0: (setUpAll)
+00:00 +0: native font controls and history stay usable fullPage=false
+00:04 +1: native font controls and history stay usable fullPage=true
+00:05 +2: (tearDownAll)
+00:05 +2: All tests passed!

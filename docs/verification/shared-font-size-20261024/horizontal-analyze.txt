@@ -1,0 +1,7 @@
+Analyzing 3 items...                                            
+
+warning • Unused import: 'package:cses_document_collab/src/ui/modal/collab_menu_row.dart'. Try removing the import directive • lib/src/editor/editor_shortcut_toolbar.dart:38:8 • unused_import
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/src/editor/editor_shortcut_toolbar.dart:2033:11 • curly_braces_in_flow_control_structures
+  error • The getter 'isNotEmpty' isn't defined for the type 'FixedSizeStack'. Try importing the library that defines 'isNotEmpty', correcting the name to the name of an existing getter, or defining a getter or field named 'isNotEmpty' • lib/src/editor/editor_shortcut_toolbar.dart:2037:43 • undefined_getter
+
+3 issues found. (ran in 8.9s)

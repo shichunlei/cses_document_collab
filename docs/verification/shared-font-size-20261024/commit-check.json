@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-24",
+  "scope": "本轮字号菜单、恢复默认及段落布局间距提交核对",
+  "stagedSourceHashesMatchLatestValidation": true,
+  "latestValidationManifests": [
+    "docs/verification/shared-font-size-20261024/review-validation.json",
+    "docs/verification/paragraph-layout-spacing-20261024/validation.json"
+  ],
+  "topicMarkdownLinksCheckedAgainstIndex": 48,
+  "stagedJsonParse": "passed",
+  "rawGitDiffCachedCheckExitCode": 2,
+  "rawLogTrailingWhitespace": {
+    "docs/verification/paragraph-layout-spacing-20261024/analyze.txt": 1,
+    "docs/verification/paragraph-layout-spacing-20261024/before-fix.txt": 4,
+    "docs/verification/paragraph-layout-spacing-20261024/final-analyze.txt": 1,
+    "docs/verification/shared-font-size-20261024/before-fix-confirmed.txt": 1,
+    "docs/verification/shared-font-size-20261024/before-fix-scrolled.txt": 2,
+    "docs/verification/shared-font-size-20261024/before-fix.txt": 2,
+    "docs/verification/shared-font-size-20261024/horizontal-analyze.txt": 1,
+    "docs/verification/shared-font-size-20261024/horizontal-current-analyze.txt": 1,
+    "docs/verification/shared-font-size-20261024/horizontal-final-analyze.txt": 1,
+    "docs/verification/shared-font-size-20261024/horizontal-first-tests.txt": 1,
+    "docs/verification/shared-font-size-20261024/horizontal-host-analyze.txt": 1,
+    "docs/verification/shared-font-size-20261024/horizontal-host-tests.txt": 43,
+    "docs/verification/shared-font-size-20261024/horizontal-target-tests.txt": 3,
+    "docs/verification/shared-font-size-20261024/host-analyze.txt": 1,
+    "docs/verification/shared-font-size-20261024/host-tests.txt": 43,
+    "docs/verification/shared-font-size-20261024/menu-probe.txt": 2,
+    "docs/verification/shared-font-size-20261024/package-analyze.txt": 1,
+    "docs/verification/shared-font-size-20261024/reset-analyze.txt": 1,
+    "docs/verification/shared-font-size-20261024/reset-host-tests.txt": 43,
+    "docs/verification/shared-font-size-20261024/reset-target-tests.txt": 1
+  },
+  "rawLogsPreserved": true,
+  "gitDiffCachedCheckExcludingOnlyListedRawLogs": "passed",
+  "note": "原始工具输出保留行尾填充；源码、手写文档、JSON及探针归档均通过暂存差异检查。"
+}

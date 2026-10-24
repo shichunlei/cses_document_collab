@@ -1,0 +1,6 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_layout_spacing_test.dart
+00:00 +0: layout trailing controls keep spacing type=paragraph width=320.0
+00:03 +1: layout trailing controls keep spacing type=paragraph width=390.0
+00:04 +2: layout trailing controls keep spacing type=quote width=320.0
+00:05 +3: layout trailing controls keep spacing type=quote width=390.0
+00:06 +4: All tests passed!

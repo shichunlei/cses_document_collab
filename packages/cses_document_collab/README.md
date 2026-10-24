@@ -218,7 +218,7 @@ Widget localBody(LocalEditorController editor) =>
 `EditorConfiguration.text`保留原六类文字块/H1～H4预设；也可通过`blocks`和`inlineFormats`选择更小的功能集合。
 
 字符格式可分别启停加粗、斜体、下划线、删除线、行内代码、字号、颜色、字体/字距/倍率、上下标、链接、行内公式和提及。
-字号菜单及命令使用`fontSizes`，默认12/16/20/24/28/32/36像素；对齐、下一段样式、行高写入及正文容量分别配置。
+字号菜单及命令使用`fontSizes`，离线与协同默认均开放字号并共用12/16/20/24/28/32/36像素选项；Aa及展开文字样式面板复用同一横向字号子菜单，固定左侧返回与默认项、数字区滚动；点击默认以一个事务清除`t:px`和旧`s:fontSize`覆盖，继承当前段落或标题的字号，其他格式保持；选择后即时回显并保留菜单，键盘不因进入字号而收起，不再弹出独立字号面板。写入、历史和协同沿用公共命令。宿主显式禁用字号或自定义集合仍按实例配置执行。对齐、下一段样式、行高写入及正文容量分别配置。
 `keyboardToolbarItems`配置内建键盘入口及顺序。收起键盘不参与配置：有内建或宿主自定义入口时自动固定在最右侧，其余入口单行横向滚动。默认使用`EditorKeyboardToolbarItem.defaults`，保留原六个菜单入口及收起按钮；传空列表`[]`隐藏内建入口，没有宿主动作时隐藏整条，不留高度或分隔线。列表构造时冻结，重复项会抛出`ArgumentError`。
 可选原入口：`addBlock`（加号）、`blockType`（T）、`textStyle`（Aa）、`blockLayout`、`image`、`mention`；`todoList`提供原生待办直达按钮，与T菜单共用类型转换，保留正文、格式和选区，已是Todo时不重置勾选状态。
 “更多→常用”可直接放到键盘上：`link`、`video`、`attachment`、`audio`、`bookmark`、`embed`、`juejin`、`figma`、`table`、`callout`、`meeting`、`formula`、`mermaid`、`inlineFormula`、`divider`、`pageDivider`，图片与@用户也可直接配置。

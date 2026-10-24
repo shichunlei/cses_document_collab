@@ -87,7 +87,7 @@ enum EditorBlock {
   final String type;
 }
 
-/// 本地组件已经支持的字符格式；配置只开放所选项。
+/// 编辑器共用的字符格式；配置只开放所选项。
 enum EditorInlineFormat {
   /// 加粗。
   bold,
@@ -255,6 +255,9 @@ enum EditorKeyboardToolbarItem {
 /// );
 /// ```
 final class EditorConfiguration {
+  /// 离线与协同字号菜单共用的默认像素值，保持相同顺序。
+  static const _defaultFontSizes = [12, 16, 20, 24, 28, 32, 36];
+
   /// [blocks] 为无重复的块集合，必须包含paragraph；类型菜单按此顺序，标题家族按级别排序。
   /// [headingLevels] 为1～9中的子集，默认全部级别，保留桌面/历史正文能力；移动菜单最多显示H6。
   /// 禁用heading时不产生标题入口。
@@ -282,7 +285,7 @@ final class EditorConfiguration {
     bool progressiveHeadingMenu = true,
     Iterable<EditorInlineFormat> inlineFormats = EditorInlineFormat.values,
     Iterable<String> alignments = const {'left', 'center', 'right', 'justify', 'distributed'},
-    Iterable<int> fontSizes = const [12, 16, 20, 24, 28, 32, 36],
+    Iterable<int> fontSizes = _defaultFontSizes,
     bool paragraphLayout = false,
     bool structuralIndentation = true,
     Iterable<String> blockConversionPreservedAttributes = const {},
@@ -369,7 +372,8 @@ final class EditorConfiguration {
     this.blockConversionPreservedAttributes = const {},
   });
 
-  /// 原协同文档的兼容预设，不改变既有复杂块、上下标、布局和宿主命令。
+  /// 协同文档的兼容预设；字号菜单与离线场景共用默认像素值。
+  /// 保留复杂块、上下标、布局和宿主命令，字符格式仍经公共命令提交。
   static const document = EditorConfiguration._(
     EditorBlock.values,
     {1, 2, 3, 4, 5, 6, 7, 8, 9},
@@ -379,6 +383,7 @@ final class EditorConfiguration {
       EditorInlineFormat.underline,
       EditorInlineFormat.strikethrough,
       EditorInlineFormat.code,
+      EditorInlineFormat.fontSize,
       EditorInlineFormat.textColor,
       EditorInlineFormat.backgroundColor,
       EditorInlineFormat.fontFamily,
@@ -391,7 +396,7 @@ final class EditorConfiguration {
       EditorInlineFormat.mention,
     },
     {'left', 'center', 'right', 'justify', 'distributed'},
-    [],
+    _defaultFontSizes,
     true,
     true,
     100000,

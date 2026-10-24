@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-24",
+  "registry": "http://npm.runtongqiuben.com/",
+  "latest": "0.11.30",
+  "desktopDeclaration": "0.11.28",
+  "yarnLocked": "0.11.28",
+  "installed": "0.11.21",
+  "historicalPnpmLocked": "0.2.78",
+  "queries": [
+    "npm view @ccc/blockcraft dist-tags --json --fetch-retries=0 --fetch-timeout=15000 --cache /private/tmp/cses-layout-gap-npm-cache --prefer-online --update-notifier=false",
+    "npm view @ccc/blockcraft@0.11.30 dist --json --fetch-retries=0 --fetch-timeout=15000 --cache /private/tmp/cses-layout-gap-npm-cache --prefer-online --update-notifier=false"
+  ],
+  "registryDistSha1": "abedbde54c71e81db525aec73f86cceb77f4cb4b",
+  "cachedArtifactSha1": "abedbde54c71e81db525aec73f86cceb77f4cb4b",
+  "readScope": "随包技能/MIGRATIONS及关联实现沿用本会话已读且发布指纹相同的版本；本轮直接核对移动端段落布局控件和已有间距定义，只修复展示。",
+  "upgrade": false,
+  "remaining": "未新增上游块能力适配，Schema/块与行内对象、选区/菜单、剪贴板、输入、历史及协同既有差异仍按主表待同步/验收。"
+}

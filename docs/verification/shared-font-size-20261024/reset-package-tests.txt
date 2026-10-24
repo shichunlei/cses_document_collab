@@ -1,0 +1,207 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: (setUpAll)
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=true
+00:03 +1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=true
+00:03 +2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=true
+00:03 +3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=true
+00:04 +4: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=true
+00:04 +5: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=true
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=true
+00:11 +7: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=true
+00:11 +8: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=true
+00:11 +9: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=true
+00:11 +10: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:12 +11: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:12 +12: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:12 +13: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:12 +14: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:12 +15: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:14 +16: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:15 +17: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:15 +18: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:15 +19: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:15 +20: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:15 +21: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:17 +22: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:18 +23: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:18 +24: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:18 +25: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:18 +26: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:18 +27: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:18 +28: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:20 +29: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:20 +30: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:22 +31: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:22 +32: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:25 +33: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: multiline paste replaces a range in one undo and preserves surrounding styles (variant: TargetPlatform.android)
+00:27 +34: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: multiline paste replaces a range in one undo and preserves surrounding styles (variant: TargetPlatform.android)
+00:27 +35: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:27 +36: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +37: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +38: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +39: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +40: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +41: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +42: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +43: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +44: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +45: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +46: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +47: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +48: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +49: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +50: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +51: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +52: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +53: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +54: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +55: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +56: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +57: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +58: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +59: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +60: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +61: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +62: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +63: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +64: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +65: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +66: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +67: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +68: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +69: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +70: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +71: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +72: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:28 +73: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +74: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +75: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +76: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +77: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +78: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +79: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +80: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +81: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +82: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +83: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +84: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +85: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +86: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +87: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +88: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +89: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +90: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +91: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +92: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +93: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +94: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +95: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +96: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +97: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +98: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +99: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +100: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +101: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +102: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +103: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +104: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +105: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +106: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +107: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +108: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +109: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +110: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +111: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +112: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +113: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +114: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +115: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +116: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +117: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +118: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +119: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +120: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +121: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +122: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:29 +123: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:30 +124: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: link tracks original block after remote reorder (variant: TargetPlatform.android)
+00:30 +125: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:31 +126: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:32 +127: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:32 +128: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:32 +129: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:32 +130: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:33 +131: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:33 +132: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:33 +133: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:34 +134: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:35 +135: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:35 +136: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:35 +137: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:36 +138: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: link rejects text while dialog is open (variant: TargetPlatform.android)
+00:36 +139: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: menus stay above and close together with the keyboard
+00:37 +140: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: menus stay above and close together with the keyboard
+00:37 +141: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: menus stay above and close together with the keyboard
+00:37 +142: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: link rejects readonly while dialog is open (variant: TargetPlatform.android)
+00:37 +143: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left quote uses published 32px layout steps
+00:37 +144: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left quote uses published 32px layout steps
+00:37 +145: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: link rejects format while dialog is open (variant: TargetPlatform.android)
+00:37 +146: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: link rejects format while dialog is open (variant: TargetPlatform.android)
+00:38 +147: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: final heading sizes left follow published defaults
+00:38 +148: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: Aa owns color and H owns all block-list actions
+00:38 +149: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: Aa owns color and H owns all block-list actions
+00:39 +150: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: final heading sizes left preserve mixed run overrides
+00:39 +151: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: final heading sizes left preserve mixed run overrides
+00:39 +152: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:40 +153: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:40 +154: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:41 +155: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel reuses bold, colors, heading and alignment controls without keyboard (variant: TargetPlatform.android)
+00:41 +156: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel reuses bold, colors, heading and alignment controls without keyboard (variant: TargetPlatform.android)
+00:42 +157: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel reuses bold, colors, heading and alignment controls without keyboard (variant: TargetPlatform.android)
+00:42 +158: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel reuses bold, colors, heading and alignment controls without keyboard (variant: TargetPlatform.android)
+00:42 +159: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel reuses bold, colors, heading and alignment controls without keyboard (variant: TargetPlatform.android)
+00:42 +160: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel reuses bold, colors, heading and alignment controls without keyboard (variant: TargetPlatform.android)
+00:43 +161: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel reuses bold, colors, heading and alignment controls without keyboard (variant: TargetPlatform.android)
+00:43 +162: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel reuses bold, colors, heading and alignment controls without keyboard (variant: TargetPlatform.android)
+00:43 +163: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: inline style persists until manual toggle or paragraph switch
+00:44 +164: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: inline style persists until manual toggle or paragraph switch
+00:44 +165: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:44 +166: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:44 +167: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:45 +168: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:45 +169: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:45 +170: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:46 +171: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:46 +172: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:46 +173: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:46 +174: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:47 +175: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:47 +176: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:48 +177: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:48 +178: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:48 +179: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:49 +180: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:49 +181: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:49 +182: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:50 +183: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:50 +184: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:51 +185: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel keeps its range through repeated local conversions (variant: TargetPlatform.android)
+00:51 +186: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth distributed heading_3 uses published 32px layout steps
+00:51 +187: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel continues after zero-depth list outdent (variant: TargetPlatform.android)
+00:52 +188: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel continues after zero-depth list outdent (variant: TargetPlatform.android)
+00:52 +189: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth distributed quote uses published 32px layout steps
+00:52 +190: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel validates remote type after a local conversion (variant: TargetPlatform.android)
+00:53 +191: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel validates remote type after a local conversion (variant: TargetPlatform.android)
+00:53 +192: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: final heading sizes distributed preserve mixed run overrides
+00:54 +193: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel validates remote delete after a local conversion (variant: TargetPlatform.android)
+00:54 +194: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: legacy font sizes distributed follow published parsing
+00:54 +195: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel validates remote readonly after a local conversion (variant: TargetPlatform.android)
+00:55 +196: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel validates remote readonly after a local conversion (variant: TargetPlatform.android)
+00:55 +197: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel validates remote text after a local conversion (variant: TargetPlatform.android)
+00:56 +198: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format panel validates remote reorder after a local conversion (variant: TargetPlatform.android)
+00:57 +199: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format action checks live range after remote reorder (variant: TargetPlatform.android)
+00:58 +200: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: format action checks live range after remote text (variant: TargetPlatform.android)
+00:58 +201: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: cross paragraph menu allows formats but hides link and formula (variant: TargetPlatform.android)
+00:58 +202: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: stable snapshot follows reorder, rejects insertion inside range and object conversion
+00:58 +203: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/mobile_selection_menu_test.dart: (tearDownAll)
+00:59 +203: All tests passed!

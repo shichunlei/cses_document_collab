@@ -123,6 +123,8 @@ void main() {
             .attributes?['t:px'],
         24,
       );
+      await tester.tap(find.byKey(const ValueKey('editor-font-size-back')));
+      await tester.pumpAndSettle();
       await tester.drag(
         find.byKey(const ValueKey('editor-inline-style-menu')),
         const Offset(-300, 0),
@@ -132,6 +134,9 @@ void main() {
       await tester.pumpAndSettle();
       local.editorState.editable = false;
       local.editorState.editable = true;
+      await tester.ensureVisible(
+        find.byKey(const ValueKey('editor-font-size-36')),
+      );
       await tester.tap(find.byKey(const ValueKey('editor-font-size-36')));
       await tester.pumpAndSettle();
       await tester.pump(const Duration(milliseconds: 500));

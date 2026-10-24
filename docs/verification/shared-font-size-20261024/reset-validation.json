@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-24",
+  "stage": "恢复默认字号（当前最新阶段）",
+  "baseCommit": "d9056368d8c36645403518cea0f227d22d145f4e",
+  "scope": "横向字号菜单固定默认项，局部与光标范围恢复继承，保留前阶段能力与交互修改",
+  "tests": {
+    "packageBroad": 203,
+    "hostBroad": 193,
+    "targetSubset": 11,
+    "failed": 0
+  },
+  "analysis": "reset-analyze.txt: No issues found",
+  "coverage": [
+    "离线/协同范围恢复与默认回显",
+    "恢复的独立撤销重做及回显",
+    "光标仅影响新输入",
+    "混合字号不误标默认",
+    "旧CSS字号清除",
+    "H2继承28.8且保留字样/字色",
+    "整段textDefaults字号清除",
+    "320宽2倍文字下默认按钮固定可命中",
+    "原生恢复默认/撤销重做/SQLite重开/测试网关无回送投影"
+  ],
+  "sourceSha256": {
+    "packages/cses_document_collab/lib/src/editor/core/editor_configuration.dart": "9201e99f1d47f85ef6209b9cd82e421f7560090a97a51d15d2071bdb34bce30b",
+    "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart": "e6d03cd699ef24326241d14382873c325052e71320b5e036140ea9db937f2117",
+    "packages/cses_document_collab/test/collab_controller_snapshot_test.dart": "e0d0343607b042170f847df03a948e83a94cc727ad26dbe959a82b72cb22f422",
+    "packages/cses_document_collab/test/local_editor_operations_test.dart": "02a91c43584b233a46e00ba8500ff8a9d8803066b5d42377f3f6f3dab71c6ebd",
+    "packages/cses_document_collab/test/shared_font_size_test.dart": "1ea96d1b1933fe7df25a2a72f1ada8e8a9a9ad1bc9e08ed0294fde5c271abb91"
+  },
+  "initialFixtureFailures": [
+    "reset-first-tests.txt",
+    "reset-target-tests.txt"
+  ],
+  "newNativeSourceOrAbiChange": false,
+  "newPlatformDeviceOrRealOnlineVerification": false,
+  "gitDiffCheck": "passed",
+  "reportLinksChecked": 33
+}

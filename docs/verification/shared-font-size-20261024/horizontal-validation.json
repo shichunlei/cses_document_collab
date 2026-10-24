@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-24",
+  "scope": "颜色式横向字号子菜单；保留前一阶段默认字号配置修复",
+  "baseCommit": "d9056368d8c36645403518cea0f227d22d145f4e",
+  "tests": {
+    "packageBroad": 200,
+    "hostBroad": 193,
+    "finalTargetsRepeated": 10,
+    "failed": 0
+  },
+  "finalRangeGuard": "大范围回归后保留旧入口支持范围校验；最终代码另跑10项菜单/离线/原生目标回归",
+  "analysis": {
+    "currentPackageTargets": "No issues found",
+    "hostTargets": "No issues found"
+  },
+  "removedSymbolReferences": [],
+  "sourceSha256": {
+    "packages/cses_document_collab/lib/src/editor/core/editor_configuration.dart": "9201e99f1d47f85ef6209b9cd82e421f7560090a97a51d15d2071bdb34bce30b",
+    "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart": "f26529cee4a87317e84681649ed431997a8814a89796d954803a192b40451d9f",
+    "packages/cses_document_collab/test/collab_controller_snapshot_test.dart": "7f1976a8649a74f5f0e97d9ea31d9f6947afad79b8f9c556b8d86bb9173872ed",
+    "packages/cses_document_collab/test/local_editor_operations_test.dart": "02a91c43584b233a46e00ba8500ff8a9d8803066b5d42377f3f6f3dab71c6ebd",
+    "packages/cses_document_collab/test/shared_font_size_test.dart": "0fab56e525dc51f368f991c378d0265e40cbc64e158a8c2c4839412cbe35c4fd"
+  },
+  "verifiedBehavior": [
+    "无独立字号弹窗",
+    "固定左侧返回与数字横向滚动",
+    "连续选择保留菜单与键盘",
+    "选中/混合字号回显",
+    "光标输入和实时选区",
+    "独立撤销重做",
+    "撤权恢复须重新进入",
+    "320宽/2倍字体及自定义四位字号",
+    "划词格式面板不叠新弹窗",
+    "原生历史/SQLite恢复/测试网关远端投影"
+  ],
+  "initialFailures": [
+    "horizontal-first-tests.txt",
+    "horizontal-analyze.txt",
+    "horizontal-target-tests.txt"
+  ],
+  "nativeSourceChanged": false,
+  "newDeviceBuildOrRealOnlineValidation": false,
+  "gitDiffCheck": "passed",
+  "reportLinksChecked": 23,
+  "stage": "横向菜单阶段历史验证",
+  "supersededBy": "reset-validation.json"
+}

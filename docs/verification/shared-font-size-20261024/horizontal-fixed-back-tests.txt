@@ -1,0 +1,10 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: (setUpAll)
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=true
+00:05 +1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=false
+00:07 +3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=false
+00:07 +4: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: font choices scroll at narrow large text and follow the current caret
+00:08 +5: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: selection format sheet hosts the same font row without another sheet
+00:09 +6: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: (tearDownAll)
+00:09 +6: All tests passed!
