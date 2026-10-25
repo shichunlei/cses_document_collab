@@ -1,0 +1,143 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart
+00:00 +0: (setUpAll)
+00:00 +0: spacing applies resets undo and revocation local=true line=true
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.single (dart:core/iterable.dart:694:25)
+#1      WidgetController.widget (package:flutter_test/src/controller.dart:828:30)
+#2      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart:117:25)
+<asynchronous suspension>
+#3      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#4      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  spacing applies resets undo and revocation local=true line=true
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:03 +0 -1: spacing applies resets undo and revocation local=true line=true [E]
+  Test failed. See exception logs above.
+  The test description was: spacing applies resets undo and revocation local=true line=true
+  
+00:03 +0 -1: spacing applies resets undo and revocation local=true line=false
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _HitTestableWidgetFinder:<Found 0 widgets with key [<'editor-letter-spacing-0.1'>]
+(considering only hit-testable widgets with a RenderBox): []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      _tap (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart:22:3)
+<asynchronous suspension>
+#5      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart:89:11)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart line 22
+The test description was:
+  spacing applies resets undo and revocation local=true line=false
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:04 +0 -2: spacing applies resets undo and revocation local=true line=false [E]
+  Test failed. See exception logs above.
+  The test description was: spacing applies resets undo and revocation local=true line=false
+  
+00:04 +0 -2: spacing applies resets undo and revocation local=false line=true
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.single (dart:core/iterable.dart:694:25)
+#1      WidgetController.widget (package:flutter_test/src/controller.dart:828:30)
+#2      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart:117:25)
+<asynchronous suspension>
+#3      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#4      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  spacing applies resets undo and revocation local=false line=true
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:05 +0 -3: spacing applies resets undo and revocation local=false line=true [E]
+  Test failed. See exception logs above.
+  The test description was: spacing applies resets undo and revocation local=false line=true
+  
+00:05 +0 -3: spacing applies resets undo and revocation local=false line=false
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _HitTestableWidgetFinder:<Found 0 widgets with key [<'editor-letter-spacing-0.1'>]
+(considering only hit-testable widgets with a RenderBox): []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      _tap (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart:22:3)
+<asynchronous suspension>
+#5      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart:89:11)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart line 22
+The test description was:
+  spacing applies resets undo and revocation local=false line=false
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:06 +0 -4: spacing applies resets undo and revocation local=false line=false [E]
+  Test failed. See exception logs above.
+  The test description was: spacing applies resets undo and revocation local=false line=false
+  
+00:06 +0 -4: expanded character spacing handles mixed legacy and live caret
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: true
+  Actual: <false>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart:190:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart line 190
+The test description was:
+  expanded character spacing handles mixed legacy and live caret
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:07 +0 -5: expanded character spacing handles mixed legacy and live caret [E]
+  Test failed. See exception logs above.
+  The test description was: expanded character spacing handles mixed legacy and live caret
+  
+00:07 +0 -5: line height skips void/code and exclusive next paragraph endpoint
+00:07 +1 -5: (tearDownAll)
+00:07 +1 -5: Some tests failed.
+
+Failing tests:
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart: expanded character spacing handles mixed legacy and live caret
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart: spacing applies resets undo and revocation local=false line=false
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart: spacing applies resets undo and revocation local=false line=true
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart: spacing applies resets undo and revocation local=true line=false
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart: spacing applies resets undo and revocation local=true line=true

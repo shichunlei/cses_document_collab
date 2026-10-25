@@ -19,7 +19,7 @@ const journalSectionType = 'local-journal-section';
 const journalSections = ['record', 'reflection', 'self-check'];
 
 /// 日记标题、文字样式、排版与提及能力；栏目只作为列表互换的透明父容器，不开放真实嵌套。
-/// 宿主继续校验栏目边界、行内引用和业务属性。
+/// 行间距与字间距复用公共段落/字符协议；宿主继续校验栏目边界、行内引用和业务属性。
 final journalConfiguration = EditorConfiguration(
   blocks: const [
     EditorBlock.paragraph,
@@ -39,6 +39,7 @@ final journalConfiguration = EditorConfiguration(
     EditorInlineFormat.textColor,
     EditorInlineFormat.backgroundColor,
     EditorInlineFormat.fontSize,
+    EditorInlineFormat.letterSpacing,
     EditorInlineFormat.superscript,
     EditorInlineFormat.subscript,
     EditorInlineFormat.mention,
@@ -51,7 +52,7 @@ final journalConfiguration = EditorConfiguration(
     'guidance_entry_id',
     'guidance_done',
   },
-  lineHeight: false,
+  lineHeight: true,
   nextParagraphStyle: false,
   listConversionContainerTypes: const [journalSectionType],
   listIndentContainerTypes: const [journalSectionType],

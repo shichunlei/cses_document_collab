@@ -1,0 +1,54 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart
+00:00 +0: (setUpAll)
+00:00 +0: spacing applies resets undo and revocation local=true line=true
+SPACING apply 2.0 enabled=true saving=false revoked=false selection=start = path = [0], offset = 0, end = path = [1], offset = 4
+SPACING apply null enabled=true saving=false revoked=false selection=start = path = [0], offset = 0, end = path = [1], offset = 4
+00:03 +1: spacing applies resets undo and revocation local=true line=false
+SPACING apply 0.1 enabled=true saving=false revoked=false selection=start = path = [0], offset = 0, end = path = [1], offset = 4
+SPACING target=start = path = [0], offset = 0, end = path = [1], offset = 4
+SPACING apply null enabled=true saving=false revoked=false selection=start = path = [0], offset = 0, end = path = [1], offset = 4
+SPACING target=start = path = [0], offset = 0, end = path = [1], offset = 4
+00:05 +2: spacing applies resets undo and revocation local=false line=true
+SPACING apply 2.0 enabled=true saving=false revoked=false selection=start = path = [0], offset = 0, end = path = [1], offset = 4
+SPACING apply null enabled=true saving=false revoked=false selection=start = path = [0], offset = 0, end = path = [1], offset = 4
+00:05 +3: spacing applies resets undo and revocation local=false line=false
+SPACING apply 0.1 enabled=true saving=false revoked=false selection=start = path = [0], offset = 0, end = path = [1], offset = 4
+SPACING target=start = path = [0], offset = 0, end = path = [1], offset = 4
+SPACING apply null enabled=true saving=false revoked=false selection=start = path = [0], offset = 0, end = path = [1], offset = 4
+SPACING target=start = path = [0], offset = 0, end = path = [1], offset = 4
+00:06 +4: expanded character spacing handles mixed legacy and live caret
+SPACING apply -0.1 enabled=true saving=false revoked=false selection=start = path = [0], offset = 0, end = path = [0], offset = 2
+SPACING target=start = path = [0], offset = 0, end = path = [0], offset = 2
+SPACING apply null enabled=true saving=false revoked=false selection=start = path = [0], offset = 0, end = path = [0], offset = 2
+SPACING target=start = path = [0], offset = 0, end = path = [0], offset = 2
+RESET DELTA [{insert: A, attributes: {bold: true}}, {insert: B}]
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: true
+  Actual: <false>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart:195:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart line 195
+The test description was:
+  expanded character spacing handles mixed legacy and live caret
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:07 +4 -1: expanded character spacing handles mixed legacy and live caret [E]
+  Test failed. See exception logs above.
+  The test description was: expanded character spacing handles mixed legacy and live caret
+  
+00:07 +4 -1: line height skips void/code and exclusive next paragraph endpoint
+00:07 +5 -1: (tearDownAll)
+00:07 +5 -1: Some tests failed.
+
+Failing tests:
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart: expanded character spacing handles mixed legacy and live caret

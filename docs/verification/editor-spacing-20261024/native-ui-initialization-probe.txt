@@ -1,0 +1,37 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_snapshot_test.dart
+00:00 +0: (setUpAll)
+00:00 +0: native spacing menus remain usable after projection and reset
+unhandled error during finalization of test:
+/Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_snapshot_test.dart
+TestDeviceException(Shell subprocess terminated by ^C (SIGINT, -2).)
+#0      FlutterTesterTestDevice.finished (package:flutter_tools/src/test/flutter_tester_device.dart:255:5)
+<asynchronous suspension>
+#1      FlutterTesterTestDevice.kill (package:flutter_tools/src/test/flutter_tester_device.dart:237:5)
+<asynchronous suspension>
+#2      FlutterPlatform._startTest.<anonymous closure> (package:flutter_tools/src/test/flutter_platform.dart:690:9)
+<asynchronous suspension>
+#3      FlutterPlatform._startTest.finalize (package:flutter_tools/src/test/flutter_platform.dart:592:11)
+<asynchronous suspension>
+#4      asyncGuard.<anonymous closure> (package:flutter_tools/src/base/async_guard.dart:108:24)
+<asynchronous suspension>
+
+unhandled error during finalization of test:
+/Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_snapshot_test.dart
+PathNotFoundException: Deletion failed, path = '/var/folders/sx/qjydrwp90_99lm16z_rld7n00000gn/T/flutter_tools.f2ckp2/flutter_test_listener.4qxApK' (OS Error: No such file or directory, errno = 2)
+#0      _Directory._deleteSync (dart:io/directory_impl.dart:216:7)
+#1      FileSystemEntity.deleteSync (dart:io/file_system_entity.dart:425:7)
+#2      ForwardingFileSystemEntity.deleteSync (package:file/src/forwarding/forwarding_file_system_entity.dart:70:16)
+#3      ErrorHandlingDirectory.deleteSync.<anonymous closure> (package:flutter_tools/src/base/error_handling_io.dart:715:22)
+#4      _runSync (package:flutter_tools/src/base/error_handling_io.dart:1116:16)
+#5      ErrorHandlingDirectory.deleteSync (package:flutter_tools/src/base/error_handling_io.dart:714:12)
+#6      FlutterPlatform._createListenerDart.<anonymous closure> (package:flutter_tools/src/test/flutter_platform.dart:787:15)
+#7      FlutterPlatform._startTest.finalize (package:flutter_tools/src/test/flutter_platform.dart:592:26)
+<asynchronous suspension>
+#8      asyncGuard.<anonymous closure> (package:flutter_tools/src/base/async_guard.dart:108:24)
+<asynchronous suspension>
+
+00:39 +0: native spacing menus remain usable after projection and reset - did not complete [E]
+00:39 +0: Some tests failed.
+
+Failing tests:
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_snapshot_test.dart: native spacing menus remain usable after projection and reset (did not complete)

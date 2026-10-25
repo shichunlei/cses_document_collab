@@ -1,0 +1,6 @@
+Analyzing 4 items...                                            
+
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • test/collab_controller_snapshot_test.dart:137:9 • curly_braces_in_flow_control_structures
+  error • The function 'codeBlockNode' isn't defined. Try importing the library that defines 'codeBlockNode', correcting the name to the name of an existing function, or defining a function named 'codeBlockNode' • test/editor_spacing_test.dart:231:13 • undefined_function
+
+2 issues found. (ran in 10.9s)

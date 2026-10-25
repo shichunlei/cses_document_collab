@@ -185,6 +185,50 @@ Future<EditorState> _reopen(WidgetTester tester) async {
 
 /// 覆盖真实菜单、渲染、撤销、预览及保存重开，不以入口存在代替功能生效。
 void main() {
+  testWidgets('journal spacing renders saves reopens and resets', (
+    tester,
+  ) async {
+    final store = _Store();
+    final state = await _open(tester, store);
+    await _menu(tester, '文字样式', 'editor-inline-style-menu');
+    await _tap(
+      tester,
+      'editor-inline-style-menu',
+      'editor-inline-letter-spacing',
+    );
+    await _tap(
+      tester,
+      'editor-letter-spacing-menu',
+      'editor-letter-spacing-0.1',
+    );
+    expect(state.getNodeAtPath([0, 0])!.delta!.first.attributes?['t:ls'], .1);
+    expect(_spans(_paragraph(tester).text).first.style!.letterSpacing, 1.6);
+    await tester.tap(find.byKey(const ValueKey('editor-letter-spacing-back')));
+    await tester.pumpAndSettle();
+    await _menu(tester, '对齐与缩进', 'editor-block-layout-menu');
+    await _tap(tester, 'editor-block-layout-menu', 'editor-block-line-height');
+    await _tap(tester, 'editor-line-height-menu', 'editor-line-height-1.5');
+    expect(_spans(_paragraph(tester).text).first.style!.height, 1.5);
+    final snapshot = state.document.toJson();
+    final reopened = await _reopen(tester);
+    expect(reopened.document.toJson(), snapshot);
+    expect(_spans(_paragraph(tester).text).first.style!.height, 1.5);
+    expect(_spans(_paragraph(tester).text).first.style!.letterSpacing, 1.6);
+    reopened.selection = Selection.single(
+      path: [0, 0],
+      startOffset: 0,
+      endOffset: 5,
+    );
+    await tester.pumpAndSettle();
+    await _menu(tester, '对齐与缩进', 'editor-block-layout-menu');
+    await _tap(tester, 'editor-block-layout-menu', 'editor-block-line-height');
+    await tester.tap(find.byKey(const ValueKey('editor-line-height-default')));
+    await tester.pumpAndSettle();
+    expect(_spans(_paragraph(tester).text).first.style!.height, 2);
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpAndSettle();
+  });
+
   for (final sample in [(320.0, 1.0), (390.0, 2.0)]) {
     testWidgets('H1-H6 render and survive preview/reopen at $sample', (
       tester,

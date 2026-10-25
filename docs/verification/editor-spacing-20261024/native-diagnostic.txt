@@ -1,0 +1,19 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_snapshot_test.dart
+00:00 +0: (setUpAll)
+00:00 +0: spacing-only changes persist, reopen and project remotely without echo
+SPACING after line editable=true selection=start = path = [0], offset = 0, end = path = [0], offset = 4 delta=[{insert: 正文😀, attributes: {t:ff: serif, href: https://example.test, bold: true, font_color: #123456}}]
+SPACING after inline editable=true selection=start = path = [0], offset = 0, end = path = [0], offset = 4 delta=[{insert: 正文😀, attributes: {t:ff: serif, href: https://example.test, bold: true, font_color: #123456}}]
+00:00 +0 -1: spacing-only changes persist, reopen and project remotely without echo [E]
+  Expected: <0.1>
+    Actual: <null>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/collab_controller_snapshot_test.dart 198:7     _expectNative
+  test/collab_controller_snapshot_test.dart 54:11     main.<fn>
+  
+00:00 +0 -1: (tearDownAll)
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_snapshot_test.dart: spacing-only changes persist, reopen and project remotely without echo

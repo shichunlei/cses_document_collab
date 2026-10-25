@@ -1,0 +1,21 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_snapshot_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_snapshot_test.dart: (setUpAll)
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_snapshot_test.dart: native spacing menus remain usable after projection and reset
+00:04 +1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart: spacing applies resets undo and revocation local=true line=true
+00:05 +2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_snapshot_test.dart: paragraph-only changes persist, reopen and project remotely without echo
+00:05 +3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart: spacing applies resets undo and revocation local=true line=false
+00:05 +4: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart: spacing applies resets undo and revocation local=true line=false
+00:05 +5: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart: spacing applies resets undo and revocation local=true line=false
+00:05 +6: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart: spacing applies resets undo and revocation local=true line=false
+00:05 +7: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart: spacing applies resets undo and revocation local=true line=false
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart: spacing applies resets undo and revocation local=true line=false
+00:05 +9: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart: spacing applies resets undo and revocation local=true line=false
+00:06 +10: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart: spacing applies resets undo and revocation local=false line=true
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart: spacing applies resets undo and revocation local=false line=false
+00:07 +12: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart: expanded character spacing handles mixed legacy and live caret
+00:09 +13: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart: line height alone exposes the layout toolbar
+00:09 +14: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart: spacing controls respect explicit disabled configuration
+00:09 +15: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart: spacing preserves heading list quote and other attributes
+00:09 +16: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart: line height skips void/code and exclusive next paragraph endpoint
+00:09 +17: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart: (tearDownAll)
+00:09 +17: All tests passed!

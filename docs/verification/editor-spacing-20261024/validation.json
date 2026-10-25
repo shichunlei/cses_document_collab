@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-24",
+  "scope": "Shared line height, character spacing and offline journal integration",
+  "sourceSha256": {
+    "lib/src/daily_guidance/journal_draft.dart": "66001bbc78f7a9e2e57d5346ba9d5ba167f69a11368aeab980917e2802cada69",
+    "packages/cses_document_collab/lib/src/editor/core/editor_configuration.dart": "1467639d7d2224f9a0c2f41d1eb6bf0d14acfc2e1e393f54eddf0be3f1dbf010",
+    "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart": "c78e585762f69c8c9c235b7eee52367602ab0cf0b5de77ffe8224161a2bc4376",
+    "packages/cses_document_collab/lib/src/model/collab_paragraph_style.dart": "a7a8c7aee94601f0e3b9dcb3aa6b8d57db9ed787cde70d75a946f4e644494102",
+    "packages/cses_document_collab/test/collab_controller_snapshot_test.dart": "277b859bfa993abc2f0290378895511ca3bcdf0f759ffbe7bc7db315400fe3f3",
+    "test/daily_guidance/journal_format_toolbar_test.dart": "6dd809b0ebd186f2abed4de2a79cfa84957774adb4cb37ed9a09a0e2d9078eb7",
+    "packages/cses_document_collab/test/editor_spacing_test.dart": "532489edab6a9838515193f9eb7940d1532e4abdf604eca522a5a9932c52d950"
+  },
+  "tests": {
+    "relatedPackageEarlierRound": {
+      "passed": 139,
+      "log": "package-tests.txt"
+    },
+    "hostDailyGuidance": {
+      "passed": 191,
+      "log": "host-tests.txt"
+    },
+    "finalCapabilityAndSpacing": {
+      "passed": 17,
+      "composition": "9 spacing + 8 configuration",
+      "log": "final-capability-tests.txt"
+    },
+    "finalNativeUiAndSpacing": {
+      "passed": 17,
+      "composition": "8 native snapshot/UI + 9 spacing",
+      "log": "final-native-ui-tests.txt"
+    },
+    "overlap": "Groups overlap and must not be added. Broad groups ran earlier this round; later configuration and pause changes were covered by final targeted groups."
+  },
+  "analysis": {
+    "package": "final-source-analyze.txt",
+    "host": "host-analyze.txt",
+    "result": "No issues found"
+  },
+  "versionCheck": "version-check.json",
+  "native": "Real FRB, temporary SQLite and isolated test gateway; UI remains usable after projection. No production server used.",
+  "format": "Touched handwritten Dart only, using existing line widths.",
+  "gitDiffCheck": "passed",
+  "limitations": [
+    "No new platform builds, physical devices or real online two-client verification.",
+    "Desktop dependency unchanged; unrelated version differences not accepted.",
+    "Cross-container character spacing and complete font/paragraph-before-after settings remain pending."
+  ],
+  "intermediateFailuresRetained": true
+}

@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-25",
+  "stagedSourceHashesMatchReview": true,
+  "stagedFilesBeforeThisRecord": 42,
+  "topicMarkdownLinksVerifiedAgainstIndex": 24,
+  "stagedJsonParse": "passed",
+  "fullStagedDiffCheckExitCode": 2,
+  "rawToolLogsWithTrailingWhitespace": {
+    "docs/verification/editor-spacing-20261024/capability-analyze.txt": 1,
+    "docs/verification/editor-spacing-20261024/final-analyze.txt": 1,
+    "docs/verification/editor-spacing-20261024/final-package-analyze.txt": 1,
+    "docs/verification/editor-spacing-20261024/final-source-analyze.txt": 1,
+    "docs/verification/editor-spacing-20261024/first-analyze.txt": 1,
+    "docs/verification/editor-spacing-20261024/first-host-tests.txt": 1,
+    "docs/verification/editor-spacing-20261024/first-tests.txt": 5,
+    "docs/verification/editor-spacing-20261024/host-analyze.txt": 1,
+    "docs/verification/editor-spacing-20261024/host-tests.txt": 44,
+    "docs/verification/editor-spacing-20261024/native-diagnostic.txt": 2,
+    "docs/verification/editor-spacing-20261024/native-ui-paused-state.txt": 1,
+    "docs/verification/editor-spacing-20261024/native-ui-root-loop.txt": 1,
+    "docs/verification/editor-spacing-20261024/package-analyze.txt": 1,
+    "docs/verification/editor-spacing-20261024/review-endpoint-probe-20261025.txt": 1,
+    "docs/verification/editor-spacing-20261024/second-widget-tests.txt": 5,
+    "docs/verification/editor-spacing-20261024/third-widget-tests.txt": 1,
+    "docs/verification/editor-spacing-20261024/widget-diagnostic.txt": 1
+  },
+  "rawEvidenceBytesPreserved": true,
+  "stagedDiffCheckExcludingOnlyListedRawToolLogs": "passed"
+}

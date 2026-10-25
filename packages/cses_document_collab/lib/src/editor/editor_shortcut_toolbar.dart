@@ -1092,9 +1092,12 @@ class _BlockLayoutMenu extends StatefulWidget {
   createState() => _BlockLayoutMenuState();
 }
 
-/// 根据当前选区展示可用操作；点击时重新校验，事务完成后在仍挂载且编辑器未更换时刷新。
+/// 根据当前选区展示布局、行间距与颜色操作；事务完成后在仍挂载且编辑器未更换时刷新。
 class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
   String? _colorAttribute;
+
+  /// 行间距替换当前布局行，返回时恢复布局按钮。
+  bool _lineHeightOpen = false;
 
   /// 为借用的 [nodes] 汇总当前块颜色，背景与边框使用同一桌面浅色色板。
   Widget _buildBlockColors(List<Node> nodes) {
@@ -1154,6 +1157,14 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
       return const SizedBox.shrink();
     }
     final nodes = widget.editorState.getNodesInSelection(selection);
+    if (_lineHeightOpen) {
+      return _EditorSpacingMenu(
+        editorState: widget.editorState,
+        lineHeight: true,
+        canExecute: () => _ToolbarCommandScope.allows(context),
+        onBack: () => setState(() => _lineHeightOpen = false),
+      );
+    }
     if (_colorAttribute != null) return _buildBlockColors(nodes);
     final canOutdent = canChangeCollabBlockIndent(widget.editorState, -1);
     final canIncreaseIndent = canChangeCollabBlockIndent(widget.editorState, 1);
@@ -1200,6 +1211,17 @@ class _BlockLayoutMenuState extends State<_BlockLayoutMenu> {
             ),
             const SizedBox(width: 5),
           ],
+        if (EditorCommandContext.of(widget.editorState).configuration.lineHeight) ...[
+          _PopupIconButton(
+            key: const ValueKey('editor-block-line-height'),
+            tooltip: '行间距',
+            enabled: widget.editorState.editable && nodes.any(supportsCollabParagraph),
+            selected: false,
+            icon: const Icon(LucideIcons.moveVertical, size: 28),
+            onPressed: () => setState(() => _lineHeightOpen = true),
+          ),
+          const SizedBox(width: 5),
+        ],
         if (EditorCommandContext.of(widget.editorState).configuration.hasParagraphLayout) ...[
           _PopupIconButton(
             key: const ValueKey('editor-block-background-color'),
@@ -1640,7 +1662,7 @@ class _InlineStyleMenu extends StatefulWidget {
   createState() => _InlineStyleMenuState();
 }
 
-/// 持有颜色与字号子菜单状态；格式命令读取实时选区，不拥有编辑器。
+/// 持有颜色、字号与字间距子菜单状态；格式命令读取实时选区，不拥有编辑器。
 class _InlineStyleMenuState extends State<_InlineStyleMenu> {
   // The two color entries are inserted after the five boolean text styles.
   // Keeping explicit indices makes the visual order stable while `_styles`
@@ -1650,6 +1672,9 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
   // palette choice updates the glyph color (`font_color`) or the inline
   // highlight behind the glyph (`bg_color`).
   _InlineColorTarget? _colorPicker;
+
+  /// 字间距子菜单与字号、颜色互斥；不持有输入状态。
+  bool _letterSpacingOpen = false;
 
   /// 字号选项替换当前文字菜单，不打开新路由或结束输入。
   bool _fontSizesOpen = false;
@@ -1694,6 +1719,7 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
       oldWidget.editorState.editableNotifier.removeListener(_onFontSizePermissionChanged);
       widget.editorState.editableNotifier.addListener(_onFontSizePermissionChanged);
       _fontSizesOpen = false;
+      _letterSpacingOpen = false;
       _fontSizeOwner = null;
       _fontSizeRevoked = false;
       _fontSizeSaving = false;
@@ -1716,7 +1742,7 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
   }
 
   /// 在借用 [context] 中回显当前格式；点击命令时重新读取选区，避免使用构建阶段的旧路径。
-  /// 字色与背景色保留当前色值；字样由实例配置选择，图标沿用Lucide。
+  /// 字色与背景色保留当前色值；字号、字间距和字样由实例配置选择，图标沿用Lucide。
   @override
   Widget build(BuildContext context) {
     final selection = widget.editorState.selection;
@@ -1724,6 +1750,14 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
       return const SizedBox.shrink();
     }
 
+    if (_letterSpacingOpen) {
+      return _EditorSpacingMenu(
+        editorState: widget.editorState,
+        lineHeight: false,
+        canExecute: () => _ToolbarCommandScope.allows(context),
+        onBack: () => setState(() => _letterSpacingOpen = false),
+      );
+    }
     if (_fontSizesOpen) return _buildFontSizePicker(selection);
     if (widget.expanded) return _buildExpanded(selection);
 
@@ -1773,6 +1807,15 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
           icon: const Icon(LucideIcons.aLargeSmall, size: 28),
           onPressed: _openFontSizes,
         ),
+      if (config.allowsFormat('t:ls'))
+        _PopupIconButton(
+          key: const ValueKey('editor-inline-letter-spacing'),
+          tooltip: '字间距',
+          enabled: widget.editorState.editable,
+          selected: false,
+          icon: const Icon(LucideIcons.moveHorizontal, size: 28),
+          onPressed: () => setState(() => _letterSpacingOpen = true),
+        ),
       for (final style in _styles.skip(5))
         if (config.allowsFormat(style.key)) _compactStyle(selection, style),
     ];
@@ -1800,7 +1843,7 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
   );
 
   /// 用借用的 [selection] 构建设计稿中的文字样式与圆形色板，所有写入复用既有命令。
-  /// 字符格式和颜色入口按实例配置筛选；字号切换同一横向子菜单，不再叠加弹窗。
+  /// 字符格式和颜色入口按实例配置筛选；字号与字间距切换同一横向子菜单，不叠加弹窗。
   Widget _buildExpanded(Selection selection) {
     final c = CollabModalColors.of(context);
     const icons = [
@@ -1833,6 +1876,13 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
             onPressed: _openFontSizes,
             icon: const Icon(LucideIcons.aLargeSmall),
             label: const Text('字号'),
+          ),
+        if (EditorCommandContext.of(widget.editorState).configuration.allowsFormat('t:ls'))
+          TextButton.icon(
+            key: const ValueKey('editor-inline-letter-spacing'),
+            onPressed: () => setState(() => _letterSpacingOpen = true),
+            icon: const Icon(LucideIcons.moveHorizontal),
+            label: const Text('字间距'),
           ),
         const SizedBox(height: 8),
         if (_styles
@@ -2170,6 +2220,254 @@ class _InlineStyleMenuState extends State<_InlineStyleMenu> {
       if (mounted && identical(state, widget.editorState)) {
         _showToolbarMessage(context, '格式修改失败，请重试');
       }
+    }
+  }
+}
+
+/// 编辑器专属行距/字距子菜单；只借用正文，权限变化使当前菜单永久失效直到重开。
+class _EditorSpacingMenu extends StatefulWidget {
+  /// [editorState]为借用正文，[lineHeight]为true操作段落倍率，false操作字符em字距。
+  /// [canExecute]实时核对所属工具栏互斥，[onBack]返回原菜单，不关闭键盘。
+  const _EditorSpacingMenu({
+    required this.editorState,
+    required this.lineHeight,
+    required this.canExecute,
+    required this.onBack,
+  });
+
+  /// 外部持有并释放的编辑器。
+  final EditorState editorState;
+
+  /// true选择段落行高倍率；false选择字间距em值。
+  final bool lineHeight;
+
+  /// 所属工具栏当前是否允许执行命令；不缓存其结果。
+  final bool Function() canExecute;
+
+  /// 未保存时返回上层菜单，不写入正文。
+  final VoidCallback onBack;
+
+  /// 创建管理菜单有效期和写入互斥的局部状态。
+  @override
+  State<_EditorSpacingMenu> createState() => _EditorSpacingMenuState();
+}
+
+/// 订阅权限与当前格式；选择实时目标，每次操作保存为独立历史记录。
+class _EditorSpacingMenuState extends State<_EditorSpacingMenu> {
+  /// 打开时借用的命令上下文，禁止会话切换后继续操作。
+  late final EditorCommandContext _owner;
+
+  /// 撤权或更换正文后保持失效，重新授权也不恢复旧回调。
+  bool _revoked = false;
+
+  /// 正在等待的格式事务；结束前拒绝连点和返回。
+  bool _saving = false;
+
+  /// 菜单测试身份前缀，与字体格式及段落布局入口分离。
+  String get _prefix => widget.lineHeight ? 'editor-line-height' : 'editor-letter-spacing';
+
+  /// 当前字段的可访问名称，不进入文档协议。
+  String get _label => widget.lineHeight ? '行间距' : '字间距';
+
+  /// 捕获菜单所属实例并监听撤权，不接管编辑器生命周期。
+  @override
+  void initState() {
+    super.initState();
+    _owner = EditorCommandContext.of(widget.editorState);
+    _revoked = !widget.editorState.editable;
+    widget.editorState.editableNotifier.addListener(_permissionChanged);
+  }
+
+  /// 更换[oldWidget]的正文时迁移监听并使旧菜单失效，不释放借用实例。
+  @override
+  void didUpdateWidget(covariant _EditorSpacingMenu oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!identical(oldWidget.editorState, widget.editorState)) {
+      oldWidget.editorState.editableNotifier.removeListener(_permissionChanged);
+      widget.editorState.editableNotifier.addListener(_permissionChanged);
+      _revoked = true;
+    }
+  }
+
+  /// 注销自行创建的权限监听，外部继续拥有编辑器。
+  @override
+  void dispose() {
+    widget.editorState.editableNotifier.removeListener(_permissionChanged);
+    super.dispose();
+  }
+
+  /// 一旦失去权限便记录失效，快速恢复权限也必须重新进入菜单。
+  void _permissionChanged() {
+    if (!widget.editorState.editable) _revoked = true;
+    if (mounted) setState(() {});
+  }
+
+  /// 实时核对实例、配置和选区；字距沿用同级正文与块锁限制。
+  bool get _enabled {
+    final state = widget.editorState;
+    if (_revoked ||
+        _saving ||
+        state.isDisposed ||
+        !state.editable ||
+        !widget.canExecute() ||
+        !identical(_owner, EditorCommandContext.of(state)) ||
+        state.selection == null) {
+      return false;
+    }
+    if (widget.lineHeight) {
+      return _owner.configuration.lineHeight &&
+          state.getNodesInSelection(state.selection!).any(supportsCollabParagraph);
+    }
+    return _owner.configuration.allowsFormat('t:ls') &&
+        CollabTextRange.capture(state, allowCollapsed: true)?.resolve(state) != null;
+  }
+
+  /// 为[attributes]读取规范em字距；旧CSS em可回显，旧px保留自定义状态。
+  ({num? value, bool isDefault}) _letterValue(Attributes attributes) {
+    final compact = normalizeParagraphTextDefaults(attributes)['t:ls'];
+    if (compact is num) return (value: compact == 0 ? null : compact, isDefault: compact == 0);
+    final legacy = attributes['s:letterSpacing'];
+    if (legacy == null) return (value: null, isDefault: true);
+    final match = legacy is String
+        ? RegExp(r'^([-+]?(?:\d+(?:\.\d+)?|\.\d+))em$', caseSensitive: false).firstMatch(legacy.trim())
+        : null;
+    final value = match == null ? null : double.tryParse(match[1]!);
+    return (value: value == 0 ? null : value, isDefault: value == 0);
+  }
+
+  /// 汇总实时选区的共同值与默认状态；混合选区不虚构任何选中项。
+  ({num? value, bool isDefault}) _current() {
+    final state = widget.editorState;
+    final selection = state.selection?.normalized;
+    if (state.isDisposed || selection == null) return (value: null, isDefault: false);
+    final values = <({num? value, bool isDefault})>[];
+    if (!widget.lineHeight && selection.isCollapsed) {
+      final node = state.getNodeAtPath(selection.start.path);
+      if (node == null) return (value: null, isDefault: false);
+      return _letterValue(collabParagraphTypingAttributes(node, selection.start.offset, pending: state.toggledStyle));
+    }
+    for (final node in state.getNodesInSelection(selection).where(supportsCollabParagraph)) {
+      if (!selection.isCollapsed &&
+          node.path.equals(selection.end.path) &&
+          !node.path.equals(selection.start.path) &&
+          selection.end.offset == 0) {
+        continue;
+      }
+      if (widget.lineHeight) {
+        final raw = readCollabParagraph(node).values['lh'];
+        final value = raw is num ? raw : num.tryParse('$raw');
+        values.add((value: value, isDefault: raw == null));
+      } else {
+        final delta = node.delta!;
+        final start = node.path.equals(selection.start.path) ? selection.start.offset : 0;
+        final end = node.path.equals(selection.end.path) ? selection.end.offset : delta.length;
+        if (delta.isEmpty) {
+          values.add(_letterValue(paragraphDefaultsToAttributes(readCollabParagraph(node).values['textDefaults'])));
+        } else {
+          for (final run in delta.slice(start.clamp(0, delta.length), end.clamp(0, delta.length))) {
+            values.add(_letterValue(run.attributes ?? {}));
+          }
+        }
+      }
+    }
+    if (values.isEmpty || values.any((value) => value != values.first)) return (value: null, isDefault: false);
+    return values.first;
+  }
+
+  /// 在[context]中保持返回/默认固定，仅滚动预设值；大字按自然宽度排版。
+  /// 随选区、输入格式与事务回显更新，订阅由Flutter构建组件自动释放。
+  @override
+  Widget build(BuildContext context) => ListenableBuilder(
+    listenable: Listenable.merge([widget.editorState.selectionNotifier, widget.editorState.toggledStyleNotifier]),
+    builder: (context, _) => StreamBuilder<EditorTransactionValue>(
+      stream: widget.editorState.transactionStream,
+      builder: (context, _) {
+        final selected = _current();
+        final enabled = _enabled;
+        return Row(
+          children: [
+            IconButton(
+              key: ValueKey('$_prefix-back'),
+              tooltip: '返回',
+              onPressed: _saving ? null : widget.onBack,
+              icon: const Icon(LucideIcons.arrowLeft),
+            ),
+            _option(null, selected.isDefault, enabled),
+            Expanded(
+              child: SingleChildScrollView(
+                key: ValueKey('$_prefix-menu'),
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    for (final value
+                        in widget.lineHeight
+                            ? const [1.0, 1.25, 1.5, 1.75, 2.0, 2.5, 3.0]
+                            : const [-.1, -.075, -.05, -.025, .025, .05, .075, .1, .15, .2, .3, .4, .5])
+                      _option(value, selected.value == value && !selected.isDefault, enabled),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    ),
+  );
+
+  /// 展示[value]预设，null为默认；[selected]回显共同值，[enabled]控制操作和语义。
+  Widget _option(double? value, bool selected, bool enabled) {
+    final colors = CollabModalColors.of(context);
+    final text = value == null
+        ? '默认'
+        : '${value.toString().replaceFirst(RegExp(r'\.0$'), '')}${widget.lineHeight ? '倍' : 'em'}';
+    return Semantics(
+      key: ValueKey('$_prefix-${value ?? 'default'}'),
+      button: true,
+      selected: selected,
+      enabled: enabled,
+      label: '$_label $text',
+      child: ExcludeSemantics(
+        child: TextButton(
+          style: TextButton.styleFrom(
+            minimumSize: const Size(44, 44),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            foregroundColor: selected ? colors.accent : colors.text,
+            backgroundColor: selected ? colors.soft : null,
+            side: BorderSide(color: selected ? colors.accent : Colors.transparent),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+          onPressed: enabled ? () => unawaited(_apply(value)) : null,
+          child: Text(text),
+        ),
+      ),
+    );
+  }
+
+  /// 将[value]应用到点击时的实时目标；null恢复默认并清除旧CSS字距。
+  /// 原生暂缓期间不提交；等待事务再刷新，捕获失败并报告所属编辑器，迟到结果不访问已卸载组件。
+  Future<void> _apply(double? value) async {
+    if (!_enabled || widget.editorState.localTransactionsPaused) return;
+    final state = widget.editorState;
+    setState(() => _saving = true);
+    try {
+      if (widget.lineHeight) {
+        await setCollabParagraphLineHeight(state, value);
+      } else {
+        final target = CollabTextRange.capture(state, allowCollapsed: true)?.resolve(state);
+        if (target == null) return;
+        if (state.undoManager.undoStack.isNonEmpty) state.undoManager.undoStack.last.seal();
+        final attributes = <String, dynamic>{'t:ls': value, 's:letterSpacing': null};
+        if (target.isCollapsed) {
+          await setCollabTypingAttributes(state, attributes);
+        } else {
+          await formatCollabParagraphSelection(state, target, attributes);
+        }
+      }
+    } catch (error, stackTrace) {
+      _reportEditorError(state, '$_label设置失败', error: error, stackTrace: stackTrace);
+      if (mounted && identical(state, widget.editorState)) _showToolbarMessage(context, '设置失败，请重试');
+    } finally {
+      if (mounted && identical(state, widget.editorState)) setState(() => _saving = false);
     }
   }
 }

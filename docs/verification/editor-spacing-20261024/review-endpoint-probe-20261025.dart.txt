@@ -1,0 +1,43 @@
+import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/src/editor/core/document_editor_controller.dart';
+import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
+import 'package:cses_document_collab/src/model/collab_paragraph_style.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+/// Review probe uses the actual new letter-spacing menu at an exclusive empty endpoint.
+void main() {
+  testWidgets('letter spacing does not change the unselected following empty paragraph', (tester) async {
+    final controller = DocumentEditorController(document: Document(root: Node(type: 'page', children: [
+      paragraphNode(text: 'A'), paragraphNode(),
+    ])));
+    final state = controller.editorState;
+    state.selection = Selection(start: Position(path: [0]), end: Position(path: [1]));
+    try {
+      await tester.pumpWidget(MaterialApp(
+        localizationsDelegates: const [AppFlowyEditorLocalizations.delegate],
+        home: Builder(builder: (context) => Scaffold(body: TextButton(
+          onPressed: () async => showEditorSelectionFormats(context, state), child: const Text('Formats')))),
+      ));
+      await tester.tap(find.text('Formats'));
+      await tester.pumpAndSettle();
+      final button = find.byKey(const ValueKey('editor-inline-letter-spacing'));
+      await tester.ensureVisible(button);
+      await tester.tap(button);
+      await tester.pumpAndSettle();
+      final value = find.byKey(const ValueKey('editor-letter-spacing-0.1'));
+      await tester.ensureVisible(value);
+      await tester.tap(value);
+      await tester.pumpAndSettle();
+      expect(state.document.first!.delta!.first.attributes?['t:ls'], .1);
+      final unselected = state.document.root.children[1];
+      final defaults = readCollabParagraph(unselected).values['textDefaults'];
+      print('UNSELECTED DEFAULTS: $defaults');
+      expect(collabParagraphTypingAttributes(unselected, 0)['t:ls'], isNull,
+        reason: 'An exclusive endpoint must not change subsequent typing in the following blank paragraph.');
+    } finally {
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.runAsync(controller.close);
+    }
+  });
+}

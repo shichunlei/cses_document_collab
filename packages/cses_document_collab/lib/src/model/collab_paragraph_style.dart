@@ -503,6 +503,57 @@ Future<bool> setCollabNextParagraphStyle(
   return true;
 }
 
+/// 将借用 [state] 的实时选区内段落行高设置为 [value] 倍；null 清除覆盖并继承文档默认。
+/// 接受1～3的有限倍率，跳过非正文、代码和选区末端未选中的下一段。
+/// 一个字段事务保留正文、其他段落属性与稳定身份，连续命令可独立撤销。
+/// 无有效目标、只读、销毁或非法值返回false；Future完成表示事务完成，失败向调用方传播。
+///
+/// ```dart
+/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:cses_document_collab/src/model/collab_paragraph_style.dart';
+/// final state = EditorState.blank();
+/// state.selection = Selection.collapsed(Position(path: [0]));
+/// await setCollabParagraphLineHeight(state, 1.5);
+/// state.dispose();
+/// ```
+Future<bool> setCollabParagraphLineHeight(
+  EditorState state,
+  double? value,
+) async {
+  final selection = state.selection?.normalized;
+  if (state.isDisposed ||
+      !state.editable ||
+      selection == null ||
+      (value != null && (!value.isFinite || value < 1 || value > 3))) {
+    return false;
+  }
+  final transaction = state.transaction;
+  for (final node
+      in state.getNodesInSelection(selection).where(supportsCollabParagraph)) {
+    if (!selection.isCollapsed &&
+        node.path.equals(selection.end.path) &&
+        !node.path.equals(selection.start.path) &&
+        selection.end.offset == 0) {
+      continue;
+    }
+    if (readCollabParagraph(node).values['lh'] == value) continue;
+    _updateParagraphProperties(transaction, node, {
+      paragraphPropertyAttribute('lh'): jsonEncode({'value': value}),
+    });
+  }
+  if (transaction.operations.isEmpty) return false;
+  if (state.undoManager.undoStack.isNonEmpty) {
+    state.undoManager.undoStack.last.seal();
+  }
+  transaction.afterSelection = state.selection;
+  await state.apply(
+    transaction,
+    withUpdateSelection: false,
+    skipHistoryDebounce: true,
+  );
+  return true;
+}
+
 /// 向借用 [transaction] 添加 [node] 的精确 [patch] 和单字段逆操作；不快照正文或其他属性。
 /// 稳定身份在正反操作中均保留，远端重排后不会写入邻居节点。
 void _updateParagraphProperties(

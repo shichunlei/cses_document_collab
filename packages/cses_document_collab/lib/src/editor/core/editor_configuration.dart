@@ -566,6 +566,6 @@ final class EditorConfiguration {
     return true;
   });
 
-  /// 是否存在任何可显示的布局命令。
-  bool get hasLayout => hasParagraphLayout || alignments.isNotEmpty || nextParagraphStyle;
+  /// 是否存在可显示的段落布局、对齐、行间距或下一段命令；单独启用行间距也显示布局入口。
+  bool get hasLayout => hasParagraphLayout || alignments.isNotEmpty || lineHeight || nextParagraphStyle;
 }

@@ -24,6 +24,7 @@
 
 | 场景 | 入口/内容实现（默认位于 `lib/src/editor/`，`ui/modal/` 前缀表示共用展示） | 已确认规则 |
 |---|---|---|
+| 行间距/字间距 | `editor_shortcut_toolbar.dart` | 行距在布局、字距在Aa；固定返回/默认、横向预设，分别写lh倍率及t:ls em；恢复默认清覆盖（字距同时清旧CSS），沿用配置、实时选区、事务与撤权保护。回归`editor_spacing_test.dart` |
 | Aa字号 | `editor_shortcut_toolbar.dart` | 使用与颜色选择相近的行内横向菜单，固定左侧返回及默认项、数字区滚动；默认清除局部t:px/旧CSS字号，继承段落或标题；选择后保留菜单与键盘并回显，格式面板不再叠加字号路由；遵循配置、实时选区、会话和撤权保护。回归见`shared_font_size_test.dart`和`local_editor_operations_test.dart` |
 | 块更多操作 | `collab_block_actions.dart` | 头部按块类型显示名称和图标，高亮块用 `highlighter`，分页符用 `separatorHorizontal`（正文标记与菜单一致），代码绘图用 `chartNetwork`（卡片、更多菜单、源码面板和添加入口一致）；不使用“块操作＋ellipsis”；未知新类型回退“内容＋file”；保留调用方独立覆盖和卡片三个点入口；下方插入用 `listEnd`，外部应用/浏览器打开用 `externalLink`，下载或打开附件用 `download`，颜色设置用 `palette`；复制用 `copy`，其余编辑用 `pencil`，删除整行红色，保留稳定身份、远端快照和权限失效保护 |
 | 添加面板 | `editor_shortcut_toolbar.dart` | 标题显示“添加”并使用内容块 `blocks` 图标；高亮块用 `highlighter`、分页符用 `separatorHorizontal`、代码绘图用 `chartNetwork`，与卡片及菜单保持一致；保留原插入、书签、权限及输入会话 |

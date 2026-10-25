@@ -1,0 +1,39 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_snapshot_test.dart
+00:00 +0: (setUpAll)
+00:00 +0: native spacing menus remain usable after projection and reset
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: true
+  Actual: <false>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_snapshot_test.dart:77:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_snapshot_test.dart line 77
+The test description was:
+  native spacing menus remain usable after projection and reset
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:03 +0 -1: native spacing menus remain usable after projection and reset [E]
+  Test failed. See exception logs above.
+  The test description was: native spacing menus remain usable after projection and reset
+  
+00:03 +0 -1: paragraph-only changes persist, reopen and project remotely without echo
+00:03 +1 -1: typography-only changes persist, reopen and project remotely without echo
+00:04 +2 -1: typography-reset-only changes persist, reopen and project remotely without echo
+00:04 +3 -1: spacing-only changes persist, reopen and project remotely without echo
+00:04 +4 -1: spacing-reset-only changes persist, reopen and project remotely without echo
+00:04 +5 -1: href-only changes persist, reopen and project remotely without echo
+00:04 +6 -1: formula-only changes persist, reopen and project remotely without echo
+00:04 +7 -1: (tearDownAll)
+00:04 +7 -1: Some tests failed.
+
+Failing tests:
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_snapshot_test.dart: native spacing menus remain usable after projection and reset

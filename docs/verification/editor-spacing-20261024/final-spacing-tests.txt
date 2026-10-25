@@ -1,0 +1,12 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_spacing_test.dart
+00:00 +0: (setUpAll)
+00:00 +0: spacing applies resets undo and revocation local=true line=true
+00:03 +1: spacing applies resets undo and revocation local=true line=false
+00:04 +2: spacing applies resets undo and revocation local=false line=true
+00:05 +3: spacing applies resets undo and revocation local=false line=false
+00:06 +4: expanded character spacing handles mixed legacy and live caret
+00:08 +5: spacing controls respect explicit disabled configuration
+00:08 +6: spacing preserves heading list quote and other attributes
+00:08 +7: line height skips void/code and exclusive next paragraph endpoint
+00:08 +8: (tearDownAll)
+00:08 +8: All tests passed!

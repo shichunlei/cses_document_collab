@@ -59,6 +59,8 @@
 
 ### 文字格式、标题与选区
 
+- [editor-spacing-20261024](editor-spacing-20261024/)（[公共行间距、字间距与离线宿主接入](editor-spacing-20261024/report.md)；[2026-10-25审查](editor-spacing-20261024/review-20261025.md)）
+
 - [shared-font-size-20261024](shared-font-size-20261024/)（[协同默认字号入口与公共配置修复](shared-font-size-20261024/report.md)；[横向字号子菜单](shared-font-size-20261024/horizontal-menu.md)；[恢复默认字号](shared-font-size-20261024/reset-default.md)；[字号与间距审查](shared-font-size-20261024/review.md)）
 
 - [default-text-color-20261021](default-text-color-20261021/)

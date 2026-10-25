@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';
+import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
 import 'package:cses_document_collab/src/model/collab_paragraph_style.dart';
 import 'package:cses_document_collab/src/native/api/collab.dart' as native;
@@ -12,8 +13,9 @@ import 'package:cses_document_collab/src/native/frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart'
     show ExternalLibrary;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/material.dart';
 
-/// 通过真实控制器、FRB及临时SQLite覆盖同文本/同分段的本地写入与远端投影。
+/// 通过真实控制器、FRB及临时SQLite覆盖同文本/同分段的本地写入、间距及远端投影。
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   setUpAll(() async {
@@ -26,10 +28,111 @@ void main() {
     );
   });
 
+  testWidgets('native spacing menus remain usable after projection and reset', (
+    tester,
+  ) async {
+    final source = (await tester.runAsync(
+      () => _SnapshotFixture.open('spacing'),
+    ))!;
+    final state = source.controller.editorState;
+    state.selection = Selection.single(
+      path: [0],
+      startOffset: 0,
+      endOffset: state.document.first!.delta!.length,
+    );
+    try {
+      await tester.pumpWidget(
+        MaterialApp(
+          localizationsDelegates: const [AppFlowyEditorLocalizations.delegate],
+          home: Builder(
+            builder: (context) => Scaffold(
+              body: TextButton(
+                onPressed: () async =>
+                    showEditorSelectionFormats(context, state),
+                child: const Text('Formats'),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('Formats'));
+      await tester.pumpAndSettle();
+      final lineButton = find.byKey(const ValueKey('editor-block-line-height'));
+      await tester.ensureVisible(lineButton);
+      await tester.tap(lineButton);
+      await tester.pumpAndSettle();
+      final lineValue = find.byKey(const ValueKey('editor-line-height-1.75'));
+      await tester.ensureVisible(lineValue);
+      await tester.tap(lineValue);
+      await tester.runAsync(() async {
+        await Future<void>.delayed(Duration.zero);
+      });
+      await tester.pumpAndSettle();
+      expect(
+        jsonDecode(
+          native.currentBlocks().first.paragraphStyle!.properties,
+        )['lh'],
+        1.75,
+      );
+      final lineDefault = find.byKey(
+        const ValueKey('editor-line-height-default'),
+      );
+      expect(tester.widget<Semantics>(lineDefault).properties.enabled, isTrue);
+      await tester.tap(find.byKey(const ValueKey('editor-line-height-back')));
+      await tester.pumpAndSettle();
+      final spacingButton = find.byKey(
+        const ValueKey('editor-inline-letter-spacing'),
+      );
+      await tester.ensureVisible(spacingButton);
+      await tester.tap(spacingButton);
+      await tester.pumpAndSettle();
+      final spacingValue = find.byKey(
+        const ValueKey('editor-letter-spacing-0.1'),
+      );
+      await tester.ensureVisible(spacingValue);
+      await tester.tap(spacingValue);
+      await tester.runAsync(() async {
+        await Future<void>.delayed(Duration.zero);
+      });
+      await tester.pumpAndSettle();
+      _expectNative('spacing');
+      final spacingDefault = find.byKey(
+        const ValueKey('editor-letter-spacing-default'),
+      );
+      expect(
+        tester.widget<Semantics>(spacingDefault).properties.enabled,
+        isTrue,
+      );
+      await tester.tap(spacingDefault);
+      await tester.runAsync(() async {
+        await Future<void>.delayed(Duration.zero);
+      });
+      await tester.pumpAndSettle();
+      expect(
+        jsonDecode(
+          native.currentBlocks().first.segments.first.typography!,
+        )['t:ls'],
+        isNull,
+      );
+      expect(
+        tester.widget<Semantics>(spacingDefault).properties.selected,
+        isTrue,
+      );
+      await tester.tap(find.text('完成'));
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+    } finally {
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.runAsync(source.close);
+    }
+  });
+
   for (final mode in [
     'paragraph',
     'typography',
     'typography-reset',
+    'spacing',
+    'spacing-reset',
     'href',
     'formula',
   ]) {
@@ -51,7 +154,20 @@ void main() {
           await Future<void>.delayed(Duration.zero);
           _expectNative(mode);
           expect(native.currentBlocks().first.text, beforeText);
-          if (mode == 'typography') {
+          if (mode == 'spacing' || mode == 'spacing-reset') {
+            expect(source.controller.canUndo, isTrue);
+            await source.controller.undo();
+            if (mode == 'spacing-reset') {
+              expect(
+                jsonDecode(
+                  native.currentBlocks().first.segments.first.typography!,
+                )['t:ls'],
+                .1,
+              );
+            }
+            await source.controller.redo();
+            _expectNative(mode);
+          } else if (mode == 'typography') {
             expect(source.controller.canUndo, isTrue);
             await source.controller.undo();
             expect(
@@ -105,7 +221,7 @@ void main() {
   }
 }
 
-/// 在借用的[state]中按[mode]修改元数据；字号设置与恢复默认复用公共格式命令，保留文字和分段范围。
+/// 在借用的[state]中按[mode]修改元数据；字号/间距及恢复默认复用字段命令，保留文字和分段范围。
 Future<void> _editSnapshot(EditorState state, String mode) async {
   final node = state.document.first!;
   state.selection = Selection.single(
@@ -113,7 +229,23 @@ Future<void> _editSnapshot(EditorState state, String mode) async {
     startOffset: 0,
     endOffset: node.delta!.length,
   );
-  if (mode == 'paragraph') {
+  if (mode == 'spacing' || mode == 'spacing-reset') {
+    await setCollabParagraphLineHeight(state, 1.75);
+    await Future<void>.delayed(Duration.zero);
+    await formatCollabParagraphSelection(state, state.selection!, {'t:ls': .1});
+    if (mode == 'spacing-reset') {
+      await Future<void>.delayed(Duration.zero);
+      await setCollabParagraphLineHeight(state, null);
+      await Future<void>.delayed(Duration.zero);
+      if (state.undoManager.undoStack.isNonEmpty) {
+        state.undoManager.undoStack.last.seal();
+      }
+      await formatCollabParagraphSelection(state, state.selection!, {
+        't:ls': null,
+        's:letterSpacing': null,
+      });
+    }
+  } else if (mode == 'paragraph') {
     expect(await setCollabNextParagraphStyle(state, 'same'), isTrue);
   } else if (mode == 'formula') {
     final offset = node.delta!.toPlainText().indexOf(
@@ -159,6 +291,16 @@ Future<void> _editSnapshot(EditorState state, String mode) async {
 void _expectNative(String mode) {
   final block = native.currentBlocks().first;
   switch (mode) {
+    case 'spacing':
+    case 'spacing-reset':
+      expect(
+        jsonDecode(block.paragraphStyle?.properties ?? '{}')['lh'],
+        mode == 'spacing' ? 1.75 : null,
+      );
+      expect(
+        jsonDecode(block.segments.first.typography ?? '{}')['t:ls'],
+        mode == 'spacing' ? .1 : null,
+      );
     case 'paragraph':
       expect(
         jsonDecode(
@@ -191,6 +333,16 @@ void _expectNative(String mode) {
 void _expectEditor(EditorState state, String mode) {
   final node = state.document.first!;
   switch (mode) {
+    case 'spacing':
+    case 'spacing-reset':
+      expect(
+        readCollabParagraph(node).values['lh'],
+        mode == 'spacing' ? 1.75 : null,
+      );
+      expect(
+        node.delta!.first.attributes?['t:ls'],
+        mode == 'spacing' ? .1 : null,
+      );
     case 'paragraph':
       expect(readCollabParagraph(node).values['nextParagraphStyle'], 'same');
     case 'typography':
