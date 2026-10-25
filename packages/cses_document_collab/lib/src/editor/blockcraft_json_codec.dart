@@ -6,6 +6,7 @@ import 'package:cses_document_collab/src/editor/editor_text_attributes.dart';
 import 'package:cses_document_collab/src/editor/blockcraft_snapshot_presets.g.dart';
 import 'package:cses_document_collab/src/model/collab_code.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
+import 'package:cses_document_collab/src/model/collab_date_card.dart';
 import 'package:cses_document_collab/src/model/collab_formula.dart';
 import 'package:cses_document_collab/src/model/collab_image.dart';
 import 'package:cses_document_collab/src/model/collab_kr.dart';
@@ -92,7 +93,6 @@ abstract final class BlockCraftJsonCodec {
     'render-unit',
     'task-list',
     'weather',
-    'date-card',
     'person-card',
     'sticker',
     'mind-map',
@@ -387,9 +387,7 @@ abstract final class BlockCraftJsonCodec {
     if (node.delta != null) {
       if (kind == 'paragraph') {
         if (node.type == 'heading') {
-          props['heading'] = (node.attributes['level'] as num? ?? 1)
-              .toInt()
-              .clamp(1, 6);
+          props['heading'] = (node.attributes['level'] as num? ?? 1).toInt().clamp(1, 6);
         } else {
           props.remove('heading');
         }
@@ -477,6 +475,12 @@ abstract final class BlockCraftJsonCodec {
     if (kind == 'formula') props.addAll(readCollabFormula(node.attributes).values);
     if (kind == 'mermaid') props.addAll(readCollabMermaidProperties(node.attributes).values);
     if (kind == 'meeting') props.addAll(CollabMeeting.readAttributes(node.attributes).values);
+    if (kind == 'date-card') {
+      for (final key in collabDateCardKeys) {
+        props.remove(key);
+      }
+      props.addAll(CollabDateCard.readAttributes(node.attributes).values);
+    }
     if (kind == 'divider') props.addAll(CollabDivider.readAttributes(node.attributes).values);
     if (collabTableTypes.contains(kind)) props.addAll(collabTableLayout(node));
     final nodeType = voidFlavours.contains(kind)

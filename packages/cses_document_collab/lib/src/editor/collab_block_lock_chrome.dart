@@ -7,7 +7,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 /// 为借用的[editor]、[node]、[child]添加轻量锁提示，不额外创建块操作入口。
 /// [context]为块视图所在的构建上下文；资源继续由调用方持有。
 /// 段落、标题、列表、引用及表格等普通正文不显示锁标，也不预留提示空间；
-/// 锁定权限仍由[editor]的守卫保护。卡片保留锁标，更多按钮由卡片自身提供，
+/// 锁定权限仍由[editor]的守卫保护。日期及资源卡片保留锁标，更多按钮由卡片自身提供，
 /// 模板锁不画额外标记。
 Widget decorateCollabBlockLock(
   BuildContext context,
@@ -44,6 +44,7 @@ Widget decorateCollabBlockLock(
         'callout',
         'image',
         'video',
+        'date-card',
         'divider',
         'page-divider',
       }.contains(node.type);

@@ -1,0 +1,263 @@
+{
+  "id": "fixture-doc",
+  "flavour": "root",
+  "nodeType": "root",
+  "props": {},
+  "meta": {},
+  "children": [
+    {
+      "id": "date-0",
+      "flavour": "date-card",
+      "nodeType": "void",
+      "props": {
+        "width": 168,
+        "height": 144.752,
+        "date": "2026-10-25T09:30",
+        "style": "calendar",
+        "format": "full",
+        "fg": "",
+        "bg": "",
+        "futureProp": {
+          "preserve": true
+        }
+      },
+      "meta": {
+        "audit": "desktop"
+      },
+      "children": []
+    },
+    {
+      "id": "date-1",
+      "flavour": "date-card",
+      "nodeType": "void",
+      "props": {
+        "width": 148,
+        "height": 148,
+        "date": "2026-10-25T09:30",
+        "style": "square",
+        "format": "noWeek",
+        "fg": "#24324b",
+        "bg": "#e6edf8"
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "date-2",
+      "flavour": "date-card",
+      "nodeType": "void",
+      "props": {
+        "width": 192,
+        "height": 52.878,
+        "date": "2026-10-25T09:30",
+        "style": "banner",
+        "format": "min",
+        "fg": "",
+        "bg": ""
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "date-3",
+      "flavour": "date-card",
+      "nodeType": "void",
+      "props": {
+        "width": 137,
+        "height": 37.93,
+        "date": "2026-10-25T09:30",
+        "style": "minibar",
+        "format": "full",
+        "fg": "#24324b",
+        "bg": "#e6edf8"
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "date-4",
+      "flavour": "date-card",
+      "nodeType": "void",
+      "props": {
+        "width": 198,
+        "height": 72.189,
+        "date": "2026-10-25T09:30",
+        "style": "ticket",
+        "format": "noWeek",
+        "fg": "",
+        "bg": ""
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "date-5",
+      "flavour": "date-card",
+      "nodeType": "void",
+      "props": {
+        "width": 140,
+        "height": 140,
+        "date": "2026-10-25T09:30",
+        "style": "stamp",
+        "format": "min",
+        "fg": "#24324b",
+        "bg": "#e6edf8"
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "date-6",
+      "flavour": "date-card",
+      "nodeType": "void",
+      "props": {
+        "width": 144,
+        "height": 116.8,
+        "date": "2026-10-25T09:30",
+        "style": "flip",
+        "format": "full",
+        "fg": "",
+        "bg": ""
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "date-7",
+      "flavour": "date-card",
+      "nodeType": "void",
+      "props": {
+        "width": 214,
+        "height": 144,
+        "date": "2026-10-25T09:30",
+        "style": "masthead",
+        "format": "noWeek",
+        "fg": "#24324b",
+        "bg": "#e6edf8"
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "date-8",
+      "flavour": "date-card",
+      "nodeType": "void",
+      "props": {
+        "width": 89,
+        "height": 165,
+        "date": "2026-10-25T09:30",
+        "style": "bookmark",
+        "format": "min",
+        "fg": "",
+        "bg": ""
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "date-9",
+      "flavour": "date-card",
+      "nodeType": "void",
+      "props": {
+        "width": 218,
+        "height": 136,
+        "date": "2026-10-25T09:30",
+        "style": "split",
+        "format": "full",
+        "fg": "#24324b",
+        "bg": "#e6edf8"
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "date-10",
+      "flavour": "date-card",
+      "nodeType": "void",
+      "props": {
+        "width": 222,
+        "height": 82,
+        "date": "2026-10-25T09:30",
+        "style": "pill",
+        "format": "noWeek",
+        "fg": "",
+        "bg": ""
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "date-11",
+      "flavour": "date-card",
+      "nodeType": "void",
+      "props": {
+        "width": 229,
+        "height": 104,
+        "date": "2026-10-25T09:30",
+        "style": "rail",
+        "format": "min",
+        "fg": "#24324b",
+        "bg": "#e6edf8"
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "tail",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {},
+      "meta": {},
+      "children": [
+        {
+          "insert": "保留正文"
+        }
+      ]
+    },
+    {
+      "id": "box",
+      "flavour": "callout",
+      "nodeType": "block",
+      "props": {},
+      "meta": {},
+      "children": [
+        {
+          "id": "nested-date",
+          "flavour": "date-card",
+          "nodeType": "void",
+          "props": {
+            "width": 168,
+            "height": 144.752,
+            "date": "2024-02-29T23:59"
+          },
+          "meta": {},
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "malformed-date",
+      "flavour": "date-card",
+      "nodeType": "void",
+      "props": {
+        "width": 168,
+        "height": 144.752
+      },
+      "meta": {},
+      "children": [
+        {
+          "id": "hidden-date",
+          "flavour": "paragraph",
+          "nodeType": "editable",
+          "props": {},
+          "meta": {},
+          "children": [
+            {
+              "insert": "保留非法子块"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -13,6 +13,7 @@ import 'package:cses_document_collab/src/editor/collab_callout_block.dart';
 import 'package:cses_document_collab/src/editor/collab_code_block.dart';
 import 'package:cses_document_collab/src/editor/collab_code_editing.dart';
 import 'package:cses_document_collab/src/editor/collab_divider_block.dart';
+import 'package:cses_document_collab/src/editor/collab_date_card_block.dart';
 import 'package:cses_document_collab/src/editor/collab_embed_block.dart';
 import 'package:cses_document_collab/src/editor/collab_figma_embed_block.dart';
 import 'package:cses_document_collab/src/editor/collab_formula_block.dart';
@@ -431,7 +432,7 @@ class _DocumentEditorViewState extends State<DocumentEditorView> {
 }
 
 /// 正式协同块的渲染器工厂；音频、附件和四类网页使用各自独立构建器。
-/// 表格保留行和单元格子树，分页符等无正文块及未知占位使用独立组件。
+/// 表格保留行和单元格子树，日期卡片、分页符等无正文块及未知占位使用独立组件。
 Map<String, BlockComponentBuilder> _createDocumentBlockBuilders() =>
     {
       ...standardBlockComponentBuilderMap,
@@ -462,6 +463,7 @@ Map<String, BlockComponentBuilder> _createDocumentBlockBuilders() =>
       TodoListBlockKeys.type: TodoListBlockComponentBuilder(
         configuration: standardBlockComponentConfiguration.copyWith(padding: _listBlockPadding),
       ),
+      'date-card': CollabDateCardBlockComponentBuilder(),
       collabDividerType: CollabDividerBlockComponentBuilder(),
       collabPageDividerType: CollabPageDividerBlockComponentBuilder(),
       collabFormulaType: CollabFormulaBlockComponentBuilder(),

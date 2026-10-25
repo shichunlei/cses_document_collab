@@ -32,6 +32,9 @@ enum EditorBlock {
   /// 分割线及其外观设置。
   divider('divider'),
 
+  /// 定格日期卡片及其外观设置。
+  dateCard('date-card'),
+
   /// 连续流中的分页标记。
   pageDivider('page-divider'),
 
@@ -218,6 +221,9 @@ enum EditorKeyboardToolbarItem {
 
   /// 设置外观后插入分割线。
   divider,
+
+  /// 插入定格为当前日期的独立卡片。
+  dateCard,
 
   /// 在根级位置插入分页符。
   pageDivider,

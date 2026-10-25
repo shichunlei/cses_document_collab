@@ -1,0 +1,11 @@
+{
+  "publishedVersion": "0.11.30",
+  "contentScale": 2,
+  "chosenDisplayPixels": 32,
+  "expectedPatch": {
+    "fsCalendar": "16"
+  },
+  "actualMobilePatch": {
+    "fsCalendar": "32.0"
+  }
+}

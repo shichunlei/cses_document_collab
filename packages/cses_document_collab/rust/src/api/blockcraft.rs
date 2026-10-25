@@ -598,8 +598,8 @@ fn mobile_type<T: ReadTxn>(block: &MapRef, props: &MapRef, txn: &T) -> Option<St
         "todo" => "todo_list".to_owned(),
         "blockquote" => "quote".to_owned(),
         "table" | "table-row" | "table-cell" => flavour,
-        "code" | "image" | "video" | "callout" | "mermaid" | "mermaid-textarea" | "divider"
-        | "page-divider" | "formula" | "meeting" | "task" | "kr-list" => flavour,
+        "code" | "image" | "video" | "callout" | "mermaid" | "mermaid-textarea" | "date-card"
+        | "divider" | "page-divider" | "formula" | "meeting" | "task" | "kr-list" => flavour,
         s if is_resource_block_type(s) => flavour,
         _ => return None,
     })
@@ -657,7 +657,7 @@ fn is_divider_style(style: &str) -> bool {
     )
 }
 
-/// 已适配块的属性白名单；表格布局通过显式补丁写入，会议/任务/分割线/公式/绘图不使用资源 URL。
+/// 已适配块的属性白名单；表格布局通过显式补丁写入，日期卡片/会议/任务/分割线/公式/绘图不使用资源 URL。
 fn resource_keys(kind: &str) -> &'static [&'static str] {
     match kind {
         "formula" => &["latex"],
@@ -668,6 +668,30 @@ fn resource_keys(kind: &str) -> &'static [&'static str] {
         "table" => &["colWidths"],
         "table-row" => &["height"],
         "table-cell" => &["verticalAlign", "rowspan", "colspan", "display"],
+        "date-card" => &[
+            "date",
+            "style",
+            "format",
+            "bg",
+            "fg",
+            "bc",
+            "bw",
+            "ff",
+            "width",
+            "height",
+            "fsCalendar",
+            "fsSquare",
+            "fsBanner",
+            "fsMinibar",
+            "fsTicket",
+            "fsStamp",
+            "fsFlip",
+            "fsMasthead",
+            "fsBookmark",
+            "fsSplit",
+            "fsPill",
+            "fsRail",
+        ],
         "divider" => &[
             "style",
             "length",
@@ -750,7 +774,13 @@ fn parse_resource_edit(
                 || key != "url"
                 || matches!(
                     kind,
-                    "divider" | "formula" | "meeting" | "task" | "kr-list" | "mermaid"
+                    "date-card"
+                        | "divider"
+                        | "formula"
+                        | "meeting"
+                        | "task"
+                        | "kr-list"
+                        | "mermaid"
                 ))
         {
             return Err(fail());
@@ -828,6 +858,50 @@ fn parse_resource_edit(
                 if !matches!(v, Any::Null)
                     && !matches!(v, Any::String(latex) if latex.encode_utf16().count() <= 20_000)
                 {
+                    return Err(fail());
+                }
+                result.insert(key.clone(), value);
+                continue;
+            }
+            if kind == "date-card" {
+                let valid = match (key.as_str(), v) {
+                    (_, Any::Null) => true,
+                    ("style", Any::String(v)) => matches!(
+                        v.as_ref(),
+                        "calendar"
+                            | "square"
+                            | "banner"
+                            | "minibar"
+                            | "ticket"
+                            | "stamp"
+                            | "flip"
+                            | "masthead"
+                            | "bookmark"
+                            | "split"
+                            | "pill"
+                            | "rail"
+                    ),
+                    ("format", Any::String(v)) => matches!(v.as_ref(), "full" | "noWeek" | "min"),
+                    ("bw", Any::String(v)) => matches!(
+                        v.as_ref(),
+                        "" | "0px solid"
+                            | "1px solid"
+                            | "2px solid"
+                            | "3px solid"
+                            | "1px dashed"
+                            | "2px dashed"
+                            | "1px dotted"
+                            | "2px dotted"
+                            | "3px double"
+                    ),
+                    ("width" | "height", Any::Number(v)) => {
+                        v.is_finite() && *v > 0.0 && *v <= 100_000.0
+                    }
+                    ("date", Any::String(v)) => v.len() <= 128,
+                    (_, Any::String(v)) => v.len() <= 256,
+                    _ => false,
+                };
+                if !valid {
                     return Err(fail());
                 }
                 result.insert(key.clone(), value);
@@ -1062,7 +1136,13 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
             Some(Out::YArray(array))
                 if matches!(
                     kind.as_str(),
-                    "divider" | "page-divider" | "formula" | "meeting" | "task" | "kr-list"
+                    "date-card"
+                        | "divider"
+                        | "page-divider"
+                        | "formula"
+                        | "meeting"
+                        | "task"
+                        | "kr-list"
                 ) && node_type == "void"
                     && array.len(&txn) == 0 => {}
             Some(Out::YArray(array))
@@ -1089,6 +1169,7 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                     && kind != "callout"
                     && kind != "mermaid"
                     && kind != "page-divider"
+                    && kind != "date-card"
                     && kind != "divider"
                     && kind != "formula"
                     && kind != "kr-list"
@@ -1185,7 +1266,13 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                 || is_table_container(&kind)
                 || matches!(
                     kind.as_str(),
-                    "divider" | "formula" | "meeting" | "task" | "kr-list" | "mermaid"
+                    "date-card"
+                        | "divider"
+                        | "formula"
+                        | "meeting"
+                        | "task"
+                        | "kr-list"
+                        | "mermaid"
                 ))
             .then(|| CollabResource {
                 properties: resource_properties(&kind, &props, &txn),
@@ -1241,6 +1328,7 @@ fn formal_type(kind: &str) -> Option<(&str, bool)> {
         "table-cell" => ("table-cell", false),
         "image" => ("image", true),
         "video" => ("video", true),
+        "date-card" => ("date-card", true),
         "divider" => ("divider", true),
         "page-divider" => ("page-divider", true),
         "formula" => ("formula", true),
@@ -1400,7 +1488,13 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
             if !is_resource_block_type(&block.block_type)
                 && !matches!(
                     block.block_type.as_str(),
-                    "divider" | "formula" | "meeting" | "task" | "kr-list" | "mermaid"
+                    "date-card"
+                        | "divider"
+                        | "formula"
+                        | "meeting"
+                        | "task"
+                        | "kr-list"
+                        | "mermaid"
                 )
             {
                 return Err("INVALID_RESOURCE: 资源属性与块类型不符".into());
@@ -1811,7 +1905,13 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
             }
             if !matches!(
                 flavour,
-                "divider" | "page-divider" | "formula" | "meeting" | "task" | "kr-list"
+                "date-card"
+                    | "divider"
+                    | "page-divider"
+                    | "formula"
+                    | "meeting"
+                    | "task"
+                    | "kr-list"
             ) && ((!is_resource_block_type(flavour)
                 && old.is_none_or(|b| b.text != next.text || b.block_type != next.block_type))
                 || (is_resource_block_type(flavour)
@@ -5984,6 +6084,144 @@ mod tests {
             children(&map(&blocks, &txn, "malformed-break").unwrap(), &txn),
             vec!["hidden"]
         );
+    }
+
+    /// 发布版日期卡片按void投影，外观补丁不覆盖日期、扩展属性和元数据。
+    #[test]
+    fn date_card_published_projection_and_field_patches() {
+        let mut e = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-date-card.update"
+        ));
+        assert_eq!(
+            e.blocks()
+                .iter()
+                .filter(|b| b.block_type == "date-card")
+                .count(),
+            13
+        );
+        assert_eq!(
+            e.blocks()
+                .iter()
+                .find(|b| b.id == "nested-date")
+                .unwrap()
+                .parent_id
+                .as_deref(),
+            Some("box")
+        );
+        assert_eq!(
+            e.blocks()
+                .iter()
+                .find(|b| b.id == "malformed-date")
+                .unwrap()
+                .block_type,
+            UNSUPPORTED_BLOCK_TYPE
+        );
+        let mut desired = e.blocks();
+        desired[0].resource.as_mut().unwrap().property_edits = Some(r##"{"style":{"value":"pill"},"fg":{"value":"#123456"},"fsCalendar":{"value":"- 24"}}"##.into());
+        e.apply_block_snapshot(desired).unwrap();
+        let txn = e.doc.transact();
+        let blocks = txn.get_map(ROOT_NAME).unwrap();
+        let card = map(&blocks, &txn, "date-0").unwrap();
+        let props = map(&card, &txn, "props").unwrap();
+        assert_eq!(
+            out_string(props.get(&txn, "date")).as_deref(),
+            Some("2026-10-25T09:30")
+        );
+        assert_eq!(
+            out_string(props.get(&txn, "style")).as_deref(),
+            Some("pill")
+        );
+        assert!(props.contains_key(&txn, "futureProp"));
+        assert_eq!(
+            out_string(map(&card, &txn, "meta").unwrap().get(&txn, "audit")).as_deref(),
+            Some("desktop")
+        );
+        assert!(!props.contains_key(&txn, "url") && !props.contains_key(&txn, "src"));
+        assert!(matches!(card.get(&txn, "children"), Some(Out::YArray(ref a)) if a.len(&txn) == 0));
+    }
+
+    /// 非法写入整次拒绝，旧未知日期外观不会因其他字段编辑被规范化。
+    #[test]
+    fn date_card_invalid_edits_are_atomic() {
+        let mut e = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-date-card.update"
+        ));
+        let before = e
+            .doc
+            .transact()
+            .encode_state_as_update_v1(&StateVector::default());
+        for patch in [
+            r#"{"style":{"value":"future"}}"#,
+            r#"{"format":{"value":"invalid"}}"#,
+            r#"{"width":{"value":0}}"#,
+            r#"{"bw":{"value":"100px solid"}}"#,
+            r#"{"fg":{"value":false}}"#,
+            r#"{"url":{"value":"https://example.test"}}"#,
+            r#"{"date":{"value":42}}"#,
+            r#"{"futureProp":{"value":null}}"#,
+        ] {
+            let mut desired = e.blocks();
+            desired[0].resource.as_mut().unwrap().property_edits = Some(patch.into());
+            assert!(e.apply_block_snapshot(desired).is_err(), "{patch}");
+            assert_eq!(
+                e.doc
+                    .transact()
+                    .encode_state_as_update_v1(&StateVector::default()),
+                before
+            );
+        }
+        let mut desired = e.blocks();
+        desired[0].text = "invalid text".into();
+        assert!(e.apply_block_snapshot(desired).is_err());
+        assert_eq!(
+            e.doc
+                .transact()
+                .encode_state_as_update_v1(&StateVector::default()),
+            before
+        );
+    }
+
+    /// 不同端编辑日期卡片独立字段后收敛，新建、删除和恢复不引入URL或正文。
+    #[test]
+    fn date_card_concurrent_fields_and_creation_converge() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-date-card.update");
+        let mut left = engine(fixture);
+        let mut right = engine(fixture);
+        let mut a = left.blocks();
+        let mut b = right.blocks();
+        a[0].resource.as_mut().unwrap().property_edits =
+            Some(r#"{"style":{"value":"rail"}}"#.into());
+        b[0].resource.as_mut().unwrap().property_edits =
+            Some(r#"{"format":{"value":"min"}}"#.into());
+        let ua = left.apply_block_snapshot(a).unwrap();
+        let ub = right.apply_block_snapshot(b).unwrap();
+        left.apply_cses_update(ub.v1_update).unwrap();
+        right.apply_cses_update(ua.v1_update).unwrap();
+        assert_eq!(left.blocks(), right.blocks());
+        let merged = left.blocks();
+        let properties = &merged[0].resource.as_ref().unwrap().properties;
+        assert!(
+            properties.contains("rail")
+                && properties.contains("min")
+                && properties.contains("2026-10-25")
+        );
+        let mut desired = left.blocks();
+        let mut new = desired[0].clone();
+        new.id = "mobile-date".into();
+        new.resource = Some(CollabResource {
+            properties: r#"{"date":"2026-10-25T10:00","style":"calendar"}"#.into(),
+            property_edits: None,
+        });
+        desired.insert(1, new);
+        left.apply_block_snapshot(desired.clone()).unwrap();
+        let mut removed = left.blocks();
+        removed.retain(|b| b.id != "mobile-date");
+        left.apply_block_snapshot(removed).unwrap();
+        left.apply_block_snapshot(desired).unwrap();
+        let txn = left.doc.transact();
+        let blocks = txn.get_map(ROOT_NAME).unwrap();
+        let props = map(&map(&blocks, &txn, "mobile-date").unwrap(), &txn, "props").unwrap();
+        assert!(!props.contains_key(&txn, "url") && !props.contains_key(&txn, "src"));
     }
 
     /// 非根级、正文、资源补丁和占位删除在事务前拒绝，失败不产生部分写入。

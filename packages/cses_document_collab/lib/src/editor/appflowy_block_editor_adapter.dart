@@ -10,6 +10,7 @@ import 'package:cses_document_collab/src/editor/core/editor_command_context.dart
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
 import 'package:cses_document_collab/src/model/collab_code.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
+import 'package:cses_document_collab/src/model/collab_date_card.dart';
 import 'package:cses_document_collab/src/model/collab_page_divider.dart';
 import 'package:cses_document_collab/src/model/collab_entity_mention.dart';
 import 'package:cses_document_collab/src/model/collab_formula.dart';
@@ -572,7 +573,7 @@ final class AppFlowyBlockEditorAdapter {
   /// Applies canonical Rust/Yrs blocks without publishing them as local edits.
   /// 行内公式或格式更新采用 Delta 局部差量，保留对象外的正文与光标位置。
   /// [nextBlocks] 是当前权威投影，空列表显示一个 UI 空段落；Future 在事务完成后结束。
-  /// 块身份、类型、顺序一致时原位更新文字、媒体、分页符、分割线、公式及会议/任务引用属性，保留组件、选区与输入连接；
+  /// 块身份、类型、顺序一致时原位更新文字、媒体、分页符、日期卡片、分割线、公式及会议/任务引用属性，保留组件、选区与输入连接；
   /// URL、尺寸和题注复用节点映射，移除的可选投影显式清空。结构不同才重建节点。
   /// 不记录本地撤销或发送 WS；销毁后不执行，事务异常向调用边界传播。
   /// 表格路径/单元格正文或绘图源码/结构改变会清除本地路径历史及选区，避免过期撤销覆盖远端内容；布局属性更新保留历史。
@@ -615,6 +616,7 @@ final class AppFlowyBlockEditorAdapter {
               currentBlocks[index].parentId == targetBlocks[index].parentId &&
               (currentNodes[index].type == csesUnsupportedBlockType ||
                   isCollabContainerType(currentNodes[index].type) ||
+                  currentNodes[index].type == collabDateCardType ||
                   currentNodes[index].type == collabDividerType ||
                   currentNodes[index].type == collabPageDividerType ||
                   currentNodes[index].type == collabFormulaType ||
@@ -633,6 +635,7 @@ final class AppFlowyBlockEditorAdapter {
         if (collabTableTypes.contains(target.blockType) ||
             _isUrlBackedBlock(target.blockType) ||
             target.blockType == collabMermaidType ||
+            target.blockType == collabDateCardType ||
             target.blockType == collabDividerType ||
             target.blockType == collabPageDividerType ||
             target.blockType == collabFormulaType ||
@@ -933,6 +936,13 @@ final class AppFlowyBlockEditorAdapter {
           }
         }
       }
+      if (node != null && node.type == collabDateCardType) {
+        for (final key in collabDateCardKeys) {
+          if (operation.attributes.containsKey(dateCardPropertyAttribute(key))) {
+            resourceEdits.putIfAbsent(node, () => {}).add(key);
+          }
+        }
+      }
       if (node != null && node.type == collabDividerType) {
         for (final key in collabDividerKeys) {
           if (operation.attributes.containsKey(dividerPropertyAttribute(key))) {
@@ -1195,7 +1205,7 @@ final class AppFlowyBlockEditorAdapter {
   /// 题注留在资源属性而非 AppFlowy children；实际父子关系由 Rust 的共享类型持有。
   /// KR只投影会议引用，不缓存业务列表；Mermaid 保留容器及独立源码 Delta；表格布局及任务卡片属性只读投影；其他无正文块保留各自白名单属性，均不生成Delta。
   /// 段落格式及其历史目标标记仅用于段落族；代码块沿用自身属性和正文历史。
-  /// 分页符使用无 Delta、无子块的独立类型；仅构建内存节点，不写入原生文档或取得资源所有权。
+  /// 日期卡片与分页符使用无 Delta、无子块的独立类型；仅构建内存节点，不写入原生文档或取得资源所有权。
   /// 标题投影限制H1~H6，旧数据超出范围按边界级别展示，不主动修改共享数据。
   static Node _nodeFromBlock(CollabEditorBlock block) {
     if (collabTableTypes.contains(block.blockType)) {
@@ -1245,6 +1255,16 @@ final class AppFlowyBlockEditorAdapter {
     }
     if (block.blockType == collabPageDividerType) {
       return Node(type: collabPageDividerType, id: block.id, attributes: {collabBlockIdAttribute: block.id});
+    }
+    if (block.blockType == collabDateCardType) {
+      return Node(
+        type: collabDateCardType,
+        id: block.id,
+        attributes: {
+          collabBlockIdAttribute: block.id,
+          ...CollabDateCard.nodeAttributes(block.resource ?? const CollabResource()),
+        },
+      );
     }
     if (block.blockType == collabDividerType) {
       return Node(
@@ -1315,10 +1335,7 @@ final class AppFlowyBlockEditorAdapter {
       final type when type.startsWith('heading_') => (
         HeadingBlockKeys.type,
         HeadingBlockKeys.delta,
-        <String, Object>{
-          HeadingBlockKeys.level:
-              int.tryParse(type.substring('heading_'.length))?.clamp(1, 6) ?? 1,
-        },
+        <String, Object>{HeadingBlockKeys.level: int.tryParse(type.substring('heading_'.length))?.clamp(1, 6) ?? 1},
       ),
       BulletedListBlockKeys.type => (BulletedListBlockKeys.type, BulletedListBlockKeys.delta, <String, Object>{}),
       NumberedListBlockKeys.type => (NumberedListBlockKeys.type, NumberedListBlockKeys.delta, <String, Object>{}),
@@ -1445,6 +1462,8 @@ final class AppFlowyBlockEditorAdapter {
             ? CollabMeeting.readAttributes(node.attributes, edited: resourceEdits[node] ?? const {})
             : node.type == collabFormulaType
             ? readCollabFormula(node.attributes, edited: resourceEdits[node]?.contains('latex') == true)
+            : node.type == collabDateCardType
+            ? CollabDateCard.readAttributes(node.attributes, edited: resourceEdits[node] ?? const {})
             : node.type == collabDividerType
             ? CollabDivider.readAttributes(node.attributes, edited: resourceEdits[node] ?? const {})
             : isCollabResourceType(node.type)
@@ -1507,6 +1526,7 @@ final class AppFlowyBlockEditorAdapter {
         node.type == collabMermaidSourceType ||
         collabTableTypes.contains(node.type) ||
         isCollabResourceType(node.type) ||
+        node.type == collabDateCardType ||
         node.type == collabDividerType ||
         node.type == collabPageDividerType ||
         node.type == collabFormulaType ||
@@ -1517,8 +1537,7 @@ final class AppFlowyBlockEditorAdapter {
     if (node.type == csesUnsupportedBlockType) return csesUnsupportedBlockType;
     if (node.type == csesCalloutBlockType) return csesCalloutBlockType;
     return switch (node.type) {
-      HeadingBlockKeys.type =>
-        'heading_${(node.attributes[HeadingBlockKeys.level] as int? ?? 1).clamp(1, 6)}',
+      HeadingBlockKeys.type => 'heading_${(node.attributes[HeadingBlockKeys.level] as int? ?? 1).clamp(1, 6)}',
       BulletedListBlockKeys.type => BulletedListBlockKeys.type,
       NumberedListBlockKeys.type => NumberedListBlockKeys.type,
       TodoListBlockKeys.type => TodoListBlockKeys.type,
@@ -1616,9 +1635,10 @@ final class AppFlowyBlockEditorAdapter {
       blockType == NumberedListBlockKeys.type ||
       blockType == TodoListBlockKeys.type;
 
-  /// 读取借用[node]的正文或资源地址，容器、分割线、分页符、公式、会议、KR和任务卡片不提供文字。
+  /// 读取借用[node]的正文或资源地址，容器、日期卡片、分割线、分页符、公式、会议、KR和任务卡片不提供文字。
   static String _readNodePlainText(Node node) {
     if (isCollabContainerType(node.type) ||
+        node.type == collabDateCardType ||
         node.type == collabDividerType ||
         node.type == collabPageDividerType ||
         node.type == collabFormulaType ||

@@ -1,0 +1,42 @@
+{
+  "installed": {
+    "version": "0.11.21",
+    "dateImplementation": {
+      "const DateCardBlockSchema =": "3628a8a7220bd4cb91fd999bd0cc4d21de4881099f198cc65c190eea7b80fbe5",
+      "const DATE_CARD_STYLES =": "93d710a70b129561a09d86ed39d9e1a29d0e28f89600e8ec18c48ed6868ee4e8",
+      "function dateCardFonts(": "8d815cf27e9db50d9fc79850d6b95ad8b3324e76e7296d40173e3e080b9b2ae7"
+    },
+    "skillSha256": "35ebfd974d56b5529dd5d022f0d5765f22db0ef1abfa7c44bd545a66cdb542c6",
+    "migrationRead": true
+  },
+  "declared": {
+    "version": "0.11.28",
+    "dateImplementation": {
+      "const DateCardBlockSchema =": "3628a8a7220bd4cb91fd999bd0cc4d21de4881099f198cc65c190eea7b80fbe5",
+      "const DATE_CARD_STYLES =": "93d710a70b129561a09d86ed39d9e1a29d0e28f89600e8ec18c48ed6868ee4e8",
+      "function dateCardFonts(": "8d815cf27e9db50d9fc79850d6b95ad8b3324e76e7296d40173e3e080b9b2ae7"
+    },
+    "skillSha256": "35ebfd974d56b5529dd5d022f0d5765f22db0ef1abfa7c44bd545a66cdb542c6",
+    "migrationRead": true
+  },
+  "latest": {
+    "version": "0.11.30",
+    "dateImplementation": {
+      "const DateCardBlockSchema =": "3628a8a7220bd4cb91fd999bd0cc4d21de4881099f198cc65c190eea7b80fbe5",
+      "const DATE_CARD_STYLES =": "93d710a70b129561a09d86ed39d9e1a29d0e28f89600e8ec18c48ed6868ee4e8",
+      "function dateCardFonts(": "8d815cf27e9db50d9fc79850d6b95ad8b3324e76e7296d40173e3e080b9b2ae7"
+    },
+    "skillSha256": "35ebfd974d56b5529dd5d022f0d5765f22db0ef1abfa7c44bd545a66cdb542c6",
+    "migrationRead": true
+  },
+  "registry": {
+    "latest": "0.11.30",
+    "registry": "http://npm.runtongqiuben.com/",
+    "shasum": "abedbde54c71e81db525aec73f86cceb77f4cb4b",
+    "artifactMatches": true,
+    "declared": "0.11.28",
+    "yarn": "0.11.28",
+    "historicalPnpm": "0.2.78",
+    "date": "2026-10-25"
+  }
+}

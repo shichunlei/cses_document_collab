@@ -99,6 +99,8 @@
 
 ### 表格、代码块与分隔块
 
+- [date-card-20261025](date-card-20261025/)（[日期卡片正式接入、原生展示与验证](date-card-20261025/report.md)；[桌面自由定位分析与移动方案](date-card-20261025/placement-plan.md)；[日期块审查与三项缺陷](date-card-20261025/review.md)；[三项修复与底部设置面板](date-card-20261025/fixes-and-bottom-sheet.md)；[预览吸顶与左右切换](date-card-20261025/sticky-preview-and-styles.md)；[提交范围核查](date-card-20261025/commit-scope.md)）
+
 - [code-block-20261019](code-block-20261019/)
 - [divider-20261020](divider-20261020/)
 - [page-divider-20261018](page-divider-20261018/)

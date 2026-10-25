@@ -46,6 +46,7 @@ void main() {
     EditorKeyboardToolbarItem.mermaid: '代码绘图',
     EditorKeyboardToolbarItem.inlineFormula: '行内公式',
     EditorKeyboardToolbarItem.divider: '分割线',
+    EditorKeyboardToolbarItem.dateCard: '日期卡片',
     EditorKeyboardToolbarItem.pageDivider: '分页符',
     EditorKeyboardToolbarItem.spreadsheet: '电子表格',
     EditorKeyboardToolbarItem.multiTable: '多维表格',
@@ -130,6 +131,7 @@ void main() {
   for (final entry in {
     EditorKeyboardToolbarItem.table: 'table',
     EditorKeyboardToolbarItem.callout: 'callout',
+    EditorKeyboardToolbarItem.dateCard: 'date-card',
     EditorKeyboardToolbarItem.pageDivider: 'page-divider',
   }.entries) {
     testWidgets('direct ${entry.key.name} inserts without more sheet and has undo', (tester) async {

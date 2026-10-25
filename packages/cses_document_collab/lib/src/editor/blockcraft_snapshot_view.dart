@@ -5,6 +5,8 @@ import 'package:appflowy_editor/appflowy_editor.dart' hide Path;
 import 'package:cses_document_collab/src/editor/blockcraft_json_codec.dart';
 import 'package:cses_document_collab/src/editor/blockcraft_snapshot_presets.g.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
+import 'package:cses_document_collab/src/model/collab_date_card.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_date_card_visual.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -288,15 +290,7 @@ class _SnapshotObject extends BlockComponentStatelessWidget {
       );
     }
     if (kind == 'date-card') {
-      final date = DateTime.tryParse('${props['date'] ?? ''}') ?? DateTime.now();
-      return _card(
-        Text(
-          '${date.year}年${date.month}月${date.day}日',
-          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-        ),
-        fill,
-        border,
-      );
+      return CollabDateCardVisual(card: CollabDateCard(props));
     }
     if (kind == 'person-card') {
       final person = props['frozen'] is Map ? props['frozen'] as Map : props;

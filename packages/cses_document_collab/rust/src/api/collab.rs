@@ -1373,10 +1373,12 @@ fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(
         }
         if matches!(
             block.block_type.as_str(),
-            "divider" | "page-divider" | "formula" | "meeting" | "task" | "kr-list"
+            "date-card" | "divider" | "page-divider" | "formula" | "meeting" | "task" | "kr-list"
         ) && (!block.text.is_empty() || !block.segments.is_empty())
         {
-            return Err(if block.block_type == "page-divider" {
+            return Err(if block.block_type == "date-card" {
+                "INVALID_DATE_CARD: 日期卡片不能存储正文".into()
+            } else if block.block_type == "page-divider" {
                 "INVALID_PAGE_DIVIDER: 分页符不能存储正文".into()
             } else if block.block_type == "kr-list" {
                 "INVALID_KR_LIST: KR引用不能存储正文".into()
@@ -1551,6 +1553,7 @@ fn is_supported_block_type(block_type: &str) -> bool {
             | "table"
             | "table-row"
             | "table-cell"
+            | "date-card"
             | "divider"
             | "page-divider"
             | "formula"

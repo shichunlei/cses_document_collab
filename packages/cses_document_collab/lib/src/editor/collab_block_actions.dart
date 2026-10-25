@@ -442,6 +442,7 @@ final _pending = Expando<bool>('block-more-actions');
   'meeting' => ('会议', LucideIcons.users),
   'task' => ('任务', LucideIcons.listTodo),
   'kr-list' => ('会议 KR', LucideIcons.listTodo),
+  'date-card' => ('日期卡片', LucideIcons.calendarDays),
   'page-divider' => ('分页符', LucideIcons.separatorHorizontal),
   _ => ('内容', LucideIcons.file),
 };

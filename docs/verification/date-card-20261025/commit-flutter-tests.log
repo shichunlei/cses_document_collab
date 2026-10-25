@@ -1,0 +1,54 @@
+00:00 +0: loading /private/tmp/date-card-commit-check/packages/cses_document_collab/test/collab_date_card_test.dart
+00:00 +0: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/collab_date_card_test.dart: date is a frozen calendar day and missing defaults never mutate props
+00:00 +1: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/collab_date_card_test.dart: atomic field edits undo by identity after reorder without losing other fields
+00:00 +2: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/collab_date_card_test.dart: insert freezes date; backspace and undo restore the same card
+00:00 +3: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/collab_date_card_test.dart: locks and invalid properties reject writes and insertion
+00:00 +4: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/collab_date_card_test.dart: JSON imports a native date node and cleared fields stay absent on export
+00:00 +5: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/collab_date_card_test.dart: all style/format combinations fit 280px at text scale 1.0
+00:01 +6: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/collab_date_card_test.dart: all style/format combinations fit 280px at text scale 1.0
+00:06 +7: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/date_card_regression_test.dart: cycling back to the current style preserves a desktop-resized card
+00:08 +8: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/date_card_regression_test.dart: cycling back to the current style preserves a desktop-resized card
+RESELECT_STYLE_RESULT={date: 2026-10-25T09:30, format: full, height: 289.504, style: calendar, width: 336.0}
+00:11 +9: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:14 +10: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:17 +11: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/date_card_regression_test.dart: choosing visible 32px uses display scale instead of storing 32 design pixels
+DISPLAY_FONT_RESULT={date: 2026-10-25T09:30, format: full, fsCalendar: 16.0, height: 289.504, style: calendar, width: 336.0}
+00:17 +12: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/collab_date_card_test.dart: remote update invalidates a dirty draft without overwriting the remote value
+00:17 +12: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/date_card_regression_test.dart: an imported tiny dotted border must not consume an unbounded painting budget
+TINY_BORDER_IMPORT=1e-320px dotted
+00:17 +13: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/collab_date_card_test.dart: remote update invalidates a dirty draft without overwriting the remote value
+00:19 +14: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/collab_date_card_test.dart: remote update invalidates a dirty draft without overwriting the remote value
+00:19 +15: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/date_card_regression_test.dart: bottom settings keeps header/actions fixed at Size(320.0, 568.0)/1.5
+00:20 +16: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/collab_date_card_test.dart: lock then unlock cannot reactivate an old date draft
+00:21 +17: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/collab_date_card_test.dart: lock then unlock cannot reactivate an old date draft
+00:21 +18: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/date_card_native_integration_test.dart: (setUpAll)
+00:21 +19: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/date_card_native_integration_test.dart: (setUpAll)
+00:22 +20: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/date_card_native_integration_test.dart: (setUpAll)
+00:22 +20: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/collab_date_card_test.dart: revocation then restoration cannot reactivate an old settings draft
+00:23 +21: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/collab_date_card_test.dart: revocation then restoration cannot reactivate an old settings draft
+00:23 +22: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/collab_date_card_test.dart: revocation then restoration cannot reactivate an old settings draft
+00:24 +23: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/date_card_regression_test.dart: arrows cycle every named style with centered preview and no writes before apply
+00:27 +24: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/date_card_regression_test.dart: arrows cycle every named style with centered preview and no writes before apply
+00:28 +25: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/date_card_regression_test.dart: arrows cycle every named style with centered preview and no writes before apply
+00:29 +26: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/date_card_regression_test.dart: arrows cycle every named style with centered preview and no writes before apply
+00:29 +27: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/collab_modal_test.dart: fixed close/save remain reachable: Size(320.0, 568.0) / 2.2 / 200.0
+00:29 +28: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: desktop block structures and attributes convert into editable nodes and survive local JSON
+00:29 +29: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/date_card_regression_test.dart: swiping the bottom sheet away discards its draft
+00:29 +30: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/date_card_regression_test.dart: swiping the bottom sheet away discards its draft
+00:29 +31: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/date_card_regression_test.dart: swiping the bottom sheet away discards its draft
+00:29 +32: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/date_card_regression_test.dart: swiping the bottom sheet away discards its draft
+00:29 +33: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/date_card_regression_test.dart: swiping the bottom sheet away discards its draft
+00:30 +34: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/date_card_regression_test.dart: swiping the bottom sheet away discards its draft
+00:30 +35: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:30 +36: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:30 +37: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:31 +38: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:31 +39: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:31 +40: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:31 +41: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:32 +42: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:32 +43: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:32 +44: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:33 +45: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:33 +46: /private/tmp/date-card-commit-check/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:34 +47: All tests passed!

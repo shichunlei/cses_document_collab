@@ -1,0 +1,53 @@
+{
+  "version": "0.11.30",
+  "kind": "read-only published coordinate codec probe",
+  "cases": [
+    {
+      "input": {
+        "x": 420.125,
+        "y": 180.456
+      },
+      "stored": "420.13 180.46",
+      "decoded": {
+        "x": 420.13,
+        "y": 180.46
+      }
+    },
+    {
+      "input": {
+        "x": -15.5,
+        "y": -30
+      },
+      "stored": "-15.5 -30",
+      "decoded": {
+        "x": -15.5,
+        "y": -30
+      }
+    },
+    {
+      "input": {
+        "x": 0,
+        "y": 0
+      },
+      "stored": "0 0",
+      "decoded": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "input": {
+        "x": 1.2345,
+        "y": 999.999
+      },
+      "stored": "1.23 1000",
+      "decoded": {
+        "x": 1.23,
+        "y": 1000
+      }
+    }
+  ],
+  "invalidInput": null,
+  "defaultLayer": "over",
+  "underLayer": "under"
+}

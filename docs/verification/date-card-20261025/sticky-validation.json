@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-25",
+  "sources": {
+    "packages/cses_document_collab/lib/src/editor/collab_date_card_settings.dart": "a6895155a29152944bf853b5f76a511efe41a5f4744787efa39de82de5f62477",
+    "packages/cses_document_collab/lib/src/ui/modal/collab_date_card_visual.dart": "905df3402b0248db7fae3a9fb5ff2e3379b8c261c0e7cb8179600a24377d6602",
+    "packages/cses_document_collab/test/date_card_regression_test.dart": "149124d7bd31fa76d048482fae28a2de6b3bab955eb9cf243885dbc7cd72829a",
+    "packages/cses_document_collab/test/collab_date_card_test.dart": "19305d28a724a699a1847eb17b95888b2ce1e81d766fe7514dd813ea3dd61df5",
+    "packages/cses_document_collab/test/date_card_settings_test_utils.dart": "d6f88d3447be45255d8236e752b6e199db04a5a29f00ed25e2c8909479684497"
+  },
+  "checks": {
+    "targetTests": {
+      "passed": 42,
+      "failed": 0,
+      "skipped": 0
+    },
+    "analysis": {
+      "targets": 7,
+      "issues": 0
+    },
+    "format": "passed; five touched Dart files at line length 120",
+    "oldStyleButtonKeySearch": "no old date-card-style-calendar/pill/square keys in lib/test",
+    "diffCheck": "passed",
+    "actualPreviewCentered": true,
+    "previewNameHeaderActionsRemainFixedOnScroll": true,
+    "allTwelveStylesCycleAndShowNames": true,
+    "cancelAndPermissionProtection": "passed",
+    "nativeHistoryAndSQLite": "passed",
+    "screenshots": [
+      "date-settings-sticky-390-1.0.png",
+      "date-settings-sticky-320-1.5.png"
+    ],
+    "platformBuild": "not run",
+    "physicalDevice": "not run",
+    "onlineDesktopPeer": "not run"
+  }
+}

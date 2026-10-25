@@ -213,7 +213,7 @@ Widget localBody(LocalEditorController editor) =>
 `blocks`是完整启用列表，按配置顺序显示块类型；标题级别仅允许H1~H6的非连续集合；默认配置、添加和类型菜单、命令及写入校验共用六级范围。
 基础paragraph必须保留，保证空文档、回车和删除末块的落点；无效配置在创建资源前拒绝。
 旧标题的拆段与同型续写只将新节点规范到H1~H6，原块原始属性保留。旧列表编号按原始depth+heading分组，超范围旧级别仍保留其协议身份；对外展示投影不作为计数器key，握手修复只处理真实缺失或错误的order。
-默认启用包内已注册的全部25种用户块类型，标题仅支持H1~H6，旧数据中的超范围正级别按H6展示，读取时不主动改写原始数据：正文、标题、引用、三类列表、代码、高亮、表格、分割线、分页符、公式、Mermaid绘图、图片、链接、音视频、附件、网页/Figma/掘金嵌入，以及会议/任务/KR引用。
+默认启用包内已注册的全部26种用户块类型，标题仅支持H1~H6，旧数据中的超范围正级别按H6展示，读取时不主动改写原始数据：正文、标题、引用、三类列表、代码、高亮、表格、分割线、日期卡片、分页符、公式、Mermaid绘图、图片、链接、音视频、附件、网页/Figma/掘金嵌入，以及会议/任务/KR引用。
 表格行/单元格和绘图源码按所属容器隐式启用，不单独出现在添加菜单。
 这表示开放现有移动端实现，不代表41种桌面块已全部适配；仍按根仓库适配表的支持范围使用。
 `EditorConfiguration.text`保留原六类文字块/H1～H4预设；也可通过`blocks`和`inlineFormats`选择更小的功能集合。
@@ -746,6 +746,32 @@ Future<void> lockBlock(CollabController controller, String blockId) async {
 node tool/generate_page_divider_fixture.mjs /path/to/blockcraft-0.11.21/package /path/to/cses-client
 cargo build --manifest-path rust/Cargo.toml
 flutter test --no-pub test/collab_page_divider_test.dart test/page_divider_native_integration_test.dart
+```
+
+## 日期卡片（date-card）
+
+默认“添加块→常用”可插入日期卡片；也可在`EditorConfiguration.keyboardToolbarItems`中加入
+`EditorKeyboardToolbarItem.dateCard`设置键盘直达入口，块能力由`EditorBlock.dateCard`控制。
+新建定格当前本地日期（YYYY-MM-DDTHH:mm），以后打开、修改样式或同步不会更新日期。
+日期值与行内日期、宿主日记日期分别存储。
+
+更多菜单的“日期设置”使用公共底部弹窗，标题下居中预览吸顶，左右按钮循环切换12种
+样式，名称显示在预览下方；预览与名称不随设置滚动。取消/应用固定底部，其余格式、
+字体、字号和边框按约束分行并独立滚动。取消或下滑关闭不写入，应用只提交变化字段并
+形成一个撤销步骤；重选或切回原样式/格式保留作者尺寸，实际切换样式才重置固定框，
+格式变化保留原宽度。字号按内容倍率回显并换算为设计字号保存；未知边框仅展示为无外框，
+保留原值且点线绘制有次数上限。锁、撤权、目标替换或远端变化使旧草稿失效。
+公共菜单继续提供授权加解锁、段落链接、下方插入、整块删除，后置正文行首退格可删除卡片。
+
+正式协同支持根级和已适配高亮容器中的void节点，保留未知共享props/meta；JSON导入后
+也使用同一个原生渲染器。字体使用系统可用字体回落；手机外观没有完全复刻桌面CSS装饰，
+复杂容器、浮动定位/缩放/动画、旧固定框迁移及真机/真实在线双端验证仍见仓库适配表。
+测试夹具由发布版0.11.30的Schema/样式声明生成，不修改桌面依赖或桥接签名：
+
+```sh
+node tool/generate_date_card_fixture.mjs /path/to/blockcraft-package /path/to/cses-client
+cargo build --manifest-path rust/Cargo.toml
+flutter test --no-pub test/collab_date_card_test.dart test/date_card_native_integration_test.dart
 ```
 
 ## Mermaid代码绘图

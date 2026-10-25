@@ -1,0 +1,73 @@
+{
+  "date": "2026-10-25",
+  "apk": {
+    "path": "build/app/outputs/flutter-apk/app-debug.apk",
+    "sha256": "04acc271b5f29eb8ba403989bda982cdbcd23c5f75162e90a6e3c2d2e600bea0",
+    "bytes": 218293020,
+    "nativeLibraries": {
+      "lib/arm64-v8a/libcses_collab_core.so": "7d91950da0a5b3cb2988dee63bb9f1f737883fbca090bb4d7d8ed626f0f70524",
+      "lib/armeabi-v7a/libcses_collab_core.so": "0b7eb3f5afc59f2070f2fbd2d7d00e304418e47dc9a01d4fbf782bc1aa51ea19",
+      "lib/x86_64/libcses_collab_core.so": "eed47d80ba84601f0b8d1115ed6c20a1201450e8c14e1f6c17890fc83d735d3f"
+    }
+  },
+  "sources": {
+    "packages/cses_document_collab/lib/src/editor/appflowy_block_editor_adapter.dart": "fadbfea80a1e2e7e98be94c5834266e7a71e2c4fd459f5baba31d721ff19dae8",
+    "packages/cses_document_collab/lib/src/editor/blockcraft_json_codec.dart": "b25213b467b4595a01243ebc975cac3173a9e2833742f35088782b63e0fde8a1",
+    "packages/cses_document_collab/lib/src/editor/blockcraft_snapshot_view.dart": "93346e2525d5a90d4a2fa7a6ab5ec6c570a8ef6f3686fc375d811bcae2480ee6",
+    "packages/cses_document_collab/lib/src/editor/collab_block_actions.dart": "0bd18d22a26fb98ba9651b7a9916a17cf0822d49425eff1c2f03a30b5797978f",
+    "packages/cses_document_collab/lib/src/editor/collab_block_delete.dart": "4f51fa56062832072876a3f8f2b3661bf3efc74addfd886ccc401d05018bd1d0",
+    "packages/cses_document_collab/lib/src/editor/collab_block_lock_chrome.dart": "c6ac9ec0030a6e04cc1f97256f21cfc76856ee6971e9536156be8aa2f6129856",
+    "packages/cses_document_collab/lib/src/editor/collab_date_card_block.dart": "27c8f7e642b82554b003fb2b65e639ae244959fd95b436abc0f69f37c95504b4",
+    "packages/cses_document_collab/lib/src/editor/collab_date_card_settings.dart": "783f11281cec523f859e1186a5ed7521b84ec0e38917d01f7870f041ee8246aa",
+    "packages/cses_document_collab/lib/src/editor/core/editor_configuration.dart": "c246d67e896922dbf647d64e5cbb91bb002d37a9d086c08d0df190bfd9973914",
+    "packages/cses_document_collab/lib/src/editor/document_editor_view.dart": "f868dca240be7d822abc651e9dfa8c68c59cfe5a2fb364f1302e7384bc77d95d",
+    "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart": "d7a2260ba2fd3036f96418f9cbe0ffac7c68a69bbd71f779bd97c8e5df279f22",
+    "packages/cses_document_collab/lib/src/model/collab_date_card.dart": "d3e32a232846b0d7a376d31e6e21ff8e8de27797c76e687ac365f429a2a78a9f",
+    "packages/cses_document_collab/lib/src/ui/modal/collab_date_card_visual.dart": "a6bbb9961e33a374951d5605eaa4c6a1ab8bf22fbabac9a7adbb5057f6f78d85",
+    "packages/cses_document_collab/rust/src/api/blockcraft.rs": "20078aed32df2d50120e40d9234c35b48ddf4992f702132815dd413d689b42ad",
+    "packages/cses_document_collab/rust/src/api/collab.rs": "3340175c3dfe9be2243f5e11226b3c2672ef1b76b0083b9f1ba7e6eeb122de4a",
+    "packages/cses_document_collab/rust/tests/fixtures/blockcraft-date-card.json": "7fec5d9dc4541385661597a80d71580cba31699862dc11ca9a65bcf2d8a7dcfa",
+    "packages/cses_document_collab/rust/tests/fixtures/blockcraft-date-card.update": "caa17edb949223e6c6e2462d25a22178bbe8c9360e939154a0b3b305a8943065",
+    "packages/cses_document_collab/test/blockcraft_json_codec_test.dart": "7855bca81a381ced111550354a9c8c2a1910912033600e29b37a627cf23962c0",
+    "packages/cses_document_collab/test/collab_date_card_test.dart": "838697dd76de046cc29a3ea02d3976d89b4204d73e5ac43751261d9c3a564024",
+    "packages/cses_document_collab/test/date_card_native_integration_test.dart": "9e073ecdf0e61e2a03a44f0979bea1f5482e2d02ea5e99a890314eb28019255d",
+    "packages/cses_document_collab/test/editor_toolbar_configuration_test.dart": "0bc3243000215481a0a69595cca10fe2a5b3f7eba2c96861ddc71ffab71d89f9",
+    "packages/cses_document_collab/tool/generate_date_card_fixture.mjs": "c2b94f829125c282958c88211d0258156d85bcb96f4b4502aa3ae1717c6d0d90"
+  },
+  "checks": {
+    "core": {
+      "passed": 18,
+      "failed": 0
+    },
+    "lockEpoch": {
+      "passed": 1,
+      "failed": 0
+    },
+    "related": {
+      "passed": 77,
+      "failed": 1,
+      "baselineConfirmed": true
+    },
+    "rust": {
+      "passed": 197,
+      "failed": 0
+    },
+    "host": {
+      "passed": 25,
+      "failed": 0
+    },
+    "packageAnalyze": "passed",
+    "hostAnalyze": "passed",
+    "androidBuild": "passed",
+    "device": "not run",
+    "ios": "not run",
+    "onlineDesktopPeer": "not run",
+    "directMenu": {
+      "passed": 2,
+      "failed": 0,
+      "overlap": "related"
+    },
+    "generatorSyntax": "passed",
+    "gitDiffCheck": "passed"
+  }
+}

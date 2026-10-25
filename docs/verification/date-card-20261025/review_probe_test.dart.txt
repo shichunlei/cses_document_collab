@@ -1,0 +1,166 @@
+import 'dart:ui' as ui;
+
+import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
+import 'package:cses_document_collab/src/editor/blockcraft_json_codec.dart';
+import 'package:cses_document_collab/src/editor/collab_date_card_settings.dart';
+import 'package:cses_document_collab/src/editor/core/document_editor_controller.dart';
+import 'package:cses_document_collab/src/model/collab_date_card.dart';
+import 'package:cses_document_collab/src/model/collab_resource.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_date_card_visual.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_modal_segments.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+/// 审查反例：期望安全行为，当前缺陷必须显式失败；不修改任何产品实现。
+void main() {
+  testWidgets('reselecting the current style must preserve a desktop-resized card', (tester) async {
+    final adapter = _resizedAdapter();
+    try {
+      await _openSettings(tester, adapter.editorState);
+      final calendar = find.byKey(const ValueKey('date-card-style-calendar'));
+      await Scrollable.ensureVisible(tester.element(calendar), alignment: .5);
+      await tester.pumpAndSettle();
+      await tester.tap(calendar);
+      await tester.pump();
+      await tester.tap(find.byKey(const ValueKey('date-card-apply')));
+      await tester.pumpAndSettle();
+      final values = adapter.blocks.first.resource!.values;
+      debugPrint('RESELECT_STYLE_RESULT=$values');
+      expect(values['width'], 336.0, reason: '点击已选样式不应抹掉作者的2倍缩放');
+      expect(values['height'], 289.504);
+      expect(adapter.editorState.undoManager.undoStack.isEmpty, isTrue);
+    } finally {
+      await tester.pumpWidget(const SizedBox());
+      adapter.dispose();
+    }
+  });
+
+  testWidgets('choosing visible 32px uses display scale instead of storing 32 design pixels', (tester) async {
+    final adapter = _resizedAdapter();
+    try {
+      await _openSettings(tester, adapter.editorState);
+      final fonts = find.byWidgetPredicate((widget) => widget is CollabModalSegments<double>);
+      final row = fonts.first;
+      await Scrollable.ensureVisible(tester.element(row), alignment: .5);
+      await tester.pumpAndSettle();
+      final size32 = find.descendant(of: row, matching: find.text('32'));
+      await tester.tap(size32);
+      await tester.pump();
+      await tester.tap(find.byKey(const ValueKey('date-card-apply')));
+      await tester.pumpAndSettle();
+      final values = adapter.blocks.first.resource!.values;
+      debugPrint('DISPLAY_FONT_RESULT=$values');
+      final stored = double.parse((values['fsCalendar'] as String).split(' ').first);
+      expect(stored * 2, 32.0, reason: '2倍卡片选择32px应保存16设计像素，与桌面contentScale合同一致');
+    } finally {
+      await tester.pumpWidget(const SizedBox());
+      adapter.dispose();
+    }
+  });
+
+  testWidgets('an imported tiny dotted border must not consume an unbounded painting budget', (tester) async {
+    final document = BlockCraftJsonCodec.decode({
+      'id': 'root',
+      'flavour': 'root',
+      'nodeType': 'root',
+      'props': {},
+      'meta': {},
+      'children': [
+        {
+          'id': 'date',
+          'flavour': 'date-card',
+          'nodeType': 'void',
+          'meta': {},
+          'children': [],
+          'props': {'date': '2026-10-25T09:30', 'bw': '1e-320px dotted'},
+        },
+      ],
+    });
+    final owner = DocumentEditorController(document: document);
+    try {
+      final values = CollabDateCard.readAttributes(document.root.children.single.attributes).values;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Offstage(
+              child: SizedBox(width: 300, child: CollabDateCardVisual(card: CollabDateCard(values))),
+            ),
+          ),
+        ),
+      );
+      expect(tester.takeException(), isNull);
+      final custom = tester.widget<CustomPaint>(
+        find.byWidgetPredicate(
+          (widget) => widget is CustomPaint && widget.foregroundPainter?.runtimeType.toString() == '_DateBorder',
+          skipOffstage: false,
+        ),
+      );
+      final canvas = _BudgetCanvas();
+      debugPrint('TINY_BORDER_IMPORT=${values['bw']}');
+      expect(
+        () => custom.foregroundPainter!.paint(canvas, const Size(160, 137)),
+        returnsNormally,
+        reason: '非法/极小边框须回落或限制dash数量，不能在UI Isolate连续执行超过10000次绘制',
+      );
+    } finally {
+      await tester.pumpWidget(const SizedBox());
+      await tester.runAsync(owner.close);
+    }
+  });
+}
+
+/// 创建一个桌面按默认固定框等比放大2倍的正式日期投影，由各测试释放。
+AppFlowyBlockEditorAdapter _resizedAdapter() => AppFlowyBlockEditorAdapter(
+  initialBlocks: [
+    CollabEditorBlock(
+      id: 'date',
+      blockType: 'date-card',
+      text: '',
+      resource: CollabResource.fromValues({
+        'date': '2026-10-25T09:30',
+        'style': 'calendar',
+        'format': 'full',
+        'width': 336.0,
+        'height': 289.504,
+      }),
+    ),
+    const CollabEditorBlock(id: 'p', blockType: 'paragraph', text: '正文'),
+  ],
+  onLocalBlocksChanged: (_) {},
+);
+
+/// 在 [tester] 中为借用的 [state] 打开真实设置面板，不注册或释放外部编辑资源。
+Future<void> _openSettings(WidgetTester tester, EditorState state) async {
+  await tester.pumpWidget(
+    MaterialApp(
+      home: Scaffold(
+        body: Builder(
+          builder: (context) => TextButton(
+            onPressed: () async => await showCollabDateCardSettings(context, state, 'date'),
+            child: const Text('打开设置'),
+          ),
+        ),
+      ),
+    ),
+  );
+  await tester.tap(find.text('打开设置'));
+  await tester.pumpAndSettle();
+}
+
+/// 阻止缺陷画笔实际挂死测试进程；超过10000次drawPath立即失败，不分配图形资源。
+class _BudgetCanvas implements Canvas {
+  /// 当前测试已经请求的路径绘制次数。
+  int draws = 0;
+
+  /// [path]/[paint]均借用；只记录请求，第10001次抛出预算错误以终止不受限循环。
+  @override
+  void drawPath(ui.Path path, Paint paint) {
+    draws++;
+    if (draws > 10000) throw StateError('PAINT_BUDGET_EXCEEDED: $draws drawPath calls');
+  }
+
+  /// [invocation]中的其他Canvas操作不属于当前点线探针，保持默认失败语义。
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}

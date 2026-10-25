@@ -1,0 +1,48 @@
+{
+  "installed": {
+    "version": "0.11.21",
+    "sha256": {
+      "font": "12e9f23c024a47bcb7b910893b5f0bb7e4429154f0c6d839dee8b0ba7a34813c",
+      "storeFont": "bb358146b4448d3f4315ed4892695d60f1b4690066bfb4f4db55c17d45857ee6",
+      "settingsScale": "c00fdd98037925682bacc45a66897a2045893ba4ec654c4d8d056b7721dbb822",
+      "border": "f80a5e0d480989c1baf2452a2c7ce914c8c47bbc11f8f17fd221c18d050fde9d",
+      "schema": "3628a8a7220bd4cb91fd999bd0cc4d21de4881099f198cc65c190eea7b80fbe5",
+      "skill": "35ebfd974d56b5529dd5d022f0d5765f22db0ef1abfa7c44bd545a66cdb542c6"
+    }
+  },
+  "declared": {
+    "version": "0.11.28",
+    "sha256": {
+      "font": "12e9f23c024a47bcb7b910893b5f0bb7e4429154f0c6d839dee8b0ba7a34813c",
+      "storeFont": "bb358146b4448d3f4315ed4892695d60f1b4690066bfb4f4db55c17d45857ee6",
+      "settingsScale": "c00fdd98037925682bacc45a66897a2045893ba4ec654c4d8d056b7721dbb822",
+      "border": "f80a5e0d480989c1baf2452a2c7ce914c8c47bbc11f8f17fd221c18d050fde9d",
+      "schema": "3628a8a7220bd4cb91fd999bd0cc4d21de4881099f198cc65c190eea7b80fbe5",
+      "skill": "35ebfd974d56b5529dd5d022f0d5765f22db0ef1abfa7c44bd545a66cdb542c6"
+    }
+  },
+  "latest": {
+    "version": "0.11.30",
+    "sha256": {
+      "font": "12e9f23c024a47bcb7b910893b5f0bb7e4429154f0c6d839dee8b0ba7a34813c",
+      "storeFont": "bb358146b4448d3f4315ed4892695d60f1b4690066bfb4f4db55c17d45857ee6",
+      "settingsScale": "c00fdd98037925682bacc45a66897a2045893ba4ec654c4d8d056b7721dbb822",
+      "border": "f80a5e0d480989c1baf2452a2c7ce914c8c47bbc11f8f17fd221c18d050fde9d",
+      "schema": "3628a8a7220bd4cb91fd999bd0cc4d21de4881099f198cc65c190eea7b80fbe5",
+      "skill": "35ebfd974d56b5529dd5d022f0d5765f22db0ef1abfa7c44bd545a66cdb542c6"
+    }
+  },
+  "registry": {
+    "date": "2026-10-25",
+    "latest": "0.11.30",
+    "declared": "0.11.28",
+    "yarn": "0.11.28",
+    "installed": "0.11.21",
+    "historicalPnpm": "0.2.78",
+    "registry": "http://npm.runtongqiuben.com/",
+    "distSha1": "abedbde54c71e81db525aec73f86cceb77f4cb4b",
+    "artifactSha1": "abedbde54c71e81db525aec73f86cceb77f4cb4b"
+  },
+  "scope": "date-card R1/R2/R3 fixes and bottom-sheet migration; registry queried again for this task",
+  "artifactVerified": true
+}

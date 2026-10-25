@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-25",
+  "base": "df3fdc21dea3e9542411aa4f3fdfa19f7fd98246",
+  "scope": "date-only isolated snapshot; weather and unrelated work excluded",
+  "versions": {
+    "latest": "0.11.30",
+    "declared": "0.11.28",
+    "yarn": "0.11.28",
+    "installed": "0.11.21",
+    "registry": "http://npm.runtongqiuben.com/",
+    "upgraded": false
+  },
+  "verification": {
+    "analyzeTargets": 19,
+    "analyzeIssues": 0,
+    "rustTests": 197,
+    "flutterSuiteTests": 47,
+    "dateToolbarTest": 1,
+    "rebuiltNativeTests": 2,
+    "format": "passed",
+    "rustCheck": "passed",
+    "rustBuild": "passed",
+    "rustFmtCheck": "passed"
+  },
+  "isolatedNativeSha256": "0ee6cadb51cd0e5f7ccae039c5e88c926c3c24cfe3ac0c2e7478c826e387333a",
+  "sourceSha256": {
+    "packages/cses_document_collab/lib/src/editor/appflowy_block_editor_adapter.dart": "5290aca74913ea7387036219a660a14b3cb74264e09a3c11bdb9cbce6a042b04",
+    "packages/cses_document_collab/lib/src/editor/blockcraft_json_codec.dart": "e377354a387ac5d9599749b408f2a7e7de5744928fb88bbdf093c03441fff2c2",
+    "packages/cses_document_collab/lib/src/editor/blockcraft_snapshot_view.dart": "93f79f7219b94eecf8f6f8df6f5c91800b70bf360e3e0a4fb3c285bc7c2ecf9e",
+    "packages/cses_document_collab/lib/src/editor/collab_block_actions.dart": "0bd18d22a26fb98ba9651b7a9916a17cf0822d49425eff1c2f03a30b5797978f",
+    "packages/cses_document_collab/lib/src/editor/collab_block_delete.dart": "c23fda30fcf663150f0940c13da5402789c3b4047b340913ebc4ab95a6b7828f",
+    "packages/cses_document_collab/lib/src/editor/collab_block_lock_chrome.dart": "c6ac9ec0030a6e04cc1f97256f21cfc76856ee6971e9536156be8aa2f6129856",
+    "packages/cses_document_collab/lib/src/editor/core/editor_configuration.dart": "c246d67e896922dbf647d64e5cbb91bb002d37a9d086c08d0df190bfd9973914",
+    "packages/cses_document_collab/lib/src/editor/document_editor_view.dart": "f868dca240be7d822abc651e9dfa8c68c59cfe5a2fb364f1302e7384bc77d95d",
+    "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart": "77bde955d337e6826344365e117c6b163ca16ad79f0290f3b3dba14354eeaaba",
+    "packages/cses_document_collab/rust/src/api/blockcraft.rs": "20078aed32df2d50120e40d9234c35b48ddf4992f702132815dd413d689b42ad",
+    "packages/cses_document_collab/rust/src/api/collab.rs": "3340175c3dfe9be2243f5e11226b3c2672ef1b76b0083b9f1ba7e6eeb122de4a",
+    "packages/cses_document_collab/test/blockcraft_json_codec_test.dart": "1e204e379c6eb853041f6d2589c0825fee7d153e097328b57d0cce84239eee6a",
+    "packages/cses_document_collab/test/editor_toolbar_configuration_test.dart": "0bc3243000215481a0a69595cca10fe2a5b3f7eba2c96861ddc71ffab71d89f9",
+    "packages/cses_document_collab/lib/src/editor/collab_date_card_block.dart": "95110c7ba4c0069e0e8460d1aed4fff06d3fd4c95949b5b0fbad77ae4d73f3dd",
+    "packages/cses_document_collab/lib/src/editor/collab_date_card_settings.dart": "a6895155a29152944bf853b5f76a511efe41a5f4744787efa39de82de5f62477",
+    "packages/cses_document_collab/lib/src/model/collab_date_card.dart": "c030e1b8516b1c891dfbf4875786d38350cb8fe04270dc72b4f809e79158b1c6",
+    "packages/cses_document_collab/lib/src/ui/modal/collab_date_card_visual.dart": "905df3402b0248db7fae3a9fb5ff2e3379b8c261c0e7cb8179600a24377d6602",
+    "packages/cses_document_collab/test/collab_date_card_test.dart": "19305d28a724a699a1847eb17b95888b2ce1e81d766fe7514dd813ea3dd61df5",
+    "packages/cses_document_collab/test/date_card_native_integration_test.dart": "9e073ecdf0e61e2a03a44f0979bea1f5482e2d02ea5e99a890314eb28019255d",
+    "packages/cses_document_collab/test/date_card_regression_test.dart": "149124d7bd31fa76d048482fae28a2de6b3bab955eb9cf243885dbc7cd72829a",
+    "packages/cses_document_collab/test/date_card_settings_test_utils.dart": "d6f88d3447be45255d8236e752b6e199db04a5a29f00ed25e2c8909479684497",
+    "packages/cses_document_collab/tool/generate_date_card_fixture.mjs": "c2b94f829125c282958c88211d0258156d85bcb96f4b4502aa3ae1717c6d0d90"
+  }
+}

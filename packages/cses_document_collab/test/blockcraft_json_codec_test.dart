@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cses_document_collab/src/ui/modal/collab_date_card_visual.dart';
+
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';
 import 'package:flutter/material.dart';
@@ -184,7 +186,7 @@ void main() {
     expect(tester.takeException(), isNull);
     for (final finder in [
       find.textContaining('示例城市'),
-      find.text('2026年10月23日'),
+      find.byWidgetPredicate((widget) => widget is CollabDateCardVisual && widget.card.date == DateTime(2026, 10, 23)),
       find.text('示例人员'),
       find.text('中心主题'),
     ]) {

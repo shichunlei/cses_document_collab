@@ -20,6 +20,7 @@ import 'package:cses_document_collab/src/editor/stable_mobile_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
 import 'package:cses_document_collab/src/model/collab_color_palette.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
+import 'package:cses_document_collab/src/model/collab_date_card.dart';
 import 'package:cses_document_collab/src/model/collab_formula.dart';
 import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
 import 'package:cses_document_collab/src/model/collab_meeting.dart';
@@ -562,6 +563,13 @@ const _commonInsertions = [
     blockType: 'divider',
   ),
   _CommonInsertionAction(
+    EditorKeyboardToolbarItem.dateCard,
+    '日期卡片',
+    LucideIcons.calendarDays,
+    'editor-shortcut-date-card',
+    blockType: 'date-card',
+  ),
+  _CommonInsertionAction(
     EditorKeyboardToolbarItem.pageDivider,
     '分页符',
     LucideIcons.separatorHorizontal,
@@ -781,6 +789,9 @@ Future<Selection?> _performCommonInsertion(
         final selection = current();
         if (draft == null || selection == null) return null;
         return await insertCollabDivider(state, selection, values: draft.values);
+      case EditorKeyboardToolbarItem.dateCard:
+        final selection = current();
+        return selection == null ? null : await insertCollabDateCard(state, selection);
       case EditorKeyboardToolbarItem.pageDivider:
         final landing = await insertCollabPageDivider(state, current()!);
         if (landing == null && context.mounted) _showToolbarMessage(context, '分页符只能插入文档顶层，请选择顶层光标位置');
@@ -3268,11 +3279,8 @@ Node _convertedNode(Node node, String blockType, int? headingLevel, {Set<String>
     },
     blockComponentDelta: (node.delta ?? Delta()).toJson(),
     blockComponentAlign: alignment,
-    csesBlockIndentAttribute: keepsIndent
-        ? (node.attributes[csesBlockIndentAttribute] as int? ?? 0).clamp(0, 6)
-        : 0,
-    if (blockType == HeadingBlockKeys.type)
-      HeadingBlockKeys.level: (headingLevel ?? 1).clamp(1, 6),
+    csesBlockIndentAttribute: keepsIndent ? (node.attributes[csesBlockIndentAttribute] as int? ?? 0).clamp(0, 6) : 0,
+    if (blockType == HeadingBlockKeys.type) HeadingBlockKeys.level: (headingLevel ?? 1).clamp(1, 6),
     if (blockType == TodoListBlockKeys.type) TodoListBlockKeys.checked: false,
     if (blockType == 'code') blockComponentBackgroundColor: '0xfff3f4f6',
   };
@@ -3295,8 +3303,7 @@ Node _emptyNode(String blockType, int? headingLevel) {
       blockComponentDelta: Delta().toJson(),
       blockComponentAlign: 'left',
       csesBlockIndentAttribute: 0,
-      if (blockType == HeadingBlockKeys.type)
-        HeadingBlockKeys.level: (headingLevel ?? 1).clamp(1, 6),
+      if (blockType == HeadingBlockKeys.type) HeadingBlockKeys.level: (headingLevel ?? 1).clamp(1, 6),
       if (blockType == TodoListBlockKeys.type) TodoListBlockKeys.checked: false,
       if (blockType == 'code') blockComponentBackgroundColor: '0xfff3f4f6',
     },

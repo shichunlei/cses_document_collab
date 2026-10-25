@@ -1,0 +1,46 @@
+{
+  "installed": {
+    "version": "0.11.21",
+    "fragments": {
+      "dateCapability": "d4e21830d385afaad34b4a924b7718cdf4011b0261635eb6463dd157f032db38",
+      "positionCodec": "479c7cc92b96b31f2557b89e5daa694c908033ca5ab9c84d6e300975ec195c80",
+      "placementFlow": "a8db9b6737b2bef5c68035cd0b91f04dbee202e1c1a43c30699da2cd3ea44bd9",
+      "placementRuntime": "c287e0d6c96819f616d9c4906ca46be33abff56ce49a906426011672b921c31f",
+      "objectDrag": "d4be9a7c7f0ede33db1aba43e67bbe6fce0392ee29680d36cc673bed92a099b5",
+      "placementGuide": "2c6eee4347cfe5c604d1352d1a1a99e6e0f7d21b256bc8bca5eca072c65bb918"
+    }
+  },
+  "declared": {
+    "version": "0.11.28",
+    "fragments": {
+      "dateCapability": "d4e21830d385afaad34b4a924b7718cdf4011b0261635eb6463dd157f032db38",
+      "positionCodec": "479c7cc92b96b31f2557b89e5daa694c908033ca5ab9c84d6e300975ec195c80",
+      "placementFlow": "a8db9b6737b2bef5c68035cd0b91f04dbee202e1c1a43c30699da2cd3ea44bd9",
+      "placementRuntime": "c287e0d6c96819f616d9c4906ca46be33abff56ce49a906426011672b921c31f",
+      "objectDrag": "d4be9a7c7f0ede33db1aba43e67bbe6fce0392ee29680d36cc673bed92a099b5",
+      "placementGuide": "74f9ec9cf85ec0430cbee5aca121b082cac2785e8d2d80ae49f8a56c90090a41"
+    }
+  },
+  "latest": {
+    "version": "0.11.30",
+    "fragments": {
+      "dateCapability": "d4e21830d385afaad34b4a924b7718cdf4011b0261635eb6463dd157f032db38",
+      "positionCodec": "479c7cc92b96b31f2557b89e5daa694c908033ca5ab9c84d6e300975ec195c80",
+      "placementFlow": "a8db9b6737b2bef5c68035cd0b91f04dbee202e1c1a43c30699da2cd3ea44bd9",
+      "placementRuntime": "c287e0d6c96819f616d9c4906ca46be33abff56ce49a906426011672b921c31f",
+      "objectDrag": "d4be9a7c7f0ede33db1aba43e67bbe6fce0392ee29680d36cc673bed92a099b5",
+      "placementGuide": "74f9ec9cf85ec0430cbee5aca121b082cac2785e8d2d80ae49f8a56c90090a41"
+    }
+  },
+  "registry": {
+    "queriedOn": "2026-10-25",
+    "latest": "0.11.30",
+    "registry": "http://npm.runtongqiuben.com/",
+    "declared": "0.11.28",
+    "yarn": "0.11.28",
+    "installed": "0.11.21",
+    "historicalPnpm": "0.2.78",
+    "artifactSha1": "abedbde54c71e81db525aec73f86cceb77f4cb4b",
+    "distSha1": "abedbde54c71e81db525aec73f86cceb77f4cb4b"
+  }
+}
