@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';
@@ -47,6 +48,7 @@ void main() {
     EditorKeyboardToolbarItem.inlineFormula: '行内公式',
     EditorKeyboardToolbarItem.divider: '分割线',
     EditorKeyboardToolbarItem.dateCard: '日期卡片',
+    EditorKeyboardToolbarItem.weather: '天气卡片',
     EditorKeyboardToolbarItem.pageDivider: '分页符',
     EditorKeyboardToolbarItem.spreadsheet: '电子表格',
     EditorKeyboardToolbarItem.multiTable: '多维表格',
@@ -132,6 +134,7 @@ void main() {
     EditorKeyboardToolbarItem.table: 'table',
     EditorKeyboardToolbarItem.callout: 'callout',
     EditorKeyboardToolbarItem.dateCard: 'date-card',
+    EditorKeyboardToolbarItem.weather: 'weather',
     EditorKeyboardToolbarItem.pageDivider: 'page-divider',
   }.entries) {
     testWidgets('direct ${entry.key.name} inserts without more sheet and has undo', (tester) async {
@@ -230,6 +233,46 @@ void main() {
         await _settleAction(tester);
         expect(local.editorState.document.root.children.any((node) => node.type == 'meeting'), !revoke);
         expect(tester.takeException(), isNull);
+      } finally {
+        await _closeMountedEditor(tester, local);
+      }
+    });
+  }
+
+  for (final revoke in [false, true]) {
+    testWidgets('weather creation freezes one insertion and ignores revoked query: $revoke', (tester) async {
+      final pending = Completer<CollabWeatherData>();
+      final local = LocalEditorController(
+        initialText: 'Text',
+        configuration: EditorConfiguration(keyboardToolbarItems: [EditorKeyboardToolbarItem.weather]),
+        services: CollabHostServices(
+          loadWeather: ({date, required refresh, required cancelled}) {
+            expect(date, matches(RegExp(r'^\d{4}-\d{2}-\d{2}$')));
+            expect(refresh, isFalse);
+            return pending.future;
+          },
+        ),
+      );
+      try {
+        await _mountToolbar(tester, local);
+        await tester.tap(find.byTooltip('天气卡片'));
+        await tester.pump();
+        if (revoke) {
+          local.editorState.editable = false;
+          local.editorState.editable = true;
+        }
+        pending.complete(const CollabWeatherData(temp: 18, condition: '晴', location: '北京'));
+        await _settleAction(tester);
+        final cards = local.editorState.document.root.children.where((node) => node.type == 'weather');
+        expect(cards.isNotEmpty, !revoke);
+        if (!revoke) {
+          final props = jsonDecode((cards.single.attributes['cses_resource'] as Map)['properties'] as String) as Map;
+          expect(props['frozen']['temp'], 18);
+          local.editorState.undoManager.undo();
+          await tester.pumpAndSettle();
+          expect(local.editorState.document.root.children.any((node) => node.type == 'weather'), isFalse);
+          expect(local.editorState.undoManager.undoStack, isEmpty);
+        }
       } finally {
         await _closeMountedEditor(tester, local);
       }

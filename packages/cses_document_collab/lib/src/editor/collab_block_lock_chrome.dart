@@ -45,6 +45,7 @@ Widget decorateCollabBlockLock(
         'image',
         'video',
         'date-card',
+        'weather',
         'divider',
         'page-divider',
       }.contains(node.type);

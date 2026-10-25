@@ -1,0 +1,70 @@
+{
+  "date": "2026-10-25",
+  "registry": "http://npm.runtongqiuben.com/",
+  "liveLatest": "0.11.30",
+  "declared": "0.11.28",
+  "yarn": "0.11.28",
+  "installed": "0.11.21",
+  "historicalPnpm": "0.2.78",
+  "initialQuery": "EPERM local proxy; stale npm response rejected",
+  "upgraded": false,
+  "installedPackage": {
+    "version": "0.11.21",
+    "implementationSha256": {
+      "const LIVE_ANCHOR =": "7e2fcc7e46646b78152ed581d1557268513b7069193952acf420f664d049045c",
+      "const WeatherBlockSchema =": "03952b1fa5c27e1ba49577d45f1a9c4172afbb2681bfcadf71540f638812d284",
+      "class WeatherBlockComponent extends": "c627c5e3ecfb75bd47494dfe4b77fbaefb466c770c8b54d53e503a1f1f584959"
+    },
+    "documentsRead": {
+      "blockcraft.md": "b06ea795f5210df0bce65d2cde5f35fb5039e2eb085b29417e84504444d71967",
+      "blockcraft-block.md": "83ccc8de57d55f6f793b19bc787d27436f756d703aa9bb6f1baf755792499b6e",
+      "MIGRATIONS.md": "800f55f39a3cfb8f389a1dd6a0053d0f40dfca7b9c564b6abb0b08206ad29c37"
+    },
+    "weatherMigrationEntries": [
+      "## Unreleased — 2026-10-08：组合内日期、天气保持等比",
+      "## Unreleased — 2026-09-23：天气手动刷新",
+      "## Unreleased — 2026-09-22：行内天气模板素材与显示格式",
+      "## Unreleased — 2026-09-21：天气块布局与色调"
+    ]
+  },
+  "declaredPackage": {
+    "version": "0.11.28",
+    "implementationSha256": {
+      "const LIVE_ANCHOR =": "7e2fcc7e46646b78152ed581d1557268513b7069193952acf420f664d049045c",
+      "const WeatherBlockSchema =": "03952b1fa5c27e1ba49577d45f1a9c4172afbb2681bfcadf71540f638812d284",
+      "class WeatherBlockComponent extends": "c627c5e3ecfb75bd47494dfe4b77fbaefb466c770c8b54d53e503a1f1f584959"
+    },
+    "documentsRead": {
+      "blockcraft.md": "fd35128d50e0f4b68d3d60881e155a884027aaef497d9e6ed2731b01c268686e",
+      "blockcraft-block.md": "450dc1d55049c43a4cb579db47d9af9c5c162af71a897686bb0e9cc6b97b7019",
+      "MIGRATIONS.md": "d1bb5a6337b0e1ce0879099a34134b6e440891720386af9af4c20cdeba205ac2"
+    },
+    "weatherMigrationEntries": [
+      "## Unreleased — 2026-10-08：组合内日期、天气保持等比",
+      "## Unreleased — 2026-09-23：天气手动刷新",
+      "## Unreleased — 2026-09-22：行内天气模板素材与显示格式",
+      "## Unreleased — 2026-09-21：天气块布局与色调"
+    ]
+  },
+  "latestPackage": {
+    "version": "0.11.30",
+    "implementationSha256": {
+      "const LIVE_ANCHOR =": "7e2fcc7e46646b78152ed581d1557268513b7069193952acf420f664d049045c",
+      "const WeatherBlockSchema =": "03952b1fa5c27e1ba49577d45f1a9c4172afbb2681bfcadf71540f638812d284",
+      "class WeatherBlockComponent extends": "c627c5e3ecfb75bd47494dfe4b77fbaefb466c770c8b54d53e503a1f1f584959"
+    },
+    "documentsRead": {
+      "blockcraft.md": "f8b0ed3c2afcb2e03334b9bd6bedb1f7a2c502a303472447367701cdbac39ffd",
+      "blockcraft-block.md": "450dc1d55049c43a4cb579db47d9af9c5c162af71a897686bb0e9cc6b97b7019",
+      "MIGRATIONS.md": "33f0840c7d98f89407e7237fa41aacfbc8b8d29eb826c1aeecbe318c509ec867"
+    },
+    "weatherMigrationEntries": [
+      "## Unreleased — 2026-10-08：组合内日期、天气保持等比",
+      "## Unreleased — 2026-09-23：天气手动刷新",
+      "## Unreleased — 2026-09-22：行内天气模板素材与显示格式",
+      "## Unreleased — 2026-09-21：天气块布局与色调"
+    ]
+  },
+  "artifactSha1": "abedbde54c71e81db525aec73f86cceb77f4cb4b",
+  "artifactMatchesRegistry": true
+}

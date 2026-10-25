@@ -213,7 +213,7 @@ Widget localBody(LocalEditorController editor) =>
 `blocks`是完整启用列表，按配置顺序显示块类型；标题级别仅允许H1~H6的非连续集合；默认配置、添加和类型菜单、命令及写入校验共用六级范围。
 基础paragraph必须保留，保证空文档、回车和删除末块的落点；无效配置在创建资源前拒绝。
 旧标题的拆段与同型续写只将新节点规范到H1~H6，原块原始属性保留。旧列表编号按原始depth+heading分组，超范围旧级别仍保留其协议身份；对外展示投影不作为计数器key，握手修复只处理真实缺失或错误的order。
-默认启用包内已注册的全部26种用户块类型，标题仅支持H1~H6，旧数据中的超范围正级别按H6展示，读取时不主动改写原始数据：正文、标题、引用、三类列表、代码、高亮、表格、分割线、日期卡片、分页符、公式、Mermaid绘图、图片、链接、音视频、附件、网页/Figma/掘金嵌入，以及会议/任务/KR引用。
+默认启用包内已注册的全部27种用户块类型，标题仅支持H1~H6，旧数据中的超范围正级别按H6展示，读取时不主动改写原始数据：正文、标题、引用、三类列表、代码、高亮、表格、分割线、日期卡片、天气卡片、分页符、公式、Mermaid绘图、图片、链接、音视频、附件、网页/Figma/掘金嵌入，以及会议/任务/KR引用。
 表格行/单元格和绘图源码按所属容器隐式启用，不单独出现在添加菜单。
 这表示开放现有移动端实现，不代表41种桌面块已全部适配；仍按根仓库适配表的支持范围使用。
 `EditorConfiguration.text`保留原六类文字块/H1～H4预设；也可通过`blocks`和`inlineFormats`选择更小的功能集合。
@@ -772,6 +772,46 @@ flutter test --no-pub test/collab_page_divider_test.dart test/page_divider_nativ
 node tool/generate_date_card_fixture.mjs /path/to/blockcraft-package /path/to/cses-client
 cargo build --manifest-path rust/Cargo.toml
 flutter test --no-pub test/collab_date_card_test.dart test/date_card_native_integration_test.dart
+```
+
+## 天气卡片（weather）
+
+通过“添加块→常用→天气卡片”插入，或配置`EditorKeyboardToolbarItem.weather`直达；
+能力由`EditorBlock.weather`控制。根和已适配高亮容器使用正式void节点，不写正文URL。
+更多菜单提供天气设置、公共锁/链接/下方插入和整块删除，后置正文行首退格可删除。
+
+宿主通过公开`CollabHostServices.loadWeather`注入`CollabWeatherLoader`；未配置时仅显示已保存
+的`frozen`，不创建默认网络请求。查询接收固定`date`或null实时、`refresh`绕过缓存意图及
+`cancelled`失效检测。宿主持有认证、定位、请求和缓存；不得返回虚构天气。Demo以独立Dio
+连接与桌面同源的IP粗定位/Open-Meteo，定位失败显示北京回落，天气失败保留旧值并提示重试。
+新建入口查询成功后将日期与天气作为一次插入；离线失败仍可插入诚实占位。
+
+天气设置使用公共底部弹窗，同日期设置的居中固定预览、左右箭头循环切换7种布局，样式名称位于预览下方；短视口/键盘压缩预览。标题与取消/应用固定，其他设置独立滚动。
+7种布局、6种色调、文字/强调/内部线/背景/外框颜色、透明底色、图标原色/单色、高低温和
+边框设置先在草稿预览，取消或下滑关闭不写入，应用一次提交改动字段。切换其他样式采用默认固定框，切回原样式恢复作者尺寸及字段缺省状态；无变化应用正常关闭且不新增历史；
+切换色调清除逐项颜色覆盖。时间锚点支持实时与固定日；切换固定日查询成功后原子保存。
+已有固定`frozen`直接展示，显式刷新替换并可撤销；实时天气只在本地展示。
+缺失定格值的旧卡片自动查询暂不落盘，须手动刷新；尚未接入桌面的无Undo初始化事务。
+
+正式投影、字段补丁、JSON及SQLite保留未知共享数据，异常void子树继续占位保护。
+旧本地`snapshot-weather`保留只读展示和属性导出，新导入使用正式天气节点。
+外观用原生布局和Lucide近似实现，窄屏按固定设计框缩小，卡片内字不随系统字号放大。
+自由布局、组合、动画、完整对象剪贴板、第三方实网及真机/真实在线双端验收仍见根适配表。
+
+```dart
+import 'package:cses_document_collab/cses_document_collab.dart';
+final services = CollabHostServices(loadWeather: ({date, required refresh, required cancelled}) async {
+  // 在这里调用宿主真实数据源；查询失败抛错，cancelled()后不交付迟到值。
+  throw StateError('请接入真实天气查询');
+});
+```
+
+发布Schema夹具与验证入口：
+
+```sh
+node tool/generate_weather_fixture.mjs /path/to/blockcraft-package /path/to/cses-client
+cargo build --manifest-path rust/Cargo.toml
+flutter test --no-pub test/collab_weather_test.dart test/weather_native_integration_test.dart
 ```
 
 ## Mermaid代码绘图

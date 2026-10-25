@@ -1,9 +1,8 @@
-import 'package:cses_document_collab/src/ui/modal/collab_editor_display_scope.dart';
 import 'dart:async';
-import 'package:cses_document_collab/src/editor/collab_paragraph_text_style.dart';
-import 'package:cses_document_collab/src/editor/blockcraft_snapshot_view.dart';
+
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
+import 'package:cses_document_collab/src/editor/blockcraft_snapshot_view.dart';
 import 'package:cses_document_collab/src/editor/collab_attachment_block.dart';
 import 'package:cses_document_collab/src/editor/collab_audio_block.dart';
 import 'package:cses_document_collab/src/editor/collab_block_colors.dart';
@@ -12,8 +11,9 @@ import 'package:cses_document_collab/src/editor/collab_bookmark_block.dart';
 import 'package:cses_document_collab/src/editor/collab_callout_block.dart';
 import 'package:cses_document_collab/src/editor/collab_code_block.dart';
 import 'package:cses_document_collab/src/editor/collab_code_editing.dart';
-import 'package:cses_document_collab/src/editor/collab_divider_block.dart';
 import 'package:cses_document_collab/src/editor/collab_date_card_block.dart';
+import 'package:cses_document_collab/src/editor/collab_weather_block.dart';
+import 'package:cses_document_collab/src/editor/collab_divider_block.dart';
 import 'package:cses_document_collab/src/editor/collab_embed_block.dart';
 import 'package:cses_document_collab/src/editor/collab_figma_embed_block.dart';
 import 'package:cses_document_collab/src/editor/collab_formula_block.dart';
@@ -29,11 +29,15 @@ import 'package:cses_document_collab/src/editor/collab_ordered_marker.dart';
 import 'package:cses_document_collab/src/editor/collab_page_divider_block.dart';
 import 'package:cses_document_collab/src/editor/collab_paragraph_editing.dart';
 import 'package:cses_document_collab/src/editor/collab_paragraph_indent.dart';
-import 'package:cses_document_collab/src/editor/editor_text_presentation.dart';
+import 'package:cses_document_collab/src/editor/collab_paragraph_text_style.dart';
 import 'package:cses_document_collab/src/editor/collab_unsupported_block.dart';
 import 'package:cses_document_collab/src/editor/collab_video_block.dart';
 import 'package:cses_document_collab/src/editor/collab_web_embed_block.dart';
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
+import 'package:cses_document_collab/src/editor/core/editor_view_configuration.dart';
+import 'package:cses_document_collab/src/editor/editor_interaction_shell.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
+import 'package:cses_document_collab/src/editor/editor_text_presentation.dart';
 import 'package:cses_document_collab/src/editor/editor_user_mentions.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
@@ -45,6 +49,7 @@ import 'package:cses_document_collab/src/model/collab_page_divider.dart';
 import 'package:cses_document_collab/src/model/collab_paragraph_style.dart';
 import 'package:cses_document_collab/src/model/collab_task_card.dart';
 import 'package:cses_document_collab/src/model/collab_user_mention.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_editor_display_scope.dart';
 import 'package:flutter/material.dart';
 
 import 'collab_inline_entity_mention.dart';
@@ -52,10 +57,6 @@ import 'collab_table_block.dart';
 import 'collab_table_cell_block.dart';
 import 'collab_table_row_block.dart';
 import 'collab_task_card_block.dart';
-
-import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
-import 'package:cses_document_collab/src/editor/core/editor_view_configuration.dart';
-import 'package:cses_document_collab/src/editor/editor_interaction_shell.dart';
 
 /// 本地与协同共用的正文、快捷栏和划词菜单；只借用编辑会话。
 ///
@@ -464,6 +465,7 @@ Map<String, BlockComponentBuilder> _createDocumentBlockBuilders() =>
         configuration: standardBlockComponentConfiguration.copyWith(padding: _listBlockPadding),
       ),
       'date-card': CollabDateCardBlockComponentBuilder(),
+      'weather': CollabWeatherBlockComponentBuilder(),
       collabDividerType: CollabDividerBlockComponentBuilder(),
       collabPageDividerType: CollabPageDividerBlockComponentBuilder(),
       collabFormulaType: CollabFormulaBlockComponentBuilder(),

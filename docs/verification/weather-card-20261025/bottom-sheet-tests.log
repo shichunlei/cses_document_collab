@@ -1,0 +1,37 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: frozen weather requires valid data and live mode ignores old frozen
+00:00 +1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: explicit patches preserve frozen, undo after reorder and reject invalid fields
+00:00 +2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: insert, preceding backspace and undo preserve stable identity and frozen data
+00:00 +3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: JSON creates native weather and cleared palette overrides never revive
+00:01 +4: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: legacy local snapshot-weather retains frozen props on export and its renderer
+00:01 +5: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: seven layouts six palettes at 280px and text scale 1.0
+00:06 +6: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather sheet fixes header/actions at Size(390.0, 844.0)/1.0
+00:08 +7: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather sheet fixes header/actions at Size(390.0, 844.0)/1.0
+00:09 +8: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather sheet fixes header/actions at Size(390.0, 844.0)/1.0
+00:15 +9: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather sheet fixes header/actions at Size(390.0, 844.0)/1.0
+00:17 +10: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather sheet fixes header/actions at Size(390.0, 844.0)/1.0
+00:18 +11: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:19 +12: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:21 +13: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:22 +14: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:23 +15: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:24 +16: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:25 +17: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:26 +18: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:27 +19: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:28 +20: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:29 +21: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:29 +22: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather sheet fixes header/actions at Size(320.0, 720.0)/2.2
+00:29 +23: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_modal_test.dart: expanded sheet pins actions above safe area: content=1000.0 safe=34.0 keyboard=200.0
+00:29 +24: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:30 +25: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:31 +26: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:34 +27: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:35 +28: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:36 +29: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: swiping weather sheet away discards changed draft
+00:36 +30: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: swiping weather sheet away discards changed draft
+00:37 +31: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: swiping weather sheet away discards changed draft
+00:38 +32: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: swiping weather sheet away discards changed draft
+00:39 +33: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: fixed-date query cannot save after permission is revoked then restored
+00:43 +34: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: native seven style gallery
+00:44 +35: All tests passed!

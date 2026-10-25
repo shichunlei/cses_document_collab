@@ -14,13 +14,16 @@ import 'package:cses_document_collab/src/editor/collab_list_editing.dart';
 import 'package:cses_document_collab/src/editor/collab_mermaid_sheet.dart';
 import 'package:cses_document_collab/src/editor/collab_paragraph_indent.dart';
 import 'package:cses_document_collab/src/editor/collab_paragraph_typing.dart';
-import 'package:cses_document_collab/src/editor/editor_media_source_sheet.dart';
+import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
+import 'package:cses_document_collab/src/editor/core/editor_configuration.dart';
 import 'package:cses_document_collab/src/editor/editor_block_conversion.dart';
+import 'package:cses_document_collab/src/editor/editor_media_source_sheet.dart';
 import 'package:cses_document_collab/src/editor/stable_mobile_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
 import 'package:cses_document_collab/src/model/collab_color_palette.dart';
-import 'package:cses_document_collab/src/model/collab_divider.dart';
 import 'package:cses_document_collab/src/model/collab_date_card.dart';
+import 'package:cses_document_collab/src/model/collab_weather.dart';
+import 'package:cses_document_collab/src/model/collab_divider.dart';
 import 'package:cses_document_collab/src/model/collab_formula.dart';
 import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
 import 'package:cses_document_collab/src/model/collab_meeting.dart';
@@ -31,10 +34,8 @@ import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/model/collab_table.dart';
 import 'package:cses_document_collab/src/model/collab_text_range.dart';
 import 'package:cses_document_collab/src/model/collab_user_mention.dart';
-import 'package:cses_document_collab/src/model/editor_media_upload.dart';
 import 'package:cses_document_collab/src/model/editor_keyboard_action.dart';
-import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
-import 'package:cses_document_collab/src/editor/core/editor_configuration.dart';
+import 'package:cses_document_collab/src/model/editor_media_upload.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_bottom_sheet.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_color_picker.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
@@ -570,6 +571,13 @@ const _commonInsertions = [
     blockType: 'date-card',
   ),
   _CommonInsertionAction(
+    EditorKeyboardToolbarItem.weather,
+    '天气卡片',
+    LucideIcons.cloudSun,
+    'editor-shortcut-weather',
+    blockType: 'weather',
+  ),
+  _CommonInsertionAction(
     EditorKeyboardToolbarItem.pageDivider,
     '分页符',
     LucideIcons.separatorHorizontal,
@@ -697,6 +705,7 @@ Future<void> _showKeyboardCommonInsertion(
 /// 在[context]中执行[state]的[action]，使用[bookmark]重定位原插入位置。
 /// [canUseHost]在每次异步返回后检查权限/宿主代次；取消不写入，失效/失败返回null。
 /// 调用方拥有模态隔离和焦点恢复，更多面板与键盘直达复用此函数。
+/// 天气创建先查询固定日，成功快照与插入合为一次历史；失败可插入占位，失效结果不创建块。
 Future<Selection?> _performCommonInsertion(
   BuildContext context,
   EditorState state,
@@ -792,6 +801,29 @@ Future<Selection?> _performCommonInsertion(
       case EditorKeyboardToolbarItem.dateCard:
         final selection = current();
         return selection == null ? null : await insertCollabDateCard(state, selection);
+      case EditorKeyboardToolbarItem.weather:
+        if (current() == null) return null;
+        final services = EditorCommandContext.of(state).services;
+        final date = weatherDay(DateTime.now());
+        final values = <String, dynamic>{'date': date};
+        final loader = services.loadWeather;
+        if (loader != null) {
+          try {
+            final data = await loader(
+              date: date,
+              refresh: false,
+              cancelled: () => current() == null || !identical(EditorCommandContext.of(state).services, services),
+            );
+            if (current() == null || !identical(EditorCommandContext.of(state).services, services)) return null;
+            values['frozen'] = data.toJson();
+          } catch (error, stack) {
+            if (current() == null) return null;
+            _reportEditorError(state, '初始天气加载失败', error: error, stackTrace: stack, tag: 'DocCollab');
+            if (context.mounted) _showToolbarMessage(context, '天气暂不可用，插入后可重试刷新');
+          }
+        }
+        final selection = current();
+        return selection == null ? null : await insertCollabWeather(state, selection, values: values);
       case EditorKeyboardToolbarItem.pageDivider:
         final landing = await insertCollabPageDivider(state, current()!);
         if (landing == null && context.mounted) _showToolbarMessage(context, '分页符只能插入文档顶层，请选择顶层光标位置');

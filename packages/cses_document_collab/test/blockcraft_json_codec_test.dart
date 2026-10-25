@@ -1,7 +1,6 @@
+import 'package:cses_document_collab/src/ui/modal/collab_date_card_visual.dart';
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:cses_document_collab/src/ui/modal/collab_date_card_visual.dart';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';
@@ -148,6 +147,9 @@ void main() {
 
   testWidgets('converted shape, columns, date, person and weather render in the actual editor', (tester) async {
     final fixture = _fixture();
+    // Frozen weather is visible only with a fixed date, matching the desktop Schema contract.
+    final weather = _blocks(fixture).firstWhere((block) => block['flavour'] == 'weather');
+    (weather['props'] as Map)['date'] = '2026-10-23';
     fixture['children'] = (fixture['children'] as List)
         .where(
           (value) => {

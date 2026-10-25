@@ -13,6 +13,7 @@ import 'collab_meeting_reference.dart';
 import 'collab_mention_tap.dart';
 import 'collab_mention_ui.dart';
 import 'collab_task_card_data.dart';
+import 'collab_weather.dart';
 import 'document_metadata.dart';
 
 /// Reports an unexpected failure with its original error and stack trace.
@@ -55,7 +56,9 @@ class CollabHostServices {
   /// [buildParagraphLink]同步构造正式文档段落链接；null隐藏复制段落链接入口。
   /// [canUnlockBlock]同步提供当前用户的额外解锁授权；null仅允许普通锁本人解锁。
   /// 模板锁始终需要显式授权；身份、角色与授权变更由宿主负责，不拥有认证资源。
+  /// [loadWeather]借用宿主天气查询；null只展示已保存的定格值。
   const CollabHostServices({
+    this.loadWeather,
     this.canUnlockBlock,
     this.buildParagraphLink,
     this.showDocumentFeedback = false,
@@ -77,6 +80,9 @@ class CollabHostServices {
     this.krRankIcons,
     this.pickMeetingReference,
   });
+
+  /// 天气查询端口；null不请求定位或网络。宿主持有请求及缓存，失败由卡片显示重试。
+  final CollabWeatherLoader? loadWeather;
 
   /// 可选段落链接构造器；接收正式文档[documentId]和稳定协同[blockId]。
   /// 宿主负责环境域名、路由及编码，须同步返回完整非空链接；失败抛出异常由菜单报告。

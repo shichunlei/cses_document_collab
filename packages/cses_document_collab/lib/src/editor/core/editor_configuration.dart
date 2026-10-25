@@ -35,6 +35,9 @@ enum EditorBlock {
   /// 定格日期卡片及其外观设置。
   dateCard('date-card'),
 
+  /// 实时或定格天气卡片及其外观设置。
+  weather('weather'),
+
   /// 连续流中的分页标记。
   pageDivider('page-divider'),
 
@@ -224,6 +227,9 @@ enum EditorKeyboardToolbarItem {
 
   /// 插入定格为当前日期的独立卡片。
   dateCard,
+
+  /// 插入以当天为锚点的天气卡片。
+  weather,
 
   /// 在根级位置插入分页符。
   pageDivider,

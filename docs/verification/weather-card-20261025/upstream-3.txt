@@ -1,0 +1,85 @@
+class WeatherBlockComponent extends ObjectBlockComponent {
+    constructor() {
+        super(...arguments);
+        this.chip = wireWeatherChip({
+            frozen: () => this.weatherRequest()?.date
+                ? readFrozenWeather(this.presentationProps?.frozen)
+                : null,
+            enabled: () => !this.isDraftProjection,
+            request: () => this.weatherRequest(),
+            query: (request, signal) => this.doc.injector
+                .get(DOC_WEATHER_SERVICE_TOKEN)
+                .query(request, signal),
+            freeze: (weather, request) => this.freezeWeather(weather, request),
+            onRefreshResult: result => {
+                if (!this.canRefreshWeather)
+                    return;
+                if (result === 'success')
+                    this.doc.messageService.success('天气已刷新');
+                else
+                    this.doc.messageService.error('天气刷新失败，请重试');
+            }
+        });
+        // 初值只是占位：字段初始化那刻 this.props 还没就绪，真值在基类 ngOnInit 的首次 repaint 里补。
+        this.look = signal(readWeatherLook(null), ...(ngDevMode ? [{ debugName: "look" }] : []));
+    }
+    /** 监听键与编辑态同源（见 WEATHER_WATCHED_PROPS）；订阅与按键过滤全在基类。 */
+    get styles() { return WEATHER_STYLES; }
+    get watchedProps() { return WEATHER_WATCHED_PROPS; }
+    /** Current model-derived content scale, also used to restore group previews. */
+    get contentScale() { return this.scaleUnit; }
+    /** 外观统一投影到 look；样式尺寸由对象基类管理。 */
+    repaint() {
+        const look = readWeatherLook(this.presentationProps);
+        this.styleDef.set(WEATHER_STYLES.resolve(look.style));
+        this.look.set(look);
+        this.chip.reload();
+    }
+    get canRefreshWeather() { return !this.isDraftProjection && !this.isReadonly && !this._isGone(); }
+    get weatherStatus() { return this.chip.status(); }
+    refreshWeather() { if (this.canRefreshWeather)
+        this.chip.refresh(); }
+    weatherRequest() {
+        const date = this.presentationProps?.date;
+        return typeof date === 'string' && date !== LIVE_ANCHOR && /^\d{4}-\d{2}-\d{2}$/.test(date)
+            ? { date }
+            : undefined;
+    }
+    freezeWeather(weather, request) {
+        if (!request.date || this._isGone() || this.doc.readonlyManager.isReadonly(this))
+            return;
+        if (this.isDraftProjection || this.weatherRequest()?.date !== request.date)
+            return;
+        if (request.refresh) {
+            this.doc.crud.undoManager.stopCapturing();
+            this.updateProps({ frozen: { ...weather } });
+            this.doc.crud.undoManager.stopCapturing();
+        }
+        else if (!readFrozenWeather(this.presentationProps?.frozen))
+            this.setInitProps({ frozen: { ...weather } });
+    }
+    /**
+     * 块重新挂载时重拉一次。**这是「一次失败=永久失败」的解药**——
+     * 早先取数只有 afterNextRender 那一次机会，撞上超时就永远显示占位：
+     * 缓存只在成功时写，失败什么都不留，也没有任何人再去问第二次。
+     *
+     * 对齐 kr-list / meeting-card / todo / task-card 四个块的既有做法（它们全都覆写了这个钩子）。
+     * `chip.reload` 自带幂等闸（已有值直接返回），反复挂载不会反复打接口。
+     */
+    afterReattach() {
+        super.afterReattach();
+        this.chip.reload();
+    }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "20.3.18", ngImport: i0, type: WeatherBlockComponent, deps: null, target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "17.0.0", version: "20.3.18", type: WeatherBlockComponent, isStandalone: true, selector: "div.weather-block", usesInheritance: true, ngImport: i0, template: "\n    <span class=\"tpl-weather-chip\" #boxEl contenteditable=\"false\" data-bc-selection-interaction-frame\n          [attr.data-style]=\"look().style\" [style.--u]=\"scaleUnitCss\"\n          [style.--wt-fg]=\"look().fg\" [style.--wt-accent]=\"look().accent\" [style.--wt-line]=\"look().line\"\n          [style.--wt-bg]=\"look().bg\" [style.color]=\"look().fg\"\n          [style.border-width]=\"look().bw\" [style.border-style]=\"look().bs\" [style.border-color]=\"look().bc\"\n          style=\"position:relative;display:block;width:100%;height:100%;box-sizing:border-box;padding:calc(4 * var(--u,1px));border-radius:calc(6 * var(--u,1px));max-width:100%;line-height:1.2;\">\n        <bc-weather-card [layout]=\"look().style\" [weather]=\"chip.view()\" [status]=\"chip.status()\"\n                         [showRange]=\"look().showRange\" [iconMode]=\"look().iconMode\" />\n        @if (!isReadonly) {\n            <mtl-scale-resizer [target]=\"boxEl\" [maxWidthContainer]=\"resizeMaxWidth\"\n                               [geometryScale]=\"viewGeometryScale\" [preserveRightEdge]=\"isFloating\"\n                               (scaleCommit)=\"onScaled($event)\"></mtl-scale-resizer>\n        }\n    </span>\n", isInline: true, dependencies: [{ kind: "component", type: WeatherCardComponent, selector: "bc-weather-card", inputs: ["layout", "weather", "status", "showRange", "iconMode"] }, { kind: "component", type: ScaleResizerComponent, selector: "mtl-scale-resizer", inputs: ["target", "maxWidthContainer", "minUnit", "preserveRightEdge", "geometryScale"], outputs: ["scaleCommit"] }], changeDetection: i0.ChangeDetectionStrategy.OnPush }); }
+}
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "20.3.18", ngImport: i0, type: WeatherBlockComponent, decorators: [{
+            type: Component,
+            args: [{
+                    selector: 'div.weather-block',
+                    standalone: true,
+                    changeDetection: ChangeDetectionStrategy.OnPush,
+                    imports: [WeatherCardComponent, ScaleResizerComponent],
+                    template: WEATHER_CHIP_TEMPLATE
+                }]
+        }] });

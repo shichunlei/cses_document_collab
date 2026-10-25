@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:cses_mobile_collab_demo/src/service/cses_weather_service.dart';
 import 'package:cses_common/core/collections/objectid.dart';
 import 'package:cses_common/flutter/feedback/toast_util.dart';
 import 'package:cses_common/observability/api/log.dart';
@@ -138,6 +139,7 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
       final mentionDirectory = localDraft ? null : CsesMentionDirectory();
       final metadata = localDraft ? null : CsesDocumentMetadataService();
       final services = CollabHostServices(
+        loadWeather: CsesWeatherService().load,
         canUnlockBlock: metadata?.canUnlockBlock,
         buildParagraphLink: localDraft
             ? null
@@ -166,8 +168,7 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
           return commentCount;
         },
         createId: () => ObjectId().toString(),
-        onError: (message, error, stack, tag) =>
-            Log.e(message, error: error, stackTrace: stack, tag: tag),
+        onError: (message, error, stack, tag) => Log.e(message, error: error, stackTrace: stack, tag: tag),
         mediaUpload: const CsesEditorMediaUploadService(),
         documentMetadata: metadata,
         mentionAvatarBuilder: buildDemoMentionAvatar,

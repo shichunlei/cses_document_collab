@@ -2,11 +2,12 @@ import 'dart:convert';
 
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
-import 'package:cses_document_collab/src/editor/editor_text_attributes.dart';
 import 'package:cses_document_collab/src/editor/blockcraft_snapshot_presets.g.dart';
+import 'package:cses_document_collab/src/editor/editor_text_attributes.dart';
 import 'package:cses_document_collab/src/model/collab_code.dart';
-import 'package:cses_document_collab/src/model/collab_divider.dart';
 import 'package:cses_document_collab/src/model/collab_date_card.dart';
+import 'package:cses_document_collab/src/model/collab_weather.dart';
+import 'package:cses_document_collab/src/model/collab_divider.dart';
 import 'package:cses_document_collab/src/model/collab_formula.dart';
 import 'package:cses_document_collab/src/model/collab_image.dart';
 import 'package:cses_document_collab/src/model/collab_kr.dart';
@@ -92,7 +93,6 @@ abstract final class BlockCraftJsonCodec {
     'placement-layout',
     'render-unit',
     'task-list',
-    'weather',
     'person-card',
     'sticker',
     'mind-map',
@@ -480,6 +480,12 @@ abstract final class BlockCraftJsonCodec {
         props.remove(key);
       }
       props.addAll(CollabDateCard.readAttributes(node.attributes).values);
+    }
+    if (kind == 'weather' && node.type == collabWeatherType) {
+      for (final key in collabWeatherKeys) {
+        props.remove(key);
+      }
+      props.addAll(CollabWeather.readAttributes(node.attributes).values);
     }
     if (kind == 'divider') props.addAll(CollabDivider.readAttributes(node.attributes).values);
     if (collabTableTypes.contains(kind)) props.addAll(collabTableLayout(node));

@@ -1,0 +1,6 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart
+00:00 +0: keyboard toolbar only enables weather
+00:06 +1: direct weather inserts without more sheet and has undo
+00:07 +2: weather creation freezes one insertion and ignores revoked query: false
+00:08 +3: weather creation freezes one insertion and ignores revoked query: true
+00:08 +4: All tests passed!

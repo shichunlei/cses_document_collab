@@ -1,25 +1,25 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:cses_document_collab/src/editor/editor_text_attributes.dart';
-
 import 'package:appflowy_editor/appflowy_editor.dart';
-import 'package:cses_document_collab/src/model/collab_kr.dart';
 import 'package:cses_document_collab/src/editor/core/document_editor_controller.dart';
 import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
+import 'package:cses_document_collab/src/editor/editor_text_attributes.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
 import 'package:cses_document_collab/src/model/collab_code.dart';
-import 'package:cses_document_collab/src/model/collab_divider.dart';
 import 'package:cses_document_collab/src/model/collab_date_card.dart';
-import 'package:cses_document_collab/src/model/collab_page_divider.dart';
+import 'package:cses_document_collab/src/model/collab_weather.dart';
+import 'package:cses_document_collab/src/model/collab_divider.dart';
 import 'package:cses_document_collab/src/model/collab_entity_mention.dart';
 import 'package:cses_document_collab/src/model/collab_formula.dart';
 import 'package:cses_document_collab/src/model/collab_image.dart';
 import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
+import 'package:cses_document_collab/src/model/collab_kr.dart';
 import 'package:cses_document_collab/src/model/collab_link_view.dart';
 import 'package:cses_document_collab/src/model/collab_meeting.dart';
 import 'package:cses_document_collab/src/model/collab_mermaid.dart';
 import 'package:cses_document_collab/src/model/collab_ordered.dart';
+import 'package:cses_document_collab/src/model/collab_page_divider.dart';
 import 'package:cses_document_collab/src/model/collab_paragraph_style.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/model/collab_table.dart';
@@ -616,6 +616,7 @@ final class AppFlowyBlockEditorAdapter {
               currentBlocks[index].parentId == targetBlocks[index].parentId &&
               (currentNodes[index].type == csesUnsupportedBlockType ||
                   isCollabContainerType(currentNodes[index].type) ||
+                  currentNodes[index].type == collabWeatherType ||
                   currentNodes[index].type == collabDateCardType ||
                   currentNodes[index].type == collabDividerType ||
                   currentNodes[index].type == collabPageDividerType ||
@@ -635,6 +636,7 @@ final class AppFlowyBlockEditorAdapter {
         if (collabTableTypes.contains(target.blockType) ||
             _isUrlBackedBlock(target.blockType) ||
             target.blockType == collabMermaidType ||
+            target.blockType == collabWeatherType ||
             target.blockType == collabDateCardType ||
             target.blockType == collabDividerType ||
             target.blockType == collabPageDividerType ||
@@ -939,6 +941,13 @@ final class AppFlowyBlockEditorAdapter {
       if (node != null && node.type == collabDateCardType) {
         for (final key in collabDateCardKeys) {
           if (operation.attributes.containsKey(dateCardPropertyAttribute(key))) {
+            resourceEdits.putIfAbsent(node, () => {}).add(key);
+          }
+        }
+      }
+      if (node != null && node.type == collabWeatherType) {
+        for (final key in collabWeatherKeys) {
+          if (operation.attributes.containsKey(weatherPropertyAttribute(key))) {
             resourceEdits.putIfAbsent(node, () => {}).add(key);
           }
         }
@@ -1266,6 +1275,16 @@ final class AppFlowyBlockEditorAdapter {
         },
       );
     }
+    if (block.blockType == collabWeatherType) {
+      return Node(
+        type: collabWeatherType,
+        id: block.id,
+        attributes: {
+          collabBlockIdAttribute: block.id,
+          ...CollabWeather.nodeAttributes(block.resource ?? const CollabResource()),
+        },
+      );
+    }
     if (block.blockType == collabDividerType) {
       return Node(
         type: collabDividerType,
@@ -1462,6 +1481,8 @@ final class AppFlowyBlockEditorAdapter {
             ? CollabMeeting.readAttributes(node.attributes, edited: resourceEdits[node] ?? const {})
             : node.type == collabFormulaType
             ? readCollabFormula(node.attributes, edited: resourceEdits[node]?.contains('latex') == true)
+            : node.type == collabWeatherType
+            ? CollabWeather.readAttributes(node.attributes, edited: resourceEdits[node] ?? const {})
             : node.type == collabDateCardType
             ? CollabDateCard.readAttributes(node.attributes, edited: resourceEdits[node] ?? const {})
             : node.type == collabDividerType
@@ -1526,6 +1547,7 @@ final class AppFlowyBlockEditorAdapter {
         node.type == collabMermaidSourceType ||
         collabTableTypes.contains(node.type) ||
         isCollabResourceType(node.type) ||
+        node.type == collabWeatherType ||
         node.type == collabDateCardType ||
         node.type == collabDividerType ||
         node.type == collabPageDividerType ||
@@ -1638,6 +1660,7 @@ final class AppFlowyBlockEditorAdapter {
   /// 读取借用[node]的正文或资源地址，容器、日期卡片、分割线、分页符、公式、会议、KR和任务卡片不提供文字。
   static String _readNodePlainText(Node node) {
     if (isCollabContainerType(node.type) ||
+        node.type == collabWeatherType ||
         node.type == collabDateCardType ||
         node.type == collabDividerType ||
         node.type == collabPageDividerType ||

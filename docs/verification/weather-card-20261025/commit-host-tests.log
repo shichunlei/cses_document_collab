@@ -1,0 +1,5 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/test/cses_weather_service_test.dart
+00:00 +0: current/historical data use finite real temperatures and WMO tones
+00:00 +1: same anchor coalesces, success caches, refresh bypasses and each client closes
+00:00 +2: failed weather never caches fake data and cancelled caller cannot receive result
+00:00 +3: All tests passed!

@@ -1,0 +1,88 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: frozen weather requires valid data and live mode ignores old frozen
+00:00 +1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: explicit patches preserve frozen, undo after reorder and reject invalid fields
+00:00 +2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: insert, preceding backspace and undo preserve stable identity and frozen data
+00:00 +3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: JSON creates native weather and cleared palette overrides never revive
+00:00 +4: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: legacy local snapshot-weather retains frozen props on export and its renderer
+00:00 +5: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: seven layouts six palettes at 280px and text scale 1.0
+00:03 +6: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather sheet fixes header/actions at Size(390.0, 844.0)/1.0
+00:04 +7: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather sheet fixes header/actions at Size(390.0, 844.0)/1.0
+00:05 +8: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather sheet fixes header/actions at Size(390.0, 844.0)/1.0
+00:06 +9: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather sheet fixes header/actions at Size(390.0, 844.0)/1.0
+00:06 +10: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:06 +11: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:06 +12: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:07 +13: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:07 +14: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:07 +15: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:07 +16: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:07 +17: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:08 +18: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:08 +19: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather sheet fixes header/actions at Size(320.0, 720.0)/2.2
+00:08 +20: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather sheet fixes header/actions at Size(320.0, 720.0)/2.2
+00:08 +21: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:08 +22: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:08 +23: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:08 +24: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:09 +25: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:09 +26: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:09 +27: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:09 +28: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_modal_test.dart: media source keeps editable draft and returns the selected URL
+00:09 +29: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_modal_test.dart: media source keeps editable draft and returns the selected URL
+00:10 +30: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_modal_test.dart: media source keeps editable draft and returns the selected URL
+00:10 +31: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather arrows cycle all seven styles with centered fixed preview and no premature writes
+00:10 +32: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather arrows cycle all seven styles with centered fixed preview and no premature writes
+00:11 +33: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather arrows cycle all seven styles with centered fixed preview and no premature writes
+00:11 +34: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather arrows cycle all seven styles with centered fixed preview and no premature writes
+
+Warning: A call to tap() with finder "Found 1 widget with text "设置": [
+  Text("设置", dependencies: [DefaultSelectionStyle, DefaultTextStyle, MediaQuery]),
+]" derived an Offset (Offset(32.0, 24.0)) that would not hit test on the specified widget.
+Maybe the widget is actually off-screen, or another widget is obscuring it, or the widget cannot receive pointer events.
+The finder corresponds to this RenderBox: RenderParagraph#683d7 relayoutBoundary=up13
+The hit test result at that offset is: HitTestResult(_RenderColoredBox#e5562@Offset(32.0, 24.0), RenderConstrainedBox#11f15@Offset(32.0, 24.0), RenderMouseRegion#3057e@Offset(32.0, 24.0), RenderSemanticsAnnotations#ccd29@Offset(32.0, 24.0), _RenderSemanticsClipper#d7694@Offset(32.0, 24.0), RenderPointerListener#cee1b@Offset(32.0, 24.0), RenderSemanticsGestureHandler#f6368@Offset(32.0, 24.0), RenderExcludeSemantics#9c6ac@Offset(32.0, 24.0), RenderBlockSemantics#8c3df@Offset(32.0, 24.0), RenderIgnorePointer#ac4bf@Offset(32.0, 24.0), RenderSemanticsAnnotations#cc02f@Offset(32.0, 24.0), _RenderTheater#d61c2@Offset(32.0, 24.0), RenderAbsorbPointer#2ff47@Offset(32.0, 24.0), RenderPointerListener#44444@Offset(32.0, 24.0), RenderSemanticsAnnotations#55fa0@Offset(32.0, 24.0), RenderCustomPaint#df640@Offset(32.0, 24.0), RenderSemanticsAnnotations#c662d@Offset(32.0, 24.0), RenderSemanticsAnnotations#52628@Offset(32.0, 24.0), RenderSemanticsAnnotations#c065d@Offset(32.0, 24.0), RenderTapRegionSurface#44434@Offset(32.0, 24.0), RenderSemanticsAnnotations#d37cc@Offset(32.0, 24.0), RenderSemanticsAnnotations#fb5a2@Offset(32.0, 24.0), HitTestEntry<HitTestTarget>#78917(_ReusableRenderView#5fa42), HitTestEntry<HitTestTarget>#967ba(<AutomatedTestWidgetsFlutterBinding>))
+#0      WidgetController._getElementPoint (package:flutter_test/src/controller.dart:2165:25)
+#1      WidgetController.getCenter (package:flutter_test/src/controller.dart:1947:12)
+#2      WidgetController.tap (package:flutter_test/src/controller.dart:1080:7)
+#3      _open (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart:194:16)
+<asynchronous suspension>
+#4      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart:110:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+To silence this warning, pass "warnIfMissed: false" to "tap()".
+To make this warning fatal, set WidgetController.hitTestWarningShouldBeFatal to true.
+
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.single (dart:core/iterable.dart:694:25)
+#1      WidgetController.widget (package:flutter_test/src/controller.dart:828:30)
+#2      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart:115:23)
+<asynchronous suspension>
+#3      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#4      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  weather arrows cycle all seven styles with centered fixed preview and no premature writes
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:12 +34 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather arrows cycle all seven styles with centered fixed preview and no premature writes [E]
+  Test failed. See exception logs above.
+  The test description was: weather arrows cycle all seven styles with centered fixed preview and no premature writes
+
+00:12 +34 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: swiping weather sheet away discards changed draft
+00:13 +35 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: (tearDownAll)
+00:13 +35 -1: Some tests failed.
+
+Failing tests:
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather arrows cycle all seven styles with centered fixed preview and no premature writes

@@ -1,0 +1,218 @@
+{
+  "id": "fixture-doc",
+  "flavour": "root",
+  "nodeType": "root",
+  "props": {},
+  "meta": {},
+  "children": [
+    {
+      "id": "weather-0",
+      "flavour": "weather",
+      "nodeType": "void",
+      "props": {
+        "width": 160,
+        "height": 42,
+        "style": "classic",
+        "date": "2026-10-25",
+        "frozen": {
+          "temp": 20,
+          "condition": "晴",
+          "location": "北京",
+          "high": 25,
+          "low": 15,
+          "tone": "sunny"
+        },
+        "futureProp": {
+          "preserve": true
+        }
+      },
+      "meta": {
+        "audit": "desktop"
+      },
+      "children": []
+    },
+    {
+      "id": "weather-1",
+      "flavour": "weather",
+      "nodeType": "void",
+      "props": {
+        "width": 280,
+        "height": 80,
+        "style": "inline",
+        "date": "2026-10-25",
+        "frozen": {
+          "temp": 21,
+          "condition": "晴",
+          "location": "北京",
+          "high": 25,
+          "low": 15,
+          "tone": "sunny"
+        }
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "weather-2",
+      "flavour": "weather",
+      "nodeType": "void",
+      "props": {
+        "width": 270,
+        "height": 98,
+        "style": "ruled",
+        "date": "2026-10-25",
+        "frozen": {
+          "temp": 22,
+          "condition": "晴",
+          "location": "北京",
+          "high": 25,
+          "low": 15,
+          "tone": "sunny"
+        }
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "weather-3",
+      "flavour": "weather",
+      "nodeType": "void",
+      "props": {
+        "width": 264,
+        "height": 104,
+        "style": "sidebar",
+        "date": "2026-10-25",
+        "frozen": {
+          "temp": 23,
+          "condition": "晴",
+          "location": "北京",
+          "high": 25,
+          "low": 15,
+          "tone": "sunny"
+        }
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "weather-4",
+      "flavour": "weather",
+      "nodeType": "void",
+      "props": {
+        "width": 264,
+        "height": 152,
+        "style": "card",
+        "date": "2026-10-25",
+        "frozen": {
+          "temp": 24,
+          "condition": "晴",
+          "location": "北京",
+          "high": 25,
+          "low": 15,
+          "tone": "sunny"
+        }
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "weather-5",
+      "flavour": "weather",
+      "nodeType": "void",
+      "props": {
+        "width": 156,
+        "height": 164,
+        "style": "stack",
+        "date": "2026-10-25",
+        "frozen": {
+          "temp": 25,
+          "condition": "晴",
+          "location": "北京",
+          "high": 25,
+          "low": 15,
+          "tone": "sunny"
+        }
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "weather-6",
+      "flavour": "weather",
+      "nodeType": "void",
+      "props": {
+        "width": 288,
+        "height": 112,
+        "style": "ledger",
+        "date": "2026-10-25",
+        "frozen": {
+          "temp": 26,
+          "condition": "晴",
+          "location": "北京",
+          "high": 25,
+          "low": 15,
+          "tone": "sunny"
+        }
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "tail",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {},
+      "meta": {},
+      "children": [
+        {
+          "insert": "保留正文"
+        }
+      ]
+    },
+    {
+      "id": "box",
+      "flavour": "callout",
+      "nodeType": "block",
+      "props": {},
+      "meta": {},
+      "children": [
+        {
+          "id": "nested-weather",
+          "flavour": "weather",
+          "nodeType": "void",
+          "props": {
+            "width": 160,
+            "height": 42,
+            "date": "live"
+          },
+          "meta": {},
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "malformed-weather",
+      "flavour": "weather",
+      "nodeType": "void",
+      "props": {
+        "width": 160,
+        "height": 42
+      },
+      "meta": {},
+      "children": [
+        {
+          "id": "hidden-weather",
+          "flavour": "paragraph",
+          "nodeType": "editable",
+          "props": {},
+          "meta": {},
+          "children": [
+            {
+              "insert": "保留非法子块"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

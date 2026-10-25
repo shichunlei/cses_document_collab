@@ -1373,10 +1373,19 @@ fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(
         }
         if matches!(
             block.block_type.as_str(),
-            "date-card" | "divider" | "page-divider" | "formula" | "meeting" | "task" | "kr-list"
+            "weather"
+                | "date-card"
+                | "divider"
+                | "page-divider"
+                | "formula"
+                | "meeting"
+                | "task"
+                | "kr-list"
         ) && (!block.text.is_empty() || !block.segments.is_empty())
         {
-            return Err(if block.block_type == "date-card" {
+            return Err(if block.block_type == "weather" {
+                "INVALID_WEATHER: 天气卡片不能存储正文".into()
+            } else if block.block_type == "date-card" {
                 "INVALID_DATE_CARD: 日期卡片不能存储正文".into()
             } else if block.block_type == "page-divider" {
                 "INVALID_PAGE_DIVIDER: 分页符不能存储正文".into()
@@ -1554,6 +1563,7 @@ fn is_supported_block_type(block_type: &str) -> bool {
             | "table-row"
             | "table-cell"
             | "date-card"
+            | "weather"
             | "divider"
             | "page-divider"
             | "formula"

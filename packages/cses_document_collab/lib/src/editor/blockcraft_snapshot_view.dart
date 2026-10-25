@@ -6,6 +6,8 @@ import 'package:cses_document_collab/src/editor/blockcraft_json_codec.dart';
 import 'package:cses_document_collab/src/editor/blockcraft_snapshot_presets.g.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
 import 'package:cses_document_collab/src/model/collab_date_card.dart';
+import 'package:cses_document_collab/src/model/collab_weather.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_weather_visual.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_date_card_visual.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -27,6 +29,7 @@ TextStyle blockCraftSnapshotRootStyle(Node root, TextStyle fallback) {
 
 /// 为已转换的桌面对象创建原生容器、几何及卡片渲染器；每个视图独占返回的builder。
 /// [builders]是借用的基础文档渲染器，不修改输入Map；已有资源/表格/代码沿用正式组件。
+/// 保留旧本地snapshot-weather节点的只读渲染入口，新导入使用正式weather组件。
 ///
 /// ```dart
 /// import 'package:cses_document_collab/cses_document_collab.dart';
@@ -39,6 +42,7 @@ TextStyle blockCraftSnapshotRootStyle(Node root, TextStyle fallback) {
 /// ```
 Map<String, BlockComponentBuilder> blockCraftSnapshotBuilders(Map<String, BlockComponentBuilder> builders) => {
   ...builders,
+  'snapshot-weather': _SnapshotObjectBuilder('weather'),
   for (final kind in BlockCraftJsonCodec.objectFlavours) 'snapshot-$kind': _SnapshotObjectBuilder(kind),
   if (builders['image'] != null) 'image': _SnapshotChildrenBuilder(builders['image']!),
 };
@@ -319,31 +323,8 @@ class _SnapshotObject extends BlockComponentStatelessWidget {
       );
     }
     if (kind == 'weather') {
-      final weather = props['frozen'] is Map ? props['frozen'] as Map : props;
-      return _card(
-        Row(
-          children: [
-            Icon(switch (weather['tone']) {
-              'rainy' => LucideIcons.umbrella,
-              'snowy' => LucideIcons.snowflake,
-              _ => LucideIcons.sun,
-            }),
-            const SizedBox(width: 10),
-            Flexible(
-              child: Text(
-                [
-                  weather['location'],
-                  if (weather['temp'] != null) '${weather['temp']}°',
-                  weather['condition'],
-                  if (weather['high'] != null) '${weather['low']}° / ${weather['high']}°',
-                ].where((value) => value != null).join('  '),
-              ),
-            ),
-          ],
-        ),
-        fill,
-        border,
-      );
+      final card = CollabWeather(props);
+      return CollabWeatherVisual(card: card, weather: card.frozen);
     }
     if (kind == 'task-list') {
       final raw = props['items'] ?? props['itemsJson'];

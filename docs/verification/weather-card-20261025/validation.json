@@ -1,0 +1,81 @@
+{
+  "date": "2026-10-25",
+  "scope": "天气卡片正式移动端接入",
+  "gitCommitted": false,
+  "preexistingChangesPreserved": true,
+  "verification": {
+    "weatherCorePassed": 15,
+    "weatherToolbarPassed": 4,
+    "hostPassed": 28,
+    "rustPassed": 200,
+    "relatedPassed": 77,
+    "relatedKnownBaselineFailures": 1,
+    "analysisPackageTargets": 20,
+    "analysisHostTargets": 4,
+    "androidDebug": "passed",
+    "rustFmtCheck": "passed",
+    "rustCheck": "passed",
+    "diffCheck": "passed",
+    "generatorSyntax": "passed",
+    "recordLinks": "passed",
+    "physicalDevices": "not tested",
+    "realOnlineDesktopSync": "not tested",
+    "thirdPartyLiveRequests": "not tested"
+  },
+  "sourcesSha256": {
+    "packages/cses_document_collab/lib/cses_document_collab.dart": "4a1dad0e0793f76600dd01358d89e437e084657a489876d0aa34d489a1c5ba25",
+    "packages/cses_document_collab/lib/src/model/collab_host_services.dart": "8459302dfb31dfffc8fc3dc7272994884d18df27594ffb33878db8e15710faab",
+    "packages/cses_document_collab/lib/src/editor/appflowy_block_editor_adapter.dart": "38b5a7e590479e60303c961005dafbf70e5bdd80e45fd04c317864a05050d53a",
+    "packages/cses_document_collab/lib/src/editor/blockcraft_json_codec.dart": "633ec4f21449ab9acd9e0102610555dc9d88c659c4c5d92ba37d2530cb432d16",
+    "packages/cses_document_collab/lib/src/editor/blockcraft_snapshot_view.dart": "6e77c4bfeb6f9f229ffa9ec7b8c194d5afbd47022b023cd0ecafb61b947bff8f",
+    "packages/cses_document_collab/lib/src/editor/collab_block_actions.dart": "dbbbd4a4cb189a38295a4fc95a620a9f6434f9f58903cad2c0564bfd4ec60cd2",
+    "packages/cses_document_collab/lib/src/editor/collab_block_delete.dart": "9d8aedede4d28a447b912f815b411792464af8282a2b547bce23dc29b1db31f8",
+    "packages/cses_document_collab/lib/src/editor/collab_block_lock_chrome.dart": "0b80973482dbd46a186b8b56cdf5b69082473234bad12f2a8bd6cda01b3a2c83",
+    "packages/cses_document_collab/lib/src/editor/core/editor_configuration.dart": "c192f1f1cf90ea09714ecb1786bcbd537ab517a05e8a3143eafce4a754ca26fa",
+    "packages/cses_document_collab/lib/src/editor/document_editor_view.dart": "7e0d2e950a4252165b747065396acb7cd2b12c9e94c6e50d217bfd12a49f2e88",
+    "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart": "ff9d6625df0bd63f87e9541bbf0e057e2c135c5f8b48a226a9fe3b878f221d89",
+    "lib/src/service/cses_weather_service.dart": "1073983f319bcb18ecd364dbf4d59db65f6b414d3a8f60663081e08d96be436e",
+    "lib/src/demo/document_host.dart": "9e73eb2def6b5f0b287f459ffd7181d2572671f56b9ddc671310397905f13d6a",
+    "lib/src/daily_guidance/local_journal_page.dart": "cf35972fd34a7f2250b89c38e6f9f4415ae34e1a9021e9056e24e17a602e559a",
+    "packages/cses_document_collab/lib/src/ui/modal/collab_weather_visual.dart": "e2e2c669c5dec1655341ae7ce64d5b80985809f9249eaa7188eeb5d930972d33",
+    "packages/cses_document_collab/lib/src/model/collab_weather.dart": "3b69237a260df7d64a85c885bb8d70be74f7238a78cbbd9fd2c37d132252ae95",
+    "packages/cses_document_collab/lib/src/editor/collab_weather_content.dart": "a0567722e52e7f0f44c862f948c620c7c4e4a206a063a3419379b986401fe0a6",
+    "packages/cses_document_collab/lib/src/editor/collab_weather_block.dart": "2f39d63d787513831ea1bf06715cf3214bfacf5df2fda83dce4f91ef1433493a",
+    "packages/cses_document_collab/lib/src/editor/collab_weather_settings.dart": "68fa6f75516d9452b57570a96c557d19c6d4241c01ce6a43e07372401813da10",
+    "packages/cses_document_collab/test/collab_weather_test.dart": "a8825675bb250eae9b77255b8d2c7f9e7dcbdfe9085bb9f6285100a4534a81a7",
+    "packages/cses_document_collab/test/weather_native_integration_test.dart": "43c9bdc7ac2dfd16dd56870476e45ab3bc35469755c8d323d2ea1269c7c6b22b",
+    "packages/cses_document_collab/test/editor_toolbar_configuration_test.dart": "2629900400e63ce2adb49c94d608eb26e533d471ba183915fb52d6c45b0f776b",
+    "packages/cses_document_collab/test/blockcraft_json_codec_test.dart": "2f2ced1eef1c5fa20d9570ad6d562d000238e0951d85afc8cfaeb90756542cf5",
+    "test/cses_weather_service_test.dart": "eef275279b7c51e021b48e789a2b75ca6b4560c666e576a960e72a53ae3661bb",
+    "packages/cses_document_collab/rust/src/api/blockcraft.rs": "3f2256289b9d1c5b624bcc80cac107a49b55144f1ae2f3936a8f551023c015c3",
+    "packages/cses_document_collab/rust/src/api/collab.rs": "896439fd72cbcc49699d082d9577bde744de1d8a7df20b210879258028fd2cb8",
+    "packages/cses_document_collab/tool/generate_weather_fixture.mjs": "f1a31cc31a61424a51469c02b89d5ff0b263be6ffc204e945d6aedad8576a410"
+  },
+  "artifacts": {
+    "build/app/outputs/flutter-apk/app-debug.apk": {
+      "sha256": "5fcc2a234b974a65680eea6fea41ad31f6c761ab18ebbbe73b9c088754cc044e",
+      "bytes": 218355589
+    },
+    "packages/cses_document_collab/rust/target/debug/libcses_collab_core.dylib": {
+      "sha256": "e57b30f66de0a5f1efc8c2dd954d9d3adf66b176ad5ea650e8390f96632ce7cc",
+      "bytes": 12585328
+    },
+    "packages/cses_document_collab/rust/tests/fixtures/blockcraft-weather.json": {
+      "sha256": "00eaedfe9eb4cc94478f974b8765bfc110663b465cf8695687bd05bb07367038",
+      "bytes": 4435
+    },
+    "packages/cses_document_collab/rust/tests/fixtures/blockcraft-weather.update": {
+      "sha256": "58a5e654c2f3d12e5d48ac0c7d066e30c7e03ecfdcea2f5a54ee5e9232a9f0dd",
+      "bytes": 3157
+    },
+    "docs/verification/weather-card-20261025/weather-gallery.png": {
+      "sha256": "d47ef6e067b95c96f507f9c8598cbb574d14fb739c955f08ffc1941008f1de52",
+      "bytes": 103802
+    }
+  },
+  "remaining": [
+    "旧固定日缺失frozen的无Undo自动初始化待同步",
+    "自由布局/组合/缩放/动画、模板draft:*及完整对象剪贴板待适配",
+    "固定框字号放大/完整桌面视觉/设备及实网/在线双端验收待补"
+  ]
+}

@@ -1,0 +1,80 @@
+[
+  {
+    "file": "related-tests.log",
+    "rawBackup": "related-tests.log.raw.gz",
+    "rawSha256": "659a0988953b96ef311f686205013473cd47c8873f19a98a396f5e3878371aad",
+    "normalizedSha256": "3753da755dc63f546ee4a9fb2ec4126ec6a0d9f3c90b7c0f7e960823c33b4c6e"
+  },
+  {
+    "file": "style-navigation-analyze.log",
+    "rawBackup": "style-navigation-analyze.log.raw.gz",
+    "rawSha256": "6127d1f4a0b266c28f12f176d8b4166c630fd397bc910fe29dcedeecf58101d1",
+    "normalizedSha256": "7e880610ed5c54035410fef5e7f4cb8bd0397514111714c1d58ada9d897df0b9"
+  },
+  {
+    "file": "package-analyze.log",
+    "rawBackup": "package-analyze.log.raw.gz",
+    "rawSha256": "e0aa626414f5fde4767b9e0e66a86a5848d67890e81c8bb7e7b41c6916879be3",
+    "normalizedSha256": "13e4be9be582b6ae050d6296e95e415bd98c879c43bd3d596a28b3b594ba4240"
+  },
+  {
+    "file": "bottom-sheet-analyze.log",
+    "rawBackup": "bottom-sheet-analyze.log.raw.gz",
+    "rawSha256": "28a5e835c59ab346aa9bc23600193e668a15c0c9c2a99ba2622c76d1c22ceb41",
+    "normalizedSha256": "dddbae51589a8b5b32791eb0ea47b3bb08c6c645d71bae37448b7249e5219a72"
+  },
+  {
+    "file": "rust-tests.log",
+    "rawBackup": "rust-tests.log.raw.gz",
+    "rawSha256": "4cddab6a1e10027b4f1106117cc6fb1a76bab2cb4ed870126fe872c1be80a606",
+    "normalizedSha256": "a0a9f5df3fe7c2c105e917357fd4d3818993796eaf3b5d5406a478b3db9b9db6"
+  },
+  {
+    "file": "android-final-build.log",
+    "rawBackup": "android-final-build.log.raw.gz",
+    "rawSha256": "0bebb5d441e709afa520d20875f2782265e019b49ee3b93e7d3a151c09f309ae",
+    "normalizedSha256": "6d94a5b4c1166ac19ab7498e5f4018f571c457b1f49b21b28b2214eaa236c096"
+  },
+  {
+    "file": "android-initial-build.log",
+    "rawBackup": "android-initial-build.log.raw.gz",
+    "rawSha256": "42b23865f621ecbdcc973728041b62e3a8e7ca1ad3497d9f1fd9d2bc71b5c287",
+    "normalizedSha256": "65b99dfa74cc1d81d39e2a09f4dc35c994e62b96d3c3c65a83c86b75589ffb77"
+  },
+  {
+    "file": "rust-target-tests.log",
+    "rawBackup": "rust-target-tests.log.raw.gz",
+    "rawSha256": "be18b9945bf31d7c21b1b884dde7717c83409cf5ef8e1a2a6f3dc25c2fb00aa0",
+    "normalizedSha256": "7c81d7f550551dfde42ebf8764841e47df5c58ff63babc4009e85aeb38b3b05e"
+  },
+  {
+    "file": "upstream-3.txt",
+    "rawBackup": "upstream-3.txt.raw.gz",
+    "rawSha256": "c627c5e3ecfb75bd47494dfe4b77fbaefb466c770c8b54d53e503a1f1f584959",
+    "normalizedSha256": "ff07b05de0cca5680a996262886b3f41941deaa6dbd4a05a87618c69a7a291b1"
+  },
+  {
+    "file": "style-navigation-initial-tests.log",
+    "rawBackup": "style-navigation-initial-tests.log.raw.gz",
+    "rawSha256": "eeac3e6d3db0377ca6d003dcc5eaf5f740cd48bacc657dc4c03a36d7a70d9ef4",
+    "normalizedSha256": "7eea881182485938899a7b072d9daa9bd29dd7953b336025928064a57fc36fe4"
+  },
+  {
+    "file": "host-analyze.log",
+    "rawBackup": "host-analyze.log.raw.gz",
+    "rawSha256": "0194c4cd30f7c5faa53902f9a2c6c20b8ba913a18462f8f58982dc32e6dc6998",
+    "normalizedSha256": "f455995319a289c1d1a15368f0f7e1ff679bcb8fc6c044404230a7227dcbf935"
+  },
+  {
+    "file": "commit-rust-tests.log",
+    "rawBackup": "commit-rust-tests.log.raw.gz",
+    "rawSha256": "6a556345e22303856c1dfdcadc2a249f3c854d55067277f6180f64fe84b58a93",
+    "normalizedSha256": "90beaac86a587552a10877d347faaaf1fccad8b8a932c403ea2f422ba0379466"
+  },
+  {
+    "file": "commit-analyze.log",
+    "rawBackup": "commit-analyze.log.raw.gz",
+    "rawSha256": "d49d07659c9558515b803fb08118254bbc5d82c2f64486aabb25489b19da4d1d",
+    "normalizedSha256": "06c268c9d3024bf0be8ad40eeac5064fc25a7c877903f0100e950ec015a18554"
+  }
+]

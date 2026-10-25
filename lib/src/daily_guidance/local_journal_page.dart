@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cses_mobile_collab_demo/src/service/cses_weather_service.dart';
 import 'package:appflowy_editor/appflowy_editor.dart';
 import 'package:cses_common/runtime/context/context.dart';
 import 'package:cses_common/runtime/session/user.dart';
@@ -117,6 +118,7 @@ class _LocalJournalPageState extends State<LocalJournalPage>
     super.initState();
     _mentionDirectory = widget.mentionDirectory ?? CsesMentionDirectory();
     _services = CollabHostServices(
+      loadWeather: CsesWeatherService().load,
       mentionAvatarBuilder: buildDemoMentionAvatar,
       pickMentionUser: _pickMentionUser,
       loadMeetingCard: CsesMeetingCardService().load,

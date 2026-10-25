@@ -1,0 +1,17 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: frozen weather requires valid data and live mode ignores old frozen
+00:00 +1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: explicit patches preserve frozen, undo after reorder and reject invalid fields
+00:00 +2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: insert, preceding backspace and undo preserve stable identity and frozen data
+00:00 +3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: JSON creates native weather and cleared palette overrides never revive
+00:00 +4: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: seven layouts six palettes at 280px and text scale 1.0
+00:03 +5: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: seven layouts six palettes at 280px and text scale 2.2
+00:04 +6: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:10 +7: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_native_integration_test.dart: (setUpAll)
+00:11 +8: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_native_integration_test.dart: (setUpAll)
+00:11 +9: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_native_integration_test.dart: (setUpAll)
+00:11 +10: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_native_integration_test.dart: (setUpAll)
+00:11 +11: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_native_integration_test.dart: (setUpAll)
+00:12 +11: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_native_integration_test.dart: desktop date cards cross adapter/native history and SQLite reopen
+00:13 +12: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_native_integration_test.dart: local draft insert and field edits survive native undo redo and reopen
+00:13 +13: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_native_integration_test.dart: (tearDownAll)
+00:13 +13: All tests passed!

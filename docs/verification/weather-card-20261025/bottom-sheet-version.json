@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-25",
+  "reason": "天气设置改公共底部弹窗",
+  "registry": "http://npm.runtongqiuben.com/",
+  "liveLatest": "0.11.30",
+  "declared": "0.11.28",
+  "yarn": "0.11.28",
+  "installed": "0.11.21",
+  "packageChecks": {
+    "installed": {
+      "version": "0.11.21",
+      "documentsSha256": {
+        "blockcraft.md": "b06ea795f5210df0bce65d2cde5f35fb5039e2eb085b29417e84504444d71967",
+        "blockcraft-block.md": "83ccc8de57d55f6f793b19bc787d27436f756d703aa9bb6f1baf755792499b6e",
+        "MIGRATIONS.md": "800f55f39a3cfb8f389a1dd6a0053d0f40dfca7b9c564b6abb0b08206ad29c37"
+      },
+      "weatherSourceUnchanged": true
+    },
+    "declared": {
+      "version": "0.11.28",
+      "documentsSha256": {
+        "blockcraft.md": "fd35128d50e0f4b68d3d60881e155a884027aaef497d9e6ed2731b01c268686e",
+        "blockcraft-block.md": "450dc1d55049c43a4cb579db47d9af9c5c162af71a897686bb0e9cc6b97b7019",
+        "MIGRATIONS.md": "d1bb5a6337b0e1ce0879099a34134b6e440891720386af9af4c20cdeba205ac2"
+      },
+      "weatherSourceUnchanged": true
+    },
+    "latest": {
+      "version": "0.11.30",
+      "documentsSha256": {
+        "blockcraft.md": "f8b0ed3c2afcb2e03334b9bd6bedb1f7a2c502a303472447367701cdbac39ffd",
+        "blockcraft-block.md": "450dc1d55049c43a4cb579db47d9af9c5c162af71a897686bb0e9cc6b97b7019",
+        "MIGRATIONS.md": "33f0840c7d98f89407e7237fa41aacfbc8b8d29eb826c1aeecbe318c509ec867"
+      },
+      "weatherSourceUnchanged": true
+    }
+  },
+  "artifactMatchesLatestDist": true,
+  "upgraded": false
+}

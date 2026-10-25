@@ -1,0 +1,114 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: frozen weather requires valid data and live mode ignores old frozen
+00:00 +1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: explicit patches preserve frozen, undo after reorder and reject invalid fields
+00:00 +2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: insert, preceding backspace and undo preserve stable identity and frozen data
+00:00 +3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: JSON creates native weather and cleared palette overrides never revive
+00:00 +4: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: seven layouts six palettes at 280px and text scale 1.0
+00:05 +5: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: seven layouts six palettes at 280px and text scale 1.0
+00:05 +6: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: seven layouts six palettes at 280px and text scale 1.0
+00:06 +7: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: seven layouts six palettes at 280px and text scale 2.2
+00:06 +8: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: seven layouts six palettes at 280px and text scale 2.2
+00:08 +9: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: seven layouts six palettes at 280px and text scale 2.2
+00:08 +10: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: seven layouts six palettes at 280px and text scale 2.2
+00:08 +11: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:08 +12: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:08 +13: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:12 +14: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:12 +15: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:12 +16: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:12 +17: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:13 +18: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:15 +19: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:15 +20: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:16 +21: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:16 +22: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:16 +23: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:16 +24: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:17 +25: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:17 +26: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:17 +27: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: all style/format combinations fit 280px at text scale 1.0
+00:17 +28: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: all style/format combinations fit 280px at text scale 1.0
+00:18 +29: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: all style/format combinations fit 280px at text scale 1.0
+00:18 +30: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: all style/format combinations fit 280px at text scale 1.0
+00:18 +31: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: all style/format combinations fit 280px at text scale 1.0
+00:18 +32: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: all style/format combinations fit 280px at text scale 1.0
+00:19 +33: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:19 +34: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:19 +35: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: all style/format combinations fit 280px at text scale 2.2
+00:19 +36: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: all style/format combinations fit 280px at text scale 2.2
+00:19 +37: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: all style/format combinations fit 280px at text scale 2.2
+00:19 +38: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: all style/format combinations fit 280px at text scale 2.2
+00:19 +39: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: all style/format combinations fit 280px at text scale 2.2
+00:19 +40: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: all style/format combinations fit 280px at text scale 2.2
+00:20 +41: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: all style/format combinations fit 280px at text scale 2.2
+00:20 +42: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: native seven style gallery
+00:20 +43: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: native seven style gallery
+00:20 +44: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: native seven style gallery
+00:20 +45: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: native seven style gallery
+00:20 +46: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: native seven style gallery
+00:21 +47: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: native seven style gallery
+00:21 +48: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:21 +49: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:21 +50: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:21 +51: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:21 +52: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:22 +53: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:22 +54: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:22 +55: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:23 +56: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:24 +57: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:24 +58: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:24 +59: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:25 +60: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct weather inserts without more sheet and has undo
+00:25 +61: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: remote update invalidates a dirty draft without overwriting the remote value
+00:25 +62: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: remote update invalidates a dirty draft without overwriting the remote value
+00:27 +63: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct formula cancellation and creation share the original input sheet
+00:29 +64: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct formula cancellation and creation share the original input sheet
+00:29 +65: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: gallery retains twelve native styles with a bounded page
+00:29 +66: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct link uses existing source validation and inserts a link block
+00:30 +67: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: revocation then restoration cannot reactivate an old settings draft
+00:30 +68: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: revocation then restoration cannot reactivate an old settings draft
+00:30 +69: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: revocation then restoration cannot reactivate an old settings draft
+00:30 +70: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: unimplemented common action only reports its existing placeholder
+00:31 +71: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: heading menus and commands stop at H6 with limited config: false
+00:32 +72: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: heading menus and commands stop at H6 with limited config: true
+00:33 +73: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: empty toolbar keeps document editing and removes its row
+00:33 +74: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: menu choices cannot reenable disabled block and format capabilities
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: no matching candidates
+  Actual: _KeyWidgetFinder:<Found 1 widget with key [<'editor-mobile-toolbar'>]: [
+            Container-[<'editor-mobile-toolbar'>](bg: BoxDecoration(color: Color(alpha: 1.0000, red:
+1.0000, green: 1.0000, blue: 1.0000, colorSpace: ColorSpace.sRGB), border: Border(top:
+BorderSide(color: Color(alpha: 1.0000, red: 0.8980, green: 0.9059, blue: 0.9216, colorSpace:
+ColorSpace.sRGB)), bottom: BorderSide(color: Color(alpha: 1.0000, red: 0.8980, green: 0.9059, blue:
+0.9216, colorSpace: ColorSpace.sRGB)))), constraints: BoxConstraints(0.0<=w<=Infinity, h=52.0)),
+          ]>
+   Which: means one was found but none were expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart:333:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart line 333
+The test description was:
+  menu choices cannot reenable disabled block and format capabilities
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:33 +74 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: menu choices cannot reenable disabled block and format capabilities [E]
+  Test failed. See exception logs above.
+  The test description was: menu choices cannot reenable disabled block and format capabilities
+
+00:33 +74 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: switching editor instances clears a previously open menu
+00:34 +75 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard add button visibility: false
+00:34 +76 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard add button visibility: true
+00:35 +77 -1: Some tests failed.
+
+Failing tests:
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: menu choices cannot reenable disabled block and format capabilities

@@ -1,0 +1,10 @@
+const WeatherBlockSchema = {
+    flavour: 'weather',
+    nodeType: BlockNodeType$1.void,
+    component: WeatherBlockComponent,
+    createSnapshot: () => snapshot('weather', {
+        width: 160,
+        height: 42,
+    }),
+    metadata: metadata('天气', 'bc_icon bc_taiyang'),
+};

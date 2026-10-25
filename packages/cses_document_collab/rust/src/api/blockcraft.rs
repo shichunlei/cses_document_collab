@@ -599,7 +599,9 @@ fn mobile_type<T: ReadTxn>(block: &MapRef, props: &MapRef, txn: &T) -> Option<St
         "blockquote" => "quote".to_owned(),
         "table" | "table-row" | "table-cell" => flavour,
         "code" | "image" | "video" | "callout" | "mermaid" | "mermaid-textarea" | "date-card"
-        | "divider" | "page-divider" | "formula" | "meeting" | "task" | "kr-list" => flavour,
+        | "weather" | "divider" | "page-divider" | "formula" | "meeting" | "task" | "kr-list" => {
+            flavour
+        }
         s if is_resource_block_type(s) => flavour,
         _ => return None,
     })
@@ -668,6 +670,10 @@ fn resource_keys(kind: &str) -> &'static [&'static str] {
         "table" => &["colWidths"],
         "table-row" => &["height"],
         "table-cell" => &["verticalAlign", "rowspan", "colspan", "display"],
+        "weather" => &[
+            "date", "frozen", "style", "palette", "fg", "accent", "line", "bg", "bw", "bc",
+            "iconMode", "range", "width", "height",
+        ],
         "date-card" => &[
             "date",
             "style",
@@ -729,6 +735,7 @@ fn valid_resource_url(kind: &str, value: &str) -> bool {
     }
 }
 
+/// 读取kind的白名单props；txn仅借用。天气嵌套定格值递归排序，避免等价JSON因哈希遍历顺序触发伪变更。
 fn resource_properties<T: ReadTxn>(kind: &str, props: &MapRef, txn: &T) -> String {
     let values: std::collections::BTreeMap<_, _> = resource_keys(kind)
         .iter()
@@ -740,7 +747,11 @@ fn resource_properties<T: ReadTxn>(kind: &str, props: &MapRef, txn: &T) -> Strin
             }
         })
         .collect();
-    serde_json::to_string(&values).unwrap()
+    if kind == "weather" {
+        serde_json::to_string(&serde_json::to_value(&values).unwrap()).unwrap()
+    } else {
+        serde_json::to_string(&values).unwrap()
+    }
 }
 
 fn parse_resource_edit(
@@ -775,6 +786,7 @@ fn parse_resource_edit(
                 || matches!(
                     kind,
                     "date-card"
+                        | "weather"
                         | "divider"
                         | "formula"
                         | "meeting"
@@ -858,6 +870,65 @@ fn parse_resource_edit(
                 if !matches!(v, Any::Null)
                     && !matches!(v, Any::String(latex) if latex.encode_utf16().count() <= 20_000)
                 {
+                    return Err(fail());
+                }
+                result.insert(key.clone(), value);
+                continue;
+            }
+            if kind == "weather" {
+                let valid = match (key.as_str(), v) {
+                    (_, Any::Null) => true,
+                    ("style", Any::String(v)) => matches!(
+                        v.as_ref(),
+                        "classic" | "inline" | "ruled" | "sidebar" | "card" | "stack" | "ledger"
+                    ),
+                    ("palette", Any::String(v)) => matches!(
+                        v.as_ref(),
+                        "document" | "ink" | "blue" | "green" | "clay" | "dark"
+                    ),
+                    ("iconMode", Any::String(v)) => matches!(v.as_ref(), "original" | "mono"),
+                    ("range", Any::String(v)) => matches!(v.as_ref(), "on" | "off"),
+                    ("date", Any::String(v)) => {
+                        v.as_ref() == "live"
+                            || (v.len() == 10
+                                && v.bytes().enumerate().all(|(i, c)| {
+                                    if i == 4 || i == 7 {
+                                        c == b'-'
+                                    } else {
+                                        c.is_ascii_digit()
+                                    }
+                                }))
+                    }
+                    ("width" | "height", Any::Number(v)) => {
+                        v.is_finite() && *v > 0.0 && *v <= 100_000.0
+                    }
+                    ("frozen", Any::Map(v)) => {
+                        matches!(v.get("temp"), Some(Any::Number(n)) if n.is_finite())
+                            && matches!(v.get("condition"), Some(Any::String(c)) if c.len() <= 4096)
+                            && v.get("location")
+                                .is_none_or(|l| matches!(l, Any::String(c) if c.len() <= 4096))
+                            && ["high", "low"].iter().all(|key| {
+                                v.get(*key)
+                                    .is_none_or(|n| matches!(n, Any::Number(n) if n.is_finite()))
+                            })
+                            && v.len() <= 32
+                    }
+                    ("bw", Any::String(v)) => matches!(
+                        v.as_ref(),
+                        "" | "0px solid"
+                            | "1px solid"
+                            | "2px solid"
+                            | "3px solid"
+                            | "1px dashed"
+                            | "2px dashed"
+                            | "1px dotted"
+                            | "2px dotted"
+                            | "3px double"
+                    ),
+                    (_, Any::String(v)) => v.len() <= 1024,
+                    _ => false,
+                };
+                if !valid {
                     return Err(fail());
                 }
                 result.insert(key.clone(), value);
@@ -1137,6 +1208,7 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                 if matches!(
                     kind.as_str(),
                     "date-card"
+                        | "weather"
                         | "divider"
                         | "page-divider"
                         | "formula"
@@ -1169,7 +1241,7 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                     && kind != "callout"
                     && kind != "mermaid"
                     && kind != "page-divider"
-                    && kind != "date-card"
+                    && !matches!(kind.as_str(), "date-card" | "weather")
                     && kind != "divider"
                     && kind != "formula"
                     && kind != "kr-list"
@@ -1267,6 +1339,7 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                 || matches!(
                     kind.as_str(),
                     "date-card"
+                        | "weather"
                         | "divider"
                         | "formula"
                         | "meeting"
@@ -1329,6 +1402,7 @@ fn formal_type(kind: &str) -> Option<(&str, bool)> {
         "image" => ("image", true),
         "video" => ("video", true),
         "date-card" => ("date-card", true),
+        "weather" => ("weather", true),
         "divider" => ("divider", true),
         "page-divider" => ("page-divider", true),
         "formula" => ("formula", true),
@@ -1489,6 +1563,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
                 && !matches!(
                     block.block_type.as_str(),
                     "date-card"
+                        | "weather"
                         | "divider"
                         | "formula"
                         | "meeting"
@@ -1906,6 +1981,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
             if !matches!(
                 flavour,
                 "date-card"
+                    | "weather"
                     | "divider"
                     | "page-divider"
                     | "formula"
@@ -6084,6 +6160,150 @@ mod tests {
             children(&map(&blocks, &txn, "malformed-break").unwrap(), &txn),
             vec!["hidden"]
         );
+    }
+
+    /// 发布版天气卡片按void投影，外观补丁不覆盖日期、扩展属性和元数据。
+    #[test]
+    fn weather_published_projection_and_field_patches() {
+        let mut e = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-weather.update"
+        ));
+        assert_eq!(
+            e.blocks()
+                .iter()
+                .filter(|b| b.block_type == "weather")
+                .count(),
+            8
+        );
+        assert_eq!(
+            e.blocks()
+                .iter()
+                .find(|b| b.id == "nested-weather")
+                .unwrap()
+                .parent_id
+                .as_deref(),
+            Some("box")
+        );
+        assert_eq!(
+            e.blocks()
+                .iter()
+                .find(|b| b.id == "malformed-weather")
+                .unwrap()
+                .block_type,
+            UNSUPPORTED_BLOCK_TYPE
+        );
+        let mut desired = e.blocks();
+        desired[0].resource.as_mut().unwrap().property_edits =
+            Some(r##"{"style":{"value":"card"},"fg":{"value":"#123456"}}"##.into());
+        e.apply_block_snapshot(desired).unwrap();
+        let txn = e.doc.transact();
+        let blocks = txn.get_map(ROOT_NAME).unwrap();
+        let card = map(&blocks, &txn, "weather-0").unwrap();
+        let props = map(&card, &txn, "props").unwrap();
+        assert_eq!(
+            out_string(props.get(&txn, "date")).as_deref(),
+            Some("2026-10-25")
+        );
+        assert_eq!(
+            out_string(props.get(&txn, "style")).as_deref(),
+            Some("card")
+        );
+        assert!(props.contains_key(&txn, "futureProp"));
+        assert_eq!(
+            out_string(map(&card, &txn, "meta").unwrap().get(&txn, "audit")).as_deref(),
+            Some("desktop")
+        );
+        assert!(!props.contains_key(&txn, "url") && !props.contains_key(&txn, "src"));
+        assert!(matches!(card.get(&txn, "children"), Some(Out::YArray(ref a)) if a.len(&txn) == 0));
+    }
+
+    /// 非法写入整次拒绝，旧未知日期外观不会因其他字段编辑被规范化。
+    #[test]
+    fn weather_invalid_edits_are_atomic() {
+        let mut e = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-weather.update"
+        ));
+        let before = e
+            .doc
+            .transact()
+            .encode_state_as_update_v1(&StateVector::default());
+        for patch in [
+            r#"{"style":{"value":"future"}}"#,
+            r#"{"range":{"value":"invalid"}}"#,
+            r#"{"width":{"value":0}}"#,
+            r#"{"bw":{"value":"100px solid"}}"#,
+            r#"{"fg":{"value":false}}"#,
+            r#"{"url":{"value":"https://example.test"}}"#,
+            r#"{"date":{"value":42}}"#,
+            r#"{"futureProp":{"value":null}}"#,
+        ] {
+            let mut desired = e.blocks();
+            desired[0].resource.as_mut().unwrap().property_edits = Some(patch.into());
+            assert!(e.apply_block_snapshot(desired).is_err(), "{patch}");
+            assert_eq!(
+                e.doc
+                    .transact()
+                    .encode_state_as_update_v1(&StateVector::default()),
+                before
+            );
+        }
+        let mut desired = e.blocks();
+        desired[0].text = "invalid text".into();
+        assert!(e.apply_block_snapshot(desired).is_err());
+        assert_eq!(
+            e.doc
+                .transact()
+                .encode_state_as_update_v1(&StateVector::default()),
+            before
+        );
+    }
+
+    /// 不同端编辑天气卡片独立字段后收敛，新建、删除和恢复不引入URL或正文。
+    #[test]
+    fn weather_concurrent_fields_and_creation_converge() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-weather.update");
+        let mut left = engine(fixture);
+        let mut right = engine(fixture);
+        let mut a = left.blocks();
+        let mut b = right.blocks();
+        a[0].resource.as_mut().unwrap().property_edits =
+            Some(r#"{"style":{"value":"ledger"}}"#.into());
+        b[0].resource.as_mut().unwrap().property_edits =
+            Some(r#"{"range":{"value":"off"}}"#.into());
+        let ua = left.apply_block_snapshot(a).unwrap();
+        let ub = right.apply_block_snapshot(b).unwrap();
+        left.apply_cses_update(ub.v1_update).unwrap();
+        right.apply_cses_update(ua.v1_update).unwrap();
+        assert_eq!(left.blocks(), right.blocks());
+        let merged = left.blocks();
+        let properties = &merged[0].resource.as_ref().unwrap().properties;
+        assert!(
+            properties.contains("ledger")
+                && properties.contains("off")
+                && properties.contains("2026-10-25")
+        );
+        let mut desired = left.blocks();
+        let mut new = desired[0].clone();
+        new.id = "mobile-weather".into();
+        new.resource = Some(CollabResource {
+            properties: r#"{"date":"2026-10-25","style":"classic"}"#.into(),
+            property_edits: None,
+        });
+        desired.insert(1, new);
+        left.apply_block_snapshot(desired.clone()).unwrap();
+        let mut removed = left.blocks();
+        removed.retain(|b| b.id != "mobile-weather");
+        left.apply_block_snapshot(removed).unwrap();
+        left.apply_block_snapshot(desired).unwrap();
+        let txn = left.doc.transact();
+        let blocks = txn.get_map(ROOT_NAME).unwrap();
+        let props = map(
+            &map(&blocks, &txn, "mobile-weather").unwrap(),
+            &txn,
+            "props",
+        )
+        .unwrap();
+        assert!(!props.contains_key(&txn, "url") && !props.contains_key(&txn, "src"));
     }
 
     /// 发布版日期卡片按void投影，外观补丁不覆盖日期、扩展属性和元数据。

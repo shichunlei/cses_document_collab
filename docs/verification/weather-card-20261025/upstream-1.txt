@@ -1,0 +1,158 @@
+const LIVE_ANCHOR = 'live';
+const TONES = ['sunny', 'cloudy', 'rainy', 'snowy', 'stormy', 'foggy'];
+/**
+ * props.frozen → 定格值；形状不符一律返回 null 交调用方回落现拉。
+ * 必须防着：老文档没有这个键、降级建档只写了 city/date、以及人手改坏的快照。
+ *
+ * 写入侧在 WeatherBlockComponent：只有 ISO 日期档、块仍存在且当前可写时才延迟定格；
+ * live 档永远不写 frozen。老文档里已经烤进去的定格值仍然优先生效。
+ */
+function readFrozenWeather(raw) {
+    if (!raw || typeof raw !== 'object')
+        return null;
+    const o = raw;
+    const temp = o['temp'];
+    const condition = o['condition'];
+    if (typeof temp !== 'number' || typeof condition !== 'string')
+        return null;
+    return {
+        tone: TONES.includes(o['tone']) ? o['tone'] : 'sunny',
+        temp,
+        condition,
+        location: typeof o['location'] === 'string' ? o['location'] : '',
+        high: typeof o['high'] === 'number' ? o['high'] : temp,
+        low: typeof o['low'] === 'number' ? o['low'] : temp
+    };
+}
+
+/**
+ * 天气 chip 的数据接线。**只管数据，尺寸一概不管**——
+ * 缩放全部交给 CSS：外层 box 是容器查询上下文（`container-type: inline-size`），
+ * chip 内部尺寸一律 `cqw`，box 一变宽内部自动等比跟随。
+ *
+ * 为什么不能用「定死 px + zoom」：zoom 得用 JS 算，而 resizer 拖动中**直接写 container 的行内宽度、
+ * 不发逐帧回调**（`widthChange` 只在松手时发一次，见 resize-container.ts:277/320）。
+ * 于是 JS 永远慢一拍，表现为「拖动时外框在变、里面纹丝不动」。图片块就是纯 CSS（`width:100%`）才天生跟手。
+ *
+ * 必须在注入上下文调用（字段初始化器）。宿主查询由调用组件从 Doc injector 取服务后传入。
+ */
+function wireWeatherChip(src) {
+    const resolved = signal(null, ...(ngDevMode ? [{ debugName: "resolved" }] : []));
+    const status = signal({ key: '', value: 'idle' }, ...(ngDevMode ? [{ debugName: "status" }] : []));
+    const cdr = inject(ChangeDetectorRef);
+    const destroyRef = inject(DestroyRef);
+    let pendingKey = null;
+    let abort = null;
+    const requestState = () => {
+        const request = src.request();
+        return request?.date ? { key: `date:${request.date}`, request } : { key: 'live' };
+    };
+    const load = (refresh = false) => {
+        if (!src.enabled())
+            return; // 编辑态：恒占位，一次网络都不发
+        const state = requestState();
+        if (pendingKey === state.key || (!refresh && (src.frozen() || resolved()?.key === state.key)))
+            return;
+        const request = refresh ? { ...state.request, refresh: true } : state.request;
+        abort?.abort();
+        const controller = new AbortController();
+        abort = controller;
+        pendingKey = state.key;
+        status.set({ key: state.key, value: 'loading' });
+        Promise.resolve().then(() => src.query(request, controller.signal)).then(weather => {
+            if (controller.signal.aborted || requestState().key !== state.key || !src.enabled())
+                return;
+            resolved.set({ key: state.key, weather });
+            status.set({ key: state.key, value: 'ready' });
+            if (request?.date)
+                src.freeze?.(weather, request);
+            cdr.markForCheck();
+            if (refresh)
+                src.onRefreshResult?.('success');
+        })
+            .catch(() => {
+            if (requestState().key !== state.key || controller.signal.aborted || !src.enabled())
+                return;
+            status.set({ key: state.key, value: 'error' });
+            cdr.markForCheck();
+            if (refresh)
+                src.onRefreshResult?.('error');
+        })
+            .finally(() => {
+            if (abort === controller) {
+                pendingKey = null;
+                abort = null;
+            }
+        });
+    };
+    destroyRef.onDestroy(() => abort?.abort());
+    // 推到 afterNextRender：①字段初始化那刻 this.props 还没就绪，读不到定格值；
+    // ②定格态本就一次网络都不该发——判定必须晚于 props 就绪。
+    afterNextRender(() => load());
+    const liveView = () => {
+        const state = requestState();
+        const value = resolved();
+        return value?.key === state.key ? value.weather : null;
+    };
+    const view = () => src.frozen() ?? liveView();
+    return {
+        view,
+        // 地名一律来自数据源：定格态读烤进去的 frozen.location，活值态读现拉到的定位
+        // 无值时给「城市」这种形状占位，而不是「当前位置」——占位要看得出将来长什么样、占多宽
+        location: () => view()?.location || '城市',
+        tone: () => view()?.tone ?? 'sunny',
+        // 主动刷新时优先显示请求状态；初次挂载的定格值直接 ready。
+        status: () => {
+            const state = status();
+            if (state.key === requestState().key && (state.value === 'loading' || state.value === 'error'))
+                return state.value;
+            if (view())
+                return 'ready';
+            return state.key === requestState().key ? state.value : 'idle';
+        },
+        reload: () => load(),
+        refresh: () => load(true)
+    };
+}
+
+/** 天气展示选项；不包含取数、定位或定格逻辑。 */
+const WEATHER_LAYOUTS = [
+    { id: 'classic', label: '经典紧凑', width: 152, height: 34 },
+    { id: 'inline', label: '行内组合', width: 272, height: 72 },
+    { id: 'ruled', label: '双线横栏', width: 262, height: 90 },
+    { id: 'sidebar', label: '侧线标记', width: 256, height: 96 },
+    { id: 'card', label: '基础信息卡', width: 256, height: 144 },
+    { id: 'stack', label: '纵向组合', width: 148, height: 156 },
+    { id: 'ledger', label: '气象分栏', width: 280, height: 104 },
+];
+const resolveWeatherLayout = (id) => WEATHER_LAYOUTS.find(layout => layout.id === id) ?? WEATHER_LAYOUTS[0];
+const WEATHER_PALETTES = [
+    { id: 'document', label: '跟随文档', fg: 'inherit', accent: 'currentColor', line: 'color-mix(in srgb, currentColor 35%, transparent)', bg: 'transparent' },
+    { id: 'ink', label: '中性灰', fg: '#30353b', accent: '#59626b', line: '#c9cdd1', bg: '#f0f1f2' },
+    { id: 'blue', label: '雾蓝', fg: '#2b4054', accent: '#42769d', line: '#b6c6d5', bg: '#eaf0f6' },
+    { id: 'green', label: '苔绿', fg: '#314b3c', accent: '#56806a', line: '#b6c8bc', bg: '#edf2eb' },
+    { id: 'clay', label: '陶土', fg: '#583f38', accent: '#a16b55', line: '#d6bbb0', bg: '#f5ece6' },
+    { id: 'dark', label: '深色', fg: '#edf2f6', accent: '#afc9df', line: '#697b8b', bg: '#293b4a' },
+];
+/** 色调切换清除逐项覆盖；背景恢复预设默认值，之后可独立覆盖为透明。调用者在同一事务内写入。 */
+function weatherPalettePatch(palette) {
+    return { palette, fg: null, accent: null, line: null, bg: null };
+}
+
+function readWeatherLook(props) {
+    const style = resolveWeatherLayout(props?.style).id;
+    const palette = WEATHER_PALETTES.find(p => p.id === props?.palette) ?? WEATHER_PALETTES[0];
+    // 没有新增配置的旧文档仍使用原来的近黑色；新布局默认跟随文档。
+    const legacy = style === 'classic' && !props?.palette;
+    const fg = props?.fg || (legacy ? DEFAULT_MATERIAL_COLOR : palette.fg);
+    return {
+        style, fg,
+        accent: props?.accent || palette.accent,
+        line: props?.line || palette.line,
+        bg: props?.bg || palette.bg,
+        bc: props?.bc || (legacy ? DEFAULT_MATERIAL_COLOR : 'currentColor'),
+        ...splitBorder(props?.bw),
+        iconMode: props?.iconMode === 'mono' ? 'mono' : 'original',
+        showRange: props?.range !== 'off',
+    };
+}
