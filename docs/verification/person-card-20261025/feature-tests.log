@@ -1,0 +1,24 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: desktop frozen JSON, typography and legacy scales are read without rewriting
+00:00 +1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: field edits, reorder, undo preserve identity and frozen values
+00:00 +2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: insert, preceding backspace and undo restore fixed JSON and sc format marker
+00:00 +3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: JSON native import, clearing and reexport preserve opaque props and meta
+00:00 +4: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:05 +5: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: revoking and restoring edit permission keeps old draft invalid
+00:06 +6: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:07 +7: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: native row wraps long text within narrow fixed frame
+00:07 +8: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: native rowPinyin wraps long text within narrow fixed frame
+00:07 +9: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_native_integration_test.dart: (setUpAll)
+00:08 +10: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_native_integration_test.dart: (setUpAll)
+00:08 +10: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_native_integration_test.dart: desktop person-card cards cross adapter/native history and SQLite reopen
+00:08 +11: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_native_integration_test.dart: local draft insert and field edits survive native undo redo and reopen
+00:08 +12: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_native_integration_test.dart: (tearDownAll)
+00:08 +12: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_bottom_sheet_test.dart: (setUpAll)
+00:09 +12: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_bottom_sheet_test.dart: person-card sheet fixes header/actions at Size(390.0, 844.0)/1.0
+00:13 +13: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_bottom_sheet_test.dart: person-card sheet fixes header/actions at Size(320.0, 568.0)/1.5
+00:14 +14: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_bottom_sheet_test.dart: person-card sheet fixes header/actions at Size(320.0, 720.0)/2.2
+00:15 +15: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_bottom_sheet_test.dart: person-card sheet fixes header/actions at Size(640.0, 360.0)/1.0
+00:15 +16: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_bottom_sheet_test.dart: person-card arrows cycle all three styles with centered fixed preview and no premature writes
+00:18 +17: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_bottom_sheet_test.dart: swiping person-card sheet away discards changed draft
+00:18 +18: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_bottom_sheet_test.dart: (tearDownAll)
+00:18 +18: All tests passed!

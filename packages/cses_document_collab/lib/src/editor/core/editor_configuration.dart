@@ -32,6 +32,9 @@ enum EditorBlock {
   /// 分割线及其外观设置。
   divider('divider'),
 
+  /// 定格人员资料及三种排版设置。
+  personCard('person-card'),
+
   /// 定格日期卡片及其外观设置。
   dateCard('date-card'),
 
@@ -225,7 +228,10 @@ enum EditorKeyboardToolbarItem {
   /// 设置外观后插入分割线。
   divider,
 
-  /// 插入定格为当前日期的独立卡片。
+  /// 插入宿主提供的定格人员卡片。
+  personCard,
+
+  /// 定格日期卡片。
   dateCard,
 
   /// 插入以当天为锚点的天气卡片。

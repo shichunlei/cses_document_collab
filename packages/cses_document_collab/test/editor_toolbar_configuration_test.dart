@@ -47,6 +47,7 @@ void main() {
     EditorKeyboardToolbarItem.mermaid: '代码绘图',
     EditorKeyboardToolbarItem.inlineFormula: '行内公式',
     EditorKeyboardToolbarItem.divider: '分割线',
+    EditorKeyboardToolbarItem.personCard: '人员卡片',
     EditorKeyboardToolbarItem.dateCard: '日期卡片',
     EditorKeyboardToolbarItem.weather: '天气卡片',
     EditorKeyboardToolbarItem.pageDivider: '分页符',
@@ -271,6 +272,44 @@ void main() {
           local.editorState.undoManager.undo();
           await tester.pumpAndSettle();
           expect(local.editorState.document.root.children.any((node) => node.type == 'weather'), isFalse);
+          expect(local.editorState.undoManager.undoStack, isEmpty);
+        }
+      } finally {
+        await _closeMountedEditor(tester, local);
+      }
+    });
+  }
+
+  for (final revoke in [false, true]) {
+    testWidgets('person-card creation freezes one insertion and ignores revoked query: $revoke', (tester) async {
+      final pending = Completer<CollabPersonCardData>();
+      final local = LocalEditorController(
+        initialText: 'Text',
+        configuration: EditorConfiguration(keyboardToolbarItems: [EditorKeyboardToolbarItem.personCard]),
+        services: CollabHostServices(
+          loadPersonCardCreator: () {
+            return pending.future;
+          },
+        ),
+      );
+      try {
+        await _mountToolbar(tester, local);
+        await tester.tap(find.byTooltip('人员卡片'));
+        await tester.pump();
+        if (revoke) {
+          local.editorState.editable = false;
+          local.editorState.editable = true;
+        }
+        pending.complete(const CollabPersonCardData(name: '张三', pinyin: 'ZHANG SAN'));
+        await _settleAction(tester);
+        final cards = local.editorState.document.root.children.where((node) => node.type == 'person-card');
+        expect(cards.isNotEmpty, !revoke);
+        if (!revoke) {
+          final props = jsonDecode((cards.single.attributes['cses_resource'] as Map)['properties'] as String) as Map;
+          expect(jsonDecode(props['person'])['name'], '张三');
+          local.editorState.undoManager.undo();
+          await tester.pumpAndSettle();
+          expect(local.editorState.document.root.children.any((node) => node.type == 'person-card'), isFalse);
           expect(local.editorState.undoManager.undoStack, isEmpty);
         }
       } finally {

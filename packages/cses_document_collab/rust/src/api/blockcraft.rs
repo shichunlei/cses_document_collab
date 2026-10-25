@@ -599,9 +599,8 @@ fn mobile_type<T: ReadTxn>(block: &MapRef, props: &MapRef, txn: &T) -> Option<St
         "blockquote" => "quote".to_owned(),
         "table" | "table-row" | "table-cell" => flavour,
         "code" | "image" | "video" | "callout" | "mermaid" | "mermaid-textarea" | "date-card"
-        | "weather" | "divider" | "page-divider" | "formula" | "meeting" | "task" | "kr-list" => {
-            flavour
-        }
+        | "person-card" | "weather" | "divider" | "page-divider" | "formula" | "meeting"
+        | "task" | "kr-list" => flavour,
         s if is_resource_block_type(s) => flavour,
         _ => return None,
     })
@@ -659,7 +658,7 @@ fn is_divider_style(style: &str) -> bool {
     )
 }
 
-/// 已适配块的属性白名单；表格布局通过显式补丁写入，日期卡片/会议/任务/分割线/公式/绘图不使用资源 URL。
+/// 已适配块的属性白名单；表格布局通过显式补丁写入，日期及人员卡片/会议/任务/分割线/公式/绘图不使用资源 URL。
 fn resource_keys(kind: &str) -> &'static [&'static str] {
     match kind {
         "formula" => &["latex"],
@@ -673,6 +672,22 @@ fn resource_keys(kind: &str) -> &'static [&'static str] {
         "weather" => &[
             "date", "frozen", "style", "palette", "fg", "accent", "line", "bg", "bw", "bc",
             "iconMode", "range", "width", "height",
+        ],
+        "person-card" => &[
+            "person",
+            "style",
+            "avatar",
+            "avatarSize",
+            "dept",
+            "color",
+            "bw",
+            "bc",
+            "width",
+            "height",
+            "sc",
+            "fsr",
+            "fsp",
+            "fsc",
         ],
         "date-card" => &[
             "date",
@@ -785,7 +800,8 @@ fn parse_resource_edit(
                 || key != "url"
                 || matches!(
                     kind,
-                    "date-card"
+                    "person-card"
+                        | "date-card"
                         | "weather"
                         | "divider"
                         | "formula"
@@ -926,6 +942,56 @@ fn parse_resource_edit(
                             | "3px double"
                     ),
                     (_, Any::String(v)) => v.len() <= 1024,
+                    _ => false,
+                };
+                if !valid {
+                    return Err(fail());
+                }
+                result.insert(key.clone(), value);
+                continue;
+            }
+            if kind == "person-card" {
+                let valid = match (key.as_str(), v) {
+                    (_, Any::Null) => true,
+                    ("style", Any::String(v)) => {
+                        matches!(v.as_ref(), "row" | "rowPinyin" | "column")
+                    }
+                    ("avatar", Any::String(v)) => matches!(v.as_ref(), "circle" | "rounded"),
+                    ("avatarSize", Any::String(v)) => {
+                        matches!(v.as_ref(), "small" | "medium" | "large")
+                    }
+                    ("dept", Any::String(v)) => {
+                        matches!(v.as_ref(), "off" | "on" | "below" | "right" | "above")
+                    }
+                    ("person", Any::String(v)) => {
+                        v.len() <= 16384
+                            && serde_json::from_str::<serde_json::Value>(v)
+                                .ok()
+                                .and_then(|json| {
+                                    json.get("name")
+                                        .and_then(|name| name.as_str())
+                                        .map(|name| !name.is_empty())
+                                })
+                                .unwrap_or(false)
+                    }
+                    ("width" | "height" | "sc", Any::Number(v)) => {
+                        v.is_finite()
+                            && *v > 0.0
+                            && *v <= if key == "sc" { 100.0 } else { 100000.0 }
+                    }
+                    ("bw", Any::String(v)) => matches!(
+                        v.as_ref(),
+                        "" | "0px solid"
+                            | "1px solid"
+                            | "2px solid"
+                            | "3px solid"
+                            | "1px dashed"
+                            | "2px dashed"
+                            | "1px dotted"
+                            | "2px dotted"
+                            | "3px double"
+                    ),
+                    (_, Any::String(v)) => v.len() <= 256,
                     _ => false,
                 };
                 if !valid {
@@ -1207,7 +1273,8 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
             Some(Out::YArray(array))
                 if matches!(
                     kind.as_str(),
-                    "date-card"
+                    "person-card"
+                        | "date-card"
                         | "weather"
                         | "divider"
                         | "page-divider"
@@ -1241,7 +1308,7 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                     && kind != "callout"
                     && kind != "mermaid"
                     && kind != "page-divider"
-                    && !matches!(kind.as_str(), "date-card" | "weather")
+                    && !matches!(kind.as_str(), "person-card" | "date-card" | "weather")
                     && kind != "divider"
                     && kind != "formula"
                     && kind != "kr-list"
@@ -1338,7 +1405,8 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                 || is_table_container(&kind)
                 || matches!(
                     kind.as_str(),
-                    "date-card"
+                    "person-card"
+                        | "date-card"
                         | "weather"
                         | "divider"
                         | "formula"
@@ -1401,6 +1469,7 @@ fn formal_type(kind: &str) -> Option<(&str, bool)> {
         "table-cell" => ("table-cell", false),
         "image" => ("image", true),
         "video" => ("video", true),
+        "person-card" => ("person-card", true),
         "date-card" => ("date-card", true),
         "weather" => ("weather", true),
         "divider" => ("divider", true),
@@ -1562,7 +1631,8 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
             if !is_resource_block_type(&block.block_type)
                 && !matches!(
                     block.block_type.as_str(),
-                    "date-card"
+                    "person-card"
+                        | "date-card"
                         | "weather"
                         | "divider"
                         | "formula"
@@ -1980,7 +2050,8 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
             }
             if !matches!(
                 flavour,
-                "date-card"
+                "person-card"
+                    | "date-card"
                     | "weather"
                     | "divider"
                     | "page-divider"
@@ -6255,6 +6326,128 @@ mod tests {
                 .transact()
                 .encode_state_as_update_v1(&StateVector::default()),
             before
+        );
+    }
+
+    /// 发布Schema生成的void人员块可字段编辑，非法子块回落占位；未知属性、meta和原JSON保留。
+    #[test]
+    fn person_card_projection_and_atomic_validation() {
+        let mut e = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-person-card.update"
+        ));
+        assert_eq!(
+            e.blocks()
+                .iter()
+                .filter(|b| b.block_type == "person-card")
+                .count(),
+            4
+        );
+        assert_eq!(
+            e.blocks()
+                .iter()
+                .find(|b| b.id == "malformed-person-card")
+                .unwrap()
+                .block_type,
+            UNSUPPORTED_BLOCK_TYPE
+        );
+        assert_eq!(
+            e.blocks()
+                .iter()
+                .find(|b| b.id == "nested-person-card")
+                .unwrap()
+                .parent_id
+                .as_deref(),
+            Some("box")
+        );
+        let mut desired = e.blocks();
+        let frozen = desired[0].resource.as_ref().unwrap().properties.clone();
+        assert!(frozen.contains("ZHANG SAN"));
+        desired[0].resource.as_mut().unwrap().property_edits =
+            Some(r##"{"style":{"value":"column"},"color":{"value":"#123456"}}"##.into());
+        e.apply_block_snapshot(desired).unwrap();
+        {
+            let txn = e.doc.transact();
+            let blocks = txn.get_map(ROOT_NAME).unwrap();
+            let card = map(&blocks, &txn, "person-0").unwrap();
+            let props = map(&card, &txn, "props").unwrap();
+            assert!(props.contains_key(&txn, "futureProp"));
+            assert!(out_string(props.get(&txn, "person"))
+                .unwrap()
+                .contains("ZHANG SAN"));
+            assert_eq!(
+                out_string(map(&card, &txn, "meta").unwrap().get(&txn, "audit")).as_deref(),
+                Some("desktop")
+            );
+            assert!(!props.contains_key(&txn, "url"));
+            assert!(
+                matches!(card.get(&txn, "children"), Some(Out::YArray(ref a)) if a.len(&txn) == 0)
+            );
+        }
+        let before = e
+            .doc
+            .transact()
+            .encode_state_as_update_v1(&StateVector::default());
+        for patch in [
+            r#"{"style":{"value":"future"}}"#,
+            r#"{"sc":{"value":0}}"#,
+            r#"{"dept":{"value":false}}"#,
+            r#"{"width":{"value":0}}"#,
+            r#"{"person":{"value":{}}}"#,
+            r#"{"person":{"value":"{\"name\":\"\"}"}}"#,
+            r#"{"url":{"value":"https://example.test"}}"#,
+        ] {
+            let mut desired = e.blocks();
+            desired[0].resource.as_mut().unwrap().property_edits = Some(patch.into());
+            assert!(e.apply_block_snapshot(desired).is_err(), "{patch}");
+            assert_eq!(
+                e.doc
+                    .transact()
+                    .encode_state_as_update_v1(&StateVector::default()),
+                before
+            );
+        }
+        let mut desired = e.blocks();
+        desired[0].text = "invalid".into();
+        assert!(e.apply_block_snapshot(desired).is_err());
+    }
+
+    /// 两端修改不同人员字段收敛，新建和删除恢复保持无正文结构。
+    #[test]
+    fn person_card_concurrent_fields_and_creation() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-person-card.update");
+        let mut left = engine(fixture);
+        let mut right = engine(fixture);
+        let mut a = left.blocks();
+        let mut b = right.blocks();
+        a[0].resource.as_mut().unwrap().property_edits =
+            Some(r#"{"style":{"value":"column"}}"#.into());
+        b[0].resource.as_mut().unwrap().property_edits =
+            Some(r#"{"dept":{"value":"above"}}"#.into());
+        let ua = left.apply_block_snapshot(a).unwrap();
+        let ub = right.apply_block_snapshot(b).unwrap();
+        left.apply_cses_update(ub.v1_update).unwrap();
+        right.apply_cses_update(ua.v1_update).unwrap();
+        assert_eq!(left.blocks(), right.blocks());
+        let mut desired = left.blocks();
+        let mut new = desired[0].clone();
+        new.id = "mobile-person".into();
+        new.resource = Some(CollabResource {
+            properties: r#"{"sc":1,"style":"row"}"#.into(),
+            property_edits: None,
+        });
+        desired.insert(1, new);
+        left.apply_block_snapshot(desired.clone()).unwrap();
+        let mut removed = left.blocks();
+        removed.retain(|b| b.id != "mobile-person");
+        left.apply_block_snapshot(removed).unwrap();
+        left.apply_block_snapshot(desired).unwrap();
+        assert_eq!(
+            left.blocks()
+                .iter()
+                .find(|b| b.id == "mobile-person")
+                .unwrap()
+                .block_type,
+            "person-card"
         );
     }
 

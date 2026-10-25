@@ -44,6 +44,7 @@ Widget decorateCollabBlockLock(
         'callout',
         'image',
         'video',
+        'person-card',
         'date-card',
         'weather',
         'divider',

@@ -21,6 +21,7 @@ import 'package:cses_document_collab/src/editor/editor_media_source_sheet.dart';
 import 'package:cses_document_collab/src/editor/stable_mobile_toolbar.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
 import 'package:cses_document_collab/src/model/collab_color_palette.dart';
+import 'package:cses_document_collab/src/model/collab_person_card.dart';
 import 'package:cses_document_collab/src/model/collab_date_card.dart';
 import 'package:cses_document_collab/src/model/collab_weather.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
@@ -564,6 +565,13 @@ const _commonInsertions = [
     blockType: 'divider',
   ),
   _CommonInsertionAction(
+    EditorKeyboardToolbarItem.personCard,
+    '人员卡片',
+    LucideIcons.userRound,
+    'editor-shortcut-person-card',
+    blockType: 'person-card',
+  ),
+  _CommonInsertionAction(
     EditorKeyboardToolbarItem.dateCard,
     '日期卡片',
     LucideIcons.calendarDays,
@@ -798,6 +806,13 @@ Future<Selection?> _performCommonInsertion(
         final selection = current();
         if (draft == null || selection == null) return null;
         return await insertCollabDivider(state, selection, values: draft.values);
+      case EditorKeyboardToolbarItem.personCard:
+        final services = EditorCommandContext.of(state).services;
+        final loader = services.loadPersonCardCreator;
+        final person = loader == null ? null : await loader();
+        final selection = current();
+        if (selection == null || !identical(EditorCommandContext.of(state).services, services)) return null;
+        return await insertCollabPersonCard(state, selection, values: {if (person != null) 'person': person.encode()});
       case EditorKeyboardToolbarItem.dateCard:
         final selection = current();
         return selection == null ? null : await insertCollabDateCard(state, selection);

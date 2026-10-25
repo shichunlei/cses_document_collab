@@ -1375,6 +1375,7 @@ fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(
             block.block_type.as_str(),
             "weather"
                 | "date-card"
+                | "person-card"
                 | "divider"
                 | "page-divider"
                 | "formula"
@@ -1385,6 +1386,8 @@ fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(
         {
             return Err(if block.block_type == "weather" {
                 "INVALID_WEATHER: 天气卡片不能存储正文".into()
+            } else if block.block_type == "person-card" {
+                "INVALID_PERSON_CARD: 人员卡片不能存储正文".into()
             } else if block.block_type == "date-card" {
                 "INVALID_DATE_CARD: 日期卡片不能存储正文".into()
             } else if block.block_type == "page-divider" {
@@ -1563,6 +1566,7 @@ fn is_supported_block_type(block_type: &str) -> bool {
             | "table-row"
             | "table-cell"
             | "date-card"
+                | "person-card"
             | "weather"
             | "divider"
             | "page-divider"

@@ -7,6 +7,7 @@ import 'package:cses_document_collab/src/editor/core/editor_command_context.dart
 import 'package:cses_document_collab/src/editor/editor_text_attributes.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
 import 'package:cses_document_collab/src/model/collab_code.dart';
+import 'package:cses_document_collab/src/model/collab_person_card.dart';
 import 'package:cses_document_collab/src/model/collab_date_card.dart';
 import 'package:cses_document_collab/src/model/collab_weather.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
@@ -616,6 +617,7 @@ final class AppFlowyBlockEditorAdapter {
               currentBlocks[index].parentId == targetBlocks[index].parentId &&
               (currentNodes[index].type == csesUnsupportedBlockType ||
                   isCollabContainerType(currentNodes[index].type) ||
+                  currentNodes[index].type == collabPersonCardType ||
                   currentNodes[index].type == collabWeatherType ||
                   currentNodes[index].type == collabDateCardType ||
                   currentNodes[index].type == collabDividerType ||
@@ -636,6 +638,7 @@ final class AppFlowyBlockEditorAdapter {
         if (collabTableTypes.contains(target.blockType) ||
             _isUrlBackedBlock(target.blockType) ||
             target.blockType == collabMermaidType ||
+            target.blockType == collabPersonCardType ||
             target.blockType == collabWeatherType ||
             target.blockType == collabDateCardType ||
             target.blockType == collabDividerType ||
@@ -945,6 +948,13 @@ final class AppFlowyBlockEditorAdapter {
           }
         }
       }
+      if (node != null && node.type == collabPersonCardType) {
+        for (final key in collabPersonCardKeys) {
+          if (operation.attributes.containsKey(personCardPropertyAttribute(key))) {
+            resourceEdits.putIfAbsent(node, () => {}).add(key);
+          }
+        }
+      }
       if (node != null && node.type == collabWeatherType) {
         for (final key in collabWeatherKeys) {
           if (operation.attributes.containsKey(weatherPropertyAttribute(key))) {
@@ -1214,7 +1224,7 @@ final class AppFlowyBlockEditorAdapter {
   /// 题注留在资源属性而非 AppFlowy children；实际父子关系由 Rust 的共享类型持有。
   /// KR只投影会议引用，不缓存业务列表；Mermaid 保留容器及独立源码 Delta；表格布局及任务卡片属性只读投影；其他无正文块保留各自白名单属性，均不生成Delta。
   /// 段落格式及其历史目标标记仅用于段落族；代码块沿用自身属性和正文历史。
-  /// 日期卡片与分页符使用无 Delta、无子块的独立类型；仅构建内存节点，不写入原生文档或取得资源所有权。
+  /// 日期、天气及人员卡片与分页符使用无 Delta、无子块的独立类型；仅构建内存节点，不写入原生文档或取得资源所有权。
   /// 标题投影限制H1~H6，旧数据超出范围按边界级别展示，不主动修改共享数据。
   static Node _nodeFromBlock(CollabEditorBlock block) {
     if (collabTableTypes.contains(block.blockType)) {
@@ -1272,6 +1282,16 @@ final class AppFlowyBlockEditorAdapter {
         attributes: {
           collabBlockIdAttribute: block.id,
           ...CollabDateCard.nodeAttributes(block.resource ?? const CollabResource()),
+        },
+      );
+    }
+    if (block.blockType == collabPersonCardType) {
+      return Node(
+        type: collabPersonCardType,
+        id: block.id,
+        attributes: {
+          collabBlockIdAttribute: block.id,
+          ...CollabPersonCard.nodeAttributes(block.resource ?? const CollabResource()),
         },
       );
     }
@@ -1483,6 +1503,8 @@ final class AppFlowyBlockEditorAdapter {
             ? readCollabFormula(node.attributes, edited: resourceEdits[node]?.contains('latex') == true)
             : node.type == collabWeatherType
             ? CollabWeather.readAttributes(node.attributes, edited: resourceEdits[node] ?? const {})
+            : node.type == collabPersonCardType
+            ? CollabPersonCard.readAttributes(node.attributes, edited: resourceEdits[node] ?? const {})
             : node.type == collabDateCardType
             ? CollabDateCard.readAttributes(node.attributes, edited: resourceEdits[node] ?? const {})
             : node.type == collabDividerType
@@ -1547,6 +1569,7 @@ final class AppFlowyBlockEditorAdapter {
         node.type == collabMermaidSourceType ||
         collabTableTypes.contains(node.type) ||
         isCollabResourceType(node.type) ||
+        node.type == collabPersonCardType ||
         node.type == collabWeatherType ||
         node.type == collabDateCardType ||
         node.type == collabDividerType ||
@@ -1657,9 +1680,10 @@ final class AppFlowyBlockEditorAdapter {
       blockType == NumberedListBlockKeys.type ||
       blockType == TodoListBlockKeys.type;
 
-  /// 读取借用[node]的正文或资源地址，容器、日期卡片、分割线、分页符、公式、会议、KR和任务卡片不提供文字。
+  /// 读取借用[node]的正文或资源地址，容器、日期/天气/人员卡片、分割线、分页符、公式、会议、KR和任务卡片不提供文字。
   static String _readNodePlainText(Node node) {
     if (isCollabContainerType(node.type) ||
+        node.type == collabPersonCardType ||
         node.type == collabWeatherType ||
         node.type == collabDateCardType ||
         node.type == collabDividerType ||

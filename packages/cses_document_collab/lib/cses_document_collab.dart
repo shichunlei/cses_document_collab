@@ -52,3 +52,5 @@ export 'src/sync/cses_collab_gateway.dart';
 export 'src/sync/cses_doc_collaboration_session.dart' show CsesCollabState;
 
 export 'src/model/collab_weather.dart' show CollabWeatherData, CollabWeatherLoader;
+
+export 'src/model/collab_person_card.dart' show CollabPersonCardData;

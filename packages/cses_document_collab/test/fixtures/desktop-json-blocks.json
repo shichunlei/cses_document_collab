@@ -701,10 +701,7 @@
         "width": 183,
         "height": 40,
         "sc": 1,
-        "frozen": {
-          "name": "示例人员",
-          "department": "示例部门"
-        }
+        "person": "{\"name\":\"示例人员\",\"description\":\"示例部门\"}"
       },
       "children": []
     },

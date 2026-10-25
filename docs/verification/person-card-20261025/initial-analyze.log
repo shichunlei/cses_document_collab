@@ -1,0 +1,5 @@
+Analyzing 5 items...
+
+   info • Missing an 'await' for the 'Future' computed by this expression. Try adding an 'await' or wrapping the expression with 'unawaited' • lib/src/editor/collab_video_block.dart:265:21 • unawaited_futures
+
+1 issue found. (ran in 11.2s)

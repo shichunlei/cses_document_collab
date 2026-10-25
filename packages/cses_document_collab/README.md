@@ -890,3 +890,22 @@ flutter test --no-pub test/native_history_editor_test.dart test/collab_native_se
 ```
 
 独立 Rust 原型仍以 `history-prototype` feature 供实验/回归使用，不是 Flutter 的指令实现。其 root/callout 结构命令限制与正式引擎完整适配范围分开；原型不要与运行中的正式引擎共用实验数据库。当前审查修复与验证见[5项修复记录](../../docs/verification/selective-undo-prototype-20261022/review-fixes.md)，接入实现见[第三阶段](../../docs/verification/selective-undo-prototype-20261022/frb-editor-history.md)，此前行为见[第二阶段](../../docs/verification/selective-undo-prototype-20261022/structure-format-locks.md)和[第一阶段](../../docs/verification/selective-undo-prototype-20261022/report.md)。
+
+## 人员卡片（person-card）
+
+正式无正文人员块支持添加菜单、`EditorKeyboardToolbarItem.personCard` 直达、三种原生样式、头像/部门/字号/颜色/边框设置、锁、删除、字段历史和 JSON 往返。`person` 为桌面定格资料 JSON 字符串；新建明确保存 `sc:1`，读取旧卡片不自动刷新人员。
+
+宿主可通过公开入口注入新建资料，账号和网络由宿主持有：
+
+```dart
+import 'package:cses_document_collab/cses_document_collab.dart';
+
+final services = CollabHostServices(
+  loadPersonCardCreator: () => const CollabPersonCardData(
+    name: '张三', pinyin: 'ZHANG SAN', description: '研发部 / 工程师',
+  ),
+);
+// 将services注入由宿主持有的CollabController；仅新插入时调用。
+```
+
+未配置或返回 null 时保留“文档创建人”占位；既有文档需要原创建人时由宿主端口解析，不能假定当前账号就是原创建人。自由定位、八向缩放、模板物化和设备/真实在线验收仍待完成，详见[实施与验证](../../docs/verification/person-card-20261025/report.md)。

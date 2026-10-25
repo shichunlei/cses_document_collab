@@ -443,6 +443,7 @@ final _pending = Expando<bool>('block-more-actions');
   'task' => ('任务', LucideIcons.listTodo),
   'kr-list' => ('会议 KR', LucideIcons.listTodo),
   'weather' => ('天气卡片', LucideIcons.cloudSun),
+  'person-card' => ('人员卡片', LucideIcons.userRound),
   'date-card' => ('日期卡片', LucideIcons.calendarDays),
   'page-divider' => ('分页符', LucideIcons.separatorHorizontal),
   _ => ('内容', LucideIcons.file),

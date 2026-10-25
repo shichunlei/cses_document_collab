@@ -1,0 +1,61 @@
+{
+  "date": "2026-10-25",
+  "scope": "person-card mobile formal node integration",
+  "status": "partial support; implemented scope verified",
+  "flutter": {
+    "feature": 18,
+    "related": 38,
+    "toolbarPassed": 52,
+    "toolbarExistingFailed": 1,
+    "host": 7,
+    "hostCodecFinalRepeat": 6,
+    "uniquePassed": 115,
+    "existingFailure": "menu choices cannot reenable disabled block and format capabilities",
+    "baselineHeadReproduced": true,
+    "skipped": 0
+  },
+  "rust": {
+    "passed": 202,
+    "failed": 0,
+    "cargoFmtCheck": "passed",
+    "cargoCheck": "passed; existing vendored yrs warnings",
+    "nativeLibraryBuild": "passed"
+  },
+  "staticAnalysis": {
+    "package": "19 targets, no issues",
+    "host": "4 targets, no issues",
+    "initialBroadScope": "existing collab_video_block.dart:265 unawaited_futures info; untouched"
+  },
+  "android": {
+    "debugApk": "build/app/outputs/flutter-apk/app-debug.apk",
+    "build": "passed",
+    "elapsedSeconds": 145.6,
+    "bytes": 218427395,
+    "sha256": "6aa7cb0a2ba20ac69f0a044f7874702420ef97c3d870604f8c6403130516cd70"
+  },
+  "versionEvidence": "blockcraft-version.json",
+  "schemaFixture": "packages/cses_document_collab/rust/tests/fixtures/blockcraft-person-card.json",
+  "yjsFixture": "packages/cses_document_collab/rust/tests/fixtures/blockcraft-person-card.update",
+  "fixtureSource": "packages/cses_document_collab/tool/generate_person_card_fixture.mjs",
+  "gitDiffCheck": "passed",
+  "limitations": [
+    "no physical Android or iOS device acceptance",
+    "no iOS App build",
+    "no real online desktop/mobile collaboration or reconnection/ACK acceptance",
+    "no free placement, object groups, resize handles or animation",
+    "no draft:* template materialization or original document creator resolution; host currently supplies insertion account",
+    "host session has no pinyin; no pinyin inferred",
+    "no complete desktop clipboard exchange",
+    "layout is native approximation; local icon fallback avatar"
+  ],
+  "preservedUnrelatedWork": [
+    "pubspec.yaml existing file_picker version change",
+    "docs/verification/block-classification-20261025 and its existing indexes"
+  ],
+  "initialTestCorrections": [
+    "test fixtures omitted required blockType; corrected",
+    "FixedSizeStack has no length property; corrected test assertion",
+    "old JSON fixture wrongly used frozen map; fixed generator source and regenerated",
+    "one related-test invocation ran from root; no tests executed; rerun from package passed"
+  ]
+}

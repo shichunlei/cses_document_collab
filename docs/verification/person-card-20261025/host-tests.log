@@ -1,0 +1,9 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/test/cses_person_card_creator_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/test/cses_person_card_creator_test.dart: creator snapshot copies current identity and never changes after account edits
+00:02 +1: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: journal formats, mentions, todo states, business ids and date survive both directions
+00:02 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: all enabled formats, repeated objects and independent business/native checked state survive
+00:02 +3: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:11 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: real controller export has no debounce delay and returns detached JSON
+00:11 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: stable block ids survive saving and reopening without entering business attributes
+00:11 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: desktop blocks outside journal capabilities are converted into real nested native nodes
+00:11 +7: All tests passed!

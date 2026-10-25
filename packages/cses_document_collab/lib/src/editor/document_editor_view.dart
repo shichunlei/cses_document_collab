@@ -11,6 +11,7 @@ import 'package:cses_document_collab/src/editor/collab_bookmark_block.dart';
 import 'package:cses_document_collab/src/editor/collab_callout_block.dart';
 import 'package:cses_document_collab/src/editor/collab_code_block.dart';
 import 'package:cses_document_collab/src/editor/collab_code_editing.dart';
+import 'package:cses_document_collab/src/editor/collab_person_card_block.dart';
 import 'package:cses_document_collab/src/editor/collab_date_card_block.dart';
 import 'package:cses_document_collab/src/editor/collab_weather_block.dart';
 import 'package:cses_document_collab/src/editor/collab_divider_block.dart';
@@ -464,6 +465,7 @@ Map<String, BlockComponentBuilder> _createDocumentBlockBuilders() =>
       TodoListBlockKeys.type: TodoListBlockComponentBuilder(
         configuration: standardBlockComponentConfiguration.copyWith(padding: _listBlockPadding),
       ),
+      'person-card': CollabPersonCardBlockComponentBuilder(),
       'date-card': CollabDateCardBlockComponentBuilder(),
       'weather': CollabWeatherBlockComponentBuilder(),
       collabDividerType: CollabDividerBlockComponentBuilder(),

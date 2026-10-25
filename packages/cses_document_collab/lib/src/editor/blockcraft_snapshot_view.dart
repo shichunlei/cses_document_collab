@@ -5,9 +5,11 @@ import 'package:appflowy_editor/appflowy_editor.dart' hide Path;
 import 'package:cses_document_collab/src/editor/blockcraft_json_codec.dart';
 import 'package:cses_document_collab/src/editor/blockcraft_snapshot_presets.g.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
+import 'package:cses_document_collab/src/model/collab_person_card.dart';
 import 'package:cses_document_collab/src/model/collab_date_card.dart';
 import 'package:cses_document_collab/src/model/collab_weather.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_weather_visual.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_person_card_visual.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_date_card_visual.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -296,32 +298,7 @@ class _SnapshotObject extends BlockComponentStatelessWidget {
     if (kind == 'date-card') {
       return CollabDateCardVisual(card: CollabDateCard(props));
     }
-    if (kind == 'person-card') {
-      final person = props['frozen'] is Map ? props['frozen'] as Map : props;
-      return _card(
-        Row(
-          children: [
-            const Icon(LucideIcons.userRound, size: 36),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${person['name'] ?? person['userName'] ?? person['userId'] ?? ''}',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  if (person['department'] != null || person['dept'] != null)
-                    Text('${person['department'] ?? person['dept']}'),
-                ],
-              ),
-            ),
-          ],
-        ),
-        fill,
-        border,
-      );
-    }
+    if (kind == 'person-card') return CollabPersonCardVisual(card: CollabPersonCard(props));
     if (kind == 'weather') {
       final card = CollabWeather(props);
       return CollabWeatherVisual(card: card, weather: card.frozen);

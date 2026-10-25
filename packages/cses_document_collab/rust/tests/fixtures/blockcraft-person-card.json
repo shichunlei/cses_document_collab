@@ -1,0 +1,116 @@
+{
+  "id": "fixture-doc",
+  "flavour": "root",
+  "nodeType": "root",
+  "props": {},
+  "meta": {},
+  "children": [
+    {
+      "id": "person-0",
+      "flavour": "person-card",
+      "nodeType": "void",
+      "props": {
+        "width": 183,
+        "height": 40,
+        "sc": 1,
+        "style": "row",
+        "person": "{\"name\":\"张三\",\"pinyin\":\"ZHANG SAN\",\"description\":\"研发部 / 工程师\"}",
+        "dept": "on",
+        "futureProp": {
+          "preserve": true
+        }
+      },
+      "meta": {
+        "audit": "desktop"
+      },
+      "children": []
+    },
+    {
+      "id": "person-1",
+      "flavour": "person-card",
+      "nodeType": "void",
+      "props": {
+        "width": 238,
+        "height": 48,
+        "sc": 1,
+        "style": "rowPinyin",
+        "person": "{\"name\":\"张三\",\"pinyin\":\"ZHANG SAN\",\"description\":\"研发部 / 工程师\"}",
+        "dept": "on"
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "person-2",
+      "flavour": "person-card",
+      "nodeType": "void",
+      "props": {
+        "width": 78,
+        "height": 91,
+        "sc": 1,
+        "style": "column",
+        "person": "{\"name\":\"张三\",\"pinyin\":\"ZHANG SAN\",\"description\":\"研发部 / 工程师\"}",
+        "dept": "on"
+      },
+      "meta": {},
+      "children": []
+    },
+    {
+      "id": "tail",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {},
+      "meta": {},
+      "children": [
+        {
+          "insert": "保留正文"
+        }
+      ]
+    },
+    {
+      "id": "box",
+      "flavour": "callout",
+      "nodeType": "block",
+      "props": {},
+      "meta": {},
+      "children": [
+        {
+          "id": "nested-person-card",
+          "flavour": "person-card",
+          "nodeType": "void",
+          "props": {
+            "width": 183,
+            "height": 40
+          },
+          "meta": {},
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "malformed-person-card",
+      "flavour": "person-card",
+      "nodeType": "void",
+      "props": {
+        "width": 183,
+        "height": 40,
+        "sc": 1
+      },
+      "meta": {},
+      "children": [
+        {
+          "id": "hidden-person-card",
+          "flavour": "paragraph",
+          "nodeType": "editable",
+          "props": {},
+          "meta": {},
+          "children": [
+            {
+              "insert": "保留非法子块"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

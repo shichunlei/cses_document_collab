@@ -77,6 +77,8 @@
 
 ### 提及、会议、任务与 KR
 
+- [person-card-20261025](person-card-20261025/)（[人员卡片正式节点、原生设置与协同验证](person-card-20261025/report.md)）
+
 - [entity-mention-20261015](entity-mention-20261015/)
 - [kr-adaptation-20261019](kr-adaptation-20261019/)
 - [meeting-card-20261015](meeting-card-20261015/)

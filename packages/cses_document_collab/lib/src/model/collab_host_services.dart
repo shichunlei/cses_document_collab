@@ -14,6 +14,7 @@ import 'collab_mention_tap.dart';
 import 'collab_mention_ui.dart';
 import 'collab_task_card_data.dart';
 import 'collab_weather.dart';
+import 'collab_person_card.dart';
 import 'document_metadata.dart';
 
 /// Reports an unexpected failure with its original error and stack trace.
@@ -57,7 +58,9 @@ class CollabHostServices {
   /// [canUnlockBlock]同步提供当前用户的额外解锁授权；null仅允许普通锁本人解锁。
   /// 模板锁始终需要显式授权；身份、角色与授权变更由宿主负责，不拥有认证资源。
   /// [loadWeather]借用宿主天气查询；null只展示已保存的定格值。
+  /// [loadPersonCardCreator]仅在新插入时读取当前宿主提供的定格资料；null保留创建人占位。
   const CollabHostServices({
+    this.loadPersonCardCreator,
     this.loadWeather,
     this.canUnlockBlock,
     this.buildParagraphLink,
@@ -80,6 +83,10 @@ class CollabHostServices {
     this.krRankIcons,
     this.pickMeetingReference,
   });
+
+  /// 新建人员卡片的资料读取器；返回null表示资料缺失，异常阻止插入并由工具栏报告。
+  /// 宿主持有账号与请求，结果只在原编辑会话仍有效时使用；不在打开旧卡片时调用。
+  final FutureOr<CollabPersonCardData?> Function()? loadPersonCardCreator;
 
   /// 天气查询端口；null不请求定位或网络。宿主持有请求及缓存，失败由卡片显示重试。
   final CollabWeatherLoader? loadWeather;
