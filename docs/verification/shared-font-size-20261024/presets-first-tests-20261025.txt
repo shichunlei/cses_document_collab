@@ -1,0 +1,261 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: (setUpAll)
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=true
+00:01 +1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=true
+00:01 +2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=true
+00:01 +3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=true
+00:01 +4: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=true
+00:01 +5: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=true
+00:01 +6: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=true
+00:01 +7: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=true
+00:01 +8: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=true
+
+Warning: A call to tap() with finder "Found 1 widget with key [<'editor-font-size-24'>]: [
+  Semantics-[<'editor-font-size-24'>](container: false, properties: SemanticsProperties, selected: false, label: "字号 24", dependencies: [Directionality], renderObject: RenderSemanticsAnnotations#6aad4 relayoutBoundary=up19),
+]" derived an Offset (Offset(412.3, 492.0)) that would not hit test on the specified widget.
+Maybe the widget is actually off-screen, or another widget is obscuring it, or the widget cannot receive pointer events.
+Indeed, Offset(412.3, 492.0) is outside the bounds of the root of the render tree, Size(390.0, 844.0).
+The finder corresponds to this RenderBox: RenderSemanticsAnnotations#6aad4 relayoutBoundary=up19
+The hit test result at that offset is: HitTestResult(HitTestEntry<HitTestTarget>#ebc75(_ReusableRenderView#5cc05), HitTestEntry<HitTestTarget>#42a37(<AutomatedTestWidgetsFlutterBinding>))
+#0      WidgetController._getElementPoint (package:flutter_test/src/controller.dart:2165:25)
+#1      WidgetController.getCenter (package:flutter_test/src/controller.dart:1947:12)
+#2      WidgetController.tap (package:flutter_test/src/controller.dart:1080:7)
+#3      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart:79:22)
+<asynchronous suspension>
+#4      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#5      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+#6      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+To silence this warning, pass "warnIfMissed: false" to "tap()".
+To make this warning fatal, set WidgetController.hitTestWarningShouldBeFatal to true.
+
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: <24>
+  Actual: <null>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart:81:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart line 81
+The test description was:
+  default font size menu applies and preserves history local=true
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:05 +8 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:05 +8 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=true [E]
+  Test failed. See exception logs above.
+  The test description was: default font size menu applies and preserves history local=true
+  
+00:07 +8 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=false
+
+Warning: A call to tap() with finder "Found 1 widget with key [<'editor-font-size-24'>]: [
+  Semantics-[<'editor-font-size-24'>](container: false, properties: SemanticsProperties, selected: false, label: "字号 24", dependencies: [Directionality], renderObject: RenderSemanticsAnnotations#d3836 relayoutBoundary=up19),
+]" derived an Offset (Offset(412.3, 492.0)) that would not hit test on the specified widget.
+Maybe the widget is actually off-screen, or another widget is obscuring it, or the widget cannot receive pointer events.
+Indeed, Offset(412.3, 492.0) is outside the bounds of the root of the render tree, Size(390.0, 844.0).
+The finder corresponds to this RenderBox: RenderSemanticsAnnotations#d3836 relayoutBoundary=up19
+The hit test result at that offset is: HitTestResult(HitTestEntry<HitTestTarget>#aec5c(_ReusableRenderView#5cc05), HitTestEntry<HitTestTarget>#33f0e(<AutomatedTestWidgetsFlutterBinding>))
+#0      WidgetController._getElementPoint (package:flutter_test/src/controller.dart:2165:25)
+#1      WidgetController.getCenter (package:flutter_test/src/controller.dart:1947:12)
+#2      WidgetController.tap (package:flutter_test/src/controller.dart:1080:7)
+#3      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart:79:22)
+<asynchronous suspension>
+#4      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#5      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+#6      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+To silence this warning, pass "warnIfMissed: false" to "tap()".
+To make this warning fatal, set WidgetController.hitTestWarningShouldBeFatal to true.
+
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: <24>
+  Actual: <null>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart:81:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart line 81
+The test description was:
+  default font size menu applies and preserves history local=false
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:07 +8 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:07 +8 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=false [E]
+  Test failed. See exception logs above.
+  The test description was: default font size menu applies and preserves history local=false
+  
+00:08 +9 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:09 +9 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default size clears legacy overrides and inherits heading local=true
+
+Warning: A call to tap() with finder "Found 1 widget with key [<'editor-font-size-24'>]: [
+  Semantics-[<'editor-font-size-24'>](container: false, properties: SemanticsProperties, selected: false, label: "字号 24", dependencies: [Directionality], renderObject: RenderSemanticsAnnotations#0a50c relayoutBoundary=up19),
+]" derived an Offset (Offset(412.3, 492.0)) that would not hit test on the specified widget.
+Maybe the widget is actually off-screen, or another widget is obscuring it, or the widget cannot receive pointer events.
+Indeed, Offset(412.3, 492.0) is outside the bounds of the root of the render tree, Size(390.0, 844.0).
+The finder corresponds to this RenderBox: RenderSemanticsAnnotations#0a50c relayoutBoundary=up19
+The hit test result at that offset is: HitTestResult(HitTestEntry<HitTestTarget>#56092(_ReusableRenderView#5cc05), HitTestEntry<HitTestTarget>#b0e95(<AutomatedTestWidgetsFlutterBinding>))
+#0      WidgetController._getElementPoint (package:flutter_test/src/controller.dart:2165:25)
+#1      WidgetController.getCenter (package:flutter_test/src/controller.dart:1947:12)
+#2      WidgetController.tap (package:flutter_test/src/controller.dart:1080:7)
+#3      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart:261:22)
+<asynchronous suspension>
+#4      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#5      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+#6      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+To silence this warning, pass "warnIfMissed: false" to "tap()".
+To make this warning fatal, set WidgetController.hitTestWarningShouldBeFatal to true.
+
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: <24>
+  Actual: <null>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart:263:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart line 263
+The test description was:
+  default size clears legacy overrides and inherits heading local=true
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:09 +9 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:09 +9 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default size clears legacy overrides and inherits heading local=true [E]
+  Test failed. See exception logs above.
+  The test description was: default size clears legacy overrides and inherits heading local=true
+  
+00:10 +9 -3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default size clears legacy overrides and inherits heading local=false
+
+Warning: A call to tap() with finder "Found 1 widget with key [<'editor-font-size-24'>]: [
+  Semantics-[<'editor-font-size-24'>](container: false, properties: SemanticsProperties, selected: false, label: "字号 24", dependencies: [Directionality], renderObject: RenderSemanticsAnnotations#affbc relayoutBoundary=up19),
+]" derived an Offset (Offset(412.3, 492.0)) that would not hit test on the specified widget.
+Maybe the widget is actually off-screen, or another widget is obscuring it, or the widget cannot receive pointer events.
+Indeed, Offset(412.3, 492.0) is outside the bounds of the root of the render tree, Size(390.0, 844.0).
+The finder corresponds to this RenderBox: RenderSemanticsAnnotations#affbc relayoutBoundary=up19
+The hit test result at that offset is: HitTestResult(HitTestEntry<HitTestTarget>#eee63(_ReusableRenderView#5cc05), HitTestEntry<HitTestTarget>#781c9(<AutomatedTestWidgetsFlutterBinding>))
+#0      WidgetController._getElementPoint (package:flutter_test/src/controller.dart:2165:25)
+#1      WidgetController.getCenter (package:flutter_test/src/controller.dart:1947:12)
+#2      WidgetController.tap (package:flutter_test/src/controller.dart:1080:7)
+#3      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart:261:22)
+<asynchronous suspension>
+#4      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#5      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+#6      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+To silence this warning, pass "warnIfMissed: false" to "tap()".
+To make this warning fatal, set WidgetController.hitTestWarningShouldBeFatal to true.
+
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: <24>
+  Actual: <null>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart:263:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart line 263
+The test description was:
+  default size clears legacy overrides and inherits heading local=false
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:10 +9 -4: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:10 +9 -4: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default size clears legacy overrides and inherits heading local=false [E]
+  Test failed. See exception logs above.
+  The test description was: default size clears legacy overrides and inherits heading local=false
+  
+00:10 +9 -4: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+
+Warning: A call to tap() with finder "Found 1 widget with key [<'editor-font-size-24'>]: [
+  Semantics-[<'editor-font-size-24'>](container: false, properties: SemanticsProperties, selected: false, label: "字号 24", dependencies: [Directionality], renderObject: RenderSemanticsAnnotations#c8f33 relayoutBoundary=up19),
+]" derived an Offset (Offset(412.3, 492.0)) that would not hit test on the specified widget.
+Maybe the widget is actually off-screen, or another widget is obscuring it, or the widget cannot receive pointer events.
+Indeed, Offset(412.3, 492.0) is outside the bounds of the root of the render tree, Size(390.0, 844.0).
+The finder corresponds to this RenderBox: RenderSemanticsAnnotations#c8f33 relayoutBoundary=up19
+The hit test result at that offset is: HitTestResult(HitTestEntry<HitTestTarget>#21542(_ReusableRenderView#ca572), HitTestEntry<HitTestTarget>#d25b2(<AutomatedTestWidgetsFlutterBinding>))
+#0      WidgetController._getElementPoint (package:flutter_test/src/controller.dart:2165:25)
+#1      WidgetController.getCenter (package:flutter_test/src/controller.dart:1947:12)
+#2      WidgetController.tap (package:flutter_test/src/controller.dart:1080:7)
+#3      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart:110:20)
+<asynchronous suspension>
+#4      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#5      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+#6      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+To silence this warning, pass "warnIfMissed: false" to "tap()".
+To make this warning fatal, set WidgetController.hitTestWarningShouldBeFatal to true.
+
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: <24>
+  Actual: <null>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart:114:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart line 114
+The test description was:
+  image editor uses original menus and isolates host services
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:10 +9 -5: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: selection format sheet hosts the same font row without another sheet
+00:10 +9 -5: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services [E]
+  Test failed. See exception logs above.
+  The test description was: image editor uses original menus and isolates host services
+  
+00:11 +10 -5: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: selection format sheet hosts the same font row without another sheet
+00:12 +11 -5: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: (tearDownAll)
+00:12 +11 -5: Some tests failed.
+
+Failing tests:
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=false
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default font size menu applies and preserves history local=true
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default size clears legacy overrides and inherits heading local=false
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/shared_font_size_test.dart: default size clears legacy overrides and inherits heading local=true

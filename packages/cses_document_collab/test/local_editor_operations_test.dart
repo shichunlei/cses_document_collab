@@ -107,6 +107,9 @@ void main() {
       await tester.ensureVisible(fontSize);
       await tester.tap(fontSize);
       await tester.pumpAndSettle();
+      await tester.ensureVisible(
+        find.byKey(const ValueKey('editor-font-size-24')),
+      );
       await tester.tap(find.byKey(const ValueKey('editor-font-size-24')));
       await tester.pumpAndSettle();
       await tester.pump(const Duration(milliseconds: 500));

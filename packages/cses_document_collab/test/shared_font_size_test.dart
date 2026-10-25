@@ -71,9 +71,12 @@ void main() {
           tester.widget<SingleChildScrollView>(find.byKey(const ValueKey('editor-font-size-menu'))).scrollDirection,
           Axis.horizontal,
         );
-        for (final size in [12, 16, 20, 24, 28, 32, 36]) {
+        const sizes = [12, 14, 16, 18, 20, 24, 28, 32, 36, 48, 64, 72];
+        expect(document.commandContext.configuration.fontSizes, sizes);
+        for (final size in sizes) {
           expect(find.byKey(ValueKey('editor-font-size-$size')), findsOneWidget);
         }
+        await tester.ensureVisible(find.byKey(const ValueKey('editor-font-size-24')));
         await tester.tap(find.byKey(const ValueKey('editor-font-size-24')));
         await tester.pumpAndSettle();
         expect(state.document.first!.delta!.first.attributes?['t:px'], 24);
@@ -131,6 +134,14 @@ void main() {
         await tester.pumpAndSettle();
         expect(state.document.first!.delta!.first.attributes?['t:px'], isNull);
         expect(tester.widget<Semantics>(reset).properties.selected, isTrue);
+        await tester.ensureVisible(find.byKey(const ValueKey('editor-font-size-72')));
+        await tester.tap(find.byKey(const ValueKey('editor-font-size-72')));
+        await tester.pumpAndSettle();
+        expect(state.document.first!.delta!.first.attributes?['t:px'], 72);
+        expect(find.byKey(const ValueKey('editor-font-size-default')).hitTestable(), findsOneWidget);
+        await tester.tap(reset);
+        await tester.pumpAndSettle();
+        expect(state.document.first!.delta!.first.attributes?['t:px'], isNull);
         expect(tester.takeException(), isNull);
       } finally {
         await tester.pumpWidget(const SizedBox.shrink());
@@ -248,6 +259,7 @@ void main() {
         await _openFontSize(tester);
         final reset = find.byKey(const ValueKey('editor-font-size-default'));
         expect(tester.widget<Semantics>(reset).properties.selected, isFalse);
+        await tester.ensureVisible(find.byKey(const ValueKey('editor-font-size-24')));
         await tester.tap(find.byKey(const ValueKey('editor-font-size-24')));
         await tester.pumpAndSettle();
         expect(state.document.first!.delta!.first.attributes?['t:px'], 24);

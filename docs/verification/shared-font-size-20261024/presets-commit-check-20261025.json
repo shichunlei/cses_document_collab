@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-25",
+  "scope": "Only the twelve default font-size presets, related tests and evidence.",
+  "stagedSourceSha256": {
+    "packages/cses_document_collab/lib/src/editor/core/editor_configuration.dart": "e643f42bd41efcca489c6f15b2e2cfaa5d39c4a538af2ed6cfd9a0928907b4bc",
+    "packages/cses_document_collab/test/shared_font_size_test.dart": "bf9a0dbb1c8d75d80f1ecc0cd83f9e5bc32ab25c80d29c0bae7add98febe2401",
+    "packages/cses_document_collab/test/local_editor_operations_test.dart": "02dec67a6d386c0445869eb94ddebf304b8062bbdbdd2d04e9be58b4fdf730c3"
+  },
+  "isolatedSnapshot": "/private/tmp/cses-font-presets-staged-m2ms3l7_",
+  "snapshotMatchesIndex": true,
+  "snapshotTests": {
+    "passed": 16,
+    "failed": 0,
+    "log": "presets-staged-tests-20261025.txt"
+  },
+  "snapshotAnalysis": "presets-staged-analyze-20261025.txt: No issues found",
+  "excludedUnrelatedWorkspaceChanges": "Heading-level restrictions, native/schema changes and other ongoing work remain unstaged.",
+  "sharedConfigurationIndexMatchesHeadExceptFontPresetDeclaration": true,
+  "originalWorkspaceValidation": "presets-validation-20261025.json records the earlier combined workspace; this record identifies the isolated commit sources.",
+  "fullStagedDiffCheckExitCode": 2,
+  "rawLogsWithTrailingWhitespace": {
+    "docs/verification/shared-font-size-20261024/presets-analyze-20261025.txt": 1,
+    "docs/verification/shared-font-size-20261024/presets-final-analyze-20261025.txt": 1,
+    "docs/verification/shared-font-size-20261024/presets-final-source-analyze-20261025.txt": 1,
+    "docs/verification/shared-font-size-20261024/presets-first-tests-20261025.txt": 5,
+    "docs/verification/shared-font-size-20261024/presets-second-tests-20261025.txt": 1,
+    "docs/verification/shared-font-size-20261024/presets-staged-analyze-20261025.txt": 1
+  },
+  "rawLogsPreserved": true,
+  "sourceAndDocsDiffCheck": "passed"
+}

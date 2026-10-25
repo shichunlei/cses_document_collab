@@ -255,8 +255,8 @@ enum EditorKeyboardToolbarItem {
 /// );
 /// ```
 final class EditorConfiguration {
-  /// 离线与协同字号菜单共用的默认像素值，保持相同顺序。
-  static const _defaultFontSizes = [12, 16, 20, 24, 28, 32, 36];
+  /// 离线与协同字号菜单共用的十二档像素值，按12～72升序排列。
+  static const _defaultFontSizes = [12, 14, 16, 18, 20, 24, 28, 32, 36, 48, 64, 72];
 
   /// [blocks] 为无重复的块集合，必须包含paragraph；类型菜单按此顺序，标题家族按级别排序。
   /// [headingLevels] 为1～9中的子集，默认全部级别，保留桌面/历史正文能力；移动菜单最多显示H6。
