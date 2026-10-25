@@ -1560,7 +1560,7 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
   }
 }
 
-/// 将[blockType]应用到借用[state]的实时选区；[headingLevel]仅用于标题，默认一级。
+/// 将[blockType]应用到借用[state]的实时选区；[headingLevel]仅用于已启用的H1~H6标题，默认一级；超范围不执行。
 /// T菜单、待办入口与键盘标题操作共用此事务，不按在线/离线划分。
 /// 能力关闭、只读、销毁、空选区或高亮容器不执行；列表与非列表混选由列表命令整批拒绝。
 /// 同类列表不重建或重置勾选，转换保留正文、格式、层级和焦点，异常交由调用边界报告。
@@ -3244,7 +3244,7 @@ Future<bool> applyBlockShortcut(
   return true;
 }
 
-/// 将借用 [node] 转为 [blockType]，[headingLevel] 仅标题使用，null 按一级。
+/// 将借用 [node] 转为 [blockType]，[headingLevel] 仅标题使用，null 按一级，数值限制为1～6。
 /// 保留正文及段落默认格式/下一段设置；代码使用独立输入规则，不继承段落字段。
 /// [preservedAttributes]指定额外保留的宿主属性键；目标内置属性优先，块背景默认保留。
 /// 已转换桌面节点的身份、独立props/meta及扩展字段随替换延续；显式正文转换解除特殊文本角色。
@@ -3263,13 +3263,16 @@ Node _convertedNode(Node node, String blockType, int? headingLevel, {Set<String>
         if (key != 'heading' && node.attributes[paragraphPropertyAttribute(key)] is String)
           paragraphPropertyAttribute(key): node.attributes[paragraphPropertyAttribute(key)] as String,
       paragraphPropertyAttribute('heading'): blockType == HeadingBlockKeys.type
-          ? '{"value":${(headingLevel ?? 1).clamp(1, 9)}}'
+          ? '{"value":${(headingLevel ?? 1).clamp(1, 6)}}'
           : '{"value":null}',
     },
     blockComponentDelta: (node.delta ?? Delta()).toJson(),
     blockComponentAlign: alignment,
-    csesBlockIndentAttribute: keepsIndent ? (node.attributes[csesBlockIndentAttribute] as int? ?? 0).clamp(0, 6) : 0,
-    if (blockType == HeadingBlockKeys.type) HeadingBlockKeys.level: (headingLevel ?? 1).clamp(1, 9),
+    csesBlockIndentAttribute: keepsIndent
+        ? (node.attributes[csesBlockIndentAttribute] as int? ?? 0).clamp(0, 6)
+        : 0,
+    if (blockType == HeadingBlockKeys.type)
+      HeadingBlockKeys.level: (headingLevel ?? 1).clamp(1, 6),
     if (blockType == TodoListBlockKeys.type) TodoListBlockKeys.checked: false,
     if (blockType == 'code') blockComponentBackgroundColor: '0xfff3f4f6',
   };
@@ -3283,6 +3286,8 @@ Node _convertedNode(Node node, String blockType, int? headingLevel, {Set<String>
   return Node(type: blockType, attributes: attributes);
 }
 
+/// 创建[blockType]的空编辑节点；[headingLevel]仅标题使用，null为一级，级别限制1～6。
+/// 返回的节点由调用方持有，尚未写入编辑树或原生文档。
 Node _emptyNode(String blockType, int? headingLevel) {
   return Node(
     type: blockType,
@@ -3290,7 +3295,8 @@ Node _emptyNode(String blockType, int? headingLevel) {
       blockComponentDelta: Delta().toJson(),
       blockComponentAlign: 'left',
       csesBlockIndentAttribute: 0,
-      if (blockType == HeadingBlockKeys.type) HeadingBlockKeys.level: (headingLevel ?? 1).clamp(1, 9),
+      if (blockType == HeadingBlockKeys.type)
+        HeadingBlockKeys.level: (headingLevel ?? 1).clamp(1, 6),
       if (blockType == TodoListBlockKeys.type) TodoListBlockKeys.checked: false,
       if (blockType == 'code') blockComponentBackgroundColor: '0xfff3f4f6',
     },

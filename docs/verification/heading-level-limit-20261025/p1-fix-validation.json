@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-25",
+  "baseline_commit": "8957022d687482c216c699256e6253a25cd393e9",
+  "resolved": [
+    "P1 legacy heading Enter rejected by native paragraph style validation",
+    "P1 legacy ordered heading keys collapsed and repaired incorrectly"
+  ],
+  "remaining": [
+    "P2 non-paragraph heading JSON export"
+  ],
+  "latest": "0.11.30",
+  "desktop_declared": "0.11.28",
+  "yarn_locked": "0.11.28",
+  "installed": "0.11.21",
+  "rust_tests": {
+    "passed": 194,
+    "failed": 0,
+    "ignored": 0
+  },
+  "editor_tests": {
+    "passed": 149,
+    "failed": 0
+  },
+  "native_tests": {
+    "passed": 36,
+    "failed": 0,
+    "skipped": 0
+  },
+  "host_tests": {
+    "passed": 30,
+    "failed": 0
+  },
+  "analysis": "No issues found",
+  "fixtures_reproducible": true,
+  "fixture_sha256": {
+    "packages/cses_document_collab/rust/tests/fixtures/blockcraft-legacy-heading.update": "0c0f518e96f250ec2b904400fc70f78f769e436e050f3c3c66803d514fd09901",
+    "packages/cses_document_collab/rust/tests/fixtures/blockcraft-legacy-ordered-headings.update": "0abceb996387990d53a0cb4c74e274af785fd0a4268d0cb47f57f086e6b228a4",
+    "packages/cses_document_collab/rust/tests/fixtures/blockcraft-legacy-ordered-missing-orders.update": "41890238fd93c0e9fba83dbc98d811f1a4e4f3617547c30fb2ffd5b4ca02e156",
+    "packages/cses_document_collab/rust/tests/fixtures/legacy-heading-fixtures.json": "d40cd71d5c75d1b4995b6de5c1fe6dffd870ae53fd0d4909bb2f1ff769f86bbf"
+  },
+  "source_sha256": {
+    "packages/cses_document_collab/lib/src/editor/collab_paragraph_editing.dart": "6f0879244c664dd89d4c4421553e86a5ad75f4de7e48aceaadff103d26d8c06f",
+    "packages/cses_document_collab/lib/src/model/collab_ordered.dart": "d161aa969ac7377f5477fa938dbfe6fea81a1f9abe6041f616fbd46be83ee3ca",
+    "packages/cses_document_collab/rust/src/api/blockcraft.rs": "5b48dab8f9e14a047380e7f2f41217cef1ace224390b2fd4fc1b27489b277cc8",
+    "packages/cses_document_collab/test/heading_level_limits_test.dart": "58755e8079ca8895b58ef35343ad237ecf551cb4a8355a68617e03c0bf6c3b78",
+    "packages/cses_document_collab/test/heading_p1_native_test.dart": "55f8110f88b488fcbfa9f74a70d23dff0edef9adde60886544547f90f6b915a2",
+    "packages/cses_document_collab/tool/generate_legacy_heading_fixtures.mjs": "f8598148623d8f19540217f0eda03f9c2c1e5a05e731a69bedbaa279ec4c2ce1"
+  },
+  "not_verified": [
+    "Full Android/iOS app builds",
+    "Physical devices",
+    "Live desktop/mobile collaboration"
+  ]
+}

@@ -70,7 +70,7 @@ const data = {
   generated_by: 'tool/generate_heading_typography_oracle.mjs', version, source,
   source_sha256: createHash('sha256').update(fs.readFileSync(modulePath)).digest('hex'),
   base_font_size: 16,
-  defaults: Array.from({length: 9}, (_, index) => ({level: index + 1, expected: fontSize({heading: index + 1})})),
+  defaults: Array.from({length: 6}, (_, index) => ({level: index + 1, expected: fontSize({heading: index + 1})})),
   mixed, empty, legacy,
 };
 fs.writeFileSync(fileURLToPath(new URL('../test/fixtures/blockcraft-0.11.21-heading-fonts.json', import.meta.url)), JSON.stringify(data, null, 2) + '\n');

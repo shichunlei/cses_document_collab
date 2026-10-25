@@ -1,0 +1,13 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_native_integration_test.dart
+00:00 +0: (setUpAll)
+00:05 +0: H6 writes cross FRB and SQLite while higher headings are rejected atomically
+00:06 +1: six resource schemas cross FRB, update metadata and recover from SQLite
+00:07 +2: desktop video url crosses FRB while unsupported videos stay opaque
+00:07 +3: code headers and Enter cross FRB, survive body edits and SQLite restore
+00:09 +4: block colors cross FRB and persist in formal props
+00:09 +5: ordered replacements, deletion and undo cross FRB with native metadata
+00:10 +6: desktop ordered fixture survives reorder and depth changes across FRB
+00:10 +7: formal root survives FRB edits and reopening a different cache identity
+00:10 +8: formal image caption and layout cross FRB and SQLite without flattening
+00:10 +9: (tearDownAll)
+00:11 +9: All tests passed!

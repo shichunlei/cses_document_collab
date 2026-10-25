@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-25",
+  "scope": "Current uncommitted H1~H6 changes, compared with HEAD 8957022",
+  "source_matches_previous_validation": true,
+  "latest": "0.11.30",
+  "desktop_declared": "0.11.28",
+  "yarn_locked": "0.11.28",
+  "installed": "0.11.21",
+  "native_fixture_generation": "review-fixtures.mjs with installed desktop Yjs",
+  "probe_count": 4,
+  "probe_results": "4 invariant probes failed; 3 confirmed change-related findings and 1 pre-existing low-level API boundary observation",
+  "findings": [
+    {
+      "priority": 1,
+      "title": "旧标题拆段复制超范围原始属性，原生写入被拒绝"
+    },
+    {
+      "priority": 1,
+      "title": "列表标题计数器分组被截断，握手修复改写旧编号"
+    },
+    {
+      "priority": 2,
+      "title": "非paragraph的heading在JSON导出时未限制到六级"
+    }
+  ]
+}

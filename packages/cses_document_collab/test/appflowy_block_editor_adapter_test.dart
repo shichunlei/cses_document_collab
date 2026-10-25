@@ -415,7 +415,7 @@ void main() {
     },
   );
 
-  test('round-trips H9, block layout and script attributes', () async {
+  test('round-trips H6, block layout and script attributes', () async {
     final changes = <List<CollabEditorBlock>>[];
     final adapter = AppFlowyBlockEditorAdapter(
       initialBlocks: const [
@@ -428,7 +428,7 @@ void main() {
     await adapter.replaceFromRemote(const [
       CollabEditorBlock(
         id: 'heading',
-        blockType: 'heading_9',
+        blockType: 'heading_6',
         text: 'x2',
         alignment: 'center',
         segments: [
@@ -446,7 +446,7 @@ void main() {
     ]);
 
     final nodes = adapter.editorState.document.root.children;
-    expect(nodes.first.attributes[HeadingBlockKeys.level], 9);
+    expect(nodes.first.attributes[HeadingBlockKeys.level], 6);
     expect(nodes.first.attributes[blockComponentAlign], 'center');
     expect(
       nodes.first.delta!.last.attributes?[csesSuperscriptAttribute],
@@ -454,7 +454,7 @@ void main() {
     );
     expect(nodes.last.attributes[blockComponentAlign], 'right');
     expect(nodes.last.attributes[csesBlockIndentAttribute], 2);
-    expect(adapter.blocks.first.blockType, 'heading_9');
+    expect(adapter.blocks.first.blockType, 'heading_6');
     expect(adapter.blocks.first.segments.last.superscript, isTrue);
     expect(adapter.blocks.last.indent, 2);
     expect(changes, isEmpty);

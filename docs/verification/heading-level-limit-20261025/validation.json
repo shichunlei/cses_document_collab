@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-25",
+  "rust_tests": {
+    "passed": 193,
+    "failed": 0,
+    "ignored": 0
+  },
+  "package_tests": {
+    "passed": 172,
+    "failed": 1,
+    "known_failure": "menu choices cannot reenable disabled block and format capabilities",
+    "baseline_reproduced": true
+  },
+  "appflowy_tests": {
+    "passed": 19,
+    "failed": 0
+  },
+  "native_tests": {
+    "passed": 9,
+    "failed": 0
+  },
+  "host_tests": {
+    "passed": 39,
+    "failed": 0
+  },
+  "static_analysis": "package, appflowy and host target analysis have no issues",
+  "not_verified": [
+    "Full Android/iOS app builds",
+    "Physical devices",
+    "Live desktop/mobile collaboration"
+  ]
+}

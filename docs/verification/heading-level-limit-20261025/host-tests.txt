@@ -1,0 +1,41 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_editing_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_editing_test.dart: R1 imported help survives heading conversion, save/reopen and both JSON directions
+00:01 +1: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_editing_test.dart: R1 imported pilot survives heading conversion, save/reopen and both JSON directions
+00:01 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_editing_test.dart: R1 imported task survives heading conversion, save/reopen and both JSON directions
+00:01 +3: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_editing_test.dart: R3 an imported top-level todo exits and stays a paragraph on reverse import
+00:01 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_editing_test.dart: R5 text, append and subtree deletion respect an imported ancestor lock
+00:01 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_editing_test.dart: R5 inserting before a locked sibling is allowed and preserves sibling lock
+00:01 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_editing_test.dart: R5 a prefix deletion cannot hide a shifted locked insertion target
+00:01 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_editing_test.dart: R5 locking then appending in one transaction is rejected atomically
+00:01 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_editing_test.dart: R5 rejected insertion leaves source identities and detached operation nodes untouched
+00:01 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_editing_test.dart: inserted copies receive new ids while ordinary text edits retain existing ids
+00:02 +10: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: journal formats, mentions, todo states, business ids and date survive both directions
+00:03 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: all enabled formats, repeated objects and independent business/native checked state survive
+00:03 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:04 +13: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:04 +14: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:04 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:04 +16: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:04 +17: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:04 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:08 +19: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:09 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:09 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:10 +22: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:11 +23: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:14 +24: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:14 +25: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: journal spacing renders saves reopens and resets
+00:14 +26: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: journal spacing renders saves reopens and resets
+00:15 +27: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: journal spacing renders saves reopens and resets
+00:15 +28: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: journal spacing renders saves reopens and resets
+00:15 +29: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (320.0, 1.0)
+00:20 +30: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: H1-H6 render and survive preview/reopen at (390.0, 2.0)
+00:23 +31: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: text/background colors, code and scripts render and persist
+00:25 +32: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: font size uses real selection and keeps list marker centered
+00:26 +33: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: malformed/unsupported persisted heading levels are rejected
+00:27 +34: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: paragraph alignment and flat indent preserve business identity
+00:28 +35: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: heading alignment and flat indent preserve business identity
+00:30 +36: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: bulleted_list alignment and flat indent preserve business identity
+00:33 +37: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: numbered_list alignment and flat indent preserve business identity
+00:36 +38: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_format_toolbar_test.dart: todo_list alignment and flat indent preserve business identity
+00:39 +39: All tests passed!

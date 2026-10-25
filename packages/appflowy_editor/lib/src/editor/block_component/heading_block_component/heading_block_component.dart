@@ -10,7 +10,7 @@ class HeadingBlockKeys {
 
   /// The level data of a heading block.
   ///
-  /// The value is a int.
+  /// The value is an integer from 1 through 6.
   static const String level = 'level';
 
   static const String delta = blockComponentDelta;
@@ -24,7 +24,7 @@ class HeadingBlockKeys {
 ///
 /// [level] is clamped to the supported range after its debug assertion.
 /// [text] supplies initial content when [delta] is absent. [attributes] are
-/// merged after the generated level and delta, so matching keys override them.
+/// merged into the generated attributes; an overriding level is clamped to 1–6.
 /// [textDirection] is stored when set.
 ///
 /// ```dart
@@ -48,8 +48,9 @@ Node headingNode({
     type: HeadingBlockKeys.type,
     attributes: {
       HeadingBlockKeys.delta: (delta ?? (Delta()..insert(text ?? ''))).toJson(),
-      HeadingBlockKeys.level: level.clamp(1, 6),
       ...?attributes,
+      HeadingBlockKeys.level:
+          ((attributes?[HeadingBlockKeys.level] as int?) ?? level).clamp(1, 6),
       HeadingBlockKeys.textDirection: textDirection,
     },
   );
@@ -133,7 +134,9 @@ class _HeadingBlockComponentWidgetState
   @override
   late final editorState = Provider.of<EditorState>(context, listen: false);
 
-  int get level => widget.node.attributes[HeadingBlockKeys.level] as int? ?? 1;
+  /// Reads the borrowed node level within H1–H6 without changing stored data.
+  int get level =>
+      (widget.node.attributes[HeadingBlockKeys.level] as int? ?? 1).clamp(1, 6);
 
   @override
   Widget build(BuildContext context) {

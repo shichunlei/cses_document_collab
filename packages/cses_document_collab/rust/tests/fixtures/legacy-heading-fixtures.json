@@ -1,0 +1,21 @@
+{
+  "generatedBy": "tool/generate_legacy_heading_fixtures.mjs",
+  "yjsVersion": "13.6.19",
+  "fixtures": {
+    "heading": {
+      "file": "blockcraft-legacy-heading.update",
+      "stateVector": "AuPnLwLAxAdB",
+      "sha256": "0c0f518e96f250ec2b904400fc70f78f769e436e050f3c3c66803d514fd09901"
+    },
+    "ordered-headings": {
+      "file": "blockcraft-legacy-ordered-headings.update",
+      "stateVector": "AuTnLznAxAdB",
+      "sha256": "0abceb996387990d53a0cb4c74e274af785fd0a4268d0cb47f57f086e6b228a4"
+    },
+    "ordered-missing-orders": {
+      "file": "blockcraft-legacy-ordered-missing-orders.update",
+      "stateVector": "AuTnLznAxAdB",
+      "sha256": "41890238fd93c0e9fba83dbc98d811f1a4e4f3617547c30fb2ffd5b4ca02e156"
+    }
+  }
+}

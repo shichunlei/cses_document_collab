@@ -1,0 +1,26 @@
+{
+  "before": [
+    {
+      "id": "ordered-0",
+      "heading": 7,
+      "order": 0
+    },
+    {
+      "id": "ordered-1",
+      "heading": 8,
+      "order": 0
+    }
+  ],
+  "after": [
+    {
+      "id": "ordered-0",
+      "heading": 7,
+      "order": 0
+    },
+    {
+      "id": "ordered-1",
+      "heading": 8,
+      "order": 1
+    }
+  ]
+}

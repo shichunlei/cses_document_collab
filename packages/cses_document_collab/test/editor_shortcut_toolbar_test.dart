@@ -1289,6 +1289,9 @@ Widget _toolbarApp(EditorState state, {double keyboardInset = 300}) {
   );
 }
 
+/// 创建测试自有的两段编辑状态，调用方负责释放。
+/// [text]/[blockType]为首段内容/类型，[headingLevel]仅标题使用，限制为1～6。
+/// [secondText]为null时不创建第二段；否则使用[secondBlockType]及限制为1～6的[secondHeadingLevel]。
 EditorState _editorState({
   required String text,
   String blockType = ParagraphBlockKeys.type,
@@ -1309,7 +1312,7 @@ EditorState _editorState({
               blockComponentDelta: (Delta()..insert(text)).toJson(),
               'cses_collab_block_id': 'block-a',
               if (blockType == HeadingBlockKeys.type)
-                HeadingBlockKeys.level: headingLevel.clamp(1, 9),
+                HeadingBlockKeys.level: headingLevel.clamp(1, 6),
               if (blockType == TodoListBlockKeys.type)
                 TodoListBlockKeys.checked: false,
             },
@@ -1322,7 +1325,7 @@ EditorState _editorState({
                 blockComponentDelta: (Delta()..insert(secondText)).toJson(),
                 'cses_collab_block_id': 'block-b',
                 if (secondBlockType == HeadingBlockKeys.type)
-                  HeadingBlockKeys.level: secondHeadingLevel.clamp(1, 9),
+                  HeadingBlockKeys.level: secondHeadingLevel.clamp(1, 6),
                 if (secondBlockType == TodoListBlockKeys.type)
                   TodoListBlockKeys.checked: false,
               },

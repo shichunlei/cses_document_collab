@@ -259,7 +259,7 @@ final class EditorConfiguration {
   static const _defaultFontSizes = [12, 14, 16, 18, 20, 24, 28, 32, 36, 48, 64, 72];
 
   /// [blocks] 为无重复的块集合，必须包含paragraph；类型菜单按此顺序，标题家族按级别排序。
-  /// [headingLevels] 为1～9中的子集，默认全部级别，保留桌面/历史正文能力；移动菜单最多显示H6。
+  /// [headingLevels] 为1～6中的子集，默认启用H1~H6；配置超出范围时抛ArgumentError。
   /// 禁用heading时不产生标题入口。
   /// [progressiveHeadingMenu]为true时T菜单从H1～H3逐级展开到H6；false直接展示允许的级别。
   /// 默认true，离线与协同共用同一规则；不改变正文支持的标题级别。
@@ -281,7 +281,7 @@ final class EditorConfiguration {
   /// 所有集合构造时复制；非法配置抛出ArgumentError，不创建编辑资源。
   factory EditorConfiguration({
     Iterable<EditorBlock> blocks = EditorBlock.values,
-    Iterable<int> headingLevels = const {1, 2, 3, 4, 5, 6, 7, 8, 9},
+    Iterable<int> headingLevels = const {1, 2, 3, 4, 5, 6},
     bool progressiveHeadingMenu = true,
     Iterable<EditorInlineFormat> inlineFormats = EditorInlineFormat.values,
     Iterable<String> alignments = const {'left', 'center', 'right', 'justify', 'distributed'},
@@ -309,7 +309,7 @@ final class EditorConfiguration {
     if (toolbarItems.toSet().length != toolbarItems.length ||
         !selected.contains(EditorBlock.paragraph) ||
         selected.toSet().length != selected.length ||
-        levels.any((level) => level < 1 || level > 9) ||
+        levels.any((level) => level < 1 || level > 6) ||
         (selected.contains(EditorBlock.heading) && levels.isEmpty) ||
         aligns.any((value) => !const {'left', 'center', 'right', 'justify', 'distributed'}.contains(value)) ||
         sizes.toSet().length != sizes.length ||
@@ -372,11 +372,11 @@ final class EditorConfiguration {
     this.blockConversionPreservedAttributes = const {},
   });
 
-  /// 协同文档的兼容预设；字号菜单与离线场景共用默认像素值。
+  /// 协同文档的兼容预设；标题限制H1~H6，字号菜单与离线场景共用默认像素值。
   /// 保留复杂块、上下标、布局和宿主命令，字符格式仍经公共命令提交。
   static const document = EditorConfiguration._(
     EditorBlock.values,
-    {1, 2, 3, 4, 5, 6, 7, 8, 9},
+    {1, 2, 3, 4, 5, 6},
     {
       EditorInlineFormat.bold,
       EditorInlineFormat.italic,
@@ -469,7 +469,7 @@ final class EditorConfiguration {
   /// 启用块及其菜单顺序；正文必须保留。
   final List<EditorBlock> blocks;
 
-  /// 启用的标题级别，支持1～9的非连续集合以保留正文能力；移动菜单只展示其中H1～H6。
+  /// 启用的H1~H6标题级别；允许非连续集合，菜单、命令与事务共用此范围。
   final Set<int> headingLevels;
 
   /// T菜单逐级展示开关，默认true，不修改正文或允许的标题级别。

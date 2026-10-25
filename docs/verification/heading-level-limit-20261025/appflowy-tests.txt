@@ -1,0 +1,23 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_level_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_level_test.dart: heading attributes retain valid overrides and clamp invalid overrides
+00:00 +1: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_level_test.dart: HTML and Markdown exports clamp legacy levels without changing stored data
+00:01 +2: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_character_shortcut_test.dart: formate mock inputting a ` ` after the >
+00:02 +3: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_character_shortcut_test.dart: formate mock inputting a ` ` after the #
+00:02 +4: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_character_shortcut_test.dart: formate mock inputting a ` ` after the #
+00:02 +5: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_character_shortcut_test.dart: formate mock inputting a ` ` in the middle of the node
+00:02 +6: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_character_shortcut_test.dart: formate mock inputting a ` ` in the middle of the node, and there's a other node at the front of it.
+00:02 +7: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_character_shortcut_test.dart: formate convert bulleted_list to heading
+00:02 +8: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_command_shortcut_test.dart: (setUpAll)
+00:03 +8: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_command_shortcut_test.dart: heading_command_shortcut_test.dart toggle H1 from paragraph
+00:03 +9: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_command_shortcut_test.dart: heading_command_shortcut_test.dart toggle H2 from paragraph
+00:03 +10: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_command_shortcut_test.dart: heading_command_shortcut_test.dart toggle H3 from paragraph
+00:03 +11: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_command_shortcut_test.dart: heading_command_shortcut_test.dart toggle body type from heading type
+00:03 +12: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_command_shortcut_test.dart: (tearDownAll)
+00:03 +12: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/plugins/markdown/decoder/heading_markdown_decoder_test.dart: markdown_heading_parser.dart convert # to heading
+00:03 +13: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/plugins/markdown/decoder/heading_markdown_decoder_test.dart: markdown_heading_parser.dart if number of # > 7
+00:03 +14: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/plugins/markdown/decoder/heading_markdown_decoder_test.dart: markdown_heading_parser.dart if no #
+00:03 +15: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/plugins/markdown/decoder/heading_markdown_decoder_test.dart: markdown_heading_parser.dart if no space after #
+00:03 +16: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/plugins/markdown/decoder/heading_markdown_decoder_test.dart: markdown_heading_parser.dart contains # but not at the beginning
+00:03 +17: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/plugins/markdown/decoder/heading_markdown_decoder_test.dart: markdown_heading_parser.dart with another markdown syntaxes
+00:04 +18: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/mobile/toolbar/mobile/toolbar_items/heading_mobile_toolbar_item_test.dart: headingMobileToolbarItem
+00:12 +19: All tests passed!

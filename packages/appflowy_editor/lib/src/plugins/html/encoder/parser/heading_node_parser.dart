@@ -17,6 +17,9 @@ class HTMLHeadingNodeParser extends HTMLNodeParser {
     );
   }
 
+  /// Encodes borrowed [node] into H1–H6 DOM nodes without changing its data.
+  /// [encodeParsers] supplies the parsers used for child content.
+  /// Stored levels outside the supported range use the nearest boundary.
   @override
   List<dom.Node> transformNodeToDomNodes(
     Node node, {
@@ -27,9 +30,15 @@ class HTMLHeadingNodeParser extends HTMLNodeParser {
     convertedNodes.addAll(
       processChildrenNodes(node.children, encodeParsers: encodeParsers),
     );
-    final tagName = 'h${node.attributes[HeadingBlockKeys.level]}';
-    final element =
-        wrapChildrenNodesWithTagName(tagName, childNodes: convertedNodes);
+    final level = (node.attributes[HeadingBlockKeys.level] as int? ?? 1).clamp(
+      1,
+      6,
+    );
+    final tagName = 'h$level';
+    final element = wrapChildrenNodesWithTagName(
+      tagName,
+      childNodes: convertedNodes,
+    );
     return [element];
   }
 }

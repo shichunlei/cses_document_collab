@@ -1,0 +1,21 @@
+{
+  "packages/appflowy_editor/lib/src/editor/block_component/heading_block_component/heading_block_component.dart": "edf72a347ffd5a079165852497044eaabd296fb85ea200406658a38ace092b4e",
+  "packages/appflowy_editor/lib/src/plugins/html/encoder/parser/heading_node_parser.dart": "a8428176136dcd2f1e0b5abe69361bd21dfe82a84be40a83afa9719fdd95cc7e",
+  "packages/appflowy_editor/lib/src/plugins/markdown/encoder/parser/heading_node_parser.dart": "b9bb8af54f8e09226ef4559218451bd362a4b90858bbb475e62a4b29ffd5b827",
+  "packages/cses_document_collab/lib/src/editor/appflowy_block_editor_adapter.dart": "4d07975b75fe52d29f6dc9f6f3ffd6b87d03f95e6038971dacaa8d9d208cbc69",
+  "packages/cses_document_collab/lib/src/editor/blockcraft_json_codec.dart": "0ef294d9f565e37d779678d2b40935dd0bc98c809786d05bcb5884c1fdc0c16c",
+  "packages/cses_document_collab/lib/src/editor/core/editor_configuration.dart": "2cb3576538ca823cccccdf780cd3a4afc7032bc1d47014236a49adcb1134e7ba",
+  "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart": "e283a3f7e9e0fd7c3c8d6ccfe9be6341b8d16ec679d91f8eb00451582e41d693",
+  "packages/cses_document_collab/lib/src/model/collab_ordered.dart": "5e4ac90cea06a614cc42be3cc47c941cce9c6b90f5582fb91a03aed89f33ecec",
+  "packages/cses_document_collab/rust/src/api/blockcraft.rs": "60e1420f5000fdee90a13947ff531f82c3c01393b66ec75d8e7e64cef5645aa3",
+  "packages/cses_document_collab/rust/src/api/collab.rs": "745e62e7424db96ad3bbd9f7b26868090e67341c430712f38f27aeeac1bf478d",
+  "packages/cses_document_collab/rust/src/api/paragraph_style.rs": "e90ba39c4703c78fa26c836fa4892982533f990b71be9569710d477124a5a237",
+  "packages/cses_document_collab/test/appflowy_block_editor_adapter_test.dart": "6785423a47604040e74b0e89dc98cb1a0200c8b207173a52d71c27e85de04249",
+  "packages/cses_document_collab/test/blockcraft_native_integration_test.dart": "1e1693b61323f0676b277a09e194214bceaffd9d07093c0913ca3dd10f05e3cb",
+  "packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart": "d2e5e050d1a4b1f9d1ca9dd9f788ceb041a96dd919693592c1b935fe3fa29790",
+  "packages/cses_document_collab/test/editor_toolbar_configuration_test.dart": "afe3fcfc24b9c3436bdfa29be75047706fc2f77461ad8e3d20f5fb3c9588bf91",
+  "packages/cses_document_collab/test/fixtures/heading_typography_oracle.dart": "0f609fdba7e6bc02837224fb4996eb409f72ad39af146968ebcb26d4f7639ec4",
+  "packages/cses_document_collab/tool/generate_heading_typography_oracle.mjs": "3c7c7ac41366bb6f2d521f4ac5930034766c30f5f6537ec024579303fe29e5e9",
+  "packages/cses_document_collab/test/heading_level_limits_test.dart": "d5108c29a6d8d6464c2963657d3e9afcadce6cc48e4c77397153703cb0531947",
+  "packages/appflowy_editor/test/new/block_component/heading_block_component/heading_level_test.dart": "26c3d50b294111bdee30953b37000972a9a54117d86b0f270acb144c69f61dd3"
+}

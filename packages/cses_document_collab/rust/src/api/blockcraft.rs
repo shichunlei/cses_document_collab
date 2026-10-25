@@ -79,6 +79,7 @@ fn counter_integer(value: Option<Out>) -> u32 {
 
 /// 使用当前桌面 OrderedBlockPlugin 的兄弟扫描规则计算编号，不依赖已存 order。
 /// 同层普通段落不打断编号；返回浅层及 ordered heading 边界剪除对应计数器，start 重开。
+/// 计数器key使用原始heading，保留旧分组身份；对外标题投影限制0～6，不回写原属性。
 /// 未建模 ms 原样保留；null/未知显式样式阻止继承，只有桌面已注册样式能够向新项传播。
 fn ordered_projection<T: ReadTxn>(
     blocks: &MapRef,
@@ -133,7 +134,7 @@ fn ordered_projection<T: ReadTxn>(
                 CollabOrdered {
                     order,
                     start: (start > 0).then_some(start),
-                    heading,
+                    heading: heading.min(6),
                     // 桌面只在插入时写入继承 ms；既有缺失 ms 的项目按自身 depth 回退展示。
                     marker_style: own_style,
                     needs_repair,
@@ -584,11 +585,12 @@ fn supported_mermaid<T: ReadTxn>(block: &MapRef, blocks: &MapRef, txn: &T) -> bo
 }
 
 /// 将正式 flavour/props 转为手机可编辑类型；不支持的类型返回 None，不降级写回 paragraph。
+/// 标题仅投影 H1~H6，超范围正值按 H6 展示；投影不回写原始 props。
 fn mobile_type<T: ReadTxn>(block: &MapRef, props: &MapRef, txn: &T) -> Option<String> {
     let flavour = out_string(block.get(txn, "flavour"))?;
     Some(match flavour.as_str() {
         "paragraph" => match out_u32(props.get(txn, "heading")) {
-            Some(level @ 1..=9) => format!("heading_{level}"),
+            Some(level) if level > 0 => format!("heading_{}", level.min(6)),
             _ => "paragraph".to_owned(),
         },
         "bullet" => "bulleted_list".to_owned(),
@@ -2268,6 +2270,167 @@ mod tests {
         engine.blockcraft_root_id = Some("fixture-doc".into());
         engine.apply_cses_update(bytes.to_vec()).unwrap();
         engine
+    }
+
+    /// 旧标题只投影为 H6，非法类型及字段补丁在原生事务开始前拒绝。
+    #[test]
+    fn heading_levels_are_bounded_without_rewriting_legacy_props() {
+        let mut e = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-basic.update"
+        ));
+        let blocks = e.doc.get_or_insert_map(ROOT_NAME);
+        for level in [7_i64, 8, 9] {
+            {
+                let mut txn = e.doc.transact_mut();
+                let props = map(&blocks, &txn, "p1")
+                    .and_then(|block| map(&block, &txn, "props"))
+                    .unwrap();
+                props.insert(&mut txn, "heading", level);
+            }
+            let expected = e.blocks();
+            assert_eq!(
+                expected.iter().find(|b| b.id == "p1").unwrap().block_type,
+                "heading_6"
+            );
+            let vector = e.doc.transact().state_vector();
+            e.apply_block_snapshot(expected.clone()).unwrap();
+            assert_eq!(e.doc.transact().state_vector(), vector);
+            let mut invalid = expected.clone();
+            invalid
+                .iter_mut()
+                .find(|b| b.id == "p1")
+                .unwrap()
+                .block_type = format!("heading_{level}");
+            assert!(e.apply_block_snapshot(invalid).is_err());
+            let mut invalid = expected;
+            invalid
+                .iter_mut()
+                .find(|b| b.id == "p1")
+                .unwrap()
+                .paragraph_style
+                .as_mut()
+                .unwrap()
+                .property_edits = Some(format!(r#"{{"heading":{{"value":{level}}}}}"#));
+            assert!(e.apply_block_snapshot(invalid).is_err());
+            assert_eq!(e.doc.transact().state_vector(), vector);
+            let txn = e.doc.transact();
+            let props = map(&blocks, &txn, "p1")
+                .and_then(|block| map(&block, &txn, "props"))
+                .unwrap();
+            assert_eq!(out_u32(props.get(&txn, "heading")), Some(level as u32));
+        }
+        for level in [0.0, 1.0, 6.0] {
+            assert!(paragraph_style::parse(
+                &format!(r#"{{"heading":{{"value":{level}}}}}"#),
+                false
+            )
+            .is_ok());
+        }
+        for level in [-1.0, 1.5, 7.0, 8.0, 9.0] {
+            assert!(paragraph_style::parse(
+                &format!(r#"{{"heading":{{"value":{level}}}}}"#),
+                false
+            )
+            .is_err());
+        }
+    }
+
+    /// 旧超范围标题保留原编号分组；仅修复缺失的order，不迁移heading或未知数据。
+    #[test]
+    fn legacy_ordered_groups_survive_sync_repair_and_peer_edits() {
+        for (fixture, missing) in [
+            (
+                include_bytes!("../../tests/fixtures/blockcraft-legacy-ordered-headings.update")
+                    .as_slice(),
+                false,
+            ),
+            (
+                include_bytes!(
+                    "../../tests/fixtures/blockcraft-legacy-ordered-missing-orders.update"
+                )
+                .as_slice(),
+                true,
+            ),
+        ] {
+            let mut local = engine(fixture);
+            let mut peer = engine(fixture);
+            let expected_orders = [0_u32, 0, 1];
+            assert_eq!(
+                local
+                    .blocks()
+                    .iter()
+                    .map(|b| b.ordered.as_ref().unwrap().order)
+                    .collect::<Vec<_>>(),
+                expected_orders
+            );
+            let before = local.doc.transact().state_vector();
+            let before_json = local
+                .doc
+                .get_or_insert_map(ROOT_NAME)
+                .to_json(&local.doc.transact());
+            let repaired = local.apply_block_snapshot(local.blocks()).unwrap();
+            if missing {
+                assert_ne!(local.doc.transact().state_vector(), before);
+            } else {
+                assert_eq!(local.doc.transact().state_vector(), before);
+                assert_eq!(
+                    local
+                        .doc
+                        .get_or_insert_map(ROOT_NAME)
+                        .to_json(&local.doc.transact()),
+                    before_json
+                );
+            }
+            peer.apply_cses_update(repaired.v1_update).unwrap();
+            let stable = local.doc.transact().state_vector();
+            let stable_json = local
+                .doc
+                .get_or_insert_map(ROOT_NAME)
+                .to_json(&local.doc.transact());
+            local.apply_block_snapshot(local.blocks()).unwrap();
+            assert_eq!(local.doc.transact().state_vector(), stable);
+            assert_eq!(
+                local
+                    .doc
+                    .get_or_insert_map(ROOT_NAME)
+                    .to_json(&local.doc.transact()),
+                stable_json
+            );
+            let mut edited = local.blocks();
+            edited[0].text.push('!');
+            edited[0].segments.clear();
+            let update = local.apply_block_snapshot(edited).unwrap();
+            peer.apply_cses_update(update.v1_update).unwrap();
+            for value in [&local, &peer] {
+                assert_eq!(value.blocks()[0].text, "Item 0!");
+                assert_eq!(
+                    value
+                        .blocks()
+                        .iter()
+                        .map(|b| b.ordered.as_ref().unwrap().order)
+                        .collect::<Vec<_>>(),
+                    expected_orders
+                );
+                let txn = value.doc.transact();
+                let blocks = txn.get_map(ROOT_NAME).unwrap();
+                for (index, heading) in [7_u32, 8, 7].iter().enumerate() {
+                    let id = format!("ordered-{index}");
+                    let block = map(&blocks, &txn, &id).unwrap();
+                    let props = map(&block, &txn, "props").unwrap();
+                    assert_eq!(out_u32(props.get(&txn, "heading")), Some(*heading));
+                    assert_eq!(
+                        out_u32(props.get(&txn, "order")),
+                        Some(expected_orders[index])
+                    );
+                    assert_eq!(out_string(props.get(&txn, "custom")), Some(id));
+                    let meta = map(&block, &txn, "meta").unwrap();
+                    assert_eq!(
+                        out_string(meta.get(&txn, "author")).as_deref(),
+                        Some("fixture-user")
+                    );
+                }
+            }
+        }
     }
 
     /// 段落字段补丁不会重放旧快照；远端其他字段和未知属性仍为权威值。

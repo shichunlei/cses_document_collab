@@ -1,0 +1,37 @@
+00:00 +0: loading /private/tmp/heading-menu-baseline-xykwdr5s/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart
+00:00 +0: menu choices cannot reenable disabled block and format capabilities
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: no matching candidates
+  Actual: _KeyWidgetFinder:<Found 1 widget with key [<'editor-mobile-toolbar'>]: [
+            Container-[<'editor-mobile-toolbar'>](bg: BoxDecoration(color: Color(alpha: 1.0000, red:
+1.0000, green: 1.0000, blue: 1.0000, colorSpace: ColorSpace.sRGB), border: Border(top:
+BorderSide(color: Color(alpha: 1.0000, red: 0.8980, green: 0.9059, blue: 0.9216, colorSpace:
+ColorSpace.sRGB)), bottom: BorderSide(color: Color(alpha: 1.0000, red: 0.8980, green: 0.9059, blue:
+0.9216, colorSpace: ColorSpace.sRGB)))), constraints: BoxConstraints(0.0<=w<=Infinity, h=52.0)),
+          ]>
+   Which: means one was found but none were expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///private/tmp/heading-menu-baseline-xykwdr5s/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart:329:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///private/tmp/heading-menu-baseline-xykwdr5s/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart line 329
+The test description was:
+  menu choices cannot reenable disabled block and format capabilities
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:03 +0 -1: menu choices cannot reenable disabled block and format capabilities [E]
+  Test failed. See exception logs above.
+  The test description was: menu choices cannot reenable disabled block and format capabilities
+
+00:03 +0 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/heading-menu-baseline-xykwdr5s/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: menu choices cannot reenable disabled block and format capabilities

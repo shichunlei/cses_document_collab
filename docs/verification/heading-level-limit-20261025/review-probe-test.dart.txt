@@ -1,0 +1,169 @@
+import 'dart:io';
+
+import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:cses_document_collab/cses_document_collab.dart';
+import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
+import 'package:cses_document_collab/src/editor/collab_paragraph_editing.dart';
+import 'package:cses_document_collab/src/model/collab_resource.dart';
+import 'package:cses_document_collab/src/native/api/collab.dart' as native;
+import 'package:cses_document_collab/src/native/frb_generated.dart';
+import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+/// 复核六级限制的未覆盖路径，只运行本地数据，不连接业务服务。
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  setUpAll(() async {
+    await RustLib.init(
+      externalLibrary: ExternalLibrary.open(
+        File('rust/target/debug/libcses_collab_core.dylib').absolute.path,
+      ),
+    );
+  });
+
+  test(
+    'legacy H9 displayed as H6 can split without a rejected native write',
+    () async {
+      final directory = await Directory.systemTemp.createTemp(
+        'heading-review-',
+      );
+      AppFlowyBlockEditorAdapter? adapter;
+      try {
+        native.openCsesDocument(
+          documentId: 'fixture-doc',
+          cacheDocumentId: 'review',
+          databasePath: '${directory.path}/updates.sqlite',
+        );
+        native.applyDocumentUpdate(
+          bytes: await File(
+            '../../docs/verification/heading-level-limit-20261025/review-legacy-heading.update',
+          ).readAsBytes(),
+        );
+        final original = native.currentBlocks();
+        final source = original.firstWhere((b) => b.id == 'p1');
+        final errors = <Object>[];
+        adapter = AppFlowyBlockEditorAdapter(
+          initialBlocks: [
+            CollabEditorBlock(
+              id: source.id,
+              blockType: source.blockType,
+              text: source.text,
+              paragraphStyle: CollabResource(
+                properties: source.paragraphStyle!.properties,
+              ),
+            ),
+          ],
+          onLocalBlocksChanged: (blocks) {
+            try {
+              native.applyBlockSnapshot(
+                blocks: [
+                  for (final b in blocks)
+                    native.CollabBlock(
+                      id: b.id,
+                      blockType: b.blockType,
+                      text: b.text,
+                      segments: const [],
+                      checked: b.checked,
+                      alignment: b.alignment,
+                      indent: b.indent,
+                      paragraphStyle: b.paragraphStyle == null
+                          ? null
+                          : native.CollabResource(
+                              properties: b.paragraphStyle!.properties,
+                              propertyEdits: b.paragraphStyle!.propertyEdits,
+                            ),
+                    ),
+                  ...original.where((b) => b.id != 'p1'),
+                ],
+              );
+            } catch (error) {
+              errors.add(error);
+            }
+          },
+        );
+        final state = adapter.editorState;
+        expect(state.document.first!.attributes[HeadingBlockKeys.level], 6);
+        state.selection = Selection.single(path: [0], startOffset: 1);
+        expect(await handleCollabParagraphEnter(state), isTrue);
+        expect(errors, isEmpty, reason: '正常拆段不应发出仍含旧heading=9的新段落初始化属性');
+      } finally {
+        adapter?.dispose();
+        native.closeDocument();
+        await directory.delete(recursive: true);
+      }
+    },
+  );
+
+  test('ordered heading JSON export cannot retain a level above H6', () {
+    final node = BlockCraftJsonCodec.decodeBlock({
+      'id': 'ordered',
+      'flavour': 'ordered',
+      'nodeType': 'editable',
+      'props': {'heading': 9, 'depth': 0, 'order': 0},
+      'meta': <String, Object>{},
+      'children': [
+        {'insert': 'Item'},
+      ],
+    });
+    final encoded = BlockCraftJsonCodec.encodeBlock(node);
+    expect((encoded['props'] as Map)['heading'], lessThanOrEqualTo(6));
+  });
+
+  test(
+    'independent shared editor refuses a direct level outside its declared configuration',
+    () async {
+      final editor = DocumentEditorController();
+      try {
+        final state = editor.editorState;
+        final node = state.document.first!;
+        await state.apply(
+          state.transaction
+            ..deleteNode(node)
+            ..insertNode(
+              [0],
+              Node(
+                type: 'heading',
+                attributes: {
+                  'level': 9,
+                  'delta': (Delta()..insert('New title')).toJson(),
+                },
+              ),
+            ),
+        );
+        expect(state.document.first!.attributes['level'], isNot(9));
+      } finally {
+        await editor.close();
+      }
+    },
+  );
+
+  test('legacy ordered heading groups keep their original counters', () async {
+    final directory = await Directory.systemTemp.createTemp('ordered-review-');
+    try {
+      native.openCsesDocument(
+        documentId: 'fixture-doc',
+        cacheDocumentId: 'ordered-review',
+        databasePath: '${directory.path}/updates.sqlite',
+      );
+      native.applyDocumentUpdate(
+        bytes: await File(
+          '../../docs/verification/heading-level-limit-20261025/review-legacy-ordered.update',
+        ).readAsBytes(),
+      );
+      expect(native.documentReadOnlyReason(), isNull);
+      final blocks = native.currentBlocks();
+      final projected = blocks.map((b) => b.ordered!.order).toList();
+      final repair = native.applyBlockSnapshot(blocks: blocks);
+      await File(
+        '../../docs/verification/heading-level-limit-20261025/review-ordered-repair.update',
+      ).writeAsBytes(repair.v1Update);
+      print(
+        'unchanged snapshot repair bytes=${repair.v1Update.length}; projected counters=$projected',
+      );
+      expect(projected, [0, 0], reason: '原有7级与8级计数器各自从1开始；只按H6展示不能合并其原始分组');
+    } finally {
+      native.closeDocument();
+      await directory.delete(recursive: true);
+    }
+  });
+}

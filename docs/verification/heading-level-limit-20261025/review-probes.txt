@@ -1,0 +1,51 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_review_probe_test.dart
+00:00 +0: (setUpAll)
+00:00 +0: legacy H9 displayed as H6 can split without a rejected native write
+00:00 +0 -1: legacy H9 displayed as H6 can split without a rejected native write [E]
+  Expected: empty
+    Actual: ['INVALID_PARAGRAPH_STYLE: 段落属性无效']
+  正常拆段不应发出仍含旧heading=9的新段落初始化属性
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/heading_review_probe_test.dart 88:9            main.<fn>
+
+00:00 +0 -1: ordered heading JSON export cannot retain a level above H6
+00:00 +0 -2: ordered heading JSON export cannot retain a level above H6 [E]
+  Expected: a value less than or equal to <6>
+    Actual: <9>
+     Which: is not a value less than or equal to <6>
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/heading_review_probe_test.dart 109:5           main.<fn>
+
+00:00 +0 -2: independent shared editor refuses a direct level outside its declared configuration
+00:00 +0 -3: independent shared editor refuses a direct level outside its declared configuration [E]
+  Expected: not <9>
+    Actual: <9>
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/heading_review_probe_test.dart 133:9           main.<fn>
+
+00:00 +0 -3: legacy ordered heading groups keep their original counters
+unchanged snapshot repair bytes=33; projected counters=[0, 1]
+00:01 +0 -4: legacy ordered heading groups keep their original counters [E]
+  Expected: [0, 0]
+    Actual: [0, 1]
+     Which: at location [1] is <1> instead of <0>
+  原有7级与8级计数器各自从1开始；只按H6展示不能合并其原始分组
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/heading_review_probe_test.dart 163:7           main.<fn>
+
+00:01 +0 -4: (tearDownAll)
+00:01 +0 -4: Some tests failed.
+
+Failing tests:
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_review_probe_test.dart: independent shared editor refuses a direct level outside its declared configuration
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_review_probe_test.dart: legacy H9 displayed as H6 can split without a rejected native write
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_review_probe_test.dart: legacy ordered heading groups keep their original counters
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_review_probe_test.dart: ordered heading JSON export cannot retain a level above H6

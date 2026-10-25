@@ -1,0 +1,788 @@
+warning: unused imports: `BlockRange` and `Block`
+ --> vendor/yrs-history/src/transaction.rs:1:20
+  |
+1 | use crate::block::{Block, BlockRange, Item, ItemContent, ItemPosition, ItemPtr, Prelim, ID};
+  |                    ^^^^^  ^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `Block`
+ --> vendor/yrs-history/src/block_iter.rs:1:20
+  |
+1 | use crate::block::{Block, Item, ItemContent, ItemPtr, Prelim};
+  |                    ^^^^^
+
+warning: unused import: `ItemContent`
+ --> vendor/yrs-history/src/iter.rs:1:20
+  |
+1 | use crate::block::{ItemContent, ItemPtr};
+  |                    ^^^^^^^^^^^
+
+warning: unused imports: `SmallVec` and `smallvec`
+ --> vendor/yrs-history/src/iter.rs:4:16
+  |
+4 | use smallvec::{smallvec, SmallVec};
+  |                ^^^^^^^^  ^^^^^^^^
+
+warning: value assigned to `left` is never read
+   --> vendor/yrs-history/src/block.rs:494:24
+    |
+494 |         let mut left = None;
+    |                        ^^^^ this value is reassigned later and never used
+...
+540 |                 left = parent_branch.map.get(sub).cloned();
+    |                 ------------------------------------------ `left` is overwritten here before the previous value is read
+    |
+    = note: `#[warn(unused_assignments)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `ptr`
+   --> vendor/yrs-history/src/block.rs:886:21
+    |
+886 |                 let ptr = BranchPtr::from(branch);
+    |                     ^^^ help: if this is intentional, prefix it with an underscore: `_ptr`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `ptr`
+   --> vendor/yrs-history/src/transaction.rs:736:13
+    |
+736 |         let ptr = item.clone();
+    |             ^^^ help: if this is intentional, prefix it with an underscore: `_ptr`
+
+warning: variable does not need to be mutable
+   --> vendor/yrs-history/src/transaction.rs:916:13
+    |
+916 |         let mut block = Item::new(
+    |             ----^^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: variable does not need to be mutable
+   --> vendor/yrs-history/src/undo.rs:149:13
+    |
+149 |         let mut state = Arc::new(Inner {
+    |             ----^^^^^
+    |             |
+    |             help: remove this `mut`
+
+warning: unused variable: `clear_undo`
+   --> vendor/yrs-history/src/undo.rs:395:34
+    |
+395 |     fn clear_internal(&mut self, clear_undo: bool, clear_redo: bool) {
+    |                                  ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_clear_undo`
+
+warning: unused variable: `clear_redo`
+   --> vendor/yrs-history/src/undo.rs:395:52
+    |
+395 |     fn clear_internal(&mut self, clear_undo: bool, clear_redo: bool) {
+    |                                                    ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_clear_redo`
+
+warning: associated constant `MASK` is never used
+  --> vendor/yrs-history/src/block.rs:84:11
+   |
+83 | impl ClientID {
+   | ------------- associated constant in this implementation
+84 |     const MASK: u64 = u64::MAX << 53; // all 1 shifted by 53 bit
+   |           ^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: methods `last_id`, `is_item`, and `is_gc` are never used
+   --> vendor/yrs-history/src/block.rs:264:12
+    |
+221 | impl Block {
+    | ---------- methods in this implementation
+...
+264 |     pub fn last_id(&self) -> ID {
+    |            ^^^^^^^
+...
+281 |     pub fn is_item(&self) -> bool {
+    |            ^^^^^^^
+...
+291 |     pub fn is_gc(&self) -> bool {
+    |            ^^^^^
+
+warning: method `delete_as_cleanup` is never used
+   --> vendor/yrs-history/src/block.rs:632:19
+    |
+444 | impl ItemPtr {
+    | ------------ method in this implementation
+...
+632 |     pub(crate) fn delete_as_cleanup(&self, txn: &mut TransactionMut, is_local: bool) {
+    |                   ^^^^^^^^^^^^^^^^^
+
+warning: method `integrate` is never used
+    --> vendor/yrs-history/src/block.rs:1415:19
+     |
+1354 | impl BlockRange {
+     | --------------- method in this implementation
+...
+1415 |     pub(crate) fn integrate(&mut self, pivot: u32) -> bool {
+     |                   ^^^^^^^^^
+
+warning: method `contains` is never used
+   --> vendor/yrs-history/src/block_store.rs:300:12
+    |
+289 | impl BlockStore {
+    | --------------- method in this implementation
+...
+300 |     pub fn contains(&self, id: &ID) -> bool {
+    |            ^^^^^^^^
+
+warning: constant `WEAK_REF_FLAGS_QUOTE` is never used
+   --> vendor/yrs-history/src/types/mod.rs:230:7
+    |
+230 | const WEAK_REF_FLAGS_QUOTE: u8 = 0b0000_0001;
+    |       ^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `WEAK_REF_FLAGS_START_ASSOC` is never used
+   --> vendor/yrs-history/src/types/mod.rs:232:7
+    |
+232 | const WEAK_REF_FLAGS_START_ASSOC: u8 = 0b0000_0010;
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `WEAK_REF_FLAGS_END_ASSOC` is never used
+   --> vendor/yrs-history/src/types/mod.rs:234:7
+    |
+234 | const WEAK_REF_FLAGS_END_ASSOC: u8 = 0b0000_0100;
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used
+   --> vendor/yrs-history/src/types/mod.rs:236:7
+    |
+236 | const WEAK_REF_FLAGS_START_UNBOUNDED: u8 = 0b0000_1000;
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used
+   --> vendor/yrs-history/src/types/mod.rs:238:7
+    |
+238 | const WEAK_REF_FLAGS_END_UNBOUNDED: u8 = 0b0001_0000;
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used
+   --> vendor/yrs-history/src/types/mod.rs:240:7
+    |
+240 | const WEAK_REF_FLAGS_PARENT_ROOT: u8 = 0b0010_0000;
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: field `txn` is never read
+   --> vendor/yrs-history/src/types/mod.rs:578:5
+    |
+576 | pub(crate) struct Entries<'a, B, T> {
+    |                   ------- field in this struct
+577 |     iter: std::collections::hash_map::Iter<'a, Arc<str>, ItemPtr>,
+578 |     txn: B,
+    |     ^^^
+    |
+    = note: `Entries` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: method `as_id_set` is never used
+  --> vendor/yrs-history/src/update.rs:48:12
+   |
+28 | impl BlockSet {
+   | ------------- method in this implementation
+...
+48 |     pub fn as_id_set(&self) -> IdSet {
+   |            ^^^^^^^^^
+
+warning: associated functions `next_target` and `return_stack` are never used
+   --> vendor/yrs-history/src/update.rs:503:8
+    |
+169 | impl Update {
+    | ----------- associated functions in this implementation
+...
+503 |     fn next_target<'a, 'b>(
+    |        ^^^^^^^^^^^
+...
+526 |     fn return_stack(stack: Vec<Block>, refs: &mut BlockSet, remaining: &mut BlockSet) {
+    |        ^^^^^^^^^^^^
+
+warning: methods `forward`, `backward`, and `values` are never used
+   --> vendor/yrs-history/src/block_iter.rs:76:12
+    |
+ 18 | impl BlockIter {
+    | -------------- methods in this implementation
+...
+ 76 |     pub fn forward<T: ReadTxn>(&mut self, txn: &T, len: u32) {
+    |            ^^^^^^^
+...
+130 |     pub fn backward<T: ReadTxn>(&mut self, txn: &mut T, mut len: u32) {
+    |            ^^^^^^^^
+...
+369 |     pub fn values<'a, 'txn, T: ReadTxn>(
+    |            ^^^^^^
+
+warning: struct `Values` is never constructed
+   --> vendor/yrs-history/src/block_iter.rs:377:12
+    |
+377 | pub struct Values<'a, 'txn> {
+    |            ^^^^^^
+
+warning: associated function `new` is never used
+   --> vendor/yrs-history/src/block_iter.rs:383:8
+    |
+382 | impl<'a, 'txn> Values<'a, 'txn> {
+    | ------------------------------- associated function in this implementation
+383 |     fn new(iter: &'a mut BlockIter, txn: &'txn mut TransactionMut<'txn>) -> Self {
+    |        ^^^
+
+warning: method `remove_at` is never used
+   --> vendor/yrs-history/src/branch.rs:423:19
+    |
+247 | impl Branch {
+    | ----------- method in this implementation
+...
+423 |     pub(crate) fn remove_at(&self, txn: &mut TransactionMut, index: u32, len: u32) -> u32 {
+    |                   ^^^^^^^^^
+
+warning: method `inner_mut` is never used
+   --> vendor/yrs-history/src/ids.rs:548:19
+    |
+ 58 | impl<T: Merge> IdRanges<T> {
+    | -------------------------- method in this implementation
+...
+548 |     pub(crate) fn inner_mut(&mut self) -> &mut SmallVec<[(Range<u32>, T); 1]> {
+    |                   ^^^^^^^^^
+
+warning: trait `BlockIterator` is never used
+ --> vendor/yrs-history/src/iter.rs:7:18
+  |
+7 | pub(crate) trait BlockIterator: Iterator<Item = ItemPtr> + Sized {
+  |                  ^^^^^^^^^^^^^
+
+warning: trait `BlockSliceIterator` is never used
+  --> vendor/yrs-history/src/iter.rs:16:18
+   |
+16 | pub(crate) trait BlockSliceIterator: Iterator<Item = ItemSlice> + Sized {
+   |                  ^^^^^^^^^^^^^^^^^^
+
+warning: struct `RangeIter` is never constructed
+   --> vendor/yrs-history/src/iter.rs:106:19
+    |
+106 | pub(crate) struct RangeIter<I> {
+    |                   ^^^^^^^^^
+
+warning: associated items `new` and `begin` are never used
+   --> vendor/yrs-history/src/iter.rs:117:8
+    |
+113 | / impl<I> RangeIter<I>
+114 | | where
+115 | |     I: Iterator<Item = ItemPtr>,
+    | |________________________________- associated items in this implementation
+116 |   {
+117 |       fn new(iter: I, start: StickyIndex, end: StickyIndex) -> Self {
+    |          ^^^
+...
+126 |       fn begin(&mut self, start_offset: &mut u32) -> Option<ItemPtr> {
+    |          ^^^^^
+
+warning: enum `RangeIterState` is never used
+   --> vendor/yrs-history/src/iter.rs:234:6
+    |
+234 | enum RangeIterState {
+    |      ^^^^^^^^^^^^^^
+
+warning: struct `Values` is never constructed
+   --> vendor/yrs-history/src/iter.rs:245:19
+    |
+245 | pub(crate) struct Values<I> {
+    |                   ^^^^^^
+
+warning: associated function `new` is never used
+   --> vendor/yrs-history/src/iter.rs:251:8
+    |
+250 | impl<I> Values<I> {
+    | ----------------- associated function in this implementation
+251 |     fn new(iter: I) -> Self {
+    |        ^^^
+
+warning: field `txn` is never read
+   --> vendor/yrs-history/src/iter.rs:287:5
+    |
+286 | pub struct AsIter<'a, T, I> {
+    |            ------ field in this struct
+287 |     txn: &'a T,
+    |     ^^^
+    |
+    = note: `AsIter` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: method `push` is never used
+  --> vendor/yrs-history/src/observer.rs:20:16
+   |
+19 |     impl PendingRemovals {
+   |     -------------------- method in this implementation
+20 |         pub fn push(&self, id: Origin) {
+   |                ^^^^
+
+warning: methods `adjacent`, `contains_id`, `right`, and `left` are never used
+   --> vendor/yrs-history/src/slice.rs:164:12
+    |
+105 | impl ItemSlice {
+    | -------------- methods in this implementation
+...
+164 |     pub fn adjacent(&self) -> bool {
+    |            ^^^^^^^^
+...
+179 |     pub fn contains_id(&self, id: &ID) -> bool {
+    |            ^^^^^^^^^^^
+...
+249 |     pub fn right(&self) -> Option<ItemSlice> {
+    |            ^^^^^
+...
+269 |     pub fn left(&self) -> Option<ItemSlice> {
+    |            ^^^^
+
+warning: methods `within_range` and `get_item` are never used
+   --> vendor/yrs-history/src/sticky_index.rs:272:19
+    |
+ 51 | impl StickyIndex {
+    | ---------------- methods in this implementation
+...
+272 |     pub(crate) fn within_range(&self, ptr: Option<ItemPtr>) -> bool {
+    |                   ^^^^^^^^^^^^
+...
+287 |     pub(crate) fn get_item<T: ReadTxn>(&self, txn: &T) -> Option<ItemPtr> {
+    |                   ^^^^^^^^
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+  --> vendor/yrs-history/src/event.rs:63:18
+   |
+63 |     pub fn added(&self) -> SubdocsEventIter {
+   |                  ^^^^^     ^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+   |                  |
+   |                  the lifetime is elided here
+   |
+   = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+   = note: `#[warn(mismatched_lifetime_syntaxes)]` on by default
+help: use `'_` for type paths
+   |
+63 |     pub fn added(&self) -> SubdocsEventIter<'_> {
+   |                                            ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+  --> vendor/yrs-history/src/event.rs:69:20
+   |
+69 |     pub fn removed(&self) -> SubdocsEventIter {
+   |                    ^^^^^     ^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+   |                    |
+   |                    the lifetime is elided here
+   |
+   = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+   |
+69 |     pub fn removed(&self) -> SubdocsEventIter<'_> {
+   |                                              ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+  --> vendor/yrs-history/src/event.rs:75:19
+   |
+75 |     pub fn loaded(&self) -> SubdocsEventIter {
+   |                   ^^^^^     ^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+   |                   |
+   |                   the lifetime is elided here
+   |
+   = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+   |
+75 |     pub fn loaded(&self) -> SubdocsEventIter<'_> {
+   |                                             ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-history/src/store.rs:358:20
+    |
+358 |     pub fn subdocs(&self) -> SubdocsIter {
+    |                    ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+    |                    |
+    |                    the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+358 |     pub fn subdocs(&self) -> SubdocsIter<'_> {
+    |                                         ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-history/src/store.rs:364:25
+    |
+364 |     pub fn subdoc_guids(&self) -> SubdocGuids {
+    |                         ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+    |                         |
+    |                         the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+364 |     pub fn subdoc_guids(&self) -> SubdocGuids<'_> {
+    |                                              ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-history/src/store.rs:444:28
+    |
+444 |     pub(crate) fn try_read(&self) -> Option<RwLockReadGuard<Store>> {
+    |                            ^^^^^            ^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+    |                            |
+    |                            the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+444 |     pub(crate) fn try_read(&self) -> Option<RwLockReadGuard<'_, Store>> {
+    |                                                             +++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-history/src/store.rs:449:33
+    |
+449 |     pub(crate) fn read_blocking(&self) -> RwLockReadGuard<Store> {
+    |                                 ^^^^^     ^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+    |                                 |
+    |                                 the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+449 |     pub(crate) fn read_blocking(&self) -> RwLockReadGuard<'_, Store> {
+    |                                                           +++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-history/src/store.rs:458:30
+    |
+458 |     pub(crate) fn read_async(&self) -> Read<Store> {
+    |                              ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+    |                              |
+    |                              the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+458 |     pub(crate) fn read_async(&self) -> Read<'_, Store> {
+    |                                             +++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-history/src/store.rs:462:29
+    |
+462 |     pub(crate) fn try_write(&self) -> Option<RwLockWriteGuard<Store>> {
+    |                             ^^^^^            ^^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+    |                             |
+    |                             the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+462 |     pub(crate) fn try_write(&self) -> Option<RwLockWriteGuard<'_, Store>> {
+    |                                                               +++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-history/src/store.rs:467:34
+    |
+467 |     pub(crate) fn write_blocking(&self) -> RwLockWriteGuard<Store> {
+    |                                  ^^^^^     ^^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+    |                                  |
+    |                                  the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+467 |     pub(crate) fn write_blocking(&self) -> RwLockWriteGuard<'_, Store> {
+    |                                                             +++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-history/src/store.rs:476:31
+    |
+476 |     pub(crate) fn write_async(&self) -> Write<Store> {
+    |                               ^^^^^     ^^^^^^^^^^^^ the same lifetime is hidden here
+    |                               |
+    |                               the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+476 |     pub(crate) fn write_async(&self) -> Write<'_, Store> {
+    |                                               +++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-history/src/transaction.rs:167:18
+    |
+167 |     fn root_refs(&self) -> RootRefs {
+    |                  ^^^^^     ^^^^^^^^ the same lifetime is hidden here
+    |                  |
+    |                  the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+167 |     fn root_refs(&self) -> RootRefs<'_> {
+    |                                    ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-history/src/transaction.rs:174:21
+    |
+174 |     fn subdoc_guids(&self) -> SubdocGuids {
+    |                     ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+    |                     |
+    |                     the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+174 |     fn subdoc_guids(&self) -> SubdocGuids<'_> {
+    |                                          ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-history/src/transaction.rs:180:16
+    |
+180 |     fn subdocs(&self) -> SubdocsIter {
+    |                ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+    |                |
+    |                the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+180 |     fn subdocs(&self) -> SubdocsIter<'_> {
+    |                                     ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-history/src/types/mod.rs:951:17
+    |
+951 |     pub fn iter(&self) -> EventsIter {
+    |                 ^^^^^     ^^^^^^^^^^ the same lifetime is hidden here
+    |                 |
+    |                 the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+951 |     pub fn iter(&self) -> EventsIter<'_> {
+    |                                     ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+  --> vendor/yrs-history/src/state_vector.rs:93:17
+   |
+93 |     pub fn iter(&self) -> std::collections::hash_map::Iter<ClientID, u32> {
+   |                 ^^^^^     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+   |                 |
+   |                 the lifetime is elided here
+   |
+   = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+   |
+93 |     pub fn iter(&self) -> std::collections::hash_map::Iter<'_, ClientID, u32> {
+   |                                                            +++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-history/src/sync/awareness.rs:173:17
+    |
+173 |     pub fn iter(&self) -> AwarenessIter {
+    |                 ^^^^^     ^^^^^^^^^^^^^ the same lifetime is hidden here
+    |                 |
+    |                 the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+173 |     pub fn iter(&self) -> AwarenessIter<'_> {
+    |                                        ++++
+
+warning: `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions)
+   Compiling cses_collab_core v0.1.0 (/Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/rust)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.59s
+     Running unittests src/lib.rs (target/debug/deps/cses_collab_core-7c4b92cfda8d2efd)
+
+running 193 tests
+test api::collab::blockcraft::tests::code_header_projects_without_overwriting_desktop_props ... ok
+test api::collab::blockcraft::tests::callout_child_order_insertion_removal_and_invalid_parent_are_atomic ... ok
+test api::collab::blockcraft::tests::callout_tree_and_appearance_roundtrip_without_flattening_or_losing_extensions ... ok
+test api::collab::blockcraft::tests::callout_changes_merge_with_remote_body_and_other_appearance_fields ... ok
+test api::collab::blockcraft::tests::block_colors_roundtrip_without_touching_inline_formats_or_unknown_props ... ok
+test api::collab::blockcraft::tests::code_property_patches_merge_and_undo_only_the_selected_field ... ok
+test api::collab::blockcraft::tests::concurrent_formal_text_and_format_edits_converge ... ok
+test api::collab::blockcraft::tests::both_justified_alignments_sync_and_survive_text_edit_and_reopen ... ok
+test api::collab::blockcraft::tests::current_image_schema_with_caption_is_editable ... ok
+test api::collab::blockcraft::tests::block_lock_owner_permissions_sync_and_reopen ... ok
+test api::collab::blockcraft::tests::concurrent_formula_edits_converge ... ok
+test api::collab::blockcraft::tests::concurrent_image_updates_and_caption_text_converge ... ok
+test api::collab::blockcraft::tests::desktop_merged_table_fixture_projects_without_flattening ... ok
+test api::collab::blockcraft::tests::edits_preserve_unknown_fields_and_native_shared_types ... ok
+test api::collab::blockcraft::tests::desktop_ordered_boundaries_styles_and_starts_survive_mobile_edits ... ok
+test api::collab::blockcraft::tests::empty_root_and_media_edits_keep_native_children_types ... ok
+test api::collab::blockcraft::tests::desktop_video_url_roundtrips_and_unsupported_sources_remain_opaque ... ok
+test api::collab::blockcraft::tests::heading_levels_are_bounded_without_rewriting_legacy_props ... ok
+test api::collab::blockcraft::tests::explicit_numbering_commands_respect_desktop_boundaries_and_preserve_props ... ok
+test api::collab::blockcraft::tests::image_edits_preserve_caption_tree_and_unknown_fields ... ok
+test api::collab::blockcraft::tests::image_preflight_and_recursive_removal_are_safe ... ok
+test api::collab::blockcraft::tests::inherited_locks_guard_structure_and_atomic_snapshots ... ok
+test api::collab::blockcraft::tests::formula_projection_patches_and_validation_are_atomic ... ok
+test api::collab::blockcraft::tests::inline_formula_and_adjacent_text_converge ... ok
+test api::collab::blockcraft::tests::inline_formulas_project_edit_insert_delete_and_preserve_extensions ... ok
+test api::collab::blockcraft::tests::invalid_conversion_does_not_mutate_doc ... ok
+test api::collab::blockcraft::tests::invalid_code_patch_is_atomic_and_native_null_is_distinct_from_missing ... ok
+test api::collab::blockcraft::tests::invalid_list_conversion_settings_are_atomic ... ok
+test api::collab::blockcraft::tests::legacy_image_size_is_preserved_when_only_url_changes ... ok
+test api::collab::blockcraft::tests::entity_mentions_converge_and_do_not_replay_stale_business_attributes ... ok
+test api::collab::blockcraft::tests::legacy_missing_orders_are_repaired_without_changing_content_or_identity ... ok
+test api::collab::blockcraft::tests::invalid_table_structure_and_inconsistent_merges_are_atomic ... ok
+test api::collab::blockcraft::tests::list_conversion_replaces_identity_and_preserves_native_extensions ... ok
+test api::collab::blockcraft::tests::locked_content_is_preserved_and_read_only ... ok
+test api::collab::blockcraft::tests::divider_field_edits_converge_and_creation_has_no_url_or_text ... ok
+test api::collab::blockcraft::tests::list_type_switch_cleans_settings_and_restores_ordered_history ... ok
+test api::collab::blockcraft::tests::kr_list_reference_roundtrip_and_validation ... ok
+test api::collab::blockcraft::tests::mermaid_creation_deletion_and_snapshot_restore_keep_formal_structure ... ok
+test api::collab::blockcraft::tests::mermaid_concurrent_source_edits_converge ... ok
+test api::collab::blockcraft::tests::divider_projection_patches_and_invalid_edits_are_atomic ... ok
+test api::collab::blockcraft::tests::mermaid_source_roundtrips_without_replacing_container_or_extensions ... ok
+test api::collab::blockcraft::tests::meeting_references_preserve_schema_and_converge ... ok
+test api::collab::blockcraft::tests::mobile_ordered_items_write_desktop_counters_and_renumber_after_deletion ... ok
+test api::collab::blockcraft::tests::mermaid_modes_project_patch_validate_and_preserve_unknown_fields ... ok
+test api::collab::blockcraft::tests::new_caption_uses_native_text_and_remote_lock_is_read_only ... ok
+test api::collab::blockcraft::tests::mermaid_invalid_mutations_are_atomic_and_malformed_remote_trees_stay_opaque ... ok
+test api::collab::blockcraft::tests::nested_unknown_blocks_and_incompatible_known_shapes_stay_opaque ... ok
+test api::collab::blockcraft::tests::page_divider_invalid_snapshots_are_atomic ... ok
+test api::collab::blockcraft::tests::entity_mentions_restore_full_attributes_and_validate_atomically ... ok
+test api::collab::blockcraft::tests::page_divider_projection_preserves_opaque_legacy_nodes ... ok
+test api::collab::blockcraft::tests::paragraph_body_reset_clears_native_depth_and_typography ... ok
+test api::collab::blockcraft::tests::page_divider_creation_delete_restore_and_concurrent_text_converge ... ok
+test api::collab::blockcraft::tests::paragraph_defaults_patch_preserves_remote_next_style_and_metadata ... ok
+test api::collab::blockcraft::tests::numbering_undo_settings_are_explicit_atomic_and_persisted ... ok
+test api::collab::blockcraft::tests::paragraph_invalid_defaults_are_atomic ... ok
+test api::collab::blockcraft::tests::remote_revision_metadata_disables_writes_without_changing_blocks ... ok
+test api::collab::blockcraft::tests::opaque_inline_blocks_preserve_nested_data_and_converge ... ok
+test api::collab::blockcraft::tests::paragraph_defaults_typography_converge_and_reopen ... ok
+test api::collab::blockcraft::tests::structural_edits_and_sqlite_restore_use_formal_schema ... ok
+test api::collab::blockcraft::tests::resource_field_patches_merge_without_replaying_stale_metadata_or_urls ... ok
+test api::collab::blockcraft::tests::table_cell_ordered_lists_update_native_counters ... ok
+test api::collab::blockcraft::tests::six_resource_kinds_roundtrip_without_overwriting_native_extensions ... ok
+test api::collab::blockcraft::tests::table_and_caption_locks_protect_hidden_and_visible_descendants ... ok
+test api::collab::blockcraft::tests::table_row_removal_restores_unknown_meta_and_latest_archived_text ... ok
+test api::collab::blockcraft::tests::mention_card_split_preserves_neighbor_atoms_and_converges ... ok
+test api::collab::blockcraft::tests::unsupported_local_types_do_not_mutate_formal_doc ... ok
+test api::collab::blockcraft::tests::table_body_sync_and_sqlite_preserve_native_tree ... ok
+test api::collab::blockcraft::tests::unknown_container_is_preserved_while_other_blocks_remain_editable ... ok
+test api::collab::blockcraft::tests::non_user_and_invalid_mentions_remain_protected ... ok
+test api::collab::blockcraft::tests::table_width_patch_converges_with_remote_body_and_invalid_grid_is_atomic ... ok
+test api::collab::blockcraft::tests::user_mention_and_text_edits_converge ... ok
+test api::collab::blockcraft::tests::user_mentions_roundtrip_preserve_identity_and_extensions ... ok
+test api::collab::blockcraft::tests::task_cards_preserve_properties_validate_and_converge ... ok
+test api::collab::document_bootstrap::tests::delete_only_changes_reject_reprepare_without_mutation ... ok
+test api::collab::document_bootstrap::tests::different_remote_root_is_rejected_without_advancing_vector ... ok
+test api::collab::blockcraft::tests::unsupported_resource_sources_stay_opaque_while_other_blocks_edit ... ok
+test api::collab::document_bootstrap::tests::retry_reuses_update_and_reopens_as_formal ... ok
+test api::collab::document_bootstrap::tests::receipt_failure_rolls_back_update_and_can_retry ... ok
+test api::collab::history::tests::empty_legacy_paragraph_first_text_is_recorded_persisted_and_restored ... ok
+test api::collab::history::tests::appended_empty_legacy_paragraph_captures_its_first_typing_separately ... ok
+test api::collab::history::tests::engine_history_preserves_remote_text_and_resolves_undo_redo_selection ... ok
+test api::collab::document_bootstrap::tests::wrong_receipt_and_existing_content_do_not_mutate ... ok
+test api::collab::history::tests::engine_redo_commit_failure_is_atomic_and_retryable ... ok
+test api::collab::history::tests::engine_redo_write_failure_is_atomic_and_retryable ... ok
+test api::collab::history::tests::engine_undo_commit_failure_is_atomic_and_retryable ... ok
+test api::collab::history::tests::engine_undo_write_failure_is_atomic_and_retryable ... ok
+test api::collab::history::tests::history_bookmarks_are_directional_session_scoped_and_drop_deleted_endpoints ... ok
+test api::collab::blockcraft::tests::video_source_projection_prefers_url_and_preserves_legacy_src ... ok
+test api::collab::history::tests::first_legacy_typing_write_and_commit_failures_leave_content_and_history_unchanged ... ok
+test api::collab::history::tests::native_history_locks_and_revocation_do_not_consume_groups ... ok
+test api::collab::history::tests::history_selection_preserves_utf16_chunk_offset_after_redo ... ok
+test api::collab::history::tests::rejected_after_selection_is_checked_before_any_persistence ... ok
+test api::collab::history::tests::native_redo_survives_remote_edits_but_new_local_intent_invalidates_it ... ok
+test api::collab::history::tests::uncaptured_native_document_change_is_rejected_instead_of_returning_uncommitted_update ... ok
+test api::collab::history::tests::engine_history_retains_awareness_and_native_handles_after_many_swaps ... ok
+test api::collab::history::tests::unsupported_remote_target_does_not_consume_local_history ... ok
+test api::collab::history::tests::native_structure_history_restores_deleted_maps_and_formats_repeatedly ... ok
+test api::collab::tests::block_text_indices_use_utf16_like_yjs_and_dart ... ok
+test api::collab::tests::block_update_converges_between_two_replicas ... ok
+test api::collab::tests::blockcraft_yjs_fixture_loads_formatted_paragraphs ... ok
+test api::collab::tests::code_block_and_inline_colors_converge_between_replicas ... ok
+test api::collab::history::tests::table_row_redo_preserves_remote_edits_in_surviving_rows ... ok
+test api::collab::tests::concurrent_block_insertions_converge_after_update_exchange ... ok
+test api::collab::tests::cses_awareness_bridge_owns_only_local_client_state ... ok
+test api::collab::tests::concurrent_rich_text_formatting_converges ... ok
+test api::collab::tests::concurrent_text_insertions_in_one_block_converge ... ok
+test api::collab::tests::cses_schema_rejection_does_not_mutate_doc_or_sqlite ... ok
+test api::collab::tests::initial_formal_sync_persistence_failure_preserves_model ... ok
+test api::collab::blockcraft::tests::list_type_history_settings_and_v1_replica_converge ... ok
+test api::collab::tests::cses_raw_update_round_trip_and_offline_recovery ... ok
+test api::collab::tests::legacy_heading_levels_project_as_six_without_rewriting_metadata ... ok
+test api::collab::tests::local_staging_preserves_pending_remote_update_and_client_id ... ok
+test api::collab::tests::legacy_paragraph_defaults_reopen_and_invalid_initialization_is_atomic ... ok
+test api::collab::tests::legacy_single_text_is_migrated_to_paragraph_blocks ... ok
+test api::collab::tests::layout_heading_six_and_scripts_converge_between_replicas ... ok
+test api::collab::tests::old_draft_headers_are_removed_once_without_changing_body ... ok
+test api::collab::tests::remote_persistence_failure_keeps_vector_and_out_of_order_retry ... ok
+test api::collab::tests::rich_text_and_todo_state_converge_between_replicas ... ok
+test api::collab::tests::reorder_type_change_and_delete_converge ... ok
+test api::collab::history::tests::whole_table_deletion_repeated_undo_redo_restores_all_archived_descendants ... ok
+test api::collab::tests::text_delta_never_splits_surrogate_pairs ... ok
+test api::collab::tests::rich_text_and_todo_state_restore_from_sqlite ... ok
+test api::collab::tests::sqlite_update_log_restores_block_document ... ok
+test api::collab::tests::sync_step_round_trip_recovers_offline_blocks ... ok
+test api::collab::history::tests::table_column_deletion_repeated_undo_redo_restores_grid_and_widths ... ok
+test api::collab::tests::unchanged_snapshot_does_not_emit_an_update ... ok
+test api::collab::history::tests::table_row_redo_rejects_remote_contributions_restored_from_archived_nodes ... ok
+test api::collab::tests::url_backed_blocks_converge_between_replicas ... ok
+test history_prototype::tests::cache_document_partition_does_not_restore_another_sessions_content_or_history ... ok
+test api::collab::tests::snapshot_persistence_failure_is_atomic_and_retry_reopens ... ok
+test history_prototype::tests::checkpoint_preserves_native_links_and_does_not_mutate_the_source_history ... ok
+test api::collab::tests::two_legacy_migrations_merge_without_duplicating_text ... ok
+test history_prototype::tests::cache_reopen_restores_accepted_updates_but_starts_fresh_history ... ok
+test history_prototype::tests::command_tests::access_revocation_blocks_all_commands_and_undo_without_consuming_history ... ok
+test history_prototype::tests::command_tests::competing_remote_move_causes_atomic_conflict_instead_of_duplicate_block ... ok
+test history_prototype::tests::command_tests::delete_write_failure ... ok
+test history_prototype::tests::command_tests::delete_commit_failure ... ok
+test history_prototype::tests::command_tests::format_write_failure ... ok
+test history_prototype::tests::command_tests::format_commit_failure ... ok
+test history_prototype::tests::command_tests::explicit_owner_and_template_locks_block_commands_and_history_until_unlocked ... ok
+test history_prototype::tests::command_tests::inherited_and_hidden_descendant_locks_guard_structure_and_redo ... ok
+test history_prototype::tests::command_tests::invalid_structure_format_and_orphan_targets_are_atomic ... ok
+test history_prototype::tests::command_tests::formatting_undo_keeps_remote_marks_and_inserted_characters ... ok
+test history_prototype::tests::command_tests::insert_write_failure ... ok
+test history_prototype::tests::command_tests::insert_commit_failure ... ok
+test history_prototype::tests::command_tests::native_checkpoint_rejects_gc_and_preserves_independent_storage ... ok
+test api::collab::history::tests::table_row_deletion_repeated_undo_redo_accepts_its_own_archive_markers ... ok
+test history_prototype::tests::command_tests::move_commit_failure ... ok
+test history_prototype::tests::command_tests::paragraph_defaults_and_spacing_are_atomic_and_keep_unknown_properties ... ok
+test history_prototype::tests::command_tests::move_write_failure ... ok
+test history_prototype::tests::command_tests::property_removal_and_explicit_null_restore_distinct_original_states ... ok
+test history_prototype::tests::command_tests::read_only_by_default_and_formal_root_cannot_be_rebound_or_spoofed ... ok
+test history_prototype::tests::command_tests::move_undo_preserves_remote_text_and_restores_exact_sibling_order ... ok
+test history_prototype::tests::command_tests::remote_overwrite_of_same_property_is_not_reverted_by_local_undo ... ok
+test history_prototype::tests::command_tests::redo_deletion_rejects_removing_remote_edits_after_restore ... ok
+test history_prototype::tests::command_tests::remote_same_mark_override_survives_local_format_undo ... ok
+test history_prototype::tests::command_tests::revision_documents_remain_read_only_without_bypassing_pending_changes ... ok
+test history_prototype::tests::command_tests::props_write_failure ... ok
+test history_prototype::tests::command_tests::props_commit_failure ... ok
+test history_prototype::tests::command_tests::true_concurrent_sibling_insertion_survives_local_structure_undo ... ok
+test history_prototype::tests::command_tests::unknown_hidden_descendant_lock_prevents_container_delete_and_history_undo ... ok
+test history_prototype::tests::command_tests::skipped_obsolete_group_cannot_bypass_older_locked_group ... ok
+test history_prototype::tests::database_lock_failure_preserves_exact_history_and_retry ... ok
+test history_prototype::tests::deletion_only_update_is_persisted_even_when_vector_does_not_advance ... ok
+test history_prototype::tests::deleted_block_is_not_resurrected_by_text_undo ... ok
+test history_prototype::tests::command_tests::unrelated_locked_sibling_does_not_block_insertion_or_writable_text ... ok
+test history_prototype::tests::invalid_remote_update_and_missing_target_do_not_change_history_or_storage ... ok
+test history_prototype::tests::command_tests::undo_insertion_rejects_removing_new_remote_content_and_children ... ok
+test history_prototype::tests::local_undo_and_redo_preserve_remote_prefix_and_converge ... ok
+test history_prototype::tests::local_write_failure_preserves_redo ... ok
+test history_prototype::tests::out_of_order_dependency_update_is_durable_even_without_visible_change ... ok
+test history_prototype::tests::local_commit_failure_preserves_redo ... ok
+test history_prototype::tests::command_tests::property_history_restores_repeated_map_values_without_losing_remote_keys ... ok
+test history_prototype::tests::redo_write_failure_is_atomic_and_retryable ... ok
+test history_prototype::tests::redo_commit_failure_is_atomic_and_retryable ... ok
+test history_prototype::tests::remote_deletion_of_local_text_makes_undo_noop_without_resurrection ... ok
+test history_prototype::tests::remote_commit_failure_preserves_local_history ... ok
+test history_prototype::tests::remote_edit_in_other_block_retains_local_history ... ok
+test history_prototype::tests::command_tests::inserted_deleted_block_and_nested_content_survive_repeated_native_history ... ok
+test history_prototype::tests::remote_format_is_preserved_when_undoing_local_characters ... ok
+test history_prototype::tests::remote_update_preserves_redo_and_echo_does_not_capture_history ... ok
+test history_prototype::tests::remote_write_failure_preserves_local_history ... ok
+test history_prototype::tests::replacement_is_one_group_and_noop_does_not_clear_redo ... ok
+test history_prototype::tests::snapshot_and_stack_copy_alone_lose_native_redone_associations ... ok
+test history_prototype::tests::undo_local_delete_restores_text_without_removing_remote_insert ... ok
+test history_prototype::tests::undo_local_run_preserves_remote_insert_inside_that_run ... ok
+test history_prototype::tests::unknown_block_properties_and_metadata_survive_history_and_peer_sync ... ok
+test history_prototype::tests::undo_write_failure_is_atomic_and_retryable ... ok
+test history_prototype::tests::undo_commit_failure_is_atomic_and_retryable ... ok
+test history_prototype::tests::insertion_deletion_and_repeated_undo_redo_preserve_native_redone_links ... ok
+test history_prototype::tests::utf16_ranges_preserve_emoji_and_reject_split_surrogates_atomically ... ok
+test history_prototype::tests::remote_format_and_complete_local_delete_survive_repeated_history_checkpoints ... ok
+test history_prototype::tests::mixed_peer_actions_preserve_remote_characters_and_converge_after_every_step ... ok
+
+test result: ok. 193 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.12s

@@ -1,0 +1,56 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_level_test.dart
+test/new/block_component/heading_block_component/heading_level_test.dart:43:28: Error: The getter 'outerHtml' isn't defined for the type 'Node'.
+ - 'Node' is from 'package:html/dom.dart' ('../../../../.pub-cache/hosted/pub.flutter-io.cn/html-0.15.7/lib/dom.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'outerHtml'.
+        expect(html.single.outerHtml, '<h6>Heading</h6>');
+                           ^^^^^^^^^
+00:00 +0 -1: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_level_test.dart [E]
+  Failed to load "/Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_level_test.dart":
+  Compilation failed for testPath=/Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_level_test.dart: test/new/block_component/heading_block_component/heading_level_test.dart:43:28: Error: The getter 'outerHtml' isn't defined for the type 'Node'.
+   - 'Node' is from 'package:html/dom.dart' ('../../../../.pub-cache/hosted/pub.flutter-io.cn/html-0.15.7/lib/dom.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'outerHtml'.
+          expect(html.single.outerHtml, '<h6>Heading</h6>');
+                             ^^^^^^^^^
+  .
+  Error: The Dart compiler exited unexpectedly.
+  package:flutter_tools/src/base/common.dart 34:3  throwToolExit
+  package:flutter_tools/src/compile.dart 1009:11   DefaultResidentCompiler._compile.<fn>
+  dart:async/zone_root.dart 48:47                  _rootRunUnary
+  dart:async/zone.dart 733:19                      _CustomZone.runUnary
+  dart:async/future_impl.dart 948:45               Future._propagateToListeners.handleValueCallback
+  dart:async/future_impl.dart 977:13               Future._propagateToListeners
+  dart:async/future_impl.dart 862:9                Future._propagateToListeners
+  dart:async/future_impl.dart 720:5                Future._completeWithValue
+  dart:async/future_impl.dart 804:7                Future._asyncCompleteWithValue.<fn>
+  dart:async/zone_root.dart 35:13                  _rootRun
+  dart:async/zone.dart 726:19                      _CustomZone.run
+  dart:async/zone.dart 625:7                       _CustomZone.runGuarded
+  dart:async/zone.dart 666:23                      _CustomZone.bindCallbackGuarded.<fn>
+  dart:async/schedule_microtask.dart 40:35         _microtaskLoop
+  dart:async/schedule_microtask.dart 49:5          _startMicrotaskLoop
+  dart:isolate-patch/isolate_patch.dart 127:13     _runPendingImmediateCallback
+  dart:isolate-patch/isolate_patch.dart 193:5      _RawReceivePort._handleMessage
+
+00:00 +0 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_character_shortcut_test.dart: formate mock inputting a ` ` after the >
+00:00 +1 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_character_shortcut_test.dart: formate mock inputting a ` ` after the #
+00:00 +2 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_character_shortcut_test.dart: formate mock inputting a ` ` after the #
+00:00 +3 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_command_shortcut_test.dart: (setUpAll)
+00:00 +4 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_command_shortcut_test.dart: (setUpAll)
+00:00 +5 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_command_shortcut_test.dart: (setUpAll)
+00:00 +6 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_command_shortcut_test.dart: (setUpAll)
+00:00 +6 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_command_shortcut_test.dart: heading_command_shortcut_test.dart toggle H1 from paragraph
+00:01 +7 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_command_shortcut_test.dart: heading_command_shortcut_test.dart toggle H2 from paragraph
+00:01 +8 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_command_shortcut_test.dart: heading_command_shortcut_test.dart toggle H3 from paragraph
+00:01 +9 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_command_shortcut_test.dart: heading_command_shortcut_test.dart toggle body type from heading type
+00:01 +10 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_command_shortcut_test.dart: (tearDownAll)
+00:01 +10 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/plugins/markdown/decoder/heading_markdown_decoder_test.dart: markdown_heading_parser.dart convert # to heading
+00:01 +11 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/plugins/markdown/decoder/heading_markdown_decoder_test.dart: markdown_heading_parser.dart if number of # > 7
+00:01 +12 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/plugins/markdown/decoder/heading_markdown_decoder_test.dart: markdown_heading_parser.dart if no #
+00:01 +13 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/plugins/markdown/decoder/heading_markdown_decoder_test.dart: markdown_heading_parser.dart if no space after #
+00:01 +14 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/plugins/markdown/decoder/heading_markdown_decoder_test.dart: markdown_heading_parser.dart contains # but not at the beginning
+00:01 +15 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/plugins/markdown/decoder/heading_markdown_decoder_test.dart: markdown_heading_parser.dart with another markdown syntaxes
+00:02 +16 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/mobile/toolbar/mobile/toolbar_items/heading_mobile_toolbar_item_test.dart: headingMobileToolbarItem
+00:10 +17 -1: Some tests failed.
+
+Failing tests:
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_level_test.dart: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/appflowy_editor/test/new/block_component/heading_block_component/heading_level_test.dart

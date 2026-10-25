@@ -26,6 +26,70 @@ void main() {
     }
   });
   test(
+    'H6 writes cross FRB and SQLite while higher headings are rejected atomically',
+    () async {
+      expect(available, isTrue, reason: '本轮必须先构建真实宿主Rust库');
+      final directory = await Directory.systemTemp.createTemp(
+        'heading-limit-frb-',
+      );
+      final path = '${directory.path}/updates.sqlite';
+
+      /// 复制借用的[source]为指定[level]的标题快照，保留文字、身份及已投影属性。
+      native.CollabBlock heading(native.CollabBlock source, int level) =>
+          native.CollabBlock(
+            id: source.id,
+            parentId: source.parentId,
+            blockType: 'heading_$level',
+            text: source.text,
+            segments: source.segments,
+            checked: source.checked,
+            alignment: source.alignment,
+            indent: source.indent,
+            paragraphStyle: source.paragraphStyle,
+          );
+
+      try {
+        native.openCsesDocument(
+          documentId: 'fixture-doc',
+          cacheDocumentId: 'heading-six',
+          databasePath: path,
+        );
+        native.applyDocumentUpdate(
+          bytes: await File(
+            'rust/tests/fixtures/blockcraft-basic.update',
+          ).readAsBytes(),
+        );
+        final blocks = native.currentBlocks();
+        final index = blocks.indexWhere((block) => block.id == 'p1');
+        blocks[index] = heading(blocks[index], 6);
+        native.applyBlockSnapshot(blocks: blocks);
+        expect(native.currentBlocks()[index].blockType, 'heading_6');
+        final vector = native.encodeStateVector();
+        for (final level in [7, 8, 9]) {
+          final invalid = [...native.currentBlocks()];
+          invalid[index] = heading(invalid[index], level);
+          expect(
+            () => native.applyBlockSnapshot(blocks: invalid),
+            throwsA(anything),
+          );
+          expect(native.encodeStateVector(), vector);
+          expect(native.currentBlocks()[index].blockType, 'heading_6');
+        }
+        native.closeDocument();
+        final restored = native.openCsesDocument(
+          documentId: 'fixture-doc',
+          cacheDocumentId: 'heading-six',
+          databasePath: path,
+        );
+        expect(restored.blocks[index].blockType, 'heading_6');
+        expect(restored.blocks[index].text, blocks[index].text);
+      } finally {
+        native.closeDocument();
+        await directory.delete(recursive: true);
+      }
+    },
+  );
+  test(
     'six resource schemas cross FRB, update metadata and recover from SQLite',
     () async {
       final directory = await Directory.systemTemp.createTemp('resources-frb-');

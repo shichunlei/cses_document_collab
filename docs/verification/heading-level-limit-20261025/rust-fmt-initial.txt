@@ -1,0 +1,81 @@
+Diff in /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/rust/src/api/blockcraft.rs:2275:
+     /// 旧标题只投影为 H6，非法类型及字段补丁在原生事务开始前拒绝。
+     #[test]
+     fn heading_levels_are_bounded_without_rewriting_legacy_props() {
+-        let mut e = engine(include_bytes!("../../tests/fixtures/blockcraft-basic.update"));
++        let mut e = engine(include_bytes!(
++            "../../tests/fixtures/blockcraft-basic.update"
++        ));
+         let blocks = e.doc.get_or_insert_map(ROOT_NAME);
+         for level in [7_i64, 8, 9] {
+             {
+Diff in /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/rust/src/api/blockcraft.rs:2286:
+                 props.insert(&mut txn, "heading", level);
+             }
+             let expected = e.blocks();
+-            assert_eq!(expected.iter().find(|b| b.id == "p1").unwrap().block_type, "heading_6");
++            assert_eq!(
++                expected.iter().find(|b| b.id == "p1").unwrap().block_type,
++                "heading_6"
++            );
+             let vector = e.doc.transact().state_vector();
+             e.apply_block_snapshot(expected.clone()).unwrap();
+             assert_eq!(e.doc.transact().state_vector(), vector);
+Diff in /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/rust/src/api/blockcraft.rs:2293:
+             let mut invalid = expected.clone();
+-            invalid.iter_mut().find(|b| b.id == "p1").unwrap().block_type = format!("heading_{level}");
++            invalid
++                .iter_mut()
++                .find(|b| b.id == "p1")
++                .unwrap()
++                .block_type = format!("heading_{level}");
+             assert!(e.apply_block_snapshot(invalid).is_err());
+             let mut invalid = expected;
+-            invalid.iter_mut().find(|b| b.id == "p1").unwrap()
+-                .paragraph_style.as_mut().unwrap().property_edits =
+-                Some(format!(r#"{{"heading":{{"value":{level}}}}}"#));
++            invalid
++                .iter_mut()
++                .find(|b| b.id == "p1")
++                .unwrap()
++                .paragraph_style
++                .as_mut()
++                .unwrap()
++                .property_edits = Some(format!(r#"{{"heading":{{"value":{level}}}}}"#));
+             assert!(e.apply_block_snapshot(invalid).is_err());
+             assert_eq!(e.doc.transact().state_vector(), vector);
+             let txn = e.doc.transact();
+Diff in /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/rust/src/api/blockcraft.rs:2306:
+             assert_eq!(out_u32(props.get(&txn, "heading")), Some(level as u32));
+         }
+         for level in [0.0, 1.0, 6.0] {
+-            assert!(paragraph_style::parse(&format!(r#"{{"heading":{{"value":{level}}}}}"#), false).is_ok());
++            assert!(paragraph_style::parse(
++                &format!(r#"{{"heading":{{"value":{level}}}}}"#),
++                false
++            )
++            .is_ok());
+         }
+         for level in [-1.0, 1.5, 7.0, 8.0, 9.0] {
+-            assert!(paragraph_style::parse(&format!(r#"{{"heading":{{"value":{level}}}}}"#), false).is_err());
++            assert!(paragraph_style::parse(
++                &format!(r#"{{"heading":{{"value":{level}}}}}"#),
++                false
++            )
++            .is_err());
+         }
+     }
+
+Diff in /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/rust/src/api/collab.rs:1434:
+         {
+             return Err(format!("UNSUPPORTED_BLOCK_TYPE: {}", block.block_type));
+         }
+-        if block.ordered.as_ref().is_some_and(|ordered| ordered.heading > 6) {
++        if block
++            .ordered
++            .as_ref()
++            .is_some_and(|ordered| ordered.heading > 6)
++        {
+             return Err("INVALID_HEADING_LEVEL: 标题级别不能超过6".into());
+         }
+         if block.segments.iter().any(|segment| {

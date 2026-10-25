@@ -9,7 +9,7 @@ import 'dart:convert';
 /// ```
 final class CollabOrdered {
   /// [order] 为零基序号；[start] 为显式一基起始值，null 表示续号。
-  /// [heading] 为计数器标题级别，默认 0；[markerStyle] 为桌面 ms 预设，null 使用层级样式。
+  /// [heading] 为标题级别投影，默认0，超范围限制为0～6，不替代原生计数器key；[markerStyle] 为桌面 ms 预设，null 使用层级样式。
   /// [needsRepair] 表示原生共享 order 缺失或过期，供握手后补齐；本对象不持有资源。
   /// [numbering] 是仅含 start/continuePrevious 的原始 JSON 对象，默认空对象；
   /// 保留缺失、null、0 和自定义起点的区别，供撤销恢复。[numberingEdit] 仅在本地
@@ -18,12 +18,12 @@ final class CollabOrdered {
   const CollabOrdered({
     required this.order,
     this.start,
-    this.heading = 0,
+    int heading = 0,
     this.markerStyle,
     this.needsRepair = false,
     this.numbering = '{}',
     this.numberingEdit,
-  });
+  }) : heading = heading < 0 ? 0 : (heading > 6 ? 6 : heading);
 
   /// 零基结构序号，0 显示为 1。
   final int order;
@@ -31,7 +31,8 @@ final class CollabOrdered {
   /// 用户显式设置的一基起始编号；null 不重开计数器。
   final int? start;
 
-  /// 与缩进共同划分计数器的标题级别，0 表示普通列表。
+  /// 标题级别投影，范围0～6，0表示普通列表；不作为既有原生列表的分组身份。
+  /// 旧超范围heading的计数器key由Rust按原始属性保留，不从本字段重建。
   final int heading;
 
   /// 桌面 ms 预设；未知值保留并按层级回退。

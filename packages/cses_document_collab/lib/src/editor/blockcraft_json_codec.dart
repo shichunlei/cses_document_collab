@@ -287,6 +287,7 @@ abstract final class BlockCraftJsonCodec {
   }
 
   /// 转换已校验的[block]及其后代为实际原生节点；返回节点的所有权交给调用者。
+  /// 正数标题按H1~H6投影，超范围按H6展示，不回写借用的原始快照。
   static Node decodeBlock(Map<String, dynamic> block) {
     final kind = block['flavour'] as String;
     final id = block['id'] as String;
@@ -296,7 +297,10 @@ abstract final class BlockCraftJsonCodec {
     final delta = nodeType == 'editable' ? decodeInline(block['children'] as List) : Delta();
     final mobileType = switch (kind) {
       'root' => 'page',
-      'paragraph' => props['heading'] is num && props['heading'] > 0 ? 'heading_${props['heading']}' : 'paragraph',
+      'paragraph' =>
+        props['heading'] is num && props['heading'] > 0
+            ? 'heading_${(props['heading'] as num).toInt().clamp(1, 6)}'
+            : 'paragraph',
       'bullet' => 'bulleted_list',
       'ordered' => 'numbered_list',
       'todo' => 'todo_list',
@@ -360,6 +364,7 @@ abstract final class BlockCraftJsonCodec {
 
   /// 将借用的[node]及后代重新编码；内容读取实时编辑树，不回放旧快照或编辑历史。
   /// 文字叶块带真实子块时抛FormatException，不输出遗漏后代的快照；宿主可在事务预检调用。
+  /// 导出的标题级别限制为1～6，不改变借用节点及原始属性归档。
   static Map<String, dynamic> encodeBlock(Node node) {
     final kind = flavour(node);
     if (node.delta != null && node.children.isNotEmpty) {
@@ -382,7 +387,9 @@ abstract final class BlockCraftJsonCodec {
     if (node.delta != null) {
       if (kind == 'paragraph') {
         if (node.type == 'heading') {
-          props['heading'] = node.attributes['level'];
+          props['heading'] = (node.attributes['level'] as num? ?? 1)
+              .toInt()
+              .clamp(1, 6);
         } else {
           props.remove('heading');
         }

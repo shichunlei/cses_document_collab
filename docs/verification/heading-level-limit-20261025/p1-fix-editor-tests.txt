@@ -1,0 +1,152 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: default and document configurations enable exactly six heading levels
+00:00 +1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: unsupported heading commands and direct transactions leave content and history intact
+00:00 +2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 7 Enter at 0 with same normalizes only the new node
+00:00 +3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 7 Enter at 1 with same normalizes only the new node
+00:00 +4: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 7 Enter at 2 with same normalizes only the new node
+00:00 +5: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 7 Enter at 0 with body normalizes only the new node
+00:00 +6: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 7 Enter at 1 with body normalizes only the new node
+00:00 +7: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 7 Enter at 2 with body normalizes only the new node
+00:00 +8: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: remote legacy level 7 displays H6 without echo or changing its source
+00:00 +9: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: desktop JSON level 7 imports and exports H6 while preserving text and unrelated props
+00:00 +10: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 8 Enter at 0 with same normalizes only the new node
+00:00 +11: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 8 Enter at 1 with same normalizes only the new node
+00:00 +12: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 8 Enter at 2 with same normalizes only the new node
+00:00 +13: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 8 Enter at 0 with body normalizes only the new node
+00:00 +14: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 8 Enter at 1 with body normalizes only the new node
+00:00 +15: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 8 Enter at 2 with body normalizes only the new node
+00:00 +16: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: remote legacy level 8 displays H6 without echo or changing its source
+00:00 +17: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: desktop JSON level 8 imports and exports H6 while preserving text and unrelated props
+00:00 +18: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 9 Enter at 0 with same normalizes only the new node
+00:00 +19: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 9 Enter at 1 with same normalizes only the new node
+00:00 +20: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 9 Enter at 2 with same normalizes only the new node
+00:00 +21: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 9 Enter at 0 with body normalizes only the new node
+00:00 +22: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 9 Enter at 1 with body normalizes only the new node
+00:00 +23: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 9 Enter at 2 with body normalizes only the new node
+00:00 +24: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: remote legacy level 9 displays H6 without echo or changing its source
+00:00 +25: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: desktop JSON level 9 imports and exports H6 while preserving text and unrelated props
+00:00 +26: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published normalization including every font family
+00:00 +27: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter paragraph heading=null next=null end=false
+00:01 +28: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter paragraph heading=null next=null end=true
+00:01 +29: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter paragraph heading=null next=same end=false
+00:01 +30: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter paragraph heading=null next=same end=true
+00:01 +31: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter paragraph heading=null next=body end=false
+00:01 +32: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter paragraph heading=null next=body end=true
+00:01 +33: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter paragraph heading=2 next=null end=false
+00:01 +34: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter paragraph heading=2 next=null end=true
+00:01 +35: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter paragraph heading=2 next=same end=false
+00:01 +36: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter paragraph heading=2 next=same end=true
+00:01 +37: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter paragraph heading=2 next=body end=false
+00:01 +38: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter paragraph heading=2 next=body end=true
+00:01 +39: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter bullet heading=null next=null end=false
+00:01 +40: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter bullet heading=null next=null end=true
+00:01 +41: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter bullet heading=null next=same end=false
+00:01 +42: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter bullet heading=null next=same end=true
+00:01 +43: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter bullet heading=null next=body end=false
+00:01 +44: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter bullet heading=null next=body end=true
+00:01 +45: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter bullet heading=2 next=null end=false
+00:01 +46: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter bullet heading=2 next=null end=true
+00:01 +47: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter bullet heading=2 next=same end=false
+00:01 +48: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter bullet heading=2 next=same end=true
+00:01 +49: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter bullet heading=2 next=body end=false
+00:01 +50: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter bullet heading=2 next=body end=true
+00:01 +51: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter ordered heading=null next=null end=false
+00:01 +52: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter ordered heading=null next=null end=true
+00:01 +53: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter ordered heading=null next=same end=false
+00:01 +54: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter ordered heading=null next=same end=true
+00:01 +55: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter ordered heading=null next=body end=false
+00:01 +56: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter ordered heading=null next=body end=true
+00:01 +57: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter ordered heading=2 next=null end=false
+00:02 +58: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter ordered heading=2 next=null end=true
+00:02 +59: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter ordered heading=2 next=same end=false
+00:02 +60: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter ordered heading=2 next=same end=true
+00:02 +61: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter ordered heading=2 next=body end=false
+00:02 +62: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter ordered heading=2 next=body end=true
+00:02 +63: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter todo heading=null next=null end=false
+00:02 +64: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter todo heading=null next=null end=true
+00:02 +65: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter todo heading=null next=same end=false
+00:02 +66: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter todo heading=null next=same end=true
+00:02 +67: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter todo heading=null next=body end=false
+00:02 +68: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter todo heading=null next=body end=true
+00:02 +69: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter todo heading=2 next=null end=false
+00:02 +70: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter todo heading=2 next=null end=true
+00:02 +71: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter todo heading=2 next=same end=false
+00:02 +72: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter todo heading=2 next=same end=true
+00:02 +73: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter todo heading=2 next=body end=false
+00:02 +74: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter todo heading=2 next=body end=true
+00:02 +75: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter blockquote heading=null next=null end=false
+00:02 +76: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter blockquote heading=null next=null end=true
+00:02 +77: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter blockquote heading=null next=same end=false
+00:02 +78: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter blockquote heading=null next=same end=true
+00:02 +79: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter blockquote heading=null next=body end=false
+00:02 +80: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter blockquote heading=null next=body end=true
+00:02 +81: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter blockquote heading=2 next=null end=false
+00:02 +82: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter blockquote heading=2 next=null end=true
+00:02 +83: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter blockquote heading=2 next=same end=false
+00:02 +84: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter blockquote heading=2 next=same end=true
+00:02 +85: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter blockquote heading=2 next=body end=false
+00:02 +86: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: published Enter blockquote heading=2 next=body end=true
+00:02 +87: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: empty color defaults use desktop CSS and retain editor alpha after reopen
+00:02 +88: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: remote empty defaults paragraph replace=false refresh typing
+00:02 +89: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: remote empty defaults paragraph replace=true refresh typing
+00:02 +90: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: remote empty defaults heading_2 replace=false refresh typing
+00:02 +91: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: remote empty defaults heading_2 replace=true refresh typing
+00:02 +92: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: remote empty defaults quote replace=false refresh typing
+00:02 +93: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: remote empty defaults quote replace=true refresh typing
+00:02 +94: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: remote empty defaults bulleted_list replace=false refresh typing
+00:02 +95: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: remote empty defaults bulleted_list replace=true refresh typing
+00:02 +96: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: empty defaults persist in a field transaction and restore on navigation and undo
+00:02 +97: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: explicit local input survives remote defaults empty=false until navigation
+00:02 +98: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: explicit local input survives remote defaults empty=true until navigation
+00:02 +99: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: whole paragraph format updates marker, partial format does not, clearing text retains last input appearance
+00:02 +100: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: formatting a multi paragraph range includes empty markers in the same undo step
+00:02 +101: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: deleting a mixed range retains common appearance and excludes links
+00:03 +102: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: reverse cross paragraph Enter is atomic and allocates a fresh next identity
+00:03 +103: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: manual caret navigation in the same block resets temporary input styles
+00:03 +104: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: undo and redo restore explicit local typing format before nonempty insertion
+00:03 +105: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: empty quote exits in place for same and keeps only continuing defaults
+00:03 +106: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: empty quote exits in place for body and keeps only continuing defaults
+00:03 +107: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: next style edits are read-only safe and undo follows stable identity after reorder
+00:03 +108: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: empty paragraph retains character defaults while outdenting raw paragraph depth
+00:03 +109: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: empty quote retains character defaults while outdenting raw paragraph depth
+00:03 +110: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: empty heading_2 retains character defaults while outdenting raw paragraph depth
+00:03 +111: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: empty heading body resets in place and undo restores heading defaults
+00:03 +112: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_style_test.dart: same paragraph preserves typography and next body drops all appearance overrides
+00:04 +113: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_input_test.dart: Android paragraph defaults and soft keyboard Enter (variant: TargetPlatform.android)
+00:09 +114: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_input_test.dart: Android paragraph defaults and soft keyboard Enter (variant: TargetPlatform.android)
+00:09 +115: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_input_test.dart: Android paragraph defaults and soft keyboard Enter (variant: TargetPlatform.android)
+00:09 +116: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_input_test.dart: Android paragraph defaults and soft keyboard Enter (variant: TargetPlatform.android)
+00:09 +117: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_input_test.dart: Android paragraph defaults and soft keyboard Enter (variant: TargetPlatform.android)
+00:09 +118: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_input_test.dart: Android paragraph defaults and soft keyboard Enter (variant: TargetPlatform.android)
+00:13 +119: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_input_test.dart: Android paragraph defaults and soft keyboard Enter (variant: TargetPlatform.android)
+00:14 +120: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_input_test.dart: Android paragraph defaults and soft keyboard Enter (variant: TargetPlatform.android)
+00:14 +121: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_input_test.dart: Android paragraph defaults and soft keyboard Enter (variant: TargetPlatform.android)
+00:14 +122: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_input_test.dart: Android paragraph defaults and soft keyboard Enter (variant: TargetPlatform.android)
+00:14 +123: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_input_test.dart: Android paragraph defaults and soft keyboard Enter (variant: TargetPlatform.android)
+00:14 +124: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_input_test.dart: Android paragraph defaults and soft keyboard Enter (variant: TargetPlatform.android)
+00:14 +125: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_input_test.dart: Android paragraph defaults and soft keyboard Enter (variant: TargetPlatform.android)
+00:14 +126: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/paragraph_input_test.dart: Android paragraph defaults and soft keyboard Enter (variant: TargetPlatform.android)
+00:16 +127: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:17 +128: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus toolbar exposes H1 through H6 and applies H6
+00:19 +129: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts a link URL and restores the trailing caret
+00:23 +130: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus selection focuses an inserted block after existing text
+00:24 +131: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts code from empty text and restores its caret
+00:24 +132: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts code from non-empty text and restores its caret
+00:26 +133: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus code entry follows its source after a remote insertion
+00:26 +134: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus code entry rejects permission revoked while the sheet is open
+00:27 +135: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: H menu converts the selected block to todo
+00:27 +136: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: menus stay above and close together with the keyboard
+00:28 +137: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: typing and newline keep the editor toolbar active
+00:28 +138: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: tapping a middle empty paragraph requests the Android keyboard
+00:29 +139: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: Aa owns color and H owns all block-list actions
+00:30 +140: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:31 +141: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: T reveals a deep current heading and its next level
+00:32 +142: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: Aa applies and displays an inline background color
+00:32 +143: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: Aa menu applies mutually exclusive superscript and subscript
+00:33 +144: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: inline style persists until manual toggle or paragraph switch
+00:33 +145: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: entering a paragraph initializes Aa from caret formatting
+00:33 +146: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: quote colors change independently and can be cleared and undone
+00:34 +147: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: block layout supports justify and distributed with undo
+00:35 +148: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: block layout menu aligns and indents list blocks
+00:35 +149: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: (tearDownAll)
+00:35 +149: All tests passed!

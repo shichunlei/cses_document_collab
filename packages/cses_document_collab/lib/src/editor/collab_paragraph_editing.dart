@@ -25,6 +25,7 @@ final collabParagraphEnter = CharacterShortcutEvent(
 /// 行首插入空同型段落并留在原正文；空标题默认原位转正文。Shift、代码、特殊块、
 /// 非叶块及跨父容器选区交给原输入处理；同父段落范围替换在一次事务中完成。
 /// 空标题/引用原位转正文时沿用宿主业务字段、桌面身份/元数据与块背景；段尾新增正文不继承原身份。
+/// 续写的新段落将标题级别规范到H1~H6；旧块原始标题属性保留，不把显示裁剪写回原块。
 /// 成功应用事务返回 true；只读、销毁或不适用返回 false，错误向调用边界传播。
 Future<bool> handleCollabParagraphEnter(EditorState state) async {
   final selection = state.selection?.normalized;
@@ -103,6 +104,17 @@ Future<bool> handleCollabParagraphEnter(EditorState state) async {
         ..remove('cses_ordered_target')
         ..remove(TodoListBlockKeys.checked);
   final nextProps = continuing ? {...props} : <String, dynamic>{'depth': 0};
+  final inheritedHeading = nextProps['heading'];
+  if (continuing && node.type == HeadingBlockKeys.type) {
+    final level = node.attributes[HeadingBlockKeys.level];
+    nextProps['heading'] = (level is num && level.isFinite ? level.toInt() : 1)
+        .clamp(1, 6);
+    attributes[HeadingBlockKeys.level] = nextProps['heading'];
+  } else if (continuing &&
+      inheritedHeading is num &&
+      inheritedHeading.isFinite) {
+    nextProps['heading'] = inheritedHeading.toInt().clamp(0, 6);
+  }
   nextProps['textDefaults'] = continuing && defaults.isNotEmpty
       ? defaults
       : null;

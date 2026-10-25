@@ -100,6 +100,7 @@ pub(super) fn typography(input: Option<&str>) -> Result<Attrs, String> {
 }
 
 /// 校验初始化值或单字段包装补丁；仅修改明确携带的字段，缺失字段保持远端权威值。
+/// heading 仅接受 0～6 的整数，0 表示正文；超范围在事务开始前拒绝。
 pub(super) fn parse(input: &str, initial: bool) -> Result<HashMap<String, Option<Any>>, String> {
     let invalid = || "INVALID_PARAGRAPH_STYLE: 段落属性无效".to_owned();
     if input.len() > 32768 {
@@ -117,6 +118,8 @@ pub(super) fn parse(input: &str, initial: bool) -> Result<HashMap<String, Option
         };
         if let Some(v) = &value {
             let valid = matches!(v, Any::Null) || match key.as_str() {
+                "heading" => matches!(v, Any::Number(level) if level.is_finite()
+                    && level.fract() == 0.0 && (0.0..=6.0).contains(level)),
                 "textDefaults" => matches!(v, Any::Map(m) if m.iter().all(|(k,v)|
                     (matches!(k.as_str(), "a:bold"|"a:italic"|"a:underline"|"a:strike"|"a:code"|"a:sup"|"a:sub") && matches!(v, Any::Bool(_)))
                     || (matches!(k.as_str(), "s:color"|"s:background") && matches!(v, Any::String(_)))

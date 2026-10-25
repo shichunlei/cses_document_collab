@@ -1,0 +1,8 @@
+{
+  "baseline_commit": "aeac6e63d4999241c33e0fd08973769e5d15e270",
+  "baseline_config_sha256": "1467639d7d2224f9a0c2f41d1eb6bf0d14acfc2e1e393f54eddf0be3f1dbf010",
+  "baseline_test_sha256": "775c2eccf094ffbe60d7cbde7777e5f10abf45a6c6ab8571ed133e8b8c890dca",
+  "command": "flutter test --no-pub test/editor_toolbar_configuration_test.dart --plain-name 'menu choices cannot reenable disabled block and format capabilities'",
+  "result": "same assertion failure as current tree",
+  "dependency_note": "Isolated original collaboration package source and test, using installed dependencies and current AppFlowy fork; failure concerns unchanged default lineHeight capability, not headings."
+}

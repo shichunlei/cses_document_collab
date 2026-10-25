@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-25",
+  "latest": "0.11.30",
+  "desktop_declared": "0.11.28",
+  "yarn_locked": "0.11.28",
+  "installed": "0.11.21",
+  "historical_pnpm": "0.2.78",
+  "latest_integrity": "sha512-rx488SxuPm4FqjL88B4c0V5balNRL1h+gJ79IgYr84lfL68lCQdH/m11Dx0LvzdBnvQE/fgJDLscWlnogKlMPQ==",
+  "latest_integrity_verified": true,
+  "initial_query": "sandbox proxy connection EPERM; fresh registry query succeeded after escalation",
+  "upgrade": false,
+  "review_latest": "0.11.30",
+  "review_desktop_declared": "0.11.28",
+  "review_yarn_locked": "0.11.28",
+  "review_installed": "0.11.21"
+}

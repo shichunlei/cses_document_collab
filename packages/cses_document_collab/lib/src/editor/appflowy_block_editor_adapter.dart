@@ -1196,6 +1196,7 @@ final class AppFlowyBlockEditorAdapter {
   /// KR只投影会议引用，不缓存业务列表；Mermaid 保留容器及独立源码 Delta；表格布局及任务卡片属性只读投影；其他无正文块保留各自白名单属性，均不生成Delta。
   /// 段落格式及其历史目标标记仅用于段落族；代码块沿用自身属性和正文历史。
   /// 分页符使用无 Delta、无子块的独立类型；仅构建内存节点，不写入原生文档或取得资源所有权。
+  /// 标题投影限制H1~H6，旧数据超出范围按边界级别展示，不主动修改共享数据。
   static Node _nodeFromBlock(CollabEditorBlock block) {
     if (collabTableTypes.contains(block.blockType)) {
       return Node(
@@ -1314,7 +1315,10 @@ final class AppFlowyBlockEditorAdapter {
       final type when type.startsWith('heading_') => (
         HeadingBlockKeys.type,
         HeadingBlockKeys.delta,
-        <String, Object>{HeadingBlockKeys.level: int.tryParse(type.substring('heading_'.length))?.clamp(1, 9) ?? 1},
+        <String, Object>{
+          HeadingBlockKeys.level:
+              int.tryParse(type.substring('heading_'.length))?.clamp(1, 6) ?? 1,
+        },
       ),
       BulletedListBlockKeys.type => (BulletedListBlockKeys.type, BulletedListBlockKeys.delta, <String, Object>{}),
       NumberedListBlockKeys.type => (NumberedListBlockKeys.type, NumberedListBlockKeys.delta, <String, Object>{}),
@@ -1497,7 +1501,7 @@ final class AppFlowyBlockEditorAdapter {
     return value is String && value.isNotEmpty ? value : node.id;
   }
 
-  /// 将借用[node]映射为投影类型；绘图、表格结构及无正文块保留独立类型。
+  /// 将借用[node]映射为投影类型；标题输出限制H1~H6，绘图、表格结构及无正文块保留独立类型。
   static String _nodeBlockType(Node node) {
     if (node.type == collabMermaidType ||
         node.type == collabMermaidSourceType ||
@@ -1513,7 +1517,8 @@ final class AppFlowyBlockEditorAdapter {
     if (node.type == csesUnsupportedBlockType) return csesUnsupportedBlockType;
     if (node.type == csesCalloutBlockType) return csesCalloutBlockType;
     return switch (node.type) {
-      HeadingBlockKeys.type => 'heading_${(node.attributes[HeadingBlockKeys.level] as int? ?? 1).clamp(1, 9)}',
+      HeadingBlockKeys.type =>
+        'heading_${(node.attributes[HeadingBlockKeys.level] as int? ?? 1).clamp(1, 6)}',
       BulletedListBlockKeys.type => BulletedListBlockKeys.type,
       NumberedListBlockKeys.type => NumberedListBlockKeys.type,
       TodoListBlockKeys.type => TodoListBlockKeys.type,

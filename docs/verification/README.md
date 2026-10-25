@@ -59,6 +59,8 @@
 
 ### 文字格式、标题与选区
 
+- [heading-level-limit-20261025](heading-level-limit-20261025/)（[标题H1~H6全链路限制与验证](heading-level-limit-20261025/report.md)；[审查与2项P1/1项P2](heading-level-limit-20261025/review.md)；[两个P1修复与验证](heading-level-limit-20261025/p1-fixes.md)）
+
 - [editor-spacing-20261024](editor-spacing-20261024/)（[公共行间距、字间距与离线宿主接入](editor-spacing-20261024/report.md)；[2026-10-25审查](editor-spacing-20261024/review-20261025.md)）
 
 - [shared-font-size-20261024](shared-font-size-20261024/)（[协同默认字号入口与公共配置修复](shared-font-size-20261024/report.md)；[横向字号子菜单](shared-font-size-20261024/horizontal-menu.md)；[恢复默认字号](shared-font-size-20261024/reset-default.md)；[字号与间距审查](shared-font-size-20261024/review.md)；[十二档字号预设](shared-font-size-20261024/presets-20261025.md)）

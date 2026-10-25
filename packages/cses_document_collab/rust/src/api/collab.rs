@@ -289,6 +289,8 @@ impl CollabEngine {
         Ok((engine, persisted_update_count))
     }
 
+    /// 读取正式文档或旧草稿投影，标题统一到 H1~H6，不改写旧块类型元数据。
+    /// 旧草稿的缺失文字键仍取得共享文本句柄，正式文档读取交给 BlockCraft 投影。
     fn blocks(&self) -> Vec<CollabBlock> {
         if let Some(root_id) = &self.blockcraft_root_id {
             return blockcraft::project(&self.doc, root_id).blocks;
@@ -307,6 +309,13 @@ impl CollabEngine {
                     return None;
                 }
                 let block_type = out_string(self.block_meta.get(&transaction, &id))
+                    .map(|kind| {
+                        kind.strip_prefix("heading_")
+                            .and_then(|level| level.parse::<u32>().ok())
+                            .filter(|level| *level > 0)
+                            .map(|level| format!("heading_{}", level.min(6)))
+                            .unwrap_or(kind)
+                    })
                     .filter(|value| is_supported_block_type(value))
                     .unwrap_or_else(|| "paragraph".to_owned());
                 let checked = block_type == "todo_list"
@@ -1434,6 +1443,13 @@ fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(
         {
             return Err(format!("UNSUPPORTED_BLOCK_TYPE: {}", block.block_type));
         }
+        if block
+            .ordered
+            .as_ref()
+            .is_some_and(|ordered| ordered.heading > 6)
+        {
+            return Err("INVALID_HEADING_LEVEL: 标题级别不能超过6".into());
+        }
         if block.segments.iter().any(|segment| {
             segment.inline_latex.as_ref().is_some_and(|latex| {
                 segment.text != "\u{fffc}"
@@ -1512,7 +1528,7 @@ fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(
     Ok(())
 }
 
-/// 返回手机可写的块类型；[block_type] 是投影类型而非桌面 flavour。
+/// 返回手机可写的块类型；[block_type] 是投影类型而非桌面 flavour，标题仅允许 H1~H6。
 fn is_supported_block_type(block_type: &str) -> bool {
     is_resource_block_type(block_type)
         || matches!(
@@ -1524,9 +1540,6 @@ fn is_supported_block_type(block_type: &str) -> bool {
             | "heading_4"
             | "heading_5"
             | "heading_6"
-            | "heading_7"
-            | "heading_8"
-            | "heading_9"
             | "bulleted_list"
             | "numbered_list"
             | "todo_list"
@@ -2330,11 +2343,37 @@ mod tests {
         assert_eq!(phone_b.blocks(), vec![code]);
     }
 
+    /// 旧草稿的超范围标题按 H6 投影，读取不会覆盖其原始类型或文字。
     #[test]
-    fn layout_heading_nine_and_scripts_converge_between_replicas() {
+    fn legacy_heading_levels_project_as_six_without_rewriting_metadata() {
+        let mut engine = test_engine("legacy-headings");
+        engine
+            .apply_block_snapshot(vec![block("heading", "heading_6", "title")])
+            .unwrap();
+        for level in [7, 8, 9] {
+            let kind = format!("heading_{level}");
+            engine
+                .block_meta
+                .insert(&mut engine.doc.transact_mut(), "heading", kind.as_str());
+            let vector = engine.doc.transact().state_vector();
+            let blocks = engine.blocks();
+            assert_eq!(blocks[0].block_type, "heading_6");
+            assert_eq!(blocks[0].text, "title");
+            let txn = engine.doc.transact();
+            assert_eq!(
+                out_string(engine.block_meta.get(&txn, "heading")),
+                Some(kind)
+            );
+            assert_eq!(txn.state_vector(), vector);
+        }
+    }
+
+    /// H6、列表布局与上下标经真实增量交换后保持一致。
+    #[test]
+    fn layout_heading_six_and_scripts_converge_between_replicas() {
         let mut phone_a = test_engine("layout-script-a");
         let mut phone_b = test_engine("layout-script-b");
-        let mut heading = block("heading", "heading_9", "x2");
+        let mut heading = block("heading", "heading_6", "x2");
         heading.alignment = "center".to_owned();
         let mut exponent = styled_segment("2", false, false);
         exponent.superscript = true;

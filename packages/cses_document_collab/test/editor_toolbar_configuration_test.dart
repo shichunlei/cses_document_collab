@@ -254,16 +254,16 @@ void main() {
   });
 
   for (final limited in [false, true]) {
-    testWidgets('heading menus stop at H6 and retain existing H9 with limited config: $limited', (tester) async {
+    testWidgets('heading menus and commands stop at H6 with limited config: $limited', (tester) async {
       final local = LocalEditorController(
         initialText: 'Legacy heading',
         configuration: limited
-            ? EditorConfiguration(blocks: [EditorBlock.paragraph, EditorBlock.heading], headingLevels: {1, 6, 7, 8, 9})
+            ? EditorConfiguration(blocks: [EditorBlock.paragraph, EditorBlock.heading], headingLevels: {1, 6})
             : EditorConfiguration(),
       );
       try {
         await _mountToolbar(tester, local);
-        await local.convert('heading', level: 9);
+        await local.convert('heading', level: 6);
         await tester.pumpAndSettle();
         final before = local.editorState.document.toJson();
         await tester.tap(find.byTooltip('块类型'));
@@ -281,7 +281,7 @@ void main() {
         await tester.tap(find.byKey(const ValueKey('editor-add-block-close')));
         await _settleAction(tester);
         expect(local.editorState.document.toJson(), before);
-        expect(local.editorState.document.first!.attributes['level'], 9);
+        expect(local.editorState.document.first!.attributes['level'], 6);
         expect(tester.takeException(), isNull);
       } finally {
         await _closeMountedEditor(tester, local);

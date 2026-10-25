@@ -1,0 +1,14 @@
+Analyzing 9 items...
+
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/src/editor/core/editor_configuration.dart:642:11 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/src/editor/core/editor_configuration.dart:646:11 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/src/editor/editor_shortcut_toolbar.dart:310:13 • curly_braces_in_flow_control_structures
+   info • The import of 'package:cses_document_collab/src/editor/blockcraft_json_codec.dart' is unnecessary because all of the used elements are also provided by the import of 'package:cses_document_collab/cses_document_collab.dart'. Try removing the import directive • test/heading_level_limits_test.dart:4:8 • unnecessary_import
+  error • The getter 'length' isn't defined for the type 'FixedSizeStack'. Try importing the library that defines 'length', correcting the name to the name of an existing getter, or defining a getter or field named 'length' • test/heading_level_limits_test.dart:40:53 • undefined_getter
+  error • The getter 'length' isn't defined for the type 'FixedSizeStack'. Try importing the library that defines 'length', correcting the name to the name of an existing getter, or defining a getter or field named 'length' • test/heading_level_limits_test.dart:50:44 • undefined_getter
+   info • Uses 'await' on an instance of 'void', which is not a subtype of 'Future'. Try removing the 'await' or changing the expression • test/heading_level_limits_test.dart:52:7 • await_only_futures
+  error • This expression has a type of 'void' so its value can't be used. Try checking to see if you're using the correct API; there might be a function or call that returns void you didn't expect. Also check type parameters and variables which might also be void • test/heading_level_limits_test.dart:52:31 • use_of_void_result
+   info • Uses 'await' on an instance of 'void', which is not a subtype of 'Future'. Try removing the 'await' or changing the expression • test/heading_level_limits_test.dart:54:7 • await_only_futures
+  error • This expression has a type of 'void' so its value can't be used. Try checking to see if you're using the correct API; there might be a function or call that returns void you didn't expect. Also check type parameters and variables which might also be void • test/heading_level_limits_test.dart:54:31 • use_of_void_result
+
+10 issues found. (ran in 29.7s)

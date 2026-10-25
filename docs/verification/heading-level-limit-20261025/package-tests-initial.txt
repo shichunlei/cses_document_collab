@@ -1,0 +1,258 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart
+test/heading_level_limits_test.dart:40:53: Error: The getter 'length' isn't defined for the type 'FixedSizeStack'.
+ - 'FixedSizeStack' is from 'package:appflowy_editor/src/history/undo_manager.dart' ('../appflowy_editor/lib/src/history/undo_manager.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'length'.
+      final undoCount = state.undoManager.undoStack.length;
+                                                    ^^^^^^
+test/heading_level_limits_test.dart:50:44: Error: The getter 'length' isn't defined for the type 'FixedSizeStack'.
+ - 'FixedSizeStack' is from 'package:appflowy_editor/src/history/undo_manager.dart' ('../appflowy_editor/lib/src/history/undo_manager.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'length'.
+        expect(state.undoManager.undoStack.length, undoCount);
+                                           ^^^^^^
+test/heading_level_limits_test.dart:52:31: Error: This expression has type 'void' and can't be used.
+      await state.undoManager.undo();
+                              ^
+test/heading_level_limits_test.dart:54:31: Error: This expression has type 'void' and can't be used.
+      await state.undoManager.redo();
+                              ^
+00:00 +0 -1: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart [E]
+  Failed to load "/Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart":
+  Compilation failed for testPath=/Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: test/heading_level_limits_test.dart:40:53: Error: The getter 'length' isn't defined for the type 'FixedSizeStack'.
+   - 'FixedSizeStack' is from 'package:appflowy_editor/src/history/undo_manager.dart' ('../appflowy_editor/lib/src/history/undo_manager.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'length'.
+        final undoCount = state.undoManager.undoStack.length;
+                                                      ^^^^^^
+  test/heading_level_limits_test.dart:50:44: Error: The getter 'length' isn't defined for the type 'FixedSizeStack'.
+   - 'FixedSizeStack' is from 'package:appflowy_editor/src/history/undo_manager.dart' ('../appflowy_editor/lib/src/history/undo_manager.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'length'.
+          expect(state.undoManager.undoStack.length, undoCount);
+                                             ^^^^^^
+  test/heading_level_limits_test.dart:52:31: Error: This expression has type 'void' and can't be used.
+        await state.undoManager.undo();
+                                ^
+  test/heading_level_limits_test.dart:54:31: Error: This expression has type 'void' and can't be used.
+        await state.undoManager.redo();
+                                ^
+  .
+  Error: The Dart compiler exited unexpectedly.
+  package:flutter_tools/src/base/common.dart 34:3  throwToolExit
+  package:flutter_tools/src/compile.dart 1009:11   DefaultResidentCompiler._compile.<fn>
+  dart:async/zone_root.dart 48:47                  _rootRunUnary
+  dart:async/zone.dart 733:19                      _CustomZone.runUnary
+  dart:async/future_impl.dart 948:45               Future._propagateToListeners.handleValueCallback
+  dart:async/future_impl.dart 977:13               Future._propagateToListeners
+  dart:async/future_impl.dart 862:9                Future._propagateToListeners
+  dart:async/future_impl.dart 720:5                Future._completeWithValue
+  dart:async/future_impl.dart 804:7                Future._asyncCompleteWithValue.<fn>
+  dart:async/zone_root.dart 35:13                  _rootRun
+  dart:async/zone.dart 726:19                      _CustomZone.run
+  dart:async/zone.dart 625:7                       _CustomZone.runGuarded
+  dart:async/zone.dart 666:23                      _CustomZone.bindCallbackGuarded.<fn>
+  dart:async/schedule_microtask.dart 40:35         _microtaskLoop
+  dart:async/schedule_microtask.dart 49:5          _startMicrotaskLoop
+  dart:isolate-patch/isolate_patch.dart 127:13     _runPendingImmediateCallback
+  dart:isolate-patch/isolate_patch.dart 193:5      _RawReceivePort._handleMessage
+
+00:00 +0 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_configuration_test.dart: configuration copies collections and rejects missing paragraph and invalid limits
+00:00 +1 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_configuration_test.dart: text paragraph layout and preserved metadata are opt-in immutable capabilities
+00:00 +2 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_configuration_test.dart: heading disclosure defaults agree for all editor capabilities
+00:00 +3 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_configuration_test.dart: configured flat container uses shared empty-list Enter local=true
+00:00 +4 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_configuration_test.dart: configured flat container uses shared empty-list Enter local=false
+00:00 +5 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_configuration_test.dart: two configurations enforce blocks, nonconsecutive headings and undo independently
+00:00 +6 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_configuration_test.dart: disabled formats cannot enter by commands, defaults, delta or locks
+00:00 +7 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_configuration_test.dart: configured character and block limits reject paste atomically
+00:02 +8 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: toolbar configuration is frozen, ordered and rejects duplicates
+00:02 +9 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:04 +10 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:04 +11 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:04 +12 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:04 +13 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:04 +14 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:04 +15 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:04 +16 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:04 +17 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:04 +18 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:04 +19 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:04 +20 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:04 +21 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:05 +22 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:05 +23 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:05 +24 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:05 +25 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:05 +26 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:05 +27 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:05 +28 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:05 +29 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:05 +30 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:05 +31 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:05 +32 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:05 +33 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:06 +34 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:06 +35 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:06 +36 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:07 +37 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:07 +38 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:07 +39 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:07 +40 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:07 +41 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:08 +42 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:08 +43 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:08 +44 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:08 +45 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:08 +46 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:09 +47 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: more directly creates a 2x2 table without a dialog and undo removes it
+00:09 +48 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:09 +49 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:09 +50 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:09 +51 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:09 +52 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:09 +53 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:09 +54 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:09 +55 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:09 +56 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:09 +57 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:09 +58 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:09 +59 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:10 +60 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:10 +61 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:10 +62 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:10 +63 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:10 +64 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:10 +65 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:10 +66 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:10 +67 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:10 +68 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:10 +69 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth left heading_3 uses published 32px layout steps
+00:10 +70 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 paragraph user remains a styled native atom after explicit font weight
+00:11 +71 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 paragraph user remains a styled native atom after explicit font weight
+00:11 +72 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 paragraph user remains a styled native atom after explicit font weight
+00:11 +73 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 paragraph user remains a styled native atom after explicit font weight
+00:11 +74 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 paragraph user remains a styled native atom after explicit font weight
+00:12 +75 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 paragraph user remains a styled native atom after explicit font weight
+00:12 +76 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 paragraph user remains a styled native atom after explicit font weight
+00:12 +77 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 paragraph user remains a styled native atom after explicit font weight
+00:12 +78 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 paragraph user remains a styled native atom after explicit font weight
+00:12 +79 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: final heading sizes left preserve mixed run overrides
+00:13 +80 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: final heading sizes left preserve mixed run overrides
+00:13 +81 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus selection focuses an inserted block after existing text
+00:13 +82 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus selection focuses an inserted block after existing text
+00:13 +83 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct pageDivider inserts without more sheet and has undo
+00:13 +84 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct pageDivider inserts without more sheet and has undo
+00:13 +85 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: legacy font sizes left follow published parsing
+00:13 +86 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: legacy font sizes left follow published parsing
+00:13 +87 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts code from empty text and restores its caret
+00:14 +88 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus sheet inserts code from empty text and restores its caret
+00:14 +89 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct formula cancellation and creation share the original input sheet
+00:14 +90 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct formula cancellation and creation share the original input sheet
+00:14 +91 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct formula cancellation and creation share the original input sheet
+00:14 +92 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct formula cancellation and creation share the original input sheet
+00:14 +93 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct formula cancellation and creation share the original input sheet
+00:15 +94 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct formula cancellation and creation share the original input sheet
+00:15 +95 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct formula cancellation and creation share the original input sheet
+00:15 +96 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct formula cancellation and creation share the original input sheet
+00:15 +97 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct formula cancellation and creation share the original input sheet
+00:15 +98 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct formula cancellation and creation share the original input sheet
+00:15 +99 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct formula cancellation and creation share the original input sheet
+00:16 +100 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth center quote uses published 32px layout steps
+00:16 +101 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: plus code entry rejects permission revoked while the sheet is open
+00:16 +102 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct link uses existing source validation and inserts a link block
+00:16 +103 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct link uses existing source validation and inserts a link block
+00:17 +104 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: H menu converts the selected block to todo
+00:17 +105 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: final heading sizes center preserve mixed run overrides
+00:17 +106 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct meeting respects injected picker and revocation: false
+00:17 +107 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: menus stay above and close together with the keyboard
+00:17 +108 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: menus stay above and close together with the keyboard
+00:17 +109 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: menus stay above and close together with the keyboard
+00:18 +110 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: menus stay above and close together with the keyboard
+00:18 +111 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: menus stay above and close together with the keyboard
+00:18 +112 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth right heading_3 uses published 32px layout steps
+00:18 +113 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth right heading_3 uses published 32px layout steps
+00:18 +114 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth right heading_3 uses published 32px layout steps
+00:18 +115 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: heading menus and commands stop at H6 with limited config: false
+00:19 +116 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: heading menus and commands stop at H6 with limited config: false
+00:19 +117 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: Aa owns color and H owns all block-list actions
+00:19 +118 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: Aa owns color and H owns all block-list actions
+00:20 +119 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: heading menus and commands stop at H6 with limited config: true
+00:20 +120 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: heading menus and commands stop at H6 with limited config: true
+00:20 +121 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: heading menus and commands stop at H6 with limited config: true
+00:20 +122 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:20 +123 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:20 +124 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:20 +125 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:20 +126 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:20 +127 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:20 +128 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:20 +128 -1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: menu choices cannot reenable disabled block and format capabilities
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: no matching candidates
+  Actual: _KeyWidgetFinder:<Found 1 widget with key [<'editor-mobile-toolbar'>]: [
+            Container-[<'editor-mobile-toolbar'>](bg: BoxDecoration(color: Color(alpha: 1.0000, red:
+1.0000, green: 1.0000, blue: 1.0000, colorSpace: ColorSpace.sRGB), border: Border(top:
+BorderSide(color: Color(alpha: 1.0000, red: 0.8980, green: 0.9059, blue: 0.9216, colorSpace:
+ColorSpace.sRGB)), bottom: BorderSide(color: Color(alpha: 1.0000, red: 0.8980, green: 0.9059, blue:
+0.9216, colorSpace: ColorSpace.sRGB)))), constraints: BoxConstraints(0.0<=w<=Infinity, h=52.0)),
+          ]>
+   Which: means one was found but none were expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart:450:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart line 450
+The test description was:
+  menu choices cannot reenable disabled block and format capabilities
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:20 +128 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:20 +128 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: menu choices cannot reenable disabled block and format capabilities [E]
+  Test failed. See exception logs above.
+  The test description was: menu choices cannot reenable disabled block and format capabilities
+
+00:20 +129 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:20 +130 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:20 +131 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:20 +132 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:20 +133 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:20 +134 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:20 +135 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:20 +136 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:21 +137 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:21 +138 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:21 +139 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:21 +140 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:21 +141 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth justify heading_3 uses published 32px layout steps
+00:21 +142 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard add button visibility: true
+00:21 +143 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: T reveals a deep current heading and its next level
+00:22 +144 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: T reveals a deep current heading and its next level
+00:22 +145 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth justify quote uses published 32px layout steps
+00:22 +146 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: Aa applies and displays an inline background color
+00:22 +147 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: final heading sizes justify follow published defaults
+00:22 +148 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: Aa menu applies mutually exclusive superscript and subscript
+00:23 +149 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: Aa menu applies mutually exclusive superscript and subscript
+00:23 +150 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: legacy font sizes justify follow published parsing
+00:23 +151 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: inline style persists until manual toggle or paragraph switch
+00:23 +152 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: empty heading sizes justify match placeholders and defaults
+00:23 +153 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: entering a paragraph initializes Aa from caret formatting
+00:24 +154 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth distributed heading_3 uses published 32px layout steps
+00:24 +155 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: quote colors change independently and can be cleared and undone
+00:24 +156 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: quote colors change independently and can be cleared and undone
+00:25 +157 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: text depth distributed quote uses published 32px layout steps
+00:25 +158 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: block layout supports justify and distributed with undo
+00:25 +159 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: final heading sizes distributed follow published defaults
+00:25 +160 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: block layout menu aligns and indents list blocks
+00:25 +161 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: final heading sizes distributed preserve mixed run overrides
+00:26 +162 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: legacy font sizes distributed follow published parsing
+00:26 +163 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: empty heading sizes distributed match placeholders and defaults
+00:27 +164 -2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_typography_test.dart: (tearDownAll)
+00:27 +164 -2: Some tests failed.
+
+Failing tests:
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: menu choices cannot reenable disabled block and format capabilities
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart

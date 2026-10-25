@@ -33,7 +33,7 @@ Future<void> openLocalEditor(BuildContext context) =>
 - AppBar 撤销/重做；远端 transaction 不进入本机 UndoManager
 - AppBar 导入 Markdown（UTF-8、`.md` / `.markdown`、最大 5 MiB），追加到文末并整体撤销；表格转文本行，独立网络图片转图片块，其他图片保留地址，不上传本地资源
 - AppFlowy transaction 与 Rust/Yrs 块级 Schema 适配层：离线草稿沿用 Demo 模型，CSES 文档使用正式 BlockCraft 模型
-- `paragraph`、`heading_1`～`heading_9`、`bulleted_list`、
+- `paragraph`、`heading_1`～`heading_6`、`bulleted_list`、
   `numbered_list`、`todo_list`、`quote`、`code`、`callout`、`link`、`image`、`video`
   的类型、文本/URL 和受支持属性同步
 - 链接块可打开系统浏览器，正式图片展示比例尺寸和题注，离线图片复用 AppFlowy 原生渲染；视频支持内嵌播放
@@ -87,7 +87,7 @@ blocks                         Y.Map<blockId, Y.Map>
 bc:revisions / bc:revision-decisions / bc:revision-meta  原样保留的修订数据
 ```
 
-正式段落的 `props.heading` 映射手机 H1～H9，`bullet/ordered/todo/blockquote/code`
+正式段落的 `props.heading` 映射手机 H1~H6，旧超范围正级别仅按H6展示，`bullet/ordered/todo/blockquote/code`
 映射列表、待办、引用和代码，图片使用 `props.src`、视频使用 `props.url`。Todo 的 checked 写入数值 0/1，
 正文对齐使用 `textAlign`，图片对齐使用 `align`，缩进使用 `depth`。富文本使用 `a:bold/italic/underline/strike/code/sup/sub`
 与 `s:color/background`，手机 ARGB 颜色写回 CSS。格式只更新发生变化的区间与受支持键，
@@ -220,7 +220,7 @@ Rust 或 FRB 桥接声明变化后必须停止运行并完整重新构建安装�
 3. 光标进入正文后，确认键盘上方出现 `＋ / T / Aa / 块布局 / 图片 / @`
    快捷栏；
 4. 选中文字后点击 `Aa`，验证粗体、斜体、下划线、删除线、行内代码和文字颜色会同步；
-5. 点击 `T`，验证 H1～H6 的逐级展开，并确认不显示 H7～H9、有序/无序列表、Todo、代码块和引用块；点击 `Aa` 验证上标和下标；Todo 勾选后手机 B 应同步状态；
+5. 点击 `T`，验证 H1～H6 的逐级展开，并确认不显示超出 H6 的标题、有序/无序列表、Todo、代码块和引用块；点击 `Aa` 验证上标和下标；Todo 勾选后手机 B 应同步状态；
 6. 点击块布局，验证对齐方式与列表缩进在手机 B 同步；
 7. 点击 `＋`，验证 H1～H6、两种列表、Todo、引用、链接、图片和视频块同步；
 8. 插入链接/图片/视频时填写完整的 HTTP(S) URL；资源块后应自动定位到空正文并弹回键盘；
