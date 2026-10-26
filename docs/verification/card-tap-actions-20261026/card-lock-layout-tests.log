@@ -1,0 +1,87 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_card_tap_actions_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_card_tap_actions_test.dart: person-card lock follows fitted card at authored width 180.0
+00:00 +1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_card_tap_actions_test.dart: person-card lock follows fitted card at authored width 180.0
+00:00 +2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_card_tap_actions_test.dart: person-card lock follows fitted card at authored width 180.0
+00:00 +3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_card_tap_actions_test.dart: person-card lock follows fitted card at authored width 180.0
+00:00 +4: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_card_tap_actions_test.dart: person-card lock follows fitted card at authored width 180.0
+00:00 +5: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_card_tap_actions_test.dart: person-card lock follows fitted card at authored width 180.0
+00:00 +6: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_card_tap_actions_test.dart: person-card lock follows fitted card at authored width 180.0
+00:00 +7: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_card_tap_actions_test.dart: person-card lock follows fitted card at authored width 180.0
+00:00 +8: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_card_tap_actions_test.dart: person-card lock follows fitted card at authored width 180.0
+00:00 +9: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_card_tap_actions_test.dart: person-card lock follows fitted card at authored width 180.0
+00:00 +10: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_card_tap_actions_test.dart: person-card lock follows fitted card at authored width 180.0
+00:01 +11: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_card_tap_actions_test.dart: person-card lock follows fitted card at authored width 180.0
+00:01 +12: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_card_tap_actions_test.dart: person-card lock follows fitted card at authored width 180.0
+00:01 +13: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_card_tap_actions_test.dart: person-card lock follows fitted card at authored width 180.0
+00:01 +14: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_card_tap_actions_test.dart: person-card lock follows fitted card at authored width 180.0
+00:01 +15: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:01 +16: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:01 +17: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:01 +18: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:02 +19: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:02 +20: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:02 +21: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:02 +22: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_bottom_sheet_test.dart: person-card sheet fixes header/actions at Size(390.0, 844.0)/1.0
+00:02 +23: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_bottom_sheet_test.dart: person-card sheet fixes header/actions at Size(390.0, 844.0)/1.0
+00:02 +24: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_bottom_sheet_test.dart: person-card sheet fixes header/actions at Size(390.0, 844.0)/1.0
+00:02 +25: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_bottom_sheet_test.dart: person-card sheet fixes header/actions at Size(390.0, 844.0)/1.0
+00:02 +26: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_bottom_sheet_test.dart: person-card sheet fixes header/actions at Size(390.0, 844.0)/1.0
+00:02 +27: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_bottom_sheet_test.dart: person-card sheet fixes header/actions at Size(390.0, 844.0)/1.0
+00:02 +28: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather sheet fixes header/actions at Size(390.0, 844.0)/1.0
+00:02 +29: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather sheet fixes header/actions at Size(390.0, 844.0)/1.0
+00:02 +30: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather sheet fixes header/actions at Size(390.0, 844.0)/1.0
+00:03 +31: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather sheet fixes header/actions at Size(390.0, 844.0)/1.0
+00:03 +32: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/date_card_regression_test.dart: cycling back to the current style preserves a desktop-resized card
+00:03 +33: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/date_card_regression_test.dart: cycling back to the current style preserves a desktop-resized card
+00:03 +34: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/date_card_regression_test.dart: cycling back to the current style preserves a desktop-resized card
+00:03 +35: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/date_card_regression_test.dart: cycling back to the current style preserves a desktop-resized card
+RESELECT_STYLE_RESULT={date: 2026-10-25T09:30, format: full, height: 289.504, style: calendar, width: 336.0}
+00:03 +36: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/date_card_regression_test.dart: cycling back to the current style preserves a desktop-resized card
+00:03 +37: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:03 +38: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:03 +39: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:03 +40: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:03 +41: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:03 +42: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:03 +43: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:04 +44: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:04 +45: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:04 +46: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:04 +47: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:04 +48: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:04 +49: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:04 +50: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:04 +51: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:04 +52: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:04 +53: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_bottom_sheet_test.dart: person-card arrows cycle all three styles with centered fixed preview and no premature writes
+00:04 +54: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_bottom_sheet_test.dart: person-card arrows cycle all three styles with centered fixed preview and no premature writes
+00:04 +55: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_bottom_sheet_test.dart: person-card arrows cycle all three styles with centered fixed preview and no premature writes
+00:04 +55: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/date_card_regression_test.dart: choosing visible 32px uses display scale instead of storing 32 design pixels
+DISPLAY_FONT_RESULT={date: 2026-10-25T09:30, format: full, fsCalendar: 16.0, height: 289.504, style: calendar, width: 336.0}
+00:04 +56: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_bottom_sheet_test.dart: person-card arrows cycle all three styles with centered fixed preview and no premature writes
+00:04 +57: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_bottom_sheet_test.dart: person-card arrows cycle all three styles with centered fixed preview and no premature writes
+00:04 +57: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/date_card_regression_test.dart: an imported tiny dotted border must not consume an unbounded painting budget
+TINY_BORDER_IMPORT=1e-320px dotted
+00:04 +58: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_bottom_sheet_test.dart: person-card arrows cycle all three styles with centered fixed preview and no premature writes
+00:05 +59: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather arrows cycle all seven styles with centered fixed preview and no premature writes
+00:05 +60: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather arrows cycle all seven styles with centered fixed preview and no premature writes
+00:05 +61: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather arrows cycle all seven styles with centered fixed preview and no premature writes
+00:05 +62: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather arrows cycle all seven styles with centered fixed preview and no premature writes
+00:05 +63: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather arrows cycle all seven styles with centered fixed preview and no premature writes
+00:05 +64: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather arrows cycle all seven styles with centered fixed preview and no premature writes
+00:05 +65: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather arrows cycle all seven styles with centered fixed preview and no premature writes
+00:05 +66: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather arrows cycle all seven styles with centered fixed preview and no premature writes
+00:05 +67: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather arrows cycle all seven styles with centered fixed preview and no premature writes
+00:05 +68: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather arrows cycle all seven styles with centered fixed preview and no premature writes
+00:05 +69: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather arrows cycle all seven styles with centered fixed preview and no premature writes
+00:05 +70: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather arrows cycle all seven styles with centered fixed preview and no premature writes
+00:05 +71: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather arrows cycle all seven styles with centered fixed preview and no premature writes
+00:06 +72: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_bottom_sheet_test.dart: weather arrows cycle all seven styles with centered fixed preview and no premature writes
+00:06 +73: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: revocation then restoration cannot reactivate an old settings draft
+00:06 +74: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: fixed-date query cannot save after permission is revoked then restored
+00:06 +75: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/date_card_regression_test.dart: arrows cycle every named style with centered preview and no writes before apply
+00:06 +76: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/date_card_regression_test.dart: arrows cycle every named style with centered preview and no writes before apply
+00:06 +77: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/date_card_regression_test.dart: arrows cycle every named style with centered preview and no writes before apply
+00:07 +78: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/date_card_regression_test.dart: swiping the bottom sheet away discards its draft
+00:07 +79: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/date_card_regression_test.dart: (tearDownAll)
+00:07 +79: All tests passed!

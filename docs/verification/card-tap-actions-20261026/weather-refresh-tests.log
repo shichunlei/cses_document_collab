@@ -1,0 +1,199 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: frozen weather requires valid data and live mode ignores old frozen
+00:00 +1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: explicit patches preserve frozen, undo after reorder and reject invalid fields
+00:00 +2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: insert, preceding backspace and undo preserve stable identity and frozen data
+00:00 +3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: JSON creates native weather and cleared palette overrides never revive
+00:00 +4: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: legacy local snapshot-weather retains frozen props on export and its renderer
+00:00 +5: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: seven layouts six palettes at 280px and text scale 1.0
+00:00 +6: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_card_tap_actions_test.dart: person-card body opens settings and delete preserves independent undo
+00:01 +7: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_card_tap_actions_test.dart: person-card body opens settings and delete preserves independent undo
+00:01 +8: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: image copies full media URL with reorder protection
+00:01 +9: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:01 +10: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:01 +11: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:01 +12: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:01 +13: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:01 +14: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:02 +15: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:02 +16: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:02 +17: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_card_tap_actions_test.dart: weather body opens settings and delete preserves independent undo
+00:02 +17: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: image copies full media URL with failure protection
+DocCollab: 块操作失败: PlatformException(clipboard-denied, null, null, null)
+#0      JSONMethodCodec.decodeEnvelope (package:flutter/src/services/message_codecs.dart:168:7)
+#1      MethodChannel._invokeMethod (package:flutter/src/services/platform_channel.dart:366:18)
+<asynchronous suspension>
+#2      Clipboard.setData (package:flutter/src/services/clipboard.dart:36:5)
+<asynchronous suspension>
+#3      copyCollabMediaLink (package:cses_document_collab/src/editor/collab_block_actions.dart:99:3)
+<asynchronous suspension>
+#4      CollabBlockMoreButton._show.<anonymous closure> (package:cses_document_collab/src/editor/collab_block_actions.dart:394:13)
+<asynchronous suspension>
+#5      runEditorHeaderAction (package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart:2852:12)
+<asynchronous suspension>
+#6      CollabBlockMoreButton._show (package:cses_document_collab/src/editor/collab_block_actions.dart:266:7)
+<asynchronous suspension>
+
+00:02 +18: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_card_tap_actions_test.dart: weather body opens settings and delete preserves independent undo
+00:02 +19: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:02 +19: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: video copies full media URL with reorder protection
+DocCollab: 文档视频加载失败: Bad state: fixture offline
+#0      _UnavailableVideo.createWithOptions (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart:36:7)
+#1      VideoPlayerController.initialize (package:video_player/video_player.dart:615:37)
+#2      _VideoBlockState._initializeVideo (package:cses_document_collab/src/editor/collab_video_block.dart:127:24)
+<asynchronous suspension>
+
+00:02 +20: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:02 +21: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:02 +21: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: video copies full media URL with reorder protection
+DocCollab: 文档视频加载失败: Bad state: fixture offline
+#0      _UnavailableVideo.createWithOptions (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart:36:7)
+#1      VideoPlayerController.initialize (package:video_player/video_player.dart:615:37)
+#2      _VideoBlockState._initializeVideo (package:cses_document_collab/src/editor/collab_video_block.dart:127:24)
+<asynchronous suspension>
+
+00:02 +22: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:02 +23: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:02 +23: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: video copies full media URL with source protection
+DocCollab: 文档视频加载失败: Bad state: fixture offline
+#0      _UnavailableVideo.createWithOptions (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart:36:7)
+#1      VideoPlayerController.initialize (package:video_player/video_player.dart:615:37)
+#2      _VideoBlockState._initializeVideo (package:cses_document_collab/src/editor/collab_video_block.dart:127:24)
+<asynchronous suspension>
+
+00:02 +24: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: video copies full media URL with source protection
+00:02 +25: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_card_tap_actions_test.dart: date-card body opens settings and delete preserves independent undo
+00:02 +25: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: video copies full media URL with delete protection
+DocCollab: 文档视频加载失败: Bad state: fixture offline
+#0      _UnavailableVideo.createWithOptions (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart:36:7)
+#1      VideoPlayerController.initialize (package:video_player/video_player.dart:615:37)
+#2      _VideoBlockState._initializeVideo (package:cses_document_collab/src/editor/collab_video_block.dart:127:24)
+<asynchronous suspension>
+
+00:02 +26: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_card_tap_actions_test.dart: date-card body opens settings and delete preserves independent undo
+00:02 +26: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: video copies full media URL with revokeRestore protection
+DocCollab: 文档视频加载失败: Bad state: fixture offline
+#0      _UnavailableVideo.createWithOptions (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart:36:7)
+#1      VideoPlayerController.initialize (package:video_player/video_player.dart:615:37)
+#2      _VideoBlockState._initializeVideo (package:cses_document_collab/src/editor/collab_video_block.dart:127:24)
+<asynchronous suspension>
+
+00:02 +27: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: weather refresh menu excludes unavailable action: locked
+00:02 +28: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: weather refresh menu excludes unavailable action: locked
+00:02 +28: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: video copies full media URL with cancel protection
+DocCollab: 文档视频加载失败: Bad state: fixture offline
+#0      _UnavailableVideo.createWithOptions (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart:36:7)
+#1      VideoPlayerController.initialize (package:video_player/video_player.dart:615:37)
+#2      _VideoBlockState._initializeVideo (package:cses_document_collab/src/editor/collab_video_block.dart:127:24)
+<asynchronous suspension>
+
+00:02 +29: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: weather refresh menu excludes unavailable action: locked
+00:02 +30: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: weather refresh menu excludes unavailable action: locked
+00:02 +31: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: video copies full media URL with cancel protection
+00:02 +32: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_card_tap_actions_test.dart: date-card repeated taps and revoke/restore cannot reuse old delete menu
+00:02 +32: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: video copies full media URL with failure protection
+DocCollab: 文档视频加载失败: Bad state: fixture offline
+#0      _UnavailableVideo.createWithOptions (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart:36:7)
+#1      VideoPlayerController.initialize (package:video_player/video_player.dart:615:37)
+#2      _VideoBlockState._initializeVideo (package:cses_document_collab/src/editor/collab_video_block.dart:127:24)
+<asynchronous suspension>
+
+00:02 +33: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: weather refresh menu excludes unavailable action: readonly
+00:02 +34: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: video copies full media URL with failure protection
+DocCollab: 块操作失败: PlatformException(clipboard-denied, null, null, null)
+#0      JSONMethodCodec.decodeEnvelope (package:flutter/src/services/message_codecs.dart:168:7)
+#1      MethodChannel._invokeMethod (package:flutter/src/services/platform_channel.dart:366:18)
+<asynchronous suspension>
+#2      Clipboard.setData (package:flutter/src/services/clipboard.dart:36:5)
+<asynchronous suspension>
+#3      copyCollabMediaLink (package:cses_document_collab/src/editor/collab_block_actions.dart:99:3)
+<asynchronous suspension>
+#4      CollabBlockMoreButton._show.<anonymous closure> (package:cses_document_collab/src/editor/collab_block_actions.dart:394:13)
+<asynchronous suspension>
+#5      runEditorHeaderAction (package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart:2852:12)
+<asynchronous suspension>
+#6      CollabBlockMoreButton._show (package:cses_document_collab/src/editor/collab_block_actions.dart:266:7)
+<asynchronous suspension>
+
+00:03 +35: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: weather refresh menu excludes unavailable action: no-service
+00:03 +36: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: audio copies full media URL with reorder protection
+00:03 +37: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: fixed snapshot avoids requests; explicit refresh is undoable and failure keeps old data
+00:03 +38: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: audio copies full media URL with source protection
+00:03 +39: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: audio copies full media URL with source protection
+00:03 +40: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: fixed-date query cannot save after permission is revoked then restored
+00:03 +41: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: fixed-date query cannot save after permission is revoked then restored
+00:03 +42: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: fixed-date query cannot save after permission is revoked then restored
+00:03 +43: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: fixed-date query cannot save after permission is revoked then restored
+00:03 +43: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: audio copies full media URL with failure protection
+DocCollab: 块操作失败: PlatformException(clipboard-denied, null, null, null)
+#0      JSONMethodCodec.decodeEnvelope (package:flutter/src/services/message_codecs.dart:168:7)
+#1      MethodChannel._invokeMethod (package:flutter/src/services/platform_channel.dart:366:18)
+<asynchronous suspension>
+#2      Clipboard.setData (package:flutter/src/services/clipboard.dart:36:5)
+<asynchronous suspension>
+#3      copyCollabMediaLink (package:cses_document_collab/src/editor/collab_block_actions.dart:99:3)
+<asynchronous suspension>
+#4      CollabBlockMoreButton._show.<anonymous closure> (package:cses_document_collab/src/editor/collab_block_actions.dart:394:13)
+<asynchronous suspension>
+#5      runEditorHeaderAction (package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart:2852:12)
+<asynchronous suspension>
+#6      CollabBlockMoreButton._show (package:cses_document_collab/src/editor/collab_block_actions.dart:266:7)
+<asynchronous suspension>
+
+00:03 +44: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: audio copies full media URL with failure protection
+00:03 +45: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: native seven style gallery
+00:03 +46: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: preview command validates permission lifetime (false)
+00:03 +47: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: preview command validates permission lifetime (true)
+00:03 +48: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: callout production menu copies its paragraph reference
+00:04 +49: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: callout production more menu inserts an editable final sibling
+00:04 +50: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: callout readonly hides insertion controls
+00:04 +51: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: meeting production menu copies its paragraph reference
+00:04 +52: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: meeting production more menu inserts an editable final sibling
+00:04 +53: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: meeting readonly hides insertion controls
+00:04 +54: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: task production menu copies its paragraph reference
+00:04 +55: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: task production more menu inserts an editable final sibling
+00:04 +56: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: task readonly hides insertion controls
+00:04 +57: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: image production menu copies its paragraph reference
+00:04 +58: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: image production more menu inserts an editable final sibling
+00:04 +59: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: image readonly hides insertion controls
+00:04 +60: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: video production menu copies its paragraph reference
+DocCollab: 文档视频加载失败: Bad state: fixture offline
+#0      _UnavailableVideo.createWithOptions (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart:36:7)
+#1      VideoPlayerController.initialize (package:video_player/video_player.dart:615:37)
+#2      _VideoBlockState._initializeVideo (package:cses_document_collab/src/editor/collab_video_block.dart:127:24)
+<asynchronous suspension>
+
+00:04 +61: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: video production more menu inserts an editable final sibling
+DocCollab: 文档视频加载失败: Bad state: fixture offline
+#0      _UnavailableVideo.createWithOptions (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart:36:7)
+#1      VideoPlayerController.initialize (package:video_player/video_player.dart:615:37)
+#2      _VideoBlockState._initializeVideo (package:cses_document_collab/src/editor/collab_video_block.dart:127:24)
+<asynchronous suspension>
+
+00:04 +62: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: video readonly hides insertion controls
+DocCollab: 文档视频加载失败: Bad state: fixture offline
+#0      _UnavailableVideo.createWithOptions (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart:36:7)
+#1      VideoPlayerController.initialize (package:video_player/video_player.dart:615:37)
+#2      _VideoBlockState._initializeVideo (package:cses_document_collab/src/editor/collab_video_block.dart:127:24)
+<asynchronous suspension>
+
+00:04 +63: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: audio production menu copies its paragraph reference
+00:05 +64: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: audio production more menu inserts an editable final sibling
+00:05 +65: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: audio readonly hides insertion controls
+00:05 +66: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: attachment production menu copies its paragraph reference
+00:05 +67: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: attachment production more menu inserts an editable final sibling
+00:05 +68: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: attachment readonly hides insertion controls
+00:05 +69: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: formula production menu copies its paragraph reference
+00:05 +70: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: formula production more menu inserts an editable final sibling
+00:05 +71: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: formula readonly hides insertion controls
+00:05 +72: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: code production menu copies its paragraph reference
+00:05 +73: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: code production more menu inserts an editable final sibling
+00:05 +74: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: code readonly hides insertion controls
+00:05 +75: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: nested task insertion stays inside callout and accepts IME input
+00:06 +76: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: open task menu handles reorder safely
+00:06 +77: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: open task menu handles delete safely
+00:06 +78: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: open task menu handles readonly safely
+00:06 +79: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: open task menu handles reference safely
+00:06 +80: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: open task menu handles session safely
+00:06 +81: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: open task menu handles revokeRestore safely
+00:06 +82: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: insertion refuses detached nodes and unsupported table parents
+00:06 +83: All tests passed!

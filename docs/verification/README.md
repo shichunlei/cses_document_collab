@@ -77,6 +77,8 @@
 
 ### 提及、会议、任务与 KR
 
+- [card-tap-actions-20261026](card-tap-actions-20261026/)（[人员、天气、日期卡片去额外外框与整卡操作](card-tap-actions-20261026/report.md)，[刷新入口移入操作面板](card-tap-actions-20261026/weather-refresh.md)；[锁标跟随卡片本体](card-tap-actions-20261026/card-lock-layout.md)，跨功能证据统一归档于此。）
+
 - [person-card-20261025](person-card-20261025/)（[人员卡片正式节点、原生设置与协同验证](person-card-20261025/report.md)）
 
 - [entity-mention-20261015](entity-mention-20261015/)

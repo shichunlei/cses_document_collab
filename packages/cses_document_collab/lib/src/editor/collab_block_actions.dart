@@ -186,9 +186,10 @@ class CollabBlockMoreButton extends StatelessWidget {
   /// Builds the launcher in borrowed [context], reacting to current permissions.
   /// Custom launchers stay visible with a null callback when unavailable; the
   /// default ellipsis remains hidden in preview without readonly actions.
+  /// 展示预览保留自定义卡片本体并传入空回调，避免以整卡触发的内容消失。
   @override
   Widget build(BuildContext context) => CollabEditorDisplayScope.maybeOf(context)?.preview == true
-      ? const SizedBox.shrink()
+      ? (triggerBuilder == null ? const SizedBox.shrink() : ExcludeFocus(child: triggerBuilder!(context, null)))
       : ListenableBuilder(
           listenable: Listenable.merge([editor.editableNotifier, CollabBlockLocks.of(editor)]),
           builder: (context, _) {
@@ -450,10 +451,11 @@ final _pending = Expando<bool>('block-more-actions');
 };
 
 /// 根据操作文案[label]返回语义图标；下载优先于打开，避免附件复合操作误用外链图标。
-/// 删除、复制、颜色和外部打开分别使用对应Lucide图标，其余编辑命令使用铅笔。
+/// 删除、复制、刷新、颜色和外部打开分别使用对应Lucide图标，其余编辑命令使用铅笔。
 IconData _blockActionIcon(String label) {
   if (label.contains('删除')) return LucideIcons.trash2;
   if (label.contains('复制')) return LucideIcons.copy;
+  if (label.contains('刷新')) return LucideIcons.refreshCw;
   if (label.contains('下载')) return LucideIcons.download;
   if (label.contains('打开')) return LucideIcons.externalLink;
   if (label.contains('颜色')) return LucideIcons.palette;

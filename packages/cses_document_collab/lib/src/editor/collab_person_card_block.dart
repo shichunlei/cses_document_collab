@@ -3,16 +3,19 @@ import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'package:cses_document_collab/src/editor/collab_person_card_settings.dart';
 import 'package:cses_document_collab/src/model/collab_person_card.dart';
-import 'package:cses_document_collab/src/ui/modal/collab_card_frame.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_person_card_visual.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-/// 为正式 person-card 注册可选中的无正文组件；更多菜单提供设置和整块删除。
+/// 为正式 person-card 注册可选中的无正文组件；点击整卡打开设置、锁定与整块删除操作。
 /// ```dart
+/// import 'package:appflowy_editor/appflowy_editor.dart';
 /// import 'package:cses_document_collab/src/editor/collab_person_card_block.dart';
-/// final builder = CollabPersonCardBlockComponentBuilder();
-/// // 在 AppFlowyEditor 的 blockComponentBuilders 中以 'person-card' 注册。
+/// final state = EditorState.blank(); // 页面关闭时由创建方 dispose。
+/// final editor = AppFlowyEditor(editorState: state, blockComponentBuilders: {
+///   ...standardBlockComponentBuilderMap,
+///   'person-card': CollabPersonCardBlockComponentBuilder(),
+/// });
 /// ```
 class CollabPersonCardBlockComponentBuilder extends BlockComponentBuilder {
   /// 创建无资源所有权的人员卡片组件工厂，编辑器由页面持有。
@@ -44,55 +47,55 @@ class _PersonCardBlockState extends State<_PersonCardBlock> with SelectableMixin
   /// 内部视觉边界，随本 Widget 释放，不绑定编辑输入。
   final _bodyKey = GlobalKey();
 
-  /// 在借用 [context] 内构建人员卡片，更多菜单提供样式设置、删除及公共锁操作。
+  /// 在借用 [context] 内构建无额外外框的人员卡片，点击整卡打开样式设置、删除及公共锁操作。
   /// 锁定时仅保留公共查看/解锁操作；只读时隐藏修改入口。
+  /// 锁标由卡片本体展示层定位，不使用整行宽度作为标记边界。
   @override
   Widget build(BuildContext context) {
     final editor = context.read<EditorState>();
     final node = widget.node;
     final id = node.attributes['cses_collab_block_id'] as String? ?? node.id;
-    final child = CollabCardFrame(
-      surfaceKey: _bodyKey,
-      margin: const EdgeInsets.symmetric(vertical: 6),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Align(
-              alignment: Alignment.centerRight,
-              child: CollabBlockMoreButton(
-                editor: editor,
-                node: node,
-                actions: [
-                  (
-                    label: '人员设置',
-                    key: const ValueKey('person-card-settings'),
-                    run: () async => await showCollabPersonCardSettings(context, editor, id),
-                  ),
-                  (
-                    label: '删除人员卡片',
-                    key: const ValueKey('person-card-delete'),
-                    run: () async {
-                      final current = findCollabPersonCard(editor, id);
-                      if (current == null || !canEditCollabNode(editor, current)) return;
-                      final transaction = editor.transaction..deleteNode(current);
-                      if (current.parent!.children.length == 1) {
-                        transaction.add(InsertOperation(current.path, [paragraphNode()]), transform: false);
-                      }
-                      transaction.afterSelection = null;
-                      if (editor.undoManager.undoStack.isNonEmpty) editor.undoManager.undoStack.last.seal();
-                      await editor.apply(transaction, withUpdateSelection: false, skipHistoryDebounce: true);
-                    },
-                  ),
-                ],
+    final child = CollabBlockMoreButton(
+      editor: editor,
+      node: node,
+      actions: [
+        (
+          label: '人员设置',
+          key: const ValueKey('person-card-settings'),
+          run: () async => await showCollabPersonCardSettings(context, editor, id),
+        ),
+        (
+          label: '删除人员卡片',
+          key: const ValueKey('person-card-delete'),
+          run: () async {
+            final current = findCollabPersonCard(editor, id);
+            if (current == null || !canEditCollabNode(editor, current)) return;
+            final transaction = editor.transaction..deleteNode(current);
+            if (current.parent!.children.length == 1) {
+              transaction.add(InsertOperation(current.path, [paragraphNode()]), transform: false);
+            }
+            transaction.afterSelection = null;
+            if (editor.undoManager.undoStack.isNonEmpty) editor.undoManager.undoStack.last.seal();
+            await editor.apply(transaction, withUpdateSelection: false, skipHistoryDebounce: true);
+          },
+        ),
+      ],
+      triggerBuilder: (context, onPressed) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6),
+        child: Semantics(
+          label: '人员卡片操作',
+          button: onPressed != null,
+          child: GestureDetector(
+            key: _bodyKey,
+            behavior: HitTestBehavior.opaque,
+            onTap: onPressed,
+            child: SizedBox(
+              width: double.infinity,
+              child: CollabPersonCardVisual(
+                card: CollabPersonCard(CollabPersonCard.readAttributes(node.attributes).values),
               ),
             ),
-            CollabPersonCardVisual(
-              card: CollabPersonCard(CollabPersonCard.readAttributes(node.attributes).values),
-            ),
-          ],
+          ),
         ),
       ),
     );

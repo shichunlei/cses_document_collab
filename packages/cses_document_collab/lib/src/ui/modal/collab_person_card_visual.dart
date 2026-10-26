@@ -3,10 +3,12 @@ import 'dart:math' as math;
 import 'package:cses_document_collab/src/model/collab_person_card.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_cached_image.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_card_lock_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// 编辑、预览和设置共用的原生人员卡片；只绘制定格数据，不查询或写入资料。
+/// 在块锁作用域内由本体展示固定大小锁标，作用域与权限仍由调用方提供。
 /// ```dart
 /// import 'package:cses_document_collab/src/model/collab_person_card.dart';
 /// import 'package:cses_document_collab/src/ui/modal/collab_person_card_visual.dart';
@@ -23,6 +25,7 @@ class CollabPersonCardVisual extends StatelessWidget {
   final AlignmentGeometry alignment;
 
   /// 在借用[context]内布局，固定框按视口缩小，文字换行并在用户设定的外框内裁剪。
+  /// 锁标随缩放后的卡片本体定位，保持14逻辑像素，不随整行可用宽度移动。
   @override
   Widget build(BuildContext context) {
     final props = card.values;
@@ -36,15 +39,12 @@ class CollabPersonCardVisual extends StatelessWidget {
     final width = dimension(props['width'], defaults.width * scale);
     final height = dimension(props['height'], defaults.height * scale);
     final color =
-        parseCollabBlockColor(props['color'] is String ? props['color'] as String : null) ??
-        const Color(0xFF1F2329);
+        parseCollabBlockColor(props['color'] is String ? props['color'] as String : null) ?? const Color(0xFF1F2329);
     final borderColor = parseCollabBlockColor(props['bc'] is String ? props['bc'] as String : null) ?? color;
     final fonts = card.fonts;
     final name = person?.name ?? '文档创建人';
     final pinyin = person?.pinyin ?? (person == null ? '拼音' : '');
-    final desc = card.departmentPosition == 'off'
-        ? ''
-        : person?.description ?? (person == null ? '部门/职务' : '');
+    final desc = card.departmentPosition == 'off' ? '' : person?.description ?? (person == null ? '部门/职务' : '');
     final column = card.style == 'column';
     final avatarSize =
         (column
@@ -135,10 +135,7 @@ class CollabPersonCardVisual extends StatelessWidget {
             padding: const EdgeInsets.all(4),
             child: LayoutBuilder(
               builder: (_, constraints) => column || constraints.maxWidth < avatarSize + 24
-                  ? Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [avatar, const SizedBox(height: 6), content],
-                    )
+                  ? Column(mainAxisSize: MainAxisSize.min, children: [avatar, const SizedBox(height: 6), content])
                   : Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -165,10 +162,13 @@ class CollabPersonCardVisual extends StatelessWidget {
           alignment: alignment,
           widthFactor: 1,
           heightFactor: 1,
-          child: SizedBox(
-            width: width * fit,
-            height: height * fit,
-            child: FittedBox(fit: BoxFit.fill, child: design),
+          child: CollabCardLockOverlay(
+            child: SizedBox(
+              key: const ValueKey('collab-person-card-surface'),
+              width: width * fit,
+              height: height * fit,
+              child: FittedBox(fit: BoxFit.fill, child: design),
+            ),
           ),
         );
       },

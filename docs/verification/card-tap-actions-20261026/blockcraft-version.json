@@ -1,0 +1,82 @@
+{
+  "date": "2026-10-26",
+  "registry": "http://npm.runtongqiuben.com/",
+  "latest": null,
+  "latestStatus": "待核对：首次ENOTFOUND，授权联网重试ECONNRESET",
+  "declared": "0.11.30",
+  "yarn": "0.11.30",
+  "pnpm": "0.2.78",
+  "installed": "0.11.17",
+  "upgraded": false,
+  "packages": {
+    "installed": {
+      "version": "0.11.17",
+      "documentsSha256": {
+        "blockcraft.md": "15f256fc6e1ffb131d114371605feab0a4c58f1a6cc76b20bbba3011001f2dc1",
+        "blockcraft-block.md": "815dcb2478cbcafc6ed3aa1a9e6fa86e0473e73aced36f56ae17f3d59107ce41",
+        "MIGRATIONS.md": "4c87c528886aed39605183f6c6d812d04d94b600c4931f314bb611e689edf5dd"
+      },
+      "schemasSha256": {
+        "PersonCardBlockSchema": "e7707fd2e9f57f7827a626b5b55306032b3711f0313796ec7200f6da255852c2",
+        "DateCardBlockSchema": "7eae948736874dbd004551b3bda686daf85639c88f10809108edcefe84f9191c",
+        "WeatherBlockSchema": "98e1fd87a55f29e79826b457012fff7055aa76c07339c5cee7748f01767d26f9"
+      }
+    },
+    "declaredCachedArtifact": {
+      "version": "0.11.30",
+      "documentsSha256": {
+        "blockcraft.md": "f8b0ed3c2afcb2e03334b9bd6bedb1f7a2c502a303472447367701cdbac39ffd",
+        "blockcraft-block.md": "450dc1d55049c43a4cb579db47d9af9c5c162af71a897686bb0e9cc6b97b7019",
+        "MIGRATIONS.md": "33f0840c7d98f89407e7237fa41aacfbc8b8d29eb826c1aeecbe318c509ec867"
+      },
+      "schemasSha256": {
+        "PersonCardBlockSchema": "e7707fd2e9f57f7827a626b5b55306032b3711f0313796ec7200f6da255852c2",
+        "DateCardBlockSchema": "7eae948736874dbd004551b3bda686daf85639c88f10809108edcefe84f9191c",
+        "WeatherBlockSchema": "98e1fd87a55f29e79826b457012fff7055aa76c07339c5cee7748f01767d26f9"
+      }
+    }
+  },
+  "weatherRefreshFollowup": {
+    "date": "2026-10-26",
+    "query": "npm view @ccc/blockcraft@latest version --json",
+    "latestStatus": "待核对：授权联网查询ECONNRESET",
+    "declared": "0.11.30",
+    "yarn": "0.11.30",
+    "installed": "0.11.17",
+    "reread": "安装包及本地0.11.30产物随包L0、块技能、MIGRATIONS、WeatherBlockComponent刷新实现；文档指纹与同日记录一致",
+    "upgraded": false
+  },
+  "cardLockLayoutFollowup": {
+    "date": "2026-10-26",
+    "latestStatus": "待核对：授权联网查询ECONNRESET",
+    "declared": "0.11.30",
+    "yarn": "0.11.30",
+    "installed": "0.11.17",
+    "upgraded": false,
+    "packages": {
+      "installed": {
+        "documentsSha256": {
+          "blockcraft.md": "15f256fc6e1ffb131d114371605feab0a4c58f1a6cc76b20bbba3011001f2dc1",
+          "blockcraft-block.md": "815dcb2478cbcafc6ed3aa1a9e6fa86e0473e73aced36f56ae17f3d59107ce41",
+          "MIGRATIONS.md": "4c87c528886aed39605183f6c6d812d04d94b600c4931f314bb611e689edf5dd"
+        }
+      },
+      "declaredCachedArtifact": {
+        "documentsSha256": {
+          "blockcraft.md": "f8b0ed3c2afcb2e03334b9bd6bedb1f7a2c502a303472447367701cdbac39ffd",
+          "blockcraft-block.md": "450dc1d55049c43a4cb579db47d9af9c5c162af71a897686bb0e9cc6b97b7019",
+          "MIGRATIONS.md": "33f0840c7d98f89407e7237fa41aacfbc8b8d29eb826c1aeecbe318c509ec867"
+        }
+      }
+    }
+  },
+  "commitCheck": {
+    "date": "2026-10-26",
+    "latestStatus": "待核对：提交前授权联网重查ECONNRESET",
+    "declared": "0.11.30",
+    "yarn": "0.11.30",
+    "installed": "0.11.17",
+    "upgraded": false,
+    "documentsAndSchemaFingerprintsUnchanged": true
+  }
+}

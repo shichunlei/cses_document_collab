@@ -3,16 +3,19 @@ import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'package:cses_document_collab/src/editor/collab_weather_settings.dart';
 import 'package:cses_document_collab/src/model/collab_weather.dart';
-import 'package:cses_document_collab/src/ui/modal/collab_card_frame.dart';
 import 'package:cses_document_collab/src/editor/collab_weather_content.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-/// 为正式 weather 注册可选中的无正文组件；更多菜单提供设置和整块删除。
+/// 为正式 weather 注册可选中的无正文组件；点击整卡打开刷新、设置、锁定与整块删除操作。
 /// ```dart
+/// import 'package:appflowy_editor/appflowy_editor.dart';
 /// import 'package:cses_document_collab/src/editor/collab_weather_block.dart';
-/// final builder = CollabWeatherBlockComponentBuilder();
-/// // 在 AppFlowyEditor 的 blockComponentBuilders 中以 'weather' 注册。
+/// final state = EditorState.blank(); // 页面关闭时由创建方 dispose。
+/// final editor = AppFlowyEditor(editorState: state, blockComponentBuilders: {
+///   ...standardBlockComponentBuilderMap,
+///   'weather': CollabWeatherBlockComponentBuilder(),
+/// });
 /// ```
 class CollabWeatherBlockComponentBuilder extends BlockComponentBuilder {
   /// 创建无资源所有权的天气卡片组件工厂，编辑器由页面持有。
@@ -44,53 +47,56 @@ class _WeatherBlockState extends State<_WeatherBlock> with SelectableMixin {
   /// 内部视觉边界，随本 Widget 释放，不绑定编辑输入。
   final _bodyKey = GlobalKey();
 
-  /// 在借用 [context] 内构建天气卡片，更多菜单提供样式设置、删除及公共锁操作。
+  /// 在借用 [context] 内构建无额外外框的天气卡片，点击整卡打开刷新、样式设置、删除及公共锁操作。
   /// 锁定时仅保留公共查看/解锁操作；只读时隐藏修改入口。
+  /// 锁标由卡片本体展示层定位，不使用整行宽度作为标记边界。
   @override
   Widget build(BuildContext context) {
     final editor = context.read<EditorState>();
     final node = widget.node;
     final id = node.attributes['cses_collab_block_id'] as String? ?? node.id;
-    final child = CollabCardFrame(
-      surfaceKey: _bodyKey,
-      margin: const EdgeInsets.symmetric(vertical: 6),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Align(
-              alignment: Alignment.centerRight,
-              child: CollabBlockMoreButton(
-                editor: editor,
-                node: node,
-                actions: [
-                  (
-                    label: '天气设置',
-                    key: const ValueKey('weather-settings'),
-                    run: () async => await showCollabWeatherSettings(context, editor, id),
-                  ),
-                  (
-                    label: '删除天气卡片',
-                    key: const ValueKey('weather-delete'),
-                    run: () async {
-                      final current = findCollabWeather(editor, id);
-                      if (current == null || !canEditCollabNode(editor, current)) return;
-                      final transaction = editor.transaction..deleteNode(current);
-                      if (current.parent!.children.length == 1) {
-                        transaction.add(InsertOperation(current.path, [paragraphNode()]), transform: false);
-                      }
-                      transaction.afterSelection = null;
-                      if (editor.undoManager.undoStack.isNonEmpty) editor.undoManager.undoStack.last.seal();
-                      await editor.apply(transaction, withUpdateSelection: false, skipHistoryDebounce: true);
-                    },
-                  ),
-                ],
-              ),
+    final child = CollabWeatherContent(
+      editor: editor,
+      node: node,
+      id: id,
+      actionBuilder: (content, refresh) => CollabBlockMoreButton(
+        editor: editor,
+        node: node,
+        actions: [
+          if (refresh != null) (label: '刷新天气', key: const ValueKey('weather-refresh'), run: refresh),
+          (
+            label: '天气设置',
+            key: const ValueKey('weather-settings'),
+            run: () async => await showCollabWeatherSettings(context, editor, id),
+          ),
+          (
+            label: '删除天气卡片',
+            key: const ValueKey('weather-delete'),
+            run: () async {
+              final current = findCollabWeather(editor, id);
+              if (current == null || !canEditCollabNode(editor, current)) return;
+              final transaction = editor.transaction..deleteNode(current);
+              if (current.parent!.children.length == 1) {
+                transaction.add(InsertOperation(current.path, [paragraphNode()]), transform: false);
+              }
+              transaction.afterSelection = null;
+              if (editor.undoManager.undoStack.isNonEmpty) editor.undoManager.undoStack.last.seal();
+              await editor.apply(transaction, withUpdateSelection: false, skipHistoryDebounce: true);
+            },
+          ),
+        ],
+        triggerBuilder: (context, onPressed) => Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          child: Semantics(
+            label: '天气卡片操作',
+            button: onPressed != null,
+            child: GestureDetector(
+              key: _bodyKey,
+              behavior: HitTestBehavior.opaque,
+              onTap: onPressed,
+              child: SizedBox(width: double.infinity, child: content),
             ),
-            CollabWeatherContent(editor: editor, node: node, id: id),
-          ],
+          ),
         ),
       ),
     );

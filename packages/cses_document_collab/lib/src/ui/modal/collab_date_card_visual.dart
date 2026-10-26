@@ -2,9 +2,11 @@ import 'dart:math' as math;
 
 import 'package:cses_document_collab/src/model/collab_date_card.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_card_lock_overlay.dart';
 import 'package:flutter/material.dart';
 
 /// 日期卡片的原生展示，编辑、预览和设置草稿共用；不写日期或持有编辑器。
+/// 在块锁作用域内由本体展示固定大小锁标，作用域与权限仍由调用方提供。
 /// ```dart
 /// import 'package:cses_document_collab/src/model/collab_date_card.dart';
 /// import 'package:cses_document_collab/src/ui/modal/collab_date_card_visual.dart';
@@ -22,6 +24,7 @@ class CollabDateCardVisual extends StatelessWidget {
   final AlignmentGeometry alignment;
 
   /// 在借用 [context] 中按手机宽度缩小固定设计框；系统大字保持框内可读且不溢出。
+  /// 锁标跟随实际等比缩放的日期边界，保持固定大小，不覆盖整行右边缘。
   @override
   Widget build(BuildContext context) {
     final style = card.style;
@@ -293,12 +296,26 @@ class CollabDateCardVisual extends StatelessWidget {
               : width * (dateCardSize(style, card.format).height) / (spec.width + 8);
           final available = constraints.maxWidth.isFinite ? constraints.maxWidth : width;
           final actual = math.min(width, available).clamp(1.0, 4096.0);
+          final frame = constraints.loosen().constrain(Size(actual, (height * actual / width).clamp(1.0, 4096.0)));
+          final fitted = applyBoxFit(
+            BoxFit.contain,
+            Size(spec.width, dateCardSize(style, card.format).height - 8),
+            frame,
+          ).destination;
           return Align(
             alignment: alignment,
-            child: SizedBox(
-              width: actual,
-              height: (height * actual / width).clamp(1.0, 4096.0),
-              child: FittedBox(fit: BoxFit.contain, alignment: alignment, child: content),
+            child: SizedBox.fromSize(
+              size: frame,
+              child: Align(
+                alignment: alignment,
+                child: CollabCardLockOverlay(
+                  child: SizedBox.fromSize(
+                    key: const ValueKey('collab-date-card-surface'),
+                    size: fitted,
+                    child: FittedBox(fit: BoxFit.contain, alignment: alignment, child: content),
+                  ),
+                ),
+              ),
             ),
           );
         },

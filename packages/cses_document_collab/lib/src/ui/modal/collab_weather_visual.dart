@@ -2,10 +2,12 @@ import 'dart:math' as math;
 
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
 import 'package:cses_document_collab/src/model/collab_weather.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_card_lock_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// 七种桌面天气布局的原生展示；只借用快照，不创建请求、不写共享属性。
+/// 在块锁作用域内由本体展示固定大小锁标，作用域与权限仍由调用方提供。
 /// ```dart
 /// import 'package:cses_document_collab/src/model/collab_weather.dart';
 /// import 'package:cses_document_collab/src/ui/modal/collab_weather_visual.dart';
@@ -36,6 +38,7 @@ class CollabWeatherVisual extends StatelessWidget {
   final AlignmentGeometry alignment;
 
   /// 按借用 [context] 的文档字色和可用宽度绘制固定比例；窄屏只缩小展示不改尺寸。
+  /// 锁标定位在缩放后实际天气框右上角，独立于行宽和卡片内的字体缩放。
   @override
   Widget build(BuildContext context) {
     final props = card.values;
@@ -285,27 +288,37 @@ class CollabWeatherVisual extends StatelessWidget {
       child: LayoutBuilder(
         builder: (context, constraints) {
           final fittedWidth = constraints.maxWidth.isFinite ? math.min(width, constraints.maxWidth) : width;
+          final frame = constraints.loosen().constrain(Size(fittedWidth, height * fittedWidth / width));
+          final fitted = applyBoxFit(BoxFit.contain, Size(size.width, size.height), frame).destination;
           return Align(
             alignment: alignment,
-            child: SizedBox(
-              width: fittedWidth,
-              height: height * fittedWidth / width,
-              child: FittedBox(
-                fit: BoxFit.contain,
+            child: SizedBox.fromSize(
+              size: frame,
+              child: Align(
                 alignment: alignment,
-                child: SizedBox(
-                  width: size.width,
-                  height: size.height,
-                  child: CustomPaint(
-                    foregroundPainter: _WeatherBorder(bw, bc, border?.group(2) ?? 'solid'),
-                    child: Padding(
-                      padding: const EdgeInsets.all(4),
+                child: CollabCardLockOverlay(
+                  child: SizedBox.fromSize(
+                    key: const ValueKey('collab-weather-surface'),
+                    size: fitted,
+                    child: FittedBox(
+                      fit: BoxFit.contain,
+                      alignment: alignment,
                       child: SizedBox(
-                        width: layout.width,
-                        height: layout.height,
-                        child: ColoredBox(
-                          color: bg,
-                          child: MediaQuery.withClampedTextScaling(maxScaleFactor: 1.0, child: content),
+                        width: size.width,
+                        height: size.height,
+                        child: CustomPaint(
+                          foregroundPainter: _WeatherBorder(bw, bc, border?.group(2) ?? 'solid'),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4),
+                            child: SizedBox(
+                              width: layout.width,
+                              height: layout.height,
+                              child: ColoredBox(
+                                color: bg,
+                                child: MediaQuery.withClampedTextScaling(maxScaleFactor: 1.0, child: content),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),

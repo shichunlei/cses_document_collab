@@ -9,7 +9,7 @@ import 'package:cses_document_collab/src/editor/blockcraft_json_codec.dart';
 import 'package:cses_document_collab/src/editor/blockcraft_snapshot_view.dart';
 import 'package:cses_document_collab/src/editor/collab_block_delete.dart';
 import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
-import 'package:cses_document_collab/src/editor/collab_weather_content.dart';
+import 'package:cses_document_collab/src/editor/collab_weather_block.dart';
 import 'package:cses_document_collab/src/editor/collab_weather_settings.dart';
 import 'package:cses_document_collab/src/editor/core/document_editor_controller.dart';
 import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
@@ -22,9 +22,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:cses_document_collab/src/ui/modal/collab_menu_row.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// 天气块正式协议、历史、设置草稿、异步会话及窄屏布局回归。
 void main() {
+  setUp(() {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockStreamHandler(
+      const EventChannel('keyboardHeightEventChannel'),
+      MockStreamHandler.inline(onListen: (_, events) => events.success(0.0)),
+    );
+  });
   test('frozen weather requires valid data and live mode ignores old frozen', () {
     final raw = {'temp': 20, 'condition': '晴', 'location': '北京', 'tone': 'future'};
     final fixed = CollabWeather({'date': '2026-10-25', 'frozen': raw, 'style': 'future'});
@@ -41,10 +50,7 @@ void main() {
     final adapter = AppFlowyBlockEditorAdapter(initialBlocks: _blocks(), onLocalBlocksChanged: published.add);
     addTearDown(adapter.dispose);
     final state = adapter.editorState;
-    expect(
-      await changeCollabWeatherProperties(state, 'weather', {'style': 'ledger', 'range': 'off'}),
-      isTrue,
-    );
+    expect(await changeCollabWeatherProperties(state, 'weather', {'style': 'ledger', 'range': 'off'}), isTrue);
     expect(jsonDecode(published.last.first.resource!.propertyEdits!), {
       'style': {'value': 'ledger'},
       'range': {'value': 'off'},
@@ -93,8 +99,7 @@ void main() {
 
   test('JSON creates native weather and cleared palette overrides never revive', () async {
     final fixture =
-        jsonDecode(await File('rust/tests/fixtures/blockcraft-weather.json').readAsString())
-            as Map<String, dynamic>;
+        jsonDecode(await File('rust/tests/fixtures/blockcraft-weather.json').readAsString()) as Map<String, dynamic>;
     fixture['children'] = [(fixture['children'] as List).first];
     final owner = DocumentEditorController(document: BlockCraftJsonCodec.decode(fixture));
     addTearDown(owner.close);
@@ -146,12 +151,7 @@ void main() {
                   child: SizedBox(
                     width: 280,
                     child: CollabWeatherVisual(
-                      card: CollabWeather({
-                        'style': style,
-                        'palette': palette,
-                        'bw': '3px double',
-                        'width': 600,
-                      }),
+                      card: CollabWeather({'style': style, 'palette': palette, 'bw': '3px double', 'width': 600}),
                       weather: _weather,
                     ),
                   ),
@@ -214,6 +214,49 @@ void main() {
     adapter.dispose();
   });
 
+  for (final scenario in ['locked', 'readonly', 'no-service']) {
+    testWidgets('weather refresh menu excludes unavailable action: $scenario', (tester) async {
+      var calls = 0;
+      final adapter = AppFlowyBlockEditorAdapter(initialBlocks: _blocks(), onLocalBlocksChanged: (_) {});
+      EditorCommandContext.bind(
+        adapter.editorState,
+        EditorCommandContext(
+          services: CollabHostServices(
+            loadWeather: scenario == 'no-service'
+                ? null
+                : ({date, required refresh, required cancelled}) async {
+                    calls++;
+                    return _weather;
+                  },
+          ),
+        ),
+      );
+      final locks = CollabBlockLocks(
+        editor: adapter.editorState,
+        userId: 'u1',
+        canUnlock: (_) => false,
+        commit: (_, _, _) async {},
+      );
+      locks.update([
+        CollabBlockLockState(
+          blockId: 'weather',
+          sourceId: scenario == 'locked' ? 'weather' : null,
+          ownerId: scenario == 'locked' ? 'u2' : null,
+        ),
+      ]);
+      if (scenario == 'readonly') adapter.editorState.editable = false;
+      await _contentHost(tester, adapter);
+      await _openWeatherMenu(tester);
+      expect(find.byKey(const ValueKey('weather-refresh')), findsNothing);
+      expect(calls, 0);
+      await tester.tap(find.byTooltip('关闭'));
+      await tester.pumpAndSettle();
+      await tester.pumpWidget(const SizedBox());
+      locks.dispose();
+      adapter.dispose();
+    });
+  }
+
   testWidgets('fixed snapshot avoids requests; explicit refresh is undoable and failure keeps old data', (
     tester,
   ) async {
@@ -237,7 +280,7 @@ void main() {
     );
     await _contentHost(tester, adapter);
     expect(calls, 0);
-    await tester.tap(find.byKey(const ValueKey('weather-refresh')));
+    await _refreshFromMenu(tester);
     await tester.pumpAndSettle();
     expect(calls, 1);
     expect(adapter.blocks.first.resource!.values['frozen']['temp'], 26);
@@ -245,29 +288,33 @@ void main() {
     await tester.pumpAndSettle();
     expect(adapter.blocks.first.resource!.values['frozen']['temp'], 20);
     fail = true;
-    await tester.tap(find.byKey(const ValueKey('weather-refresh')));
+    await _refreshFromMenu(tester);
     await tester.pumpAndSettle();
     expect(adapter.blocks.first.resource!.values['frozen']['temp'], 20);
-    expect(find.text('重试天气'), findsOneWidget);
+    expect(find.textContaining('天气加载失败，请重试'), findsOneWidget);
+    expect(find.byKey(const ValueKey('weather-refresh')), findsNothing);
+    await _openWeatherMenu(tester);
+    expect(find.text('刷新天气'), findsOneWidget);
+    fail = false;
+    await tester.tap(find.byKey(const ValueKey('weather-refresh')));
+    await tester.pumpAndSettle();
+    expect(calls, 3);
+    expect(adapter.blocks.first.resource!.values['frozen']['temp'], 26);
     await tester.pumpWidget(const SizedBox());
     adapter.dispose();
   });
 
-  testWidgets('live responses never persist; revoked pending refresh cannot write after restore', (
-    tester,
-  ) async {
+  testWidgets('live responses never persist; revoked pending refresh cannot write after restore', (tester) async {
     final response = Completer<CollabWeatherData>();
     final adapter = AppFlowyBlockEditorAdapter(initialBlocks: _blocks(), onLocalBlocksChanged: (_) {});
     EditorCommandContext.bind(
       adapter.editorState,
       EditorCommandContext(
-        services: CollabHostServices(
-          loadWeather: ({date, required refresh, required cancelled}) => response.future,
-        ),
+        services: CollabHostServices(loadWeather: ({date, required refresh, required cancelled}) => response.future),
       ),
     );
     await _contentHost(tester, adapter);
-    await tester.tap(find.byKey(const ValueKey('weather-refresh')));
+    await _refreshFromMenu(tester);
     await tester.pump();
     adapter.editorState.editable = false;
     adapter.editorState.editable = true;
@@ -291,9 +338,7 @@ void main() {
     EditorCommandContext.bind(
       live.editorState,
       EditorCommandContext(
-        services: CollabHostServices(
-          loadWeather: ({date, required refresh, required cancelled}) async => _weather,
-        ),
+        services: CollabHostServices(loadWeather: ({date, required refresh, required cancelled}) async => _weather),
       ),
     );
     await _contentHost(tester, live);
@@ -320,9 +365,7 @@ void main() {
     EditorCommandContext.bind(
       adapter.editorState,
       EditorCommandContext(
-        services: CollabHostServices(
-          loadWeather: ({date, required refresh, required cancelled}) => response.future,
-        ),
+        services: CollabHostServices(loadWeather: ({date, required refresh, required cancelled}) => response.future),
       ),
     );
     await _settingsHost(tester, adapter.editorState);
@@ -348,8 +391,7 @@ void main() {
     const font = String.fromEnvironment('WEATHER_PREVIEW_FONT');
     if (font.isNotEmpty) {
       await tester.runAsync(() async {
-        final loader = FontLoader('WeatherPreview')
-          ..addFont(File(font).readAsBytes().then(ByteData.sublistView));
+        final loader = FontLoader('WeatherPreview')..addFont(File(font).readAsBytes().then(ByteData.sublistView));
         await loader.load();
       });
     }
@@ -417,11 +459,7 @@ List<CollabEditorBlock> _blocks() => [
     id: 'weather',
     blockType: 'weather',
     text: '',
-    resource: CollabResource.fromValues({
-      'date': '2026-10-25',
-      'style': 'classic',
-      'frozen': _weather.toJson(),
-    }),
+    resource: CollabResource.fromValues({'date': '2026-10-25', 'style': 'classic', 'frozen': _weather.toJson()}),
   ),
   const CollabEditorBlock(id: 'p', blockType: 'paragraph', text: '正文'),
 ];
@@ -442,18 +480,43 @@ Future<void> _settingsHost(WidgetTester tester, EditorState state) async {
   );
 }
 
-/// 由 [tester] 承载借用 [adapter] 中当前天气节点，不关闭编辑器。
+/// 由 [tester] 承载借用 [adapter] 的正式天气块与公共操作菜单，不关闭编辑器。
 Future<void> _contentHost(WidgetTester tester, AppFlowyBlockEditorAdapter adapter) async {
   await tester.pumpWidget(
     MaterialApp(
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        AppFlowyEditorLocalizations.delegate,
+      ],
       home: Scaffold(
-        body: CollabWeatherContent(
-          editor: adapter.editorState,
-          node: adapter.editorState.document.root.children.first,
-          id: 'weather',
+        body: AppFlowyEditor(
+          editorState: adapter.editorState,
+          editable: adapter.editorState.editable,
+          blockComponentBuilders: {
+            ...standardBlockComponentBuilderMap,
+            'weather': CollabWeatherBlockComponentBuilder(),
+          },
         ),
       ),
     ),
   );
-  await tester.pump();
+  await tester.pumpAndSettle();
+}
+
+/// 使用[tester]点击天气卡片打开操作菜单；正文不直接提供刷新按钮。
+Future<void> _openWeatherMenu(WidgetTester tester) async {
+  expect(find.byKey(const ValueKey('weather-refresh')), findsNothing);
+  await tester.tap(find.byWidgetPredicate((widget) => widget is Semantics && widget.properties.label == '天气卡片操作'));
+  await tester.pumpAndSettle();
+}
+
+/// 使用[tester]执行公共菜单中的刷新，并等待菜单退场及请求启动。
+Future<void> _refreshFromMenu(WidgetTester tester) async {
+  await _openWeatherMenu(tester);
+  final refresh = find.byKey(const ValueKey('weather-refresh'));
+  expect((tester.widget<CollabMenuRow>(refresh).leading as Icon).icon, LucideIcons.refreshCw);
+  await tester.tap(refresh);
+  await tester.pumpAndSettle();
 }

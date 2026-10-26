@@ -18,7 +18,14 @@ import 'package:flutter/material.dart';
 /// ```
 class CollabWeatherContent extends StatefulWidget {
   /// [key]控制身份；[editor]/[node]由调用方释放，[id]是稳定协同块身份。
-  const CollabWeatherContent({super.key, required this.editor, required this.node, required this.id});
+  /// [actionBuilder]可选，借用展示内容和刷新回调构建操作入口；默认仅显示内容。
+  const CollabWeatherContent({
+    super.key,
+    required this.editor,
+    required this.node,
+    required this.id,
+    this.actionBuilder,
+  });
 
   /// 借用的编辑器。
   final EditorState editor;
@@ -28,6 +35,10 @@ class CollabWeatherContent extends StatefulWidget {
 
   /// 协同稳定身份，用于重排后定位。
   final String id;
+
+  /// 可选操作外壳；接收卡片内容及异步刷新回调，资源仍由本组件持有。
+  /// 无天气服务、请求进行中或当前不可编辑时回调为null；不在正文内绘制刷新按钮。
+  final Widget Function(Widget content, Future<void> Function()? refresh)? actionBuilder;
 
   /// 创建请求代次和本地实时值的所有者。
   @override
@@ -70,9 +81,7 @@ class _WeatherContentState extends State<CollabWeatherContent> {
 
   /// 原节点仍存在且编辑器未关闭时才允许响应影响本组件。
   bool get _alive =>
-      mounted &&
-      !widget.editor.isDisposed &&
-      identical(findCollabWeather(widget.editor, widget.id), widget.node);
+      mounted && !widget.editor.isDisposed && identical(findCollabWeather(widget.editor, widget.id), widget.node);
 
   /// 源属性变化清除实时值；权限变化终止当前等待，恢复权限不会恢复旧请求。
   void _observe() {
@@ -115,8 +124,7 @@ class _WeatherContentState extends State<CollabWeatherContent> {
         !_alive ||
         generation != _generation ||
         !identical(EditorCommandContext.of(widget.editor).services, services) ||
-        (refresh &&
-            (!canEditCollabNode(widget.editor, widget.node) || (_locks?.epoch(widget.id) ?? 0) != epoch)) ||
+        (refresh && (!canEditCollabNode(widget.editor, widget.node) || (_locks?.epoch(widget.id) ?? 0) != epoch)) ||
         CollabWeather.readAttributes(widget.node.attributes).properties != original;
     setState(() {
       _loading = true;
@@ -150,33 +158,23 @@ class _WeatherContentState extends State<CollabWeatherContent> {
   }
 
   /// 在借用 [context] 中展示快照和刷新状态；只读或无服务时保留明确占位。
+  /// 可用刷新能力借给操作外壳，卡片下方不再显示刷新或重试按钮。
   @override
   Widget build(BuildContext context) {
     final card = CollabWeather(CollabWeather.readAttributes(widget.node.attributes).values);
     final configured = EditorCommandContext.of(widget.editor).services.loadWeather != null;
-    return Column(
+    final content = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        CollabWeatherVisual(
-          card: card,
-          weather: card.frozen ?? _resolved,
-          status: _loading ? '加载中…' : _error,
-        ),
-        if (configured && canEditCollabNode(widget.editor, widget.node))
-          TextButton(
-            key: const ValueKey('weather-refresh'),
-            onPressed: _loading ? null : () => _load(refresh: true),
-            child: Text(
-              _loading
-                  ? '刷新中…'
-                  : _error == null
-                  ? '刷新天气'
-                  : '重试天气',
-            ),
-          ),
+        CollabWeatherVisual(card: card, weather: card.frozen ?? _resolved, status: _loading ? '加载中…' : _error),
         if (!configured && card.frozen == null) const Text('当前实例未提供天气服务'),
       ],
     );
+    return widget.actionBuilder?.call(
+          content,
+          configured && !_loading && canEditCollabNode(widget.editor, widget.node) ? () => _load(refresh: true) : null,
+        ) ??
+        content;
   }
 }
