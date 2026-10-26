@@ -1338,6 +1338,7 @@ fn schema_attribute(key: &str, formal: bool) -> &str {
 /// 在事务之前验证投影身份、父子顺序和块专属约束，失败不会修改共享状态。
 /// Mermaid 使用唯一的纯文本源码子块，容器及源码仅用于正式文档；KR引用同样仅用于正式文档且无正文。
 fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(), String> {
+    blockcraft::validate_columns(blocks)?;
     let by_id: HashMap<_, _> = blocks.iter().map(|b| (b.id.as_str(), b)).collect();
     let mut by_parent = HashMap::<&str, Vec<&CollabBlock>>::new();
     for block in blocks {
@@ -1417,7 +1418,7 @@ fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(
         }
         if matches!(
             block.block_type.as_str(),
-            "callout" | "table" | "table-row" | "table-cell" | "mermaid"
+            "callout" | "table" | "table-row" | "table-cell" | "columns" | "column" | "mermaid"
         ) {
             if !block.text.is_empty() || !block.segments.is_empty() || ancestors.len() >= 256 {
                 return Err("INVALID_CALLOUT: 高亮容器不能直接存储正文或超出嵌套限制".into());
@@ -1565,6 +1566,8 @@ fn is_supported_block_type(block_type: &str) -> bool {
             | "table"
             | "table-row"
             | "table-cell"
+            | "columns"
+            | "column"
             | "date-card"
                 | "person-card"
             | "weather"

@@ -139,7 +139,7 @@ Future<bool> changeCollabMermaid(
 }
 
 /// 在借用 [editor] 的保存 [selection] 起点插入 [source]，返回后置段落光标。
-/// 仅支持根/高亮内普通正文；空段落替换，非空段落完整保留。
+/// 仅支持根/高亮/单列内普通正文；空段落替换，非空段落完整保留。
 /// [view] 是新块的共享视图，默认仅预览；
 /// 容器及源码分别使用新身份，同一事务支持整体撤销。只读、关闭、无效位置或超限返回 null。
 Future<Selection?> insertCollabMermaid(
@@ -152,7 +152,7 @@ Future<Selection?> insertCollabMermaid(
     return null;
   }
   final anchor = editor.getNodeAtPath(selection.start.path);
-  if (anchor == null || anchor.delta == null || !const {'page', 'callout'}.contains(anchor.parent?.type)) {
+  if (anchor == null || anchor.delta == null || !const {'page', 'callout', 'column'}.contains(anchor.parent?.type)) {
     return null;
   }
   final text = Node(
@@ -183,7 +183,7 @@ Future<Selection?> insertCollabMermaid(
 Future<void> deleteCollabMermaid(EditorState editor, String id) async {
   if (editor.isDisposed || !editor.editable) return;
   final node = findCollabMermaid(editor, id);
-  if (collabMermaidSource(node) == null || !const {'page', 'callout'}.contains(node?.parent?.type)) {
+  if (collabMermaidSource(node) == null || !const {'page', 'callout', 'column'}.contains(node?.parent?.type)) {
     return;
   }
   final path = node!.path;

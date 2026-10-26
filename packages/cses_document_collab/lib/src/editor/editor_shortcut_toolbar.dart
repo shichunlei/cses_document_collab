@@ -24,6 +24,7 @@ import 'package:cses_document_collab/src/model/collab_color_palette.dart';
 import 'package:cses_document_collab/src/model/collab_person_card.dart';
 import 'package:cses_document_collab/src/model/collab_date_card.dart';
 import 'package:cses_document_collab/src/model/collab_weather.dart';
+import 'package:cses_document_collab/src/model/collab_columns.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
 import 'package:cses_document_collab/src/model/collab_formula.dart';
 import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
@@ -509,6 +510,13 @@ const _commonInsertions = [
     blockType: 'figma-embed',
   ),
   _CommonInsertionAction(
+    EditorKeyboardToolbarItem.columns,
+    '多栏布局',
+    LucideIcons.columns2,
+    'editor-shortcut-columns',
+    blockType: 'columns',
+  ),
+  _CommonInsertionAction(
     EditorKeyboardToolbarItem.table,
     '表格',
     LucideIcons.table2,
@@ -754,6 +762,8 @@ Future<Selection?> _performCommonInsertion(
       return await applyUrlBlockShortcut(state, selection, type, source.url, mediaSource: source);
     }
     switch (action.item) {
+      case EditorKeyboardToolbarItem.columns:
+        return await insertCollabColumns(state, current()!);
       case EditorKeyboardToolbarItem.table:
         return await insertCollabTable(state, current()!);
       case EditorKeyboardToolbarItem.callout:

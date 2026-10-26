@@ -46,11 +46,11 @@ BuildContext collabBlockActionContext(BuildContext context) {
 
 /// Inserts an empty sibling after borrowed [source] in [editor], as one undo step.
 /// Returns the inserted node or null for readonly, disposed, detached or unsupported
-/// parents. Root/callout children are supported, including whole containers.
+/// parents. Root/callout/column children are supported, including whole containers.
 /// Selection stays suspended; the caller restores input after its menu dismisses.
 /// Errors propagate through the apply future; neither borrowed argument is owned.
 Future<Node?> insertCollabParagraphBelow(EditorState editor, Node source) async {
-  if (editor.isDisposed || !editor.editable || !const {'page', 'callout'}.contains(source.parent?.type)) {
+  if (editor.isDisposed || !editor.editable || !const {'page', 'callout', 'column'}.contains(source.parent?.type)) {
     return null;
   }
   final id = source.attributes['cses_collab_block_id'] as String? ?? source.id;
@@ -197,7 +197,7 @@ class CollabBlockMoreButton extends StatelessWidget {
                 !editor.isDisposed &&
                 (CollabBlockLocks.of(editor)?.userId.isNotEmpty == true ||
                     (editor.editable
-                        ? const {'page', 'callout'}.contains(node.parent?.type)
+                        ? const {'page', 'callout', 'column', 'columns'}.contains(node.parent?.type)
                         : readOnlyActions.isNotEmpty));
             final VoidCallback? onPressed = available && enabled ? () => _show(context) : null;
             if (triggerBuilder != null) {
@@ -320,7 +320,7 @@ class CollabBlockMoreButton extends StatelessWidget {
                         title: const Text('复制段落链接'),
                         onTap: () => Navigator.pop(sheet, -5),
                       ),
-                    if (wasEditable && !protected && const {'page', 'callout'}.contains(node.parent?.type))
+                    if (wasEditable && !protected && const {'page', 'callout', 'column'}.contains(node.parent?.type))
                       CollabMenuRow(
                         key: ValueKey('block-insert-below-$id'),
                         leading: const Icon(LucideIcons.listEnd),
@@ -435,6 +435,8 @@ final _pending = Expando<bool>('block-more-actions');
   'video' => ('视频', LucideIcons.film),
   'code' => ('代码块', LucideIcons.codeXml),
   'callout' => ('高亮块', LucideIcons.highlighter),
+  'columns' => ('多栏布局', LucideIcons.columns2),
+  'column' => ('列操作', LucideIcons.columns2),
   'audio' => ('音频', LucideIcons.audioLines),
   'attachment' => ('附件', LucideIcons.paperclip),
   'formula' => ('公式', LucideIcons.sigma),

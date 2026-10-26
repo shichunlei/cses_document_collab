@@ -1,0 +1,72 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: formal projection preserves children and edits only explicit width fields
+00:00 +1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: add move delete and flatten preserve descendant identity with independent undo
+00:00 +2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_native_integration_test.dart: (setUpAll)
+00:00 +3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_native_integration_test.dart: (setUpAll)
+00:00 +4: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_native_integration_test.dart: (setUpAll)
+00:00 +5: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_native_integration_test.dart: (setUpAll)
+00:00 +5: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: column list conversion and enter preserve the column parent
+00:00 +6: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_native_integration_test.dart: published columns cross FRB field history, text edits, structure undo redo and reopen
+00:00 +7: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_native_integration_test.dart: published columns cross FRB field history, text edits, structure undo redo and reopen
+00:00 +8: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_native_integration_test.dart: published columns cross FRB field history, text edits, structure undo redo and reopen
+00:00 +9: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:00 +10: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:01 +11: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:01 +12: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:01 +13: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:01 +14: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:01 +15: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:02 +16: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables addBlock
+00:02 +17: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables blockType
+00:02 +18: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables textStyle
+00:02 +19: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables blockLayout
+00:02 +20: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables image
+00:02 +21: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables mention
+00:02 +22: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables todoList
+00:02 +23: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables link
+00:02 +24: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables video
+00:02 +25: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables attachment
+00:02 +26: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables audio
+00:02 +27: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables bookmark
+00:02 +28: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables embed
+00:02 +29: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables juejin
+00:03 +30: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables figma
+00:03 +31: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables table
+00:03 +32: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables columns
+00:03 +33: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables callout
+00:03 +34: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables meeting
+00:03 +35: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables formula
+00:03 +36: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables mermaid
+00:03 +37: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables inlineFormula
+00:03 +38: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables divider
+00:03 +39: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables personCard
+00:03 +40: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables dateCard
+00:03 +41: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables weather
+00:03 +42: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables pageDivider
+00:03 +43: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables spreadsheet
+00:03 +44: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables multiTable
+00:03 +45: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables mindMap
+00:03 +46: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: common shortcuts follow caller order while dismiss remains trailing
+00:03 +47: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: dismiss stays at the right edge while long menus scroll and closes the toolbar
+00:03 +48: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct table inserts without more sheet and has undo
+00:04 +49: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct columns inserts without more sheet and has undo
+00:04 +50: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct callout inserts without more sheet and has undo
+00:04 +51: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct dateCard inserts without more sheet and has undo
+00:04 +52: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct weather inserts without more sheet and has undo
+00:04 +53: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct pageDivider inserts without more sheet and has undo
+00:04 +54: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct formula cancellation and creation share the original input sheet
+00:05 +55: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct link uses existing source validation and inserts a link block
+00:05 +56: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct meeting respects injected picker and revocation: false
+00:05 +57: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct meeting respects injected picker and revocation: true
+00:05 +58: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: weather creation freezes one insertion and ignores revoked query: false
+00:05 +59: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: weather creation freezes one insertion and ignores revoked query: true
+00:05 +60: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: person-card creation freezes one insertion and ignores revoked query: false
+00:06 +61: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: person-card creation freezes one insertion and ignores revoked query: true
+00:06 +62: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: unimplemented common action only reports its existing placeholder
+00:06 +63: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: heading menus and commands stop at H6 with limited config: false
+00:06 +64: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: heading menus and commands stop at H6 with limited config: true
+00:07 +65: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: empty toolbar keeps document editing and removes its row
+00:07 +66: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: switching editor instances clears a previously open menu
+00:07 +67: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard add button visibility: false
+00:07 +68: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard add button visibility: true
+00:08 +69: All tests passed!

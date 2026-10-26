@@ -1,0 +1,133 @@
+{
+  "date": "2026-10-26",
+  "feature": "columns / column mobile adaptation",
+  "status": "partially-supported",
+  "checks": [
+    {
+      "command": "cargo fmt --manifest-path packages/cses_document_collab/rust/Cargo.toml --check",
+      "status": "passed"
+    },
+    {
+      "command": "cargo check --manifest-path packages/cses_document_collab/rust/Cargo.toml",
+      "status": "passed",
+      "evidence": "rust-check.txt",
+      "existing_yrs_warnings": 58
+    },
+    {
+      "command": "cargo test --manifest-path packages/cses_document_collab/rust/Cargo.toml",
+      "status": "passed",
+      "passed": 205,
+      "evidence": "rust-tests.txt"
+    },
+    {
+      "command": "cargo build --manifest-path packages/cses_document_collab/rust/Cargo.toml",
+      "status": "passed",
+      "evidence": "rust-build.txt"
+    },
+    {
+      "command": "flutter test --no-pub test/collab_columns_test.dart test/columns_native_integration_test.dart test/blockcraft_json_codec_test.dart test/blockcraft_json_editing_test.dart test/blockcraft_json_integrity_test.dart",
+      "cwd": "packages/cses_document_collab",
+      "status": "passed",
+      "passed": 52,
+      "evidence": "target-and-json-tests.txt"
+    },
+    {
+      "command": "flutter test --no-pub test/collab_columns_test.dart test/columns_native_integration_test.dart test/editor_toolbar_configuration_test.dart --name '^(?!menu choices cannot reenable disabled block and format capabilities)'",
+      "cwd": "packages/cses_document_collab",
+      "status": "passed-with-explicit-baseline-exclusion",
+      "passed": 69,
+      "excluded": 1,
+      "evidence": "columns-and-toolbar-tests.txt"
+    },
+    {
+      "command": "initial related suite (15 files)",
+      "status": "initial-failures-retained",
+      "passed": 274,
+      "failed": 2,
+      "evidence": "initial-related-tests.txt",
+      "resolution": "new enum mapping updated and direct insertion test added; one unchanged baseline remains"
+    },
+    {
+      "command": "unmodified HEAD toolbar/config source, exact baseline test",
+      "status": "failed-on-baseline",
+      "test": "menu choices cannot reenable disabled block and format capabilities",
+      "evidence": "baseline-toolbar-failure.txt",
+      "restored_current_sources": true
+    },
+    {
+      "command": "flutter analyze --no-pub [22 changed implementation/test targets]",
+      "status": "passed",
+      "evidence": "package-analyze.txt"
+    },
+    {
+      "command": "flutter test --no-pub [5 host daily_guidance consumers]",
+      "status": "passed",
+      "passed": 50,
+      "evidence": "host-tests.txt"
+    },
+    {
+      "command": "flutter analyze --no-pub lib test/daily_guidance/journal_blockcraft_codec_test.dart test/daily_guidance/journal_keyboard_toolbar_test.dart",
+      "cwd": "repository root",
+      "status": "passed",
+      "evidence": "host-analyze.txt"
+    },
+    {
+      "command": "flutter build apk --debug --no-pub",
+      "status": "passed",
+      "evidence": "android-build.txt",
+      "installed": false
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "evidence": "diff-check.txt"
+    }
+  ],
+  "counts_overlap": true,
+  "source_sha256": {
+    "packages/cses_document_collab/lib/src/editor/appflowy_block_editor_adapter.dart": "11a06970a6336f0ac753b603031c48e1d2c597be502b3d59869ccfe6bf87a792",
+    "packages/cses_document_collab/lib/src/editor/blockcraft_json_codec.dart": "931c9ae2f224785e45dec3e61291bf225b730f9ab01f395ae334f9ec36cb4ce8",
+    "packages/cses_document_collab/lib/src/editor/blockcraft_snapshot_view.dart": "57904c7cbe8176a163fb74179c32468d22950a75fa00ada093c87d40cc022054",
+    "packages/cses_document_collab/lib/src/editor/collab_block_actions.dart": "de88e0686ae66f4301ab71cc4d3efb9dad2b6d0b16417bd767e020d1710f904e",
+    "packages/cses_document_collab/lib/src/editor/collab_column_block.dart": "47bd49dc4277fb20be1d9267a86566df2cd06743a42893922c72b5ee5d00577e",
+    "packages/cses_document_collab/lib/src/editor/collab_columns_block.dart": "c05eaf20c315891c522ec6d6c55a5ec1197b47937089f4749e0f2539b7c1fcf1",
+    "packages/cses_document_collab/lib/src/editor/collab_list_editing.dart": "9e7c745c02f92e646b05bbe1ac78740e6dff540da02d9582cf45ea444d720b06",
+    "packages/cses_document_collab/lib/src/editor/core/editor_configuration.dart": "c81de294806ee2b4ed5e44f2d7a02e72f7545dcc165b19e10423b2bfb8c8a5ea",
+    "packages/cses_document_collab/lib/src/editor/document_editor_view.dart": "3f2b7201a56c4e135ef89ff57bb8edf1f45db87f3e0bddb39b46a320fa91ef27",
+    "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart": "a407107a39586570e208b93d8c98bec9761f5617c44ea7da364461896eca1095",
+    "packages/cses_document_collab/lib/src/model/collab_columns.dart": "f0e371c4db79a13b28a5c1cdadb5ff9cb9707570dfc50260f32b0367cafdf2fc",
+    "packages/cses_document_collab/lib/src/model/collab_date_card.dart": "0422039f6e65a058e224fb9e57f335056525537c3befa52865c2590407cd9219",
+    "packages/cses_document_collab/lib/src/model/collab_entity_mention.dart": "510353a9ab48d222e850f6e402415456d78a230d15399f556b7681773ab6ac6f",
+    "packages/cses_document_collab/lib/src/model/collab_formula.dart": "e63d94f7f7bfaec64c909281510f8e2ee8789b2e24df7c8690b4191aa4e60354",
+    "packages/cses_document_collab/lib/src/model/collab_meeting.dart": "d3289b1b8939dd0b2c8236e1424e0e8c09fe32df10e0a71b8e1e5f65fa9f78ef",
+    "packages/cses_document_collab/lib/src/model/collab_mermaid.dart": "03fa05b3154e99f818c378b368dd30032bfd16a585ec3db80162ed4869cf6844",
+    "packages/cses_document_collab/lib/src/model/collab_person_card.dart": "dc41065dc2546d40ca9b5583dc7bad4c1adcb1d3374f671dd1ecdfed28ac2990",
+    "packages/cses_document_collab/lib/src/model/collab_table.dart": "452c321c406c3848be27ef7897938ceb82b3c4adcaa9832143e62e1b4d8caf09",
+    "packages/cses_document_collab/lib/src/model/collab_weather.dart": "605ab2833b318d954e48e39a149faeb0dd7b985ede919e028f8b2f98e7e6f7ba",
+    "packages/cses_document_collab/rust/src/api/blockcraft.rs": "ab936f28de30ec3e3d65ef2c5065d65dab70471032dbf864235292d709e53255",
+    "packages/cses_document_collab/rust/src/api/collab.rs": "d7e78a3553bbd713354a1f5a198fb93aba8efc6b7c6d76810f8d036b10f67dbc",
+    "packages/cses_document_collab/rust/src/api/document_history.rs": "6486a24eba5391ccbb49dbfac7f44dd9d2e1d6c798ff4a4ae067beb571cdb70d",
+    "packages/cses_document_collab/rust/tests/fixtures/blockcraft-columns.json": "dc740d457a2e47a6ab0561e717e95ee9b4023d8ea03cb533ed7cab64b0bc9dfb",
+    "packages/cses_document_collab/rust/tests/fixtures/blockcraft-columns.update": "c20108fec5dbb6ca5900768a16345b2d307e792d3cd6c1bcca7bec4c31eef2ac",
+    "packages/cses_document_collab/test/collab_columns_test.dart": "9ff090e724ebd0378f77d9a5d7868aa83507c29a665de7e75e088696fadc5b82",
+    "packages/cses_document_collab/test/columns_native_integration_test.dart": "331787f53142004208304a5b39036070dfed4123ea2a489aa4e05e156895c098",
+    "packages/cses_document_collab/test/editor_toolbar_configuration_test.dart": "7d641bb6b876731eb957edf2a165f820675a79aba7852c1dfd2a4b8156e60353",
+    "packages/cses_document_collab/tool/generate_columns_fixture.mjs": "8a9dff228b0358a04540a8937153e943c68d655b2773fb8ee80ddbff6f23726d"
+  },
+  "apk": {
+    "path": "build/app/outputs/flutter-apk/app-debug.apk",
+    "bytes": 228207958,
+    "sha256": "619df23381391d1986b9bf23c2e47ab87f55b7ab929bf6e37eb5cbbca7b60c9b",
+    "rebuilt_after_final_sources": true
+  },
+  "existing_user_changes_preserved": [
+    "packages/appflowy_editor/pubspec.yaml",
+    "docs/日成果-2026-10-23-完整文档结构.json"
+  ],
+  "not_validated_or_implemented": [
+    "touch drag resize/reorder is not implemented (menu commands are implemented)",
+    "full cross-column selection, tail-preserving replacement/IME and rich clipboard parity",
+    "HTML/Markdown columns round-trip专项",
+    "physical mobile device, iOS app/device, live online desktop/mobile collaboration"
+  ]
+}

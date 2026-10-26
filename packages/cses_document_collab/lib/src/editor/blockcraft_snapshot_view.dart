@@ -45,6 +45,9 @@ TextStyle blockCraftSnapshotRootStyle(Node root, TextStyle fallback) {
 Map<String, BlockComponentBuilder> blockCraftSnapshotBuilders(Map<String, BlockComponentBuilder> builders) => {
   ...builders,
   'snapshot-weather': _SnapshotObjectBuilder('weather'),
+  // 保留已落盘的旧分栏视图；新导入由正式columns/column渲染器处理。
+  'snapshot-columns': _SnapshotObjectBuilder('columns'),
+  'snapshot-column': _SnapshotObjectBuilder('column'),
   for (final kind in BlockCraftJsonCodec.objectFlavours) 'snapshot-$kind': _SnapshotObjectBuilder(kind),
   if (builders['image'] != null) 'image': _SnapshotChildrenBuilder(builders['image']!),
 };

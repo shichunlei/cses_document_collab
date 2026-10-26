@@ -1,0 +1,23 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: formal projection preserves children and edits only explicit width fields
+00:00 +1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: add move delete and flatten preserve descendant identity with independent undo
+00:00 +2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: deleting one of two columns unwraps surviving content
+00:00 +3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: insert supports root and callout, rejects nested columns and enforces eight-column limit
+00:00 +4: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: column first paragraph backspace is protected, other paragraphs stay editable
+00:00 +5: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:00 +6: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:00 +7: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:00 +8: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:00 +9: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace preserves normal deletion and merging within one column
+00:01 +10: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace outdents a column list before leaving it as a paragraph
+00:01 +11: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: legacy persisted columns preserve layout before and after text editing
+00:01 +12: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: formal columns do not revive explicitly cleared properties from the original snapshot
+00:01 +13: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: column list conversion and enter preserve the column parent
+00:01 +14: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: readonly, descendant locks and stale identities reject structural mutations
+00:01 +15: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: JSON uses formal types and current widths; invalid widths fall back without mutation
+00:01 +16: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:01 +17: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: phone layout, horizontal scrolling and preview retain real text at 320.0/1.0
+00:01 +18: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: phone layout, horizontal scrolling and preview retain real text at 390.0/1.0
+00:01 +19: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: phone layout, horizontal scrolling and preview retain real text at 320.0/1.8
+00:01 +20: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: phone layout, horizontal scrolling and preview retain real text at 900.0/1.0
+00:01 +21: All tests passed!

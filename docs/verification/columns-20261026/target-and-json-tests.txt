@@ -1,0 +1,55 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: formal projection preserves children and edits only explicit width fields
+00:00 +1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: add move delete and flatten preserve descendant identity with independent undo
+00:00 +2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_native_integration_test.dart: (setUpAll)
+00:00 +3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_native_integration_test.dart: (setUpAll)
+00:00 +4: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_native_integration_test.dart: (setUpAll)
+00:00 +5: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_native_integration_test.dart: (setUpAll)
+00:00 +5: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: column list conversion and enter preserve the column parent
+00:00 +6: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_native_integration_test.dart: published columns cross FRB field history, text edits, structure undo redo and reopen
+00:00 +7: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_native_integration_test.dart: published columns cross FRB field history, text edits, structure undo redo and reopen
+00:00 +8: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_native_integration_test.dart: published columns cross FRB field history, text edits, structure undo redo and reopen
+00:00 +9: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:00 +10: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:00 +11: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:00 +12: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:00 +13: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:00 +14: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:00 +15: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:00 +16: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:00 +17: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:00 +18: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:00 +19: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:00 +20: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:00 +21: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:00 +22: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:00 +23: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:00 +24: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:01 +25: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:01 +26: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:01 +27: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:01 +28: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:01 +29: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:01 +30: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:01 +31: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:01 +32: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:01 +33: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:01 +34: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:01 +35: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:01 +36: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: common menu adds a column and rejects a stale open menu
+00:01 +37: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +38: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +39: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +40: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +41: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +42: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +43: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +44: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +45: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: phone layout, horizontal scrolling and preview retain real text at 900.0/1.0
+00:01 +46: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 paragraph latex remains a styled native atom after explicit font weight
+00:02 +47: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 word-art user remains a styled native atom after explicit font weight
+00:02 +48: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 word-art meeting remains a styled native atom after explicit font weight
+00:02 +49: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 word-art task remains a styled native atom after explicit font weight
+00:02 +50: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 word-art doc remains a styled native atom after explicit font weight
+00:02 +51: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 word-art latex remains a styled native atom after explicit font weight
+00:02 +52: All tests passed!

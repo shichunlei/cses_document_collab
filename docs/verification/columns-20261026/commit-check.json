@@ -1,0 +1,92 @@
+{
+  "date": "2026-10-26",
+  "action": "local commit of columns adaptation and two review fixes",
+  "parent_revision": "0f34422013e16b368981766a88972d7e090766af",
+  "source_and_fixture_fingerprints_verified": 29,
+  "latest_rechecked": "0.11.31",
+  "desktop_upgrade": false,
+  "reused_validation": "fix-validation.json",
+  "excluded_user_changes": [
+    "packages/appflowy_editor/pubspec.yaml",
+    "docs/日成果-2026-10-23-完整文档结构.json"
+  ],
+  "log_normalization": "Only trailing line whitespace and surplus EOF blank lines were removed from new evidence text files; assertions, failures and conclusions are unchanged. Source, fixture and artifact fingerprints were not modified.",
+  "normalized_evidence": [
+    {
+      "file": "android-build.txt",
+      "before_sha256": "07a55d681da67907fb7af385b3d1ccd3b77ade9200ce96f7979998ccb8697172",
+      "after_sha256": "9a0f11580336edff4557f40caf13831562e44214db928734527975e34acef35f"
+    },
+    {
+      "file": "baseline-toolbar-failure.txt",
+      "before_sha256": "bbd6b3d63164c8718fcd5ddad2d4d2c596fa9d3eff77df977c8fd268401364db",
+      "after_sha256": "5aca1390495514c56af3a4bcef9ecdf1fee446fceb4dd8313ebf52cbc1882501"
+    },
+    {
+      "file": "fix-analyze.txt",
+      "before_sha256": "253bf8c5cbc7cd32cd5a61b509e24f0e7831b38ba01ce180cf1eb117b61063db",
+      "after_sha256": "69cf2f93ce8be73118a7b10bd6c5b081b8288a7bb6c3c3d43477c2d5e2585f43"
+    },
+    {
+      "file": "fix-android-build.txt",
+      "before_sha256": "88d11226f7e2efa6e96b1f3306d0d28430538eb95caab24643c60d3c96d4187d",
+      "after_sha256": "697bf8dc889be31f5de89e320107d6b60e4bb9f79301c276b23e849def678e1c"
+    },
+    {
+      "file": "fix-before-tests.txt",
+      "before_sha256": "f5349ef2681e7b5a1a6806c8c2a636c9856d3f14df79af38851a55995222219b",
+      "after_sha256": "e19586253622945af6aebd73e30a4d20e33ae7e395ce24703bc4861a1e23ca3c"
+    },
+    {
+      "file": "fix-initial-test-harness.txt",
+      "before_sha256": "b97e414b55463f2e172899821734707254e6a91590050d1b692a26170328144b",
+      "after_sha256": "af29f8b31dbb1ab38c816b809a84c2c34ab93707e955f1aa0afbc23b49cafcf3"
+    },
+    {
+      "file": "host-analyze.txt",
+      "before_sha256": "83c23f29df922d53979f4fc8876ba2e56dc960d2de012db82951ab9a3cb484a3",
+      "after_sha256": "4fca35b2bd4bd048a75bbe2455abee054f498bfa7c7bb287fbb2033ab7f8f0e6"
+    },
+    {
+      "file": "initial-related-tests.txt",
+      "before_sha256": "459abcd22d412e73e51121a28712d2308ddb02d3ed569c4a330565a0b12914ef",
+      "after_sha256": "1a07f947bc4ff0f9e52dc5d10403a8656e483c20df4ec6e78e2bdc71b08e4490"
+    },
+    {
+      "file": "intermediate-column-failures.txt",
+      "before_sha256": "7ddbfab1fea5bf0ce8ce5c430c88c9e53937eec4674cb5a7dbc400cab4613e49",
+      "after_sha256": "7767301ec3e913de2d3427a17d5965df897d220921c8f095a85a35cc3a3eac6c"
+    },
+    {
+      "file": "new-files-analyze.txt",
+      "before_sha256": "9f0d61c47b7e59441a401c8ac6930d302053777d109a05e1f7eaba0f532f88b4",
+      "after_sha256": "8bc84321e1c4eaded3da7d80f33ecadfa9c91ec92347a40825232a5897b4ec5a"
+    },
+    {
+      "file": "package-analyze.txt",
+      "before_sha256": "38444bf5e553dfbb405fa316ca9c52848649846c1d583700792605797c6e338d",
+      "after_sha256": "de5b840885371be145f1b86666721fed5955606eff17893151fa028c4a10e4d8"
+    },
+    {
+      "file": "review-probes-output.txt",
+      "before_sha256": "4800fb7eb0c89999e52b1c001020a327dc4221329870d5f5a05c5362b0b44756",
+      "after_sha256": "7cc289633e2d875340267928f40b6da66e97af49ca43c5bf5f9fa3a93c0388a2"
+    },
+    {
+      "file": "review-rust-tests.txt",
+      "before_sha256": "9ea8a4ae8e85668d9f99664fd6925c5d2c6dc2358bf621b61051c7d3ad76df01",
+      "after_sha256": "01e5211ff49dc7517251f7a9cc7f257f580ba08fc43e53a2d75af91051669cdd"
+    },
+    {
+      "file": "rust-tests.txt",
+      "before_sha256": "ef2144e77731e6f51695c8726f893ba81f3f33dc34182662885ffde700f212e0",
+      "after_sha256": "190aafa6dab82028c02da7fe467d86268bbfdb3a803a5efc18fba5fda31bb746"
+    },
+    {
+      "file": "toolbar-known-failure.txt",
+      "before_sha256": "caed1118a9cfc0be66c455b54d2cbb8879d4a0801271b5f68d49526c46be649f",
+      "after_sha256": "38a50c7ce18b4e4d94857268ecab4d6fd362ac4a85407b703df42fdbc1924d83"
+    }
+  ],
+  "staged_diff_check": "passed"
+}

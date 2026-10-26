@@ -18,6 +18,7 @@ import 'package:cses_document_collab/src/model/collab_ordered.dart';
 import 'package:cses_document_collab/src/model/collab_paragraph_style.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/model/collab_table.dart';
+import 'package:cses_document_collab/src/model/collab_columns.dart';
 import 'package:cses_document_collab/src/model/collab_task_card.dart';
 
 /// 将桌面快照转换为实际编辑树；每块/行内对象均转换，不保存原始JSON快照兜底。
@@ -86,8 +87,6 @@ abstract final class BlockCraftJsonCodec {
 
   /// 需使用新增原生对象/容器渲染器的桌面类型。
   static const objectFlavours = {
-    'columns',
-    'column',
     'shape',
     'text-box',
     'object-group',
@@ -365,6 +364,7 @@ abstract final class BlockCraftJsonCodec {
   /// 将借用的[node]及后代重新编码；内容读取实时编辑树，不回放旧快照或编辑历史。
   /// 文字叶块带真实子块时抛FormatException，不输出遗漏后代的快照；宿主可在事务预检调用。
   /// 导出的标题级别限制为1～6，不改变借用节点及原始属性归档。
+  /// 旧snapshot分栏从bc.p读取布局；正式分栏使用当前字段投影，显式清除不恢复旧值。
   static Map<String, dynamic> encodeBlock(Node node) {
     final kind = flavour(node);
     if (node.delta != null && node.children.isNotEmpty) {
@@ -494,6 +494,12 @@ abstract final class BlockCraftJsonCodec {
       props.addAll(CollabPersonCard.readAttributes(node.attributes).values);
     }
     if (kind == 'divider') props.addAll(CollabDivider.readAttributes(node.attributes).values);
+    if (collabColumnsTypes.contains(node.type)) {
+      for (final key in collabColumnsKeys) {
+        props.remove(key);
+      }
+      props.addAll(readCollabColumns(node.attributes).values);
+    }
     if (collabTableTypes.contains(kind)) props.addAll(collabTableLayout(node));
     final nodeType = voidFlavours.contains(kind)
         ? 'void'

@@ -1,5 +1,11 @@
 # 桌面块移动端适配表
 
+2026-10-26分栏修复：R1按词退格接入已有边界/列表保护，R2旧snapshot导出保留布局且正式字段清除不复活。目标21、关联249与宿主50项通过，静态分析和Android构建通过；最新核对0.11.31、桌面声明/Yarn0.11.30、安装0.11.17，三版列族契约一致，其他新版本差异待同步。42及13/28/1/0保持，详见[修复与验证](verification/columns-20261026/fixes.md)。
+
+2026-10-26分栏审查：独立反例确认1项P1（按词退格跨列合并并被原生保存）和1项P2（旧snapshot分栏导出丢列宽/列数/列索引），本轮未修产品代码；既有Flutter15/Rust3项通过不能覆盖新增反例。两块仍部分支持，42及13/28/1/0保持，最后核对2026-10-26，见[审查及证据](verification/columns-20261026/review.md)。
+
+2026-10-26分栏：`columns`/`column`接入正式协同树、比例布局/窄屏横滚、两列插入、增减/移动列、5个百分点调宽、均分/上下展开、列内列表与边界保护、稳定字段历史及FRB/SQLite重开；状态仍部分支持，42及13/28/1/0保持。拖拽、跨列选区/剪贴板完整语义及真机/在线双端待同步或验收，见[本轮实施与验证](verification/columns-20261026/report.md)。
+
 2026-10-26卡片锁标：人员/天气/日期的小锁改为定位在实际缩放卡片的右上角，不再跟随整行布局宽度；日期/天气额外处理FittedBox比例留白，锁保持14逻辑像素。79项目标回归与7文件静态分析通过，最后核对2026-10-26；三类仍部分支持，42及13/28/1/0保持，见[锁标定位记录](verification/card-tap-actions-20261026/card-lock-layout.md)。
 
 2026-10-26天气刷新入口：刷新天气移入整卡点击后的公共操作面板，卡片下方不再显示刷新/重试按钮；保留请求状态、固定日撤销、实时不落盘及锁/撤权保护，详见[刷新入口验证](verification/card-tap-actions-20261026/weather-refresh.md)。42及13/28/1/0统计与三类卡片部分支持状态保持，最后核对2026-10-26。
@@ -186,10 +192,10 @@
 | 未适配 | 0 | 正式清单均有实际内容转换；部分能力仍见各行限制 |
 | 合计 | 42 | 基础注册41种（含新增mind-map），页面追加任务列表1种；额外sticker单列 |
 
-- 常规离线默认目录为包内27种移动端类型（含独立heading、日期卡片及天气卡片）；JSON导入按文档实例扩展渲染范围。最后核对2026-10-25，日期卡片见[日期验证](verification/date-card-20261025/report.md)，天气卡片见[天气验证](verification/weather-card-20261025/report.md)，此前[转换验证](verification/blockcraft-json-exchange-20261023/report.md)，原目录[记录](verification/offline-all-blocks-20261020/offline-all-blocks-20261020.json)保留。
+- 常规离线默认目录为包内29项EditorBlock能力（以本轮实际枚举核对为准；新增columns并隐式启用column，含独立heading、日期卡片及天气卡片）；JSON导入按文档实例扩展渲染范围。最后核对2026-10-26，分栏见[分栏验证](verification/columns-20261026/report.md)，日期卡片见[日期验证](verification/date-card-20261025/report.md)，天气卡片见[天气验证](verification/weather-card-20261025/report.md)，此前[转换验证](verification/blockcraft-json-exchange-20261023/report.md)，原目录[记录](verification/offline-all-blocks-20261020/offline-all-blocks-20261020.json)保留。
 - 本节仅统计正文块；H1~H6 属于段落属性，行内内容、移动端自有块和业务头部不另计块数。
 - 独立JSON导入显式转换全部42种注册块及包内sticker，不保留原始快照兜底；未知插件类型拒绝整次导入。正式协同路径的旧占位保护仍按原契约运行，不等于这些路径已经完成适配。
-- 当前状态以各清单为准；最后核对2026-10-26（人员/天气/日期卡片整卡操作；既有正式适配范围保持），42及13/28/1/0保持；更新记录保留历史变更及当时的验证结论。
+- 当前状态以各清单为准；最后核对2026-10-26（分栏正式投影与手机列操作、人员/天气/日期卡片整卡操作），42及13/28/1/0保持；更新记录保留历史变更及当时的验证结论。
 - 正文历史安全边界：普通文字/代码尚未实现跨远端更新的历史OT。远端正文、行内格式或结构变化后清理不安全撤销/重做项；结构不变时保留独立字段补丁，重排后仅保留稳定身份或指纹保护命令，见[包级P1修复](verification/package-review-20261017/package-review-p1-fixes-20261017.json)。
 - 2026-10-18分页符由未适配转部分支持；该轮统计为13/13/1/14，合计41。此前Mermaid轮次为13/12/1/15，历史计数保留在各自验证记录中。
 - 三项格式审查修复未新增块或扩大完整兼容验收；该轮统计为13/10/1/17，合计41，验证见[记录](verification/selection-format-review-fixes-20261016/selection-format-review-fixes-0.11.21-20261016.json)。
@@ -220,8 +226,8 @@
 | [表格](../packages/cses_document_collab/lib/src/editor/collab_table_block.dart) | `table` | 已适配 | 2026-10-21本地整体convert忽略并保留全部单元格、选区和历史，专用表格入口保持，见[记录](verification/editor-decoupling-fixes-20261021/report.md)；无装饰层更多按钮，暂不显示锁标及其占位，锁定权限仍生效；新建 2×2、左对齐、横向滚动、行列增删/高亮、拖动列宽；上限 100 行/50 列/500 格；2026-10-20离线Android真机新建2×2、单元格输入/设置与模板预览通过（[记录](verification/offline-all-blocks-device-20261020/offline-all-blocks-device-20261020.json)） | 多格拖选、行列剪切复制粘贴、Markdown 导入、整表下方插入；行高只读 |
 | [表格行](../packages/cses_document_collab/lib/src/editor/collab_table_row_block.dart) | `table-row` | 已适配 | 父子结构、稳定 ID、行高保留；整行选择、插入/删除及撤销/重做 | 同表格限制 |
 | [表格单元格](../packages/cses_document_collab/lib/src/editor/collab_table_cell_block.dart) | `table-cell` | 已适配 | 无装饰层更多按钮，暂不显示锁标及其占位，锁定权限仍生效；合并/拆分、隐藏覆盖格、正文/富文本编辑、协同与撤销/重做；2026-10-20离线Android真机输入、设置面板退场和预览隐藏操作/键盘通过（[记录](verification/offline-all-blocks-device-20261020/offline-all-blocks-device-20261020.json)） | iOS、桌面双向联调、双端结构冲突及持久化 ACK 待验收；含未知占位禁改结构，异常网格整表占位 |
-| 多栏布局 | `columns` | 部分支持 | 2026-10-23：JSON转换真实列子树，窄屏横向滚动与列内富文本编辑；[全类型与原生渲染验证](verification/blockcraft-json-exchange-20261023/report.md) | 正式协同投影、拖动列宽及桌面完整布局；真机/iOS与在线双端未验收 |
-| 单列容器 | `column` | 部分支持 | 2026-10-23：JSON转换实际列后代及独立属性，原生渲染/文字编辑；[全类型与原生渲染验证](verification/blockcraft-json-exchange-20261023/report.md) | 正式协同路径及列结构编辑；真机/iOS与在线双端未验收 |
+| 多栏布局 | `columns` | 部分支持 | 2026-10-26：正式协同/JSON真实列子树、比例横滚/窄屏大字、两列插入、增减/移动、5个百分点调宽/均分/上下展开、字段历史/锁及FRB/SQLite；[实施与验证](verification/columns-20261026/report.md) | 按词退格边界及旧snapshot布局导出R1/R2已修复，见[验证](verification/columns-20261026/fixes.md)；触摸拖拽、跨列范围/剪贴板/HTML/Markdown专项及真机/iOS/在线双端待办保留 |
+| 单列容器 | `column` | 部分支持 | 2026-10-26：正式父子投影/JSON、独立正文与列表转换/回车、列首退格保护、右侧插入/移动/加宽/删除、删至单列展开、稳定身份历史/锁与保存重开；[实施与验证](verification/columns-20261026/report.md) | 段首按词退格及旧snapshot列索引导出R1/R2已修复，见[验证](verification/columns-20261026/fixes.md)；整列拖动、跨列范围/剪贴板、复杂后代与设备/在线双端待办保留 |
 | [附件](../packages/cses_document_collab/lib/src/editor/collab_attachment_block.dart) | `attachment` | 部分支持 | 公共覆盖层显示右上角普通显式锁标，锁操作沿用公共更多菜单；类型配色图标、双行文件名及B～TB大小展示（缺失显示未知）、外部打开/下载、链接/上传（100 MB）、修改/删除、下方插入；下载/打开（下载图标）、修改/删除及下方插入统一收进更多菜单；正式文档更多可复制段落链接（宿主配置、稳定ID，保留既有预览显隐） | 应用内下载管理 |
 | [音频](../packages/cses_document_collab/lib/src/editor/collab_audio_block.dart) | `audio` | 部分支持 | 统一音频名称标题栏（无来源副标题）与独立播放内容区；首次加载与播放共享按钮、时间行及轨道槽，仅初始化显示不确定动画，播放/跳转缓冲保留滑块和目标进度，卡片同高；只读隐藏更多但保留播放/暂停/跳转；播放/暂停/进度、链接/上传（50 MB）、修改/删除、下方插入；播放/暂停和进度条直接显示；与视频共用铺满时间行可用宽度的细轨道、圆滑块、当前/总时长及拖动预览/松手单次跳转，外部打开（外链图标）、复制链接、修改/删除及下方插入收进更多菜单；正式文档更多可复制段落链接（宿主配置、稳定ID，保留既有预览显隐） | blob、嵌入代码 |
 | [网页卡片](../packages/cses_document_collab/lib/src/editor/collab_bookmark_block.dart) | `bookmark` | 部分支持 | 独立链接菜单支持锁定/解锁、继承锁定位和授权限制，锁定时保留打开/复制并隐藏写入命令，右上角普通显式锁标与标准卡片共用；统一图标/标题/网址双行标题栏；只读隐藏更多；标题/摘要/缩略图、重试、链接操作；卡片/嵌入/链接互转、下方插入、协同与撤销/重做；正式文档更多可复制段落链接（宿主配置、稳定ID，保留既有预览显隐） | 桌面预览服务；站点限制时仅显示链接 |
@@ -402,6 +408,9 @@ PNG宽256～2160像素，单边高度8192像素/总计1200万像素。超限提�
 
 | 日期 | 上游 `latest` | 桌面声明 / 锁定 / 安装 | 移动端核对与变化 | 验证及待同步项 |
 |---|---|---|---|---|
+| 2026-10-26（分栏R1/R2修复） | 配置仓库实时latest=0.11.31；发布产物SHA1核对通过 | 声明/Yarn0.11.30；安装0.11.17；历史pnpm0.2.78；未升级 | 三版技能/MIGRATIONS及列族实现核对，列族指纹一致；修复按词退格绑定和旧稿导出覆盖，保留正式字段清除语义；0.11.31另有艺术字、拖动范围选区/层级及FakeRange缩放差异，未跟随 | [修复验证](verification/columns-20261026/fixes.md)、[版本指纹](verification/columns-20261026/fix-blockcraft-version.json)；目标21/关联249/宿主50及分析、Android构建通过；42及13/28/1/0保持，未新增设备/真实在线验收 |
+| 2026-10-26（分栏审查） | 配置仓库重新查询latest=0.11.30 | 声明/Yarn0.11.30；安装0.11.17；历史pnpm0.2.78；未升级 | 随包技能/MIGRATIONS指纹保持，检查列边界命令、旧稿JSON覆盖、原生投影与历史；两项反例确认P1/P2，只记录未修复 | [审查](verification/columns-20261026/review.md)、[复现/版本证据](verification/columns-20261026/review-validation.json)；15/3项既有回归通过，6探针3通过/3失败覆盖2缺陷；42及13/28/1/0保持，无新增平台/设备/在线验收 |
+| 2026-10-26（columns/column） | 配置仓库实时latest=0.11.30；dist与发布包SHA1一致 | 声明/Yarn0.11.30；安装0.11.17；历史pnpm0.2.78；未升级 | 读取两版随包技能/MIGRATIONS和列族Schema/组件/适配实现，列族源码指纹一致；接入正式树、手机列操作、字段历史/锁、JSON与原生持久化，FRB签名不变，原生库重建 | [实施验证](verification/columns-20261026/report.md)、[版本指纹](verification/columns-20261026/blockcraft-version.json)；两块仍部分支持，42及13/28/1/0保持；拖拽、跨列完整语义与设备/真实在线待办保留 |
 | 2026-10-26（人员/天气/日期整卡操作） | 待核对：配置仓库查询ENOTFOUND，授权联网重试ECONNRESET | 声明/Yarn0.11.30；安装0.11.17；历史pnpm0.2.78；未升级 | 读取安装包及本地已有0.11.30产物随包L0/块技能/MIGRATIONS与三类Schema/渲染；Schema指纹一致，安装包日期设置生命周期实现与发布产物有差异。只调整移动展示/整卡入口与自定义触发器预览保留，不改协议或依赖。 | [记录及128项回归](verification/card-tap-actions-20261026/report.md)、[版本证据](verification/card-tap-actions-20261026/blockcraft-version.json)；42及13/28/1/0保持。同日刷新入口后续重新查询latest仍ECONNRESET，随包文档指纹保持；[菜单刷新验证](verification/card-tap-actions-20261026/weather-refresh.md)。同日锁标跟随本体修复再次查询latest仍ECONNRESET，版本组合/指纹保持；[锁标79项回归](verification/card-tap-actions-20261026/card-lock-layout.md)。提交前再次查询latest仍ECONNRESET，声明/锁定/安装及技能/Schema指纹保持；提交范围见本轮记录。最新发布差异待联网核对，完整能力与设备/在线待办沿用各行。 |
 | 2026-10-25（天气适配提交核查） | 桌面配置仓库重新查询latest=0.11.30 | 声明/Yarn0.11.28，安装0.11.21；未升级 | 日期已独立提交；暂存天气正式协同/原生组件、宿主数据源、底部设置与固定预览左右循环、测试和功能证据；排除内容分类记录与根file_picker版本改动。天气契约沿用本日随包技能/MIGRATIONS与实现核对。 | [提交范围及复验](verification/weather-card-20261025/commit-scope.md)；天气仍部分支持，42及13/28/1/0保持；旧缺失frozen初始化、对象布局及设备/在线待办不变。 |
 | 2026-10-25（日期适配提交核查） | 桌面配置仓库重新查询latest=0.11.30 | 声明/Yarn0.11.28，安装0.11.21；未升级 | 提交范围隔离天气等并行改动，日期契约沿用本日已核对的随包技能/迁移及实现；在独立日期快照验证。 | [提交范围与验证](verification/date-card-20261025/commit-scope.md)；范围和未验收项保持，不将本次提交视为全版本兼容完成。 |
@@ -609,6 +618,12 @@ PNG宽256～2160像素，单边高度8192像素/总计1200万像素。超限提�
 桌面源码链接依赖当前工作区相邻的 `cses-client` 仓库。
 
 ## 更新记录
+
+2026-10-26分栏修复：R1按词退格接入已有边界/列表保护，R2旧snapshot导出保留布局且正式字段清除不复活。目标21、关联249与宿主50项通过，静态分析和Android构建通过；最新核对0.11.31、桌面声明/Yarn0.11.30、安装0.11.17，三版列族契约一致，其他新版本差异待同步。42及13/28/1/0保持，详见[修复与验证](verification/columns-20261026/fixes.md)。
+
+2026-10-26分栏审查：独立反例确认1项P1（按词退格跨列合并并被原生保存）和1项P2（旧snapshot分栏导出丢列宽/列数/列索引），本轮未修产品代码；既有Flutter15/Rust3项通过不能覆盖新增反例。两块仍部分支持，42及13/28/1/0保持，最后核对2026-10-26，见[审查及证据](verification/columns-20261026/review.md)。
+
+2026-10-26分栏：`columns`/`column`接入正式协同树、比例布局/窄屏横滚、两列插入、增减/移动列、5个百分点调宽、均分/上下展开、列内列表与边界保护、稳定字段历史及FRB/SQLite重开；状态仍部分支持，42及13/28/1/0保持。拖拽、跨列选区/剪贴板完整语义及真机/在线双端待同步或验收，见[本轮实施与验证](verification/columns-20261026/report.md)。
 
 2026-10-26卡片锁标：人员/天气/日期的小锁改为定位在实际缩放卡片的右上角，不再跟随整行布局宽度；日期/天气额外处理FittedBox比例留白，锁保持14逻辑像素。79项目标回归与7文件静态分析通过，最后核对2026-10-26；三类仍部分支持，42及13/28/1/0保持，见[锁标定位记录](verification/card-tap-actions-20261026/card-lock-layout.md)。
 

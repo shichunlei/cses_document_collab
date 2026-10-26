@@ -353,6 +353,7 @@ impl CollabEngine {
             }
             block_locks::preflight(&self.doc, root, &before.blocks, &after.blocks)?;
             blockcraft::validate_tables(&after.blocks)?;
+            blockcraft::validate_columns(&after.blocks)?;
             let previous = reachable(&self.doc, root)?;
             let next = reachable(&doc, root)?;
             let raw = raw_blocks(&self.doc)?;

@@ -1,0 +1,251 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_delete_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_delete_test.dart: Backspace cannot merge text across an opaque placeholder
+00:00 +1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_delete_test.dart: Backspace removes each URL-backed block and retains its paragraph
+00:00 +2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_delete_test.dart: Backspace does not remove a resource away from paragraph start
+00:00 +3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to numbered_list depth=0 empty=false
+00:00 +4: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to numbered_list depth=0 empty=true
+00:00 +5: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to numbered_list depth=1 empty=false
+00:00 +6: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to numbered_list depth=1 empty=true
+00:00 +7: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to numbered_list depth=2 empty=false
+00:00 +8: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to numbered_list depth=2 empty=true
+00:00 +9: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to numbered_list depth=3 empty=false
+00:00 +10: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to numbered_list depth=3 empty=true
+00:00 +11: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to numbered_list depth=4 empty=false
+00:00 +12: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to numbered_list depth=4 empty=true
+00:00 +13: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to numbered_list depth=5 empty=false
+00:00 +14: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to numbered_list depth=5 empty=true
+00:00 +15: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to numbered_list depth=6 empty=false
+00:00 +16: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to numbered_list depth=6 empty=true
+00:00 +17: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to bulleted_list depth=0 empty=false
+00:00 +18: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to bulleted_list depth=0 empty=true
+00:00 +19: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to bulleted_list depth=1 empty=false
+00:00 +20: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to bulleted_list depth=1 empty=true
+00:00 +21: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to bulleted_list depth=2 empty=false
+00:00 +22: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to bulleted_list depth=2 empty=true
+00:00 +23: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to bulleted_list depth=3 empty=false
+00:00 +24: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to bulleted_list depth=3 empty=true
+00:00 +25: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to bulleted_list depth=4 empty=false
+00:00 +26: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to bulleted_list depth=4 empty=true
+00:00 +27: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to bulleted_list depth=5 empty=false
+00:00 +28: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to bulleted_list depth=5 empty=true
+00:00 +29: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to bulleted_list depth=6 empty=false
+00:00 +30: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to bulleted_list depth=6 empty=true
+00:00 +31: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to todo_list depth=0 empty=false
+00:00 +32: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to todo_list depth=0 empty=true
+00:00 +33: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to todo_list depth=1 empty=false
+00:00 +34: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to todo_list depth=1 empty=true
+00:00 +35: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to todo_list depth=2 empty=false
+00:00 +36: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to todo_list depth=2 empty=true
+00:00 +37: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to todo_list depth=3 empty=false
+00:00 +38: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to todo_list depth=3 empty=true
+00:00 +39: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to todo_list depth=4 empty=false
+00:00 +40: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to todo_list depth=4 empty=true
+00:00 +41: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to todo_list depth=5 empty=false
+00:00 +42: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to todo_list depth=5 empty=true
+00:00 +43: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to todo_list depth=6 empty=false
+00:00 +44: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: numbered_list to todo_list depth=6 empty=true
+00:00 +45: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to numbered_list depth=0 empty=false
+00:00 +46: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to numbered_list depth=0 empty=true
+00:00 +47: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to numbered_list depth=1 empty=false
+00:00 +48: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to numbered_list depth=1 empty=true
+00:00 +49: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to numbered_list depth=2 empty=false
+00:00 +50: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to numbered_list depth=2 empty=true
+00:00 +51: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to numbered_list depth=3 empty=false
+00:00 +52: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to numbered_list depth=3 empty=true
+00:00 +53: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to numbered_list depth=4 empty=false
+00:00 +54: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to numbered_list depth=4 empty=true
+00:00 +55: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to numbered_list depth=5 empty=false
+00:00 +56: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to numbered_list depth=5 empty=true
+00:00 +57: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to numbered_list depth=6 empty=false
+00:00 +58: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to numbered_list depth=6 empty=true
+00:00 +59: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to bulleted_list depth=0 empty=false
+00:00 +60: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to bulleted_list depth=0 empty=true
+00:00 +61: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to bulleted_list depth=1 empty=false
+00:00 +62: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to bulleted_list depth=1 empty=true
+00:00 +63: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to bulleted_list depth=2 empty=false
+00:00 +64: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to bulleted_list depth=2 empty=true
+00:00 +65: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to bulleted_list depth=3 empty=false
+00:00 +66: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to bulleted_list depth=3 empty=true
+00:00 +67: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to bulleted_list depth=4 empty=false
+00:00 +68: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to bulleted_list depth=4 empty=true
+00:00 +69: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to bulleted_list depth=5 empty=false
+00:00 +70: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to bulleted_list depth=5 empty=true
+00:00 +71: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to bulleted_list depth=6 empty=false
+00:00 +72: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to bulleted_list depth=6 empty=true
+00:00 +73: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to todo_list depth=0 empty=false
+00:00 +74: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to todo_list depth=0 empty=true
+00:00 +75: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to todo_list depth=1 empty=false
+00:00 +76: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to todo_list depth=1 empty=true
+00:00 +77: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to todo_list depth=2 empty=false
+00:00 +78: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to todo_list depth=2 empty=true
+00:00 +79: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to todo_list depth=3 empty=false
+00:00 +80: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to todo_list depth=3 empty=true
+00:00 +81: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to todo_list depth=4 empty=false
+00:00 +82: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to todo_list depth=4 empty=true
+00:00 +83: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to todo_list depth=5 empty=false
+00:00 +84: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to todo_list depth=5 empty=true
+00:00 +85: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to todo_list depth=6 empty=false
+00:00 +86: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: bulleted_list to todo_list depth=6 empty=true
+00:00 +87: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to numbered_list depth=0 empty=false
+00:00 +88: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to numbered_list depth=0 empty=true
+00:00 +89: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to numbered_list depth=1 empty=false
+00:00 +90: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to numbered_list depth=1 empty=true
+00:00 +91: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to numbered_list depth=2 empty=false
+00:00 +92: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to numbered_list depth=2 empty=true
+00:00 +93: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to numbered_list depth=3 empty=false
+00:00 +94: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to numbered_list depth=3 empty=true
+00:00 +95: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to numbered_list depth=4 empty=false
+00:00 +96: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to numbered_list depth=4 empty=true
+00:00 +97: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to numbered_list depth=5 empty=false
+00:00 +98: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to numbered_list depth=5 empty=true
+00:00 +99: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to numbered_list depth=6 empty=false
+00:00 +100: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to numbered_list depth=6 empty=true
+00:00 +101: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to bulleted_list depth=0 empty=false
+00:00 +102: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to bulleted_list depth=0 empty=true
+00:00 +103: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to bulleted_list depth=1 empty=false
+00:00 +104: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to bulleted_list depth=1 empty=true
+00:00 +105: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to bulleted_list depth=2 empty=false
+00:00 +106: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to bulleted_list depth=2 empty=true
+00:00 +107: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to bulleted_list depth=3 empty=false
+00:00 +108: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to bulleted_list depth=3 empty=true
+00:00 +109: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to bulleted_list depth=4 empty=false
+00:00 +110: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to bulleted_list depth=4 empty=true
+00:00 +111: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to bulleted_list depth=5 empty=false
+00:00 +112: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to bulleted_list depth=5 empty=true
+00:00 +113: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to bulleted_list depth=6 empty=false
+00:00 +114: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to bulleted_list depth=6 empty=true
+00:00 +115: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to todo_list depth=0 empty=false
+00:00 +116: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to todo_list depth=0 empty=true
+00:00 +117: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to todo_list depth=1 empty=false
+00:00 +118: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to todo_list depth=1 empty=true
+00:00 +119: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to todo_list depth=2 empty=false
+00:00 +120: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to todo_list depth=2 empty=true
+00:00 +121: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to todo_list depth=3 empty=false
+00:00 +122: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to todo_list depth=3 empty=true
+00:00 +123: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to todo_list depth=4 empty=false
+00:00 +124: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to todo_list depth=4 empty=true
+00:00 +125: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to todo_list depth=5 empty=false
+00:00 +126: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to todo_list depth=5 empty=true
+00:00 +127: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to todo_list depth=6 empty=false
+00:00 +128: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: todo_list to todo_list depth=6 empty=true
+00:00 +129: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: batch to numbered_list reverse=false selection=SelectionType.inline
+00:00 +130: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: batch to numbered_list reverse=false selection=SelectionType.block
+00:00 +131: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: batch to numbered_list reverse=true selection=SelectionType.inline
+00:00 +132: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: batch to numbered_list reverse=true selection=SelectionType.block
+00:00 +133: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: batch to bulleted_list reverse=false selection=SelectionType.inline
+00:00 +134: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: batch to bulleted_list reverse=false selection=SelectionType.block
+00:00 +135: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: batch to bulleted_list reverse=true selection=SelectionType.inline
+00:00 +136: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: batch to bulleted_list reverse=true selection=SelectionType.block
+00:00 +137: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: batch to todo_list reverse=false selection=SelectionType.inline
+00:00 +138: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: batch to todo_list reverse=false selection=SelectionType.block
+00:00 +139: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: batch to todo_list reverse=true selection=SelectionType.inline
+00:00 +140: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: batch to todo_list reverse=true selection=SelectionType.block
+00:00 +141: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_type_test.dart: invalid target, range, read-only, disposed and mixed blocks do not mutate
+00:01 +142: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:01 +143: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:01 +144: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:01 +145: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:01 +146: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:02 +147: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:02 +148: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:02 +149: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:02 +150: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:02 +151: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:02 +152: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:02 +153: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:02 +154: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:02 +155: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:02 +156: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:02 +157: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:02 +158: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:02 +159: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:02 +160: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:02 +161: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:02 +162: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:02 +163: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:02 +164: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:02 +165: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:02 +166: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:02 +167: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:02 +168: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:02 +169: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:03 +170: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:03 +171: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:03 +172: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:03 +173: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:03 +174: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: callout more deletes withTail subtree as one undo step
+00:03 +175: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: callout more deletes withTail subtree as one undo step
+00:03 +176: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: callout more deletes withTail subtree as one undo step
+00:03 +177: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: callout more deletes withTail subtree as one undo step
+00:03 +178: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: callout more deletes withTail subtree as one undo step
+00:03 +179: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: callout more deletes withTail subtree as one undo step
+00:03 +180: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: callout more deletes withTail subtree as one undo step
+00:03 +181: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: callout more deletes withTail subtree as one undo step
+00:03 +182: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: callout more deletes withTail subtree as one undo step
+00:03 +183: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: callout more deletes withTail subtree as one undo step
+00:03 +184: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: callout more deletes withTail subtree as one undo step
+00:03 +185: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: callout more deletes withTail subtree as one undo step
+00:03 +186: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: callout more deletes withTail subtree as one undo step
+00:03 +187: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: callout more deletes withTail subtree as one undo step
+00:04 +188: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: callout more deletes withTail subtree as one undo step
+00:04 +189: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: callout more deletes withTail subtree as one undo step
+00:04 +190: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: callout more deletes withTail subtree as one undo step
+00:04 +191: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: callout more deletes withTail subtree as one undo step
+00:04 +192: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: callout more deletes withTail subtree as one undo step
+00:04 +193: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: tapping body resolves through unrendered table rows
+00:04 +194: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: tapping body resolves through unrendered table rows
+00:04 +195: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: tapping body resolves through unrendered table rows
+00:04 +196: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: tapping body resolves through unrendered table rows
+00:04 +197: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_lock_test.dart: remote lock then unlock disables an open picker and rejects its old callback
+00:04 +198: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_lock_test.dart: remote lock then unlock disables an open picker and rejects its old callback
+00:04 +199: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_lock_test.dart: remote lock then unlock disables an open picker and rejects its old callback
+00:04 +200: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_lock_test.dart: remote lock then unlock disables an open picker and rejects its old callback
+00:05 +201: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_lock_test.dart: remote lock then unlock disables an open picker and rejects its old callback
+00:05 +202: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_lock_test.dart: remote lock then unlock disables an open picker and rejects its old callback
+00:05 +203: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_lock_test.dart: remote lock then unlock disables an open picker and rejects its old callback
+00:05 +204: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_lock_test.dart: remote lock then unlock disables an open picker and rejects its old callback
+00:05 +205: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_lock_test.dart: remote lock then unlock disables an open picker and rejects its old callback
+00:05 +206: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_lock_test.dart: remote lock then unlock disables an open picker and rejects its old callback
+00:05 +207: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_lock_test.dart: remote lock then unlock disables an open picker and rejects its old callback
+00:05 +208: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menus insert before/after and delete rows and columns atomically
+00:05 +209: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menus insert before/after and delete rows and columns atomically
+00:05 +210: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menus insert before/after and delete rows and columns atomically
+00:05 +211: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menus insert before/after and delete rows and columns atomically
+00:05 +212: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menus insert before/after and delete rows and columns atomically
+00:06 +213: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menus insert before/after and delete rows and columns atomically
+00:06 +214: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menus insert before/after and delete rows and columns atomically
+00:06 +215: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menus insert before/after and delete rows and columns atomically
+00:06 +216: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menus insert before/after and delete rows and columns atomically
+00:06 +217: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menus insert before/after and delete rows and columns atomically
+00:06 +218: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menus insert before/after and delete rows and columns atomically
+00:06 +219: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menus insert before/after and delete rows and columns atomically
+00:06 +220: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menus insert before/after and delete rows and columns atomically
+00:06 +221: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menus insert before/after and delete rows and columns atomically
+00:06 +222: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: shared appearance picker preserves custom colors and independent undo
+00:07 +223: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: numbered_list toolbar at offset=0 keeps content, checked state and focus (variant: TargetPlatform.android)
+00:07 +224: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: numbered_list toolbar at offset=0 keeps content, checked state and focus (variant: TargetPlatform.android)
+00:07 +225: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: emoji and color controls publish field edits and independent undo
+00:07 +226: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: emoji and color controls publish field edits and independent undo
+00:07 +227: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: emoji and color controls publish field edits and independent undo
+00:07 +228: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: emoji and color controls publish field edits and independent undo
+00:07 +229: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: emoji and color controls publish field edits and independent undo
+00:07 +230: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: emoji and color controls publish field edits and independent undo
+00:07 +231: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: emoji and color controls publish field edits and independent undo
+00:08 +232: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: emoji and color controls publish field edits and independent undo
+00:08 +233: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: merged cell spans rows/columns and more sheet only offers merge and split at 320px
+00:08 +234: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: todo_list toolbar at offset=0 keeps content, checked state and focus (variant: TargetPlatform.android)
+00:08 +235: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: todo_list toolbar at offset=0 keeps content, checked state and focus (variant: TargetPlatform.android)
+00:08 +236: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: todo_list toolbar at offset=0 keeps content, checked state and focus (variant: TargetPlatform.android)
+00:08 +237: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: footer removes emoji and preserves independent undo
+00:08 +238: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: open table sheet rejects permission/remote changes revoke=true
+00:08 +239: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: open table sheet rejects permission/remote changes revoke=true
+00:08 +240: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: open table sheet rejects permission/remote changes revoke=true
+00:08 +241: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_callout_block_test.dart: add sheet inserts a callout and body shortcuts never replace the container
+00:09 +242: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: toolbar mixed range reverse=false keeps range and focus through conversion (variant: TargetPlatform.android)
+00:09 +243: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: open table sheet rejects permission/remote changes revoke=false
+00:09 +244: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: open table sheet rejects permission/remote changes revoke=false
+00:09 +245: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: toolbar mixed range reverse=true keeps range and focus through conversion (variant: TargetPlatform.android)
+00:09 +246: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: toolbar mixed range reverse=true keeps range and focus through conversion (variant: TargetPlatform.android)
+00:09 +247: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: toolbar mixed range reverse=true keeps range and focus through conversion (variant: TargetPlatform.android)
+00:09 +248: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: toolbar maximum depth disables increase and preserves unchecked Todo (variant: TargetPlatform.android)
+00:09 +249: All tests passed!

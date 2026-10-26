@@ -269,7 +269,7 @@ Node? findCollabDateCard(EditorState state, String id) {
 }
 
 /// 在借用 [state] 的保存 [selection] 起点插入正式日期卡片并返回后置段落光标。
-/// 空正文被替换，非空正文保留；新块使用独立身份，可插在根或高亮容器内。
+/// 空正文被替换，非空正文保留；新块使用独立身份，可插在根、高亮或单列容器内。
 /// [values] 为可选的已校验日期/外观属性；默认定格当前本地日期并采用台历固定尺寸。
 /// 复制属性值后与插入合为一次历史，不在读取或重新打开时刷新日期。
 /// 只读/已失效位置返回 null；不恢复输入焦点，调用方须等待添加面板退出。
@@ -286,7 +286,7 @@ Future<Selection?> insertCollabDateCard(
     return null;
   }
   final source = state.getNodeAtPath(selection.start.path);
-  if (source == null || !const {'page', 'callout'}.contains(source.parent?.type)) {
+  if (source == null || !const {'page', 'callout', 'column'}.contains(source.parent?.type)) {
     return null;
   }
   if (values.entries.any((e) => !isValidDateCardProperty(e.key, e.value))) return null;

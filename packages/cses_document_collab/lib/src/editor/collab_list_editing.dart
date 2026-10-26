@@ -330,9 +330,9 @@ Node? _editableFlatList(EditorState state) {
   return node;
 }
 
-/// 判断借用[node]是否属于默认根级或高亮容器的扁平列表；层级仍保存在兄弟节点属性中。
+/// 判断借用[node]是否属于默认根级、高亮或单列容器的扁平列表；层级仍保存在兄弟节点属性中。
 bool _isFlatListParent(Node node) =>
-    node.path.length == 1 || node.parent?.type == csesCalloutBlockType;
+    node.path.length == 1 || node.parent?.type == csesCalloutBlockType || node.parent?.type == 'column';
 
 /// 判断借用[state]是否允许[node]所属无Delta父容器中的平面列表缩进、回车及行首退格。
 bool _isListIndentParent(EditorState state, Node node) {

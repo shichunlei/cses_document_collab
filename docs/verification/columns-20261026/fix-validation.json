@@ -1,0 +1,103 @@
+{
+  "date": "2026-10-26",
+  "findings": {
+    "R1": {
+      "priority": "P1",
+      "status": "fixed",
+      "change": "ordinary and word-backspace bindings share the existing boundary/list guard; standard within-paragraph behavior delegates unchanged"
+    },
+    "R2": {
+      "priority": "P2",
+      "status": "fixed",
+      "change": "only formal columns/column nodes overwrite JSON layout from field projections; legacy bc.p props preserved and explicit formal clears honored"
+    }
+  },
+  "source_sha256": {
+    "packages/cses_document_collab/lib/src/editor/collab_block_delete.dart": "8e1c2981d467f0e49dd54b9304c248535e07a7f3c4c077cfc4d9ecb5ef8016d4",
+    "packages/cses_document_collab/lib/src/editor/blockcraft_json_codec.dart": "7153ed925341436b2f1ec54d940af98a19472a113dbafa95bc26189200361792",
+    "packages/cses_document_collab/test/collab_columns_test.dart": "af71742ca0faef0b7a8455a07aa8673fbb6e1d73b9cf2b8027a1889657eb2b6b",
+    "packages/cses_document_collab/test/columns_native_integration_test.dart": "5ccd5f86c0d2510edfc74c4e87a7552e9d91952f03e4b7a839766c09cfd252c0"
+  },
+  "checks": [
+    {
+      "command": "dart format (changed files, preserved existing 80/120 width)",
+      "status": "passed"
+    },
+    {
+      "command": "flutter analyze --no-pub lib/src/editor/collab_block_delete.dart lib/src/editor/blockcraft_json_codec.dart test/collab_columns_test.dart test/columns_native_integration_test.dart",
+      "status": "passed",
+      "evidence": "fix-analyze.txt"
+    },
+    {
+      "command": "flutter test --no-pub test/collab_columns_test.dart test/columns_native_integration_test.dart (before fix)",
+      "passed": 17,
+      "failed": 4,
+      "evidence": "fix-before-tests.txt"
+    },
+    {
+      "command": "flutter test --no-pub test/collab_columns_test.dart test/columns_native_integration_test.dart",
+      "passed": 21,
+      "failed": 0,
+      "evidence": "fix-target-tests.txt"
+    },
+    {
+      "command": "flutter test --no-pub test/collab_columns_test.dart --plain-name 'word backspace uses the registered column guard before the standard command'",
+      "passed": 1,
+      "failed": 0,
+      "evidence": "fix-hardware-keyboard-test.txt",
+      "overlaps_target_group": true,
+      "note": "existing widget case then expanded with focused-editor physical modifier/backspace event and rerun individually"
+    },
+    {
+      "command": "flutter test --no-pub [9 associated package tests]",
+      "passed": 249,
+      "failed": 0,
+      "evidence": "fix-related-tests.txt"
+    },
+    {
+      "command": "flutter test --no-pub [5 host daily_guidance consumers]",
+      "passed": 50,
+      "failed": 0,
+      "evidence": "fix-host-tests.txt"
+    },
+    {
+      "command": "flutter build apk --debug --no-pub",
+      "status": "passed",
+      "evidence": "fix-android-build.txt",
+      "installed": false
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "evidence": "fix-diff-check.txt"
+    }
+  ],
+  "package_distinct_tests": 270,
+  "host_tests": 50,
+  "apk": {
+    "path": "build/app/outputs/flutter-apk/app-debug.apk",
+    "sha256": "43f8be5d7f414ba8a5a35be59952c3ceadcbc19c5b4feb7f7e803c3780579384",
+    "bytes": 228215925,
+    "final_product_source_embedded": {
+      "packages/cses_document_collab/lib/src/editor/collab_block_delete.dart": true,
+      "packages/cses_document_collab/lib/src/editor/blockcraft_json_codec.dart": true
+    }
+  },
+  "version_evidence": "fix-blockcraft-version.json",
+  "generated_or_native_interfaces_changed": false,
+  "existing_user_changes_preserved": [
+    "packages/appflowy_editor/pubspec.yaml",
+    "docs/日成果-2026-10-23-完整文档结构.json"
+  ],
+  "not_newly_validated": [
+    "physical device",
+    "iOS app/device",
+    "live online desktop/mobile collaboration",
+    "full package test suite (existing toolbar baseline failure retained)"
+  ],
+  "remaining_scope": [
+    "touch drag resize/reorder",
+    "full cross-column range editing and clipboard/HTML/Markdown parity",
+    "unrelated 0.11.31 changes listed in version evidence"
+  ]
+}

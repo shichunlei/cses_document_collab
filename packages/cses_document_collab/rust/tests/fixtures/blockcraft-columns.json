@@ -1,0 +1,201 @@
+{
+  "id": "fixture-doc",
+  "flavour": "root",
+  "nodeType": "root",
+  "props": {},
+  "meta": {},
+  "children": [
+    {
+      "id": "columns",
+      "flavour": "columns",
+      "nodeType": "block",
+      "props": {
+        "columnCount": 2,
+        "columnWidths": [
+          30,
+          70
+        ],
+        "futureProp": {
+          "preserve": true
+        }
+      },
+      "meta": {
+        "audit": "desktop"
+      },
+      "children": [
+        {
+          "id": "column-0",
+          "flavour": "column",
+          "nodeType": "block",
+          "props": {
+            "columnIndex": 0
+          },
+          "meta": {},
+          "children": [
+            {
+              "id": "body-0",
+              "flavour": "paragraph",
+              "nodeType": "editable",
+              "props": {},
+              "meta": {},
+              "children": [
+                {
+                  "insert": "第1列正文",
+                  "attributes": {
+                    "a:bold": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "column-1",
+          "flavour": "column",
+          "nodeType": "block",
+          "props": {
+            "columnIndex": 1
+          },
+          "meta": {},
+          "children": [
+            {
+              "id": "body-1",
+              "flavour": "paragraph",
+              "nodeType": "editable",
+              "props": {},
+              "meta": {},
+              "children": [
+                {
+                  "insert": "第2列正文",
+                  "attributes": {
+                    "a:bold": true
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "text-18",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {},
+      "meta": {},
+      "children": [
+        {
+          "insert": "后续正文",
+          "attributes": {
+            "a:bold": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "box",
+      "flavour": "callout",
+      "nodeType": "block",
+      "props": {},
+      "meta": {},
+      "children": [
+        {
+          "id": "nested-columns",
+          "flavour": "columns",
+          "nodeType": "block",
+          "props": {
+            "columnCount": 2,
+            "columnWidths": [
+              50,
+              50
+            ]
+          },
+          "meta": {},
+          "children": [
+            {
+              "id": "block-8",
+              "flavour": "column",
+              "nodeType": "block",
+              "props": {},
+              "meta": {},
+              "children": [
+                {
+                  "id": "text-7",
+                  "flavour": "paragraph",
+                  "nodeType": "editable",
+                  "props": {},
+                  "meta": {},
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "block-10",
+              "flavour": "column",
+              "nodeType": "block",
+              "props": {},
+              "meta": {},
+              "children": [
+                {
+                  "id": "text-9",
+                  "flavour": "paragraph",
+                  "nodeType": "editable",
+                  "props": {},
+                  "meta": {},
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "malformed-columns",
+      "flavour": "columns",
+      "nodeType": "block",
+      "props": {
+        "columnCount": 2,
+        "columnWidths": [
+          50,
+          50
+        ]
+      },
+      "meta": {},
+      "children": [
+        {
+          "id": "text-17",
+          "flavour": "paragraph",
+          "nodeType": "editable",
+          "props": {},
+          "meta": {},
+          "children": [
+            {
+              "insert": "保留不合法子块",
+              "attributes": {
+                "a:bold": true
+              }
+            }
+          ]
+        },
+        {
+          "id": "block-15",
+          "flavour": "column",
+          "nodeType": "block",
+          "props": {},
+          "meta": {},
+          "children": [
+            {
+              "id": "text-14",
+              "flavour": "paragraph",
+              "nodeType": "editable",
+              "props": {},
+              "meta": {},
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

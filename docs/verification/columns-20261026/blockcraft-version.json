@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-26",
+  "registry": "http://npm.runtongqiuben.com/",
+  "latest": "0.11.30",
+  "latest_query": "npm view @ccc/blockcraft dist-tags.latest --json --fetch-retries=0 --fetch-timeout=15000 --cache /private/tmp/columns-npm-cache (desktop cwd, succeeded)",
+  "desktop": {
+    "declaration": "0.11.30",
+    "yarn_lock": "0.11.30",
+    "installed": "0.11.17",
+    "historical_pnpm_lock": "0.2.78",
+    "changed_by_this_task": false
+  },
+  "dist": {
+    "integrity": "sha512-rx488SxuPm4FqjL88B4c0V5balNRL1h+gJ79IgYr84lfL68lCQdH/m11Dx0LvzdBnvQE/fgJDLscWlnogKlMPQ==",
+    "shasum": "abedbde54c71e81db525aec73f86cceb77f4cb4b",
+    "tarball": "http://npm.runtongqiuben.com/@ccc/blockcraft/-/blockcraft-0.11.30.tgz"
+  },
+  "tarball_sha1": "abedbde54c71e81db525aec73f86cceb77f4cb4b",
+  "versions": {
+    "published": {
+      "version": "0.11.30",
+      "documentation_sha256": {
+        "SKILL.md": "1bdaa3efdde9a455284810febaffb043cd3e59e8ef9a0babbb76c5c875140b0d",
+        "blockcraft.md": "f8b0ed3c2afcb2e03334b9bd6bedb1f7a2c502a303472447367701cdbac39ffd",
+        "blockcraft-block.md": "450dc1d55049c43a4cb579db47d9af9c5c162af71a897686bb0e9cc6b97b7019",
+        "MIGRATIONS.md": "33f0840c7d98f89407e7237fa41aacfbc8b8d29eb826c1aeecbe318c509ec867"
+      },
+      "sources_sha256": {
+        "column.block.ts": "8ec7f273fb9702e08c57af0a618da6f5cb006007924e1536daa3c506b01d9811",
+        "columns.block.ts": "0d0ea0104306fda87bf8f1013484e6b8b45c77c6c6ea0f13f864981c1062156b",
+        "agent/index.ts": "252821d585432f64bcaca16ce23fe961b036253232d7b021475af51686c802b0",
+        "index.ts": "bf10cc835026a9968f07981105f0894628b577bb5ce7b07d7d881b50eeeee9cb",
+        "adapter/index.ts": "ea70e02b33320f698af500447f0eb37c8c3ee6e9b7240861cf2230c11c1b891a"
+      }
+    },
+    "installed": {
+      "version": "0.11.17",
+      "documentation_sha256": {
+        "SKILL.md": "1bdaa3efdde9a455284810febaffb043cd3e59e8ef9a0babbb76c5c875140b0d",
+        "blockcraft.md": "15f256fc6e1ffb131d114371605feab0a4c58f1a6cc76b20bbba3011001f2dc1",
+        "blockcraft-block.md": "815dcb2478cbcafc6ed3aa1a9e6fa86e0473e73aced36f56ae17f3d59107ce41",
+        "MIGRATIONS.md": "4c87c528886aed39605183f6c6d812d04d94b600c4931f314bb611e689edf5dd"
+      },
+      "sources_sha256": {
+        "column.block.ts": "8ec7f273fb9702e08c57af0a618da6f5cb006007924e1536daa3c506b01d9811",
+        "columns.block.ts": "0d0ea0104306fda87bf8f1013484e6b8b45c77c6c6ea0f13f864981c1062156b",
+        "agent/index.ts": "252821d585432f64bcaca16ce23fe961b036253232d7b021475af51686c802b0",
+        "index.ts": "bf10cc835026a9968f07981105f0894628b577bb5ce7b07d7d881b50eeeee9cb",
+        "adapter/index.ts": "ea70e02b33320f698af500447f0eb37c8c3ee6e9b7240861cf2230c11c1b891a"
+      }
+    }
+  },
+  "columns_sources_match": true,
+  "scope": "columns/column Schema, rendering/widths, add/remove/reorder/flatten, selection scope and child restrictions; other 0.11.30 differences remain outside this task"
+}

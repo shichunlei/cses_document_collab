@@ -1,0 +1,456 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: image copies full media URL with reorder protection
+00:00 +1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: image copies full media URL with reorder protection
+00:00 +2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: image copies full media URL with reorder protection
+00:00 +3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: image copies full media URL with reorder protection
+00:01 +4: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:01 +5: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:01 +6: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:01 +7: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:01 +8: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:01 +9: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:01 +10: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:01 +11: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:01 +12: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:01 +13: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:01 +14: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:01 +15: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:01 +16: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:01 +17: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:01 +18: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:01 +19: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:02 +20: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart: type switch numbered_list to numbered_list retains rich text, depth and Android focus (variant: TargetPlatform.android)
+00:02 +21: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +22: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +23: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +24: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +25: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +26: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +27: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +28: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +29: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +30: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +31: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +32: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +33: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +33: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: image copies full media URL with failure protection
+DocCollab: 块操作失败: PlatformException(clipboard-denied, null, null, null)
+#0      JSONMethodCodec.decodeEnvelope (package:flutter/src/services/message_codecs.dart:168:7)
+#1      MethodChannel._invokeMethod (package:flutter/src/services/platform_channel.dart:366:18)
+<asynchronous suspension>
+#2      Clipboard.setData (package:flutter/src/services/clipboard.dart:36:5)
+<asynchronous suspension>
+#3      copyCollabMediaLink (package:cses_document_collab/src/editor/collab_block_actions.dart:99:3)
+<asynchronous suspension>
+#4      CollabBlockMoreButton._show.<anonymous closure> (package:cses_document_collab/src/editor/collab_block_actions.dart:394:13)
+<asynchronous suspension>
+#5      runEditorHeaderAction (package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart:2862:12)
+<asynchronous suspension>
+#6      CollabBlockMoreButton._show (package:cses_document_collab/src/editor/collab_block_actions.dart:266:7)
+<asynchronous suspension>
+
+00:02 +34: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +35: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +36: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +36: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: video copies full media URL with reorder protection
+DocCollab: 文档视频加载失败: Bad state: fixture offline
+#0      _UnavailableVideo.createWithOptions (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart:36:7)
+#1      VideoPlayerController.initialize (package:video_player/video_player.dart:615:37)
+#2      _VideoBlockState._initializeVideo (package:cses_document_collab/src/editor/collab_video_block.dart:127:24)
+<asynchronous suspension>
+
+00:02 +37: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +38: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +39: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +40: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +41: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +42: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +43: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +43: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: video copies full media URL with reorder protection
+DocCollab: 文档视频加载失败: Bad state: fixture offline
+#0      _UnavailableVideo.createWithOptions (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart:36:7)
+#1      VideoPlayerController.initialize (package:video_player/video_player.dart:615:37)
+#2      _VideoBlockState._initializeVideo (package:cses_document_collab/src/editor/collab_video_block.dart:127:24)
+<asynchronous suspension>
+
+00:02 +44: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +45: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +46: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +46: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: video copies full media URL with source protection
+DocCollab: 文档视频加载失败: Bad state: fixture offline
+#0      _UnavailableVideo.createWithOptions (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart:36:7)
+#1      VideoPlayerController.initialize (package:video_player/video_player.dart:615:37)
+#2      _VideoBlockState._initializeVideo (package:cses_document_collab/src/editor/collab_video_block.dart:127:24)
+<asynchronous suspension>
+
+00:02 +46: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +47: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +48: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +48: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: video copies full media URL with delete protection
+DocCollab: 文档视频加载失败: Bad state: fixture offline
+#0      _UnavailableVideo.createWithOptions (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart:36:7)
+#1      VideoPlayerController.initialize (package:video_player/video_player.dart:615:37)
+#2      _VideoBlockState._initializeVideo (package:cses_document_collab/src/editor/collab_video_block.dart:127:24)
+<asynchronous suspension>
+
+00:03 +49: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:03 +50: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:03 +51: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:03 +51: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: video copies full media URL with revokeRestore protection
+DocCollab: 文档视频加载失败: Bad state: fixture offline
+#0      _UnavailableVideo.createWithOptions (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart:36:7)
+#1      VideoPlayerController.initialize (package:video_player/video_player.dart:615:37)
+#2      _VideoBlockState._initializeVideo (package:cses_document_collab/src/editor/collab_video_block.dart:127:24)
+<asynchronous suspension>
+
+00:03 +52: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:03 +53: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:03 +54: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:03 +54: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: video copies full media URL with cancel protection
+DocCollab: 文档视频加载失败: Bad state: fixture offline
+#0      _UnavailableVideo.createWithOptions (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart:36:7)
+#1      VideoPlayerController.initialize (package:video_player/video_player.dart:615:37)
+#2      _VideoBlockState._initializeVideo (package:cses_document_collab/src/editor/collab_video_block.dart:127:24)
+<asynchronous suspension>
+
+00:03 +55: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:03 +56: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:03 +57: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:03 +58: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:03 +58: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: video copies full media URL with failure protection
+DocCollab: 文档视频加载失败: Bad state: fixture offline
+#0      _UnavailableVideo.createWithOptions (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart:36:7)
+#1      VideoPlayerController.initialize (package:video_player/video_player.dart:615:37)
+#2      _VideoBlockState._initializeVideo (package:cses_document_collab/src/editor/collab_video_block.dart:127:24)
+<asynchronous suspension>
+
+00:03 +59: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:03 +59: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: video copies full media URL with failure protection
+DocCollab: 块操作失败: PlatformException(clipboard-denied, null, null, null)
+#0      JSONMethodCodec.decodeEnvelope (package:flutter/src/services/message_codecs.dart:168:7)
+#1      MethodChannel._invokeMethod (package:flutter/src/services/platform_channel.dart:366:18)
+<asynchronous suspension>
+#2      Clipboard.setData (package:flutter/src/services/clipboard.dart:36:5)
+<asynchronous suspension>
+#3      copyCollabMediaLink (package:cses_document_collab/src/editor/collab_block_actions.dart:99:3)
+<asynchronous suspension>
+#4      CollabBlockMoreButton._show.<anonymous closure> (package:cses_document_collab/src/editor/collab_block_actions.dart:394:13)
+<asynchronous suspension>
+#5      runEditorHeaderAction (package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart:2862:12)
+<asynchronous suspension>
+#6      CollabBlockMoreButton._show (package:cses_document_collab/src/editor/collab_block_actions.dart:266:7)
+<asynchronous suspension>
+
+00:03 +60: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:03 +61: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:03 +62: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:03 +63: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:03 +64: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:03 +65: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:03 +66: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:03 +67: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:03 +68: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:04 +69: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:04 +70: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:04 +71: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:04 +72: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:04 +73: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:04 +74: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:04 +75: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:04 +76: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:04 +77: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:04 +78: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:04 +79: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:04 +80: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:04 +81: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:04 +82: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:04 +83: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:04 +84: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:04 +85: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:04 +86: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:05 +86: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: audio copies full media URL with failure protection
+DocCollab: 块操作失败: PlatformException(clipboard-denied, null, null, null)
+#0      JSONMethodCodec.decodeEnvelope (package:flutter/src/services/message_codecs.dart:168:7)
+#1      MethodChannel._invokeMethod (package:flutter/src/services/platform_channel.dart:366:18)
+<asynchronous suspension>
+#2      Clipboard.setData (package:flutter/src/services/clipboard.dart:36:5)
+<asynchronous suspension>
+#3      copyCollabMediaLink (package:cses_document_collab/src/editor/collab_block_actions.dart:99:3)
+<asynchronous suspension>
+#4      CollabBlockMoreButton._show.<anonymous closure> (package:cses_document_collab/src/editor/collab_block_actions.dart:394:13)
+<asynchronous suspension>
+#5      runEditorHeaderAction (package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart:2862:12)
+<asynchronous suspension>
+#6      CollabBlockMoreButton._show (package:cses_document_collab/src/editor/collab_block_actions.dart:266:7)
+<asynchronous suspension>
+
+00:05 +87: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:05 +88: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:05 +89: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:05 +90: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:05 +91: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:05 +92: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:05 +93: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:05 +94: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:05 +95: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:05 +96: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:05 +97: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:05 +98: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:05 +99: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:05 +100: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:05 +101: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:05 +102: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:05 +103: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:05 +104: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:05 +105: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:05 +106: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:05 +107: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:05 +108: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:05 +109: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:05 +110: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:05 +111: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:05 +112: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:05 +113: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:05 +114: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:05 +115: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:05 +116: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:05 +117: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +118: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +119: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +120: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +121: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +122: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +123: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +124: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +125: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +126: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +127: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +128: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +129: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +130: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +131: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +132: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +133: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +134: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +135: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +135: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables columns
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following _TypeError was thrown running a test:
+Null check operator used on a null value
+
+When the exception was thrown, this was the stack:
+#0      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart:72:57)
+<asynchronous suspension>
+#1      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#2      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  keyboard toolbar only enables columns
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:06 +135 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +135 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables columns [E]
+  Test failed. See exception logs above.
+  The test description was: keyboard toolbar only enables columns
+
+00:06 +136 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +137 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +138 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +139 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +140 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +141 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +142 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +143 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +144 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +145 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +146 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +147 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +148 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +149 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +150 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +151 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_operations_test.dart: image editor uses original menus and isolates host services
+00:06 +152 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:06 +153 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:07 +153 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: video production menu copies its paragraph reference
+DocCollab: 文档视频加载失败: Bad state: fixture offline
+#0      _UnavailableVideo.createWithOptions (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart:36:7)
+#1      VideoPlayerController.initialize (package:video_player/video_player.dart:615:37)
+#2      _VideoBlockState._initializeVideo (package:cses_document_collab/src/editor/collab_video_block.dart:127:24)
+<asynchronous suspension>
+
+00:07 +154 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:07 +155 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:07 +156 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:07 +156 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: video production more menu inserts an editable final sibling
+DocCollab: 文档视频加载失败: Bad state: fixture offline
+#0      _UnavailableVideo.createWithOptions (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart:36:7)
+#1      VideoPlayerController.initialize (package:video_player/video_player.dart:615:37)
+#2      _VideoBlockState._initializeVideo (package:cses_document_collab/src/editor/collab_video_block.dart:127:24)
+<asynchronous suspension>
+
+00:07 +157 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:07 +158 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:07 +159 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:07 +160 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:07 +160 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart: video readonly hides insertion controls
+DocCollab: 文档视频加载失败: Bad state: fixture offline
+#0      _UnavailableVideo.createWithOptions (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_block_actions_test.dart:36:7)
+#1      VideoPlayerController.initialize (package:video_player/video_player.dart:615:37)
+#2      _VideoBlockState._initializeVideo (package:cses_document_collab/src/editor/collab_video_block.dart:127:24)
+<asynchronous suspension>
+
+00:07 +161 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:07 +162 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:07 +163 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:07 +164 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:07 +165 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:07 +166 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:07 +167 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:07 +168 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:07 +169 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:07 +170 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:07 +171 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:07 +172 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:07 +173 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:07 +174 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:07 +175 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:08 +176 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:08 +177 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:08 +178 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:08 +179 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_person_card_test.dart: cancel writes nothing, apply once and undo preserves frozen data
+00:08 +180 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:08 +181 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:08 +182 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:08 +183 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:08 +184 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:08 +185 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:08 +186 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:08 +187 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:08 +188 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:08 +189 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:08 +190 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:08 +191 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:09 +192 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:09 +193 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:09 +194 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:09 +195 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:09 +196 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:09 +197 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:09 +198 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:09 +199 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:09 +200 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:09 +201 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:09 +202 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: settings preview cancels; apply is one undo step and preserves date
+00:09 +203 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menus insert before/after and delete rows and columns atomically
+00:09 +204 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menus insert before/after and delete rows and columns atomically
+00:09 +205 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menus insert before/after and delete rows and columns atomically
+00:09 +206 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: edge menus insert before/after and delete rows and columns atomically
+00:09 +207 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:09 +208 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:09 +209 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:09 +210 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:09 +211 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:09 +212 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: settings cancel no write; apply once, preserve frozen and undo
+00:10 +213 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct formula cancellation and creation share the original input sheet
+00:10 +214 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct formula cancellation and creation share the original input sheet
+00:10 +215 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct formula cancellation and creation share the original input sheet
+00:10 +216 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct formula cancellation and creation share the original input sheet
+00:10 +217 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct formula cancellation and creation share the original input sheet
+00:10 +218 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: menus stay above and close together with the keyboard
+00:10 +219 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: menus stay above and close together with the keyboard
+00:10 +220 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:10 +221 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:10 +222 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:10 +223 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:10 +224 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:10 +225 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:10 +226 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:10 +227 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:10 +228 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:10 +229 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:10 +230 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: old draft remains invalid after lock/unlock and remote edits
+00:10 +231 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: lock then unlock cannot reactivate an old date draft
+00:10 +232 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: lock then unlock cannot reactivate an old date draft
+00:10 +233 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_date_card_test.dart: lock then unlock cannot reactivate an old date draft
+00:10 +234 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: Aa owns color and H owns all block-list actions
+00:10 +235 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: Aa owns color and H owns all block-list actions
+00:10 +236 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: Aa owns color and H owns all block-list actions
+00:10 +237 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: Aa owns color and H owns all block-list actions
+00:10 +238 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: weather refresh menu excludes unavailable action: locked
+00:10 +239 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: weather refresh menu excludes unavailable action: locked
+00:10 +240 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: weather refresh menu excludes unavailable action: locked
+00:10 +241 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: weather refresh menu excludes unavailable action: locked
+00:11 +242 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: merged cell spans rows/columns and more sheet only offers merge and split at 320px
+00:11 +243 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: merged cell spans rows/columns and more sheet only offers merge and split at 320px
+00:11 +244 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: merged cell spans rows/columns and more sheet only offers merge and split at 320px
+00:11 +245 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: merged cell spans rows/columns and more sheet only offers merge and split at 320px
+00:11 +246 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: merged cell spans rows/columns and more sheet only offers merge and split at 320px
+00:11 +247 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: merged cell spans rows/columns and more sheet only offers merge and split at 320px
+00:11 +248 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:11 +249 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:11 +250 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:11 +251 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: primary T progressively reveals H4 through H6 and resets
+00:11 +252 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: fixed snapshot avoids requests; explicit refresh is undoable and failure keeps old data
+00:11 +253 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: fixed snapshot avoids requests; explicit refresh is undoable and failure keeps old data
+00:11 +254 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: open table sheet rejects permission/remote changes revoke=true
+00:11 +255 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: open table sheet rejects permission/remote changes revoke=true
+00:11 +256 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: open table sheet rejects permission/remote changes revoke=true
+00:11 +257 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: open table sheet rejects permission/remote changes revoke=true
+00:11 +258 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: fixed-date query cannot save after permission is revoked then restored
+00:11 +259 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: fixed-date query cannot save after permission is revoked then restored
+00:11 +260 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: fixed-date query cannot save after permission is revoked then restored
+00:12 +261 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: fixed-date query cannot save after permission is revoked then restored
+00:12 +262 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: fixed-date query cannot save after permission is revoked then restored
+00:12 +263 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: fixed-date query cannot save after permission is revoked then restored
+00:12 +263 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: menu choices cannot reenable disabled block and format capabilities
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: no matching candidates
+  Actual: _KeyWidgetFinder:<Found 1 widget with key [<'editor-mobile-toolbar'>]: [
+            Container-[<'editor-mobile-toolbar'>](bg: BoxDecoration(color: Color(alpha: 1.0000, red:
+1.0000, green: 1.0000, blue: 1.0000, colorSpace: ColorSpace.sRGB), border: Border(top:
+BorderSide(color: Color(alpha: 1.0000, red: 0.8980, green: 0.9059, blue: 0.9216, colorSpace:
+ColorSpace.sRGB)), bottom: BorderSide(color: Color(alpha: 1.0000, red: 0.8980, green: 0.9059, blue:
+0.9216, colorSpace: ColorSpace.sRGB)))), constraints: BoxConstraints(0.0<=w<=Infinity, h=52.0)),
+          ]>
+   Which: means one was found but none were expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart:413:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart line 413
+The test description was:
+  menu choices cannot reenable disabled block and format capabilities
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:12 +263 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: fixed-date query cannot save after permission is revoked then restored
+00:12 +263 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: menu choices cannot reenable disabled block and format capabilities [E]
+  Test failed. See exception logs above.
+  The test description was: menu choices cannot reenable disabled block and format capabilities
+
+00:12 +264 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_weather_test.dart: fixed-date query cannot save after permission is revoked then restored
+00:12 +265 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_table_test.dart: 320px table scrolls horizontally, preserves body and preview=true
+00:12 +266 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: switching editor instances clears a previously open menu
+00:12 +267 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: switching editor instances clears a previously open menu
+00:12 +268 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: switching editor instances clears a previously open menu
+00:12 +269 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: quote colors change independently and can be cleared and undone
+00:12 +270 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: quote colors change independently and can be cleared and undone
+00:12 +271 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard add button visibility: true
+00:12 +272 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: block layout supports justify and distributed with undo
+00:12 +273 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: block layout menu aligns and indents list blocks
+00:12 +274 -2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart: (tearDownAll)
+00:12 +274 -2: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard toolbar only enables columns
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: menu choices cannot reenable disabled block and format capabilities

@@ -1,0 +1,3 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart
+00:00 +0: word backspace uses the registered column guard before the standard command
+00:01 +1: All tests passed!

@@ -94,14 +94,14 @@ Future<bool> changeCollabFormula(EditorState state, String id, String latex, {St
 }
 
 /// 在借用 [state] 的保存 [selection] 起点插入 [latex]，返回后置段落光标。
-/// 空正文被替换，非空正文保留；支持根与高亮容器，公式使用独立身份。
+/// 空正文被替换，非空正文保留；支持根、高亮与单列容器，公式使用独立身份。
 /// 只读、关闭、无效位置或超长表达式返回 null；焦点由面板退场后的调用方恢复。
 Future<Selection?> insertCollabFormula(EditorState state, Selection selection, String latex) async {
   if (state.isDisposed || !state.editable || selection.start.path.isEmpty || latex.length > collabFormulaMaxLength) {
     return null;
   }
   final source = state.getNodeAtPath(selection.start.path);
-  if (source == null || !const {'page', 'callout'}.contains(source.parent?.type)) {
+  if (source == null || !const {'page', 'callout', 'column'}.contains(source.parent?.type)) {
     return null;
   }
   final formula = Node(

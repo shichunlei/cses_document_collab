@@ -18,8 +18,9 @@ import 'package:cses_document_collab/src/model/collab_task_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-/// 硬件 Backspace/Shift+Backspace 的协同入口，置于标准命令前。
+/// 硬件普通及按词退格的协同入口，置于标准命令前；绑定复用AppFlowy当前平台的对应命令。
 /// 行首列表先退级，随后保护容器边界，再处理前置资源删除；不接管行内文字和范围删除。
+/// 按词退格在段首与普通退格共用保护，段内返回ignored继续执行原生按词删除。
 /// 编辑器命令回调必须同步返回 KeyEventResult，事务由私有异步异常边界等待并上报失败。
 /// 借用 EditorState，无额外监听或资源；软键盘通过同规则的拦截器处理。
 ///
@@ -33,7 +34,7 @@ import 'package:flutter/services.dart';
 /// ```
 final collabBlockBackspaceCommand = CommandShortcutEvent(
   key: 'cses-block-backspace',
-  command: 'backspace, shift+backspace',
+  command: '${backspaceCommand.command}, ${deleteLeftWordCommand.command}',
   getDescription: () => '列表退级或删除前置资源块',
   handler: (state) {
     if (state.isDisposed || !state.editable) {

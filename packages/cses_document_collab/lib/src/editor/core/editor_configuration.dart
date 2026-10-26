@@ -29,6 +29,9 @@ enum EditorBlock {
   /// 表格，同时启用行和单元格结构。
   table('table'),
 
+  /// 多栏布局，同时启用单列子容器。
+  columns('columns'),
+
   /// 分割线及其外观设置。
   divider('divider'),
 
@@ -209,6 +212,9 @@ enum EditorKeyboardToolbarItem {
 
   /// 新建2×2表格。
   table,
+
+  /// 新建两栏布局。
+  columns,
 
   /// 新建高亮块。
   callout,
@@ -543,6 +549,7 @@ final class EditorConfiguration {
       (documentFeatures ||
           blocks.any((block) => block.type == type) ||
           (const {'table-row', 'table-cell'}.contains(type) && blocks.contains(EditorBlock.table)) ||
+          (type == 'column' && blocks.contains(EditorBlock.columns)) ||
           (type == 'mermaid-textarea' && blocks.contains(EditorBlock.mermaid))) &&
       (type != 'heading' || headingLevels.contains(level ?? 1));
 

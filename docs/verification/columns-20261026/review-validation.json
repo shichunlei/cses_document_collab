@@ -1,0 +1,86 @@
+{
+  "date": "2026-10-26",
+  "kind": "review-only",
+  "product_sources_unchanged": true,
+  "latest_query": {
+    "cwd": "/System/Volumes/Data/workspace/cses-client",
+    "command": "npm view @ccc/blockcraft dist-tags.latest --json --fetch-retries=0 --fetch-timeout=15000 --cache /private/tmp/columns-review-npm-cache",
+    "result": "0.11.30",
+    "status": "success"
+  },
+  "desktop": {
+    "declaration": "0.11.30",
+    "yarn_lock": "0.11.30",
+    "installed": "0.11.17",
+    "historical_pnpm_lock": "0.2.78"
+  },
+  "documentation_recheck": {
+    "published": {
+      "version": "0.11.30",
+      "documentation_sha256": {
+        "SKILL.md": "1bdaa3efdde9a455284810febaffb043cd3e59e8ef9a0babbb76c5c875140b0d",
+        "blockcraft.md": "f8b0ed3c2afcb2e03334b9bd6bedb1f7a2c502a303472447367701cdbac39ffd",
+        "blockcraft-block.md": "450dc1d55049c43a4cb579db47d9af9c5c162af71a897686bb0e9cc6b97b7019",
+        "MIGRATIONS.md": "33f0840c7d98f89407e7237fa41aacfbc8b8d29eb826c1aeecbe318c509ec867"
+      }
+    },
+    "installed": {
+      "version": "0.11.17",
+      "documentation_sha256": {
+        "SKILL.md": "1bdaa3efdde9a455284810febaffb043cd3e59e8ef9a0babbb76c5c875140b0d",
+        "blockcraft.md": "15f256fc6e1ffb131d114371605feab0a4c58f1a6cc76b20bbba3011001f2dc1",
+        "blockcraft-block.md": "815dcb2478cbcafc6ed3aa1a9e6fa86e0473e73aced36f56ae17f3d59107ce41",
+        "MIGRATIONS.md": "4c87c528886aed39605183f6c6d812d04d94b600c4931f314bb611e689edf5dd"
+      }
+    }
+  },
+  "original_source_fingerprints": "validation.json#source_sha256",
+  "probe_sha256": "21cf95411e37a1b70431b1b54b19dff232edceaaa35db59f7e3def72f3f05e5c",
+  "native_library_sha256": "8812a3e59039f0bc15831617ba81285c6eeca48d746b2b5c554411db8b5ef18e",
+  "findings": [
+    {
+      "id": "R1",
+      "priority": "P1",
+      "status": "unfixed",
+      "file": "packages/cses_document_collab/lib/src/editor/document_editor_view.dart",
+      "line": 403,
+      "evidence": "review-probes-output.txt",
+      "description": "word-backspace bypasses column boundary guard; right paragraph removed and text persisted into left column (adapter and FRB)"
+    },
+    {
+      "id": "R2",
+      "priority": "P2",
+      "status": "unfixed",
+      "file": "packages/cses_document_collab/lib/src/editor/blockcraft_json_codec.dart",
+      "line": 496,
+      "evidence": "review-probes-output.txt",
+      "description": "legacy snapshot-columns/column JSON export drops columnWidths/columnCount/columnIndex"
+    }
+  ],
+  "checks": [
+    {
+      "command": "flutter test --no-pub test/columns_review_probe_test.dart --timeout 30s",
+      "passed": 3,
+      "failed": 3,
+      "failed_assertions_cover_findings": 2,
+      "evidence": "review-probes-output.txt"
+    },
+    {
+      "command": "flutter test --no-pub test/collab_columns_test.dart test/columns_native_integration_test.dart",
+      "passed": 15,
+      "failed": 0,
+      "evidence": "review-existing-tests.txt"
+    },
+    {
+      "command": "cargo test --manifest-path packages/cses_document_collab/rust/Cargo.toml columns_",
+      "passed": 3,
+      "failed": 0,
+      "evidence": "review-rust-tests.txt"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed"
+    }
+  ],
+  "new_build_or_device_validation": false
+}

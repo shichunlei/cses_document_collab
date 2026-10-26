@@ -1,0 +1,37 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart
+00:00 +0: formal projection preserves children and edits only explicit width fields
+00:00 +0 -1: formal projection preserves children and edits only explicit width fields [E]
+  Expected: same instance as Node:<Node(id: columns, type: columns, attributes: {cses_collab_block_id: columns, cses_resource: {properties: {"columnCount":2,"columnWidths":[30,70]}}, cses_columns_columnCount: {"value":2}, cses_columns_columnWidths: {"value":[35.0,65.0]}, cses_columns_columnIndex: {}, cses_resource_target: columns, cses_resource_kind: columns}, children: [Node(id: left, type: column, attributes: {cses_collab_block_id: left, cses_resource: {properties: {}}, cses_columns_columnCount: {}, cses_columns_columnWidths: {}, cses_columns_columnIndex: {}}, children: [Node(id: left-text, type: paragraph, attributes: {delta: [{insert: 第一列}], cses_paragraph_textDefaults: {}, cses_paragraph_nextParagraphStyle: {}, cses_paragraph_heading: {}, cses_paragraph_depth: {}, cses_paragraph_fs: {}, cses_paragraph_pfs: {}, cses_paragraph_lh: {}, cses_paragraph_psb: {}, cses_paragraph_psa: {}, cses_paragraph_decoration: {}, cses_paragraph_target: left-text, cses_collab_block_id: left-text, cses_block_background_color: null, cses_block_border_color: null, bgColor: null, align: left, cses_collab_indent: 0}, children: [])]), Node(id: right, type: column, attributes: {cses_collab_block_id: right, cses_resource: {properties: {}}, cses_columns_columnCount: {}, cses_columns_columnWidths: {}, cses_columns_columnIndex: {}}, children: [Node(id: right-text, type: paragraph, attributes: {delta: [{insert: 第二列}], cses_paragraph_textDefaults: {}, cses_paragraph_nextParagraphStyle: {}, cses_paragraph_heading: {}, cses_paragraph_depth: {}, cses_paragraph_fs: {}, cses_paragraph_pfs: {}, cses_paragraph_lh: {}, cses_paragraph_psb: {}, cses_paragraph_psa: {}, cses_paragraph_decoration: {}, cses_paragraph_target: right-text, cses_collab_block_id: right-text, cses_block_background_color: null, cses_block_border_color: null, bgColor: null, align: left, cses_collab_indent: 0}, children: [])])])>
+    Actual: Node:<Node(id: columns, type: columns, attributes: {cses_collab_block_id: columns, cses_resource: {properties: {"columnCount":2,"columnWidths":[35.0,65.0]}}, cses_columns_columnCount: {"value":2}, cses_columns_columnWidths: {"value":[35.0,65.0]}, cses_columns_columnIndex: {}}, children: [Node(id: left, type: column, attributes: {cses_collab_block_id: left, cses_resource: {properties: {}}, cses_columns_columnCount: {}, cses_columns_columnWidths: {}, cses_columns_columnIndex: {}}, children: [Node(id: left-text, type: paragraph, attributes: {delta: [{insert: 第一列}], cses_paragraph_textDefaults: {}, cses_paragraph_nextParagraphStyle: {}, cses_paragraph_heading: {}, cses_paragraph_depth: {}, cses_paragraph_fs: {}, cses_paragraph_pfs: {}, cses_paragraph_lh: {}, cses_paragraph_psb: {}, cses_paragraph_psa: {}, cses_paragraph_decoration: {}, cses_paragraph_target: left-text, cses_collab_block_id: left-text, cses_block_background_color: null, cses_block_border_color: null, bgColor: null, align: left, cses_collab_indent: 0}, children: [])]), Node(id: right, type: column, attributes: {cses_collab_block_id: right, cses_resource: {properties: {}}, cses_columns_columnCount: {}, cses_columns_columnWidths: {}, cses_columns_columnIndex: {}}, children: [Node(id: right-text, type: paragraph, attributes: {delta: [{insert: 第二列}], cses_paragraph_textDefaults: {}, cses_paragraph_nextParagraphStyle: {}, cses_paragraph_heading: {}, cses_paragraph_depth: {}, cses_paragraph_fs: {}, cses_paragraph_pfs: {}, cses_paragraph_lh: {}, cses_paragraph_psb: {}, cses_paragraph_psa: {}, cses_paragraph_decoration: {}, cses_paragraph_target: right-text, cses_collab_block_id: right-text, cses_block_background_color: null, cses_block_border_color: null, bgColor: null, align: left, cses_collab_indent: 0}, children: [])])])>
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/collab_columns_test.dart 48:5                  main.<fn>
+
+00:00 +0 -1: add move delete and flatten preserve descendant identity with independent undo
+00:00 +0 -2: add move delete and flatten preserve descendant identity with independent undo [E]
+  Expected: 'left'
+    Actual: 'uuac6s'
+     Which: is different.
+            Expected: left
+              Actual: uuac6s
+                      ^
+             Differ at offset 0
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/collab_columns_test.dart 62:5                  main.<fn>
+
+00:00 +0 -2: deleting one of two columns unwraps surviving content
+00:00 +1 -2: insert supports root and callout, rejects nested columns and enforces eight-column limit
+00:00 +2 -2: column first paragraph backspace is protected, other paragraphs stay editable
+00:00 +3 -2: readonly, descendant locks and stale identities reject structural mutations
+00:00 +4 -2: JSON uses formal types and current widths; invalid widths fall back without mutation
+00:00 +5 -2: phone layout, horizontal scrolling and preview retain real text at 320.0
+00:00 +6 -2: phone layout, horizontal scrolling and preview retain real text at 390.0
+00:01 +7 -2: phone layout, horizontal scrolling and preview retain real text at 900.0
+00:01 +8 -2: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: add move delete and flatten preserve descendant identity with independent undo
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: formal projection preserves children and edits only explicit width fields

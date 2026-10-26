@@ -322,6 +322,70 @@ pub(super) fn validate(doc: &Doc, root_id: &str) -> Result<(), String> {
     Ok(())
 }
 
+/// 分栏与单列都以Y.Array保存子块，不保存第二份正文。
+fn is_columns_container(kind: &str) -> bool {
+    matches!(kind, "columns" | "column")
+}
+
+/// 只投影完整的分栏结构；不合法旧树作为不透明块保留，普通文字编辑不修复布局。
+fn supported_columns<T: ReadTxn>(block: &MapRef, blocks: &MapRef, txn: &T) -> bool {
+    if out_string(block.get(txn, "nodeType")).as_deref() != Some("block") {
+        return false;
+    }
+    let Some(Out::YArray(_)) = block.get(txn, "children") else {
+        return false;
+    };
+    let ids = children(block, txn);
+    let columns = out_string(block.get(txn, "flavour")).as_deref() == Some("columns");
+    if columns && (ids.is_empty() || ids.len() > 8) {
+        return false;
+    }
+    ids.iter().all(|id| {
+        map(blocks, txn, id).is_some_and(|child| {
+            let kind = out_string(child.get(txn, "flavour")).unwrap_or_default();
+            if columns {
+                kind == "column" && supported_columns(&child, blocks, txn)
+            } else {
+                !matches!(
+                    kind.as_str(),
+                    "root" | "columns" | "column" | "table" | "table-row" | "table-cell"
+                )
+            }
+        })
+    })
+}
+
+/// 校验分栏结构及桌面子块限制；历史回放与本地提交共用，失败保持原文档不变。
+pub(super) fn validate_columns(desired: &[CollabBlock]) -> Result<(), String> {
+    let by_id: HashMap<_, _> = desired.iter().map(|b| (b.id.as_str(), b)).collect();
+    let mut counts = HashMap::<&str, usize>::new();
+    for block in desired {
+        if let Some(parent) = block.parent_id.as_deref() {
+            *counts.entry(parent).or_default() += 1;
+        }
+    }
+    for block in desired {
+        let parent = block.parent_id.as_deref().and_then(|id| by_id.get(id));
+        if parent.is_some_and(|p| p.block_type == "columns" && block.block_type != "column")
+            || parent.is_some_and(|p| {
+                p.block_type == "column"
+                    && (is_columns_container(&block.block_type)
+                        || is_table_container(&block.block_type))
+            })
+            || (block.block_type == "columns" && parent.is_some_and(|p| p.block_type != "callout"))
+        {
+            return Err("INVALID_COLUMNS: 分栏父子类型无效".into());
+        }
+        if block.block_type == "columns" {
+            let count = counts.get(block.id.as_str()).copied().unwrap_or(0);
+            if !(1..=8).contains(&count) {
+                return Err("INVALID_COLUMNS: 仅支持1到8列".into());
+            }
+        }
+    }
+    Ok(())
+}
+
 /// 表格结构节点保留独立身份，正文继续使用各自的共享 Y.Text。
 fn is_table_container(kind: &str) -> bool {
     matches!(kind, "table" | "table-row" | "table-cell")
@@ -597,7 +661,7 @@ fn mobile_type<T: ReadTxn>(block: &MapRef, props: &MapRef, txn: &T) -> Option<St
         "ordered" => "numbered_list".to_owned(),
         "todo" => "todo_list".to_owned(),
         "blockquote" => "quote".to_owned(),
-        "table" | "table-row" | "table-cell" => flavour,
+        "table" | "table-row" | "table-cell" | "columns" | "column" => flavour,
         "code" | "image" | "video" | "callout" | "mermaid" | "mermaid-textarea" | "date-card"
         | "person-card" | "weather" | "divider" | "page-divider" | "formula" | "meeting"
         | "task" | "kr-list" => flavour,
@@ -661,6 +725,8 @@ fn is_divider_style(style: &str) -> bool {
 /// 已适配块的属性白名单；表格布局通过显式补丁写入，日期及人员卡片/会议/任务/分割线/公式/绘图不使用资源 URL。
 fn resource_keys(kind: &str) -> &'static [&'static str] {
     match kind {
+        "columns" => &["columnCount", "columnWidths"],
+        "column" => &["columnIndex"],
         "formula" => &["latex"],
         "mermaid" => &["mode"],
         "meeting" => &["meetingId", "title", "number"],
@@ -809,6 +875,8 @@ fn parse_resource_edit(
                         | "task"
                         | "kr-list"
                         | "mermaid"
+                        | "columns"
+                        | "column"
                 ))
         {
             return Err(fail());
@@ -832,6 +900,19 @@ fn parse_resource_edit(
             return Err(fail());
         }
         if let Some(v) = &value {
+            if is_columns_container(kind) {
+                let valid = match (key.as_str(), v) {
+                    ("columnCount", Any::Number(n)) => n.is_finite() && n.fract() == 0.0 && (1.0..=8.0).contains(n),
+                    ("columnIndex", Any::Number(n)) => n.is_finite() && n.fract() == 0.0 && (0.0..=7.0).contains(n),
+                    ("columnWidths", Any::Array(items)) => !items.is_empty() && items.len() <= 8 && items.iter().all(|v| matches!(v, Any::Number(n) if n.is_finite() && *n > 0.0 && *n <= 100.0)),
+                    _ => false,
+                };
+                if !valid {
+                    return Err(fail());
+                }
+                result.insert(key.clone(), value);
+                continue;
+            }
             if key == "url"
                 && !out_string(Some(Out::Any(v.clone())))
                     .is_some_and(|url| valid_resource_url(kind, &url))
@@ -1250,6 +1331,10 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
             result.blocks.push(placeholder(id, parent_id));
             continue;
         }
+        if is_columns_container(&kind) && !supported_columns(&block, &blocks, &txn) {
+            result.blocks.push(placeholder(id, parent_id));
+            continue;
+        }
         if kind == "table" && !supported_table(&block, &blocks, &txn) {
             result.blocks.push(placeholder(id, parent_id));
             continue;
@@ -1261,7 +1346,8 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
         match block.get(&txn, "children") {
             Some(Out::YArray(_))
                 if (matches!(kind.as_str(), "callout" | "mermaid")
-                    || is_table_container(&kind))
+                    || is_table_container(&kind)
+                    || is_columns_container(&kind))
                     && node_type == "block" =>
             {
                 let ids = children(&block, &txn);
@@ -1305,6 +1391,7 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                 if node_type == "editable"
                     && !is_media
                     && !is_resource_block_type(&kind)
+                    && !is_columns_container(&kind)
                     && kind != "callout"
                     && kind != "mermaid"
                     && kind != "page-divider"
@@ -1403,6 +1490,7 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
             }),
             resource: (is_resource_block_type(&kind)
                 || is_table_container(&kind)
+                || is_columns_container(&kind)
                 || matches!(
                     kind.as_str(),
                     "person-card"
@@ -1414,6 +1502,8 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                         | "task"
                         | "kr-list"
                         | "mermaid"
+                        | "columns"
+                        | "column"
                 ))
             .then(|| CollabResource {
                 properties: resource_properties(&kind, &props, &txn),
@@ -1467,6 +1557,8 @@ fn formal_type(kind: &str) -> Option<(&str, bool)> {
         "table" => ("table", false),
         "table-row" => ("table-row", false),
         "table-cell" => ("table-cell", false),
+        "columns" => ("columns", false),
+        "column" => ("column", false),
         "image" => ("image", true),
         "video" => ("video", true),
         "person-card" => ("person-card", true),
@@ -1521,6 +1613,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
         }
     }
     validate_tables(desired)?;
+    validate_columns(desired)?;
     for block in desired {
         if block.block_type == UNSUPPORTED_BLOCK_TYPE
             && previous.get(block.id.as_str()).copied() == Some(block)
@@ -1640,6 +1733,8 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
                         | "task"
                         | "kr-list"
                         | "mermaid"
+                        | "columns"
+                        | "column"
                 )
             {
                 return Err("INVALID_RESOURCE: 资源属性与块类型不符".into());
@@ -1697,7 +1792,8 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
         }
         if old.is_some_and(|b| {
             (matches!(b.block_type.as_str(), "callout" | "mermaid")
-                || is_table_container(&b.block_type))
+                || is_table_container(&b.block_type)
+                || is_columns_container(&b.block_type))
                 && b.block_type != block.block_type
         }) {
             return Err("UNSUPPORTED_BLOCK_TYPE: 高亮容器不能直接转换为正文块".into());
@@ -1735,6 +1831,27 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
                 {
                     return Err("BLOCK_ID_CONFLICT: 图片题注 ID 已被占用".into());
                 }
+            }
+        }
+    }
+    for block in desired.iter().filter(|b| b.block_type == "columns") {
+        if previous.get(block.id.as_str()).is_none() || resource_edits.contains_key(&block.id) {
+            let count = desired_children.get(block.id.as_str()).map_or(0, Vec::len);
+            let props: serde_json::Value = serde_json::from_str(
+                block
+                    .resource
+                    .as_ref()
+                    .map_or("{}", |r| r.properties.as_str()),
+            )
+            .map_err(|_| "INVALID_COLUMNS: 布局属性无效")?;
+            if props
+                .get("columnCount")
+                .is_some_and(|v| v.as_u64() != Some(count as u64))
+                || props
+                    .get("columnWidths")
+                    .is_some_and(|v| v.as_array().is_none_or(|a| a.len() != count))
+            {
+                return Err("INVALID_COLUMNS: 列数、比例与子树不一致".into());
             }
         }
     }
@@ -1807,6 +1924,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
         if old == Some(next)
             && !matches!(next.block_type.as_str(), "callout" | "mermaid")
             && !is_table_container(&next.block_type)
+            && !is_columns_container(&next.block_type)
         {
             continue;
         }
@@ -1864,6 +1982,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
             }
             // 未投影期间到达的远端正文仍是权威内容，撤销删除不能以旧UI快照覆盖它。
             if !is_table_container(&next.block_type)
+                && !is_columns_container(&next.block_type)
                 && !matches!(next.block_type.as_str(), "callout" | "mermaid")
             {
                 continue;
@@ -1907,7 +2026,9 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
             block.try_update(
                 &mut txn,
                 "nodeType",
-                if matches!(flavour, "image" | "callout" | "mermaid") || is_table_container(flavour)
+                if matches!(flavour, "image" | "callout" | "mermaid")
+                    || is_table_container(flavour)
+                    || is_columns_container(flavour)
                 {
                     "block"
                 } else if media {
@@ -1994,7 +2115,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
         {
             props.try_update(&mut txn, "checked", i64::from(next.checked));
         }
-        if is_table_container(flavour) || flavour == "mermaid" {
+        if is_table_container(flavour) || is_columns_container(flavour) || flavour == "mermaid" {
             if let Some(edits) = resource_edits.get(&next.id) {
                 for (key, value) in edits {
                     if let Some(value) = value {
@@ -2005,7 +2126,10 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
                 }
             }
         }
-        if matches!(flavour, "callout" | "mermaid") || is_table_container(flavour) {
+        if matches!(flavour, "callout" | "mermaid")
+            || is_table_container(flavour)
+            || is_columns_container(flavour)
+        {
             let array = match block.get(&txn, "children") {
                 Some(Out::YArray(v)) => v,
                 _ => block.insert(
@@ -7181,5 +7305,110 @@ mod tests {
         assert!(projected
             .iter()
             .any(|b| b.id == "tail" && b.block_type == "paragraph"));
+    }
+    /// 发布Schema分栏按前序投影，比例与扩展属性保持；非法树不被部分消费。
+    #[test]
+    fn columns_published_tree_and_field_patches() {
+        let mut e = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-columns.update"
+        ));
+        let before = e.blocks();
+        assert_eq!(
+            before.iter().filter(|b| b.block_type == "columns").count(),
+            2
+        );
+        assert_eq!(
+            before
+                .iter()
+                .find(|b| b.id == "body-0")
+                .unwrap()
+                .parent_id
+                .as_deref(),
+            Some("column-0")
+        );
+        assert_eq!(
+            before
+                .iter()
+                .find(|b| b.id == "malformed-columns")
+                .unwrap()
+                .block_type,
+            UNSUPPORTED_BLOCK_TYPE
+        );
+        let mut desired = before;
+        let layout = desired
+            .iter_mut()
+            .find(|b| b.id == "columns")
+            .unwrap()
+            .resource
+            .as_mut()
+            .unwrap();
+        layout.properties = r#"{"columnCount":2,"columnWidths":[40,60]}"#.into();
+        layout.property_edits = Some(r#"{"columnWidths":{"value":[40,60]}}"#.into());
+        e.apply_block_snapshot(desired).unwrap();
+        let txn = e.doc.transact();
+        let blocks = txn.get_map(ROOT_NAME).unwrap();
+        let block = map(&blocks, &txn, "columns").unwrap();
+        let props = map(&block, &txn, "props").unwrap();
+        assert!(props.contains_key(&txn, "futureProp"));
+        assert_eq!(
+            out_string(map(&block, &txn, "meta").unwrap().get(&txn, "audit")).as_deref(),
+            Some("desktop")
+        );
+        assert_eq!(children(&block, &txn), vec!["column-0", "column-1"]);
+    }
+
+    /// 分栏结构与比例的非法写入均在事务前拒绝，不产生部分共享状态。
+    #[test]
+    fn columns_invalid_mutations_are_atomic() {
+        let mut e = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-columns.update"
+        ));
+        let initial = e.blocks();
+        for input in [
+            r#"{"columnWidths":{"value":[-1,101]}}"#,
+            r#"{"columnCount":{"value":9}}"#,
+            r#"{"url":{"value":"https://example.com"}}"#,
+        ] {
+            let mut desired = initial.clone();
+            desired[0].resource.as_mut().unwrap().property_edits = Some(input.into());
+            assert!(e.apply_block_snapshot(desired).is_err());
+            assert_eq!(e.blocks(), initial);
+        }
+        let mut desired = initial.clone();
+        desired
+            .iter_mut()
+            .find(|b| b.id == "body-0")
+            .unwrap()
+            .parent_id = Some("columns".into());
+        assert!(e.apply_block_snapshot(desired).is_err());
+        assert_eq!(e.blocks(), initial);
+    }
+
+    /// 另一端列宽变化与本端列内正文输入交换增量后收敛，正文样式和列身份保留。
+    #[test]
+    fn columns_concurrent_text_and_widths_converge() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-columns.update");
+        let mut left = engine(fixture);
+        let mut right = engine(fixture);
+        let mut a = left.blocks();
+        let text = a.iter_mut().find(|b| b.id == "body-0").unwrap();
+        text.text.push_str("追加");
+        text.segments.clear();
+        let ua = left.apply_block_snapshot(a).unwrap();
+        let mut b = right.blocks();
+        b[0].resource.as_mut().unwrap().property_edits =
+            Some(r#"{"columnWidths":{"value":[45,55]}}"#.into());
+        let ub = right.apply_block_snapshot(b).unwrap();
+        left.apply_cses_update(ub.v1_update).unwrap();
+        right.apply_cses_update(ua.v1_update).unwrap();
+        assert_eq!(left.blocks(), right.blocks());
+        assert_eq!(
+            left.blocks()
+                .iter()
+                .find(|b| b.id == "body-0")
+                .unwrap()
+                .text,
+            "第1列正文追加"
+        );
     }
 }

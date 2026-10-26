@@ -909,3 +909,17 @@ final services = CollabHostServices(
 ```
 
 未配置或返回 null 时保留“文档创建人”占位；既有文档需要原创建人时由宿主端口解析，不能假定当前账号就是原创建人。自由定位、八向缩放、模板物化和设备/真实在线验收仍待完成，详见[实施与验证](../../docs/verification/person-card-20261025/report.md)。
+
+
+### 多栏布局与单列容器
+
+`columns`/`column`已接入正式协同树、JSON与默认编辑器。添加面板“多栏布局”新建两列；宿主可通过`EditorBlock.columns`启用分栏，列子块随父能力授权，键盘直达使用`EditorKeyboardToolbarItem.columns`。
+
+手机按比例展示真实列内正文，窄屏横向滚动。组菜单提供添加列、均分、转为上下排列；列菜单提供右侧插入、左右移动、加宽和删除（包含该列内容）。最多8列；删至单列时展开剩余正文，布局和结构各使用一次事务与独立历史。列内普通文字与列表保留原输入链，锁定/只读及过期菜单禁止修改。
+
+当前比例调整为菜单动作，触摸拖宽/整列拖动、桌面跨列范围输入与剪贴板完整语义仍待同步；设备、iOS及真实在线双端待验收，详见[分栏实施记录](../../docs/verification/columns-20261026/report.md)。旧`snapshot-columns`/`snapshot-column`本地树保留原显示及JSON布局字段，不自动改写数据。普通与按词退格在列首共用边界/列表保护，段内继续使用原生按词删除；[两项审查修复与验证](../../docs/verification/columns-20261026/fixes.md)。
+
+```bash
+cargo build --manifest-path rust/Cargo.toml
+flutter test --no-pub test/collab_columns_test.dart test/columns_native_integration_test.dart
+```

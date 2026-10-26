@@ -1,0 +1,42 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_review_probe_test.dart
+00:00 +0: (setUpAll)
+00:00 +0: R1 forward delete at left-column end must not consume right-column content
+00:00 +1: R1 word-backspace at right-column start must not merge into the left column
+00:00 +1 -1: R1 word-backspace at right-column start must not merge into the left column [E]
+  Expected: {'left': '第一列', 'right': ['第二列']}
+    Actual: {'left': '第一列第二列', 'right': []}
+     Which: at location ['left'] is '第一列第二列' instead of '第一列'
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/columns_review_probe_test.dart 52:5            main.<fn>
+
+00:00 +1 -1: R2 legacy persisted snapshot columns retain width/count on JSON export
+00:00 +1 -2: R2 legacy persisted snapshot columns retain width/count on JSON export [E]
+  Expected: {'columnWidths': [30, 70], 'columnCount': 2, 'columnIndex': 0}
+    Actual: {'columnWidths': null, 'columnCount': null, 'columnIndex': null}
+     Which: at location ['columnWidths'] is <null> which is not Iterable
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/columns_review_probe_test.dart 87:5            main.<fn>
+
+00:00 +1 -2: preview of an empty column contains no body insertion control
+00:00 +2 -2: native word-backspace at a column boundary must preserve both columns
+00:00 +2 -3: native word-backspace at a column boundary must preserve both columns [E]
+  Expected: {'left': '第1列正文', 'right': ['第2列正文']}
+    Actual: {'left': '第1列正文第2列正文', 'right': []}
+     Which: at location ['left'] is '第1列正文第2列正文' instead of '第1列正文'
+
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/columns_review_probe_test.dart 149:7           main.<fn>
+
+00:00 +2 -3: native delete column, undo redo and structure restore remain valid
+00:00 +3 -3: (tearDownAll)
+00:00 +3 -3: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_review_probe_test.dart: R1 word-backspace at right-column start must not merge into the left column
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_review_probe_test.dart: R2 legacy persisted snapshot columns retain width/count on JSON export
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_review_probe_test.dart: native word-backspace at a column boundary must preserve both columns

@@ -113,7 +113,7 @@ Future<bool> deleteCollabEntityMention(
 
 /// 将借用[state]中的稳定[target]转换为正式会议/任务卡片，不调用宿主详情回调。
 /// 与桌面相同，原块保留前文，卡片插在原块之后，后文拆为新段落并保留其格式和对象。
-/// 仅根/高亮内的正文支持；关闭、只读、目标变化或引用超限返回false，事务异常透传。
+/// 仅根/高亮/单列内的正文支持；关闭、只读、目标变化或引用超限返回false，事务异常透传。
 /// 转换作为单独一项历史提交，不创建或更改业务实体；焦点由调用方管理。
 Future<bool> convertCollabEntityMentionToCard(
   EditorState state,
@@ -123,7 +123,7 @@ Future<bool> convertCollabEntityMentionToCard(
   final source = target.resolve(state);
   if (source == null ||
       source.children.isNotEmpty ||
-      !const {'page', 'callout'}.contains(source.parent?.type)) {
+      !const {'page', 'callout', 'column'}.contains(source.parent?.type)) {
     return false;
   }
   final properties = <String, dynamic>{

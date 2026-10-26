@@ -129,13 +129,13 @@ Future<bool> deleteCollabMeeting(EditorState state, String id, {required String 
 }
 
 /// 在借用 [state] 的保存 [selection] 位置插入引用 [values]，返回后置段落光标。
-/// 空正文被替换、非空保留；只支持根/高亮容器。非法或失效返回null，调用方恢复焦点，事务异常透传。
+/// 空正文被替换、非空保留；只支持根/高亮/单列容器。非法或失效返回null，调用方恢复焦点，事务异常透传。
 Future<Selection?> insertCollabMeeting(EditorState state, Selection selection, Map<String, dynamic> values) async {
   if (state.isDisposed || !state.editable || !CollabMeeting.valid(values) || selection.start.path.isEmpty) {
     return null;
   }
   final source = state.getNodeAtPath(selection.start.path);
-  if (source == null || !const {'page', 'callout'}.contains(source.parent?.type)) {
+  if (source == null || !const {'page', 'callout', 'column'}.contains(source.parent?.type)) {
     return null;
   }
   final meeting = Node(

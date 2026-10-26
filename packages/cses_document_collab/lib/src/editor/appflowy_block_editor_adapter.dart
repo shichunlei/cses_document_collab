@@ -24,6 +24,7 @@ import 'package:cses_document_collab/src/model/collab_page_divider.dart';
 import 'package:cses_document_collab/src/model/collab_paragraph_style.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/model/collab_table.dart';
+import 'package:cses_document_collab/src/model/collab_columns.dart';
 import 'package:cses_document_collab/src/model/collab_task_card.dart';
 import 'package:cses_document_collab/src/model/collab_user_mention.dart';
 import 'package:cses_document_collab/src/model/text_delta.dart' as collab;
@@ -635,7 +636,8 @@ final class AppFlowyBlockEditorAdapter {
         final node = currentNodes[index];
         final target = targetBlocks[index];
         if (node.type == csesUnsupportedBlockType) continue;
-        if (collabTableTypes.contains(target.blockType) ||
+        if (collabColumnsTypes.contains(target.blockType) ||
+            collabTableTypes.contains(target.blockType) ||
             _isUrlBackedBlock(target.blockType) ||
             target.blockType == collabMermaidType ||
             target.blockType == collabPersonCardType ||
@@ -955,6 +957,13 @@ final class AppFlowyBlockEditorAdapter {
           }
         }
       }
+      if (node != null && collabColumnsTypes.contains(node.type)) {
+        for (final key in collabColumnsKeys) {
+          if (operation.attributes.containsKey(columnsPropertyAttribute(key))) {
+            resourceEdits.putIfAbsent(node, () => {}).add(key);
+          }
+        }
+      }
       if (node != null && node.type == collabWeatherType) {
         for (final key in collabWeatherKeys) {
           if (operation.attributes.containsKey(weatherPropertyAttribute(key))) {
@@ -1222,11 +1231,22 @@ final class AppFlowyBlockEditorAdapter {
 
   /// 将权威 [block] 转为 AppFlowy 节点，图片保存强类型专属数据的 Map 投影。
   /// 题注留在资源属性而非 AppFlowy children；实际父子关系由 Rust 的共享类型持有。
+  /// 分栏保留独立列子树及布局字段，不直接创建正文Delta。
   /// KR只投影会议引用，不缓存业务列表；Mermaid 保留容器及独立源码 Delta；表格布局及任务卡片属性只读投影；其他无正文块保留各自白名单属性，均不生成Delta。
   /// 段落格式及其历史目标标记仅用于段落族；代码块沿用自身属性和正文历史。
   /// 日期、天气及人员卡片与分页符使用无 Delta、无子块的独立类型；仅构建内存节点，不写入原生文档或取得资源所有权。
   /// 标题投影限制H1~H6，旧数据超出范围按边界级别展示，不主动修改共享数据。
   static Node _nodeFromBlock(CollabEditorBlock block) {
+    if (collabColumnsTypes.contains(block.blockType)) {
+      return Node(
+        type: block.blockType,
+        id: block.id,
+        attributes: {
+          collabBlockIdAttribute: block.id,
+          ...columnsNodeAttributes(block.resource ?? const CollabResource()),
+        },
+      );
+    }
     if (collabTableTypes.contains(block.blockType)) {
       return Node(
         type: block.blockType,
@@ -1418,11 +1438,11 @@ final class AppFlowyBlockEditorAdapter {
   /// 转换生成新的协同身份，历史身份链保证 Undo/Redo 仍替换当前块，保留 Rust 原生扩展属性。
   /// [numberingNodes] 默认空集合，只有当前本地事务明确修改编号设置的节点才生成写入意图。
   /// [paragraphEdits] 指定当前事务修改的段落字段，默认不写入共享设置。
-  /// [codeEdits] 和 [resourceEdits] 默认空，分别指定代码头部及资源/分割线/公式/绘图视图的显式字段修改；
+  /// [codeEdits] 和 [resourceEdits] 默认空，分别指定代码头部及资源/分栏/分割线/公式/绘图视图的显式字段修改；
   /// 仅指定字段产生补丁，其他原始属性保持只读投影，不重放到权威文档。
   /// 恢复为有序列表的历史节点保留其编号投影，Rust 仅在新身份替换时用它初始化原始设置；
   /// 正常新转入有序列表的节点由类型命令移除旧投影，走默认续号。非有序目标清理内存编号数据。
-  /// 表格按容器父身份遍历，布局属性只读投影；每个单元格正文仍独立持有Delta。
+  /// 表格与分栏按容器父身份遍历，布局属性按字段生成补丁；单元格与列的正文仍独立持有Delta。
   List<CollabEditorBlock> _readBlocks(
     EditorState state,
     List<CollabEditorBlock> previous, {
@@ -1489,7 +1509,9 @@ final class AppFlowyBlockEditorAdapter {
         blockTextColor: node.type == csesCalloutBlockType
             ? node.attributes[csesBlockTextColorAttribute] as String?
             : null,
-        resource: node.type == collabMermaidType
+        resource: collabColumnsTypes.contains(node.type)
+            ? readCollabColumns(node.attributes, edited: resourceEdits[node] ?? const {})
+            : node.type == collabMermaidType
             ? readCollabMermaidProperties(node.attributes, edited: resourceEdits[node]?.contains('mode') == true)
             : collabTableTypes.contains(node.type)
             ? readCollabTable(node.attributes, before?.resource)
@@ -1568,6 +1590,7 @@ final class AppFlowyBlockEditorAdapter {
     if (node.type == collabMermaidType ||
         node.type == collabMermaidSourceType ||
         collabTableTypes.contains(node.type) ||
+        collabColumnsTypes.contains(node.type) ||
         isCollabResourceType(node.type) ||
         node.type == collabPersonCardType ||
         node.type == collabWeatherType ||
