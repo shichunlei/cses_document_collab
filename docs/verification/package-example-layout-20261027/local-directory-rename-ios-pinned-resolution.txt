@@ -1,0 +1,77 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -resolvePackageDependencies -onlyUsePackageVersionsFromResolvedFile -project ios/Runner.xcodeproj -scheme Runner -clonedSourcePackagesDirPath /System/Volumes/Data/workspace/cses_document_collab/example/build/ios/SourcePackages
+
+Resolve Package Graph
+
+Checking out 2.12.1 of package ‘swift-service-lifecycle’
+
+Checking out 1.35.1 of package ‘swift-nio-extras’
+
+Checking out 1.7.2 of package ‘swift-collections’
+
+Checking out 5.0.0 of package ‘swift-crypto’
+
+Checking out 1.38.1 of package ‘swift-protobuf’
+
+Checking out 1.21.0 of package ‘swift-certificates’
+
+Checking out 1.16.1 of package ‘swift-log’
+
+
+Resolved source packages:
+  swift-algorithms: https://github.com/apple/swift-algorithms.git @ 1.2.1
+  swift-crypto: https://github.com/apple/swift-crypto.git @ 5.0.0
+  swift-nio-http2: https://github.com/apple/swift-nio-http2.git @ 1.46.0
+  app_badge_plus: /System/Volumes/Data/workspace/cses_document_collab/example/ios/Flutter/ephemeral/Packages/.packages/app_badge_plus-1.3.5 @ local
+  aliyun_log_dart_sdk_plus: /System/Volumes/Data/workspace/cses_document_collab/example/ios/Flutter/ephemeral/Packages/.packages/aliyun_log_dart_sdk_plus @ local
+  swift-asn1: https://github.com/apple/swift-asn1.git @ 1.7.3
+  camera_avfoundation: /System/Volumes/Data/workspace/cses_document_collab/example/ios/Flutter/ephemeral/Packages/.packages/camera_avfoundation-0.10.3+1 @ local
+  permission_handler_apple: /System/Volumes/Data/workspace/cses_document_collab/example/ios/Flutter/ephemeral/Packages/.packages/permission_handler_apple-9.6.2 @ local
+  opentelemetry-swift: https://github.com/open-telemetry/opentelemetry-swift @ 1.17.1
+  video_player_avfoundation: /System/Volumes/Data/workspace/cses_document_collab/example/ios/Flutter/ephemeral/Packages/.packages/video_player_avfoundation-2.12.1 @ local
+  file_picker_darwin: /System/Volumes/Data/workspace/cses_document_collab/example/ios/Flutter/ephemeral/Packages/.packages/file_picker_darwin-2.4.0 @ local
+  Opentracing: https://github.com/undefinedlabs/opentracing-objc @ 0.5.2
+  swift-nio: https://github.com/apple/swift-nio.git @ 2.104.0
+  webview_flutter_wkwebview: /System/Volumes/Data/workspace/cses_document_collab/example/ios/Flutter/ephemeral/Packages/.packages/webview_flutter_wkwebview-3.26.2 @ local
+  swift-nio-extras: https://github.com/apple/swift-nio-extras.git @ 1.35.1
+  image_gallery_saver_plus: /System/Volumes/Data/workspace/cses_document_collab/example/ios/Flutter/ephemeral/Packages/.packages/image_gallery_saver_plus-5.1.1 @ local
+  swift-nio-ssl: https://github.com/apple/swift-nio-ssl.git @ 2.37.5
+  SwiftProtobuf: https://github.com/apple/swift-protobuf.git @ 1.38.1
+  swift-async-algorithms: https://github.com/apple/swift-async-algorithms.git @ 1.1.7
+  swift-metrics: https://github.com/apple/swift-metrics.git @ 2.12.0
+  swift-system: https://github.com/apple/swift-system.git @ 1.8.1
+  flutter_image_compress_common: /System/Volumes/Data/workspace/cses_document_collab/example/ios/Flutter/ephemeral/Packages/.packages/flutter_image_compress_common-1.1.1 @ local
+  swift-service-lifecycle: https://github.com/swift-server/swift-service-lifecycle.git @ 2.12.1
+  AliyunLogProducer: https://gitee.com/aliyun-sls/aliyun-log-ios-sdk.git @ 4.3.17
+  libwebp: https://github.com/SDWebImage/libwebp-Xcode.git @ 1.6.0
+  swift-numerics: https://github.com/apple/swift-numerics.git @ 1.1.1
+  media_info: /System/Volumes/Data/workspace/cses_document_collab/example/ios/Flutter/ephemeral/Packages/.packages/media_info @ local
+  integration_test: /System/Volumes/Data/workspace/cses_document_collab/example/ios/Flutter/ephemeral/Packages/.packages/integration_test @ local
+  swift-http-types: https://github.com/apple/swift-http-types.git @ 1.8.0
+  FlutterGeneratedPluginSwiftPackage: /System/Volumes/Data/workspace/cses_document_collab/example/ios/Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage
+  cses_document_collab: /System/Volumes/Data/workspace/cses_document_collab/example/ios/Flutter/ephemeral/Packages/.packages/cses_document_collab @ local
+  sensors_plus: /System/Volumes/Data/workspace/cses_document_collab/example/ios/Flutter/ephemeral/Packages/.packages/sensors_plus-7.1.1 @ local
+  package_info_plus: /System/Volumes/Data/workspace/cses_document_collab/example/ios/Flutter/ephemeral/Packages/.packages/package_info_plus-10.2.2 @ local
+  swift-nio-transport-services: https://github.com/apple/swift-nio-transport-services.git @ 1.28.0
+  swift-http-structured-headers: https://github.com/apple/swift-http-structured-headers.git @ 1.7.0
+  TOCropViewController: https://github.com/TimOliver/TOCropViewController.git @ 3.2.0
+  url_launcher_ios: /System/Volumes/Data/workspace/cses_document_collab/example/ios/Flutter/ephemeral/Packages/.packages/url_launcher_ios-6.4.2 @ local
+  swift-log: https://github.com/apple/swift-log.git @ 1.16.1
+  photo_manager: /System/Volumes/Data/workspace/cses_document_collab/example/ios/Flutter/ephemeral/Packages/.packages/photo_manager-3.12.0 @ local
+  sqflite_darwin: /System/Volumes/Data/workspace/cses_document_collab/example/ios/Flutter/ephemeral/Packages/.packages/sqflite_darwin-2.4.4 @ local
+  FlutterFramework: /System/Volumes/Data/workspace/cses_document_collab/example/ios/Flutter/ephemeral/Packages/.packages/FlutterFramework @ local
+  SDWebImageWebPCoder: https://github.com/SDWebImage/SDWebImageWebPCoder.git @ 0.15.0
+  swift-collections: https://github.com/apple/swift-collections.git @ 1.7.2
+  shared_preferences_foundation: /System/Volumes/Data/workspace/cses_document_collab/example/ios/Flutter/ephemeral/Packages/.packages/shared_preferences_foundation-2.5.7 @ local
+  keyboard_height_plugin: /System/Volumes/Data/workspace/cses_document_collab/example/ios/Flutter/ephemeral/Packages/.packages/keyboard_height_plugin-0.3.0 @ local
+  grpc-swift: https://github.com/grpc/grpc-swift.git @ 1.26.1
+  device_info_plus: /System/Volumes/Data/workspace/cses_document_collab/example/ios/Flutter/ephemeral/Packages/.packages/device_info_plus-13.3.0 @ local
+  swift-atomics: https://github.com/apple/swift-atomics.git @ 1.3.1
+  image_cropper: /System/Volumes/Data/workspace/cses_document_collab/example/ios/Flutter/ephemeral/Packages/.packages/image_cropper-12.2.1 @ local
+  swift-certificates: https://github.com/apple/swift-certificates.git @ 1.21.0
+  SDWebImage: https://github.com/SDWebImage/SDWebImage.git @ 5.21.7
+  Thrift: https://github.com/undefinedlabs/Thrift-Swift @ 1.1.2
+  filesaverplus: /System/Volumes/Data/workspace/cses_document_collab/example/ios/Flutter/ephemeral/Packages/.packages/filesaverplus @ local
+  connectivity_plus: /System/Volumes/Data/workspace/cses_document_collab/example/ios/Flutter/ephemeral/Packages/.packages/connectivity_plus-7.3.2 @ local
+
+resolved source packages: swift-algorithms, swift-crypto, swift-nio-http2, app_badge_plus, aliyun_log_dart_sdk_plus, swift-asn1, camera_avfoundation, permission_handler_apple, opentelemetry-swift, video_player_avfoundation, file_picker_darwin, Opentracing, swift-nio, webview_flutter_wkwebview, swift-nio-extras, image_gallery_saver_plus, swift-nio-ssl, SwiftProtobuf, swift-async-algorithms, swift-metrics, swift-system, flutter_image_compress_common, swift-service-lifecycle, AliyunLogProducer, libwebp, swift-numerics, media_info, integration_test, swift-http-types, FlutterGeneratedPluginSwiftPackage, cses_document_collab, sensors_plus, package_info_plus, swift-nio-transport-services, swift-http-structured-headers, TOCropViewController, url_launcher_ios, swift-log, photo_manager, sqflite_darwin, FlutterFramework, SDWebImageWebPCoder, swift-collections, shared_preferences_foundation, keyboard_height_plugin, grpc-swift, device_info_plus, swift-atomics, image_cropper, swift-certificates, SDWebImage, Thrift, filesaverplus, connectivity_plus

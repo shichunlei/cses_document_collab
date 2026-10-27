@@ -1,0 +1,74 @@
+{
+  "date": "2026-10-27",
+  "action": "local_repository_directory_rename",
+  "oldPath": "/System/Volumes/Data/workspace/mobile-collab-demo",
+  "newPath": "/System/Volumes/Data/workspace/cses_document_collab",
+  "head": "b6e2b45d6780199c9b7cac774e6a6e3491575735",
+  "checks": {
+    "oldDirectoryAbsent": true,
+    "newDirectoryCorrect": true,
+    "headUnchanged": true,
+    "originalWorkingChangesUnchanged": true,
+    "remotesUnchanged": true,
+    "originalFileHashesPreserved": true,
+    "resolvedDependenciesCorrect": true,
+    "iosApplicationPathRefreshed": true,
+    "iosPackageConfigPathRefreshed": true,
+    "swiftPinsPreserved": true,
+    "runnerProjectPreserved": true
+  },
+  "resolvedDependencies": {
+    ".": {
+      "cses_document_collab": {
+        "path": "/System/Volumes/Data/workspace/cses_document_collab",
+        "correct": true
+      },
+      "appflowy_editor": {
+        "path": "/System/Volumes/Data/workspace/cses_document_collab/packages/appflowy_editor",
+        "correct": true
+      }
+    },
+    "example": {
+      "cses_document_collab": {
+        "path": "/System/Volumes/Data/workspace/cses_document_collab",
+        "correct": true
+      },
+      "cses_mobile_collab_demo": {
+        "path": "/System/Volumes/Data/workspace/cses_document_collab/example",
+        "correct": true
+      },
+      "appflowy_editor": {
+        "path": "/System/Volumes/Data/workspace/cses_document_collab/packages/appflowy_editor",
+        "correct": true
+      },
+      "cses_common": {
+        "path": "/System/Volumes/Data/workspace/cses/cses.common",
+        "correct": true
+      }
+    }
+  },
+  "pubCommands": [
+    {
+      "name": "core",
+      "cwd": "/System/Volumes/Data/workspace/cses_document_collab",
+      "command": "flutter pub get --offline --no-example",
+      "exitCode": 0
+    },
+    {
+      "name": "example",
+      "cwd": "/System/Volumes/Data/workspace/cses_document_collab/example",
+      "command": "flutter pub get --offline",
+      "exitCode": 0
+    }
+  ],
+  "iosConfigurationRefresh": {
+    "command": "flutter build ios --debug --config-only --no-codesign --no-pub",
+    "exitCode": 0,
+    "pinnedResolutionExitCode": 0,
+    "note": "Restored automatic Runner navigator additions and Swift lockfile updates; generated path caches point to the new directory. No full build or device installation."
+  },
+  "codexSavedProjectPath": "/System/Volumes/Data/workspace/mobile-collab-demo",
+  "nextStep": "Reopen /System/Volumes/Data/workspace/cses_document_collab in Codex; its saved project path still references the old directory.",
+  "newCommitCreated": false,
+  "pushed": false
+}
