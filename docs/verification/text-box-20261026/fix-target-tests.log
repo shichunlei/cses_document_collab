@@ -1,0 +1,44 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: (setUpAll)
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: control: opaque inline at root does not block editing an unrelated root paragraph
+00:00 +1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: opaque inline inside a text-box must not block editing an unrelated root paragraph
+00:00 +2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: opaque paragraph rejects edits, moves, deletion and forgery without losing history or SQLite data
+00:00 +2 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: opaque paragraph rejects edits, moves, deletion and forgery without losing history or SQLite data [E]
+  Expected: [3, 149, 183, 182, 250, 10, 6, 194, 170, 51, 89, 221, 189, 50, 3]
+    Actual: [3, 221, 189, 50, 3, 194, 170, 51, 89, 149, 183, 182, 250, 10, 6]
+     Which: at location [1] is <221> instead of <149>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/text_box_review_test.dart 163:7                main.<fn>
+  
+00:00 +2 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: empty and nonempty text-box children reject code through both shared commands: 
+00:00 +3 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: formal JSON retains edited text, metadata and unknown properties
+00:00 +4 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: formal JSON retains edited text, metadata and unknown properties
+00:00 +5 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: formal JSON retains edited text, metadata and unknown properties
+00:00 +6 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: formal JSON retains edited text, metadata and unknown properties
+00:00 +7 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: formal JSON retains edited text, metadata and unknown properties
+00:00 +8 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: formal JSON retains edited text, metadata and unknown properties
+00:00 +9 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: formal JSON retains edited text, metadata and unknown properties
+00:00 +10 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: valid text-box child numbered_list can be added and independently undone
+00:00 +11 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: persisted legacy snapshot text-box remains visible and exports its original geometry
+00:00 +12 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: persisted legacy snapshot text-box remains visible and exports its original geometry
+00:00 +13 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: persisted legacy snapshot text-box remains visible and exports its original geometry
+00:00 +14 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: persisted legacy snapshot text-box remains visible and exports its original geometry
+00:01 +15 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: preview must start at the top after editing has scrolled inside a fixed frame
+00:01 +16 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: preview must start at the top after editing has scrolled inside a fixed frame
+00:01 +17 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: preview must start at the top after editing has scrolled inside a fixed frame
+00:01 +18 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: preview must start at the top after editing has scrolled inside a fixed frame
+00:01 +19 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: native input connection accepts composed Chinese and emoji inside the frame
+00:01 +20 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: native input connection accepts composed Chinese and emoji inside the frame
+00:01 +21 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: actual add sheet must keep code out of a text-box
+00:01 +22 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: actual add sheet must keep code out of a text-box
+00:01 +23 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:02 +24 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:03 +25 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.8
+00:03 +26 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 700.0/1.0
+00:04 +27 -1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: (tearDownAll)
+00:04 +27 -1: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: opaque paragraph rejects edits, moves, deletion and forgery without losing history or SQLite data

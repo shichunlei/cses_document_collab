@@ -1,0 +1,42 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: journal formats, mentions, todo states, business ids and date survive both directions
+00:00 +1: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: all enabled formats, repeated objects and independent business/native checked state survive
+00:00 +2: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:00 +3: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:00 +4: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:00 +5: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:00 +6: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:00 +7: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:00 +8: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:00 +9: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:00 +10: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:00 +11: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:00 +12: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:00 +13: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:00 +14: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:00 +15: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:00 +16: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:00 +17: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:00 +18: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:01 +19: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:02 +20: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:02 +21: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:02 +22: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:03 +23: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:03 +24: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:04 +25: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:04 +26: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:05 +27: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:05 +28: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:05 +29: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:06 +30: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:06 +31: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:06 +32: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: review regression: native picker revokes a changed user permanently
+00:06 +33: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: review regression: native picker revokes a changed user permanently
+00:06 +34: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: review regression: native picker revokes a changed user permanently
+00:06 +35: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: review regression: native picker revokes a changed user permanently
+00:06 +36: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: review regression: native picker revokes a changed company permanently
+00:06 +37: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: native picker releases its permission watch on cancel and page removal
+00:07 +38: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: native mention and Todo survive preview and saving
+00:07 +39: /System/Volumes/Data/workspace/mobile-collab-demo/test/daily_guidance/journal_keyboard_toolbar_test.dart: (tearDownAll)
+00:07 +39: All tests passed!

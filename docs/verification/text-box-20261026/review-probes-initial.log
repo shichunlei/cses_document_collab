@@ -1,0 +1,71 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart
+00:00 +0: (setUpAll)
+00:00 +0: opaque inline inside a text-box must not block editing an unrelated root paragraph
+00:00 +0 -1: opaque inline inside a text-box must not block editing an unrelated root paragraph [E]
+  INVALID_TEXT_BOX: 文本框仅允许普通正文子块
+  package:flutter_rust_bridge/src/codec/base.dart 34:9                   SimpleDecoder.decode
+  package:flutter_rust_bridge/src/codec/sse.dart 45:55                   SseCodec._decode
+  package:flutter_rust_bridge/src/codec/sse.dart 40:7                    SseCodec.decodeWireSyncType
+  package:flutter_rust_bridge/src/main_components/handler.dart 35:25     BaseHandler.executeSync
+  package:cses_document_collab/src/native/frb_generated.dart 277:20      RustLibApiImpl.crateApiCollabHistoryApplyHistorySnapshot
+  package:cses_document_collab/src/native/api/collab/history.dart 36:28  applyHistorySnapshot
+  test/text_box_review_test.dart 44:15                                   main.<fn>
+  
+00:00 +0 -1: preview must start at the top after editing has scrolled inside a fixed frame
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.first (dart:core/iterable.dart:663:7)
+#1      _FirstFinderMixin.filter (package:flutter_test/src/finders.dart:1383:28)
+#3      Iterable.single (dart:core/iterable.dart:694:13)
+#4      WidgetController.state (package:flutter_test/src/controller.dart:932:42)
+#5      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart:70:28)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 2 frames from dart:async-patch and package:stack_trace)
+
+The test description was:
+  preview must start at the top after editing has scrolled inside a fixed frame
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:00 +0 -2: preview must start at the top after editing has scrolled inside a fixed frame [E]
+  Test failed. See exception logs above.
+  The test description was: preview must start at the top after editing has scrolled inside a fixed frame
+  
+00:00 +0 -2: add menu code insertion must not create a forbidden text-box descendant
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: false
+  Actual: <true>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart:100:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart line 100
+The test description was:
+  add menu code insertion must not create a forbidden text-box descendant
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +0 -3: add menu code insertion must not create a forbidden text-box descendant [E]
+  Test failed. See exception logs above.
+  The test description was: add menu code insertion must not create a forbidden text-box descendant
+  
+00:01 +0 -3: (tearDownAll)
+00:01 +0 -3: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: add menu code insertion must not create a forbidden text-box descendant
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: opaque inline inside a text-box must not block editing an unrelated root paragraph
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: preview must start at the top after editing has scrolled inside a fixed frame

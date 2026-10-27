@@ -368,6 +368,7 @@ fn supported_layout<T: ReadTxn>(block: &MapRef, blocks: &MapRef, txn: &T) -> boo
 }
 
 /// 校验分栏结构及桌面子块限制；历史回放与本地提交共用，失败保持原文档不变。
+/// 允许正式投影的不透明正文占位；提交入口仍须核对其原始身份、父级及全部字段不变。
 pub(super) fn validate_columns(desired: &[CollabBlock]) -> Result<(), String> {
     let by_id: HashMap<_, _> = desired.iter().map(|b| (b.id.as_str(), b)).collect();
     let mut counts = HashMap::<&str, usize>::new();
@@ -381,7 +382,12 @@ pub(super) fn validate_columns(desired: &[CollabBlock]) -> Result<(), String> {
         if parent.is_some_and(|p| p.block_type == "text-box")
             && !(matches!(
                 block.block_type.as_str(),
-                "paragraph" | "bulleted_list" | "numbered_list" | "todo_list" | "quote"
+                "paragraph"
+                    | "bulleted_list"
+                    | "numbered_list"
+                    | "todo_list"
+                    | "quote"
+                    | UNSUPPORTED_BLOCK_TYPE
             ) || block.block_type.starts_with("heading_"))
         {
             return Err("INVALID_TEXT_BOX: 文本框仅允许普通正文子块".into());
@@ -7433,6 +7439,88 @@ mod tests {
             invalid[0].resource.as_mut().unwrap().property_edits = Some(edit.into());
             assert!(e.apply_block_snapshot(invalid).is_err());
             assert_eq!(e.blocks(), before);
+        }
+    }
+
+    /// 框内未知行内对象只保护原段落；框外编辑保留原始Delta，非法占位操作原子拒绝。
+    #[test]
+    fn text_box_opaque_child_preserves_data_and_does_not_block_other_text() {
+        let mut e = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-text-box.update"
+        ));
+        let blocks = e.doc.get_or_insert_map(ROOT_NAME);
+        {
+            let mut txn = e.doc.transact_mut();
+            let body = map(&blocks, &txn, "box-body").unwrap();
+            let Some(Out::YText(text)) = body.get(&txn, "children") else {
+                panic!("body text")
+            };
+            text.insert_embed(
+                &mut txn,
+                1,
+                Any::from_json(r#"{"futurePlugin":"preserve"}"#).unwrap(),
+            );
+        }
+        let original = {
+            let txn = e.doc.transact();
+            let body = map(&blocks, &txn, "box-body").unwrap();
+            let Some(Out::YText(text)) = body.get(&txn, "children") else {
+                panic!("body text")
+            };
+            (body.to_json(&txn), text.diff(&txn, |_| ()))
+        };
+        let mut desired = e.blocks();
+        assert_eq!(
+            desired
+                .iter()
+                .find(|b| b.id == "box-body")
+                .unwrap()
+                .block_type,
+            UNSUPPORTED_BLOCK_TYPE
+        );
+        let tail = desired.iter_mut().find(|b| b.id == "tail").unwrap();
+        tail.text.push_str("手机");
+        tail.segments.clear();
+        e.apply_block_snapshot(desired).unwrap();
+        {
+            let txn = e.doc.transact();
+            let body = map(&blocks, &txn, "box-body").unwrap();
+            let Some(Out::YText(text)) = body.get(&txn, "children") else {
+                panic!("body text")
+            };
+            assert_eq!(original, (body.to_json(&txn), text.diff(&txn, |_| ())));
+        }
+        let before = e.blocks();
+        let version = e
+            .doc
+            .transact()
+            .encode_state_as_update_v1(&StateVector::default());
+        for mode in 0..6 {
+            let mut invalid = before.clone();
+            let index = invalid.iter().position(|b| b.id == "box-body").unwrap();
+            match mode {
+                0 => {
+                    invalid.remove(index);
+                }
+                1 => invalid[index].parent_id = None,
+                2 => invalid[index].text = "覆盖".into(),
+                3 => {
+                    let mut forged = invalid[index].clone();
+                    forged.id = "forged-body".into();
+                    invalid.insert(index + 1, forged);
+                }
+                4 => invalid
+                    .retain(|b| b.id != "text-box" && b.parent_id.as_deref() != Some("text-box")),
+                _ => invalid[index].block_type = "paragraph".into(),
+            }
+            assert!(e.apply_block_snapshot(invalid).is_err());
+            assert_eq!(before, e.blocks());
+            assert_eq!(
+                version,
+                e.doc
+                    .transact()
+                    .encode_state_as_update_v1(&StateVector::default())
+            );
         }
     }
 

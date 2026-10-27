@@ -39,10 +39,11 @@ class _TextBoxBlock extends BlockComponentStatelessWidget {
   /// [key]控制身份复用；[node]和[configuration]借自所属编辑器。
   const _TextBoxBlock({super.key, required super.node, required super.configuration});
 
-  /// 在借用[context]中绘制固定框；编辑时内部滚动，纯预览只裁切超出内容。
+  /// 在借用[context]中绘制固定框；编辑滚动位置独立保存，纯预览从顶部裁切超出内容。
   @override
   Widget build(BuildContext context) {
     final editor = context.read<EditorState>();
+    final preview = CollabEditorDisplayScope.maybeOf(context)?.preview == true;
     final host = collabBlockActionContext(context);
     final id = CollabBlockLocks.idOf(node);
     final props = readCollabTextBox(node.attributes).values;
@@ -124,10 +125,8 @@ class _TextBoxBlock extends BlockComponentStatelessWidget {
                         borderRadius: props['shape'] == 'rounded-rectangle' ? BorderRadius.circular(12) : null,
                       ),
                       child: SingleChildScrollView(
-                        key: PageStorageKey('text-box-scroll-$id'),
-                        physics: CollabEditorDisplayScope.maybeOf(context)?.preview == true
-                            ? const NeverScrollableScrollPhysics()
-                            : null,
+                        key: PageStorageKey(preview ? 'text-box-preview-$id' : 'text-box-scroll-$id'),
+                        physics: preview ? const NeverScrollableScrollPhysics() : null,
                         padding: inset,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,

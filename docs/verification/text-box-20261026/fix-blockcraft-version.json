@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-27",
+  "registry": "http://npm.runtongqiuben.com/",
+  "latest": "0.11.31",
+  "desktop": {
+    "declaration": "0.11.30",
+    "yarn": "0.11.30",
+    "installed": "0.11.17",
+    "historicalPnpm": "0.2.78"
+  },
+  "query": "npm view @ccc/blockcraft@latest version dist.tarball dist.integrity --json (desktop cwd)",
+  "queryNote": "修复前桌面配置仓库查询成功，latest/integrity保持0.11.31；不沿用已安装版本作为latest。",
+  "integrity": "sha512-nCQqSyKVOrIZHOteLCq3fq0n7Bbkb7qoKYbPeTCg1BQla3BRyxWFUDD/mpYFrWz4DNK9EIQXvnxwG45nx7jjWw==",
+  "sources": {
+    "installed": {
+      "version": "0.11.17",
+      "schemaSha256": "92cbbd30b83c3c19cd8617b6998301fb3263e604f6a65b56d246066c520a770c",
+      "normalizersSha256": "71f6e185fdd03682f8732351dee8fe049af585d71f772e216fc92d5735572886",
+      "files": {
+        "ai-skills/SKILL.md": "1bdaa3efdde9a455284810febaffb043cd3e59e8ef9a0babbb76c5c875140b0d",
+        "ai-skills/blockcraft.md": "15f256fc6e1ffb131d114371605feab0a4c58f1a6cc76b20bbba3011001f2dc1",
+        "ai-skills/blockcraft-block.md": "815dcb2478cbcafc6ed3aa1a9e6fa86e0473e73aced36f56ae17f3d59107ce41",
+        "ai-skills/MIGRATIONS.md": "4c87c528886aed39605183f6c6d812d04d94b600c4931f314bb611e689edf5dd",
+        "fesm2022/ccc-blockcraft.mjs": "c08ce485e4fce072ceea7958b5568001799083fe448807a541117984f29aeeea"
+      }
+    },
+    "declared": {
+      "version": "0.11.30",
+      "schemaSha256": "92cbbd30b83c3c19cd8617b6998301fb3263e604f6a65b56d246066c520a770c",
+      "normalizersSha256": "71f6e185fdd03682f8732351dee8fe049af585d71f772e216fc92d5735572886",
+      "files": {
+        "ai-skills/SKILL.md": "1bdaa3efdde9a455284810febaffb043cd3e59e8ef9a0babbb76c5c875140b0d",
+        "ai-skills/blockcraft.md": "f8b0ed3c2afcb2e03334b9bd6bedb1f7a2c502a303472447367701cdbac39ffd",
+        "ai-skills/blockcraft-block.md": "450dc1d55049c43a4cb579db47d9af9c5c162af71a897686bb0e9cc6b97b7019",
+        "ai-skills/MIGRATIONS.md": "33f0840c7d98f89407e7237fa41aacfbc8b8d29eb826c1aeecbe318c509ec867",
+        "fesm2022/ccc-blockcraft.mjs": "11cf88de81ec375b2866d1d9b18adc7f9df43c9ad40837ca8776b795cf768b7c"
+      }
+    },
+    "latest": {
+      "version": "0.11.31",
+      "schemaSha256": "92cbbd30b83c3c19cd8617b6998301fb3263e604f6a65b56d246066c520a770c",
+      "normalizersSha256": "71f6e185fdd03682f8732351dee8fe049af585d71f772e216fc92d5735572886",
+      "files": {
+        "ai-skills/SKILL.md": "1bdaa3efdde9a455284810febaffb043cd3e59e8ef9a0babbb76c5c875140b0d",
+        "ai-skills/blockcraft.md": "f8b0ed3c2afcb2e03334b9bd6bedb1f7a2c502a303472447367701cdbac39ffd",
+        "ai-skills/blockcraft-block.md": "450dc1d55049c43a4cb579db47d9af9c5c162af71a897686bb0e9cc6b97b7019",
+        "ai-skills/MIGRATIONS.md": "33f0840c7d98f89407e7237fa41aacfbc8b8d29eb826c1aeecbe318c509ec867",
+        "fesm2022/ccc-blockcraft.mjs": "c2d0b246ca9fedb394426f6d5b12b5efc43a0b4dff6631ee8186fc68473a8588"
+      }
+    }
+  },
+  "result": "三项修复遵循相同文本框Schema和只读投影契约；三版文本框Schema/规范化指纹仍一致。移动端不透明内容保护、父容器插入限制及预览滚动隔离已验证，其他待办保持。",
+  "phase": "R1/R2/R3修复"
+}

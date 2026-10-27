@@ -728,7 +728,7 @@ Future<void> _showKeyboardCommonInsertion(
 
 /// 在[context]中执行[state]的[action]，使用[bookmark]重定位原插入位置。
 /// [canUseHost]在每次异步返回后检查权限/宿主代次；取消不写入，失效/失败返回null。
-/// 调用方拥有模态隔离和焦点恢复，更多面板与键盘直达复用此函数。
+/// 调用方拥有模态隔离和焦点恢复，更多面板与键盘直达复用此函数；文本框内只开放合法子块及行内动作。
 /// 天气创建先查询固定日，成功快照与插入合为一次历史；失败可插入占位，失效结果不创建块。
 Future<Selection?> _performCommonInsertion(
   BuildContext context,
@@ -740,7 +740,12 @@ Future<Selection?> _performCommonInsertion(
   /// 异步结束后拒绝迟到结果；书签进一步校验稳定身份及块锁代次。
   Selection? current() => context.mounted && !state.isDisposed && canUseHost() ? bookmark.resolve(state) : null;
 
-  if (current() == null || !_commonInsertionAllowed(EditorCommandContext.of(state).configuration, action)) return null;
+  final initial = current();
+  if (initial == null ||
+      !_commonInsertionAllowed(EditorCommandContext.of(state).configuration, action) ||
+      !_allowsTextBoxBlock(state.getNodeAtPath(initial.start.path), action.blockType)) {
+    return null;
+  }
   try {
     if (!action.implemented) {
       _showUnsupportedMessage(context, action.label);
@@ -1638,6 +1643,11 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
   }
 }
 
+/// 检查借用[source]所在文本框是否允许插入或转换为[blockType]；null类型表示行内动作。
+/// 非文本框及尚无目标节点的菜单保持原规则，失效目标由调用方的书签检查拒绝。
+bool _allowsTextBoxBlock(Node? source, String? blockType) =>
+    source?.parent?.type != collabTextBoxType || blockType == null || collabTextBoxChildren.contains(blockType);
+
 /// 将[blockType]应用到借用[state]的实时选区；[headingLevel]仅用于已启用的H1~H6标题，默认一级；超范围不执行。
 /// T菜单、待办入口与键盘标题操作共用此事务，不按在线/离线划分。
 /// 能力关闭、只读、销毁、空选区或高亮容器不执行；列表与非列表混选由列表命令整批拒绝。
@@ -1650,7 +1660,7 @@ Future<void> applyEditorBlockStyle(EditorState state, String blockType, {int? he
   if (state.isDisposed || !state.editable || selection == null) return;
   final nodes = state.getNodesInSelection(selection);
   if (nodes.isEmpty || nodes.any((node) => node.type == csesCalloutBlockType)) return;
-  if (nodes.any((node) => node.parent?.type == collabTextBoxType) && !collabTextBoxChildren.contains(blockType)) return;
+  if (nodes.any((node) => !_allowsTextBoxBlock(node, blockType))) return;
   const listTypes = {'numbered_list', 'bulleted_list', 'todo_list'};
   if (listTypes.contains(blockType) && nodes.any((node) => listTypes.contains(node.type))) {
     await changeCollabListType(state, blockType);
@@ -2984,10 +2994,12 @@ class _AddBlockSheet extends StatelessWidget {
   /// 标题显示“添加”及内容块图标，高亮/分页/代码绘图与各自卡片及菜单使用相同语义图标。
   /// 行内公式入口使用Ω图标，与独立公式块的Σ图标区分。
   /// 表格直接创建2×2网格；绘图先收集源码草稿再创建容器和子块；分页符仅插入根级光标位置。
-  /// 标题入口按实例启用集合与H1～H6取交集；插入前重查书签，权限/文档失效时不插入。
+  /// 标题入口按实例启用集合与H1～H6取交集；文本框按捕获位置隐藏不合法子块，插入前重新核对书签及父级。
   @override
   Widget build(BuildContext context) {
     final config = EditorCommandContext.of(editorState).configuration;
+    final selection = bookmark.resolve(editorState);
+    final source = selection == null ? null : editorState.getNodeAtPath(selection.start.path);
     final headingLevels = config.allowsBlock(HeadingBlockKeys.type, level: config.headingLevels.firstOrNull)
         ? _menuHeadingLevels(config)
         : const <int>[];
@@ -3037,7 +3049,9 @@ class _AddBlockSheet extends StatelessWidget {
                 children: [
                   if (!EditorCommandContext.of(editorState).configuration.hasComplexBlocks)
                     for (final block in EditorCommandContext.of(editorState).configuration.blocks)
-                      if (block.type != ParagraphBlockKeys.type && block.type != HeadingBlockKeys.type)
+                      if (block.type != ParagraphBlockKeys.type &&
+                          block.type != HeadingBlockKeys.type &&
+                          _allowsTextBoxBlock(source, block.type))
                         _ActionShortcutTile(
                           key: ValueKey(
                             'editor-shortcut-${switch (block.type) {
@@ -3062,35 +3076,38 @@ class _AddBlockSheet extends StatelessWidget {
                           onTap: () => _applyAndClose(context, _BlockShortcut(block.type)),
                         ),
                   if (EditorCommandContext.of(editorState).configuration.hasComplexBlocks) ...[
-                    if (EditorCommandContext.of(editorState).configuration.allowsBlock(NumberedListBlockKeys.type))
+                    if (config.allowsBlock(NumberedListBlockKeys.type) &&
+                        _allowsTextBoxBlock(source, NumberedListBlockKeys.type))
                       _ActionShortcutTile(
                         key: const ValueKey('editor-shortcut-numbered-list'),
                         icon: LucideIcons.listOrdered,
                         label: '有序列表',
                         onTap: () => _applyAndClose(context, const _BlockShortcut(NumberedListBlockKeys.type)),
                       ),
-                    if (EditorCommandContext.of(editorState).configuration.allowsBlock(BulletedListBlockKeys.type))
+                    if (config.allowsBlock(BulletedListBlockKeys.type) &&
+                        _allowsTextBoxBlock(source, BulletedListBlockKeys.type))
                       _ActionShortcutTile(
                         key: const ValueKey('editor-shortcut-bulleted-list'),
                         icon: LucideIcons.list,
                         label: '无序列表',
                         onTap: () => _applyAndClose(context, const _BlockShortcut(BulletedListBlockKeys.type)),
                       ),
-                    if (EditorCommandContext.of(editorState).configuration.allowsBlock(TodoListBlockKeys.type))
+                    if (config.allowsBlock(TodoListBlockKeys.type) &&
+                        _allowsTextBoxBlock(source, TodoListBlockKeys.type))
                       _ActionShortcutTile(
                         key: const ValueKey('editor-shortcut-todo-list'),
                         icon: LucideIcons.squareCheck,
                         label: '待办列表',
                         onTap: () => _applyAndClose(context, const _BlockShortcut(TodoListBlockKeys.type)),
                       ),
-                    if (EditorCommandContext.of(editorState).configuration.allowsBlock(csesCodeBlockType))
+                    if (config.allowsBlock(csesCodeBlockType) && _allowsTextBoxBlock(source, csesCodeBlockType))
                       _ActionShortcutTile(
                         key: const ValueKey('editor-shortcut-code-block'),
                         icon: LucideIcons.code,
                         label: '代码块',
                         onTap: () => _applyAndClose(context, const _BlockShortcut(csesCodeBlockType)),
                       ),
-                    if (EditorCommandContext.of(editorState).configuration.allowsBlock(QuoteBlockKeys.type))
+                    if (config.allowsBlock(QuoteBlockKeys.type) && _allowsTextBoxBlock(source, QuoteBlockKeys.type))
                       _ActionShortcutTile(
                         key: const ValueKey('editor-shortcut-quote'),
                         icon: LucideIcons.quote,
@@ -3118,7 +3135,7 @@ class _AddBlockSheet extends StatelessWidget {
                   childAspectRatio: 1.18,
                   children: [
                     for (final action in _commonInsertions)
-                      if (_commonInsertionAllowed(EditorCommandContext.of(editorState).configuration, action))
+                      if (_commonInsertionAllowed(config, action) && _allowsTextBoxBlock(source, action.blockType))
                         _ActionShortcutTile(
                           key: ValueKey(action.key),
                           icon: action.icon,
@@ -3183,7 +3200,7 @@ class _BlockShortcut {
 /// created and selected. This is what makes choosing a block from “更多” return
 /// immediately to editing with the keyboard open.
 /// [editorState]是借用正文，[selection]为插入位置，[blockType]为资源类型，[url]为完整地址。
-/// [mediaSource]可补充宿主读取的资源信息；null仅使用url。制图模式返回null。
+/// [mediaSource]可补充宿主读取的资源信息；null仅使用url。制图模式及不接受资源子块的文本框返回null。
 Future<Selection?> applyUrlBlockShortcut(
   EditorState editorState,
   Selection selection,
@@ -3202,7 +3219,7 @@ Future<Selection?> applyUrlBlockShortcut(
   }
   final targetPath = selection.start.path;
   final targetNode = editorState.getNodeAtPath(targetPath);
-  if (targetNode == null) {
+  if (targetNode == null || !_allowsTextBoxBlock(targetNode, blockType)) {
     return null;
   }
 
@@ -3282,7 +3299,7 @@ bool _isSupportedBlockUrl(String value) {
 }
 
 /// 在借用[editorState]的稳定[selection]处转换空块，或在非空正文后插入[blockType]。
-/// [headingLevel]只用于标题，null按一级；超出所属能力、只读或失效目标返回false。
+/// [headingLevel]只用于标题，null按一级；超出所属能力、文本框子块限制、只读或失效目标返回false。
 /// 成功写入可撤销事务并返回true；异常交由所属操作边界处理。
 Future<bool> applyBlockShortcut(
   EditorState editorState,
@@ -3297,7 +3314,7 @@ Future<bool> applyBlockShortcut(
   }
   final targetPath = selection.start.path;
   final node = editorState.getNodeAtPath(targetPath);
-  if (node == null || node.delta == null) {
+  if (node == null || node.delta == null || !_allowsTextBoxBlock(node, blockType)) {
     return false;
   }
 

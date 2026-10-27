@@ -1,0 +1,30 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart
+test/text_box_review_test.dart:42:49: Error: Required named parameter 'segments' must be provided.
+          if (b.id == 'tail') native.CollabBlock(id: b.id, blockType: b.blockType, text: '${tail.text}手机') else b,
+                                                ^
+lib/src/native/api/collab.dart:206:9: Context: Found this candidate, but the arguments don't match.
+  const CollabBlock({
+        ^^^^^^^^^^^
+test/text_box_review_test.dart:44:44: Error: The argument type 'List<dynamic>' can't be assigned to the parameter type 'List<CollabBlock>'.
+ - 'List' is from 'dart:core'.
+ - 'CollabBlock' is from 'package:cses_document_collab/src/native/api/collab.dart' ('lib/src/native/api/collab.dart').
+      history.applyHistorySnapshot(blocks: next);
+                                           ^
+00:00 +0 -1: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart [E]
+  Failed to load "/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart":
+  Compilation failed for testPath=/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: test/text_box_review_test.dart:42:49: Error: Required named parameter 'segments' must be provided.
+            if (b.id == 'tail') native.CollabBlock(id: b.id, blockType: b.blockType, text: '${tail.text}手机') else b,
+                                                  ^
+  lib/src/native/api/collab.dart:206:9: Context: Found this candidate, but the arguments don't match.
+    const CollabBlock({
+          ^^^^^^^^^^^
+  test/text_box_review_test.dart:44:44: Error: The argument type 'List<dynamic>' can't be assigned to the parameter type 'List<CollabBlock>'.
+   - 'List' is from 'dart:core'.
+   - 'CollabBlock' is from 'package:cses_document_collab/src/native/api/collab.dart' ('lib/src/native/api/collab.dart').
+        history.applyHistorySnapshot(blocks: next);
+                                             ^
+  .
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart
