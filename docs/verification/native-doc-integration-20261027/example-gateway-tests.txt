@@ -1,0 +1,164 @@
+00:00 +0: loading /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart
+00:00 +0: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: multiple ready listeners do not duplicate Common subscriptions
+00:00 +1: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: ready recovers subscribe before join; local unregister prevents later recovery
+00:00 +1: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: missing Common login rejects connection without creating a socket
+00:00 +1: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: ready recovers subscribe before join; local unregister prevents later recovery
+00:00 +1: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: missing Common login rejects connection without creating a socket
+00:00 +1: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: ready recovers subscribe before join; local unregister prevents later recovery
+00:00 +2: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: ready recovers subscribe before join; local unregister prevents later recovery
+00:00 +2: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +2: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: ready recovers subscribe before join; local unregister prevents later recovery
+00:00 +2: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +2: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: ready recovers subscribe before join; local unregister prevents later recovery
+00:00 +2: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +2: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: ready recovers subscribe before join; local unregister prevents later recovery
+00:00 +2: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +2: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: ready recovers subscribe before join; local unregister prevents later recovery
+00:00 +2: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +2: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: ready recovers subscribe before join; local unregister prevents later recovery
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: offline and synchronous send failure never enqueue document commands
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: offline and synchronous send failure never enqueue document commands
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: offline and synchronous send failure never enqueue document commands
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: offline and synchronous send failure never enqueue document commands
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: offline and synchronous send failure never enqueue document commands
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: offline and synchronous send failure never enqueue document commands
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: offline and synchronous send failure never enqueue document commands
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: offline and synchronous send failure never enqueue document commands
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: offline and synchronous send failure never enqueue document commands
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: offline and synchronous send failure never enqueue document commands
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: offline and synchronous send failure never enqueue document commands
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: offline and synchronous send failure never enqueue document commands
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: offline and synchronous send failure never enqueue document commands
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: offline and synchronous send failure never enqueue document commands
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: offline and synchronous send failure never enqueue document commands
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: offline and synchronous send failure never enqueue document commands
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: offline and synchronous send failure never enqueue document commands
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: offline and synchronous send failure never enqueue document commands
+00:00 +4: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +4: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: online registration awaits subscribe; explicit unsubscribe is not duplicated
+00:00 +4: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +4: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: online registration awaits subscribe; explicit unsubscribe is not duplicated
+00:00 +4: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +4: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: online registration awaits subscribe; explicit unsubscribe is not duplicated
+00:00 +4: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +4: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: online registration awaits subscribe; explicit unsubscribe is not duplicated
+00:00 +4: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +4: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: online registration awaits subscribe; explicit unsubscribe is not duplicated
+00:00 +4: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +4: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: online registration awaits subscribe; explicit unsubscribe is not duplicated
+00:00 +4: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +4: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: online registration awaits subscribe; explicit unsubscribe is not duplicated
+00:00 +4: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +4: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: online registration awaits subscribe; explicit unsubscribe is not duplicated
+00:00 +4: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +4: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: online registration awaits subscribe; explicit unsubscribe is not duplicated
+00:00 +4: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: pending registration cancellation does not resurrect or remove a reopened page
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: pending registration cancellation does not resurrect or remove a reopened page
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: pending registration cancellation does not resurrect or remove a reopened page
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: pending registration cancellation does not resurrect or remove a reopened page
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: pending registration cancellation does not resurrect or remove a reopened page
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: pending registration cancellation does not resurrect or remove a reopened page
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: pending registration cancellation does not resurrect or remove a reopened page
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: pending registration cancellation does not resurrect or remove a reopened page
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: pending registration cancellation does not resurrect or remove a reopened page
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: pending registration cancellation does not resurrect or remove a reopened page
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: pending registration cancellation does not resurrect or remove a reopened page
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: pending registration cancellation does not resurrect or remove a reopened page
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: pending registration cancellation does not resurrect or remove a reopened page
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: pending registration cancellation does not resurrect or remove a reopened page
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: pending registration cancellation does not resurrect or remove a reopened page
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: pending registration cancellation does not resurrect or remove a reopened page
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: pending registration cancellation does not resurrect or remove a reopened page
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: pending registration cancellation does not resurrect or remove a reopened page
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: pending registration cancellation does not resurrect or remove a reopened page
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: pending registration cancellation does not resurrect or remove a reopened page
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: pending registration cancellation does not resurrect or remove a reopened page
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: pending registration cancellation does not resurrect or remove a reopened page
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: pending registration cancellation does not resurrect or remove a reopened page
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/cses_ws_gateway_integration_test.dart: Common awaited gateway connects, subscribes, joins and exchanges routed JSON
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: pending registration cancellation does not resurrect or remove a reopened page
+00:00 +6: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: pending registration cancellation does not resurrect or remove a reopened page
+00:00 +7: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: gateway does not send or unregister another adapter ownership
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/example/test/document_host_native_test.dart: home initialization and reconnect never select or request a document
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: native document sends edits, merges offline changes and replays to a read-only controller
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/example/test/document_host_native_test.dart: home initialization and reconnect never select or request a document
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: native document sends edits, merges offline changes and replays to a read-only controller
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/example/test/document_host_native_test.dart: home initialization and reconnect never select or request a document
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: native document sends edits, merges offline changes and replays to a read-only controller
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/example/test/document_host_native_test.dart: home initialization and reconnect never select or request a document
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: native document sends edits, merges offline changes and replays to a read-only controller
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/example/test/document_host_native_test.dart: home initialization and reconnect never select or request a document
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: native document sends edits, merges offline changes and replays to a read-only controller
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/example/test/document_host_native_test.dart: home initialization and reconnect never select or request a document
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: native document sends edits, merges offline changes and replays to a read-only controller
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/example/test/document_host_native_test.dart: home initialization and reconnect never select or request a document
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: native document sends edits, merges offline changes and replays to a read-only controller
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/example/test/document_host_native_test.dart: home initialization and reconnect never select or request a document
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: native document sends edits, merges offline changes and replays to a read-only controller
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/example/test/document_host_native_test.dart: home initialization and reconnect never select or request a document
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: native document sends edits, merges offline changes and replays to a read-only controller
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/example/test/document_host_native_test.dart: home initialization and reconnect never select or request a document
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: native document sends edits, merges offline changes and replays to a read-only controller
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/example/test/document_host_native_test.dart: home initialization and reconnect never select or request a document
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: native document sends edits, merges offline changes and replays to a read-only controller
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/example/test/document_host_native_test.dart: home initialization and reconnect never select or request a document
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: native document sends edits, merges offline changes and replays to a read-only controller
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/example/test/document_host_native_test.dart: home initialization and reconnect never select or request a document
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: native document sends edits, merges offline changes and replays to a read-only controller
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/example/test/document_host_native_test.dart: home initialization and reconnect never select or request a document
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart: native document sends edits, merges offline changes and replays to a read-only controller
+00:00 +9: /System/Volumes/Data/workspace/cses_document_collab/example/test/document_host_native_test.dart: home initialization and reconnect never select or request a document
+00:08 +10: /System/Volumes/Data/workspace/cses_document_collab/example/test/document_host_native_test.dart: a completed creation record is restored without automatically opening its document
+00:08 +11: /System/Volumes/Data/workspace/cses_document_collab/example/test/document_host_native_test.dart: selecting another cached document releases the old engine and keeps the new one read-only
+00:09 +12: /System/Volumes/Data/workspace/cses_document_collab/example/test/document_host_native_test.dart: opening the same selected document retains its controller and undo history
+00:09 +13: /System/Volumes/Data/workspace/cses_document_collab/example/test/document_host_native_test.dart: a rejected list selection preserves the current document and permits retry
+00:09 +14: /System/Volumes/Data/workspace/cses_document_collab/example/test/document_host_native_test.dart: a late access check after logout cannot open a document
+00:09 +15: /System/Volumes/Data/workspace/cses_document_collab/example/test/document_host_native_test.dart: cached formal document opens read-only before a pending permission HTTP response
+00:09 +16: /System/Volumes/Data/workspace/cses_document_collab/example/test/document_host_native_test.dart: transient permissions recover on explicit retry and an explicit denial revokes editing
+00:25 +17: /System/Volumes/Data/workspace/cses_document_collab/example/test/document_host_native_test.dart: foreground recovery refreshes authorization even when the socket remains offline
+00:25 +18: /System/Volumes/Data/workspace/cses_document_collab/example/test/document_host_native_test.dart: late permission response cannot re-enable a closed host or retain its native engine
+00:25 +19: /System/Volumes/Data/workspace/cses_document_collab/example/test/document_host_native_test.dart: storage failure can retry local opening without recreating or losing the cached document
+00:33 +20: /System/Volumes/Data/workspace/cses_document_collab/example/test/document_host_native_test.dart: account change during a permission refresh revokes the old editable controller
+00:41 +21: All tests passed!

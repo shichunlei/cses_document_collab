@@ -1,0 +1,18 @@
+00:00 +0: loading /System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart
+00:00 +0: /System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart: subscribe precedes join; sync status never completes handshake
+00:00 +1: /System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart: applies server update before calculating unframed reverse diff
+00:00 +2: /System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart: remote updates apply without echo; local edits only send while ready
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart: terminal document errors survive reconnect and foreground recovery
+00:00 +4: /System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart: bootstrap root conflict stops supplement and automatic reconnect
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart: collabClose retries join with a bounded retry count
+00:00 +6: /System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart: online disposal sends awareness removal, leave, unsubscribe once
+00:00 +7: /System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart: offline disposal sends no stale exit commands
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart: upstream larger than 1 MiB stops without byte slicing
+00:00 +9: /System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart: downstream sync may exceed upstream limit
+00:00 +10: /System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart: send failure leaves ready without claiming delivery or save
+00:00 +11: /System/Volumes/Data/workspace/cses_document_collab/test/collab_controller_lifecycle_native_test.dart: (setUpAll)
+00:00 +11: /System/Volumes/Data/workspace/cses_document_collab/test/collab_controller_lifecycle_native_test.dart: failed controller retry must not send the next owner document
+00:00 +12: /System/Volumes/Data/workspace/cses_document_collab/test/collab_controller_lifecycle_native_test.dart: permission registration failure must not poison transitions or cleanup
+00:00 +13: /System/Volumes/Data/workspace/cses_document_collab/test/collab_controller_lifecycle_native_test.dart: close waits for pending registration and stale callbacks cannot mutate the next owner
+00:00 +14: /System/Volumes/Data/workspace/cses_document_collab/test/collab_controller_lifecycle_native_test.dart: (tearDownAll)
+00:00 +14: All tests passed!

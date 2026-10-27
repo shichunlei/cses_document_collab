@@ -1,13 +1,11 @@
-import 'package:cses_common/network/websocket/cses_websocket_client.dart';
-import 'package:cses_common/network/websocket/models/socket_subscribe_header.dart';
-import 'package:cses_common/network/websocket/websocket_init_entry.dart';
+import 'package:cses_common/cses_common_network.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';
 
-/// 使用 Common 原有接口连接 CSES，不创建物理 Socket，不修改 Common。
+/// 借用 Common 主连接的协同适配器，只拥有自身页面登记，不创建或关闭物理连接。
 ///
-/// onlyListen 注册接收回调，平台 subscribe 由此适配器在 ready 时发送，确保离线注销
-/// 仅清理本地监听。Common 的 register/unregister 为 async void，借用其公开 lock
-/// 等待已排入的注册操作完成。该兼容方式仅用于独立 Demo 的单编辑器会话。
+/// 可等待登记保证监听已安装；平台订阅及重连恢复统一由 Common 负责。
+/// 所有本适配器消息采用即时发送，离线或同步发送失败不入队。
+/// 协同会话负责发送离开及取消订阅，本适配器注销只释放本地登记。
 ///
 /// ```dart
 /// import 'package:cses_mobile_collab_demo/src/demo/common_cses_collab_gateway.dart';
@@ -17,38 +15,31 @@ import 'package:cses_document_collab/cses_document_collab.dart';
 ///     instanceId: 'unique-editor', callbacks: {'collabSync': (body) {}});
 ///   // 宿主先建立主连接，此处只示范空向量的协议封装。
 ///   gateway.send('demo-editor', 'collabJoin', {'stateVector': 'AA=='});
+///   gateway.send('demo-editor', 'collabLeave', {});
+///   gateway.send('demo-editor', 'unsubscribe', {});
 ///   await gateway.unregister('demo-editor');
 /// }
 /// ```
 final class CommonCsesCollabGateway implements CsesCollabGateway {
-  /// 创建单会话路由适配器；资源归主连接和调用方会话所有。
+  /// 创建页面登记适配器；主连接归宿主所有，每个pageId必须在活跃登记间唯一。
   CommonCsesCollabGateway();
 
-  final Map<String, SocketSubscription> _routes = {};
+  /// 本适配器发起的登记票据，隔离注销期间同名页面重开和迟到的注册失败。
+  final Map<String, Object> _registrations = {};
 
   /// 查询当前 CSES hello-ready 状态，不发起连接。
   @override
   bool get isConnected => csesWebSocketClient.isConnected;
 
-  /// 每次主连接 ready 时先恢复本适配器的 subscribe，再通知会话重新 join。
-  ///
-  /// 此流必须由单一会话订阅一次；多次订阅会重复发送平台 subscribe。
+  /// 转发Common的hello-ready/离线事件；发布ready前Common已尝试恢复平台订阅。
+  /// 多个监听者不会重复发送subscribe；发送失败时由即时发送前置返回false，协同会话有界重试。
   @override
-  Stream<bool> get connectionStates => WebSocketInitEntry.watch(scope: WebSocketInitScope.cses)
-      .map((event) => event.current.isConnected)
-      .distinct()
-      .map((connected) {
-        if (connected) {
-          for (final pageId in _routes.keys.toList(growable: false)) {
-            send(pageId, 'subscribe', const {});
-          }
-        }
-        return connected;
-      });
+  Stream<bool> get connectionStates =>
+      WebSocketInitEntry.watch(scope: WebSocketInitScope.cses).map((event) => event.current.isConnected).distinct();
 
-  /// 登记 [pageId]、[documentId]/[instanceId] 和 [callbacks]，在线时先发空 body subscribe。
-  ///
-  /// 使用 onlyListen 避免 Common 自动排队 unsubscribe；锁屏障保证回调已安装才开始握手。
+  /// 等待[pageId]的[documentId]/[instanceId]路由与[callbacks]安装，首次订阅正文为空Map。
+  /// 离线也可完成本地登记；Common在hello-ready后恢复订阅，发送失败不入队。
+  /// 重复活跃pageId抛StateError；注册被注销/关闭取消或安装失败时Future向调用方报告。
   @override
   Future<void> register({
     required String pageId,
@@ -56,40 +47,42 @@ final class CommonCsesCollabGateway implements CsesCollabGateway {
     required String instanceId,
     required Map<String, void Function(Map<String, dynamic>)> callbacks,
   }) async {
-    final route = SocketSubscription(channel: 'Document', topic: documentId, instance: instanceId);
-    csesWebSocketClient.registerListeners(
-      pageId: pageId,
-      subscription: route,
-      eventCallbacks: callbacks,
-      onlyListen: true,
-    );
-    await csesWebSocketClient.lock.synchronized(() {
-      _routes[pageId] = route;
-      if (isConnected) send(pageId, 'subscribe', const {});
-    });
+    if (_registrations.containsKey(pageId)) throw StateError('协同页面已登记');
+    final owner = Object();
+    _registrations[pageId] = owner;
+    try {
+      await csesWebSocketClient.registerListenersAsync(
+        pageId: pageId,
+        subscription: SocketSubscription(channel: 'Document', topic: documentId, instance: instanceId),
+        eventCallbacks: callbacks,
+        params: const {},
+        immediateOnly: true,
+      );
+    } catch (_) {
+      if (identical(_registrations[pageId], owner)) _registrations.remove(pageId);
+      rethrow;
+    }
   }
 
-  /// 发送 [pageId]/[action]/[body] 的标准 CSES 信封；离线不调用 Common 发送器。
-  ///
-  /// 复用 sendMessageWithResult 保留立即发送结果。底层同步异常仍可能排队，这是原 Common
-  /// API 的已知边界；协同会话以向量重同步修复正文，不能据此宣称严格无队列发送。
+  /// 即时发送[pageId]的[action]/[body]，未登记、离线或同步失败返回false且不入队。
+  /// 普通命令前确保本代平台订阅已发送；leave/unsubscribe不为清理重新订阅。
+  /// true仅表示本机发送调用成功，不表示服务端ACK或持久化。
   @override
   bool send(String pageId, String action, Map<String, dynamic> body) {
-    final route = _routes[pageId];
-    if (!isConnected || route == null) return false;
-    return csesWebSocketClient.sendMessageWithResult({
-      'action': action,
-      'header': route.toJson(),
-      'subscription': route.toJson(),
-      'body': body,
-    });
+    if (!isConnected || !_registrations.containsKey(pageId)) return false;
+    return csesWebSocketClient.trySendWithPage(
+      pageId: pageId,
+      action: action,
+      body: body,
+      ensureSubscribed: action != 'collabLeave' && action != 'unsubscribe',
+    );
   }
 
-  /// 注销 [pageId] 的纯监听注册；不关闭主连接，不排队取消订阅。
+  /// 等待[pageId]的本地监听、恢复登记及定时器注销，重复或非本适配器登记的页面直接完成。
+  /// 立即撤销本适配器发送权限，不重复发送网络unsubscribe；主连接及其他页面保持。
   @override
-  Future<void> unregister(String pageId) async {
-    _routes.remove(pageId);
-    csesWebSocketClient.unregisterListeners(pageId);
-    await csesWebSocketClient.lock.synchronized(() {});
+  Future<void> unregister(String pageId) {
+    if (_registrations.remove(pageId) == null) return Future<void>.value();
+    return csesWebSocketClient.unregisterListenersAsync(pageId, localOnly: true);
   }
 }

@@ -47,7 +47,7 @@ DemoDocumentHost 在列表选择或新建文档后创建包控制器并监听其
 
 `resync()` 保留权限/Schema 等终止错误，适用于主连接恢复；`retry()` 是用户主动重试。清缓存只影响当前分区，随后由 retry 重新加入。ready/online 不等于数据库 ACK；服务端落库、业务更新时间、搜索和桌面互通须另行联调。
 
-Common 适配器沿用已有 onlyListen+手动 subscribe 策略；注册/注销 async void 通过公开锁形成完成屏障。接口的同步发送异常仍可能入队，向量同步修复正文；join/leave/Awareness 的重放和生产订阅策略须在真实环境专项验证。
+Demo 的 Common 适配器通过 `registerListenersAsync(immediateOnly: true)` 等待监听与平台恢复登记安装，订阅正文为 `{}`。Common 在主连接 hello-ready 事件发布前恢复平台订阅；Gateway 的连接状态流只转发事件，多次监听不会重复订阅。`trySendWithPage` 保证本代订阅前置和即时发送，离线或同步失败不入队；协同会话通过状态向量重同步补传原有 Yrs/SQLite 状态。leave/unsubscribe 使用 `ensureSubscribed: false`，避免为退出重新订阅。协同会话负责网络退出，Gateway 以 `unregisterListenersAsync(localOnly: true)` 等待本地清理，避免重复 unsubscribe。Gateway 只跟踪自己发起的页面登记，不借用 Common 的锁，也不拥有主连接。真实业务服务器与设备联调仍需独立验收。
 
 ## 数据兼容
 

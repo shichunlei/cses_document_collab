@@ -1,0 +1,2251 @@
+00:00 +0: loading /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/websocket_envelope_log_summary_test.dart
+00:00 +0: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/websocket_envelope_log_summary_test.dart: uploaded summary keeps protocol shape without sensitive values
+00:00 +0 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/websocket_envelope_log_summary_test.dart: uploaded summary keeps protocol shape without sensitive values [E]
+  Expected: not contains 'private-message'
+    Actual: '{event: websocket_envelope_received, client: cses, direction: incoming, action: joinLive, seq: 12, isHeartbeat: false, isControlMessage: false, hasSubscriptionEnvelope: true, hasTraceContext: true, payloadType: _Map<String, dynamic>, payloadFieldCount: 2, body: {content: private-message, token: secret-token}}'
+
+  package:matcher                                                       expect
+  package:flutter_test/src/widget_tester.dart 473:18                    expect
+  test/network/websocket/websocket_envelope_log_summary_test.dart 23:5  main.<fn>
+
+00:00 +0 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/websocket_envelope_log_summary_test.dart: non numeric sequence value is not copied to upload summary
+00:00 +1 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 即时离线发送不入队，旧接口仍排队
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.040] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.047] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.058] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.062] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 2
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.063] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +2 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: await注册后立即可分发，await注销后不可分发
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.070] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.071] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WS原始消息] [JSON] [2026-10-27 18:45:28.082] package:cses_common/network/websocket/cses_websocket_client.dart:195
+│ {
+│   "action": "collabUpdate",
+│   "subscription": {
+│     "channel": "Document",
+│     "topic": "doc-test",
+│     "instance": "editor-test"
+│   },
+│   "body": {}
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.095] package:cses_common/network/websocket/cses_websocket_client.dart:235
+│ {
+│   "event": "websocket_envelope_received",
+│   "client": "cses",
+│   "direction": "incoming",
+│   "action": "collabUpdate",
+│   "isHeartbeat": false,
+│   "isControlMessage": false,
+│   "hasSubscriptionEnvelope": true,
+│   "hasTraceContext": false,
+│   "payloadType": "_Map<String, dynamic>",
+│   "payloadFieldCount": 0,
+│   "body": {}
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.097] package:cses_common/network/websocket/cses_websocket_client.dart:266
+│ 🚀 action: collabUpdate
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.098] package:cses_common/network/websocket/cses_websocket_client.dart:296
+│ 🚀 🔑 Dispatch key = Document|doc-test|editor-test|collabUpdate
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.099] package:cses_common/network/websocket/cses_websocket_client.dart:346
+│ 🚀 ✅ Found 1 callbacks for pageId=editor, key=Document|doc-test|editor-test|collabUpdate
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WS原始消息] [JSON] [2026-10-27 18:45:28.103] package:cses_common/network/websocket/cses_websocket_client.dart:195
+│ {
+│   "action": "collabUpdate",
+│   "subscription": {
+│     "channel": "Document",
+│     "topic": "doc-test",
+│     "instance": "editor-test"
+│   },
+│   "body": {}
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.105] package:cses_common/network/websocket/cses_websocket_client.dart:235
+│ {
+│   "event": "websocket_envelope_received",
+│   "client": "cses",
+│   "direction": "incoming",
+│   "action": "collabUpdate",
+│   "isHeartbeat": false,
+│   "isControlMessage": false,
+│   "hasSubscriptionEnvelope": true,
+│   "hasTraceContext": false,
+│   "payloadType": "_Map<String, dynamic>",
+│   "payloadFieldCount": 0,
+│   "body": {}
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.106] package:cses_common/network/websocket/cses_websocket_client.dart:266
+│ 🚀 action: collabUpdate
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.106] package:cses_common/network/websocket/cses_websocket_client.dart:296
+│ 🚀 🔑 Dispatch key = Document|doc-test|editor-test|collabUpdate
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.109] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.109] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +3 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 等待锁的注册被注销取消，注销完成后不会复活
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.112] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.113] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.119] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.120] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +4 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 关闭取消等待锁的注册
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.124] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.124] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.125] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.126] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.127] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.127] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +5 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 同名页面在注销期间重开只保留新监听
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.130] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.130] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WS原始消息] [JSON] [2026-10-27 18:45:28.132] package:cses_common/network/websocket/cses_websocket_client.dart:195
+│ {
+│   "action": "collabUpdate",
+│   "subscription": {
+│     "channel": "Document",
+│     "topic": "doc-test",
+│     "instance": "editor-test"
+│   },
+│   "body": {}
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.134] package:cses_common/network/websocket/cses_websocket_client.dart:235
+│ {
+│   "event": "websocket_envelope_received",
+│   "client": "cses",
+│   "direction": "incoming",
+│   "action": "collabUpdate",
+│   "isHeartbeat": false,
+│   "isControlMessage": false,
+│   "hasSubscriptionEnvelope": true,
+│   "hasTraceContext": false,
+│   "payloadType": "_Map<String, dynamic>",
+│   "payloadFieldCount": 0,
+│   "body": {}
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.135] package:cses_common/network/websocket/cses_websocket_client.dart:266
+│ 🚀 action: collabUpdate
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.135] package:cses_common/network/websocket/cses_websocket_client.dart:296
+│ 🚀 🔑 Dispatch key = Document|doc-test|editor-test|collabUpdate
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.136] package:cses_common/network/websocket/cses_websocket_client.dart:346
+│ 🚀 ✅ Found 1 callbacks for pageId=reopen, key=Document|doc-test|editor-test|collabUpdate
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.137] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.138] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +6 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 离线即时登记/注销不入队，既有登记注销仍排队
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.143] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.144] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.145] package:cses_common/network/websocket/cses_websocket_client.dart:585
+│ 🚀 ⏳ Defer websocket subscription until ready: pageId=immediate
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.147] package:cses_common/network/websocket/cses_websocket_client.dart:585
+│ 🚀 ⏳ Defer websocket subscription until ready: pageId=legacy
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.148] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.149] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 2
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.149] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +7 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 仅本地注销不发送且重复注销安全
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.152] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.154] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.154] package:cses_common/network/websocket/cses_websocket_client.dart:585
+│ 🚀 ⏳ Defer websocket subscription until ready: pageId=local
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.155] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.156] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +8 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 实例完整路由隔离，注销一页不影响另一页
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.159] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.159] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WS原始消息] [JSON] [2026-10-27 18:45:28.161] package:cses_common/network/websocket/cses_websocket_client.dart:195
+│ {
+│   "action": "collabUpdate",
+│   "subscription": {
+│     "channel": "Document",
+│     "topic": "doc-test",
+│     "instance": "editor-test"
+│   },
+│   "body": {}
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.162] package:cses_common/network/websocket/cses_websocket_client.dart:235
+│ {
+│   "event": "websocket_envelope_received",
+│   "client": "cses",
+│   "direction": "incoming",
+│   "action": "collabUpdate",
+│   "isHeartbeat": false,
+│   "isControlMessage": false,
+│   "hasSubscriptionEnvelope": true,
+│   "hasTraceContext": false,
+│   "payloadType": "_Map<String, dynamic>",
+│   "payloadFieldCount": 0,
+│   "body": {}
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.163] package:cses_common/network/websocket/cses_websocket_client.dart:266
+│ 🚀 action: collabUpdate
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.164] package:cses_common/network/websocket/cses_websocket_client.dart:296
+│ 🚀 🔑 Dispatch key = Document|doc-test|editor-test|collabUpdate
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.164] package:cses_common/network/websocket/cses_websocket_client.dart:365
+│ 🚀 ⚠️ No matching key=Document|doc-test|editor-test|collabUpdate in pageId=b
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WS原始消息] [JSON] [2026-10-27 18:45:28.165] package:cses_common/network/websocket/cses_websocket_client.dart:195
+│ {
+│   "action": "collabUpdate",
+│   "subscription": {
+│     "channel": "Document",
+│     "topic": "doc-test",
+│     "instance": "other"
+│   },
+│   "body": {}
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.168] package:cses_common/network/websocket/cses_websocket_client.dart:235
+│ {
+│   "event": "websocket_envelope_received",
+│   "client": "cses",
+│   "direction": "incoming",
+│   "action": "collabUpdate",
+│   "isHeartbeat": false,
+│   "isControlMessage": false,
+│   "hasSubscriptionEnvelope": true,
+│   "hasTraceContext": false,
+│   "payloadType": "_Map<String, dynamic>",
+│   "payloadFieldCount": 0,
+│   "body": {}
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.170] package:cses_common/network/websocket/cses_websocket_client.dart:266
+│ 🚀 action: collabUpdate
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.170] package:cses_common/network/websocket/cses_websocket_client.dart:296
+│ 🚀 🔑 Dispatch key = Document|doc-test|other|collabUpdate
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.171] package:cses_common/network/websocket/cses_websocket_client.dart:346
+│ 🚀 ✅ Found 1 callbacks for pageId=b, key=Document|doc-test|other|collabUpdate
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.172] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.173] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +9 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 纯监听不允许订阅正文，失败不留下半登记
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.176] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.177] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.180] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.180] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +10 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 真实连接先订阅后业务，双路由字段一致且只订阅一次
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.183] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.184] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.193] package:cses_common/network/websocket/cses_websocket_client.dart:585
+│ 🚀 ⏳ Defer websocket subscription until ready: pageId=online
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.197] package:cses_common/network/websocket/cses_websocket_client.dart:121
+│ 🚀 websocketHost = ws://127.0.0.1:53460
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.198] package:cses_common/network/websocket/base_websocket_client.dart:259
+│ 🚀 scheme=ws
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.198] package:cses_common/network/websocket/base_websocket_client.dart:260
+│ 🚀 host=127.0.0.1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.199] package:cses_common/network/websocket/base_websocket_client.dart:261
+│ 🚀 port=53460
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.199] package:cses_common/network/websocket/base_websocket_client.dart:262
+│ 🚀 path=
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.199] package:cses_common/network/websocket/base_websocket_client.dart:263
+│ 🚀 query=cookieId=local-test
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.200] package:cses_common/network/websocket/base_websocket_client.dart:264
+│ 🚀 uri=ws://127.0.0.1:53460?cookieId=local-test
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.210] package:cses_common/network/websocket/base_websocket_client.dart:494
+│ 🚀 WebSocket connection state: Connecting
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +10 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/websocket_observability_integration_test.dart: CSES 心跳消息更新收包和 pong 时间但不标记业务消息
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [WEBSOCKET OWNER] [DEBUG] [2026-10-27 18:45:28.225] package:cses_common/network/websocket/websocket_lifecycle_owner.dart:215
+│ 🚀 WebSocket lifecycle reset: reason=test_setup
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +10 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 真实连接先订阅后业务，双路由字段一致且只订阅一次
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.244] package:cses_common/network/websocket/base_websocket_client.dart:494
+│ 🚀 WebSocket connection state: Connected
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.245] package:cses_common/network/websocket/cses_websocket_client.dart:141
+│ 🚀 CSES transport connected, waiting for hello before ready
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WS原始消息] [JSON] [2026-10-27 18:45:28.247] package:cses_common/network/websocket/cses_websocket_client.dart:195
+│ {
+│   "action": "hello",
+│   "serverName": "local-test"
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.248] package:cses_common/network/websocket/cses_websocket_client.dart:235
+│ {
+│   "event": "websocket_envelope_received",
+│   "client": "cses",
+│   "direction": "incoming",
+│   "action": "hello",
+│   "isHeartbeat": false,
+│   "isControlMessage": true,
+│   "hasSubscriptionEnvelope": false,
+│   "hasTraceContext": false,
+│   "payloadType": "none"
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.249] package:cses_common/network/websocket/cses_websocket_client.dart:266
+│ 🚀 action: hello
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [INFO] [2026-10-27 18:45:28.249] package:cses_common/network/websocket/cses_websocket_client.dart:318
+│ 🚀 🤝 CSES websocket hello received: serverName=local-test, serverTime=null
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.251] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:58
+│ 🚀 ❤️ Heartbeat started, interval: 15s
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.252] package:cses_common/network/websocket/cses_websocket_client.dart:749
+│ 🚀 🌐 Restoring global websocket subscription
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.256] package:cses_common/network/websocket/cses_websocket_client.dart:602
+│ 🚀 🔁 Restoring 1 page websocket subscriptions
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.258] package:cses_common/network/websocket/interceptors/ws_interceptor.dart:235
+│ {
+│   "event": "websocket_message_body",
+│   "direction": "outgoing",
+│   "action": "subscribe",
+│   "body": null
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.260] package:cses_common/network/websocket/interceptors/ws_interceptor.dart:235
+│ {
+│   "event": "websocket_message_body",
+│   "direction": "outgoing",
+│   "action": "collabJoin",
+│   "body": {
+│     "stateVector": "AA=="
+│   }
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.262] package:cses_common/network/websocket/interceptors/ws_interceptor.dart:235
+│ {
+│   "event": "websocket_message_body",
+│   "direction": "outgoing",
+│   "action": "collabSync",
+│   "body": {}
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +11 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 真实连接先订阅后业务，双路由字段一致且只订阅一次
+00:00 +11 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/websocket_observability_integration_test.dart: CSES hello记录服务节点且普通协议消息更新业务活动时间
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [WEBSOCKET OWNER] [DEBUG] [2026-10-27 18:45:28.270] package:cses_common/network/websocket/websocket_lifecycle_owner.dart:215
+│ 🚀 WebSocket lifecycle reset: reason=test_setup
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WS原始消息] [JSON] [2026-10-27 18:45:28.272] package:cses_common/network/websocket/cses_websocket_client.dart:195
+│ {
+│   "action": "hello",
+│   "serverName": "cses-ws-01",
+│   "connectionId": "cses-connection-1"
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.283] package:cses_common/network/websocket/cses_websocket_client.dart:235
+│ {
+│   "event": "websocket_envelope_received",
+│   "client": "cses",
+│   "direction": "incoming",
+│   "action": "hello",
+│   "isHeartbeat": false,
+│   "isControlMessage": true,
+│   "hasSubscriptionEnvelope": false,
+│   "hasTraceContext": false,
+│   "payloadType": "none"
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.285] package:cses_common/network/websocket/cses_websocket_client.dart:266
+│ 🚀 action: hello
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [INFO] [2026-10-27 18:45:28.286] package:cses_common/network/websocket/cses_websocket_client.dart:318
+│ 🚀 🤝 CSES websocket hello received: serverName=cses-ws-01, serverTime=null
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WS原始消息] [JSON] [2026-10-27 18:45:28.288] package:cses_common/network/websocket/cses_websocket_client.dart:195
+│ {
+│   "action": "notice",
+│   "subscription": {
+│     "channel": "global",
+│     "topic": "systemNotice"
+│   },
+│   "body": {}
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.290] package:cses_common/network/websocket/cses_websocket_client.dart:235
+│ {
+│   "event": "websocket_envelope_received",
+│   "client": "cses",
+│   "direction": "incoming",
+│   "action": "notice",
+│   "isHeartbeat": false,
+│   "isControlMessage": false,
+│   "hasSubscriptionEnvelope": true,
+│   "hasTraceContext": false,
+│   "payloadType": "_Map<String, dynamic>",
+│   "payloadFieldCount": 0,
+│   "body": {}
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.291] package:cses_common/network/websocket/cses_websocket_client.dart:266
+│ 🚀 action: notice
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.292] package:cses_common/network/websocket/cses_websocket_client.dart:296
+│ 🚀 🔑 Dispatch key = global|systemNotice||notice
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +11 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 真实连接先订阅后业务，双路由字段一致且只订阅一次
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.293] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.294] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +12 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 真实连接先订阅后业务，双路由字段一致且只订阅一次
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.309] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.310] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +12 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/websocket_observability_integration_test.dart: IM hello记录connectionId和消息活动时间
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [WEBSOCKET OWNER] [DEBUG] [2026-10-27 18:45:28.310] package:cses_common/network/websocket/websocket_lifecycle_owner.dart:215
+│ 🚀 WebSocket lifecycle reset: reason=test_setup
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +12 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 真实连接先订阅后业务，双路由字段一致且只订阅一次
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.310] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +13 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/websocket_observability_integration_test.dart: IM hello记录connectionId和消息活动时间
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [IM WS原始消息] [JSON] [2026-10-27 18:45:28.314] package:cses_common/network/websocket/im_websocket_client.dart:116
+│ {
+00:00 +13 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 同步编码失败即时不入队，旧发送失败仍入队
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.314] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.315] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.315] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +13 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/websocket_observability_integration_test.dart: IM hello记录connectionId和消息活动时间
+│   "action": "hello",
+│   "seq": 12,
+│   "data": {
+│     "connection_id": "im-connection-1",
+│     "serverVersion": "1.0",
+│     "pingInterval": 15
+│   }
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +13 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 同步编码失败即时不入队，旧发送失败仍入队
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.317] package:cses_common/network/websocket/cses_websocket_client.dart:121
+│ 🚀 websocketHost = ws://127.0.0.1:53465
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.317] package:cses_common/network/websocket/base_websocket_client.dart:259
+00:00 +13 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/websocket_observability_integration_test.dart: IM hello记录connectionId和消息活动时间
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [IM WEBSOCKET] [JSON] [2026-10-27 18:45:28.317] package:cses_common/network/websocket/im_websocket_client.dart:149
+│ {
+│   "event": "websocket_envelope_received",
+│   "client": "im",
+00:00 +13 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 同步编码失败即时不入队，旧发送失败仍入队
+│ 🚀 scheme=ws
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +13 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/websocket_observability_integration_test.dart: IM hello记录connectionId和消息活动时间
+│   "direction": "incoming",
+│   "action": "hello",
+│   "seq": 12,
+│   "isHeartbeat": false,
+│   "isControlMessage": true,
+│   "hasSubscriptionEnvelope": false,
+│   "hasTraceContext": false,
+│   "payloadType": "_Map<String, dynamic>",
+│   "payloadFieldCount": 3,
+│   "body": {
+00:00 +13 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 同步编码失败即时不入队，旧发送失败仍入队
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.318] package:cses_common/network/websocket/base_websocket_client.dart:260
+│ 🚀 host=127.0.0.1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +13 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/websocket_observability_integration_test.dart: IM hello记录connectionId和消息活动时间
+│     "connection_id": "im-connection-1",
+│     "serverVersion": "1.0",
+│     "pingInterval": 15
+│   }
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +13 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 同步编码失败即时不入队，旧发送失败仍入队
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.319] package:cses_common/network/websocket/base_websocket_client.dart:261
+│ 🚀 port=53465
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.319] package:cses_common/network/websocket/base_websocket_client.dart:262
+│ 🚀 path=
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.320] package:cses_common/network/websocket/base_websocket_client.dart:263
+│ 🚀 query=cookieId=local-test
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.320] package:cses_common/network/websocket/base_websocket_client.dart:264
+│ 🚀 uri=ws://127.0.0.1:53465?cookieId=local-test
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +13 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/websocket_observability_integration_test.dart: IM hello记录connectionId和消息活动时间
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [IM WEBSOCKET] [INFO] [2026-10-27 18:45:28.320] package:cses_common/network/websocket/im_websocket_client.dart:273
+│ 🚀 🤝 IM websocket hello received: connectionId=im-connection-1, serverVersion=1.0, pingInterval=15
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +13 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 同步编码失败即时不入队，旧发送失败仍入队
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.322] package:cses_common/network/websocket/base_websocket_client.dart:494
+│ 🚀 WebSocket connection state: Connecting
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +13 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/websocket_observability_integration_test.dart: IM hello记录connectionId和消息活动时间
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [IM WS原始消息] [JSON] [2026-10-27 18:45:28.322] package:cses_common/network/websocket/im_websocket_client.dart:116
+│ {
+│   "action": "newMessage",
+│   "seq": 13,
+│   "data": {}
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [IM WEBSOCKET] [JSON] [2026-10-27 18:45:28.324] package:cses_common/network/websocket/im_websocket_client.dart:149
+│ {
+│   "event": "websocket_envelope_received",
+│   "client": "im",
+│   "direction": "incoming",
+│   "action": "newMessage",
+│   "seq": 13,
+│   "isHeartbeat": false,
+│   "isControlMessage": false,
+│   "hasSubscriptionEnvelope": false,
+│   "hasTraceContext": false,
+│   "payloadType": "_Map<String, dynamic>",
+│   "payloadFieldCount": 0,
+│   "body": {}
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +13 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 同步编码失败即时不入队，旧发送失败仍入队
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.328] package:cses_common/network/websocket/base_websocket_client.dart:494
+│ 🚀 WebSocket connection state: Connected
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.330] package:cses_common/network/websocket/cses_websocket_client.dart:141
+│ 🚀 CSES transport connected, waiting for hello before ready
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WS原始消息] [JSON] [2026-10-27 18:45:28.335] package:cses_common/network/websocket/cses_websocket_client.dart:195
+│ {
+│   "action": "hello",
+│   "serverName": "local-test"
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.336] package:cses_common/network/websocket/cses_websocket_client.dart:235
+│ {
+│   "event": "websocket_envelope_received",
+│   "client": "cses",
+│   "direction": "incoming",
+│   "action": "hello",
+│   "isHeartbeat": false,
+│   "isControlMessage": true,
+│   "hasSubscriptionEnvelope": false,
+│   "hasTraceContext": false,
+│   "payloadType": "none"
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.337] package:cses_common/network/websocket/cses_websocket_client.dart:266
+│ 🚀 action: hello
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [INFO] [2026-10-27 18:45:28.337] package:cses_common/network/websocket/cses_websocket_client.dart:318
+│ 🚀 🤝 CSES websocket hello received: serverName=local-test, serverTime=null
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.338] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.338] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:58
+│ 🚀 ❤️ Heartbeat started, interval: 15s
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.339] package:cses_common/network/websocket/cses_websocket_client.dart:749
+│ 🚀 🌐 Restoring global websocket subscription
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +14 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 同步编码失败即时不入队，旧发送失败仍入队
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.340] package:cses_common/network/websocket/cses_websocket_client.dart:598
+│ 🚀 🔁 No page websocket subscriptions to restore
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +14 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/websocket_observability_integration_test.dart: CSES 页面订阅记录注册、发送确认和注销状态
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [WEBSOCKET OWNER] [DEBUG] [2026-10-27 18:45:28.341] package:cses_common/network/websocket/websocket_lifecycle_owner.dart:215
+│ 🚀 WebSocket lifecycle reset: reason=test_setup
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +14 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 同步编码失败即时不入队，旧发送失败仍入队
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [ERROR] [2026-10-27 18:45:28.342] package:cses_common/network/websocket/base_websocket_client.dart:800
+│ 🚀 Error sending message: Converting object to an encodable object failed: Instance of 'Object'
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [ERROR] [2026-10-27 18:45:28.343] package:cses_common/network/websocket/interceptors/ws_interceptor.dart:90
+│ 🚀 ❌ CSES WebSocket error: Converting object to an encodable object failed: Instance of 'Object'
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [ERROR] [2026-10-27 18:45:28.344] package:cses_common/network/websocket/base_websocket_client.dart:800
+│ 🚀 Error sending message: Converting object to an encodable object failed: Instance of 'Object'
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +14 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/websocket_observability_integration_test.dart: CSES 页面订阅记录注册、发送确认和注销状态
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.345] package:cses_common/network/websocket/cses_websocket_client.dart:585
+│ 🚀 ⏳ Defer websocket subscription until ready: pageId=observability-subscription-page
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +14 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 同步编码失败即时不入队，旧发送失败仍入队
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [ERROR] [2026-10-27 18:45:28.345] package:cses_common/network/websocket/interceptors/ws_interceptor.dart:90
+│ 🚀 ❌ CSES WebSocket error: Converting object to an encodable object failed: Instance of 'Object'
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.346] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.348] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.348] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.351] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.352] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.352] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +15 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/websocket_observability_integration_test.dart: CSES 页面订阅记录注册、发送确认和注销状态
+00:00 +15 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 订阅发送失败阻断业务且不入队，修复参数后按顺序重试
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.357] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.357] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.358] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.360] package:cses_common/network/websocket/cses_websocket_client.dart:121
+│ 🚀 websocketHost = ws://127.0.0.1:53467
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.360] package:cses_common/network/websocket/base_websocket_client.dart:259
+│ 🚀 scheme=ws
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.360] package:cses_common/network/websocket/base_websocket_client.dart:260
+│ 🚀 host=127.0.0.1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +15 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/websocket_observability_integration_test.dart: CSES 页面订阅记录注册、发送确认和注销状态
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WS原始消息] [JSON] [2026-10-27 18:45:28.360] package:cses_common/network/websocket/cses_websocket_client.dart:195
+│ {
+│   "action": "subscribe",
+│   "subscription": {
+│     "channel": "CSES",
+00:00 +15 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 订阅发送失败阻断业务且不入队，修复参数后按顺序重试
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.361] package:cses_common/network/websocket/base_websocket_client.dart:261
+│ 🚀 port=53467
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.361] package:cses_common/network/websocket/base_websocket_client.dart:262
+│ 🚀 path=
+00:00 +15 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/websocket_observability_integration_test.dart: CSES 页面订阅记录注册、发送确认和注销状态
+│     "topic": "diagnostic"
+│   },
+│   "body": {}
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +15 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 订阅发送失败阻断业务且不入队，修复参数后按顺序重试
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.361] package:cses_common/network/websocket/base_websocket_client.dart:263
+│ 🚀 query=cookieId=local-test
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.362] package:cses_common/network/websocket/base_websocket_client.dart:264
+│ 🚀 uri=ws://127.0.0.1:53467?cookieId=local-test
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +15 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/websocket_observability_integration_test.dart: CSES 页面订阅记录注册、发送确认和注销状态
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.362] package:cses_common/network/websocket/cses_websocket_client.dart:235
+│ {
+│   "event": "websocket_envelope_received",
+│   "client": "cses",
+│   "direction": "incoming",
+│   "action": "subscribe",
+│   "isHeartbeat": false,
+│   "isControlMessage": true,
+│   "hasSubscriptionEnvelope": true,
+│   "hasTraceContext": false,
+│   "payloadType": "_Map<String, dynamic>",
+│   "payloadFieldCount": 0,
+│   "body": {}
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +15 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 订阅发送失败阻断业务且不入队，修复参数后按顺序重试
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.363] package:cses_common/network/websocket/base_websocket_client.dart:494
+│ 🚀 WebSocket connection state: Connecting
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +15 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/websocket_observability_integration_test.dart: CSES 页面订阅记录注册、发送确认和注销状态
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.363] package:cses_common/network/websocket/cses_websocket_client.dart:266
+│ 🚀 action: subscribe
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.365] package:cses_common/network/websocket/cses_websocket_client.dart:296
+│ 🚀 🔑 Dispatch key = CSES|diagnostic||subscribe
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.366] package:cses_common/network/websocket/cses_websocket_client.dart:365
+│ 🚀 ⚠️ No matching key=CSES|diagnostic||subscribe in pageId=observability-subscription-page
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +15 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 订阅发送失败阻断业务且不入队，修复参数后按顺序重试
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.368] package:cses_common/network/websocket/base_websocket_client.dart:494
+│ 🚀 WebSocket connection state: Connected
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.369] package:cses_common/network/websocket/cses_websocket_client.dart:141
+│ 🚀 CSES transport connected, waiting for hello before ready
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WS原始消息] [JSON] [2026-10-27 18:45:28.370] package:cses_common/network/websocket/cses_websocket_client.dart:195
+│ {
+│   "action": "hello",
+│   "serverName": "local-test"
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.371] package:cses_common/network/websocket/cses_websocket_client.dart:235
+│ {
+│   "event": "websocket_envelope_received",
+│   "client": "cses",
+│   "direction": "incoming",
+│   "action": "hello",
+│   "isHeartbeat": false,
+│   "isControlMessage": true,
+│   "hasSubscriptionEnvelope": false,
+│   "hasTraceContext": false,
+│   "payloadType": "none"
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.372] package:cses_common/network/websocket/cses_websocket_client.dart:266
+│ 🚀 action: hello
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [INFO] [2026-10-27 18:45:28.373] package:cses_common/network/websocket/cses_websocket_client.dart:318
+│ 🚀 🤝 CSES websocket hello received: serverName=local-test, serverTime=null
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.373] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.374] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:58
+│ 🚀 ❤️ Heartbeat started, interval: 15s
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.375] package:cses_common/network/websocket/cses_websocket_client.dart:749
+│ 🚀 🌐 Restoring global websocket subscription
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.377] package:cses_common/network/websocket/cses_websocket_client.dart:598
+│ 🚀 🔁 No page websocket subscriptions to restore
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.377] package:cses_common/network/websocket/cses_websocket_client.dart:589
+│ 🚀 📡 Send initial websocket subscription: pageId=failed-subscribe
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [ERROR] [2026-10-27 18:45:28.378] package:cses_common/network/websocket/base_websocket_client.dart:800
+│ 🚀 Error sending message: Converting object to an encodable object failed: Instance of 'Object'
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [ERROR] [2026-10-27 18:45:28.378] package:cses_common/network/websocket/interceptors/ws_interceptor.dart:90
+│ 🚀 ❌ CSES WebSocket error: Converting object to an encodable object failed: Instance of 'Object'
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [ERROR] [2026-10-27 18:45:28.379] package:cses_common/network/websocket/base_websocket_client.dart:800
+│ 🚀 Error sending message: Converting object to an encodable object failed: Instance of 'Object'
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [ERROR] [2026-10-27 18:45:28.379] package:cses_common/network/websocket/interceptors/ws_interceptor.dart:90
+│ 🚀 ❌ CSES WebSocket error: Converting object to an encodable object failed: Instance of 'Object'
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.380] package:cses_common/network/websocket/interceptors/ws_interceptor.dart:235
+│ {
+│   "event": "websocket_message_body",
+│   "direction": "outgoing",
+│   "action": "subscribe",
+│   "body": {}
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.381] package:cses_common/network/websocket/interceptors/ws_interceptor.dart:235
+│ {
+│   "event": "websocket_message_body",
+│   "direction": "outgoing",
+│   "action": "collabJoin",
+│   "body": null
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +15 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/websocket_observability_integration_test.dart: CSES 页面订阅记录注册、发送确认和注销状态
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.384] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +15 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 订阅发送失败阻断业务且不入队，修复参数后按顺序重试
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.389] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.390] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.393] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.393] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.393] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +16 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/websocket_observability_integration_test.dart: CSES 页面订阅记录注册、发送确认和注销状态
+00:00 +16 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 重连后新登记的首次订阅失败重试仍使用首次参数
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.398] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.398] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +17 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 重连后新登记的首次订阅失败重试仍使用首次参数
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.399] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.400] package:cses_common/network/websocket/cses_websocket_client.dart:121
+│ 🚀 websocketHost = ws://127.0.0.1:53469
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.400] package:cses_common/network/websocket/base_websocket_client.dart:259
+│ 🚀 scheme=ws
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.401] package:cses_common/network/websocket/base_websocket_client.dart:260
+│ 🚀 host=127.0.0.1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +17 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/websocket_observability_integration_test.dart: 生命周期 activate 对 CSES 和 IM 记录同一全局决策
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [WEBSOCKET OWNER] [DEBUG] [2026-10-27 18:45:28.401] package:cses_common/network/websocket/websocket_lifecycle_owner.dart:215
+│ 🚀 WebSocket lifecycle reset: reason=test_setup
+00:00 +17 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 重连后新登记的首次订阅失败重试仍使用首次参数
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.401] package:cses_common/network/websocket/base_websocket_client.dart:261
+│ 🚀 port=53469
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +17 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/websocket_observability_integration_test.dart: 生命周期 activate 对 CSES 和 IM 记录同一全局决策
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +17 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 重连后新登记的首次订阅失败重试仍使用首次参数
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.401] package:cses_common/network/websocket/base_websocket_client.dart:262
+│ 🚀 path=
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.402] package:cses_common/network/websocket/base_websocket_client.dart:263
+│ 🚀 query=cookieId=local-test
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.402] package:cses_common/network/websocket/base_websocket_client.dart:264
+│ 🚀 uri=ws://127.0.0.1:53469?cookieId=local-test
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +17 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/websocket_observability_integration_test.dart: 生命周期 activate 对 CSES 和 IM 记录同一全局决策
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [WEBSOCKET OWNER] [DEBUG] [2026-10-27 18:45:28.403] package:cses_common/network/websocket/websocket_lifecycle_owner.dart:92
+│ 🚀 WebSocket lifecycle activate: enableCses=true, enableIm=true, source=integration_test, enabled={WebSocketClientType.cses, WebSocketClientType.im}
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +17 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 重连后新登记的首次订阅失败重试仍使用首次参数
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.403] package:cses_common/network/websocket/base_websocket_client.dart:494
+│ 🚀 WebSocket connection state: Connecting
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +18 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 重连后新登记的首次订阅失败重试仍使用首次参数
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.408] package:cses_common/network/websocket/base_websocket_client.dart:494
+│ 🚀 WebSocket connection state: Connected
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.409] package:cses_common/network/websocket/cses_websocket_client.dart:141
+│ 🚀 CSES transport connected, waiting for hello before ready
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WS原始消息] [JSON] [2026-10-27 18:45:28.409] package:cses_common/network/websocket/cses_websocket_client.dart:195
+│ {
+│   "action": "hello",
+│   "serverName": "local-test"
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.410] package:cses_common/network/websocket/cses_websocket_client.dart:235
+│ {
+│   "event": "websocket_envelope_received",
+│   "client": "cses",
+│   "direction": "incoming",
+│   "action": "hello",
+│   "isHeartbeat": false,
+│   "isControlMessage": true,
+│   "hasSubscriptionEnvelope": false,
+│   "hasTraceContext": false,
+│   "payloadType": "none"
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.411] package:cses_common/network/websocket/cses_websocket_client.dart:266
+│ 🚀 action: hello
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [INFO] [2026-10-27 18:45:28.412] package:cses_common/network/websocket/cses_websocket_client.dart:318
+│ 🚀 🤝 CSES websocket hello received: serverName=local-test, serverTime=null
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.412] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.413] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:58
+│ 🚀 ❤️ Heartbeat started, interval: 15s
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.413] package:cses_common/network/websocket/cses_websocket_client.dart:749
+│ 🚀 🌐 Restoring global websocket subscription
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.415] package:cses_common/network/websocket/cses_websocket_client.dart:598
+│ 🚀 🔁 No page websocket subscriptions to restore
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET-RECONNECT] [DEBUG] [2026-10-27 18:45:28.416] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: Manual stop
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.417] package:cses_common/network/websocket/base_websocket_client.dart:126
+│ 🚀 🛑 Reconnect stopped: Manual stop
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.417] package:cses_common/network/websocket/cses_websocket_client.dart:121
+│ 🚀 websocketHost = ws://127.0.0.1:53469
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.418] package:cses_common/network/websocket/base_websocket_client.dart:259
+│ 🚀 scheme=ws
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.418] package:cses_common/network/websocket/base_websocket_client.dart:260
+│ 🚀 host=127.0.0.1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.418] package:cses_common/network/websocket/base_websocket_client.dart:261
+│ 🚀 port=53469
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.418] package:cses_common/network/websocket/base_websocket_client.dart:262
+│ 🚀 path=
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.418] package:cses_common/network/websocket/base_websocket_client.dart:263
+│ 🚀 query=cookieId=local-test
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.419] package:cses_common/network/websocket/base_websocket_client.dart:264
+│ 🚀 uri=ws://127.0.0.1:53469?cookieId=local-test
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.420] package:cses_common/network/websocket/base_websocket_client.dart:494
+│ 🚀 WebSocket connection state: Connecting
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.424] package:cses_common/network/websocket/base_websocket_client.dart:494
+│ 🚀 WebSocket connection state: Connected
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.425] package:cses_common/network/websocket/cses_websocket_client.dart:141
+│ 🚀 CSES transport connected, waiting for hello before ready
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WS原始消息] [JSON] [2026-10-27 18:45:28.425] package:cses_common/network/websocket/cses_websocket_client.dart:195
+│ {
+│   "action": "hello",
+│   "serverName": "local-test"
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.426] package:cses_common/network/websocket/cses_websocket_client.dart:235
+│ {
+│   "event": "websocket_envelope_received",
+│   "client": "cses",
+│   "direction": "incoming",
+│   "action": "hello",
+│   "isHeartbeat": false,
+│   "isControlMessage": true,
+│   "hasSubscriptionEnvelope": false,
+│   "hasTraceContext": false,
+│   "payloadType": "none"
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.427] package:cses_common/network/websocket/cses_websocket_client.dart:266
+│ 🚀 action: hello
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [INFO] [2026-10-27 18:45:28.427] package:cses_common/network/websocket/cses_websocket_client.dart:318
+│ 🚀 🤝 CSES websocket hello received: serverName=local-test, serverTime=null
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.427] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.427] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:58
+│ 🚀 ❤️ Heartbeat started, interval: 15s
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.428] package:cses_common/network/websocket/cses_websocket_client.dart:749
+│ 🚀 🌐 Restoring global websocket subscription
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.429] package:cses_common/network/websocket/cses_websocket_client.dart:598
+│ 🚀 🔁 No page websocket subscriptions to restore
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.429] package:cses_common/network/websocket/base_websocket_client.dart:602
+│ 🚀 🔄 检测到重连成功，等待连接稳定后恢复订阅并处理队列
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.430] package:cses_common/network/websocket/cses_websocket_client.dart:589
+│ 🚀 📡 Send initial websocket subscription: pageId=new-after-reconnect
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [ERROR] [2026-10-27 18:45:28.430] package:cses_common/network/websocket/base_websocket_client.dart:800
+│ 🚀 Error sending message: Converting object to an encodable object failed: Instance of 'Object'
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [ERROR] [2026-10-27 18:45:28.431] package:cses_common/network/websocket/interceptors/ws_interceptor.dart:90
+│ 🚀 ❌ CSES WebSocket error: Converting object to an encodable object failed: Instance of 'Object'
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.431] package:cses_common/network/websocket/interceptors/ws_interceptor.dart:235
+│ {
+│   "event": "websocket_message_body",
+│   "direction": "outgoing",
+│   "action": "subscribe",
+│   "body": {
+│     "phase": "initial"
+│   }
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.431] package:cses_common/network/websocket/interceptors/ws_interceptor.dart:235
+│ {
+│   "event": "websocket_message_body",
+│   "direction": "outgoing",
+│   "action": "collabJoin",
+│   "body": null
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.440] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.440] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET-RECONNECT] [DEBUG] [2026-10-27 18:45:28.441] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: Disposed
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.441] package:cses_common/network/websocket/base_websocket_client.dart:126
+│ 🚀 🛑 Reconnect stopped: Disposed
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.444] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.444] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.444] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET-RECONNECT] [DEBUG] [2026-10-27 18:45:28.445] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: Disposed
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.445] package:cses_common/network/websocket/base_websocket_client.dart:126
+│ 🚀 🛑 Reconnect stopped: Disposed
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +19 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/im_websocket_heartbeat_compatibility_test.dart: 新版 Pong 只有 seq_reply 匹配当前 Ping 时才确认
+00:00 +19 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 注销开始后立即阻断回调和恢复，即使仍在等待锁
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.448] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.448] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.448] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET-RECONNECT] [DEBUG] [2026-10-27 18:45:28.449] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: Disposed
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.449] package:cses_common/network/websocket/base_websocket_client.dart:126
+│ 🚀 🛑 Reconnect stopped: Disposed
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.450] package:cses_common/network/websocket/cses_websocket_client.dart:585
+│ 🚀 ⏳ Defer websocket subscription until ready: pageId=closing
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WS原始消息] [JSON] [2026-10-27 18:45:28.451] package:cses_common/network/websocket/cses_websocket_client.dart:195
+│ {
+│   "action": "collabUpdate",
+│   "subscription": {
+│     "channel": "Document",
+│     "topic": "doc-test",
+│     "instance": "editor-test"
+│   },
+│   "body": {}
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.452] package:cses_common/network/websocket/cses_websocket_client.dart:235
+│ {
+│   "event": "websocket_envelope_received",
+│   "client": "cses",
+│   "direction": "incoming",
+│   "action": "collabUpdate",
+│   "isHeartbeat": false,
+│   "isControlMessage": false,
+│   "hasSubscriptionEnvelope": true,
+│   "hasTraceContext": false,
+│   "payloadType": "_Map<String, dynamic>",
+│   "payloadFieldCount": 0,
+│   "body": {}
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.452] package:cses_common/network/websocket/cses_websocket_client.dart:266
+│ 🚀 action: collabUpdate
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.453] package:cses_common/network/websocket/cses_websocket_client.dart:296
+│ 🚀 🔑 Dispatch key = Document|doc-test|editor-test|collabUpdate
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.453] package:cses_common/network/websocket/cses_websocket_client.dart:374
+│ 🚀 🔄 WebSocket reconnecting...
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.454] package:cses_common/network/websocket/cses_websocket_client.dart:375
+│ 🚀 _reconnectCallbacks-----------------(closing)
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.455] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.456] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.456] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET-RECONNECT] [DEBUG] [2026-10-27 18:45:28.456] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: Disposed
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.457] package:cses_common/network/websocket/base_websocket_client.dart:126
+│ 🚀 🛑 Reconnect stopped: Disposed
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +20 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/im_websocket_heartbeat_compatibility_test.dart: 新版 Pong 只有 seq_reply 匹配当前 Ping 时才确认
+00:00 +20 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 首次/恢复订阅正文沿用会议直播参数约定
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.458] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.459] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.459] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET-RECONNECT] [DEBUG] [2026-10-27 18:45:28.459] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: Disposed
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.460] package:cses_common/network/websocket/base_websocket_client.dart:126
+│ 🚀 🛑 Reconnect stopped: Disposed
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.461] package:cses_common/network/websocket/cses_websocket_client.dart:585
+│ 🚀 ⏳ Defer websocket subscription until ready: pageId=meeting
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.461] package:cses_common/network/websocket/cses_websocket_client.dart:121
+│ 🚀 websocketHost = ws://127.0.0.1:53472
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.462] package:cses_common/network/websocket/base_websocket_client.dart:259
+│ 🚀 scheme=ws
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.462] package:cses_common/network/websocket/base_websocket_client.dart:260
+│ 🚀 host=127.0.0.1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.462] package:cses_common/network/websocket/base_websocket_client.dart:261
+│ 🚀 port=53472
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.462] package:cses_common/network/websocket/base_websocket_client.dart:262
+│ 🚀 path=
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.462] package:cses_common/network/websocket/base_websocket_client.dart:263
+│ 🚀 query=cookieId=local-test
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.463] package:cses_common/network/websocket/base_websocket_client.dart:264
+│ 🚀 uri=ws://127.0.0.1:53472?cookieId=local-test
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.463] package:cses_common/network/websocket/base_websocket_client.dart:494
+│ 🚀 WebSocket connection state: Connecting
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.467] package:cses_common/network/websocket/base_websocket_client.dart:494
+│ 🚀 WebSocket connection state: Connected
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +20 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/im_websocket_heartbeat_compatibility_test.dart: 新版 Pong 只有 seq_reply 匹配当前 Ping 时才确认
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [IM WEBSOCKET] [WARN] [2026-10-27 18:45:28.462] package:cses_common/network/websocket/base_websocket_client.dart:919
+00:00 +20 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 首次/恢复订阅正文沿用会议直播参数约定
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.468] package:cses_common/network/websocket/cses_websocket_client.dart:141
+│ 🚀 CSES transport connected, waiting for hello before ready
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +20 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/im_websocket_heartbeat_compatibility_test.dart: 新版 Pong 只有 seq_reply 匹配当前 Ping 时才确认
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +20 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 首次/恢复订阅正文沿用会议直播参数约定
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WS原始消息] [JSON] [2026-10-27 18:45:28.468] package:cses_common/network/websocket/cses_websocket_client.dart:195
+│ {
+│   "action": "hello",
+│   "serverName": "local-test"
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.469] package:cses_common/network/websocket/cses_websocket_client.dart:235
+│ {
+│   "event": "websocket_envelope_received",
+│   "client": "cses",
+│   "direction": "incoming",
+│   "action": "hello",
+│   "isHeartbeat": false,
+│   "isControlMessage": true,
+│   "hasSubscriptionEnvelope": false,
+│   "hasTraceContext": false,
+│   "payloadType": "none"
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.470] package:cses_common/network/websocket/cses_websocket_client.dart:266
+│ 🚀 action: hello
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [INFO] [2026-10-27 18:45:28.470] package:cses_common/network/websocket/cses_websocket_client.dart:318
+│ 🚀 🤝 CSES websocket hello received: serverName=local-test, serverTime=null
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.470] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.471] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:58
+│ 🚀 ❤️ Heartbeat started, interval: 15s
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.471] package:cses_common/network/websocket/cses_websocket_client.dart:749
+│ 🚀 🌐 Restoring global websocket subscription
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.472] package:cses_common/network/websocket/cses_websocket_client.dart:602
+│ 🚀 🔁 Restoring 1 page websocket subscriptions
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.472] package:cses_common/network/websocket/interceptors/ws_interceptor.dart:235
+│ {
+│   "event": "websocket_message_body",
+│   "direction": "outgoing",
+│   "action": "subscribe",
+│   "body": {
+│     "isReconnect": false
+│   }
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +20 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/im_websocket_heartbeat_compatibility_test.dart: 新版 Pong 只有 seq_reply 匹配当前 Ping 时才确认
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [IM WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.478] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +20 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 首次/恢复订阅正文沿用会议直播参数约定
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET-RECONNECT] [DEBUG] [2026-10-27 18:45:28.480] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: Manual stop
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.481] package:cses_common/network/websocket/base_websocket_client.dart:126
+│ 🚀 🛑 Reconnect stopped: Manual stop
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.482] package:cses_common/network/websocket/cses_websocket_client.dart:121
+│ 🚀 websocketHost = ws://127.0.0.1:53472
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.482] package:cses_common/network/websocket/base_websocket_client.dart:259
+│ 🚀 scheme=ws
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.482] package:cses_common/network/websocket/base_websocket_client.dart:260
+│ 🚀 host=127.0.0.1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.482] package:cses_common/network/websocket/base_websocket_client.dart:261
+│ 🚀 port=53472
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.483] package:cses_common/network/websocket/base_websocket_client.dart:262
+│ 🚀 path=
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.483] package:cses_common/network/websocket/base_websocket_client.dart:263
+│ 🚀 query=cookieId=local-test
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.483] package:cses_common/network/websocket/base_websocket_client.dart:264
+│ 🚀 uri=ws://127.0.0.1:53472?cookieId=local-test
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.484] package:cses_common/network/websocket/base_websocket_client.dart:494
+│ 🚀 WebSocket connection state: Connecting
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +20 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/im_websocket_heartbeat_compatibility_test.dart: 新版 Pong 只有 seq_reply 匹配当前 Ping 时才确认
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [IM WEBSOCKET] [WARN] [2026-10-27 18:45:28.488] package:cses_common/network/websocket/im_websocket_client.dart:260
+│ 🚀 忽略序号不匹配的 IM Pong
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +20 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 首次/恢复订阅正文沿用会议直播参数约定
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.490] package:cses_common/network/websocket/base_websocket_client.dart:494
+│ 🚀 WebSocket connection state: Connected
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.491] package:cses_common/network/websocket/cses_websocket_client.dart:141
+│ 🚀 CSES transport connected, waiting for hello before ready
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WS原始消息] [JSON] [2026-10-27 18:45:28.492] package:cses_common/network/websocket/cses_websocket_client.dart:195
+│ {
+│   "action": "hello",
+│   "serverName": "local-test"
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.493] package:cses_common/network/websocket/cses_websocket_client.dart:235
+│ {
+│   "event": "websocket_envelope_received",
+│   "client": "cses",
+│   "direction": "incoming",
+│   "action": "hello",
+│   "isHeartbeat": false,
+│   "isControlMessage": true,
+│   "hasSubscriptionEnvelope": false,
+│   "hasTraceContext": false,
+│   "payloadType": "none"
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.493] package:cses_common/network/websocket/cses_websocket_client.dart:266
+│ 🚀 action: hello
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [INFO] [2026-10-27 18:45:28.494] package:cses_common/network/websocket/cses_websocket_client.dart:318
+│ 🚀 🤝 CSES websocket hello received: serverName=local-test, serverTime=null
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.494] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.494] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:58
+│ 🚀 ❤️ Heartbeat started, interval: 15s
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.495] package:cses_common/network/websocket/cses_websocket_client.dart:749
+│ 🚀 🌐 Restoring global websocket subscription
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.495] package:cses_common/network/websocket/cses_websocket_client.dart:602
+│ 🚀 🔁 Restoring 1 page websocket subscriptions
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.496] package:cses_common/network/websocket/interceptors/ws_interceptor.dart:235
+│ {
+│   "event": "websocket_message_body",
+│   "direction": "outgoing",
+│   "action": "subscribe",
+│   "body": {
+│     "isReconnect": true
+│   }
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.497] package:cses_common/network/websocket/base_websocket_client.dart:602
+│ 🚀 🔄 检测到重连成功，等待连接稳定后恢复订阅并处理队列
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +20 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/im_websocket_heartbeat_compatibility_test.dart: 新版 Pong 只有 seq_reply 匹配当前 Ping 时才确认
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [IM WEBSOCKET] [WARN] [2026-10-27 18:45:28.500] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [IM WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.502] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +21 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 首次/恢复订阅正文沿用会议直播参数约定
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.504] package:cses_common/network/websocket/interceptors/ws_interceptor.dart:235
+│ {
+│   "event": "websocket_message_body",
+│   "direction": "outgoing",
+│   "action": "unsubscribe",
+│   "body": null
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +21 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/im_websocket_heartbeat_compatibility_test.dart: 即将过期的旧版 Pong 缺少 seq_reply 时只确认当前唯一在途 Ping
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [IM WEBSOCKET] [WARN] [2026-10-27 18:45:28.506] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [IM WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.507] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [IM WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.508] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [IM WEBSOCKET] [WARN] [2026-10-27 18:45:28.509] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [IM WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.510] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +22 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 首次/恢复订阅正文沿用会议直播参数约定
+00:00 +22 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/im_websocket_heartbeat_compatibility_test.dart: 普通 status OK 响应不能冒充 Pong
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [IM WEBSOCKET] [WARN] [2026-10-27 18:45:28.512] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [IM WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.513] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +22 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 首次/恢复订阅正文沿用会议直播参数约定
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.513] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +22 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/im_websocket_heartbeat_compatibility_test.dart: 普通 status OK 响应不能冒充 Pong
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [IM WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.513] package:cses_common/network/websocket/base_websocket_client.dart:786
+00:00 +22 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 首次/恢复订阅正文沿用会议直播参数约定
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.514] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +22 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/im_websocket_heartbeat_compatibility_test.dart: 普通 status OK 响应不能冒充 Pong
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +22 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 首次/恢复订阅正文沿用会议直播参数约定
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET-RECONNECT] [DEBUG] [2026-10-27 18:45:28.514] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: Disposed
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.514] package:cses_common/network/websocket/base_websocket_client.dart:126
+│ 🚀 🛑 Reconnect stopped: Disposed
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +22 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/im_websocket_heartbeat_compatibility_test.dart: 普通 status OK 响应不能冒充 Pong
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [IM WS原始消息] [JSON] [2026-10-27 18:45:28.515] package:cses_common/network/websocket/im_websocket_client.dart:116
+│ {
+│   "status": "OK",
+│   "data": {
+│     "result": "accepted"
+│   }
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +22 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 首次/恢复订阅正文沿用会议直播参数约定
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.516] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.517] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.517] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET-RECONNECT] [DEBUG] [2026-10-27 18:45:28.517] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: Disposed
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.518] package:cses_common/network/websocket/base_websocket_client.dart:126
+│ 🚀 🛑 Reconnect stopped: Disposed
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +23 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/im_websocket_heartbeat_compatibility_test.dart: 普通 status OK 响应不能冒充 Pong
+00:00 +23 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 直播旧入口保持首次参数、恢复参数和自动退出
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.520] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.520] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.520] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET-RECONNECT] [DEBUG] [2026-10-27 18:45:28.521] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: Disposed
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.521] package:cses_common/network/websocket/base_websocket_client.dart:126
+│ 🚀 🛑 Reconnect stopped: Disposed
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.522] package:cses_common/network/websocket/cses_websocket_client.dart:585
+│ 🚀 ⏳ Defer websocket subscription until ready: pageId=live
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.523] package:cses_common/network/websocket/cses_websocket_client.dart:121
+│ 🚀 websocketHost = ws://127.0.0.1:53477
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.523] package:cses_common/network/websocket/base_websocket_client.dart:259
+│ 🚀 scheme=ws
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.523] package:cses_common/network/websocket/base_websocket_client.dart:260
+│ 🚀 host=127.0.0.1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.523] package:cses_common/network/websocket/base_websocket_client.dart:261
+│ 🚀 port=53477
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.523] package:cses_common/network/websocket/base_websocket_client.dart:262
+│ 🚀 path=
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.523] package:cses_common/network/websocket/base_websocket_client.dart:263
+│ 🚀 query=cookieId=local-test
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.524] package:cses_common/network/websocket/base_websocket_client.dart:264
+│ 🚀 uri=ws://127.0.0.1:53477?cookieId=local-test
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.524] package:cses_common/network/websocket/base_websocket_client.dart:494
+│ 🚀 WebSocket connection state: Connecting
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +23 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/im_websocket_heartbeat_compatibility_test.dart: 普通 status OK 响应不能冒充 Pong
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [IM WEBSOCKET] [JSON] [2026-10-27 18:45:28.524] package:cses_common/network/websocket/im_websocket_client.dart:149
+│ {
+│   "event": "websocket_envelope_received",
+│   "client": "im",
+│   "direction": "incoming",
+│   "action": "none",
+│   "isHeartbeat": false,
+│   "isControlMessage": false,
+│   "hasSubscriptionEnvelope": false,
+│   "hasTraceContext": false,
+│   "payloadType": "_Map<String, dynamic>",
+│   "payloadFieldCount": 1,
+│   "body": {
+│     "result": "accepted"
+│   }
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +23 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 直播旧入口保持首次参数、恢复参数和自动退出
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.527] package:cses_common/network/websocket/base_websocket_client.dart:494
+│ 🚀 WebSocket connection state: Connected
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +23 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/im_websocket_heartbeat_compatibility_test.dart: 普通 status OK 响应不能冒充 Pong
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [IM WEBSOCKET] [WARN] [2026-10-27 18:45:28.527] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +23 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 直播旧入口保持首次参数、恢复参数和自动退出
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.528] package:cses_common/network/websocket/cses_websocket_client.dart:141
+│ 🚀 CSES transport connected, waiting for hello before ready
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +23 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/im_websocket_heartbeat_compatibility_test.dart: 普通 status OK 响应不能冒充 Pong
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [IM WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.528] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:00 +23 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 直播旧入口保持首次参数、恢复参数和自动退出
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WS原始消息] [JSON] [2026-10-27 18:45:28.529] package:cses_common/network/websocket/cses_websocket_client.dart:195
+│ {
+│   "action": "hello",
+│   "serverName": "local-test"
+│ }
+00:00 +24 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/cses_websocket_registration_test.dart: 直播旧入口保持首次参数、恢复参数和自动退出
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.529] package:cses_common/network/websocket/cses_websocket_client.dart:235
+│ {
+│   "event": "websocket_envelope_received",
+│   "client": "cses",
+│   "direction": "incoming",
+│   "action": "hello",
+│   "isHeartbeat": false,
+│   "isControlMessage": true,
+│   "hasSubscriptionEnvelope": false,
+│   "hasTraceContext": false,
+│   "payloadType": "none"
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.530] package:cses_common/network/websocket/cses_websocket_client.dart:266
+│ 🚀 action: hello
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [INFO] [2026-10-27 18:45:28.530] package:cses_common/network/websocket/cses_websocket_client.dart:318
+│ 🚀 🤝 CSES websocket hello received: serverName=local-test, serverTime=null
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.530] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.531] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:58
+│ 🚀 ❤️ Heartbeat started, interval: 15s
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.531] package:cses_common/network/websocket/cses_websocket_client.dart:749
+│ 🚀 🌐 Restoring global websocket subscription
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.532] package:cses_common/network/websocket/cses_websocket_client.dart:602
+│ 🚀 🔁 Restoring 1 page websocket subscriptions
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.532] package:cses_common/network/websocket/interceptors/ws_interceptor.dart:235
+│ {
+│   "event": "websocket_message_body",
+│   "direction": "outgoing",
+│   "action": "subscribe",
+│   "body": {
+│     "isReconnect": false
+│   }
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET-RECONNECT] [DEBUG] [2026-10-27 18:45:28.540] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: Manual stop
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.541] package:cses_common/network/websocket/base_websocket_client.dart:126
+│ 🚀 🛑 Reconnect stopped: Manual stop
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.541] package:cses_common/network/websocket/cses_websocket_client.dart:121
+│ 🚀 websocketHost = ws://127.0.0.1:53477
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.541] package:cses_common/network/websocket/base_websocket_client.dart:259
+│ 🚀 scheme=ws
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.541] package:cses_common/network/websocket/base_websocket_client.dart:260
+│ 🚀 host=127.0.0.1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.541] package:cses_common/network/websocket/base_websocket_client.dart:261
+│ 🚀 port=53477
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.542] package:cses_common/network/websocket/base_websocket_client.dart:262
+│ 🚀 path=
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.542] package:cses_common/network/websocket/base_websocket_client.dart:263
+│ 🚀 query=cookieId=local-test
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.542] package:cses_common/network/websocket/base_websocket_client.dart:264
+│ 🚀 uri=ws://127.0.0.1:53477?cookieId=local-test
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.543] package:cses_common/network/websocket/base_websocket_client.dart:494
+│ 🚀 WebSocket connection state: Connecting
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.547] package:cses_common/network/websocket/base_websocket_client.dart:494
+│ 🚀 WebSocket connection state: Connected
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.547] package:cses_common/network/websocket/cses_websocket_client.dart:141
+│ 🚀 CSES transport connected, waiting for hello before ready
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WS原始消息] [JSON] [2026-10-27 18:45:28.548] package:cses_common/network/websocket/cses_websocket_client.dart:195
+│ {
+│   "action": "hello",
+│   "serverName": "local-test"
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.548] package:cses_common/network/websocket/cses_websocket_client.dart:235
+│ {
+│   "event": "websocket_envelope_received",
+│   "client": "cses",
+│   "direction": "incoming",
+│   "action": "hello",
+│   "isHeartbeat": false,
+│   "isControlMessage": true,
+│   "hasSubscriptionEnvelope": false,
+│   "hasTraceContext": false,
+│   "payloadType": "none"
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.549] package:cses_common/network/websocket/cses_websocket_client.dart:266
+│ 🚀 action: hello
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [INFO] [2026-10-27 18:45:28.549] package:cses_common/network/websocket/cses_websocket_client.dart:318
+│ 🚀 🤝 CSES websocket hello received: serverName=local-test, serverTime=null
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.550] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.550] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:58
+│ 🚀 ❤️ Heartbeat started, interval: 15s
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.550] package:cses_common/network/websocket/cses_websocket_client.dart:749
+│ 🚀 🌐 Restoring global websocket subscription
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.551] package:cses_common/network/websocket/cses_websocket_client.dart:602
+│ 🚀 🔁 Restoring 1 page websocket subscriptions
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.551] package:cses_common/network/websocket/interceptors/ws_interceptor.dart:235
+│ {
+│   "event": "websocket_message_body",
+│   "direction": "outgoing",
+│   "action": "subscribe",
+│   "body": {
+│     "isReconnect": true
+│   }
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.552] package:cses_common/network/websocket/base_websocket_client.dart:602
+│ 🚀 🔄 检测到重连成功，等待连接稳定后恢复订阅并处理队列
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [JSON] [2026-10-27 18:45:28.559] package:cses_common/network/websocket/interceptors/ws_interceptor.dart:235
+│ {
+│   "event": "websocket_message_body",
+│   "direction": "outgoing",
+│   "action": "unsubscribe",
+│   "body": null
+│ }
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.566] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.567] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET-RECONNECT] [DEBUG] [2026-10-27 18:45:28.567] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: Disposed
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.567] package:cses_common/network/websocket/base_websocket_client.dart:126
+│ 🚀 🛑 Reconnect stopped: Disposed
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.569] package:cses_common/network/websocket/base_websocket_client.dart:786
+│ 🚀 消息已入队，队列长度: 1
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [WARN] [2026-10-27 18:45:28.569] package:cses_common/network/websocket/base_websocket_client.dart:919
+│ 🚀 手动关闭websocket
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 18:45:28.569] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69
+│ 🚀 💔 Heartbeat stopped
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET-RECONNECT] [DEBUG] [2026-10-27 18:45:28.570] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: Disposed
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 18:45:28.570] package:cses_common/network/websocket/base_websocket_client.dart:126
+│ 🚀 🛑 Reconnect stopped: Disposed
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:01 +25 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/controllers/reconnect_controller_test.dart: ReconnectController reports exhausted after max attempts and resetForRecovery opens a new window
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.647] package:cses_common/network/websocket/controllers/reconnect_controller.dart:87
+│ 🚀 🔄 Scheduling reconnect attempt 1 in 1s
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.653] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: test_next_attempt
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.653] package:cses_common/network/websocket/controllers/reconnect_controller.dart:87
+│ 🚀 🔄 Scheduling reconnect attempt 2 in 1s
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.654] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: test_next_attempt
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.654] package:cses_common/network/websocket/controllers/reconnect_controller.dart:87
+│ 🚀 🔄 Scheduling reconnect attempt 3 in 2s
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.655] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: test_next_attempt
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.656] package:cses_common/network/websocket/controllers/reconnect_controller.dart:87
+│ 🚀 🔄 Scheduling reconnect attempt 4 in 5s
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.657] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: test_next_attempt
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.659] package:cses_common/network/websocket/controllers/reconnect_controller.dart:87
+│ 🚀 🔄 Scheduling reconnect attempt 5 in 9s
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.659] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: test_next_attempt
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.660] package:cses_common/network/websocket/controllers/reconnect_controller.dart:87
+│ 🚀 🔄 Scheduling reconnect attempt 6 in 17s
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.661] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: test_next_attempt
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.661] package:cses_common/network/websocket/controllers/reconnect_controller.dart:87
+│ 🚀 🔄 Scheduling reconnect attempt 7 in 30s
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.662] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: test_next_attempt
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.662] package:cses_common/network/websocket/controllers/reconnect_controller.dart:87
+│ 🚀 🔄 Scheduling reconnect attempt 8 in 30s
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.663] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: test_next_attempt
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.663] package:cses_common/network/websocket/controllers/reconnect_controller.dart:87
+│ 🚀 🔄 Scheduling reconnect attempt 9 in 30s
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.664] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: test_next_attempt
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.664] package:cses_common/network/websocket/controllers/reconnect_controller.dart:87
+│ 🚀 🔄 Scheduling reconnect attempt 10 in 30s
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.665] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: test_next_attempt
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.666] package:cses_common/network/websocket/controllers/reconnect_controller.dart:87
+│ 🚀 🔄 Scheduling reconnect attempt 11 in 30s
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.667] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: test_next_attempt
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.667] package:cses_common/network/websocket/controllers/reconnect_controller.dart:87
+│ 🚀 🔄 Scheduling reconnect attempt 12 in 30s
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.668] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: test_next_attempt
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.668] package:cses_common/network/websocket/controllers/reconnect_controller.dart:87
+│ 🚀 🔄 Scheduling reconnect attempt 13 in 30s
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.669] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: test_next_attempt
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.669] package:cses_common/network/websocket/controllers/reconnect_controller.dart:87
+│ 🚀 🔄 Scheduling reconnect attempt 14 in 30s
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.670] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: test_next_attempt
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.670] package:cses_common/network/websocket/controllers/reconnect_controller.dart:87
+│ 🚀 🔄 Scheduling reconnect attempt 15 in 30s
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.671] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: test_next_attempt
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.676] package:cses_common/network/websocket/controllers/reconnect_controller.dart:113
+│ 🚀 🔄 Reconnect window reset for recovery: test_force_recover
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.677] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: Disposed
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:01 +26 -1: /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/controllers/reconnect_controller_test.dart: ReconnectController reports exhausted when reconnect window exceeds max total time
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.681] package:cses_common/network/websocket/controllers/reconnect_controller.dart:87
+│ 🚀 🔄 Scheduling reconnect attempt 1 in 1s
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.681] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: test_keep_first_attempt_time
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.682] package:cses_common/network/websocket/controllers/reconnect_controller.dart:113
+│ 🚀 🔄 Reconnect window reset for recovery: test_total_time_force_recover
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+│ [RECONNECT] [DEBUG] [2026-10-27 18:45:28.683] package:cses_common/network/websocket/controllers/reconnect_controller.dart:190
+│ 🚀 🛑 Reconnect stopped: Disposed
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+00:01 +27 -1: /System/Volumes/Data/workspace/cses/cses.common/test/observability/context/realtime_diagnostic_context_test.dart: 连接上下文按 scope 展平并保留当前代次
+00:01 +28 -1: /System/Volumes/Data/workspace/cses/cses.common/test/observability/context/realtime_diagnostic_context_test.dart: 旧连接迟到回调不能覆盖新连接状态
+00:01 +29 -1: /System/Volumes/Data/workspace/cses/cses.common/test/observability/context/realtime_diagnostic_context_test.dart: 连接 scope 大小写差异仍命中同一代次栅栏
+00:01 +30 -1: /System/Volumes/Data/workspace/cses/cses.common/test/observability/context/realtime_diagnostic_context_test.dart: 开始更新代次连接时清理上一代连接身份和活动时间
+00:01 +31 -1: /System/Volumes/Data/workspace/cses/cses.common/test/observability/context/realtime_diagnostic_context_test.dart: 生命周期可在连接建立前记录恢复决策且新代次继续携带
+00:01 +32 -1: /System/Volumes/Data/workspace/cses/cses.common/test/observability/context/realtime_diagnostic_context_test.dart: 新连接清理旧订阅确认时间但允许恢复注册数量
+00:01 +33 -1: /System/Volumes/Data/workspace/cses/cses.common/test/observability/context/realtime_diagnostic_context_test.dart: 通用上下文贡献者按 namespace 展平安全字段
+00:01 +34 -1: /System/Volumes/Data/workspace/cses/cses.common/test/observability/context/realtime_diagnostic_context_test.dart: 旧贡献者 token 不能注销同 namespace 的新上下文
+00:01 +35 -1: /System/Volumes/Data/workspace/cses/cses.common/test/observability/context/realtime_diagnostic_context_test.dart: 上下文贡献者过滤敏感字段且异常不会阻断 payload
+00:01 +36 -1: /System/Volumes/Data/workspace/cses/cses.common/test/observability/context/realtime_diagnostic_context_test.dart: 重置观测 session 同时清理贡献者和传输诊断状态
+00:01 +37 -1: /System/Volumes/Data/workspace/cses/cses.common/test/observability/context/realtime_diagnostic_context_test.dart: 统一 payload 自动合并实时连接和通用业务上下文
+00:01 +38 -1: /System/Volumes/Data/workspace/cses/cses.common/test/observability_regressions/websocket_context_test.dart: (setUpAll)
+00:01 +38 -1: /System/Volumes/Data/workspace/cses/cses.common/test/observability_regressions/websocket_context_test.dart: 并发消费者交错完成后保持各自上下文，异常=false
+00:01 +39 -1: /System/Volumes/Data/workspace/cses/cses.common/test/observability_regressions/websocket_context_test.dart: 并发消费者交错完成后保持各自上下文，异常=true
+00:01 +40 -1: /System/Volumes/Data/workspace/cses/cses.common/test/observability_regressions/websocket_context_test.dart: (tearDownAll)
+00:01 +40 -1: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/cses/cses.common/test/network/websocket/websocket_envelope_log_summary_test.dart: uploaded summary keeps protocol shape without sensitive values

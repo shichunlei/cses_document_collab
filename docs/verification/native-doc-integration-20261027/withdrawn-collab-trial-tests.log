@@ -1,0 +1,215 @@
+00:00 +0: loading /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart
+00:00 +0: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: (setUpAll)
+00:00 +0: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:00 +1: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:00 +2: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:00 +4: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:00 +6: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:00 +7: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:00 +9: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:00 +10: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:00 +11: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:00 +12: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:00 +12: /System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart: bootstrap root conflict stops supplement and automatic reconnect
+DocCollab: 文档协同处理失败: Bad state: DOCUMENT_BOOTSTRAP_CONFLICT: independent root
+#0      main.<anonymous closure>.<anonymous closure> (file:///System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart:189:13)
+#1      CsesDocCollaborationSession._handle (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:276:30)
+#2      CsesDocCollaborationSession.start.<anonymous closure> (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:172:33)
+#3      _Gateway.receive (file:///System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart:62:26)
+#4      main.<anonymous closure> (file:///System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart:197:15)
+<asynchronous suspension>
+#5      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#6      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#7      Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:00 +13: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:00 +14: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:00 +15: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:00 +16: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:00 +17: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:00 +18: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:00 +19: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:01 +19: /System/Volumes/Data/workspace/cses_document_collab/test/collab_controller_lifecycle_native_test.dart: failed controller retry must not send the next owner document
+DocCollab: 编辑器操作失败: Bad state: fixture registration failure
+#0      _ProbeGateway.register (file:///System/Volumes/Data/workspace/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:254:28)
+<asynchronous suspension>
+#1      CsesDocCollaborationSession.start (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:167:5)
+<asynchronous suspension>
+#2      CollabController._startSession (package:cses_document_collab/src/controller/collab_controller.dart:690:7)
+<asynchronous suspension>
+#3      CollabController._initialize (package:cses_document_collab/src/controller/collab_controller.dart:519:9)
+<asynchronous suspension>
+#4      CollabController._initializeRecoverably (package:cses_document_collab/src/controller/collab_controller.dart:493:7)
+<asynchronous suspension>
+#5      Throws._matchFuture (package:matcher/src/expect/throws_matcher.dart:103:19)
+<asynchronous suspension>
+#6      _expect.<anonymous closure> (package:matcher/src/expect/expect.dart:153:17)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      expectLater.<anonymous closure> (package:flutter_test/src/widget_tester.dart:508:19)
+<asynchronous suspension>
+#9      main.<anonymous closure> (file:///System/Volumes/Data/workspace/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:41:7)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#11     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#12     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+DocCollab: 编辑器操作失败: Bad state: COLLAB_DOCUMENT_IN_USE: 请先等待当前文档关闭
+#0      CollabRuntime.acquire (package:cses_document_collab/src/native/collab_runtime.dart:24:7)
+#1      CollabController._initialize (package:cses_document_collab/src/controller/collab_controller.dart:510:21)
+#2      CollabController._initializeRecoverably (package:cses_document_collab/src/controller/collab_controller.dart:493:13)
+#3      CollabController.initialize (package:cses_document_collab/src/controller/collab_controller.dart:487:36)
+#4      CollabController.retry (package:cses_document_collab/src/controller/collab_controller.dart:586:13)
+<asynchronous suspension>
+#5      Throws._matchFuture (package:matcher/src/expect/throws_matcher.dart:103:19)
+<asynchronous suspension>
+#6      _expect.<anonymous closure> (package:matcher/src/expect/expect.dart:153:17)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      expectLater.<anonymous closure> (package:flutter_test/src/widget_tester.dart:508:19)
+<asynchronous suspension>
+#9      main.<anonymous closure> (file:///System/Volumes/Data/workspace/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:50:7)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#11     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#12     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:01 +20: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:01 +20: /System/Volumes/Data/workspace/cses_document_collab/test/collab_controller_lifecycle_native_test.dart: permission registration failure must not poison transitions or cleanup
+DocCollab: 编辑器操作失败: Bad state: fixture registration failure
+#0      _ProbeGateway.register (file:///System/Volumes/Data/workspace/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:254:28)
+<asynchronous suspension>
+#1      CsesDocCollaborationSession.start (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:167:5)
+<asynchronous suspension>
+#2      CollabController._startSession (package:cses_document_collab/src/controller/collab_controller.dart:690:7)
+<asynchronous suspension>
+#3      CollabController.setEditable.<anonymous closure> (package:cses_document_collab/src/controller/collab_controller.dart:565:57)
+<asynchronous suspension>
+#4      Throws._matchFuture (package:matcher/src/expect/throws_matcher.dart:103:19)
+<asynchronous suspension>
+#5      _expect.<anonymous closure> (package:matcher/src/expect/expect.dart:153:17)
+<asynchronous suspension>
+#6      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#7      expectLater.<anonymous closure> (package:flutter_test/src/widget_tester.dart:508:19)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///System/Volumes/Data/workspace/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:123:9)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#11     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:01 +21: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:01 +21: /System/Volumes/Data/workspace/cses_document_collab/test/collab_controller_lifecycle_native_test.dart: close waits for pending registration and stale callbacks cannot mutate the next owner
+DocCollab: 文档协同处理失败: Bad state: COLLAB_SESSION_STALE
+#0      CollabController._requireCurrentSession (package:cses_document_collab/src/controller/collab_controller.dart:713:38)
+#1      CollabController._startSession.<anonymous closure> (package:cses_document_collab/src/controller/collab_controller.dart:643:9)
+#2      CsesDocCollaborationSession._beginSync (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:245:40)
+#3      CsesDocCollaborationSession.start (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:185:30)
+<asynchronous suspension>
+#4      CollabController._startSession (package:cses_document_collab/src/controller/collab_controller.dart:690:7)
+<asynchronous suspension>
+#5      CollabController._initialize (package:cses_document_collab/src/controller/collab_controller.dart:519:9)
+<asynchronous suspension>
+#6      CollabController._initializeRecoverably (package:cses_document_collab/src/controller/collab_controller.dart:493:7)
+<asynchronous suspension>
+#7      main.<anonymous closure> (file:///System/Volumes/Data/workspace/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:181:9)
+<asynchronous suspension>
+#8      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#10     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:01 +22: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:01 +23: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import success respects transaction and lifecycle
+00:03 +24: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import cancel respects transaction and lifecycle
+00:04 +25: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import invalid respects transaction and lifecycle
+MarkdownImport: Markdown 导入失败: FormatException: Markdown 文件为空
+#0      decodeMarkdownImport (package:cses_document_collab/src/editor/markdown_import.dart:20:30)
+#1      compute.<anonymous closure> (package:flutter/src/foundation/_isolates_io.dart:23:20)
+#2      _RemoteRunner._run (dart:isolate:1116:47)
+#3      _RemoteRunner._remoteExecute (dart:isolate:1110:12)
+#4      _delayEntrypointInvocation.<anonymous closure> (dart:isolate-patch/isolate_patch.dart:316:17)
+#5      _RawReceivePort._handleMessage (dart:isolate-patch/isolate_patch.dart:192:12)
+
+00:06 +26: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import revoked respects transaction and lifecycle
+00:06 +27: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import closed respects transaction and lifecycle
+00:07 +28: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: unrenderable video  uses the unified placeholder
+00:07 +29: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: unrenderable video blob:desktop-only uses the unified placeholder
+00:07 +30: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: unrenderable video file:///desktop/video.mp4 uses the unified placeholder
+00:07 +31: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: unrenderable video null uses the unified placeholder
+00:07 +32: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: unknown blocks stay opaque while surrounding text remains editable
+00:07 +33: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: desktop quote background and border render in edit and preview
+00:07 +34: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: alignment switches keep the live paragraph caret and text
+00:07 +35: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: paragraph renders justify and preserves selection in preview
+00:07 +36: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: heading_2 renders justify and preserves selection in preview
+00:08 +37: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: quote renders justify and preserves selection in preview
+00:08 +38: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: bulleted_list renders justify and preserves selection in preview
+00:08 +39: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: numbered_list renders justify and preserves selection in preview
+00:08 +40: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: todo_list renders justify and preserves selection in preview
+00:08 +41: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: paragraph renders distributed and preserves selection in preview
+00:08 +42: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: heading_2 renders distributed and preserves selection in preview
+00:08 +43: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: quote renders distributed and preserves selection in preview
+00:08 +44: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: bulleted_list renders distributed and preserves selection in preview
+00:08 +45: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: numbered_list renders distributed and preserves selection in preview
+00:08 +46: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: todo_list renders distributed and preserves selection in preview
+00:09 +47: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: paragraph rows stay compact in edit and preview
+00:09 +48: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: numbered_list rows stay compact in edit and preview
+00:09 +49: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: bulleted_list rows stay compact in edit and preview
+00:09 +50: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: todo_list rows stay compact in edit and preview
+00:09 +51: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: formal cover fills page width; centered controls overlay image and icon crosses its bottom
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: <20>
+  Actual: <16.0>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart:658:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart line 658
+The test description was:
+  formal cover fills page width; centered controls overlay image and icon crosses its bottom
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:09 +51 -1: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: formal cover fills page width; centered controls overlay image and icon crosses its bottom [E]
+  Test failed. See exception logs above.
+  The test description was: formal cover fills page width; centered controls overlay image and icon crosses its bottom
+
+Warning: At least one test in this suite creates an HttpClient. When running a test suite that uses
+TestWidgetsFlutterBinding, all HTTP requests will return status code 400, and no network request
+will actually be made. Any test expecting a real network connection and status code will fail.
+To test code that needs an HttpClient, provide your own HttpClient implementation to the code under
+test, so that your test can consistently provide a testable response to the code under test.
+00:09 +51 -1: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: standalone page owns the full-screen editor UI
+00:10 +52 -1: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: remote read-only capability disables all editing and preserves preview choice
+00:10 +53 -1: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: (tearDownAll)
+00:10 +53 -1: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: formal cover fills page width; centered controls overlay image and icon crosses its bottom

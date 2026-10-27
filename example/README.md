@@ -134,6 +134,7 @@ Demo 登录（Common HTTP → User/ctx）→ DemoDocumentHost → cses_document_
 - Demo 按 SaaS 账号密码流程先初始化 Common 的 PRE 配置、偏好和设备信息，再通过 `HttpManager` 的共享 Dio 请求 `/User/login`；公共 header 和异常映射均由 Common 提供。首页仅启动主 WebSocket 连接，不自动选择文档，不保存密码或登录账户快照。
 - 登录成功后由 `CsesAccountLogin` 将完整响应交给 `User().resolveContext(value)`，统一解析身份、企业、权限、媒体站点、域名和 WebSocket 地址，校验通过后才进入首页。企业选择复用 Common 的组织排序和上次企业偏好；Demo 不再保留响应副本、手动推导企业或覆盖连接地址。页面已销毁的迟到响应不注入上下文；解析/校验失败清理本次用户态，留在登录页重试。
 - 登录成功直接通知页面切换，账号与展示名读取 Common 的 `User`，不传递独立会话对象。`DemoDocumentHost` 选择旧 SQLite 路径，在创建控制器时直接使用 `ctx.websocketHost`、`User().companyId`、`User().userId` 和展示名构造 `CollabDocumentConfig`，再注入 Gateway、ID、日志和媒体上传；不再次解析登录或请求 `/User/auth`。包直接打开正式模型，不先打开草稿；离线预览和测试显式设置 `localDraft: true`。
+- `CommonCsesCollabGateway` 使用 Common 的 `registerListenersAsync`/`unregisterListenersAsync`，登记选择 `immediateOnly: true`；平台订阅与恢复统一由 Common 持有，状态流仅转发连接事件。发送使用 `trySendWithPage`，离线或同步失败不入队；退出命令不补订阅，会话负责发送 leave/unsubscribe，Gateway 只等待本地注销，不关闭主连接。适配器不读取 Common 的公开锁。
 - 文档 ID、服务端、企业、用户和数据库路径只在 `CollabDocumentConfig` 中形成不可变快照；缓存键由协同包统一计算，宿主不保存 Cookie 副本或重复维护缓存算法。切换身份须关闭旧控制器后重新创建。
 - WebSocket 地址和默认协议以 Common 解析结果为准。若与历史 Demo 的默认地址不同，按现有地址/企业/用户/文档缓存键进入对应分区，旧缓存仍保留。
 - `DemoDocumentHost.initialize()` 完成表示账号服务、创建记录恢复及主连接启动已调度，不打开文档；从“文档列表”点击条目后才核验访问权限、恢复缓存并进入编辑页，返回后保留列表位置。新建也在列表页完成并从该页进入编辑器；文档控制器的 `initialize()` 完成表示本地恢复和回调注册完成；协同 ready/online 只表示客户端差量交换，不是服务端落库回执。

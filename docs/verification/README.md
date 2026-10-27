@@ -139,6 +139,8 @@
 
 ### 上传与宿主集成
 
+- [native-doc-integration-20261027](native-doc-integration-20261027)（[Common前置能力验证](native-doc-integration-20261027/common.md)；[Demo Gateway切换与验证](native-doc-integration-20261027/example-gateway.md)）
+
 - [attachment-picker-upload-20261014](attachment-picker-upload-20261014)
 - [audio-picker-upload-20261014](audio-picker-upload-20261014)
 - [common-login-upload-20261014](common-login-upload-20261014)

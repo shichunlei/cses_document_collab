@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-27",
+  "scope": "example Gateway切换Common新接口；不接入SaaS、不修改核心Schema/FRB/Rust",
+  "example_tests": {
+    "passed": 21,
+    "failed": 0,
+    "new_gateway_cases": 7
+  },
+  "core_tests": {
+    "passed": 14,
+    "failed": 0
+  },
+  "analyze": "passed (4 target files)",
+  "blockcraft": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "latest": null,
+    "latest_query_error": "ENOTFOUND",
+    "desktop_declared": "0.11.31",
+    "yarn_locked": "0.11.31",
+    "installed": "0.11.17",
+    "historical_pnpm": "0.2.78",
+    "upgraded": false
+  },
+  "sha256": {
+    "example/lib/src/demo/common_cses_collab_gateway.dart": "0a5feaaba86dfce384c8c4a307f83b6a7992a0985d7a328dd9e3961ea98fa0d6",
+    "example/test/common_cses_collab_gateway_test.dart": "9160cdef27d407d4e4503e168c5979bbe77111eb93eeb64ea7e522849db7039a",
+    "example/test/cses_ws_gateway_integration_test.dart": "5d5a51c723a946a62b475c660872e1879f423a5c4c5cfbdf93becdf7afde83e2",
+    "rust/target/debug/libcses_collab_core.dylib": "e1ddafa9537d27b8b60a71cc747fc577a573ada3ab09b7e58df278ce8b819a0d"
+  },
+  "limits": [
+    "真实本机WebSocket对端与真实FRB/SQLite，非真实业务后台",
+    "未新增真机或真实桌面双端验收",
+    "包仓库查询失败，最新稳定版待核对"
+  ]
+}

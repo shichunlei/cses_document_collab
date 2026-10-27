@@ -2,15 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:cses_common/network/websocket/cses_websocket_client.dart';
+import 'package:cses_common/cses_common_network.dart';
 import 'package:cses_mobile_collab_demo/src/demo/common_cses_collab_gateway.dart';
 import 'package:cses_mobile_collab_demo/src/demo/cses_account_login.dart';
 import 'package:cses_mobile_collab_demo/src/demo/cses_demo_host.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:cses_common/runtime/config/config.dart';
-import 'package:cses_common/runtime/context/context.dart';
-import 'package:cses_common/runtime/session/user.dart';
+import 'package:cses_common/cses_common_runtime.dart';
 
 import 'support/common_login_harness.dart';
 
@@ -30,7 +28,7 @@ void main() {
     expect(csesWebSocketClient.isConnected, isFalse);
   });
   test(
-    'unmodified Common connects, subscribes, joins and exchanges routed JSON',
+    'Common awaited gateway connects, subscribes, joins and exchanges routed JSON',
     () async {
       final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
       final sockets = <WebSocket>[];
