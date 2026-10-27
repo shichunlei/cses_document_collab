@@ -1,5 +1,10 @@
 include: package:flutter_lints/flutter.yaml
 
+analyzer:
+  exclude:
+    # 历史审查探针保留原源码和失败证据；正式回归位于各包的 test/ 中。
+    - docs/verification/**/*.dart
+
 linter:
   rules:
     unawaited_futures: true

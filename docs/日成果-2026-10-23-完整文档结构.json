@@ -1,0 +1,423 @@
+{
+  "id": "cses-daily-fill-v7:64118eebd2b665246b7880eb:5ffd465e263864787b87aa01:2026-10-23:result",
+  "flavour": "root",
+  "nodeType": "root",
+  "props": {
+    "fs": 16,
+    "lh": 2,
+    "color": "#39414C",
+    "background": "#FAF7EF",
+    "showHeader": false
+  },
+  "meta": {
+    "dailyTemplate": "daily-writing",
+    "dailyTemplateVersion": 5,
+    "dailyType": "result",
+    "dailyDate": "2026-10-23"
+  },
+  "children": [
+    {
+      "id": "usOqJxBzIbrIKsO6SA",
+      "flavour": "render-unit",
+      "nodeType": "block",
+      "props": {
+        "p": [
+          40,
+          32,
+          40
+        ],
+        "backColor": "#E9D8D3",
+        "bgi": "url(\"/assets/daily-fill/mountain-cover.svg\") center / cover",
+        "textFill": "#30364A"
+      },
+      "meta": {
+        "tplRegion": true,
+        "tplFieldName": "日成果",
+        "dailySlot": "daily-cover",
+        "incl": [
+          "paragraph",
+          "bullet",
+          "ordered",
+          "todo",
+          "attachment"
+        ]
+      },
+      "children": [
+        {
+          "id": "1RalRWD3hHenNZn3Q8",
+          "flavour": "paragraph",
+          "nodeType": "editable",
+          "props": {
+            "depth": 0,
+            "psa": 0,
+            "psb": 0,
+            "pfs": 1.75,
+            "lh": 1.5
+          },
+          "meta": {
+            "lock": "daily-template",
+            "lockKind": "template"
+          },
+          "children": [
+            {
+              "insert": "今日成果"
+            }
+          ]
+        },
+        {
+          "id": "yWCKMavW9QgHGrTTMq",
+          "flavour": "paragraph",
+          "nodeType": "editable",
+          "props": {
+            "depth": 0,
+            "psa": 0,
+            "psb": 0
+          },
+          "meta": {
+            "plh": "记录今天完成的事，以及带来的成果…",
+            "plhMode": "always"
+          },
+          "children": [
+            {
+              "insert": "这是一个导向哈哈哈哈哈哈"
+            }
+          ]
+        },
+        {
+          "id": "JOVO4l71ZT9CxFDQH0",
+          "flavour": "paragraph",
+          "nodeType": "editable",
+          "props": {
+            "depth": 0,
+            "psb": 0,
+            "psa": 0
+          },
+          "meta": {},
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "VmW6fTKiUrmIGmizYL",
+      "flavour": "render-unit",
+      "nodeType": "block",
+      "props": {
+        "p": [
+          56,
+          32,
+          16
+        ],
+        "backColor": "#FAF7EF"
+      },
+      "meta": {
+        "lock": "daily-template",
+        "lockKind": "template"
+      },
+      "children": [
+        {
+          "id": "TujS5sxGlCEwpUZuwP",
+          "flavour": "date-card",
+          "nodeType": "void",
+          "props": {
+            "style": "masthead",
+            "format": "full",
+            "width": 206,
+            "height": 136,
+            "bg": "transparent",
+            "fg": "#39414C",
+            "bw": "0px solid",
+            "date": "2026-10-23T12:00:00"
+          },
+          "meta": {
+            "dailyDate": true
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "odHbxmW9ZJ8mbezVHf",
+      "flavour": "render-unit",
+      "nodeType": "block",
+      "props": {
+        "p": [
+          0,
+          40,
+          40
+        ],
+        "backColor": "#FAF7EF",
+        "background": "repeating-linear-gradient(to bottom, transparent 0px, transparent 31px, #DFD9CC 31px, #DFD9CC 32px)"
+      },
+      "meta": {
+        "tplRegion": true,
+        "tplFieldName": "日成果",
+        "dailySlot": "daily-body",
+        "incl": [
+          "paragraph",
+          "bullet",
+          "ordered",
+          "todo",
+          "attachment"
+        ]
+      },
+      "children": [
+        {
+          "id": "zRAxMID_V-ypaQD4_X",
+          "flavour": "paragraph",
+          "nodeType": "editable",
+          "props": {
+            "depth": 0,
+            "psa": 0,
+            "psb": 0
+          },
+          "meta": {},
+          "children": [
+            {
+              "insert": "看见超级词库路交叉口来吃饭多擦"
+            }
+          ]
+        },
+        {
+          "id": "lj8S3whRsXgUx65kJb",
+          "flavour": "paragraph",
+          "nodeType": "editable",
+          "props": {
+            "depth": 0,
+            "psb": 0,
+            "psa": 0
+          },
+          "meta": {},
+          "children": [
+            {
+              "insert": {
+                "dailyTag": "help"
+              }
+            },
+            {
+              "insert": {
+                "mention": "威震天"
+              },
+              "attributes": {
+                "mentionId": "5ffd465e263864787b87aa01",
+                "companyId": "64118eebd2b665246b7880eb",
+                "deptId": "65f2a1bc6339554c37bd0dba",
+                "deptName": "总经办",
+                "isUser": true,
+                "memberType": "HUMAN",
+                "orgId": "641287f6d2b665246b78e763",
+                "orgName": "CEO",
+                "parentId": "65f2a1bc6339554c37bd0dba",
+                "seq": 55000,
+                "type": "Boss",
+                "userId": "5ffd465e263864787b87aa01",
+                "userName": "威震天",
+                "mentionType": "user"
+              }
+            },
+            {
+              "insert": " 成都你开车电动车"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2QMW22vii9cHL5pmfw",
+      "flavour": "render-unit",
+      "nodeType": "block",
+      "props": {
+        "p": [
+          80,
+          40,
+          40
+        ],
+        "textFont": "14px 400 normal",
+        "textSpacing": "0em 2.86",
+        "textFill": "#2B2623"
+      },
+      "meta": {
+        "dailySection": "reflection",
+        "tplRegion": true,
+        "tplFieldName": "感悟",
+        "incl": [
+          "paragraph",
+          "bullet",
+          "ordered",
+          "todo",
+          "attachment"
+        ]
+      },
+      "children": [
+        {
+          "id": "0L7jNWxhLL90vaFw3P",
+          "flavour": "paragraph",
+          "nodeType": "editable",
+          "props": {
+            "depth": 0,
+            "psb": 0,
+            "psa": 0
+          },
+          "meta": {
+            "plh": "写下感悟…",
+            "plhMode": "always"
+          },
+          "children": [
+            {
+              "insert": "大城市；加删除；第三次模拟大城市你不是抽卡出纳说法出纳你不保存都市传说"
+            }
+          ]
+        },
+        {
+          "id": "mtiseX9PfRTVEMvyE0",
+          "flavour": "todo",
+          "nodeType": "editable",
+          "props": {
+            "created": 1792724273458,
+            "checked": 0,
+            "depth": 0,
+            "psb": 0,
+            "psa": 0,
+            "nextParagraphStyle": "body",
+            "dailyTask": {
+              "blockId": "mtiseX9PfRTVEMvyE0",
+              "userId": "5ffd465e263864787b87aa01",
+              "name": "威震天"
+            }
+          },
+          "meta": {},
+          "children": [
+            {
+              "insert": {
+                "dailyTag": "help"
+              }
+            },
+            {
+              "insert": {
+                "mention": "威震天"
+              },
+              "attributes": {
+                "mentionId": "5ffd465e263864787b87aa01",
+                "companyId": "64118eebd2b665246b7880eb",
+                "deptId": "65f2a1bc6339554c37bd0dba",
+                "deptName": "总经办",
+                "isUser": true,
+                "memberType": "HUMAN",
+                "orgId": "641287f6d2b665246b78e763",
+                "orgName": "CEO",
+                "parentId": "65f2a1bc6339554c37bd0dba",
+                "seq": 55000,
+                "type": "Boss",
+                "userId": "5ffd465e263864787b87aa01",
+                "userName": "威震天",
+                "mentionType": "user"
+              }
+            },
+            {
+              "insert": " 点击混吃等死快捷菜单山卡拉"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Y_3xa_6kcOrqdinO9n",
+      "flavour": "render-unit",
+      "nodeType": "block",
+      "props": {
+        "p": [
+          80,
+          40,
+          40
+        ],
+        "textFont": "14px 400 normal",
+        "textSpacing": "0em 2.86",
+        "textFill": "#2B2623"
+      },
+      "meta": {
+        "dailySection": "self-check",
+        "tplRegion": true,
+        "tplFieldName": "自检",
+        "incl": [
+          "paragraph",
+          "bullet",
+          "ordered",
+          "todo",
+          "attachment"
+        ]
+      },
+      "children": [
+        {
+          "id": "diBR4fqa7l8XV2wIzU",
+          "flavour": "paragraph",
+          "nodeType": "editable",
+          "props": {
+            "depth": 0,
+            "psb": 0,
+            "psa": 0
+          },
+          "meta": {
+            "plh": "写下自检…",
+            "plhMode": "always"
+          },
+          "children": [
+            {
+              "insert": "第三次你不吃亏解决措施；落到实处救命稻草考虑到成绩考拉擦擦你们"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "I2hIockHy0BR4IhQ4v",
+      "flavour": "render-unit",
+      "nodeType": "block",
+      "props": {
+        "p": [
+          80,
+          40,
+          40
+        ],
+        "textFont": "14px 400 normal",
+        "textSpacing": "0em 2.86",
+        "textFill": "#2B2623"
+      },
+      "meta": {
+        "dailySection": "custom",
+        "tplRegion": true,
+        "tplFieldName": "今日收获-自定义字段",
+        "incl": [
+          "paragraph",
+          "bullet",
+          "ordered",
+          "todo",
+          "attachment"
+        ],
+        "dailyCustomField": {
+          "key": "local_UMIGCoRg6a1w1oMXfv",
+          "label": "今日收获-自定义字段"
+        }
+      },
+      "children": [
+        {
+          "id": "IjbdDWFnqh5obfIefQ",
+          "flavour": "paragraph",
+          "nodeType": "editable",
+          "props": {
+            "depth": 0,
+            "psb": 0,
+            "psa": 0
+          },
+          "meta": {
+            "plh": "写下今日收获-自定义字段…",
+            "plhMode": "always"
+          },
+          "children": [
+            {
+              "insert": "尺寸明年开除党籍大尺寸奶茶店进度款次"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
