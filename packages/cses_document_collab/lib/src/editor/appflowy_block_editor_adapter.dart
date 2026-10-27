@@ -25,6 +25,7 @@ import 'package:cses_document_collab/src/model/collab_paragraph_style.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/model/collab_table.dart';
 import 'package:cses_document_collab/src/model/collab_columns.dart';
+import 'package:cses_document_collab/src/model/collab_text_box.dart';
 import 'package:cses_document_collab/src/model/collab_task_card.dart';
 import 'package:cses_document_collab/src/model/collab_user_mention.dart';
 import 'package:cses_document_collab/src/model/text_delta.dart' as collab;
@@ -636,7 +637,8 @@ final class AppFlowyBlockEditorAdapter {
         final node = currentNodes[index];
         final target = targetBlocks[index];
         if (node.type == csesUnsupportedBlockType) continue;
-        if (collabColumnsTypes.contains(target.blockType) ||
+        if (target.blockType == collabTextBoxType ||
+            collabColumnsTypes.contains(target.blockType) ||
             collabTableTypes.contains(target.blockType) ||
             _isUrlBackedBlock(target.blockType) ||
             target.blockType == collabMermaidType ||
@@ -909,7 +911,7 @@ final class AppFlowyBlockEditorAdapter {
   /// 类型转换生成新身份并记录来源供Rust保留扩展数据；提及卡片及链接视图转换历史在写入前整组预检，并按身份链重定位。
   /// 远端回放及销毁后不发布；Undo/Redo 的历史身份经文档内映射恢复为当前可替换来源。
   /// 仅明确修改编号设置属性的 UpdateOperation 生成编号写入意图；普通文字/结构快照
-  /// 即使携带旧设置也不会覆盖原生 start/continuePrevious。分割线、公式和绘图mode同样只发布明确的单字段补丁。
+  /// 即使携带旧设置也不会覆盖原生 start/continuePrevious。分割线、公式、绘图mode与文本框外观同样只发布明确的字段补丁。
   /// 撤销和重做复用相同路径。
   void _handleTransaction(EditorTransactionValue value) {
     if (_disposed || _applyingRemote) {
@@ -953,6 +955,13 @@ final class AppFlowyBlockEditorAdapter {
       if (node != null && node.type == collabPersonCardType) {
         for (final key in collabPersonCardKeys) {
           if (operation.attributes.containsKey(personCardPropertyAttribute(key))) {
+            resourceEdits.putIfAbsent(node, () => {}).add(key);
+          }
+        }
+      }
+      if (node != null && node.type == collabTextBoxType) {
+        for (final key in collabTextBoxKeys) {
+          if (operation.attributes.containsKey(textBoxPropertyAttribute(key))) {
             resourceEdits.putIfAbsent(node, () => {}).add(key);
           }
         }
@@ -1231,12 +1240,22 @@ final class AppFlowyBlockEditorAdapter {
 
   /// 将权威 [block] 转为 AppFlowy 节点，图片保存强类型专属数据的 Map 投影。
   /// 题注留在资源属性而非 AppFlowy children；实际父子关系由 Rust 的共享类型持有。
-  /// 分栏保留独立列子树及布局字段，不直接创建正文Delta。
+  /// 文本框与分栏保留独立子树及外观/布局字段，不直接创建正文Delta。
   /// KR只投影会议引用，不缓存业务列表；Mermaid 保留容器及独立源码 Delta；表格布局及任务卡片属性只读投影；其他无正文块保留各自白名单属性，均不生成Delta。
   /// 段落格式及其历史目标标记仅用于段落族；代码块沿用自身属性和正文历史。
   /// 日期、天气及人员卡片与分页符使用无 Delta、无子块的独立类型；仅构建内存节点，不写入原生文档或取得资源所有权。
   /// 标题投影限制H1~H6，旧数据超出范围按边界级别展示，不主动修改共享数据。
   static Node _nodeFromBlock(CollabEditorBlock block) {
+    if (block.blockType == collabTextBoxType) {
+      return Node(
+        type: collabTextBoxType,
+        id: block.id,
+        attributes: {
+          collabBlockIdAttribute: block.id,
+          ...textBoxNodeAttributes(block.resource ?? const CollabResource()),
+        },
+      );
+    }
     if (collabColumnsTypes.contains(block.blockType)) {
       return Node(
         type: block.blockType,
@@ -1438,11 +1457,11 @@ final class AppFlowyBlockEditorAdapter {
   /// 转换生成新的协同身份，历史身份链保证 Undo/Redo 仍替换当前块，保留 Rust 原生扩展属性。
   /// [numberingNodes] 默认空集合，只有当前本地事务明确修改编号设置的节点才生成写入意图。
   /// [paragraphEdits] 指定当前事务修改的段落字段，默认不写入共享设置。
-  /// [codeEdits] 和 [resourceEdits] 默认空，分别指定代码头部及资源/分栏/分割线/公式/绘图视图的显式字段修改；
+  /// [codeEdits] 和 [resourceEdits] 默认空，分别指定代码头部及资源/分栏/文本框/分割线/公式/绘图视图的显式字段修改；
   /// 仅指定字段产生补丁，其他原始属性保持只读投影，不重放到权威文档。
   /// 恢复为有序列表的历史节点保留其编号投影，Rust 仅在新身份替换时用它初始化原始设置；
   /// 正常新转入有序列表的节点由类型命令移除旧投影，走默认续号。非有序目标清理内存编号数据。
-  /// 表格与分栏按容器父身份遍历，布局属性按字段生成补丁；单元格与列的正文仍独立持有Delta。
+  /// 文本框、表格与分栏按容器父身份遍历，布局属性按字段生成补丁；单元格与列的正文仍独立持有Delta。
   List<CollabEditorBlock> _readBlocks(
     EditorState state,
     List<CollabEditorBlock> previous, {
@@ -1509,7 +1528,9 @@ final class AppFlowyBlockEditorAdapter {
         blockTextColor: node.type == csesCalloutBlockType
             ? node.attributes[csesBlockTextColorAttribute] as String?
             : null,
-        resource: collabColumnsTypes.contains(node.type)
+        resource: node.type == collabTextBoxType
+            ? readCollabTextBox(node.attributes, edited: resourceEdits[node] ?? const {})
+            : collabColumnsTypes.contains(node.type)
             ? readCollabColumns(node.attributes, edited: resourceEdits[node] ?? const {})
             : node.type == collabMermaidType
             ? readCollabMermaidProperties(node.attributes, edited: resourceEdits[node]?.contains('mode') == true)
@@ -1587,7 +1608,8 @@ final class AppFlowyBlockEditorAdapter {
 
   /// 将借用[node]映射为投影类型；标题输出限制H1~H6，绘图、表格结构及无正文块保留独立类型。
   static String _nodeBlockType(Node node) {
-    if (node.type == collabMermaidType ||
+    if (node.type == collabTextBoxType ||
+        node.type == collabMermaidType ||
         node.type == collabMermaidSourceType ||
         collabTableTypes.contains(node.type) ||
         collabColumnsTypes.contains(node.type) ||

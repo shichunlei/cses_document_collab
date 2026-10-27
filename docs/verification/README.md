@@ -103,6 +103,8 @@
 
 ### 表格、代码块与分隔块
 
+- [text-box-20261026](text-box-20261026/)（[文本框正式容器、手机基础编辑与原生历史](text-box-20261026/report.md)）
+
 - [columns-20261026](columns-20261026/)（[columns/column正式投影、手机布局、列操作及原生历史](columns-20261026/report.md)；[审查与两项缺陷](columns-20261026/review.md)；[两项修复与验证](columns-20261026/fixes.md)）
 
 - [weather-card-20261025](weather-card-20261025/)（[天气卡片正式接入、宿主数据源及验证](weather-card-20261025/report.md)；[天气设置底部弹窗](weather-card-20261025/bottom-sheet.md)；[与日期统一样式切换](weather-card-20261025/style-navigation.md)；[提交范围核查](weather-card-20261025/commit-scope.md)）

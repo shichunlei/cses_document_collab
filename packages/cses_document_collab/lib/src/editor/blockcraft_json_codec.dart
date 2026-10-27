@@ -19,6 +19,7 @@ import 'package:cses_document_collab/src/model/collab_paragraph_style.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/model/collab_table.dart';
 import 'package:cses_document_collab/src/model/collab_columns.dart';
+import 'package:cses_document_collab/src/model/collab_text_box.dart';
 import 'package:cses_document_collab/src/model/collab_task_card.dart';
 
 /// 将桌面快照转换为实际编辑树；每块/行内对象均转换，不保存原始JSON快照兜底。
@@ -285,7 +286,8 @@ abstract final class BlockCraftJsonCodec {
     visit(snapshot, 0);
   }
 
-  /// 转换已校验的[block]及其后代为实际原生节点；返回节点的所有权交给调用者。
+  /// 转换已校验的[block]及其后代为实际原生节点；文本框使用正式容器，旧对象渲染入口仍保留。
+  /// 返回节点的所有权交给调用者。
   /// 正数标题按H1~H6投影，超范围按H6展示，不回写借用的原始快照。
   static Node decodeBlock(Map<String, dynamic> block) {
     final kind = block['flavour'] as String;
@@ -337,7 +339,7 @@ abstract final class BlockCraftJsonCodec {
       blockBorderColor: props['borderColor'] as String?,
     );
     final Node node;
-    if (kind == 'root' || objectFlavours.contains(kind)) {
+    if (kind == 'root' || (objectFlavours.contains(kind) && kind != collabTextBoxType)) {
       node = Node(type: kind == 'root' ? 'page' : 'snapshot-$kind', id: id);
     } else {
       node = createCollabSnapshotNode(projection);
@@ -494,6 +496,12 @@ abstract final class BlockCraftJsonCodec {
       props.addAll(CollabPersonCard.readAttributes(node.attributes).values);
     }
     if (kind == 'divider') props.addAll(CollabDivider.readAttributes(node.attributes).values);
+    if (node.type == collabTextBoxType) {
+      for (final key in collabTextBoxKeys) {
+        props.remove(key);
+      }
+      props.addAll(readCollabTextBox(node.attributes).values);
+    }
     if (collabColumnsTypes.contains(node.type)) {
       for (final key in collabColumnsKeys) {
         props.remove(key);

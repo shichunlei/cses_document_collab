@@ -203,7 +203,7 @@ void main() {
       expect(finder, findsOneWidget);
     }
     final paragraph = controller.editorState.document.root.children
-        .firstWhere((node) => node.type == 'snapshot-text-box')
+        .firstWhere((node) => node.type == 'text-box')
         .children
         .first;
     await controller.editorState.apply(

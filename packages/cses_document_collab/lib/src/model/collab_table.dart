@@ -10,9 +10,13 @@ const collabTableTypes = {'table', 'table-row', 'table-cell'};
 /// 表格布局属性的本地投影；写回时按与上一快照的差异生成字段补丁。
 const collabTableLayoutAttribute = 'cses_table_layout';
 
-/// 判断 [type] 是否拥有独立子块的已适配容器（含绘图与分栏），不转移节点所有权。
+/// 判断 [type] 是否拥有独立子块的已适配容器（含绘图、分栏与文本框），不转移节点所有权。
 bool isCollabContainerType(String type) =>
-    type == 'callout' || type == 'mermaid' || collabTableTypes.contains(type) || collabColumnsTypes.contains(type);
+    type == 'text-box' ||
+    type == 'callout' ||
+    type == 'mermaid' ||
+    collabTableTypes.contains(type) ||
+    collabColumnsTypes.contains(type);
 
 /// 读取借用 [node] 的表格布局；null或缺失属性返回空Map，不生成默认值写回。
 Map<String, dynamic> collabTableLayout(Node? node) {

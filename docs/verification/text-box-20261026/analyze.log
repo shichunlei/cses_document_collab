@@ -1,0 +1,8 @@
+Analyzing 15 items...                                           
+
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/src/editor/collab_text_box_block.dart:142:37 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/src/model/collab_text_box.dart:99:5 • curly_braces_in_flow_control_structures
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/src/model/collab_text_box.dart:167:5 • curly_braces_in_flow_control_structures
+warning • Unused import: 'package:cses_document_collab/cses_document_collab.dart'. Try removing the import directive • test/text_box_native_integration_test.dart:5:8 • unused_import
+
+4 issues found. (ran in 6.8s)

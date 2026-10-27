@@ -1,0 +1,103 @@
+{
+  "id": "fixture-doc",
+  "flavour": "root",
+  "nodeType": "root",
+  "props": {},
+  "meta": {},
+  "children": [
+    {
+      "id": "text-box",
+      "flavour": "text-box",
+      "nodeType": "block",
+      "props": {
+        "width": 300,
+        "height": 160,
+        "lockRatio": false,
+        "shape": "rectangle",
+        "fill": "#FFF3C4",
+        "outline": "2px solid #334455",
+        "futureProp": {
+          "preserve": true
+        }
+      },
+      "meta": {
+        "audit": "desktop"
+      },
+      "children": [
+        {
+          "id": "box-body",
+          "flavour": "paragraph",
+          "nodeType": "editable",
+          "props": {
+            "depth": 0
+          },
+          "meta": {},
+          "children": [
+            {
+              "insert": "文本框正文",
+              "attributes": {
+                "a:bold": true
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tail",
+      "flavour": "paragraph",
+      "nodeType": "editable",
+      "props": {
+        "depth": 0
+      },
+      "meta": {},
+      "children": [
+        {
+          "insert": "后续正文"
+        }
+      ]
+    },
+    {
+      "id": "malformed-box",
+      "flavour": "text-box",
+      "nodeType": "block",
+      "props": {
+        "width": 240,
+        "height": 120,
+        "lockRatio": false,
+        "shape": "rectangle"
+      },
+      "meta": {},
+      "children": [
+        {
+          "id": "nested-box",
+          "flavour": "text-box",
+          "nodeType": "block",
+          "props": {
+            "width": 240,
+            "height": 120,
+            "lockRatio": false,
+            "shape": "rectangle"
+          },
+          "meta": {},
+          "children": [
+            {
+              "id": "hidden-body",
+              "flavour": "paragraph",
+              "nodeType": "editable",
+              "props": {
+                "depth": 0
+              },
+              "meta": {},
+              "children": [
+                {
+                  "insert": "不能丢弃"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

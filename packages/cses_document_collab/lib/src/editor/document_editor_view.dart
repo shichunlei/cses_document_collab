@@ -56,6 +56,7 @@ import 'package:flutter/material.dart';
 import 'collab_inline_entity_mention.dart';
 import 'collab_table_block.dart';
 import 'collab_columns_block.dart';
+import 'collab_text_box_block.dart';
 import 'collab_column_block.dart';
 import 'collab_table_cell_block.dart';
 import 'collab_table_row_block.dart';
@@ -436,7 +437,7 @@ class _DocumentEditorViewState extends State<DocumentEditorView> {
 }
 
 /// 正式协同块的渲染器工厂；音频、附件和四类网页使用各自独立构建器。
-/// 分栏保留列子树；表格保留行和单元格子树，日期卡片、分页符等无正文块及未知占位使用独立组件。
+/// 文本框保留普通文字子树；分栏保留列子树；表格保留行和单元格子树，日期卡片、分页符等无正文块及未知占位使用独立组件。
 Map<String, BlockComponentBuilder> _createDocumentBlockBuilders() =>
     {
       ...standardBlockComponentBuilderMap,
@@ -479,6 +480,7 @@ Map<String, BlockComponentBuilder> _createDocumentBlockBuilders() =>
       collabKrType: CollabKrBlockComponentBuilder(),
       csesCodeBlockType: CollabCodeBlockComponentBuilder(),
       csesCalloutBlockType: CollabCalloutBlockComponentBuilder(),
+      'text-box': CollabTextBoxBlockComponentBuilder(),
       'columns': CollabColumnsBlockComponentBuilder(),
       'column': CollabColumnBlockComponentBuilder(),
       'table': CollabTableBlockComponentBuilder(),

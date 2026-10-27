@@ -41,6 +41,7 @@ void main() {
     EditorKeyboardToolbarItem.juejin: '掘金',
     EditorKeyboardToolbarItem.figma: 'Figma',
     EditorKeyboardToolbarItem.table: '表格',
+    EditorKeyboardToolbarItem.textBox: '文本框',
     EditorKeyboardToolbarItem.columns: '多栏布局',
     EditorKeyboardToolbarItem.callout: '高亮块',
     EditorKeyboardToolbarItem.meeting: '会议',
@@ -134,6 +135,7 @@ void main() {
 
   for (final entry in {
     EditorKeyboardToolbarItem.table: 'table',
+    EditorKeyboardToolbarItem.textBox: 'text-box',
     EditorKeyboardToolbarItem.columns: 'columns',
     EditorKeyboardToolbarItem.callout: 'callout',
     EditorKeyboardToolbarItem.dateCard: 'date-card',

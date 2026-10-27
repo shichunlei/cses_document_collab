@@ -32,6 +32,9 @@ enum EditorBlock {
   /// 多栏布局，同时启用单列子容器。
   columns('columns'),
 
+  /// 文本框及其普通文字子树。
+  textBox('text-box'),
+
   /// 分割线及其外观设置。
   divider('divider'),
 
@@ -212,6 +215,9 @@ enum EditorKeyboardToolbarItem {
 
   /// 新建2×2表格。
   table,
+
+  /// 新建文本框。
+  textBox,
 
   /// 新建两栏布局。
   columns,

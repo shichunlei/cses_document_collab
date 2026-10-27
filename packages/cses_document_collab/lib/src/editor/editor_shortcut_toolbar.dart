@@ -25,6 +25,7 @@ import 'package:cses_document_collab/src/model/collab_person_card.dart';
 import 'package:cses_document_collab/src/model/collab_date_card.dart';
 import 'package:cses_document_collab/src/model/collab_weather.dart';
 import 'package:cses_document_collab/src/model/collab_columns.dart';
+import 'package:cses_document_collab/src/model/collab_text_box.dart';
 import 'package:cses_document_collab/src/model/collab_divider.dart';
 import 'package:cses_document_collab/src/model/collab_formula.dart';
 import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
@@ -510,6 +511,13 @@ const _commonInsertions = [
     blockType: 'figma-embed',
   ),
   _CommonInsertionAction(
+    EditorKeyboardToolbarItem.textBox,
+    '文本框',
+    LucideIcons.textCursorInput,
+    'editor-shortcut-text-box',
+    blockType: 'text-box',
+  ),
+  _CommonInsertionAction(
     EditorKeyboardToolbarItem.columns,
     '多栏布局',
     LucideIcons.columns2,
@@ -762,6 +770,8 @@ Future<Selection?> _performCommonInsertion(
       return await applyUrlBlockShortcut(state, selection, type, source.url, mediaSource: source);
     }
     switch (action.item) {
+      case EditorKeyboardToolbarItem.textBox:
+        return await insertCollabTextBox(state, current()!);
       case EditorKeyboardToolbarItem.columns:
         return await insertCollabColumns(state, current()!);
       case EditorKeyboardToolbarItem.table:
@@ -1631,6 +1641,7 @@ class _BlockStyleMenuState extends State<_BlockStyleMenu> {
 /// 将[blockType]应用到借用[state]的实时选区；[headingLevel]仅用于已启用的H1~H6标题，默认一级；超范围不执行。
 /// T菜单、待办入口与键盘标题操作共用此事务，不按在线/离线划分。
 /// 能力关闭、只读、销毁、空选区或高亮容器不执行；列表与非列表混选由列表命令整批拒绝。
+/// 文本框仅允许其普通文字Schema类型，拒绝转换成代码、媒体或嵌套容器。
 /// 同类列表不重建或重置勾选，转换保留正文、格式、层级和焦点，异常交由调用边界报告。
 Future<void> applyEditorBlockStyle(EditorState state, String blockType, {int? headingLevel}) async {
   final capabilities = EditorCommandContext.of(state).configuration;
@@ -1639,6 +1650,7 @@ Future<void> applyEditorBlockStyle(EditorState state, String blockType, {int? he
   if (state.isDisposed || !state.editable || selection == null) return;
   final nodes = state.getNodesInSelection(selection);
   if (nodes.isEmpty || nodes.any((node) => node.type == csesCalloutBlockType)) return;
+  if (nodes.any((node) => node.parent?.type == collabTextBoxType) && !collabTextBoxChildren.contains(blockType)) return;
   const listTypes = {'numbered_list', 'bulleted_list', 'todo_list'};
   if (listTypes.contains(blockType) && nodes.any((node) => listTypes.contains(node.type))) {
     await changeCollabListType(state, blockType);

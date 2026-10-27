@@ -1,0 +1,14 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart
+00:00 +0: (setUpAll)
+00:00 +0: formal JSON retains edited text, metadata and unknown properties
+00:00 +1: field undo follows stable identity after remote reorder
+00:00 +2: insert and delete undo preserve children and list Enter stays in frame
+00:00 +3: readonly, descendant locks, invalid geometry and missing identities reject writes
+00:00 +4: native input connection accepts composed Chinese and emoji inside the frame
+00:00 +5: explicitly clearing a field does not revive original JSON props
+00:00 +6: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:01 +7: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:02 +8: settings cancel, apply, stale permission and preview at 320.0/1.8
+00:02 +9: settings cancel, apply, stale permission and preview at 700.0/1.0
+00:03 +10: (tearDownAll)
+00:03 +10: All tests passed!

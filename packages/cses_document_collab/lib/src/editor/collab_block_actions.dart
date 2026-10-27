@@ -435,6 +435,7 @@ final _pending = Expando<bool>('block-more-actions');
   'video' => ('视频', LucideIcons.film),
   'code' => ('代码块', LucideIcons.codeXml),
   'callout' => ('高亮块', LucideIcons.highlighter),
+  'text-box' => ('文本框', LucideIcons.textCursorInput),
   'columns' => ('多栏布局', LucideIcons.columns2),
   'column' => ('列操作', LucideIcons.columns2),
   'audio' => ('音频', LucideIcons.audioLines),

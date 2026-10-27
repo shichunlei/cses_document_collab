@@ -322,13 +322,13 @@ pub(super) fn validate(doc: &Doc, root_id: &str) -> Result<(), String> {
     Ok(())
 }
 
-/// 分栏与单列都以Y.Array保存子块，不保存第二份正文。
-fn is_columns_container(kind: &str) -> bool {
-    matches!(kind, "columns" | "column")
+/// 分栏、单列与文本框以Y.Array保存子块，不保存第二份正文。
+fn is_layout_container(kind: &str) -> bool {
+    matches!(kind, "columns" | "column" | "text-box")
 }
 
 /// 只投影完整的分栏结构；不合法旧树作为不透明块保留，普通文字编辑不修复布局。
-fn supported_columns<T: ReadTxn>(block: &MapRef, blocks: &MapRef, txn: &T) -> bool {
+fn supported_layout<T: ReadTxn>(block: &MapRef, blocks: &MapRef, txn: &T) -> bool {
     if out_string(block.get(txn, "nodeType")).as_deref() != Some("block") {
         return false;
     }
@@ -336,7 +336,19 @@ fn supported_columns<T: ReadTxn>(block: &MapRef, blocks: &MapRef, txn: &T) -> bo
         return false;
     };
     let ids = children(block, txn);
-    let columns = out_string(block.get(txn, "flavour")).as_deref() == Some("columns");
+    let flavour = out_string(block.get(txn, "flavour")).unwrap_or_default();
+    if flavour == "text-box" {
+        return ids.iter().all(|id| {
+            map(blocks, txn, id).is_some_and(|child| {
+                matches!(
+                    out_string(child.get(txn, "flavour")).as_deref(),
+                    Some("paragraph" | "bullet" | "ordered" | "todo" | "blockquote")
+                ) && out_string(child.get(txn, "nodeType")).as_deref() == Some("editable")
+                    && matches!(child.get(txn, "children"), Some(Out::YText(_)))
+            })
+        });
+    }
+    let columns = flavour == "columns";
     if columns && (ids.is_empty() || ids.len() > 8) {
         return false;
     }
@@ -344,7 +356,7 @@ fn supported_columns<T: ReadTxn>(block: &MapRef, blocks: &MapRef, txn: &T) -> bo
         map(blocks, txn, id).is_some_and(|child| {
             let kind = out_string(child.get(txn, "flavour")).unwrap_or_default();
             if columns {
-                kind == "column" && supported_columns(&child, blocks, txn)
+                kind == "column" && supported_layout(&child, blocks, txn)
             } else {
                 !matches!(
                     kind.as_str(),
@@ -366,10 +378,18 @@ pub(super) fn validate_columns(desired: &[CollabBlock]) -> Result<(), String> {
     }
     for block in desired {
         let parent = block.parent_id.as_deref().and_then(|id| by_id.get(id));
+        if parent.is_some_and(|p| p.block_type == "text-box")
+            && !(matches!(
+                block.block_type.as_str(),
+                "paragraph" | "bulleted_list" | "numbered_list" | "todo_list" | "quote"
+            ) || block.block_type.starts_with("heading_"))
+        {
+            return Err("INVALID_TEXT_BOX: 文本框仅允许普通正文子块".into());
+        }
         if parent.is_some_and(|p| p.block_type == "columns" && block.block_type != "column")
             || parent.is_some_and(|p| {
                 p.block_type == "column"
-                    && (is_columns_container(&block.block_type)
+                    && (matches!(block.block_type.as_str(), "columns" | "column")
                         || is_table_container(&block.block_type))
             })
             || (block.block_type == "columns" && parent.is_some_and(|p| p.block_type != "callout"))
@@ -661,7 +681,7 @@ fn mobile_type<T: ReadTxn>(block: &MapRef, props: &MapRef, txn: &T) -> Option<St
         "ordered" => "numbered_list".to_owned(),
         "todo" => "todo_list".to_owned(),
         "blockquote" => "quote".to_owned(),
-        "table" | "table-row" | "table-cell" | "columns" | "column" => flavour,
+        "table" | "table-row" | "table-cell" | "columns" | "column" | "text-box" => flavour,
         "code" | "image" | "video" | "callout" | "mermaid" | "mermaid-textarea" | "date-card"
         | "person-card" | "weather" | "divider" | "page-divider" | "formula" | "meeting"
         | "task" | "kr-list" => flavour,
@@ -725,6 +745,40 @@ fn is_divider_style(style: &str) -> bool {
 /// 已适配块的属性白名单；表格布局通过显式补丁写入，日期及人员卡片/会议/任务/分割线/公式/绘图不使用资源 URL。
 fn resource_keys(kind: &str) -> &'static [&'static str] {
     match kind {
+        "text-box" => &[
+            "width",
+            "height",
+            "rotation",
+            "lockRatio",
+            "shape",
+            "fill",
+            "fillOpacity",
+            "outline",
+            "lineEnds",
+            "arrows",
+            "shadow",
+            "glow",
+            "textPadding",
+            "textAlignment",
+            "textDirection",
+            "textWrap",
+            "textAutoFit",
+            "textRotate",
+            "textFamily",
+            "textFont",
+            "textSpacing",
+            "textFill",
+            "textFillOpacity",
+            "textOutline",
+            "textShadow",
+            "textGlow",
+            "textTransform",
+            "textFit",
+            "artwork",
+            "adjustments",
+            "position",
+            "placementLayer",
+        ],
         "columns" => &["columnCount", "columnWidths"],
         "column" => &["columnIndex"],
         "formula" => &["latex"],
@@ -877,6 +931,7 @@ fn parse_resource_edit(
                         | "mermaid"
                         | "columns"
                         | "column"
+                        | "text-box"
                 ))
         {
             return Err(fail());
@@ -900,7 +955,42 @@ fn parse_resource_edit(
             return Err(fail());
         }
         if let Some(v) = &value {
-            if is_columns_container(kind) {
+            if kind == "text-box" {
+                let valid = match (key.as_str(), v) {
+                    ("width", Any::Number(n)) => n.is_finite() && (48.0..=2000.0).contains(n),
+                    ("height" | "textFit", Any::Number(n)) => {
+                        n.is_finite() && (32.0..=2000.0).contains(n)
+                    }
+                    ("rotation", Any::Number(n)) => {
+                        n.is_finite() && (0.0..360.0).contains(n) && n.fract() == 0.0
+                    }
+                    ("fillOpacity" | "textFillOpacity", Any::Number(n)) => {
+                        n.is_finite() && (0.0..=1.0).contains(n)
+                    }
+                    ("lockRatio" | "textWrap" | "textRotate", Any::Bool(_)) => true,
+                    ("position" | "adjustments", Any::Map(items)) => {
+                        items.len() <= 32
+                            && items
+                                .values()
+                                .all(|v| matches!(v, Any::Number(n) if n.is_finite()))
+                    }
+                    (
+                        "shape" | "fill" | "outline" | "lineEnds" | "arrows" | "shadow" | "glow"
+                        | "textPadding" | "textAlignment" | "textDirection" | "textAutoFit"
+                        | "textFamily" | "textFont" | "textSpacing" | "textFill" | "textOutline"
+                        | "textShadow" | "textGlow" | "textTransform" | "artwork"
+                        | "placementLayer",
+                        Any::String(value),
+                    ) => value.len() <= 8192,
+                    _ => false,
+                };
+                if !valid {
+                    return Err(fail());
+                }
+                result.insert(key.clone(), value);
+                continue;
+            }
+            if is_layout_container(kind) {
                 let valid = match (key.as_str(), v) {
                     ("columnCount", Any::Number(n)) => n.is_finite() && n.fract() == 0.0 && (1.0..=8.0).contains(n),
                     ("columnIndex", Any::Number(n)) => n.is_finite() && n.fract() == 0.0 && (0.0..=7.0).contains(n),
@@ -1331,7 +1421,7 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
             result.blocks.push(placeholder(id, parent_id));
             continue;
         }
-        if is_columns_container(&kind) && !supported_columns(&block, &blocks, &txn) {
+        if is_layout_container(&kind) && !supported_layout(&block, &blocks, &txn) {
             result.blocks.push(placeholder(id, parent_id));
             continue;
         }
@@ -1347,7 +1437,7 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
             Some(Out::YArray(_))
                 if (matches!(kind.as_str(), "callout" | "mermaid")
                     || is_table_container(&kind)
-                    || is_columns_container(&kind))
+                    || is_layout_container(&kind))
                     && node_type == "block" =>
             {
                 let ids = children(&block, &txn);
@@ -1391,7 +1481,7 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                 if node_type == "editable"
                     && !is_media
                     && !is_resource_block_type(&kind)
-                    && !is_columns_container(&kind)
+                    && !is_layout_container(&kind)
                     && kind != "callout"
                     && kind != "mermaid"
                     && kind != "page-divider"
@@ -1490,7 +1580,7 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
             }),
             resource: (is_resource_block_type(&kind)
                 || is_table_container(&kind)
-                || is_columns_container(&kind)
+                || is_layout_container(&kind)
                 || matches!(
                     kind.as_str(),
                     "person-card"
@@ -1504,6 +1594,7 @@ pub(super) fn project(doc: &Doc, root_id: &str) -> Projection {
                         | "mermaid"
                         | "columns"
                         | "column"
+                        | "text-box"
                 ))
             .then(|| CollabResource {
                 properties: resource_properties(&kind, &props, &txn),
@@ -1559,6 +1650,7 @@ fn formal_type(kind: &str) -> Option<(&str, bool)> {
         "table-cell" => ("table-cell", false),
         "columns" => ("columns", false),
         "column" => ("column", false),
+        "text-box" => ("text-box", false),
         "image" => ("image", true),
         "video" => ("video", true),
         "person-card" => ("person-card", true),
@@ -1735,6 +1827,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
                         | "mermaid"
                         | "columns"
                         | "column"
+                        | "text-box"
                 )
             {
                 return Err("INVALID_RESOURCE: 资源属性与块类型不符".into());
@@ -1793,7 +1886,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
         if old.is_some_and(|b| {
             (matches!(b.block_type.as_str(), "callout" | "mermaid")
                 || is_table_container(&b.block_type)
-                || is_columns_container(&b.block_type))
+                || is_layout_container(&b.block_type))
                 && b.block_type != block.block_type
         }) {
             return Err("UNSUPPORTED_BLOCK_TYPE: 高亮容器不能直接转换为正文块".into());
@@ -1924,7 +2017,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
         if old == Some(next)
             && !matches!(next.block_type.as_str(), "callout" | "mermaid")
             && !is_table_container(&next.block_type)
-            && !is_columns_container(&next.block_type)
+            && !is_layout_container(&next.block_type)
         {
             continue;
         }
@@ -1982,7 +2075,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
             }
             // 未投影期间到达的远端正文仍是权威内容，撤销删除不能以旧UI快照覆盖它。
             if !is_table_container(&next.block_type)
-                && !is_columns_container(&next.block_type)
+                && !is_layout_container(&next.block_type)
                 && !matches!(next.block_type.as_str(), "callout" | "mermaid")
             {
                 continue;
@@ -2028,7 +2121,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
                 "nodeType",
                 if matches!(flavour, "image" | "callout" | "mermaid")
                     || is_table_container(flavour)
-                    || is_columns_container(flavour)
+                    || is_layout_container(flavour)
                 {
                     "block"
                 } else if media {
@@ -2115,7 +2208,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
         {
             props.try_update(&mut txn, "checked", i64::from(next.checked));
         }
-        if is_table_container(flavour) || is_columns_container(flavour) || flavour == "mermaid" {
+        if is_table_container(flavour) || is_layout_container(flavour) || flavour == "mermaid" {
             if let Some(edits) = resource_edits.get(&next.id) {
                 for (key, value) in edits {
                     if let Some(value) = value {
@@ -2128,7 +2221,7 @@ pub(super) fn apply(doc: &Doc, root_id: &str, desired: &[CollabBlock]) -> Result
         }
         if matches!(flavour, "callout" | "mermaid")
             || is_table_container(flavour)
-            || is_columns_container(flavour)
+            || is_layout_container(flavour)
         {
             let array = match block.get(&txn, "children") {
                 Some(Out::YArray(v)) => v,
@@ -7306,6 +7399,43 @@ mod tests {
             .iter()
             .any(|b| b.id == "tail" && b.block_type == "paragraph"));
     }
+    /// 桌面Schema生成的树、字段补丁和非法旧子树使用同一正式投影。
+    #[test]
+    fn text_box_projection_fields_and_invalid_children() {
+        let mut e = engine(include_bytes!(
+            "../../tests/fixtures/blockcraft-text-box.update"
+        ));
+        let before = e.blocks();
+        assert_eq!(before[0].block_type, "text-box");
+        assert_eq!(before[1].parent_id.as_deref(), Some("text-box"));
+        assert_eq!(before[1].text, "文本框正文");
+        assert_eq!(before.last().unwrap().block_type, UNSUPPORTED_BLOCK_TYPE);
+        let mut desired = before.clone();
+        desired[0].resource.as_mut().unwrap().property_edits =
+            Some(r#"{"width":{"value":360},"fill":{"value":"none"}}"#.into());
+        e.apply_block_snapshot(desired).unwrap();
+        let txn = e.doc.transact();
+        let blocks = txn.get_map(ROOT_NAME).unwrap();
+        let props = map(&map(&blocks, &txn, "text-box").unwrap(), &txn, "props").unwrap();
+        assert_eq!(out_u32(props.get(&txn, "width")), Some(360));
+        assert!(props.contains_key(&txn, "futureProp"));
+        drop(txn);
+        let mut invalid = e.blocks();
+        invalid[1].block_type = "image".into();
+        assert!(e.apply_block_snapshot(invalid).is_err());
+        assert_eq!(e.blocks()[1].text, "文本框正文");
+        let before = e.blocks();
+        for edit in [
+            r#"{"width":{"value":-1}}"#,
+            r#"{"url":{"value":"https://example.com"}}"#,
+        ] {
+            let mut invalid = before.clone();
+            invalid[0].resource.as_mut().unwrap().property_edits = Some(edit.into());
+            assert!(e.apply_block_snapshot(invalid).is_err());
+            assert_eq!(e.blocks(), before);
+        }
+    }
+
     /// 发布Schema分栏按前序投影，比例与扩展属性保持；非法树不被部分消费。
     #[test]
     fn columns_published_tree_and_field_patches() {
@@ -7409,6 +7539,33 @@ mod tests {
                 .unwrap()
                 .text,
             "第1列正文追加"
+        );
+    }
+    /// 远端文本框外观与本端正文修改交换增量后收敛。
+    #[test]
+    fn text_box_concurrent_text_and_fill_converge() {
+        let fixture = include_bytes!("../../tests/fixtures/blockcraft-text-box.update");
+        let mut left = engine(fixture);
+        let mut right = engine(fixture);
+        let mut a = left.blocks();
+        let text = a.iter_mut().find(|b| b.id == "box-body").unwrap();
+        text.text.push_str("追加");
+        text.segments.clear();
+        let ua = left.apply_block_snapshot(a).unwrap();
+        let mut b = right.blocks();
+        b[0].resource.as_mut().unwrap().property_edits =
+            Some(r#"{"fill":{"value":"none"}}"#.into());
+        let ub = right.apply_block_snapshot(b).unwrap();
+        left.apply_cses_update(ub.v1_update).unwrap();
+        right.apply_cses_update(ua.v1_update).unwrap();
+        assert_eq!(left.blocks(), right.blocks());
+        assert_eq!(
+            left.blocks()
+                .iter()
+                .find(|b| b.id == "box-body")
+                .unwrap()
+                .text,
+            "文本框正文追加"
         );
     }
 }

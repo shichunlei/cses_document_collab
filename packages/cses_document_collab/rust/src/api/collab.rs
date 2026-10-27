@@ -1418,7 +1418,14 @@ fn validate_blocks(blocks: &[CollabBlock], allow_placeholders: bool) -> Result<(
         }
         if matches!(
             block.block_type.as_str(),
-            "callout" | "table" | "table-row" | "table-cell" | "columns" | "column" | "mermaid"
+            "callout"
+                | "table"
+                | "table-row"
+                | "table-cell"
+                | "columns"
+                | "column"
+                | "text-box"
+                | "mermaid"
         ) {
             if !block.text.is_empty() || !block.segments.is_empty() || ancestors.len() >= 256 {
                 return Err("INVALID_CALLOUT: 高亮容器不能直接存储正文或超出嵌套限制".into());
@@ -1568,6 +1575,7 @@ fn is_supported_block_type(block_type: &str) -> bool {
             | "table-cell"
             | "columns"
             | "column"
+            | "text-box"
             | "date-card"
                 | "person-card"
             | "weather"
