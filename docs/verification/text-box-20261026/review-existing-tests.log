@@ -1,0 +1,17 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: (setUpAll)
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: formal JSON retains edited text, metadata and unknown properties
+00:00 +1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: persisted legacy snapshot text-box remains visible and exports its original geometry
+00:00 +2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: persisted legacy snapshot text-box remains visible and exports its original geometry
+00:00 +3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: persisted legacy snapshot text-box remains visible and exports its original geometry
+00:00 +4: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: field undo follows stable identity after remote reorder
+00:00 +5: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: insert and delete undo preserve children and list Enter stays in frame
+00:00 +6: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: readonly, descendant locks, invalid geometry and missing identities reject writes
+00:00 +7: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: native input connection accepts composed Chinese and emoji inside the frame
+00:00 +8: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: explicitly clearing a field does not revive original JSON props
+00:00 +9: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:02 +10: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:02 +11: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.8
+00:03 +12: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 700.0/1.0
+00:03 +13: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: (tearDownAll)
+00:03 +13: All tests passed!

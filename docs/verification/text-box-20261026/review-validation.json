@@ -1,0 +1,66 @@
+{
+  "date": "2026-10-27",
+  "commit": "e928e796ee101ad04da8515c4dd30256cdb842f9",
+  "findings": [
+    {
+      "id": "R1",
+      "priority": 1,
+      "issue": "框内未知行内对象导致框外快照提交失败"
+    },
+    {
+      "id": "R2",
+      "priority": 2,
+      "issue": "添加面板代码块绕过父容器限制"
+    },
+    {
+      "id": "R3",
+      "priority": 2,
+      "issue": "预览保留编辑滚动位置且无法回顶"
+    }
+  ],
+  "tests": {
+    "existingPassed": 13,
+    "reviewCases": 5,
+    "reviewPassed": 1,
+    "reviewFailed": 4,
+    "productIssues": 3
+  },
+  "version": {
+    "latest": "0.11.31",
+    "declaration": "0.11.30",
+    "yarn": "0.11.30",
+    "installed": "0.11.17",
+    "pnpm": "0.2.78",
+    "latestIntegrity": "sha512-nCQqSyKVOrIZHOteLCq3fq0n7Bbkb7qoKYbPeTCg1BQla3BRyxWFUDD/mpYFrWz4DNK9EIQXvnxwG45nx7jjWw=="
+  },
+  "reviewedSourceMatchesPreviousValidation": {
+    "packages/cses_document_collab/lib/src/editor/appflowy_block_editor_adapter.dart": true,
+    "packages/cses_document_collab/lib/src/editor/blockcraft_json_codec.dart": true,
+    "packages/cses_document_collab/lib/src/editor/collab_block_actions.dart": true,
+    "packages/cses_document_collab/lib/src/editor/collab_list_editing.dart": true,
+    "packages/cses_document_collab/lib/src/editor/core/editor_configuration.dart": true,
+    "packages/cses_document_collab/lib/src/editor/document_editor_view.dart": true,
+    "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart": true,
+    "packages/cses_document_collab/lib/src/model/collab_table.dart": true,
+    "packages/cses_document_collab/rust/src/api/blockcraft.rs": true,
+    "packages/cses_document_collab/rust/src/api/collab.rs": true,
+    "packages/cses_document_collab/test/blockcraft_json_codec_test.dart": true,
+    "packages/cses_document_collab/test/editor_toolbar_configuration_test.dart": true,
+    "packages/cses_document_collab/lib/src/editor/collab_text_box_block.dart": true,
+    "packages/cses_document_collab/lib/src/editor/collab_text_box_settings.dart": true,
+    "packages/cses_document_collab/lib/src/model/collab_text_box.dart": true,
+    "packages/cses_document_collab/rust/tests/fixtures/blockcraft-text-box.json": true,
+    "packages/cses_document_collab/rust/tests/fixtures/blockcraft-text-box.update": true,
+    "packages/cses_document_collab/test/collab_text_box_test.dart": true,
+    "packages/cses_document_collab/test/text_box_native_integration_test.dart": true,
+    "packages/cses_document_collab/tool/generate_text_box_fixture.mjs": true
+  },
+  "evidenceSha256": {
+    "packages/cses_document_collab/test/text_box_review_test.dart": "90ddf59b7dbfceec73fd750a15f71eadaa5801cd4d638d510381249309316681",
+    "docs/verification/text-box-20261026/review-unknown-inline.update": "e761af239cc06ace19ae50b20d81bb8a8cffe3e47c4ae7762622acfb0ea62179",
+    "docs/verification/text-box-20261026/review-unknown-inline-root.update": "5759f19f9c737b2eadfbf61fe7d8795aa05d6c29f70f649881beab3b83da7563",
+    "docs/verification/text-box-20261026/review-probes.log": "4fa0c58297018b06d1210672699e2c47eaaa29f16902e067e8fd1cdc4ffd4550",
+    "docs/verification/text-box-20261026/review-existing-tests.log": "d931ef0fc0cee65c4767aad49115b9e2f180def839b715c65a70237c9ee7b9ec"
+  },
+  "productChanges": false
+}

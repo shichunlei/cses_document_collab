@@ -105,7 +105,7 @@
 
 ### 表格、代码块与分隔块
 
-- [text-box-20261026](text-box-20261026/)（[文本框正式容器、手机基础编辑与原生历史](text-box-20261026/report.md)）
+- [text-box-20261026](text-box-20261026/)（[文本框正式容器、手机基础编辑与原生历史](text-box-20261026/report.md)；[提交审查与三项缺陷](text-box-20261026/review.md)；[三项修复与回归](text-box-20261026/fixes.md)）
 
 - [columns-20261026](columns-20261026/)（[columns/column正式投影、手机布局、列操作及原生历史](columns-20261026/report.md)；[审查与两项缺陷](columns-20261026/review.md)；[两项修复与验证](columns-20261026/fixes.md)）
 

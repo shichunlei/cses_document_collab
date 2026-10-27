@@ -1,0 +1,502 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: (setUpAll)
+00:00 +0: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: control: opaque inline at root does not block editing an unrelated root paragraph
+00:00 +1: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: opaque inline inside a text-box must not block editing an unrelated root paragraph
+00:00 +2: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: opaque paragraph rejects edits, moves, deletion and forgery without losing history or SQLite data
+00:00 +3: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: empty and nonempty text-box children reject code through both shared commands: 
+00:00 +4: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: empty and nonempty text-box children reject code through both shared commands: 正文
+00:00 +5: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: valid text-box child paragraph can be added and independently undone
+00:00 +6: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: valid text-box child heading can be added and independently undone
+00:00 +7: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: valid text-box child quote can be added and independently undone
+00:00 +8: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: valid text-box child todo_list can be added and independently undone
+00:00 +9: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: valid text-box child bulleted_list can be added and independently undone
+00:00 +10: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: valid text-box child numbered_list can be added and independently undone
+00:00 +11: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: code remains available outside a text-box
+00:00 +12: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: preview must start at the top after editing has scrolled inside a fixed frame
+00:00 +13: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: preview must start at the top after editing has scrolled inside a fixed frame
+00:00 +14: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: preview must start at the top after editing has scrolled inside a fixed frame
+00:00 +15: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: preview must start at the top after editing has scrolled inside a fixed frame
+00:00 +16: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: preview must start at the top after editing has scrolled inside a fixed frame
+00:00 +17: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: preview must start at the top after editing has scrolled inside a fixed frame
+00:00 +18: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: preview must start at the top after editing has scrolled inside a fixed frame
+00:01 +19: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: preview must start at the top after editing has scrolled inside a fixed frame
+00:01 +20: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_review_test.dart: preview must start at the top after editing has scrolled inside a fixed frame
+00:01 +21: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +22: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +23: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +24: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +25: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +26: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:01 +27: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +28: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +29: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +30: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +31: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +32: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +33: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +34: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +35: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +36: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +37: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +38: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:02 +39: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:02 +40: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:02 +41: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:02 +42: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:02 +43: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +44: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +45: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +46: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +47: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +48: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +49: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +50: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +51: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +52: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +53: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +54: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +55: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +56: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +57: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +58: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +59: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +60: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +61: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +62: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +63: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +64: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +65: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +66: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +67: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +68: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +69: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +70: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +71: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +72: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +73: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +74: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +75: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +76: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +77: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +78: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +79: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +80: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +81: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +82: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +83: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +84: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +85: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +86: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +87: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +88: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +89: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +90: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +91: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +92: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +93: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +94: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +95: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +96: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +97: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +98: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +99: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +100: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +101: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +102: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +103: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +104: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +105: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +106: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +107: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +108: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +109: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +110: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +111: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +112: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +113: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +114: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +115: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +116: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +117: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +118: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +119: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +120: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +121: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +122: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 320.0/1.0
+00:03 +123: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:03 +124: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:03 +125: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:03 +126: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:03 +127: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:03 +128: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:03 +129: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:03 +130: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:03 +131: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:03 +132: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:03 +133: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:03 +134: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:03 +135: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:03 +136: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:03 +137: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:03 +138: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:03 +139: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:03 +140: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:03 +141: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:03 +142: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:03 +143: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:03 +144: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:03 +145: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:03 +146: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:03 +147: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +148: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +149: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +150: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +151: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +152: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +153: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +154: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +155: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +156: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +157: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +158: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +159: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +160: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +161: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +162: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +163: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +164: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +165: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +166: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +167: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +168: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +169: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +170: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +171: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +172: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +173: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +174: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +175: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +176: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +177: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +178: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +179: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +180: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +181: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +182: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +183: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +184: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +185: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +186: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +187: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +188: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +189: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +190: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +191: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +192: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +193: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +194: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +195: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +196: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +197: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +198: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +199: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +200: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +201: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +202: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +203: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +204: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +205: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +206: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +207: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +208: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +209: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +210: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +211: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +212: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +213: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +214: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +215: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +216: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +217: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +218: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +219: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +220: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +221: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +222: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +223: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +224: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +225: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +226: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +227: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_columns_test.dart: word backspace uses the registered column guard before the standard command
+00:04 +228: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +229: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +230: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +231: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +232: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +233: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +234: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +235: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +236: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +237: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +238: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +239: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +240: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +241: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +242: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +243: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +244: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +245: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +246: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +247: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +248: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +249: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +250: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +251: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +252: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +253: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +254: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +255: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +256: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +257: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +258: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +259: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +260: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +261: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +262: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +263: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +264: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +265: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +266: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +267: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +268: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +269: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +270: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +271: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +272: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +273: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +274: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +275: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:04 +276: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +277: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +278: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +279: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +280: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +281: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +282: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +283: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +284: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +285: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +286: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +287: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +288: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +289: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +290: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +291: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +292: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +293: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +294: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +295: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +296: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +297: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +298: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +299: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +300: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +301: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +302: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +303: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +304: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +305: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +306: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +307: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +308: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +309: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +310: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +311: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +312: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +313: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +314: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +315: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +316: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 390.0/1.0
+00:05 +317: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: page undo and redo buttons use native history without entering preview
+00:05 +318: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: page undo and redo buttons use native history without entering preview
+00:05 +319: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: page undo and redo buttons use native history without entering preview
+00:05 +320: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: page undo and redo buttons use native history without entering preview
+00:05 +321: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: page undo and redo buttons use native history without entering preview
+00:05 +322: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: page undo and redo buttons use native history without entering preview
+00:05 +323: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: page undo and redo buttons use native history without entering preview
+00:05 +324: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: page undo and redo buttons use native history without entering preview
+00:05 +325: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: page undo and redo buttons use native history without entering preview
+00:05 +326: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: page undo and redo buttons use native history without entering preview
+00:05 +327: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: page undo and redo buttons use native history without entering preview
+00:05 +328: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: page undo and redo buttons use native history without entering preview
+00:05 +329: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:05 +330: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:05 +331: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:05 +331: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: transport exception after commit still projects accepted native history
+DocCollab: 历史更新已落盘但即时发送失败: Bad state: test transport failure
+#0      _Gateway.send (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart:404:52)
+#1      CsesDocCollaborationSession.sendLocalUpdate (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:199:18)
+#2      CollabController._performNativeHistory (package:cses_document_collab/src/controller/collab_controller.dart:364:19)
+<asynchronous suspension>
+#3      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#4      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart:123:7)
+<asynchronous suspension>
+#5      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#6      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#7      Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:05 +332: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:06 +333: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:06 +334: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:06 +335: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:06 +336: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:06 +337: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:06 +338: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:06 +339: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:06 +340: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:06 +340: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: lock and host revocation keep native history until editing is allowed
+DocCollab: 原生撤销/重做被拒绝: READ_ONLY_BLOCK: p1
+#0      SimpleDecoder.decode (package:flutter_rust_bridge/src/codec/base.dart:34:9)
+#1      SseCodec._decode (package:flutter_rust_bridge/src/codec/sse.dart:45:55)
+#2      SseCodec.decodeWireSyncType (package:flutter_rust_bridge/src/codec/sse.dart:40:7)
+#3      BaseHandler.executeSync (package:flutter_rust_bridge/src/main_components/handler.dart:35:25)
+#4      RustLibApiImpl.crateApiCollabHistoryUndoDocument (package:cses_document_collab/src/native/frb_generated.dart:924:20)
+#5      undoDocument (package:cses_document_collab/src/native/api/collab/history.dart:48:6)
+#6      CollabController._performNativeHistory (package:cses_document_collab/src/controller/collab_controller.dart:357:28)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart:205:7)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#11     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:06 +341: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:06 +342: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:06 +343: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:06 +343: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: real SQLite write failure leaves UI/history and permits retry
+DocCollab: 原生撤销/重做被拒绝: cannot persist Yjs update: history failure
+#0      SimpleDecoder.decode (package:flutter_rust_bridge/src/codec/base.dart:34:9)
+#1      SseCodec._decode (package:flutter_rust_bridge/src/codec/sse.dart:45:55)
+#2      SseCodec.decodeWireSyncType (package:flutter_rust_bridge/src/codec/sse.dart:40:7)
+#3      BaseHandler.executeSync (package:flutter_rust_bridge/src/main_components/handler.dart:35:25)
+#4      RustLibApiImpl.crateApiCollabHistoryUndoDocument (package:cses_document_collab/src/native/frb_generated.dart:924:20)
+#5      undoDocument (package:cses_document_collab/src/native/api/collab/history.dart:48:6)
+#6      CollabController._performNativeHistory (package:cses_document_collab/src/controller/collab_controller.dart:357:28)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart:252:13)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#11     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:06 +344: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:06 +345: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:06 +346: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:06 +346: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: real SQLite write failure leaves UI/history and permits retry
+DocCollab: 原生撤销/重做被拒绝: cannot persist Yjs update: history failure
+#0      SimpleDecoder.decode (package:flutter_rust_bridge/src/codec/base.dart:34:9)
+#1      SseCodec._decode (package:flutter_rust_bridge/src/codec/sse.dart:45:55)
+#2      SseCodec.decodeWireSyncType (package:flutter_rust_bridge/src/codec/sse.dart:40:7)
+#3      BaseHandler.executeSync (package:flutter_rust_bridge/src/main_components/handler.dart:35:25)
+#4      RustLibApiImpl.crateApiCollabHistoryRedoDocument (package:cses_document_collab/src/native/frb_generated.dart:798:20)
+#5      redoDocument (package:cses_document_collab/src/native/api/collab/history.dart:55:6)
+#6      CollabController._performNativeHistory (package:cses_document_collab/src/controller/collab_controller.dart:356:28)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart:250:13)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#11     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:06 +347: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:06 +347: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart: real SQLite COMMIT failure leaves UI/history and permits retry
+DocCollab: 原生撤销/重做被拒绝: cannot persist Yjs update: FOREIGN KEY constraint failed
+#0      SimpleDecoder.decode (package:flutter_rust_bridge/src/codec/base.dart:34:9)
+#1      SseCodec._decode (package:flutter_rust_bridge/src/codec/sse.dart:45:55)
+#2      SseCodec.decodeWireSyncType (package:flutter_rust_bridge/src/codec/sse.dart:40:7)
+#3      BaseHandler.executeSync (package:flutter_rust_bridge/src/main_components/handler.dart:35:25)
+#4      RustLibApiImpl.crateApiCollabHistoryUndoDocument (package:cses_document_collab/src/native/frb_generated.dart:924:20)
+#5      undoDocument (package:cses_document_collab/src/native/api/collab/history.dart:48:6)
+#6      CollabController._performNativeHistory (package:cses_document_collab/src/controller/collab_controller.dart:357:28)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart:252:13)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#11     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+DocCollab: 原生撤销/重做被拒绝: cannot persist Yjs update: FOREIGN KEY constraint failed
+#0      SimpleDecoder.decode (package:flutter_rust_bridge/src/codec/base.dart:34:9)
+#1      SseCodec._decode (package:flutter_rust_bridge/src/codec/sse.dart:45:55)
+#2      SseCodec.decodeWireSyncType (package:flutter_rust_bridge/src/codec/sse.dart:40:7)
+#3      BaseHandler.executeSync (package:flutter_rust_bridge/src/main_components/handler.dart:35:25)
+#4      RustLibApiImpl.crateApiCollabHistoryRedoDocument (package:cses_document_collab/src/native/frb_generated.dart:798:20)
+#5      redoDocument (package:cses_document_collab/src/native/api/collab/history.dart:55:6)
+#6      CollabController._performNativeHistory (package:cses_document_collab/src/controller/collab_controller.dart:356:28)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/native_history_editor_test.dart:250:13)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#11     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:06 +348: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:06 +349: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:06 +350: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:07 +351: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: local and collaborative contexts share menus and transactions
+00:07 +352: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 700.0/1.0
+00:07 +353: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_text_box_test.dart: settings cancel, apply, stale permission and preview at 700.0/1.0
+00:07 +354: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: progressive headings skip disabled levels without hiding enabled commands
+00:07 +355: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct columns inserts without more sheet and has undo
+00:07 +356: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: read-only and preview share rules local=true
+00:07 +357: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct callout inserts without more sheet and has undo
+00:07 +358: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct callout inserts without more sheet and has undo
+00:07 +359: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/configured_editor_view_test.dart: skin update preserves borrowed scroll, document and history
+00:07 +360: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct dateCard inserts without more sheet and has undo
+00:07 +361: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct weather inserts without more sheet and has undo
+00:07 +362: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct pageDivider inserts without more sheet and has undo
+00:07 +363: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct formula cancellation and creation share the original input sheet
+00:08 +364: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct link uses existing source validation and inserts a link block
+00:08 +365: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct meeting respects injected picker and revocation: false
+00:08 +366: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: direct meeting respects injected picker and revocation: true
+00:08 +367: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: weather creation freezes one insertion and ignores revoked query: false
+00:08 +368: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: weather creation freezes one insertion and ignores revoked query: true
+00:09 +369: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: person-card creation freezes one insertion and ignores revoked query: false
+00:09 +370: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: person-card creation freezes one insertion and ignores revoked query: true
+00:09 +371: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: unimplemented common action only reports its existing placeholder
+00:09 +372: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: heading menus and commands stop at H6 with limited config: false
+00:09 +373: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: heading menus and commands stop at H6 with limited config: true
+00:09 +374: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: empty toolbar keeps document editing and removes its row
+00:09 +375: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: switching editor instances clears a previously open menu
+00:10 +376: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard add button visibility: false
+00:10 +377: /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/editor_toolbar_configuration_test.dart: keyboard add button visibility: true
+00:10 +378: All tests passed!

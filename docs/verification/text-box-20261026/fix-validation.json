@@ -1,0 +1,76 @@
+{
+  "date": "2026-10-27",
+  "baseCommit": "e928e796ee101ad04da8515c4dd30256cdb842f9",
+  "resolved": [
+    "R1/P1",
+    "R2/P2",
+    "R3/P2"
+  ],
+  "sourceSha256": {
+    "packages/cses_document_collab/lib/src/editor/collab_text_box_block.dart": "31f2cef209058f3ff5d80bd03c1e7bef795f069d91e9da8dc083596be27edf79",
+    "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart": "f8dd949d993a0319334a732fc8c69930835da25c6efcf3a3baeea3af7bda5b40",
+    "packages/cses_document_collab/rust/src/api/blockcraft.rs": "0f209ca8cf3c106ba602779c89d997ccdd58167e6ae8585b49870433345e8421",
+    "packages/cses_document_collab/test/text_box_review_test.dart": "66da529eeca39551e2523a9d1f5088c9f9954e35185ccee74a1f972f1ac3414b"
+  },
+  "results": {
+    "target": {
+      "files": 3,
+      "passed": 28,
+      "failed": 0,
+      "log": "fix-target-tests-final.log"
+    },
+    "related": {
+      "files": 13,
+      "passed": 378,
+      "failed": 0,
+      "excludedKnownBaseline": [
+        "menu choices cannot reenable disabled block and format capabilities"
+      ],
+      "log": "fix-regression.log"
+    },
+    "rust": {
+      "passed": 208,
+      "failed": 0,
+      "log": "fix-cargo-test.log"
+    },
+    "host": {
+      "passed": 39,
+      "failed": 0,
+      "log": "fix-host-tests.log"
+    },
+    "dartFormat": "修改的3个手写Dart文件已格式化",
+    "packageAnalyze": "fix-analyze.log",
+    "hostAnalyze": "fix-host-analyze.log",
+    "cargoFmt": "cargo fmt --check通过",
+    "cargoCheck": "fix-cargo-check.log",
+    "nativeBuild": "fix-cargo-build.log",
+    "androidBuild": "fix-android-build.log",
+    "diffCheck": "源码、测试、文档通过；原始日志按字节保留，未格式化"
+  },
+  "evidenceSha256": {
+    "fix-target-tests-final.log": "37bf3d8cc2625a8734bee97266d206bb07337d29b11e17a996a17374da4d7010",
+    "fix-regression.log": "7aa50f0f8bf2250374d1c38d7a9de3ae5d69d999ac604652718a9cacad068278",
+    "fix-cargo-test.log": "48d18f1bcb09e21cc43e5fd9cd8c6c14d77970a1eaa67153e261c1b23029bf0d",
+    "fix-cargo-check.log": "0c061203253938698b41ecde6190b649f041fd3ef3669cfccc519d74841a890f",
+    "fix-cargo-build.log": "08f95fce0d12d41cc348294576219bbd5d10e03c9ea7864dcb685db65b883290",
+    "fix-analyze.log": "c23a540ff59e54ffe65b2bb12198a136cfd02b2ddf89c5929010c1d5ad7eede8",
+    "fix-host-tests.log": "5e4e1483fd75f374af334d5387ac68df168e2f577d65022b5699070ff58cf69b",
+    "fix-host-analyze.log": "e361d01f6fb7c7fc51b5e16ab09c562ad15cafe114b50bbff3c795936e3b87b4",
+    "fix-android-build.log": "61ddf6cd3dd055b87b18520b6beb8164cb9c7286cb340796c2ef3667a2bace67"
+  },
+  "notVerified": [
+    "物理设备",
+    "真实在线桌面/手机双端",
+    "iOS完整应用及真机",
+    "重连与持久化ACK"
+  ],
+  "preservedPreexistingChanges": [
+    "packages/appflowy_editor/pubspec.yaml",
+    "docs/日成果-2026-10-23-完整文档结构.json"
+  ],
+  "androidArtifact": {
+    "path": "build/app/outputs/flutter-apk/app-debug.apk",
+    "bytes": 228268057,
+    "sha256": "1a7d4406c8046a8944cfab51576f56822ef255d3453f11c3559cc4912b5d8282"
+  }
+}
