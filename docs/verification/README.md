@@ -27,6 +27,8 @@
 
 ### 编辑器架构、配置与离线能力
 
+- [block-adaptation-audit-20261027](block-adaptation-audit-20261027/)（[42块正式协同/JSON路径、功能完整性与版本核查](block-adaptation-audit-20261027/report.md)；[逐块矩阵](block-adaptation-audit-20261027/block-matrix.json)；[旧有序列表heading导出修复](block-adaptation-audit-20261027/ordered-heading-export.md)）
+
 - [image-composer-20261024](image-composer-20261024/)（[image_composer 业务分层与最小迁移边界分析](image-composer-20261024/layering-analysis.md)；[宿主迁移与验证](image-composer-20261024/migration.md)；[迁移审查](image-composer-20261024/review.md)）
 
 - [blockcraft-json-exchange-20261023](blockcraft-json-exchange-20261023/)（[今日导向与桌面JSON双向转换、原生渲染和示例验证](blockcraft-json-exchange-20261023/report.md)；[189ffad审查与6项缺陷](blockcraft-json-exchange-20261023/review.md)；[六项修复与双向验证](blockcraft-json-exchange-20261023/fixes.md)；[再次审查与2项遗漏](blockcraft-json-exchange-20261023/review-2.md)；[两项P1修复与文件往返验证](blockcraft-json-exchange-20261023/p1-fixes.md)）

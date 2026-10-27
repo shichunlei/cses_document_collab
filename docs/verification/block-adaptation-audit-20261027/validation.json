@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-27",
+  "scope": "只核查/更新文档与证据，无产品改动",
+  "results": {
+    "flutter_target": {
+      "passed": 120,
+      "failed": 0,
+      "skipped": 0
+    },
+    "native_target": {
+      "passed": 11,
+      "failed": 0,
+      "skipped": 0
+    },
+    "probe": {
+      "passed": 1,
+      "failed": 1,
+      "cause": "旧列表heading=9导出仍9，H6契约失败，已知P2未修复"
+    },
+    "analysis": "No issues found (5 targets)",
+    "native_build": "success; 58 pre-existing yrs warnings",
+    "git_diff_check": "passed"
+  },
+  "source_sha256": {
+    "docs/block-adaptation.md": "85a0b5e67e4e5b66852120840ba1d14f33c31c5d6f96187880479390bea9d33d",
+    "docs/verification/README.md": "9845fd49fb4ac0c280691bc3800e4c178a1b5a03baf3c51f219b878a9231bf7f",
+    "packages/cses_document_collab/lib/src/editor/core/editor_configuration.dart": "f6b77ca90ecd116a5a91736617c1962235fb30c5e2d134cc0882abd5fa350dd3",
+    "packages/cses_document_collab/lib/src/editor/blockcraft_json_codec.dart": "d89e74a515393a8fe4b8bd502b8ceba68f7cfb422904fb0365fb7bac4fa5e084",
+    "packages/cses_document_collab/lib/src/editor/appflowy_block_editor_adapter.dart": "311ccbf750fcefdf75bc451ea720dd77786878423525f7e01aaf0e74973f1a6d",
+    "packages/cses_document_collab/lib/src/editor/blockcraft_snapshot_view.dart": "57904c7cbe8176a163fb74179c32468d22950a75fa00ada093c87d40cc022054",
+    "packages/cses_document_collab/rust/src/api/blockcraft.rs": "874125f7adb214efc002df019fd44b1a922c81077b1438e92be50096880a3836",
+    "packages/cses_document_collab/rust/src/api/collab.rs": "7fcb4c3f9870f04b5880f03e2adfa141ede91014fe0068d03da9622cd5ffbbf0"
+  },
+  "logs_sha256": {
+    "target-analysis.txt": "5f8893ae0556b6f9eaf0810532a07662715c1747df637c8655063b04046b248c",
+    "audit-probe.dart.txt": "f478deee75a30648f7fadd9b0a92a4b2f2efd76f9a158b22ea0e27dd84593f2f",
+    "flutter-target-tests.txt": "962a28e55469c812b6cb773ec2ad2e6f2ec8294e764e8d41ea2f9992d5543023",
+    "audit-probe-tests.txt": "3cd2928a17816996b9b7da4830b9d5ec31ef907cde238d888a405a345dd98646",
+    "native-target-tests.txt": "eda1031481b169cd541a1d9d4da35606d2107dc35a215eb44eb1865d900cae69",
+    "native-build.txt": "c14f4d6012d40cc3237062a8d72e422d324c79e33ff053dd3855633aa5f68ef8",
+    "audit-probe-initial-compile.txt": "d139d003d3139ea3b302a8b119516915b812f846c76db3b8f5d6e1f595d10201"
+  },
+  "not_verified": [
+    "full package regression",
+    "Android/iOS app builds",
+    "physical devices and manual IME",
+    "real desktop-mobile online sync",
+    "network reconnect/concurrency/server durable ACK"
+  ]
+}

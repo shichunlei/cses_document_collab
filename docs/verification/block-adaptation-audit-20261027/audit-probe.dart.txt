@@ -1,0 +1,92 @@
+import 'dart:io';
+
+import 'package:cses_document_collab/cses_document_collab.dart';
+import 'package:cses_document_collab/src/native/api/collab.dart' as native;
+import 'package:cses_document_collab/src/native/frb_generated.dart';
+import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+/// 审计正式投影缺口，并用目标契约断言复验尚未关闭的列表导出问题。
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  test('formal projection keeps JSON-only object families opaque', () async {
+    final library = File('rust/target/debug/libcses_collab_core.dylib');
+    expect(library.existsSync(), isTrue);
+    await RustLib.init(
+      externalLibrary: ExternalLibrary.open(library.absolute.path),
+    );
+    final directory = await Directory.systemTemp.createTemp('block-audit-');
+    try {
+      native.openCsesDocument(
+        documentId: 'desktop-1',
+        cacheDocumentId: 'audit',
+        databasePath: '${directory.path}/audit.sqlite',
+      );
+      native.applyDocumentUpdate(
+        bytes: await File(
+          '../../docs/verification/block-adaptation-audit-20261027/json-only.update',
+        ).readAsBytes(),
+      );
+      final blocks = native.currentBlocks();
+      for (final id in [
+        'desktop-41',
+        'desktop-45',
+        'desktop-46',
+        'desktop-49',
+        'desktop-52',
+        'desktop-58',
+        'desktop-61',
+      ]) {
+        expect(
+          blocks.singleWhere((block) => block.id == id).blockType,
+          'unsupported',
+          reason: id,
+        );
+      }
+      expect(
+        blocks.any((block) => block.id == 'desktop-42'),
+        isFalse,
+        reason: 'shape-text hidden with unsupported shape',
+      );
+      expect(
+        blocks.singleWhere((block) => block.id == 'desktop-2').blockType,
+        'paragraph',
+      );
+    } finally {
+      native.closeDocument();
+      RustLib.dispose();
+      await directory.delete(recursive: true);
+    }
+  });
+
+  test('legacy ordered heading JSON export obeys H1-H6 contract', () {
+    final document = BlockCraftJsonCodec.decode({
+      'id': 'root',
+      'flavour': 'root',
+      'nodeType': 'root',
+      'props': <String, dynamic>{},
+      'meta': <String, dynamic>{},
+      'children': [
+        {
+          'id': 'legacy-list',
+          'flavour': 'ordered',
+          'nodeType': 'editable',
+          'props': {'heading': 9},
+          'meta': <String, dynamic>{},
+          'children': [
+            {'insert': '旧列表'},
+          ],
+        },
+      ],
+    });
+    try {
+      final child =
+          (BlockCraftJsonCodec.encode(document)['children'] as List).single
+              as Map;
+      expect((child['props'] as Map)['heading'], 6);
+    } finally {
+      document.dispose();
+    }
+  });
+}

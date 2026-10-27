@@ -366,6 +366,8 @@ abstract final class BlockCraftJsonCodec {
   /// 将借用的[node]及后代重新编码；内容读取实时编辑树，不回放旧快照或编辑历史。
   /// 文字叶块带真实子块时抛FormatException，不输出遗漏后代的快照；宿主可在事务预检调用。
   /// 导出的标题级别限制为1～6，不改变借用节点及原始属性归档。
+  /// 有序列表读取当前heading字段，1～6保留对应标题级别，旧7～9等不支持值移除标题样式；
+  /// 仍保留ordered类型、编号、富文本及其他属性，不将旧级别收敛到H6。
   /// 旧snapshot分栏从bc.p读取布局；正式分栏使用当前字段投影，显式清除不恢复旧值。
   static Map<String, dynamic> encodeBlock(Node node) {
     final kind = flavour(node);
@@ -403,7 +405,7 @@ abstract final class BlockCraftJsonCodec {
         }
       }
       for (final key in collabParagraphKeys) {
-        if (key == 'heading') continue;
+        if (key == 'heading' && kind != 'ordered') continue;
         final value = node.attributes[paragraphPropertyAttribute(key)];
         if (value is String) {
           final wrapper = jsonDecode(value) as Map;
@@ -412,6 +414,14 @@ abstract final class BlockCraftJsonCodec {
           } else {
             props.remove(key);
           }
+        }
+      }
+      if (kind == 'ordered') {
+        final heading = props['heading'];
+        if (heading is num && heading >= 1 && heading <= 6 && heading == heading.toInt()) {
+          props['heading'] = heading.toInt();
+        } else {
+          props.remove('heading');
         }
       }
       if (node.attributes['cses_collab_indent'] is num &&

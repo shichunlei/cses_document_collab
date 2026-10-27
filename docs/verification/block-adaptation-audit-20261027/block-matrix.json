@@ -1,0 +1,314 @@
+{
+  "date": "2026-10-27",
+  "counts": {
+    "已适配": 13,
+    "部分支持": 28,
+    "结构支持": 1,
+    "未适配_按JSON覆盖口径": 0,
+    "正式路径未实现": 8,
+    "EditorBlock默认枚举项": 30
+  },
+  "blocks": [
+    {
+      "name": "段落、H1~H6 标题",
+      "flavour": "paragraph",
+      "documented_status": "已适配",
+      "formal_path": "implemented_with_limits",
+      "remaining": "文本/列表混选及跨父容器缩进、完整字体/段间距设置；iOS、在线桌面联调待验收"
+    },
+    {
+      "name": "无序列表",
+      "flavour": "bullet",
+      "documented_status": "已适配",
+      "formal_path": "implemented_with_limits",
+      "remaining": "0.11.20 的 8 级通用 Tab/前兄弟约束待同步"
+    },
+    {
+      "name": "有序列表",
+      "flavour": "ordered",
+      "documented_status": "已适配",
+      "formal_path": "implemented_with_limits",
+      "remaining": "0.11.20 的 8 级通用 Tab/前兄弟约束待同步；旧列表heading导出P2已按用户规则修复：1～6保留H1～H6，7～9移除标题样式并保留普通ordered正文/编号；实时更新/清除优先，见[修复验证](verification/block-adaptation-audit-20261027/ordered-heading-export.md)"
+    },
+    {
+      "name": "待办事项",
+      "flavour": "todo",
+      "documented_status": "已适配",
+      "formal_path": "implemented_with_limits",
+      "remaining": "0.11.20 的 8 级通用 Tab/前兄弟约束待同步"
+    },
+    {
+      "name": "引用块",
+      "flavour": "blockquote",
+      "documented_status": "已适配",
+      "formal_path": "implemented_with_limits",
+      "remaining": "文本/列表混选及跨父容器缩进、完整段间距设置待同步"
+    },
+    {
+      "name": "代码块",
+      "flavour": "code",
+      "documented_status": "已适配",
+      "formal_path": "implemented_with_limits",
+      "remaining": "协同新入口及代码回车真机、在线桌面联调待验收；Shift仍沿用既有输入处理"
+    },
+    {
+      "name": "高亮块",
+      "flavour": "callout",
+      "documented_status": "已适配",
+      "formal_path": "implemented_with_limits",
+      "remaining": "表情最近记录/肤色仅进程内保留，双人混合肤色编辑未提供；未投影属性/审计数据的删除恢复；协同真机、桌面双向联调待验收；含占位子块禁删"
+    },
+    {
+      "name": "图片",
+      "flavour": "image",
+      "documented_status": "已适配",
+      "formal_path": "implemented_with_limits",
+      "remaining": "0.11.29用户插图后gap光标及Enter分流待同步/验收；完整桌面图片工具栏；默认图片预览页面由宿主提供，Demo仅回调提示；新点击交互真机待验收"
+    },
+    {
+      "name": "视频",
+      "flavour": "video",
+      "documented_status": "部分支持",
+      "formal_path": "implemented_with_limits",
+      "remaining": "blob、嵌入代码、网页嵌入、完整桌面视频工具栏"
+    },
+    {
+      "name": "图片等内容的题注",
+      "flavour": "caption",
+      "documented_status": "部分支持",
+      "formal_path": "indirect_caption",
+      "remaining": "独立插入"
+    },
+    {
+      "name": "文档根节点",
+      "flavour": "root",
+      "documented_status": "结构支持",
+      "formal_path": "structural_root",
+      "remaining": "—"
+    },
+    {
+      "name": "分割线",
+      "flavour": "divider",
+      "documented_status": "已适配",
+      "formal_path": "implemented_with_limits",
+      "remaining": "旧版文字装订编辑；本轮Android/iOS真机及在线协同待验收"
+    },
+    {
+      "name": "分页符",
+      "flavour": "page-divider",
+      "documented_status": "部分支持",
+      "formal_path": "implemented_with_limits",
+      "remaining": "手机纸张分页布局、打印/PDF导出及完整剪贴板尚未适配；删除撤销仅恢复投影数据，未投影props/meta恢复待同步；Android/iOS真机、在线桌面双向及服务端持久化ACK待验收"
+    },
+    {
+      "name": "公式",
+      "flavour": "formula",
+      "documented_status": "已适配",
+      "formal_path": "implemented_with_limits",
+      "remaining": "完整 KaTeX 兼容；新面板在线桌面及iOS验收、重连、持久化 ACK 待完成；段落链接需正式宿主配置和稳定ID"
+    },
+    {
+      "name": "Mermaid 代码绘图",
+      "flavour": "mermaid",
+      "documented_status": "部分支持",
+      "formal_path": "implemented_with_limits",
+      "remaining": "可视化拖拽/标签编辑、全屏缩放、SVG导出、Markdown导入；删除撤销仅恢复投影内容，未投影属性/审计数据恢复待适配；iOS、真实断网重连及服务端持久化ACK待验收"
+    },
+    {
+      "name": "Mermaid 源码输入块",
+      "flavour": "mermaid-textarea",
+      "documented_status": "部分支持",
+      "formal_path": "implemented_with_limits",
+      "remaining": "不单独插入、不在正文内直接输入；远端源码或绘图存在时的结构变化清空编辑器路径历史/选区，避免旧偏移回写；完整源码剪贴板及双端并发/断网场景待补"
+    },
+    {
+      "name": "表格",
+      "flavour": "table",
+      "documented_status": "已适配",
+      "formal_path": "implemented_with_limits",
+      "remaining": "多格拖选、行列剪切复制粘贴、Markdown 导入、整表下方插入；行高只读"
+    },
+    {
+      "name": "表格行",
+      "flavour": "table-row",
+      "documented_status": "已适配",
+      "formal_path": "implemented_with_limits",
+      "remaining": "同表格限制"
+    },
+    {
+      "name": "表格单元格",
+      "flavour": "table-cell",
+      "documented_status": "已适配",
+      "formal_path": "implemented_with_limits",
+      "remaining": "iOS、桌面双向联调、双端结构冲突及持久化 ACK 待验收；含未知占位禁改结构，异常网格整表占位"
+    },
+    {
+      "name": "多栏布局",
+      "flavour": "columns",
+      "documented_status": "部分支持",
+      "formal_path": "implemented_with_limits",
+      "remaining": "按词退格边界及旧snapshot布局导出R1/R2已修复，见[验证](verification/columns-20261026/fixes.md)；触摸拖拽、跨列范围/剪贴板/HTML/Markdown专项及真机/iOS/在线双端待办保留"
+    },
+    {
+      "name": "单列容器",
+      "flavour": "column",
+      "documented_status": "部分支持",
+      "formal_path": "implemented_with_limits",
+      "remaining": "段首按词退格及旧snapshot列索引导出R1/R2已修复，见[验证](verification/columns-20261026/fixes.md)；整列拖动、跨列范围/剪贴板、复杂后代与设备/在线双端待办保留"
+    },
+    {
+      "name": "附件",
+      "flavour": "attachment",
+      "documented_status": "部分支持",
+      "formal_path": "implemented_with_limits",
+      "remaining": "应用内下载管理"
+    },
+    {
+      "name": "音频",
+      "flavour": "audio",
+      "documented_status": "部分支持",
+      "formal_path": "implemented_with_limits",
+      "remaining": "blob、嵌入代码"
+    },
+    {
+      "name": "网页卡片",
+      "flavour": "bookmark",
+      "documented_status": "部分支持",
+      "formal_path": "implemented_with_limits",
+      "remaining": "桌面预览服务；站点限制时仅显示链接"
+    },
+    {
+      "name": "网页嵌入",
+      "flavour": "embed",
+      "documented_status": "部分支持",
+      "formal_path": "implemented_with_limits",
+      "remaining": "原始 HTML、宿主 JS 桥；登录及禁止嵌入限制"
+    },
+    {
+      "name": "Figma 嵌入",
+      "flavour": "figma-embed",
+      "documented_status": "部分支持",
+      "formal_path": "implemented_with_limits",
+      "remaining": "登录/分享权限限制；非 Figma 旧块仅占位"
+    },
+    {
+      "name": "掘金嵌入",
+      "flavour": "juejin-embed",
+      "documented_status": "部分支持",
+      "formal_path": "implemented_with_limits",
+      "remaining": "站点嵌入/元数据限制；非掘金旧块仅占位"
+    },
+    {
+      "name": "形状",
+      "flavour": "shape",
+      "documented_status": "部分支持",
+      "formal_path": "not_implemented",
+      "remaining": "正式协同路径、几何手柄、动画/渐变/阴影及完整对象工具；真机/iOS与在线双端未验收"
+    },
+    {
+      "name": "形状内部文字",
+      "flavour": "shape-text",
+      "documented_status": "部分支持",
+      "formal_path": "not_implemented",
+      "remaining": "正式协同路径、桌面形状文字布局及工具；真机/iOS与在线双端未验收"
+    },
+    {
+      "name": "艺术字",
+      "flavour": "word-art",
+      "documented_status": "部分支持",
+      "formal_path": "not_implemented",
+      "remaining": "正式协同路径、路径变形及完整艺术字工具；真机/iOS与在线双端未验收"
+    },
+    {
+      "name": "文本框",
+      "flavour": "text-box",
+      "documented_status": "部分支持",
+      "formal_path": "implemented_with_limits",
+      "remaining": "高级装饰/几何/文字效果、浮动/竖排/触摸对象工具、自适应测量、完整跨框选区/剪贴板及HTML/Markdown；设备/iOS与在线双端待验收"
+    },
+    {
+      "name": "对象组合",
+      "flavour": "object-group",
+      "documented_status": "部分支持",
+      "formal_path": "not_implemented",
+      "remaining": "正式协同路径、缩放/组内编辑和完整变换工具；真机/iOS与在线双端未验收"
+    },
+    {
+      "name": "对象定位布局容器",
+      "flavour": "placement-layout",
+      "documented_status": "部分支持",
+      "formal_path": "not_implemented",
+      "remaining": "正式协同路径及完整画布/拖拽工具；真机/iOS与在线双端未验收"
+    },
+    {
+      "name": "内容区域",
+      "flavour": "render-unit",
+      "documented_status": "部分支持",
+      "formal_path": "not_implemented",
+      "remaining": "正式协同路径、独立组合内容域及全部容器规则；真机/iOS与在线双端未验收"
+    },
+    {
+      "name": "任务卡片",
+      "flavour": "task",
+      "documented_status": "部分支持",
+      "formal_path": "implemented_with_limits",
+      "remaining": "实时推送、状态编辑、任务选择、转回行内、未知属性/审计数据恢复；新交互真机、桌面双向联调及 iOS 待验收"
+    },
+    {
+      "name": "任务列表",
+      "flavour": "task-list",
+      "documented_status": "部分支持",
+      "formal_path": "not_implemented",
+      "remaining": "真实查询/分页/多视图、业务写操作和正式协同路径；真机/iOS与在线双端未验收"
+    },
+    {
+      "name": "会议卡片",
+      "flavour": "meeting",
+      "documented_status": "部分支持",
+      "formal_path": "implemented_with_limits",
+      "remaining": "搜索选择、实时推送、实际路由、纪要/回放、未知属性/审计数据恢复；真机、桌面双向联调待验收"
+    },
+    {
+      "name": "会议 KR 列表",
+      "flavour": "kr-list",
+      "documented_status": "部分支持",
+      "formal_path": "implemented_with_limits",
+      "remaining": "实时刷新、会议标题、长列表虚拟化、未知属性删除后恢复、专用富文本剪贴板/导出；真实接口/真机/iOS/在线桌面双向及持久化ACK待验收"
+    },
+    {
+      "name": "天气卡片",
+      "flavour": "weather",
+      "documented_status": "部分支持",
+      "formal_path": "implemented_with_limits",
+      "remaining": "缺失frozen的旧固定日块自动查询只本地展示，须手动刷新才落盘，未实现桌面无Undo初始化事务；自由布局/组合/缩放/动画、模板draft:*物化和完整剪贴板；Lucide替代桌面多色图形、外观近似且固定框文字不随系统字号放大；第三方实网、真机/iOS与真实在线双端未验收"
+    },
+    {
+      "name": "日期卡片",
+      "flavour": "date-card",
+      "documented_status": "部分支持",
+      "formal_path": "implemented_with_limits",
+      "remaining": "复杂桌面容器内正式协同仍受所属容器支持范围限制；浮动定位/缩放/动画、桌面字体文件及精确CSS装饰未完整复刻；完整自定义字号/颜色输入、旧固定框迁移、真机/iOS与真实在线双端待验收"
+    },
+    {
+      "name": "人员卡片",
+      "flavour": "person-card",
+      "documented_status": "部分支持",
+      "formal_path": "implemented_with_limits",
+      "remaining": "自由定位/组合/八向缩放、宽高/倍率面板、动画、模板draft:*物化与原文档创建人补齐、完整剪贴板；宿主会话无拼音时不推测，默认头像为Lucide；物理设备/iOS和真实在线双端未验收"
+    },
+    {
+      "name": "思维导图",
+      "flavour": "mind-map",
+      "documented_status": "部分支持",
+      "formal_path": "not_implemented",
+      "remaining": "v2源JSON通常不含图正文；独立Vectra文档读取/图更新和完整图形编辑、正式协同路径未实现"
+    }
+  ],
+  "ordered_heading_export": {
+    "heading_1_to_6": "保留H1～H6",
+    "heading_7_to_9": "移除heading并保留普通ordered正文/编号",
+    "source_mutation": false,
+    "status": "P2已按用户新规则修复",
+    "evidence": "ordered-heading-export.md"
+  }
+}

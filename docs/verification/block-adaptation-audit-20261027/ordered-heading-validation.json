@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-27",
+  "user_rule": {
+    "ordered_heading_1_to_6": "H1～H6",
+    "ordered_heading_7_to_9": "普通列表正文，保留ordered/编号/格式",
+    "source_tree": "unchanged"
+  },
+  "versions": {
+    "registry": "http://npm.runtongqiuben.com/",
+    "query": "npm view @ccc/blockcraft dist-tags.latest dist --json; fresh /private/tmp/blockcraft-heading-export-20261027-npm-cache",
+    "latest": "0.11.31",
+    "declared": "0.11.30",
+    "yarn": "0.11.30",
+    "installed": "0.11.21",
+    "historical_pnpm": "0.2.78",
+    "latest_dist_sha1": "290e54057395c172887cd5c34973e951ac60c76d",
+    "matches_previously_verified_tarball": true,
+    "dependency_upgrade": false
+  },
+  "checks": {
+    "before": {
+      "passed": 6,
+      "failed": 7
+    },
+    "package_after": {
+      "passed": 76,
+      "failed": 0,
+      "skipped": 0
+    },
+    "host_after": {
+      "passed": 25,
+      "failed": 0,
+      "skipped": 0
+    },
+    "analysis_package": "No issues found (3 items)",
+    "analysis_host": "No issues found (4 items)",
+    "format": "dart format --line-length 120 (2 files)",
+    "diff": "git diff --check passed"
+  },
+  "source_sha256": {
+    "packages/cses_document_collab/lib/src/editor/blockcraft_json_codec.dart": "0b7e126acd4d5430521de8ff6ddae32066f7316ddf8bab04bf59163ea769c727",
+    "packages/cses_document_collab/test/ordered_heading_json_export_test.dart": "158ce4d93fe2fc4d8573b9215a517e6372cebcbd651903563a3213a5ba629229",
+    "docs/block-adaptation.md": "c5981d29b422a9ec79670c06abfe3de6c2d37c1299b12e765beb564f3af1a057",
+    "docs/verification/README.md": "d6d3c99c9c2327665c7106d2db97a66c624a6f5be00ef9f4f83c2dbfd0e82728",
+    "docs/verification/block-adaptation-audit-20261027/ordered-heading-export.md": "882241d729cb0022a0cfc4f29b6d301d3048114a1f89f1c14aaf6a627bc04568"
+  },
+  "evidence_sha256": {
+    "ordered-heading-host-analysis.txt": "fbcaf12969f7ad321fdadbb6ee06f83b36313d772ba5306838432f45246d9919",
+    "ordered-heading-before.txt": "19d3a0e695d2407a80c3dfdeb86087c21968536072668552a35ba64bc7e3386f",
+    "ordered-heading-after.txt": "7fcc8396735950673d206658cd10de45dd47b626b7e0573dfb53c22cc09ec701",
+    "ordered-heading-host-tests.txt": "8ae261fed3e102dec5181438363eaaed7020a478f07c6860c44bb4929bb2e8cb",
+    "ordered-heading-analysis.txt": "aa260ccf77d24e82286256a9dd6982805a860abba8759580825a5fe86b22a5f7"
+  },
+  "scope": "Dart JSON导出兼容规则；无Rust/FRB/平台/依赖改动；不新增真机或真实在线验收"
+}

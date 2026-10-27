@@ -1,0 +1,126 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/ordered_heading_json_export_test.dart
+00:00 +0: ordered heading 1 exports the supported title or body style without changing source
+00:00 +1: ordered heading 2 exports the supported title or body style without changing source
+00:00 +2: ordered heading 3 exports the supported title or body style without changing source
+00:00 +3: ordered heading 4 exports the supported title or body style without changing source
+00:00 +4: ordered heading 5 exports the supported title or body style without changing source
+00:00 +5: ordered heading 6 exports the supported title or body style without changing source
+00:00 +6: ordered heading 7 exports the supported title or body style without changing source
+00:00 +6 -1: ordered heading 7 exports the supported title or body style without changing source [E]
+  Expected: {
+              'order': 4,
+              'start': 5,
+              'continuePrevious': false,
+              'ms': 'decimal',
+              'depth': 2,
+              'custom': 'keep'
+            }
+    Actual: {
+              'heading': 7,
+              'order': 4,
+              'ms': 'decimal',
+              'depth': 2,
+              'custom': 'keep',
+              'start': 5,
+              'continuePrevious': false
+            }
+     Which: has different length and has extra map key 'heading'
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/ordered_heading_json_export_test.dart 50:7     main.<fn>
+  
+00:00 +6 -1: ordered heading 8 exports the supported title or body style without changing source
+00:00 +6 -2: ordered heading 8 exports the supported title or body style without changing source [E]
+  Expected: {
+              'order': 4,
+              'start': 5,
+              'continuePrevious': false,
+              'ms': 'decimal',
+              'depth': 2,
+              'custom': 'keep'
+            }
+    Actual: {
+              'heading': 8,
+              'order': 4,
+              'ms': 'decimal',
+              'depth': 2,
+              'custom': 'keep',
+              'start': 5,
+              'continuePrevious': false
+            }
+     Which: has different length and has extra map key 'heading'
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/ordered_heading_json_export_test.dart 50:7     main.<fn>
+  
+00:00 +6 -2: ordered heading 9 exports the supported title or body style without changing source
+00:00 +6 -3: ordered heading 9 exports the supported title or body style without changing source [E]
+  Expected: {
+              'order': 4,
+              'start': 5,
+              'continuePrevious': false,
+              'ms': 'decimal',
+              'depth': 2,
+              'custom': 'keep'
+            }
+    Actual: {
+              'heading': 9,
+              'order': 4,
+              'ms': 'decimal',
+              'depth': 2,
+              'custom': 'keep',
+              'start': 5,
+              'continuePrevious': false
+            }
+     Which: has different length and has extra map key 'heading'
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/ordered_heading_json_export_test.dart 50:7     main.<fn>
+  
+00:00 +6 -3: ordered heading export reads the current field 2 instead of the archived legacy value
+00:00 +6 -4: ordered heading export reads the current field 2 instead of the archived legacy value [E]
+  Expected: <2>
+    Actual: <9>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/ordered_heading_json_export_test.dart 72:9     main.<fn>
+  
+00:00 +6 -4: ordered heading export reads the current field 7 instead of the archived legacy value
+00:00 +6 -5: ordered heading export reads the current field 7 instead of the archived legacy value [E]
+  Expected: false
+    Actual: <true>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/ordered_heading_json_export_test.dart 74:9     main.<fn>
+  
+00:00 +6 -5: ordered heading export reads the current field null instead of the archived legacy value
+00:00 +6 -6: ordered heading export reads the current field null instead of the archived legacy value [E]
+  Expected: false
+    Actual: <true>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/ordered_heading_json_export_test.dart 74:9     main.<fn>
+  
+00:00 +6 -6: document JSON encode and decode preserve ordered bodies alongside H1-H6
+00:00 +6 -7: document JSON encode and decode preserve ordered bodies alongside H1-H6 [E]
+  Expected: null
+    Actual: <7>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/ordered_heading_json_export_test.dart 98:9     main.<fn>
+  
+00:00 +6 -7: Some tests failed.
+
+Failing tests:
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/ordered_heading_json_export_test.dart: document JSON encode and decode preserve ordered bodies alongside H1-H6
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/ordered_heading_json_export_test.dart: ordered heading 7 exports the supported title or body style without changing source
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/ordered_heading_json_export_test.dart: ordered heading 8 exports the supported title or body style without changing source
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/ordered_heading_json_export_test.dart: ordered heading 9 exports the supported title or body style without changing source
+  ... and 3 more

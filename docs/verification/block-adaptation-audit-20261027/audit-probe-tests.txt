@@ -1,0 +1,15 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/block_adaptation_audit_probe_test.dart
+00:00 +0: formal projection keeps JSON-only object families opaque
+00:00 +1: legacy ordered heading JSON export obeys H1-H6 contract
+00:00 +1 -1: legacy ordered heading JSON export obeys H1-H6 contract [E]
+  Expected: <6>
+    Actual: <9>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/block_adaptation_audit_probe_test.dart 87:7    main.<fn>
+  
+00:00 +1 -1: Some tests failed.
+
+Failing tests:
+  /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/block_adaptation_audit_probe_test.dart: legacy ordered heading JSON export obeys H1-H6 contract

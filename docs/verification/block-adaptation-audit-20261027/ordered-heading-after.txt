@@ -1,0 +1,78 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/ordered_heading_json_export_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/ordered_heading_json_export_test.dart: ordered heading 1 exports the supported title or body style without changing source
+00:00 +1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/ordered_heading_json_export_test.dart: ordered heading 2 exports the supported title or body style without changing source
+00:00 +2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/ordered_heading_json_export_test.dart: ordered heading 3 exports the supported title or body style without changing source
+00:00 +3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/ordered_heading_json_export_test.dart: ordered heading 4 exports the supported title or body style without changing source
+00:00 +4: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/ordered_heading_json_export_test.dart: ordered heading 5 exports the supported title or body style without changing source
+00:00 +5: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/ordered_heading_json_export_test.dart: ordered heading 6 exports the supported title or body style without changing source
+00:00 +6: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/ordered_heading_json_export_test.dart: ordered heading 7 exports the supported title or body style without changing source
+00:00 +7: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/ordered_heading_json_export_test.dart: ordered heading 8 exports the supported title or body style without changing source
+00:00 +8: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/ordered_heading_json_export_test.dart: ordered heading 9 exports the supported title or body style without changing source
+00:00 +9: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/ordered_heading_json_export_test.dart: ordered heading export reads the current field 2 instead of the archived legacy value
+00:00 +10: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/ordered_heading_json_export_test.dart: ordered heading export reads the current field 7 instead of the archived legacy value
+00:00 +11: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/ordered_heading_json_export_test.dart: ordered heading export reads the current field null instead of the archived legacy value
+00:00 +12: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/ordered_heading_json_export_test.dart: document JSON encode and decode preserve ordered bodies alongside H1-H6
+00:00 +13: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: default and document configurations enable exactly six heading levels
+00:01 +14: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: unsupported heading commands and direct transactions leave content and history intact
+00:01 +15: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 7 Enter at 0 with same normalizes only the new node
+00:01 +16: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 7 Enter at 1 with same normalizes only the new node
+00:01 +17: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 7 Enter at 2 with same normalizes only the new node
+00:01 +18: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 7 Enter at 0 with body normalizes only the new node
+00:01 +19: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 7 Enter at 1 with body normalizes only the new node
+00:01 +20: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 7 Enter at 2 with body normalizes only the new node
+00:01 +21: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: remote legacy level 7 displays H6 without echo or changing its source
+00:01 +22: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: desktop JSON level 7 imports and exports H6 while preserving text and unrelated props
+00:01 +23: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 8 Enter at 0 with same normalizes only the new node
+00:01 +24: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 8 Enter at 1 with same normalizes only the new node
+00:01 +25: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 8 Enter at 2 with same normalizes only the new node
+00:01 +26: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 8 Enter at 0 with body normalizes only the new node
+00:01 +27: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 8 Enter at 1 with body normalizes only the new node
+00:01 +28: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 8 Enter at 2 with body normalizes only the new node
+00:01 +29: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: remote legacy level 8 displays H6 without echo or changing its source
+00:01 +30: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: desktop JSON level 8 imports and exports H6 while preserving text and unrelated props
+00:01 +31: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 9 Enter at 0 with same normalizes only the new node
+00:01 +32: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 9 Enter at 1 with same normalizes only the new node
+00:01 +33: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 9 Enter at 2 with same normalizes only the new node
+00:01 +34: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 9 Enter at 0 with body normalizes only the new node
+00:01 +35: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 9 Enter at 1 with body normalizes only the new node
+00:01 +36: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: legacy level 9 Enter at 2 with body normalizes only the new node
+00:01 +37: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: remote legacy level 9 displays H6 without echo or changing its source
+00:01 +38: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/heading_level_limits_test.dart: desktop JSON level 9 imports and exports H6 while preserving text and unrelated props
+00:01 +39: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: desktop block structures and attributes convert into editable nodes and survive local JSON
+00:02 +40: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: inline objects and styles are converted at UTF16 object boundaries
+00:02 +41: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: null fields and cleared mention formatting survive persistence without reviving old styles
+00:02 +42: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: unknown plugins, duplicate ids and patch deltas fail instead of becoming opaque JSON
+00:02 +43: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +44: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +45: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +46: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +47: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +48: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +49: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +50: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:02 +51: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:03 +52: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:03 +53: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:03 +54: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:03 +55: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:03 +56: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:04 +57: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:04 +58: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:04 +59: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:04 +60: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:04 +61: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:04 +62: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:04 +63: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:04 +64: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:04 +65: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_codec_test.dart: converted shape, columns, date, person and weather render in the actual editor
+00:06 +66: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 paragraph user remains a styled native atom after explicit font weight
+00:07 +67: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 paragraph meeting remains a styled native atom after explicit font weight
+00:07 +68: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 paragraph task remains a styled native atom after explicit font weight
+00:07 +69: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 paragraph doc remains a styled native atom after explicit font weight
+00:07 +70: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 paragraph latex remains a styled native atom after explicit font weight
+00:08 +71: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 word-art user remains a styled native atom after explicit font weight
+00:08 +72: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 word-art meeting remains a styled native atom after explicit font weight
+00:08 +73: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 word-art task remains a styled native atom after explicit font weight
+00:08 +74: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 word-art doc remains a styled native atom after explicit font weight
+00:08 +75: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/blockcraft_json_editing_test.dart: R4 word-art latex remains a styled native atom after explicit font weight
+00:08 +76: All tests passed!

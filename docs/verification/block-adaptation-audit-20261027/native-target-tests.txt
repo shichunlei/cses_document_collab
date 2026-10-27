@@ -1,0 +1,19 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_native_integration_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_native_integration_test.dart: (setUpAll)
+00:02 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/text_box_native_integration_test.dart: (setUpAll)
+00:02 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/weather_native_integration_test.dart: (setUpAll)
+00:02 +0: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_native_integration_test.dart: published columns cross FRB field history, text edits, structure undo redo and reopen
+00:03 +1: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_native_integration_test.dart: published columns cross FRB field history, text edits, structure undo redo and reopen
+00:03 +2: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_native_integration_test.dart: published columns cross FRB field history, text edits, structure undo redo and reopen
+00:03 +3: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_native_integration_test.dart: published columns cross FRB field history, text edits, structure undo redo and reopen
+00:03 +4: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_native_integration_test.dart: published columns cross FRB field history, text edits, structure undo redo and reopen
+00:03 +5: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_native_integration_test.dart: published columns cross FRB field history, text edits, structure undo redo and reopen
+00:03 +6: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_native_integration_test.dart: published columns cross FRB field history, text edits, structure undo redo and reopen
+00:03 +7: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_native_integration_test.dart: word-backspace column boundary leaves native history and SQLite content unchanged
+00:03 +8: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_native_integration_test.dart: local draft columns insert, field history and reopen use the public controller
+00:03 +9: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/columns_native_integration_test.dart: (tearDownAll)
+00:06 +9: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_native_integration_test.dart: (setUpAll)
+00:06 +9: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_native_integration_test.dart: desktop person-card cards cross adapter/native history and SQLite reopen
+00:06 +10: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_native_integration_test.dart: local draft insert and field edits survive native undo redo and reopen
+00:07 +11: /Users/shichunlei/workspace/mobile-collab-demo/packages/cses_document_collab/test/person_card_native_integration_test.dart: (tearDownAll)
+00:07 +11: All tests passed!

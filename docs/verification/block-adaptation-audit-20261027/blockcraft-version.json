@@ -1,0 +1,186 @@
+{
+  "date": "2026-10-27",
+  "registry": "http://npm.runtongqiuben.com/",
+  "query": "npm view @ccc/blockcraft dist-tags.latest dist --json (fresh temporary cache)",
+  "latest": "0.11.31",
+  "desktop_declared": "0.11.30",
+  "yarn_locked": "0.11.30",
+  "historical_pnpm_locked": "0.2.78",
+  "dependency_changes": false,
+  "packages": {
+    "installed": {
+      "version": "0.11.21",
+      "skills": {
+        "SKILL.md": "1bdaa3efdde9a455284810febaffb043cd3e59e8ef9a0babbb76c5c875140b0d",
+        "blockcraft.md": "b06ea795f5210df0bce65d2cde5f35fb5039e2eb085b29417e84504444d71967",
+        "blockcraft-block.md": "83ccc8de57d55f6f793b19bc787d27436f756d703aa9bb6f1baf755792499b6e",
+        "blockcraft-plugins-ref.md": "1e0e2e1066ef44fcd4d9f46d040e46fbdd8b6713fc2d0fc63b6666710cb579ff",
+        "MIGRATIONS.md": "800f55f39a3cfb8f389a1dd6a0053d0f40dfca7b9c564b6abb0b08206ad29c37"
+      },
+      "bundle_sha256": "037b9b0325f164baac79bf0416dc400a4d2787214d0a3a6e4bdc0cf4514fa4b9"
+    },
+    "locked": {
+      "version": "0.11.30",
+      "skills": {
+        "SKILL.md": "1bdaa3efdde9a455284810febaffb043cd3e59e8ef9a0babbb76c5c875140b0d",
+        "blockcraft.md": "f8b0ed3c2afcb2e03334b9bd6bedb1f7a2c502a303472447367701cdbac39ffd",
+        "blockcraft-block.md": "450dc1d55049c43a4cb579db47d9af9c5c162af71a897686bb0e9cc6b97b7019",
+        "blockcraft-plugins-ref.md": "1e0e2e1066ef44fcd4d9f46d040e46fbdd8b6713fc2d0fc63b6666710cb579ff",
+        "MIGRATIONS.md": "33f0840c7d98f89407e7237fa41aacfbc8b8d29eb826c1aeecbe318c509ec867"
+      },
+      "bundle_sha256": "11cf88de81ec375b2866d1d9b18adc7f9df43c9ad40837ca8776b795cf768b7c"
+    },
+    "latest": {
+      "version": "0.11.31",
+      "skills": {
+        "SKILL.md": "1bdaa3efdde9a455284810febaffb043cd3e59e8ef9a0babbb76c5c875140b0d",
+        "blockcraft.md": "f8b0ed3c2afcb2e03334b9bd6bedb1f7a2c502a303472447367701cdbac39ffd",
+        "blockcraft-block.md": "450dc1d55049c43a4cb579db47d9af9c5c162af71a897686bb0e9cc6b97b7019",
+        "blockcraft-plugins-ref.md": "1e0e2e1066ef44fcd4d9f46d040e46fbdd8b6713fc2d0fc63b6666710cb579ff",
+        "MIGRATIONS.md": "33f0840c7d98f89407e7237fa41aacfbc8b8d29eb826c1aeecbe318c509ec867"
+      },
+      "bundle_sha256": "c2d0b246ca9fedb394426f6d5b12b5efc43a0b4dff6631ee8186fc68473a8588"
+    }
+  },
+  "tarballs": {
+    "0.11.30": {
+      "sha1": "abedbde54c71e81db525aec73f86cceb77f4cb4b",
+      "sha256": "953aabf7c326a0b1719969a989f4915cbc2c74c219a5c2c037fdb75b3380fa6c"
+    },
+    "0.11.31": {
+      "sha1": "290e54057395c172887cd5c34973e951ac60c76d",
+      "sha256": "6fbacfdeac9dec9d879b0ef5a67bdeb270dfb98c32e794f85caa2f50cf830827"
+    }
+  },
+  "source_changes_to_latest": {
+    "installed": [
+      "../../../packages/editor/adapters/html-adapter/typography.ts",
+      "../../../packages/editor/framework/block-std/block/component/base-block.ts",
+      "../../../packages/editor/framework/block-std/typography/font-weight.ts",
+      "../../../packages/editor/framework/block-std/typography/paragraph-style.ts",
+      "../../../packages/editor/framework/block-std/typography/index.ts",
+      "../../../packages/editor/framework/utils/text-toolbar-helper.ts",
+      "../../../packages/editor/framework/doc/composition/types.ts",
+      "../../../packages/editor/framework/doc/composition-guards.ts",
+      "../../../packages/editor/framework/doc/block-mutation-policy.ts",
+      "../../../packages/editor/framework/doc/undoManger.ts",
+      "../../../packages/editor/framework/modules/columns/column-structure.ts",
+      "../../../packages/editor/framework/doc/crud.ts",
+      "../../../packages/editor/framework/modules/selection/createFakeRange.ts",
+      "../../../packages/editor/framework/modules/input/index.ts",
+      "../../../packages/editor/framework/modules/selection/after-insertion.ts",
+      "../../../packages/editor/framework/modules/drag-drop/dnd.service.ts",
+      "../../../packages/editor/framework/modules/drag-drop/internal-drag.controller.ts",
+      "../../../packages/editor/framework/modules/object/animation/config.ts",
+      "../../../packages/editor/framework/modules/object/animation/player.ts",
+      "../../../packages/editor/framework/modules/object/block-object-animation.manager.ts",
+      "../../../packages/editor/framework/revision/store.ts",
+      "../../../packages/editor/framework/revision/manager.ts",
+      "../../../packages/editor/framework/doc/document.ts",
+      "../../../packages/editor/framework/model/block.ts",
+      "../../../packages/editor/blocks/image-block/image.block.ts",
+      "../../../packages/editor/blocks/table-block/table.block.ts",
+      "../../../packages/editor/framework/block-std/block/object-format/index.ts",
+      "../../../packages/editor/blocks/word-art-block/word-art-text-layout.ts",
+      "../../../packages/editor/blocks/word-art-block/word-art.types.ts",
+      "../../../packages/editor/blocks/word-art-block/word-art.block.ts",
+      "../../../packages/editor/blocks/render-unit-block/render-unit.block.ts",
+      "../../../packages/editor/blocks/render-unit-block/index.ts",
+      "../../../packages/editor/framework/doc/composition/model.ts",
+      "../../../packages/editor/framework/doc/composition/session.ts",
+      "../../../packages/editor/framework/doc/index.ts",
+      "../../../packages/editor/embeds/word-art/index.ts",
+      "../../../packages/editor/snapshot-viewer/renderers/structural-renderers.ts",
+      "../../../packages/editor/snapshot-viewer/renderers/word-art-renderers.ts",
+      "../../../packages/editor/snapshot-viewer/snapshot-render-engine.ts",
+      "../../../packages/editor/blocks/word-art-block/adapter/html.ts",
+      "../../../packages/editor/editor/doc-builder.ts",
+      "../../../packages/editor/plugins/fixed-toolbar/widgets/toolbar-selection-session.ts",
+      "../../../packages/editor/plugins/fixed-toolbar/widgets/font-settings-dialog.component.ts",
+      "../../../packages/editor/plugins/fixed-toolbar/widgets/font-settings-dialog.component.html",
+      "../../../packages/editor/plugins/fixed-toolbar/widgets/typography-settings-controller.ts",
+      "../../../packages/editor/plugins/formula-extension/widgets/formula-toolbar.ts",
+      "../../../packages/editor/plugins/float-text-toolbar/widgets/link-input-pad.ts",
+      "../../../packages/editor/plugins/fixed-toolbar/widgets/fixed-toolbar.component.ts",
+      "../../../packages/editor/plugins/inline-link-extension/index.ts",
+      "../../../packages/editor/plugins/img-toolbar/index.ts",
+      "../../../packages/editor/plugins/float-text-toolbar/widgets/toolbar.component.ts",
+      "../../../packages/editor/plugins/float-text-toolbar/rich-text-toolbar.ts",
+      "../../../packages/editor/plugins/callout-toolbar/widgets/render-unit.toolbar.ts",
+      "../../../packages/editor/plugins/block-transformer/keyboard-routing.ts",
+      "../../../packages/editor/plugins/block-transformer/slash-query.ts",
+      "../../../packages/editor/plugins/block-transformer/widget/contextmenu.ts",
+      "../../../packages/editor/plugins/block-transformer/index.ts",
+      "../../../packages/editor/plugins/attachment-extension/index.ts",
+      "../../../packages/editor/plugins/findReplace/find-replace.helper.ts",
+      "../../../packages/editor/plugins/object-animation/settings.component.ts",
+      "../../../packages/editor/plugins/object-animation/toolbar.component.ts",
+      "../../../packages/editor/plugins/object-animation/toolbar-controller.ts",
+      "../../../packages/editor/plugins/object-format-toolbar/object-format-toolbar.component.ts",
+      "../../../packages/editor/plugins/object-format-toolbar/index.ts",
+      "../../../packages/editor/plugins/context-menu/menu.component.ts",
+      "../../../packages/editor/plugins/context-menu/index.ts"
+    ],
+    "locked": [
+      "../../../packages/editor/framework/modules/selection/createFakeRange.ts",
+      "../../../packages/editor/framework/modules/drag-drop/dnd.service.ts",
+      "../../../packages/editor/framework/modules/drag-drop/internal-drag.controller.ts",
+      "../../../packages/editor/framework/block-std/block/object-format/index.ts",
+      "../../../packages/editor/blocks/word-art-block/word-art-text-layout.ts",
+      "../../../packages/editor/blocks/word-art-block/word-art.types.ts",
+      "../../../packages/editor/blocks/word-art-block/word-art.block.ts",
+      "../../../packages/editor/embeds/word-art/index.ts",
+      "../../../packages/editor/snapshot-viewer/renderers/word-art-renderers.ts",
+      "../../../packages/editor/blocks/word-art-block/adapter/html.ts",
+      "../../../packages/editor/plugins/findReplace/find-replace.helper.ts"
+    ]
+  },
+  "schema_source_hashes": {
+    "../../../packages/editor/blocks/paragraph-block/index.ts": {
+      "installed": "1ba0cc621ea19025cbc82d5c2705fcdb04ac578d18c4660a0142d59dfec8fd7d",
+      "locked": "1ba0cc621ea19025cbc82d5c2705fcdb04ac578d18c4660a0142d59dfec8fd7d",
+      "latest": "1ba0cc621ea19025cbc82d5c2705fcdb04ac578d18c4660a0142d59dfec8fd7d"
+    },
+    "../../../packages/editor/blocks/image-block/index.ts": {
+      "installed": "0c2a8efbe2f7b5c882d829bbf73547c1b07a6f867b73523f7fe79b1591a18c08",
+      "locked": "0c2a8efbe2f7b5c882d829bbf73547c1b07a6f867b73523f7fe79b1591a18c08",
+      "latest": "0c2a8efbe2f7b5c882d829bbf73547c1b07a6f867b73523f7fe79b1591a18c08"
+    },
+    "../../../packages/editor/blocks/table-block/index.ts": {
+      "installed": "f4a647a5f65561c7255e839da4c89d26784a38e39377cb9268415adba8061f70",
+      "locked": "f4a647a5f65561c7255e839da4c89d26784a38e39377cb9268415adba8061f70",
+      "latest": "f4a647a5f65561c7255e839da4c89d26784a38e39377cb9268415adba8061f70"
+    },
+    "../../../packages/editor/blocks/columns-block/index.ts": {
+      "installed": "bf10cc835026a9968f07981105f0894628b577bb5ce7b07d7d881b50eeeee9cb",
+      "locked": "bf10cc835026a9968f07981105f0894628b577bb5ce7b07d7d881b50eeeee9cb",
+      "latest": "bf10cc835026a9968f07981105f0894628b577bb5ce7b07d7d881b50eeeee9cb"
+    },
+    "../../../packages/editor/blocks/shape-block/index.ts": {
+      "installed": "950205cdd1b4c4927b1647e2c66b954fcfc2ba4aaf8775d892b8ec7c577caa03",
+      "locked": "950205cdd1b4c4927b1647e2c66b954fcfc2ba4aaf8775d892b8ec7c577caa03",
+      "latest": "950205cdd1b4c4927b1647e2c66b954fcfc2ba4aaf8775d892b8ec7c577caa03"
+    },
+    "../../../packages/editor/blocks/text-box-block/index.ts": {
+      "installed": "ac935d8f8b9b83ae3af7f28c0601747c78f82cd6ad50c9d0cfb6036f2ea98ea3",
+      "locked": "ac935d8f8b9b83ae3af7f28c0601747c78f82cd6ad50c9d0cfb6036f2ea98ea3",
+      "latest": "ac935d8f8b9b83ae3af7f28c0601747c78f82cd6ad50c9d0cfb6036f2ea98ea3"
+    },
+    "../../../packages/editor/blocks/object-group-block/index.ts": {
+      "installed": "760fc5741c1ecb249115f7de5f49d236a03fd18d739e2dd9b0b03e2474003b78",
+      "locked": "760fc5741c1ecb249115f7de5f49d236a03fd18d739e2dd9b0b03e2474003b78",
+      "latest": "760fc5741c1ecb249115f7de5f49d236a03fd18d739e2dd9b0b03e2474003b78"
+    },
+    "../../../packages/editor/blocks/word-art-block/index.ts": {
+      "installed": "819ccc709ff60245ae386721d1a3233ad8275302397a9126e0b29604165c7d6a",
+      "locked": "819ccc709ff60245ae386721d1a3233ad8275302397a9126e0b29604165c7d6a",
+      "latest": "819ccc709ff60245ae386721d1a3233ad8275302397a9126e0b29604165c7d6a"
+    },
+    "../../../packages/editor/blocks/render-unit-block/index.ts": {
+      "installed": "2a78ae626d80378e494026c807303c68965dde6f94f783bcea66f834fc1af092",
+      "locked": "87921ea42664eaab739ce8cccaa9e97c2e16d3c2045a96d0a9a1f383e5dd9c7a",
+      "latest": "87921ea42664eaab739ce8cccaa9e97c2e16d3c2045a96d0a9a1f383e5dd9c7a"
+    }
+  },
+  "scope": "注册清单、随包技能/迁移和关键Schema/受影响实现审计；不是0.11.31全功能兼容验收。迁移文档仍标未发布的条目按发布包实际实现核对。"
+}

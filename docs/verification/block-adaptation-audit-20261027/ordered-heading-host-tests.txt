@@ -1,0 +1,27 @@
+00:00 +0: loading /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart
+00:00 +0: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: journal formats, mentions, todo states, business ids and date survive both directions
+00:00 +1: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: all enabled formats, repeated objects and independent business/native checked state survive
+00:00 +2: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:01 +3: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:01 +4: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:01 +5: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:01 +6: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:01 +7: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:01 +8: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:02 +9: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:02 +10: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:02 +11: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:02 +12: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:02 +13: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:02 +14: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:02 +15: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:02 +16: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:02 +17: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:02 +18: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:05 +19: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:05 +20: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:05 +21: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: JSON menu exports live edits and opens a desktop snapshot in a separate editable route
+00:10 +22: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: real controller export has no debounce delay and returns detached JSON
+00:10 +23: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: stable block ids survive saving and reopening without entering business attributes
+00:10 +24: /Users/shichunlei/workspace/mobile-collab-demo/test/daily_guidance/journal_blockcraft_codec_test.dart: desktop blocks outside journal capabilities are converted into real nested native nodes
+00:10 +25: All tests passed!
