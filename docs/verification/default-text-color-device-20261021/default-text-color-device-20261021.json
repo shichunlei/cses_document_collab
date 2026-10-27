@@ -36,7 +36,7 @@
   },
   "reproduce": {
     "working_directory": "仓库根目录",
-    "command": "TEXT_COLOR_SCREENSHOTS=build/document-text-color-screenshots flutter drive --driver packages/cses_document_collab/test_driver/document_text_color_driver.dart --target packages/cses_document_collab/integration_test/document_text_color_test.dart -d ANDROID_DEVICE_ID --no-pub --keep-app-running",
+    "command": "TEXT_COLOR_SCREENSHOTS=build/document-text-color-screenshots flutter drive --driver test_driver/document_text_color_driver.dart --target integration_test/document_text_color_test.dart -d ANDROID_DEVICE_ID --no-pub --keep-app-running",
     "restore": "使用普通Demo APK执行adb install -r覆盖恢复，禁止卸载或清除数据"
   },
   "artifacts": {

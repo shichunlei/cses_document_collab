@@ -5,7 +5,7 @@
       "cargo",
       "fmt",
       "--manifest-path",
-      "packages/cses_document_collab/rust/Cargo.toml",
+      "rust/Cargo.toml",
       "--check"
     ],
     "exit_code": 0
@@ -17,7 +17,7 @@
       "check",
       "--locked",
       "--manifest-path",
-      "packages/cses_document_collab/rust/Cargo.toml"
+      "rust/Cargo.toml"
     ],
     "exit_code": 0
   },
@@ -28,7 +28,7 @@
       "check",
       "--locked",
       "--manifest-path",
-      "packages/cses_document_collab/rust/Cargo.toml",
+      "rust/Cargo.toml",
       "--features",
       "history-prototype"
     ],
@@ -41,7 +41,7 @@
       "test",
       "--locked",
       "--manifest-path",
-      "packages/cses_document_collab/rust/Cargo.toml"
+      "rust/Cargo.toml"
     ],
     "exit_code": 0
   },
@@ -52,7 +52,7 @@
       "check",
       "--locked",
       "--manifest-path",
-      "packages/cses_document_collab/rust/vendor/yrs-history/Cargo.toml",
+      "rust/vendor/yrs-history/Cargo.toml",
       "--features",
       "small-client,sync,history-checkpoint"
     ],
@@ -65,7 +65,7 @@
       "test",
       "--locked",
       "--manifest-path",
-      "packages/cses_document_collab/rust/vendor/yrs-history/Cargo.toml",
+      "rust/vendor/yrs-history/Cargo.toml",
       "--features",
       "small-client,sync,history-checkpoint",
       "--lib",

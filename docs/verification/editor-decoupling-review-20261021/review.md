@@ -16,7 +16,7 @@
 
 ### R1 · P1：初始化失败后的重试可发送另一文档的正文
 
-定位：[CollabController.retry](/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/lib/src/controller/collab_controller.dart:303)，关联初始化的 252、269–270 行及 `_startSession` 中直接访问全局 Rust 文档的回调。
+定位：[CollabController.retry](/System/Volumes/Data/workspace/mobile-collab-demo/lib/src/controller/collab_controller.dart:303)，关联初始化的 252、269–270 行及 `_startSession` 中直接访问全局 Rust 文档的回调。
 
 `_initialized` 在会话注册前设为 true。注册失败后 catch 关闭并释放唯一原生引擎，却未使控制器失效或重建其初始化状态。`retry()` 只看 initialized/busy，不核对 `CollabRuntime.owns(this)`，直接创建新会话；状态向量及正文增量回调操作的是当前进程的全局文档。
 
@@ -28,7 +28,7 @@
 
 ### R2 · P1：本地 convert 对容器整体替换，丢失子树
 
-定位：[LocalEditorController.convert](/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/lib/src/editor/local_editor_controller.dart:354)。
+定位：[LocalEditorController.convert](/System/Volumes/Data/workspace/mobile-collab-demo/lib/src/editor/local_editor_controller.dart:354)。
 
 公开命令允许任意已启用类型；对当前选中节点仅复制 attributes，构造不含 children 的 replacement，然后删除整个原节点。默认启用表格等容器后，该命令不再只面对文字叶子。
 
@@ -40,7 +40,7 @@
 
 ### R3 · P2：权限注册失败污染串行队列，关闭跳过订阅清理
 
-定位：[setEditable](/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/lib/src/controller/collab_controller.dart:290)，关联 [shutdown](/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/lib/src/controller/collab_controller.dart:788)。
+定位：[setEditable](/System/Volumes/Data/workspace/mobile-collab-demo/lib/src/controller/collab_controller.dart:290)，关联 [shutdown](/System/Volumes/Data/workspace/mobile-collab-demo/lib/src/controller/collab_controller.dart:788)。
 
 `_accessTransition.then` 只链接成功回调；一轮 register 失败后，后续权限切换都继承旧的 rejected Future，根本不再注册。关闭先等待这个失败 Future，进入 catch 后跳过 `_releaseSession()`，保留部分启动会话的网关订阅。
 
@@ -52,7 +52,7 @@
 
 ### R4 · P2：本地多行粘贴破坏代码块语义
 
-定位：[LocalEditorController.pasteText](/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/lib/src/editor/local_editor_controller.dart:503)。
+定位：[LocalEditorController.pasteText](/System/Volumes/Data/workspace/mobile-collab-demo/lib/src/editor/local_editor_controller.dart:503)。
 
 所有块统一按换行拆节点，仅首行沿用原类型，后续强制创建 paragraph；这与代码块回车应在源码 Delta 内保留换行的规则不一致。本地公开粘贴及其接管的纯文本快捷键会经过该路径。
 
@@ -64,7 +64,7 @@
 
 ### R5 · P2：关闭对齐能力会连带禁用标题转换
 
-定位：[rich transaction guard](/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/lib/src/editor/local_editor_controller.dart:157)。
+定位：[rich transaction guard](/System/Volumes/Data/workspace/mobile-collab-demo/lib/src/editor/local_editor_controller.dart:157)。
 
 富内容校验要求节点的每个显式 align 都在配置列表中。共用块转换会写入默认 left，因此 alignments: [] 不仅隐藏布局操作，还令普通标题/代码等转换事务被静默拒绝。
 
@@ -132,7 +132,7 @@ EditorCommandContext 按 EditorState 注入配置、业务端口和本地粘贴�
 | 宿主分析 | lib/test 定向检查无 error/warning，有 8 条未直接声明依赖的信息；根目录全量额外扫到已有 build 缓存中的 1 error/1 warning，以及包测试的 1 条信息。不能宣称根全量 analyze 通过；未为消除提示清理 build 或改无关依赖。 |
 | 原生工具脚本 | build_rust_ios.sh、verify_portable_package.sh 的 bash -n 通过；没有重新执行完整异地消费者构建。 |
 
-标题断言位于 [image_composer_operations_test.dart:185](/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/image_composer_operations_test.dart:185) 和 [image_composer_operations_test.dart:301](/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/image_composer_operations_test.dart:301)。应改为稳定 Key、实际 Icon 或可访问语义断言，并继续检查对应转换行为。本轮没有改这些测试。
+标题断言位于 [image_composer_operations_test.dart:185](/System/Volumes/Data/workspace/mobile-collab-demo/test/image_composer_operations_test.dart:185) 和 [image_composer_operations_test.dart:301](/System/Volumes/Data/workspace/mobile-collab-demo/test/image_composer_operations_test.dart:301)。应改为稳定 Key、实际 Icon 或可访问语义断言，并继续检查对应转换行为。本轮没有改这些测试。
 
 本轮未重新运行 Android/iOS 构建、手机手势、真实联网协同、服务端 ACK 或大文档性能测量。已有真机记录不是本轮新增覆盖。前述全量测试失败阻止给出“全套回归通过”的结论。
 

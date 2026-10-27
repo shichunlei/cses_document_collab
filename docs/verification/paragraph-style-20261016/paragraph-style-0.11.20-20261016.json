@@ -13,8 +13,8 @@
   "upstream_oracle": {
     "source": "fesm2022/ccc-blockcraft-framework-block-std-typography.mjs",
     "source_sha256": "a8c1e7f85c57533839778a171f5e638ab048930e5c3a8a154359d5ce394c4b85",
-    "generator": "packages/cses_document_collab/tool/generate_paragraph_oracle.mjs",
-    "fixture": "packages/cses_document_collab/test/fixtures/blockcraft-0.11.20-paragraph.json",
+    "generator": "tool/generate_paragraph_oracle.mjs",
+    "fixture": "test/fixtures/blockcraft-0.11.20-paragraph.json",
     "fixture_sha256": "834210acba2bcc942a692da33a4eedfdda3fc1d05847013f71aa28734e4129a8",
     "normalization_cases": 30,
     "font_catalog_ids": 23,
@@ -35,7 +35,7 @@
   "validation": {
     "flutter": {
       "status": "passed",
-      "directory": "packages/cses_document_collab",
+      "directory": ".",
       "passed": 324,
       "files": [
         "test/paragraph_input_test.dart",
@@ -81,7 +81,7 @@
     },
     "consumer_tests": {
       "status": "passed",
-      "file": "test/collab_cache_compatibility_test.dart",
+      "file": "example/test/collab_cache_compatibility_test.dart",
       "passed": 2
     },
     "android": {
@@ -89,8 +89,8 @@
       "device": "HONOR X70 MTN-AN00",
       "device_id": "A92G6R5704004108",
       "os": "Android 16",
-      "target": "packages/cses_document_collab/integration_test/paragraph_input_test.dart",
-      "command": "flutter drive --driver packages/cses_document_collab/test_driver/integration_test.dart --target packages/cses_document_collab/integration_test/paragraph_input_test.dart -d A92G6R5704004108 --no-pub --keep-app-running",
+      "target": "integration_test/paragraph_input_test.dart",
+      "command": "flutter drive --driver example/test_driver/integration_test.dart --target integration_test/paragraph_input_test.dart -d A92G6R5704004108 --no-pub --keep-app-running",
       "checks": [
         "Styled empty heading typing",
         "Continue heading on soft Enter",
@@ -111,13 +111,13 @@
     "git_diff_check": "passed",
     "ios_native": {
       "status": "passed",
-      "command": "packages/cses_document_collab/tool/build_rust_ios.sh debug",
+      "command": "tool/build_rust_ios.sh debug",
       "targets": [
         "aarch64-apple-ios",
         "aarch64-apple-ios-sim",
         "x86_64-apple-ios"
       ],
-      "artifact": "packages/cses_document_collab/ios/cses_document_collab/cses_collab_core.xcframework",
+      "artifact": "ios/cses_document_collab/cses_collab_core.xcframework",
       "xcode": "26.5 (17F42)"
     },
     "ios_simulator": {

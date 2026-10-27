@@ -3,10 +3,10 @@
   "scope": "Native-only opt-in Rust/Yrs text-history and failure-atomic persistence prototype",
   "head_at_final_validation": "a058ef10a64f981cb36ffc0e65221eed3f4c36aa",
   "source_sha256": {
-    "packages/cses_document_collab/rust/Cargo.toml": "7dafdc0ed74f300fcdfbb45d51adf45138b44607a894408d5709f34798e623d3",
-    "packages/cses_document_collab/rust/src/lib.rs": "d7ad603ee5f55d22e96dad855ef7533f06703022a298645e363a878010b749c9",
-    "packages/cses_document_collab/rust/src/history_prototype.rs": "57d17b1654b01dfbe3e621d5486d584faad6799da7e555a3b55dadc9b04f86fd",
-    "packages/cses_document_collab/rust/src/history_prototype_tests.rs": "cfd1b4b8ed9f44490a3a201a942ae22b588db7d7aada2a9985cc0cc1dbe70888"
+    "rust/Cargo.toml": "7dafdc0ed74f300fcdfbb45d51adf45138b44607a894408d5709f34798e623d3",
+    "rust/src/lib.rs": "d7ad603ee5f55d22e96dad855ef7533f06703022a298645e363a878010b749c9",
+    "rust/src/history_prototype.rs": "57d17b1654b01dfbe3e621d5486d584faad6799da7e555a3b55dadc9b04f86fd",
+    "rust/src/history_prototype_tests.rs": "cfd1b4b8ed9f44490a3a201a942ae22b588db7d7aada2a9985cc0cc1dbe70888"
   },
   "yrs_locked": "0.27.4",
   "feature": "history-prototype",
@@ -22,7 +22,7 @@
     "passed": 28,
     "failed": 0,
     "skipped": 0,
-    "native_library": "packages/cses_document_collab/rust/target/debug/libcses_collab_core.dylib"
+    "native_library": "rust/target/debug/libcses_collab_core.dylib"
   },
   "mixed_replica_steps": 400,
   "failure_injections": [

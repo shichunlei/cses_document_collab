@@ -20,13 +20,13 @@
 
 主要源码依据：
 
-- [手机独立编辑会话](../packages/cses_document_collab/lib/src/editor/core/document_editor_controller.dart)。
-- [手机编辑视图](../packages/cses_document_collab/lib/src/editor/document_editor_view.dart)。
-- [手机本地编辑控制器](../packages/cses_document_collab/lib/src/editor/local_editor_controller.dart)。
-- [手机正式文档控制器](../packages/cses_document_collab/lib/src/controller/collab_controller.dart)。
-- [手机 Demo 宿主](../lib/src/demo/document_host.dart)。
-- [手机原生协同接口与持久化](../packages/cses_document_collab/rust/src/api/collab.rs)。
-- [手机正式 BlockCraft 模型适配](../packages/cses_document_collab/rust/src/api/blockcraft.rs)。
+- [手机独立编辑会话](../lib/src/editor/core/document_editor_controller.dart)。
+- [手机编辑视图](../lib/src/editor/document_editor_view.dart)。
+- [手机本地编辑控制器](../lib/src/editor/local_editor_controller.dart)。
+- [手机正式文档控制器](../lib/src/controller/collab_controller.dart)。
+- [手机 Demo 宿主](../example/lib/src/demo/document_host.dart)。
+- [手机原生协同接口与持久化](../rust/src/api/collab.rs)。
+- [手机正式 BlockCraft 模型适配](../rust/src/api/blockcraft.rs)。
 - [桌面文档创建与快照保存](../../cses-client/packages/docs/src/document-content/doc.service.ts)。
 - [桌面初始块快照转换](../../cses-client/packages/docs/src/document-content/snapshot-insert-diff.ts)。
 - [桌面空间列表及默认空间初始化](../../cses-client/packages/docs/src/entity-catalog/entity.service.ts)。
@@ -367,14 +367,14 @@ HTTP 快照重试也不能默认重复 `Insert` 安全。结果不明时先回�
 
 | 范围 | 代码 |
 |---|---|
-| 业务接口 | [CsesDocumentCreationService](../lib/src/service/cses_document_creation_service.dart) |
-| 创建编排及恢复阶段 | [DocumentCreationCoordinator](../lib/src/demo/document_creation/document_creation_coordinator.dart)、[操作记录](../lib/src/demo/document_creation/document_creation_operation.dart) |
-| 账号隔离持久化 | [FileDocumentCreationStore](../lib/src/demo/document_creation/document_creation_store.dart) |
-| 手机创建页面 | [DocumentCreationPage](../lib/src/demo/document_creation/document_creation_page.dart) |
-| 文档切换与动态身份 | [DemoDocumentHost](../lib/src/demo/document_host.dart)、[入口页面](../lib/src/demo/collab_demo_page.dart) |
-| 包级公开准备端口 | [DocumentBootstrapper](../packages/cses_document_collab/lib/src/controller/document_bootstrapper.dart)、[PreparedDocument](../packages/cses_document_collab/lib/src/model/prepared_document.dart) |
-| 原生事务及根来源保护 | [document_bootstrap.rs](../packages/cses_document_collab/rust/src/api/document_bootstrap.rs) |
-| 设备隔离流程验证 | [集成测试](../integration_test/document_creation_device_test.dart) |
+| 业务接口 | [CsesDocumentCreationService](../example/lib/src/service/cses_document_creation_service.dart) |
+| 创建编排及恢复阶段 | [DocumentCreationCoordinator](../example/lib/src/demo/document_creation/document_creation_coordinator.dart)、[操作记录](../example/lib/src/demo/document_creation/document_creation_operation.dart) |
+| 账号隔离持久化 | [FileDocumentCreationStore](../example/lib/src/demo/document_creation/document_creation_store.dart) |
+| 手机创建页面 | [DocumentCreationPage](../example/lib/src/demo/document_creation/document_creation_page.dart) |
+| 文档切换与动态身份 | [DemoDocumentHost](../example/lib/src/demo/document_host.dart)、[入口页面](../example/lib/src/demo/collab_demo_page.dart) |
+| 包级公开准备端口 | [DocumentBootstrapper](../lib/src/controller/document_bootstrapper.dart)、[PreparedDocument](../lib/src/model/prepared_document.dart) |
+| 原生事务及根来源保护 | [document_bootstrap.rs](../rust/src/api/document_bootstrap.rs) |
+| 设备隔离流程验证 | [集成测试](../example/integration_test/document_creation_device_test.dart) |
 
 FRB使用与仓库一致的2.13.0生成；未采用本机旧2.12生成器自动引入的依赖降级。
 具体测试结果、平台构建及未验收范围以本轮验证记录为准，不能把隔离HTTP替身验证视为真实业务服务通过。

@@ -20,9 +20,9 @@
 
 ## 回归与双向转换
 
-[共享包正式回归](../../../packages/cses_document_collab/test/blockcraft_json_integrity_test.dart)13项，包括三类列表Tab/Shift+Tab、容量/只读、非法树拒绝、三种空标题/引用回车、正常新增身份及表格命令边界。
+[共享包正式回归](../../../test/blockcraft_json_integrity_test.dart)13项，包括三类列表Tab/Shift+Tab、容量/只读、非法树拒绝、三种空标题/引用回车、正常新增身份及表格命令边界。
 
-[宿主正式回归](../../../test/daily_guidance/journal_blockcraft_integrity_test.dart)9项。保存/重开使用生产FileJournalStore和独占临时目录，实际执行后台编解码、flush和原子文件替换；源稿与反向导入稿分属不同文件，不依赖内存Store替身。
+[宿主正式回归](../../../example/test/daily_guidance/journal_blockcraft_integrity_test.dart)9项。保存/重开使用生产FileJournalStore和独占临时目录，实际执行后台编解码、flush和原子文件替换；源稿与反向导入稿分属不同文件，不依赖内存Store替身。
 
 六组业务用例验证流程为：桌面JSON → 宿主稿 → 原位Enter → Undo/Redo → 桌面JSON → 独立文件反向导入并重开 → 原稿flush/关闭/重开。比较完整children，包含业务元数据、稳定ID及独立props；根级audit也单独验证。自动更新时间不作为正文相等条件。
 
@@ -43,7 +43,7 @@
 - [宿主分析](p1-fixes-host-analyze.txt)、[共享包分析](p1-fixes-package-analyze.txt)：分别检查2/8个目标文件，无问题；相关消费者由宿主190项验证。
 - [Android构建](p1-fixes-android-build.txt)、[19份当前源与APK精确匹配](p1-fixes-build-validation.json)：debug构建成功，未安装或新增设备验收。
 - [p1-fixes-validation.json](p1-fixes-validation.json)：汇总测试、源文件与示例指纹、版本和限制。修改文件已格式化，`git diff --check`通过；新内部模块未新增跨包src导入或全局聚合入口。
-- 本轮三个专用示例使用独立开关`GENERATE_BLOCKCRAFT_P1_EXAMPLES`；仅重新生成时执行`flutter test --no-pub --dart-define=GENERATE_BLOCKCRAFT_P1_EXAMPLES=true test/daily_guidance/journal_blockcraft_integrity_test.dart`。
+- 本轮三个专用示例使用独立开关`GENERATE_BLOCKCRAFT_P1_EXAMPLES`；仅重新生成时执行`flutter test --no-pub --dart-define=GENERATE_BLOCKCRAFT_P1_EXAMPLES=true example/test/daily_guidance/journal_blockcraft_integrity_test.dart`。
 - 证据维护说明：首次沿用旧通用生成开关跑全量，重新生成了三份上一轮示例（fixes-converted-journal、fixes-restored-mobile、fixed-journal-roundtrip）。旧校验记录/指纹保持原样，但旧字节未恢复；这些同名文件当前为本轮重生成值，不能用于证明上一轮原始产物。新旧指纹及归属见[p1-fixes-regenerated-artifacts.json](p1-fixes-regenerated-artifacts.json)。本轮正式结论使用p1-fixed-*专用示例。
 - 保留中间日志：首次新共享文件导入常量错误导致编译失败，修正后目标回归发现列表depth未随实时层级更新，已补同一事务与逆补丁；另一次关联测试名写错，仅该文件加载失败。最终全量测试涵盖实际列表测试并全部通过，不将中间失败作为最终通过证据。
 

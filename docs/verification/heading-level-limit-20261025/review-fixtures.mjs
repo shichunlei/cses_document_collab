@@ -5,7 +5,7 @@ const require=createRequire('/Users/shichunlei/workspace/cses-client/package.jso
 const Y=require('yjs');
 const root=process.cwd();
 const output=path.join(root,'docs/verification/heading-level-limit-20261025');
-const baseline=fs.readFileSync(path.join(root,'packages/cses_document_collab/rust/tests/fixtures/blockcraft-basic.update'));
+const baseline=fs.readFileSync(path.join(root,'rust/tests/fixtures/blockcraft-basic.update'));
 const heading=new Y.Doc();
 Y.applyUpdate(heading,baseline);
 heading.transact(()=>{

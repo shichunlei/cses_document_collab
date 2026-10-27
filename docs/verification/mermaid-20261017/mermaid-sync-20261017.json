@@ -3,7 +3,7 @@
   "scope": "按用户要求准备手机与真实桌面Mermaid双向在线同步联调。",
   "status": "completed_scoped_live_validation",
   "document_id": "6ad06c992a6b14f42c256937",
-  "document_id_source": "lib/src/demo/cses_account_login.dart: csesDemoDocumentId（当前Demo固定文档；旧验收记录中的6ac76e5375083c8c9f19cbd3不用于本轮）",
+  "document_id_source": "example/lib/src/demo/cses_account_login.dart: csesDemoDocumentId（当前Demo固定文档；旧验收记录中的6ac76e5375083c8c9f19cbd3不用于本轮）",
   "versions": {
     "registry_latest": "0.11.21",
     "desktop_declared": "0.11.21",

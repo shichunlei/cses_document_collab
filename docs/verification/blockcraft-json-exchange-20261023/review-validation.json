@@ -33,19 +33,19 @@
     "issues": 0
   },
   "productionSourceUnchanged": {
-    "lib/src/daily_guidance/journal_blockcraft_codec.dart": true,
-    "lib/src/daily_guidance/journal_exchange_keys.dart": true,
-    "lib/src/daily_guidance/journal_json_files.dart": true,
-    "lib/src/daily_guidance/journal_draft.dart": true,
-    "lib/src/daily_guidance/journal_surface.dart": true,
-    "lib/src/daily_guidance/local_journal_controller.dart": true,
-    "lib/src/daily_guidance/local_journal_page.dart": true,
-    "packages/cses_document_collab/lib/cses_document_collab.dart": true,
-    "packages/cses_document_collab/lib/src/editor/blockcraft_json_codec.dart": true,
-    "packages/cses_document_collab/lib/src/editor/blockcraft_snapshot_view.dart": true,
-    "packages/cses_document_collab/lib/src/editor/blockcraft_snapshot_presets.g.dart": true,
-    "packages/cses_document_collab/lib/src/editor/appflowy_block_editor_adapter.dart": true,
-    "packages/cses_document_collab/lib/src/editor/document_editor_view.dart": true
+    "example/lib/src/daily_guidance/journal_blockcraft_codec.dart": true,
+    "example/lib/src/daily_guidance/journal_exchange_keys.dart": true,
+    "example/lib/src/daily_guidance/journal_json_files.dart": true,
+    "example/lib/src/daily_guidance/journal_draft.dart": true,
+    "example/lib/src/daily_guidance/journal_surface.dart": true,
+    "example/lib/src/daily_guidance/local_journal_controller.dart": true,
+    "example/lib/src/daily_guidance/local_journal_page.dart": true,
+    "lib/cses_document_collab.dart": true,
+    "lib/src/editor/blockcraft_json_codec.dart": true,
+    "lib/src/editor/blockcraft_snapshot_view.dart": true,
+    "lib/src/editor/blockcraft_snapshot_presets.g.dart": true,
+    "lib/src/editor/appflowy_block_editor_adapter.dart": true,
+    "lib/src/editor/document_editor_view.dart": true
   },
   "versions": {
     "query": "桌面项目配置仓库 npm view @ccc/blockcraft dist-tags dist.integrity --json",

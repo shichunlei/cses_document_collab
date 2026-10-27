@@ -61,9 +61,9 @@
       ]
     },
     "consumer": {
-      "test": "flutter test --no-pub test/collab_demo_page_test.dart --reporter expanded",
+      "test": "flutter test --no-pub example/test/collab_demo_page_test.dart --reporter expanded",
       "result": "1项通过",
-      "analyze": "flutter analyze --no-pub lib/src/demo/document_host.dart",
+      "analyze": "flutter analyze --no-pub example/lib/src/demo/document_host.dart",
       "analyzeResult": "既有1条depend_on_referenced_packages信息：path_provider未在宿主pubspec直接声明；本轮未改该依赖",
       "isolatedResult": "隔离提交目录宿主1项回归通过"
     },

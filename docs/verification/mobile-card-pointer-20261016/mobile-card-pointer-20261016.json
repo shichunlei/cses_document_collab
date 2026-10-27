@@ -51,7 +51,7 @@
     ],
     "gesture_target": "Inner GestureDetector of DragHandle; the outer DragHandle Stack may cover the selection rectangle and is not a valid handle hit target.",
     "no_wait_for_auto_dismiss": true,
-    "runner": "flutter drive --driver packages/cses_document_collab/test_driver/integration_test.dart --target packages/cses_document_collab/integration_test/mobile_card_pointer_test.dart -d ANDROID_DEVICE_ID --no-pub --keep-app-running"
+    "runner": "flutter drive --driver example/test_driver/integration_test.dart --target integration_test/mobile_card_pointer_test.dart -d ANDROID_DEVICE_ID --no-pub --keep-app-running"
   },
   "other_validation": {
     "appflowy_selection_gesture_components": 115,
@@ -79,7 +79,7 @@
   },
   "source_sha256": {
     "packages/appflowy_editor/lib/src/editor/editor_component/service/selection/mobile_selection_service.dart": "bdd47ba7e873bf945750a304160931d8b67a78af32e8729363d4336490b61884",
-    "packages/cses_document_collab/integration_test/mobile_card_pointer_test.dart": "876cd10a7c2a39ae10553615111c7df5a8defe3679f6aaa35e6a1e46c5ff810c",
-    "packages/cses_document_collab/test_driver/integration_test.dart": "52f06a1912b44bfb796340b29ed19a9c35bc877847168d6dea613979bb0a035d"
+    "integration_test/mobile_card_pointer_test.dart": "876cd10a7c2a39ae10553615111c7df5a8defe3679f6aaa35e6a1e46c5ff810c",
+    "example/test_driver/integration_test.dart": "52f06a1912b44bfb796340b29ed19a9c35bc877847168d6dea613979bb0a035d"
   }
 }

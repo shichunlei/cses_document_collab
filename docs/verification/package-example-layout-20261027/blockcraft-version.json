@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-27",
+  "scope": "Repository layout migration only; no BlockCraft dependency or model upgrade.",
+  "latest": "0.11.31",
+  "declared": "0.11.30",
+  "yarnLocked": "0.11.30",
+  "installed": "0.11.17",
+  "dist": {
+    "integrity": "sha512-nCQqSyKVOrIZHOteLCq3fq0n7Bbkb7qoKYbPeTCg1BQla3BRyxWFUDD/mpYFrWz4DNK9EIQXvnxwG45nx7jjWw==",
+    "shasum": "290e54057395c172887cd5c34973e951ac60c76d",
+    "tarball": "http://npm.runtongqiuben.com/@ccc/blockcraft/-/blockcraft-0.11.31.tgz"
+  },
+  "files": {
+    "installed": {
+      "ai-skills/SKILL.md": "1bdaa3efdde9a455284810febaffb043cd3e59e8ef9a0babbb76c5c875140b0d",
+      "ai-skills/blockcraft.md": "15f256fc6e1ffb131d114371605feab0a4c58f1a6cc76b20bbba3011001f2dc1",
+      "ai-skills/MIGRATIONS.md": "4c87c528886aed39605183f6c6d812d04d94b600c4931f314bb611e689edf5dd",
+      "package.json": "fb139ff2aee88165cbe2a3ae6b289120f87e9868d88da564f252e13311883be4",
+      "index.d.ts": "ce1b277296bee9a41c18fda3c424fc2e6dfbf7e402b31f54ced33216277773e5",
+      "fesm2022/ccc-blockcraft.mjs": "c08ce485e4fce072ceea7958b5568001799083fe448807a541117984f29aeeea"
+    },
+    "latest": {
+      "ai-skills/SKILL.md": "1bdaa3efdde9a455284810febaffb043cd3e59e8ef9a0babbb76c5c875140b0d",
+      "ai-skills/blockcraft.md": "f8b0ed3c2afcb2e03334b9bd6bedb1f7a2c502a303472447367701cdbac39ffd",
+      "ai-skills/MIGRATIONS.md": "33f0840c7d98f89407e7237fa41aacfbc8b8d29eb826c1aeecbe318c509ec867",
+      "package.json": "e857dc1272a2ddaee657273693a70d62f5925526cc3f4f9861463920ade1d1eb",
+      "index.d.ts": "bb18167ad5f2225c287859c502d1977bbf79e39a6ee445a9c8aaf9bec7920098",
+      "fesm2022/ccc-blockcraft.mjs": "c2d0b246ca9fedb394426f6d5b12b5efc43a0b4dff6631ee8186fc68473a8588"
+    }
+  },
+  "archiveSha1": "290e54057395c172887cd5c34973e951ac60c76d",
+  "archiveMatchesDist": true
+}

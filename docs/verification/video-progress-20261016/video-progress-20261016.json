@@ -21,7 +21,7 @@
     "widget_tests": {
       "count": 36,
       "command": "flutter test --no-pub test/collab_video_update_test.dart test/collab_block_actions_test.dart",
-      "cwd": "packages/cses_document_collab",
+      "cwd": ".",
       "result": "passed",
       "log": "/tmp/video-progress-tests.log",
       "coverage": [
@@ -33,7 +33,7 @@
     },
     "analysis": {
       "command": "flutter analyze --no-pub lib/src/editor/collab_embed_block.dart test/collab_video_update_test.dart integration_test/mobile_card_pointer_test.dart",
-      "cwd": "packages/cses_document_collab",
+      "cwd": ".",
       "result": "No issues found",
       "log": "/tmp/video-progress-analyze-final.log"
     },
@@ -41,13 +41,13 @@
       "device": "HONOR X70 (MTN-AN00), Android 16",
       "cases": 12,
       "result": "passed",
-      "command": "flutter drive --driver packages/cses_document_collab/test_driver/integration_test.dart --target packages/cses_document_collab/integration_test/mobile_card_pointer_test.dart -d A92G6R5704004108 --no-pub --keep-app-running",
+      "command": "flutter drive --driver example/test_driver/integration_test.dart --target integration_test/mobile_card_pointer_test.dart -d A92G6R5704004108 --no-pub --keep-app-running",
       "log": "/tmp/video-progress-android.log",
       "coverage": "视频实际触摸拖动一次seek、播放暂停、卡片按钮、跨卡拖选和正文光标/手柄",
       "data_policy": "本地合成文档和播放器/业务/WebView替身，无在线文档写入，保留应用运行，不卸载或清数据"
     },
     "normal_demo_restore": {
-      "build": "flutter build apk --debug --no-pub -t lib/main.dart passed",
+      "build": "flutter build apk --debug --no-pub -t example/lib/main.dart passed",
       "entry_check": "APK kernel contains CsesCollabDemoApp, excludes mobile_card_pointer_test.dart",
       "install": "adb install -r passed (Success); no uninstall or data clearing",
       "build_log": "/tmp/video-progress-demo-build.log",
@@ -61,9 +61,9 @@
     "iOS未验证。"
   ],
   "source_sha256": {
-    "packages/cses_document_collab/lib/src/editor/collab_embed_block.dart": "a553885a47838f83027eedf06817827e0ab3d9ae4be63e7f8f89cd89c8e23454",
-    "packages/cses_document_collab/test/collab_video_update_test.dart": "4f0bf8627f5a35ec1339a1e5645af651a338d036adbf8921740f669e89491dae",
-    "packages/cses_document_collab/integration_test/mobile_card_pointer_test.dart": "ecbb034d0097043c8ff16886960291456a3f5bf20278a31a3880ea0953b6a19f"
+    "lib/src/editor/collab_embed_block.dart": "a553885a47838f83027eedf06817827e0ab3d9ae4be63e7f8f89cd89c8e23454",
+    "test/collab_video_update_test.dart": "4f0bf8627f5a35ec1339a1e5645af651a338d036adbf8921740f669e89491dae",
+    "integration_test/mobile_card_pointer_test.dart": "ecbb034d0097043c8ff16886960291456a3f5bf20278a31a3880ea0953b6a19f"
   },
   "overlay_followup": {
     "request": "进度条在视频画面内底部",

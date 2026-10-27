@@ -3,75 +3,75 @@
   "apkPath": "/System/Volumes/Data/workspace/mobile-collab-demo/build/app/outputs/flutter-apk/app-debug.apk",
   "apkSha256": "d13c628a1a9f14a1a84034e160ca388c05a7aa49bc1a852662138c60ab23ec38",
   "sources": {
-    "lib/src/daily_guidance/local_journal_controller.dart": {
+    "example/lib/src/daily_guidance/local_journal_controller.dart": {
       "sha256": "bf56287996873d40f1d3fae7e2993d5308d7a8d2be21b18c42082650a53d2b80",
       "sourceEmbedded": true
     },
-    "lib/src/daily_guidance/journal_ruled_content.dart": {
+    "example/lib/src/daily_guidance/journal_ruled_content.dart": {
       "sha256": "b99367a854e0434d1cc8aeefdd89f158de8eb95d4c2d0f65ca2ca638c8861c61",
       "sourceEmbedded": true
     },
-    "lib/src/daily_guidance/guidance_entries.dart": {
+    "example/lib/src/daily_guidance/guidance_entries.dart": {
       "sha256": "27d60a63e1f975194d4ac95f0115ebb8217291858576043171ac78147bb98798",
       "sourceEmbedded": true
     },
-    "lib/src/daily_guidance/local_journal_page.dart": {
+    "example/lib/src/daily_guidance/local_journal_page.dart": {
       "sha256": "c13f8cbf4773378cc687bc74e7ac3831c82d52edbb81ace94a4bf0c7666fa04f",
       "sourceEmbedded": true
     },
-    "lib/src/daily_guidance/journal_store.dart": {
+    "example/lib/src/daily_guidance/journal_store.dart": {
       "sha256": "ff8a703c1068125717c323d66d9e9e1f63943a8d2d34cdd39f7bf597bd731ebe",
       "sourceEmbedded": true
     },
-    "lib/src/daily_guidance/journal_editing.dart": {
+    "example/lib/src/daily_guidance/journal_editing.dart": {
       "sha256": "587dee9250ef8cc095198844fec91776cc4e782dca418f0b1a2c1c390c6fad03",
       "sourceEmbedded": true
     },
-    "lib/src/daily_guidance/journal_draft.dart": {
+    "example/lib/src/daily_guidance/journal_draft.dart": {
       "sha256": "7a08c407739b15844b64612f29c5d50e3bc252fa6aed4cc3d6effe13c372e7a9",
       "sourceEmbedded": true
     },
-    "lib/src/daily_guidance/guidance_people.dart": {
+    "example/lib/src/daily_guidance/guidance_people.dart": {
       "sha256": "79b0fc3364ef7fa114146cbec6272effdfcf9e06c256b34133de4e718306fcdb",
       "sourceEmbedded": true
     },
-    "lib/src/daily_guidance/journal_surface.dart": {
+    "example/lib/src/daily_guidance/journal_surface.dart": {
       "sha256": "f02083f5ace896dc51fff25934f94a9a1fc51ca3cb51b8f67e5b44c9d460b8de",
       "sourceEmbedded": true
     },
-    "lib/src/daily_guidance/file_journal_store.dart": {
+    "example/lib/src/daily_guidance/file_journal_store.dart": {
       "sha256": "d379dc2488dfeec027649b46747cd091ce125deb41174ada9667ab672137e96c",
       "sourceEmbedded": true
     },
-    "lib/src/daily_guidance/journal_list_markers.dart": {
+    "example/lib/src/daily_guidance/journal_list_markers.dart": {
       "sha256": "e49093b775dada58ea4b752a871c0b2508abc93744715eae3261bf2f8b196e54",
       "sourceEmbedded": true
     },
-    "lib/src/demo/collab_demo_page.dart": {
+    "example/lib/src/demo/collab_demo_page.dart": {
       "sha256": "a5118d2435e925ea561dd75380b4d7a11600393d43ba1b91f08a6afb05171390",
       "sourceEmbedded": true
     },
-    "packages/cses_document_collab/lib/cses_document_collab.dart": {
+    "lib/cses_document_collab.dart": {
       "sha256": "b5779092a19aee9311babd7facc354594c576d7c74f859b2416a942b544184bd",
       "sourceEmbedded": true
     },
-    "packages/cses_document_collab/lib/src/editor/document_editor_commands.dart": {
+    "lib/src/editor/document_editor_commands.dart": {
       "sha256": "504ea02b4eac46e7f790f16577ef3cda3ccd38d6be7138830d93ee9492bcaa88",
       "sourceEmbedded": true
     },
-    "packages/cses_document_collab/lib/src/editor/editor_interaction_shell.dart": {
+    "lib/src/editor/editor_interaction_shell.dart": {
       "sha256": "e96a73cd83e9ec0d979537c716bf9dfab4e184347b04b0d0b29865c30234d6ba",
       "sourceEmbedded": true
     },
-    "lib/src/daily_guidance/journal_input.dart": {
+    "example/lib/src/daily_guidance/journal_input.dart": {
       "sha256": "b7677736e99d4db80d12094008ad46421c0235b59a35d0d521a1ff2baf604444",
       "sourceEmbedded": true
     },
-    "packages/cses_document_collab/lib/src/editor/core/editor_command_context.dart": {
+    "lib/src/editor/core/editor_command_context.dart": {
       "sha256": "0979714ffef4c05dd37cb60e39bfb3a7ebda17f0a5012af5420628010fa0f78a",
       "sourceEmbedded": true
     },
-    "packages/cses_document_collab/lib/src/editor/collab_mobile_selection_menu.dart": {
+    "lib/src/editor/collab_mobile_selection_menu.dart": {
       "sha256": "0b76d42038a1ffb491c8a07898946a8b7ed9b7d298181002f9685822d0f236cc",
       "sourceEmbedded": true
     }

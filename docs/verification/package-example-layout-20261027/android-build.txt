@@ -1,0 +1,22 @@
+Running Gradle task 'assembleDebug'...                          
+注: /System/Volumes/Data/workspace/cses/cses.plugins/media_info/android/src/main/java/asia/ivity/mediainfo/MediaInfoPlugin.java使用或覆盖了已过时的 API。
+注: 有关详细信息, 请使用 -Xlint:deprecation 重新编译。
+Resolving dependencies...
+Downloading packages...
+* build_tool 1.0.0 from path /System/Volumes/Data/workspace/mobile-collab-demo/cargokit/gradle/../build_tool (was 1.0.0 from path /System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/cargokit/gradle/../build_tool)
+  crypto 3.0.7 (3.0.8 available)
+  http_parser 4.0.2 (4.1.2 available)
+  petitparser 7.0.2 (7.1.0 available)
+  web 1.1.1 (1.1.2 available)
+Changed 1 dependency!
+4 packages have newer versions incompatible with dependency constraints.
+Try `dart pub outdated` for more information.
+Compiling bin/build_tool_runner.dart to kernel file bin/build_tool_runner.dill.
+INFO: Precompiled binaries are disabled
+INFO: Building cses_collab_core for armv7-linux-androideabi
+INFO: Building cses_collab_core for aarch64-linux-android
+INFO: Building cses_collab_core for x86_64-linux-android
+INFO: Building cses_collab_core for i686-linux-android
+INFO: Building cses_collab_core for x86_64-linux-android
+Running Gradle task 'assembleDebug'...                            187.3s
+✓ Built build/app/outputs/flutter-apk/app-debug.apk

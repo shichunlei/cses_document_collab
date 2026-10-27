@@ -1,0 +1,6 @@
+Analyzing 5 items...                                            
+
+   info • Missing an 'await' for the 'Future' computed by this expression. Try adding an 'await' or wrapping the expression with 'unawaited' • lib/src/editor/collab_video_block.dart:265:21 • unawaited_futures
+   info • Unclosed instance of 'Sink'. Try invoking 'close' in the function in which the 'Sink' was created • test/collab_controller_native_test.dart:186:9 • close_sinks
+
+2 issues found. (ran in 18.9s)

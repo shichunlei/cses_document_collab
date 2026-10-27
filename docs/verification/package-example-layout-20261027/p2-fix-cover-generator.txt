@@ -1,0 +1,3 @@
+Formatted /private/tmp/cses-layout-p2-fix-vkrh3t9d/package/lib/src/model/document_cover_catalog.dart
+Formatted 1 file (1 changed) in 0.00 seconds.
+Synced 3 groups, 20 covers from desktop

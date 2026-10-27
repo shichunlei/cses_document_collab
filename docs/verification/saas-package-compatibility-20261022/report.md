@@ -1,6 +1,6 @@
 # packages 与 cses.saas 兼容核对
 
-核对日期：2026-10-22。对象为当前工作区的 `packages/cses_document_collab`、`packages/appflowy_editor`，以及 `/workspace/cses/cses.saas`（实际指向 `/Users/shichunlei/workspace/cses/cses.saas`）。包括已有未提交的新建文档改动，不以 HEAD 代替当前源码。未修改 SaaS、Common、桌面源码或依赖。
+核对日期：2026-10-22。对象为当前工作区的 `仓库根 package`、`packages/appflowy_editor`，以及 `/workspace/cses/cses.saas`（实际指向 `/Users/shichunlei/workspace/cses/cses.saas`）。包括已有未提交的新建文档改动，不以 HEAD 代替当前源码。未修改 SaaS、Common、桌面源码或依赖。
 
 ## 结论
 
@@ -31,7 +31,7 @@
 
 ### 2. 服务端明确报告同步失败时，移动端状态没有跟随失败
 
-`packages/cses_document_collab/lib/src/sync/cses_doc_collaboration_session.dart` 的 collabSyncStatus 分支对任何 body 都只调用 `onStateChanged(_state, 'sync-status-received', null)`。若会话已经 ready，收到 `{synced:false}` 后仍维持 ready。
+`lib/src/sync/cses_doc_collaboration_session.dart` 的 collabSyncStatus 分支对任何 body 都只调用 `onStateChanged(_state, 'sync-status-received', null)`。若会话已经 ready，收到 `{synced:false}` 后仍维持 ready。
 
 对照 `cses-client/packages/docs/src/realtime/docs-collaboration-session.ts`：该分支检查 synced 类型，false 触发失败恢复。两边均正确避免把 true 当作握手完成或持久化 ACK，但“不是 ACK”不意味着可以忽略明确的失败。
 

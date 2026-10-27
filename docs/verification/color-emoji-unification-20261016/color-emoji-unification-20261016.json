@@ -22,19 +22,19 @@
   "verification": [
     {
       "command": "flutter test --no-pub test/editor_shortcut_toolbar_test.dart test/collab_callout_block_test.dart test/collab_divider_test.dart test/document_header_test.dart test/mobile_selection_menu_test.dart test/collab_color_emoji_picker_test.dart --reporter expanded",
-      "cwd": "packages/cses_document_collab",
+      "cwd": ".",
       "result": "passed",
       "tests": 116
     },
     {
       "command": "flutter test --no-pub --reporter expanded",
-      "cwd": "packages/cses_document_collab",
+      "cwd": ".",
       "result": "passed",
       "tests": 1128
     },
     {
       "command": "flutter analyze --no-pub（7个受影响源文件及6个相关测试文件）",
-      "cwd": "packages/cses_document_collab",
+      "cwd": ".",
       "result": "No issues found"
     },
     {
@@ -43,7 +43,7 @@
       "result": "No issues found"
     },
     {
-      "command": "flutter test --no-pub test/collab_demo_page_test.dart test/mention_picker_test.dart test/meeting_reference_picker_test.dart --reporter expanded",
+      "command": "flutter test --no-pub example/test/collab_demo_page_test.dart example/test/mention_picker_test.dart example/test/meeting_reference_picker_test.dart --reporter expanded",
       "cwd": ".",
       "result": "passed",
       "tests": 6

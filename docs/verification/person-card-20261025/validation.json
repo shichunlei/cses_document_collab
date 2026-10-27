@@ -34,9 +34,9 @@
     "sha256": "6aa7cb0a2ba20ac69f0a044f7874702420ef97c3d870604f8c6403130516cd70"
   },
   "versionEvidence": "blockcraft-version.json",
-  "schemaFixture": "packages/cses_document_collab/rust/tests/fixtures/blockcraft-person-card.json",
-  "yjsFixture": "packages/cses_document_collab/rust/tests/fixtures/blockcraft-person-card.update",
-  "fixtureSource": "packages/cses_document_collab/tool/generate_person_card_fixture.mjs",
+  "schemaFixture": "rust/tests/fixtures/blockcraft-person-card.json",
+  "yjsFixture": "rust/tests/fixtures/blockcraft-person-card.update",
+  "fixtureSource": "tool/generate_person_card_fixture.mjs",
   "gitDiffCheck": "passed",
   "limitations": [
     "no physical Android or iOS device acceptance",

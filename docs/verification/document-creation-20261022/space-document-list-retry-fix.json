@@ -4,8 +4,8 @@
   "status": "fixed",
   "implementation": "one in-flight position request; immediate progress state; identity token checks before success/error writes; invalidate on dispose; unlock in finally",
   "changed_handmade_dart_files": [
-    "lib/src/demo/document_creation/document_creation_page.dart",
-    "test/document_creation_coordinator_test.dart"
+    "example/lib/src/demo/document_creation/document_creation_page.dart",
+    "example/test/document_creation_coordinator_test.dart"
   ],
   "tests": {
     "target_files": 3,
@@ -25,12 +25,12 @@
   "dart_format": "2 handmade files checked, no final changes",
   "git_diff_check": "passed",
   "source_sha256": {
-    "lib/src/demo/document_creation/document_creation_page.dart": "421defbc0388adfbab740412d226aa9bb45f6a5b6a015396fded57520b233eef",
-    "test/document_creation_coordinator_test.dart": "5ce6e09fe45c4c3e67cbde9cc418e2fbfa6c9c666d45b920a0867d3a0c718134"
+    "example/lib/src/demo/document_creation/document_creation_page.dart": "421defbc0388adfbab740412d226aa9bb45f6a5b6a015396fded57520b233eef",
+    "example/test/document_creation_coordinator_test.dart": "5ce6e09fe45c4c3e67cbde9cc418e2fbfa6c9c666d45b920a0867d3a0c718134"
   },
   "baseline_source_sha256": {
-    "lib/src/demo/document_creation/document_creation_page.dart": "c4613b8e4415527b1366e263bac07ec2ba438424de2a0a94cb6772ae69757cd2",
-    "test/document_creation_coordinator_test.dart": "c98db522c193cf1cac2aaf9a5a0ecd602904ba26d815c86b06b89d89b002eb4e"
+    "example/lib/src/demo/document_creation/document_creation_page.dart": "c4613b8e4415527b1366e263bac07ec2ba438424de2a0a94cb6772ae69757cd2",
+    "example/test/document_creation_coordinator_test.dart": "c98db522c193cf1cac2aaf9a5a0ecd602904ba26d815c86b06b89d89b002eb4e"
   },
   "android": {
     "build": "debug apk passed",

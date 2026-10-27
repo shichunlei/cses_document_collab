@@ -1,0 +1,107 @@
+{
+  "allDocumentedDevicePathsExist": true,
+  "devicePaths": [
+    {
+      "flag": "driver",
+      "path": "../test_driver/emoji_performance.dart",
+      "cwd": "example",
+      "resolvedRelativeToRepo": "test_driver/emoji_performance.dart",
+      "exists": true
+    },
+    {
+      "flag": "target",
+      "path": "../integration_test/emoji_scroll_test.dart",
+      "cwd": "example",
+      "resolvedRelativeToRepo": "integration_test/emoji_scroll_test.dart",
+      "exists": true
+    },
+    {
+      "flag": "target",
+      "path": "../integration_test/emoji_scroll_test.dart",
+      "cwd": "example",
+      "resolvedRelativeToRepo": "integration_test/emoji_scroll_test.dart",
+      "exists": true
+    },
+    {
+      "flag": "driver",
+      "path": "../test_driver/integration_test.dart",
+      "cwd": "example",
+      "resolvedRelativeToRepo": "test_driver/integration_test.dart",
+      "exists": true
+    },
+    {
+      "flag": "target",
+      "path": "../integration_test/mobile_selection_menu_test.dart",
+      "cwd": "example",
+      "resolvedRelativeToRepo": "integration_test/mobile_selection_menu_test.dart",
+      "exists": true
+    },
+    {
+      "flag": "driver",
+      "path": "../test_driver/integration_test.dart",
+      "cwd": "example",
+      "resolvedRelativeToRepo": "test_driver/integration_test.dart",
+      "exists": true
+    },
+    {
+      "flag": "target",
+      "path": "../integration_test/mobile_card_pointer_test.dart",
+      "cwd": "example",
+      "resolvedRelativeToRepo": "integration_test/mobile_card_pointer_test.dart",
+      "exists": true
+    },
+    {
+      "flag": "driver",
+      "path": "../test_driver/document_text_color_driver.dart",
+      "cwd": "example",
+      "resolvedRelativeToRepo": "test_driver/document_text_color_driver.dart",
+      "exists": true
+    },
+    {
+      "flag": "target",
+      "path": "../integration_test/document_text_color_test.dart",
+      "cwd": "example",
+      "resolvedRelativeToRepo": "integration_test/document_text_color_test.dart",
+      "exists": true
+    },
+    {
+      "flag": "driver",
+      "path": "../test_driver/integration_test.dart",
+      "cwd": "example",
+      "resolvedRelativeToRepo": "test_driver/integration_test.dart",
+      "exists": true
+    },
+    {
+      "flag": "target",
+      "path": "../integration_test/heading_typography_test.dart",
+      "cwd": "example",
+      "resolvedRelativeToRepo": "integration_test/heading_typography_test.dart",
+      "exists": true
+    },
+    {
+      "flag": "driver",
+      "path": "../test_driver/integration_test.dart",
+      "cwd": "example",
+      "resolvedRelativeToRepo": "test_driver/integration_test.dart",
+      "exists": true
+    },
+    {
+      "flag": "target",
+      "path": "../integration_test/editor_review_fixes_test.dart",
+      "cwd": "example",
+      "resolvedRelativeToRepo": "integration_test/editor_review_fixes_test.dart",
+      "exists": true
+    }
+  ],
+  "oldDoubleExampleDriverAbsent": true,
+  "coreNoExampleEntrypointsPresent": true,
+  "oldHostRootInstructionsAbsent": true,
+  "forkSubdirectoryInstructionsCorrect": true,
+  "coverGenerator": {
+    "cwd": "repository root",
+    "script": "tool/sync_document_cover_catalog.py",
+    "scriptExists": true,
+    "source": "../cses-client/packages/docs/src/document-content/metadata/components/doc-image-picker.catalog.ts",
+    "sourceExists": true
+  }
+}

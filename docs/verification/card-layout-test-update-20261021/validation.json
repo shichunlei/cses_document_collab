@@ -91,15 +91,15 @@
   ],
   "files": [
     {
-      "path": "packages/cses_document_collab/test/collab_task_card_test.dart",
+      "path": "test/collab_task_card_test.dart",
       "sha256": "a3d01d8a7e0b857b0cfd04026786f31fc4b0871be0f7d40c29d2588e6f7410d7"
     },
     {
-      "path": "packages/cses_document_collab/test/collab_meeting_card_test.dart",
+      "path": "test/collab_meeting_card_test.dart",
       "sha256": "a2e4952c31869f3ef8ab13827f044311ffded085844dea6f006da09cee7a086d"
     },
     {
-      "path": "packages/cses_document_collab/lib/src/editor/collab_meeting_block.dart",
+      "path": "lib/src/editor/collab_meeting_block.dart",
       "sha256": "9c4105f42445dec8a337de4385ca23ad964592f4cd12b9c1cb6ba8212bcbf123"
     }
   ]

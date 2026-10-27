@@ -6,7 +6,7 @@
 
 ## R1 [P1] 按词退格绕过列边界保护，合并并持久化相邻列正文
 
-位置：`packages/cses_document_collab/lib/src/editor/document_editor_view.dart:403`（命令装配；新列渲染注册在482～483行）。
+位置：`lib/src/editor/document_editor_view.dart:403`（命令装配；新列渲染注册在482～483行）。
 
 在第二列的首个普通段落开头，执行Ctrl+Backspace（Mac对应Alt+Backspace）。目前装配只在普通 `backspace, shift+backspace` 路径加入 `collabBlockBackspaceCommand`；标准 `deleteLeftWordCommand` 仍原样启用，在偏移0时直接调用AppFlowy的 `backspaceCommand.execute`，绕过 `isProtectedCalloutBoundary`。标准命令会向前查找上一可编辑节点，跨到前一列，合并正文并删除当前段落。
 
@@ -16,7 +16,7 @@
 
 ## R2 [P2] 旧分栏草稿导出丢失列宽、列数和列索引
 
-位置：`packages/cses_document_collab/lib/src/editor/blockcraft_json_codec.dart:496–500`。
+位置：`lib/src/editor/blockcraft_json_codec.dart:496–500`。
 
 原有已落盘的 `snapshot-columns` / `snapshot-column` 把原始属性保存在 `bc.p:*`，没有新节点的 `cses_resource` / `cses_columns_*` 字段。新导出逻辑按解析后的 `kind` 无条件进入分栏覆盖路径，先删除 `columnCount`、`columnWidths`、`columnIndex`，再合并 `readCollabColumns()` 的空结果。因此保留旧渲染入口仍不足以保证旧稿交换兼容。
 
@@ -32,6 +32,6 @@
 - 既有分栏/原生15项全部通过；Rust分栏3项全部通过，见 [既有Flutter回归](review-existing-tests.txt) 和 [Rust回归](review-rust-tests.txt)。未重跑全包、平台构建、物理设备或真实在线双端；实施轮次的通过记录仍保留其原有范围。
 - 本轮检查产品源码指纹与实施轮次28个来源/夹具指纹一致，确认没有修产品实现。`git diff --check`通过。临时测试从默认test目录移出，保存为 [review-probes.dart](review-probes.dart)，避免把预期失败的审查探针混入正常测试目录。
 
-复现时，从`packages/cses_document_collab`目录将归档探针复制到`test/columns_review_probe_test.dart`，执行`flutter test --no-pub test/columns_review_probe_test.dart --timeout 30s`。探针依赖该包已构建的macOS调试动态库，缺库失败；完成后删除临时副本，保留归档源和输出。
+复现时，从`仓库根 package`目录将归档探针复制到`test/columns_review_probe_test.dart`，执行`flutter test --no-pub test/columns_review_probe_test.dart --timeout 30s`。探针依赖该包已构建的macOS调试动态库，缺库失败；完成后删除临时副本，保留归档源和输出。
 
 两块继续部分支持，42及13已适配/28部分支持/1结构支持/0未适配统计保持。此次审查不关闭既有拖拽、跨列完整语义、HTML/Markdown和设备/真实在线待办；上述R1/R2另外作为已确认缺陷列出。

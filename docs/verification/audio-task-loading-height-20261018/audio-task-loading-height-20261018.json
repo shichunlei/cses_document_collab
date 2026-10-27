@@ -58,7 +58,7 @@
     },
     "package_full": {
       "passed": 1257,
-      "command": "cd packages/cses_document_collab && flutter test --no-pub",
+      "command": "cd . && flutter test --no-pub",
       "log": "/tmp/card-loading-package-full.log"
     },
     "analysis": {

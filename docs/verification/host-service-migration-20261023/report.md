@@ -22,7 +22,7 @@
 | 服务目录及document_host跨目录相对导入 | 0处 | [最终检查](final-checks.txt) |
 | 直接依赖解析 | 成功，版本保持 | [pub get](pub-get.txt) |
 
-测试使用仓库README指定的 `FRB_DART_LOAD_EXTERNAL_LIBRARY_NATIVE_LIB_DIR="$PWD/packages/cses_document_collab/rust/target/debug"`，复用现有本机库，未重建Rust。运行 `flutter test --no-pub --concurrency=1`，覆盖上述8个测试文件。
+测试使用仓库README指定的 `FRB_DART_LOAD_EXTERNAL_LIBRARY_NATIVE_LIB_DIR="$PWD/rust/target/debug"`，复用现有本机库，未重建Rust。运行 `flutter test --no-pub --concurrency=1`，覆盖上述8个测试文件。
 
 首次两个测试进程并发使用同一测试产物目录产生清理提示；消费者97项通过，但宿主原生12项因未配置本机库路径失败，并触发初始化未完成的tearDown异常。配置库路径并串行复跑后109项全部通过。首次结果保留在[消费者](consumer-tests-first.txt)、[原生宿主](host-native-tests-first.txt)。展示用txt保留终端结果摘要并清理行尾空白；同名 `.txt.raw.gz` 保存完整原始日志，未删除失败依据。
 

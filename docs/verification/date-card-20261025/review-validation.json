@@ -5,7 +5,7 @@
     {
       "id": "R1",
       "priority": 1,
-      "file": "packages/cses_document_collab/lib/src/ui/modal/collab_date_card_visual.dart",
+      "file": "lib/src/ui/modal/collab_date_card_visual.dart",
       "line": 380,
       "title": "极小点线宽度造成实际无绘制次数上限",
       "verified": "JSON accepted 1e-320px dotted; actual painter exceeded 10000 drawPath calls"
@@ -13,7 +13,7 @@
     {
       "id": "R2",
       "priority": 2,
-      "file": "packages/cses_document_collab/lib/src/editor/collab_date_card_settings.dart",
+      "file": "lib/src/editor/collab_date_card_settings.dart",
       "line": 127,
       "title": "重选当前样式重置已有缩放尺寸",
       "verified": "336x289.504 became 168x144.752 after reselect calendar and apply"
@@ -21,7 +21,7 @@
     {
       "id": "R3",
       "priority": 2,
-      "file": "packages/cses_document_collab/lib/src/editor/collab_date_card_settings.dart",
+      "file": "lib/src/editor/collab_date_card_settings.dart",
       "line": 191,
       "title": "字号未按contentScale换算",
       "verified": "at scale 2 selecting 32 persisted 32 instead of published expected 16"
@@ -51,19 +51,19 @@
     "build": "not run"
   },
   "sources": {
-    "packages/cses_document_collab/lib/src/model/collab_date_card.dart": {
+    "lib/src/model/collab_date_card.dart": {
       "before": "d3e32a232846b0d7a376d31e6e21ff8e8de27797c76e687ac365f429a2a78a9f",
       "after": "d3e32a232846b0d7a376d31e6e21ff8e8de27797c76e687ac365f429a2a78a9f"
     },
-    "packages/cses_document_collab/lib/src/editor/collab_date_card_settings.dart": {
+    "lib/src/editor/collab_date_card_settings.dart": {
       "before": "783f11281cec523f859e1186a5ed7521b84ec0e38917d01f7870f041ee8246aa",
       "after": "783f11281cec523f859e1186a5ed7521b84ec0e38917d01f7870f041ee8246aa"
     },
-    "packages/cses_document_collab/lib/src/editor/collab_date_card_block.dart": {
+    "lib/src/editor/collab_date_card_block.dart": {
       "before": "95110c7ba4c0069e0e8460d1aed4fff06d3fd4c95949b5b0fbad77ae4d73f3dd",
       "after": "95110c7ba4c0069e0e8460d1aed4fff06d3fd4c95949b5b0fbad77ae4d73f3dd"
     },
-    "packages/cses_document_collab/lib/src/ui/modal/collab_date_card_visual.dart": {
+    "lib/src/ui/modal/collab_date_card_visual.dart": {
       "before": "a6bbb9961e33a374951d5605eaa4c6a1ab8bf22fbabac9a7adbb5057f6f78d85",
       "after": "a6bbb9961e33a374951d5605eaa4c6a1ab8bf22fbabac9a7adbb5057f6f78d85"
     }

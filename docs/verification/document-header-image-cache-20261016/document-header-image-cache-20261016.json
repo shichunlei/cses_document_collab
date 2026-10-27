@@ -21,7 +21,7 @@
       "count": 44,
       "result": "passed",
       "command": "flutter test --no-pub test/document_header_test.dart test/collab_image_svg_test.dart test/collab_image_test.dart",
-      "cwd": "packages/cses_document_collab",
+      "cwd": ".",
       "log": "/tmp/header-cache-tests-verified.log",
       "coverage": [
         "封面缓存位图、SVG的cover与y裁切、调整y无需重新读取、换源和失败占位",
@@ -53,9 +53,9 @@
     "Android/iOS/Web未复测；图库缩略图、头像及网页缩略图不在范围。"
   ],
   "source_sha256": {
-    "packages/cses_document_collab/lib/src/editor/collab_cached_image.dart": "3ed3ca90a197663357a8e46ea3f5c19f132e999dcfdf80f30b9890ea46c4265c",
-    "packages/cses_document_collab/lib/src/editor/collab_image_content.dart": "25710adf3f0ba6bbc9b35263ee8d0aae2f0c2bf103438854fc27130fb82dad04",
-    "packages/cses_document_collab/lib/src/editor/document_header.dart": "57b5ddc0ca33fce868a2fcb77d864c8a42e6a69237df8a3b5a08961b9f52da9f",
-    "packages/cses_document_collab/test/document_header_test.dart": "f14131816d815e217b922eb95626631d084b80c2e0766d5f155b2355edcf9bb0"
+    "lib/src/editor/collab_cached_image.dart": "3ed3ca90a197663357a8e46ea3f5c19f132e999dcfdf80f30b9890ea46c4265c",
+    "lib/src/editor/collab_image_content.dart": "25710adf3f0ba6bbc9b35263ee8d0aae2f0c2bf103438854fc27130fb82dad04",
+    "lib/src/editor/document_header.dart": "57b5ddc0ca33fce868a2fcb77d864c8a42e6a69237df8a3b5a08961b9f52da9f",
+    "test/document_header_test.dart": "f14131816d815e217b922eb95626631d084b80c2e0766d5f155b2355edcf9bb0"
   }
 }

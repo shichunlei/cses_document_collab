@@ -12,7 +12,7 @@ BlockCraft 通过桌面配置仓库重新查询 latest=0.11.28；桌面声明/Ya
 
 ## R1 — P1：新建空草稿段落后的首次输入被丢弃/拒绝
 
-位置：[document_history.rs](../../../packages/cses_document_collab/rust/src/api/document_history.rs) 第232～236行，关联第413～425行和 `collab.rs` 第465～475行。
+位置：[document_history.rs](../../../rust/src/api/document_history.rs) 第232～236行，关联第413～425行和 `collab.rs` 第465～475行。
 
 空的 legacy `Y.Text` 根没有内容可进入V1复制。候选历史manager初始scope因此不含该段落文字根；本地适配器在建立订阅后才声明并写入这个根，`commit_local_history` 又在写入结束后才扩scope。若这次只输入文字，没有新StackItem，`new.is_empty()`直接返回成功，未持久化或安装有真实文字变化的候选。
 
@@ -22,7 +22,7 @@ BlockCraft 通过桌面配置仓库重新查询 latest=0.11.28；桌面声明/Ya
 
 ## R2 — P1：撤销恢复光标时断开了正在使用的输入连接
 
-位置：[collab_controller.dart](../../../packages/cses_document_collab/lib/src/controller/collab_controller.dart) 第687～691行；关联第315～316、346～348和696～698行。
+位置：[collab_controller.dart](../../../lib/src/controller/collab_controller.dart) 第687～691行；关联第315～316、346～348和696～698行。
 
 恢复选区时 `_historyExecuting` / `_projectionPending` 仍生效，`editorState.editable=false`。AppFlowy键盘服务在选区通知中调用 `canInputAt`，判断不可输入后执行 `textInputService.close()`。稍后仅恢复editable，没有再次发送选区或重新绑定输入。
 
@@ -32,7 +32,7 @@ BlockCraft 通过桌面配置仓库重新查询 latest=0.11.28；桌面声明/Ya
 
 ## R3 — P2：表格删行撤销后，无远端变化也无法重做
 
-位置：[document_history.rs](../../../packages/cses_document_collab/rust/src/api/document_history.rs) 第515～517行；误判发生于第344～345行。
+位置：[document_history.rs](../../../rust/src/api/document_history.rs) 第515～517行；误判发生于第344～345行。
 
 表格删除会将节点归档，而非物理移除map。`meta.removable`优先保存 `next`，其中包含 `meta.csesMobileTableDeleted=true`。Undo恢复可达节点并清除该标志后，Redo仍用删除后的原指纹检查，因仅归档标记的差异就误判存在远端贡献。
 
@@ -42,7 +42,7 @@ BlockCraft 通过桌面配置仓库重新查询 latest=0.11.28；桌面声明/Ya
 
 ## R4 — P2：远端投影暂停输入被误判为永久撤权
 
-位置：[collab_controller.dart](../../../packages/cses_document_collab/lib/src/controller/collab_controller.dart) 第675～677行。关联 `collab_host_mention_ui.dart` 第59～60行、会议选择器以及表格/Mermaid弹窗的 `_revoked`。
+位置：[collab_controller.dart](../../../lib/src/controller/collab_controller.dart) 第675～677行。关联 `collab_host_mention_ui.dart` 第59～60行、会议选择器以及表格/Mermaid弹窗的 `_revoked`。
 
 `_queueProjection`无条件临时将editable置false，但现有消费者把这个Notifier作为权限撤销信号，且为避免迟到提交会永久作废进行中的操作。这样普通远端正文变化也会永久禁用选人/会议确认或编辑弹窗，即使更新发生在其他块、权限从未撤销。
 
@@ -52,7 +52,7 @@ BlockCraft 通过桌面配置仓库重新查询 latest=0.11.28；桌面声明/Ya
 
 ## R5 — P2：初次协同握手跳过自动编号修复
 
-位置：[collab_controller.dart](../../../packages/cses_document_collab/lib/src/controller/collab_controller.dart) 第539～542行，关联第536行的远端投影。
+位置：[collab_controller.dart](../../../lib/src/controller/collab_controller.dart) 第539～542行，关联第536行的远端投影。
 
 `onSync`先调用 `_applyRemoteUpdate`，有正文变化时新投影立即令editable=false；紧接的编号修复条件又要求editable=true，因此首次握手载入缺失派生order的列表时不再执行既有修复，也没有在投影结束后补做。
 
@@ -64,7 +64,7 @@ BlockCraft 通过桌面配置仓库重新查询 latest=0.11.28；桌面声明/Ya
 
 4项Flutter场景及2项原生测试（空段落在两层交叉验证）均产生预期断言失败。3项Flutter复现由父审查再次直接捕获真实exitCode=1，未使用 `; cat logfile` 的包装退出码。原生失败日志为断言失败，不是缺依赖或缺库。命令、哈希和环境见[审查证据清单](review-evidence.json)。
 
-运行Flutter复现时，将归档的 `.dart.txt` 复制为对应 `/tmp/*.dart`，从 `packages/cses_document_collab` 目录执行清单中的单个命名测试。编号测试须将归档seed复制为 `/tmp/review-ordered-missing.update`。使用已有真实本机动态库；SDK访问需要当前环境允许其正常使用缓存，受限启动失败另行记录，不算功能测试结论。
+运行Flutter复现时，将归档的 `.dart.txt` 复制为对应 `/tmp/*.dart`，从 `仓库根 package` 目录执行清单中的单个命名测试。编号测试须将归档seed复制为 `/tmp/review-ordered-missing.update`。使用已有真实本机动态库；SDK访问需要当前环境允许其正常使用缓存，受限启动失败另行记录，不算功能测试结论。
 
 原生补充测试须在临时Rust crate副本中追加至 `src/api/document_history_tests.rs`，其辅助函数由既有测试模块提供，再按完整测试名过滤执行。源码、fixtures、vendor与manifest保持副本，避免修改工作区。未把这批失败复现并入正式测试，留待用户选择修复时补入回归。
 

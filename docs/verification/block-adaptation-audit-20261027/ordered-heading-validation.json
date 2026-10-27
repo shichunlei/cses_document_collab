@@ -38,8 +38,8 @@
     "diff": "git diff --check passed"
   },
   "source_sha256": {
-    "packages/cses_document_collab/lib/src/editor/blockcraft_json_codec.dart": "0b7e126acd4d5430521de8ff6ddae32066f7316ddf8bab04bf59163ea769c727",
-    "packages/cses_document_collab/test/ordered_heading_json_export_test.dart": "158ce4d93fe2fc4d8573b9215a517e6372cebcbd651903563a3213a5ba629229",
+    "lib/src/editor/blockcraft_json_codec.dart": "0b7e126acd4d5430521de8ff6ddae32066f7316ddf8bab04bf59163ea769c727",
+    "test/ordered_heading_json_export_test.dart": "158ce4d93fe2fc4d8573b9215a517e6372cebcbd651903563a3213a5ba629229",
     "docs/block-adaptation.md": "c5981d29b422a9ec79670c06abfe3de6c2d37c1299b12e765beb564f3af1a057",
     "docs/verification/README.md": "d6d3c99c9c2327665c7106d2db97a66c624a6f5be00ef9f4f83c2dbfd0e82728",
     "docs/verification/block-adaptation-audit-20261027/ordered-heading-export.md": "882241d729cb0022a0cfc4f29b6d301d3048114a1f89f1c14aaf6a627bc04568"

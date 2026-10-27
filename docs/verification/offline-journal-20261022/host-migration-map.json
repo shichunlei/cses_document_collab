@@ -1,14 +1,14 @@
 {
   "movedPaths": {
-    "packages/cses_document_collab/lib/src/journal/local_journal_controller.dart": "lib/src/daily_guidance/local_journal_controller.dart",
-    "packages/cses_document_collab/lib/src/journal/journal_ruled_content.dart": "lib/src/daily_guidance/journal_ruled_content.dart",
-    "packages/cses_document_collab/lib/src/journal/local_journal_page.dart": "lib/src/daily_guidance/local_journal_page.dart",
-    "packages/cses_document_collab/lib/src/journal/journal_store.dart": "lib/src/daily_guidance/journal_store.dart",
-    "packages/cses_document_collab/lib/src/journal/journal_editing.dart": "lib/src/daily_guidance/journal_editing.dart",
-    "packages/cses_document_collab/lib/src/journal/journal_draft.dart": "lib/src/daily_guidance/journal_draft.dart",
-    "packages/cses_document_collab/lib/src/journal/journal_surface.dart": "lib/src/daily_guidance/journal_surface.dart",
-    "packages/cses_document_collab/lib/src/journal/journal_list_markers.dart": "lib/src/daily_guidance/journal_list_markers.dart",
-    "lib/src/demo/journal/file_journal_store.dart": "lib/src/daily_guidance/file_journal_store.dart"
+    "lib/src/journal/local_journal_controller.dart": "example/lib/src/daily_guidance/local_journal_controller.dart",
+    "lib/src/journal/journal_ruled_content.dart": "example/lib/src/daily_guidance/journal_ruled_content.dart",
+    "lib/src/journal/local_journal_page.dart": "example/lib/src/daily_guidance/local_journal_page.dart",
+    "lib/src/journal/journal_store.dart": "example/lib/src/daily_guidance/journal_store.dart",
+    "lib/src/journal/journal_editing.dart": "example/lib/src/daily_guidance/journal_editing.dart",
+    "lib/src/journal/journal_draft.dart": "example/lib/src/daily_guidance/journal_draft.dart",
+    "lib/src/journal/journal_surface.dart": "example/lib/src/daily_guidance/journal_surface.dart",
+    "lib/src/journal/journal_list_markers.dart": "example/lib/src/daily_guidance/journal_list_markers.dart",
+    "example/lib/src/demo/journal/file_journal_store.dart": "example/lib/src/daily_guidance/file_journal_store.dart"
   },
   "historicalEvidence": "Original source hashes/logs/review probes retain their old paths as historical snapshots; current production files use these destinations."
 }

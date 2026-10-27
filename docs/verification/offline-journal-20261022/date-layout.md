@@ -6,7 +6,7 @@
 - 右上角月份使用完整大写英文（例如OCTOBER）；日期旁的中文月份与星期保持原显示。英文月份在窄屏/大字号下按可用宽度缩小，避免溢出。
 - 编辑和预览继续复用同一个头部组件；不改变记录日期、自动保存或草稿协议。
 
-本轮只修改`packages/cses_document_collab/lib/src/journal/local_journal_page.dart`的日期头部布局和对应DartDoc，保留其他任务的工作区改动。
+本轮只修改`lib/src/journal/local_journal_page.dart`的日期头部布局和对应DartDoc，保留其他任务的工作区改动。
 
 验证：既有页面及日记回归31项全部通过，覆盖280宽两倍字与390宽标准字、编辑/预览和既有四项修复，见[测试](date-layout-test.txt)；目标静态分析无问题，见[分析](date-layout-analyze.txt)。目标文件已格式化，完成前执行`git diff --check`及记录链接检查。
 

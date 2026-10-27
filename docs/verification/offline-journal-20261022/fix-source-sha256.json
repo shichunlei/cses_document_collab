@@ -1,13 +1,13 @@
 {
-  "packages/cses_document_collab/lib/src/journal/local_journal_controller.dart": "963f01aeaf9ae53ca0e1a9f4ce19d5638559b9bed90fe77c92510c05a07dadad",
-  "packages/cses_document_collab/lib/src/journal/journal_ruled_content.dart": "3b89468c9e5b83ce58c1a92b7df5b59fa643396083d5c2d590b031fad04a100d",
-  "packages/cses_document_collab/lib/src/journal/local_journal_page.dart": "f47700f312315478eadd9855d60579f45fbba0ae572835de544e033c4b993eb4",
-  "packages/cses_document_collab/lib/src/journal/journal_store.dart": "a404d7ad1b03c0e8195b9ed6b86df8679c5229fbe4545c543b99899947f35101",
-  "packages/cses_document_collab/lib/src/journal/journal_draft.dart": "ddb0c5a9a493ce9fbbd362538fde0cb2dcdd77d935d3de792a307ee01de548e0",
-  "packages/cses_document_collab/lib/src/journal/journal_surface.dart": "0a0c07dce692cb0eeb009cf62b683d79e7c336f4317d221cf8817c00ab1a20b2",
-  "lib/src/demo/journal/file_journal_store.dart": "7f63c41b602ca71347195d47674eef33b69cd189f4077a31aa32554c65e9cba4",
-  "lib/src/demo/collab_demo_page.dart": "acb6786002653f1c08ce76da04938a8cd5c806c449d3116c101b01156fc5a41b",
-  "packages/cses_document_collab/lib/cses_document_collab.dart": "ba486f6474630da27a06720633fd019dd04c46a45ad78ba08cbaaaec1d117141",
-  "packages/cses_document_collab/lib/src/journal/journal_editing.dart": "284acf9756fa4bb627ec915fb49304277f545073d8a1677f72930d29710aa2ef",
-  "packages/cses_document_collab/test/local_journal_regressions_test.dart": "18eb2d8f58e62bda1d3477af4ee21765ff4066a4309e4004cfadac6a15e55000"
+  "lib/src/journal/local_journal_controller.dart": "963f01aeaf9ae53ca0e1a9f4ce19d5638559b9bed90fe77c92510c05a07dadad",
+  "lib/src/journal/journal_ruled_content.dart": "3b89468c9e5b83ce58c1a92b7df5b59fa643396083d5c2d590b031fad04a100d",
+  "lib/src/journal/local_journal_page.dart": "f47700f312315478eadd9855d60579f45fbba0ae572835de544e033c4b993eb4",
+  "lib/src/journal/journal_store.dart": "a404d7ad1b03c0e8195b9ed6b86df8679c5229fbe4545c543b99899947f35101",
+  "lib/src/journal/journal_draft.dart": "ddb0c5a9a493ce9fbbd362538fde0cb2dcdd77d935d3de792a307ee01de548e0",
+  "lib/src/journal/journal_surface.dart": "0a0c07dce692cb0eeb009cf62b683d79e7c336f4317d221cf8817c00ab1a20b2",
+  "example/lib/src/demo/journal/file_journal_store.dart": "7f63c41b602ca71347195d47674eef33b69cd189f4077a31aa32554c65e9cba4",
+  "example/lib/src/demo/collab_demo_page.dart": "acb6786002653f1c08ce76da04938a8cd5c806c449d3116c101b01156fc5a41b",
+  "lib/cses_document_collab.dart": "ba486f6474630da27a06720633fd019dd04c46a45ad78ba08cbaaaec1d117141",
+  "lib/src/journal/journal_editing.dart": "284acf9756fa4bb627ec915fb49304277f545073d8a1677f72930d29710aa2ef",
+  "test/local_journal_regressions_test.dart": "18eb2d8f58e62bda1d3477af4ee21765ff4066a4309e4004cfadac6a15e55000"
 }

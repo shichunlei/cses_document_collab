@@ -24,7 +24,7 @@
   "checks": {
     "device_cases": "全部上述范围通过",
     "package_tests_passed": 2,
-    "package_test_file": "packages/cses_document_collab/test/editor_toolbar_configuration_test.dart",
+    "package_test_file": "test/editor_toolbar_configuration_test.dart",
     "consumer_analyze": "No issues found",
     "android_debug_build": "passed，81.0s",
     "installed": true,

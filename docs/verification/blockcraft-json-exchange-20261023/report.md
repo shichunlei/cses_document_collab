@@ -24,10 +24,10 @@
 - [converted-journal.json](converted-journal.json)：由生产 `JournalBlockCraftCodec.exportDraft` 从前轮虚构三栏示例生成，含12块、3个人员对象、2个已完成待办，以及help/pilot业务身份。
 - [restored-mobile.json](restored-mobile.json)：将该桌面根快照反向转换后的生产草稿，能进入同一个手机编辑器并继续编辑。
 - [desktop-model-validation.json](desktop-model-validation.json)：实际桌面安装版Schema的nodeType/父子规则检查，真实Yjs恢复及生产exportSnapshot深度一致验证通过。未操作桌面窗口下载或文件导入菜单。
-- [desktop-json-blocks.json](../../../packages/cses_document_collab/test/fixtures/desktop-json-blocks.json)：实际安装版公开Schema生成及宿主业务契约构造的虚构全类型夹具，覆盖当前桌面42种注册类型和包内额外sticker，共43种；包含真实父子结构。
+- [desktop-json-blocks.json](../../../test/fixtures/desktop-json-blocks.json)：实际安装版公开Schema生成及宿主业务契约构造的虚构全类型夹具，覆盖当前桌面42种注册类型和包内额外sticker，共43种；包含真实父子结构。
 - [vector-generation.json](vector-generation.json)：从桌面公共几何/贴纸数据生成111种形状路径、3种贴纸的原生矢量目录；生成器和源文件SHA-256保留。修改生成器后重新生成，不手改g.dart。
 
-示例生成命令：`flutter test --no-pub --dart-define=GENERATE_BLOCKCRAFT_EXAMPLES=true test/daily_guidance/journal_blockcraft_codec_test.dart`。桌面模型核对命令：`node docs/verification/blockcraft-json-exchange-20261023/verify-desktop-model.mjs`。夹具生成脚本和输出随本目录保留。
+示例生成命令：`flutter test --no-pub --dart-define=GENERATE_BLOCKCRAFT_EXAMPLES=true example/test/daily_guidance/journal_blockcraft_codec_test.dart`。桌面模型核对命令：`node docs/verification/blockcraft-json-exchange-20261023/verify-desktop-model.mjs`。夹具生成脚本和输出随本目录保留。
 
 ## 验证与首轮修复
 

@@ -1,0 +1,20 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/test/collab_controller_native_test.dart
+00:00 +0: (setUpAll)
+00:00 +0: a rejected second controller cannot close the active native Doc
+DocCollab: 编辑器操作失败: Bad state: COLLAB_DOCUMENT_IN_USE: 请先等待当前文档关闭
+#0      CollabRuntime.acquire (package:cses_document_collab/src/native/collab_runtime.dart:24:7)
+#1      CollabController._initialize (package:cses_document_collab/src/controller/collab_controller.dart:431:21)
+#2      CollabController._initializeRecoverably (package:cses_document_collab/src/controller/collab_controller.dart:414:13)
+#3      CollabController.initialize (package:cses_document_collab/src/controller/collab_controller.dart:408:36)
+#4      main.<anonymous closure> (file:///System/Volumes/Data/workspace/mobile-collab-demo/test/collab_controller_native_test.dart:39:18)
+<asynchronous suspension>
+#5      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#6      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#7      Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:00 +1: formal cache survives reopen; read-only sync withholds pending edits
+00:00 +2: (tearDownAll)
+00:00 +2: All tests passed!

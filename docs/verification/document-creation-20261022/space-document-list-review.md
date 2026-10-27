@@ -6,7 +6,7 @@
 
 ## L1 / P2：恢复完成后迟到的空间响应覆盖固定创建位置
 
-位置：`lib/src/demo/document_creation/document_creation_page.dart:78–86`，关联第158行列表目标选择。
+位置：`example/lib/src/demo/document_creation/document_creation_page.dart:78–86`，关联第158行列表目标选择。
 
 触发顺序：
 

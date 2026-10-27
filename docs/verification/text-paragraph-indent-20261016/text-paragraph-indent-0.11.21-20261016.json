@@ -45,7 +45,7 @@
       }
     },
     "full_package": {
-      "directory": "packages/cses_document_collab",
+      "directory": ".",
       "command": "flutter test --no-pub --reporter expanded",
       "passed": 1097,
       "failed": 0
@@ -65,7 +65,7 @@
     "os": "Android 16 / API 36",
     "emulator": false,
     "viewport": "Actual device viewport; real MobileSelectionServiceWidget asserted present.",
-    "command": "flutter drive --driver packages/cses_document_collab/test_driver/integration_test.dart --target packages/cses_document_collab/integration_test/heading_typography_test.dart -d A92G6R5704004108 --no-pub --keep-app-running",
+    "command": "flutter drive --driver example/test_driver/integration_test.dart --target integration_test/heading_typography_test.dart -d A92G6R5704004108 --no-pub --keep-app-running",
     "result": "passed",
     "functional_scenarios": 30,
     "runner_count_with_setup_hooks": 32,
@@ -122,10 +122,10 @@
     "Other BlockCraft 0.11.21 features and full paragraph spacing/font settings are outside this fix."
   ],
   "source_hashes": {
-    "packages/cses_document_collab/lib/src/editor/collab_paragraph_indent.dart": "14858b0f952d006baf1fce44d5e231dd0f594bc09c1ceed38d54bfb96f3b9801",
-    "packages/cses_document_collab/lib/src/editor/collab_paragraph_presentation.dart": "ea2c27b194a7a6a4f7d3e22e017fdcccd4c578dfa13d777d99a410b0b0a8e203",
-    "packages/cses_document_collab/test/paragraph_indent_test.dart": "e81f5472032768a142f6f80fd9a26899762a83f3dcdb0e1fa5b9998b3d203172",
-    "packages/cses_document_collab/test/heading_typography_test.dart": "0a82f4fc3eaeee39b7a04704f69dd2e3e8f1a993b7b211da47813963ae6c3783",
-    "packages/cses_document_collab/test/paragraph_style_native_test.dart": "5d6dc193c241b16ea622538097adf78577133663661fc86622153913e900489b"
+    "lib/src/editor/collab_paragraph_indent.dart": "14858b0f952d006baf1fce44d5e231dd0f594bc09c1ceed38d54bfb96f3b9801",
+    "lib/src/editor/collab_paragraph_presentation.dart": "ea2c27b194a7a6a4f7d3e22e017fdcccd4c578dfa13d777d99a410b0b0a8e203",
+    "test/paragraph_indent_test.dart": "e81f5472032768a142f6f80fd9a26899762a83f3dcdb0e1fa5b9998b3d203172",
+    "test/heading_typography_test.dart": "0a82f4fc3eaeee39b7a04704f69dd2e3e8f1a993b7b211da47813963ae6c3783",
+    "test/paragraph_style_native_test.dart": "5d6dc193c241b16ea622538097adf78577133663661fc86622153913e900489b"
   }
 }

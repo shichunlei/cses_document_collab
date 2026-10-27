@@ -45,7 +45,7 @@
       "failed": 0
     },
     "hostSuite": {
-      "command": "flutter test --no-pub test/collab_demo_page_test.dart --reporter expanded",
+      "command": "flutter test --no-pub example/test/collab_demo_page_test.dart --reporter expanded",
       "passed": 1,
       "failed": 0
     },
@@ -54,7 +54,7 @@
       "result": "No issues found"
     },
     "hostAnalysis": {
-      "command": "flutter analyze --no-pub lib/src/demo/document_host.dart",
+      "command": "flutter analyze --no-pub example/lib/src/demo/document_host.dart",
       "infos": 1,
       "finding": "depend_on_referenced_packages: path_provider不是宿主pubspec的直接依赖。",
       "baseline": "HEAD的document_host.dart已有相同path_provider导入，pubspec未修改；保留历史问题，未标为静态分析完全通过。",

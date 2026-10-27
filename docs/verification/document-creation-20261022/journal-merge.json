@@ -7,10 +7,10 @@
   "mergeBase": "923f47aaec3dc40b49829c61d9a2368c1104800c",
   "conflictsResolved": [
     "docs/block-adaptation.md",
-    "lib/src/demo/collab_demo_page.dart",
-    "test/collab_demo_page_test.dart"
+    "example/lib/src/demo/collab_demo_page.dart",
+    "example/test/collab_demo_page_test.dart"
   ],
-  "semanticTestAdaptation": "test/document_host_native_test.dart 同文档重开用例改为公开 canUndo/undo/canRedo/redo，实际检查正文恢复；原 AppFlowy undoStack 断言与本地原生历史接口不相容。",
+  "semanticTestAdaptation": "example/test/document_host_native_test.dart 同文档重开用例改为公开 canUndo/undo/canRedo/redo，实际检查正文恢复；原 AppFlowy undoStack 断言与本地原生历史接口不相容。",
   "blockcraft": {
     "latest": "0.11.28",
     "registry": "http://npm.runtongqiuben.com/",
@@ -25,103 +25,103 @@
   "android": {
     "apkSha256": "9ab3369e30165eda18929995862ac63fa7a7d8efca4fb611cf1d8f0871c1f77e",
     "sources": {
-      "lib/src/daily_guidance/file_journal_store.dart": {
+      "example/lib/src/daily_guidance/file_journal_store.dart": {
         "sha256": "d379dc2488dfeec027649b46747cd091ce125deb41174ada9667ab672137e96c",
         "embedded": true
       },
-      "lib/src/daily_guidance/guidance_entries.dart": {
+      "example/lib/src/daily_guidance/guidance_entries.dart": {
         "sha256": "27d60a63e1f975194d4ac95f0115ebb8217291858576043171ac78147bb98798",
         "embedded": true
       },
-      "lib/src/daily_guidance/guidance_people.dart": {
+      "example/lib/src/daily_guidance/guidance_people.dart": {
         "sha256": "79b0fc3364ef7fa114146cbec6272effdfcf9e06c256b34133de4e718306fcdb",
         "embedded": true
       },
-      "lib/src/daily_guidance/journal_draft.dart": {
+      "example/lib/src/daily_guidance/journal_draft.dart": {
         "sha256": "7a08c407739b15844b64612f29c5d50e3bc252fa6aed4cc3d6effe13c372e7a9",
         "embedded": true
       },
-      "lib/src/daily_guidance/journal_editing.dart": {
+      "example/lib/src/daily_guidance/journal_editing.dart": {
         "sha256": "587dee9250ef8cc095198844fec91776cc4e782dca418f0b1a2c1c390c6fad03",
         "embedded": true
       },
-      "lib/src/daily_guidance/journal_input.dart": {
+      "example/lib/src/daily_guidance/journal_input.dart": {
         "sha256": "b7677736e99d4db80d12094008ad46421c0235b59a35d0d521a1ff2baf604444",
         "embedded": true
       },
-      "lib/src/daily_guidance/journal_list_markers.dart": {
+      "example/lib/src/daily_guidance/journal_list_markers.dart": {
         "sha256": "e49093b775dada58ea4b752a871c0b2508abc93744715eae3261bf2f8b196e54",
         "embedded": true
       },
-      "lib/src/daily_guidance/journal_ruled_content.dart": {
+      "example/lib/src/daily_guidance/journal_ruled_content.dart": {
         "sha256": "b99367a854e0434d1cc8aeefdd89f158de8eb95d4c2d0f65ca2ca638c8861c61",
         "embedded": true
       },
-      "lib/src/daily_guidance/journal_store.dart": {
+      "example/lib/src/daily_guidance/journal_store.dart": {
         "sha256": "ff8a703c1068125717c323d66d9e9e1f63943a8d2d34cdd39f7bf597bd731ebe",
         "embedded": true
       },
-      "lib/src/daily_guidance/journal_surface.dart": {
+      "example/lib/src/daily_guidance/journal_surface.dart": {
         "sha256": "f02083f5ace896dc51fff25934f94a9a1fc51ca3cb51b8f67e5b44c9d460b8de",
         "embedded": true
       },
-      "lib/src/daily_guidance/local_journal_controller.dart": {
+      "example/lib/src/daily_guidance/local_journal_controller.dart": {
         "sha256": "bf56287996873d40f1d3fae7e2993d5308d7a8d2be21b18c42082650a53d2b80",
         "embedded": true
       },
-      "lib/src/daily_guidance/local_journal_page.dart": {
+      "example/lib/src/daily_guidance/local_journal_page.dart": {
         "sha256": "c13f8cbf4773378cc687bc74e7ac3831c82d52edbb81ace94a4bf0c7666fa04f",
         "embedded": true
       },
-      "lib/src/demo/collab_demo_page.dart": {
+      "example/lib/src/demo/collab_demo_page.dart": {
         "sha256": "9ddb3cfaa5da0b14247f96a379aa6b5451fc0c8529dfbaad645c1af67f97cb9f",
         "embedded": true
       },
-      "lib/src/demo/cses_account_login.dart": {
+      "example/lib/src/demo/cses_account_login.dart": {
         "sha256": "ff3e8dd9b20a26ffdb2df082d2984f7b855d5bcee5c7ccf710699e5357bd9f20",
         "embedded": true
       },
-      "lib/src/demo/document_creation/cses_document_creation_service.dart": {
+      "example/lib/src/demo/document_creation/cses_document_creation_service.dart": {
         "sha256": "25715d68ac1879f462439f52295325c2342c84a56bceaaa0fce2a07850b5ae06",
         "embedded": true
       },
-      "lib/src/demo/document_creation/document_creation_api.dart": {
+      "example/lib/src/demo/document_creation/document_creation_api.dart": {
         "sha256": "ea94d02c7083b0ab8a39a494886a022f04a172d1d465212a1d27042d3ff42e77",
         "embedded": true
       },
-      "lib/src/demo/document_creation/document_creation_coordinator.dart": {
+      "example/lib/src/demo/document_creation/document_creation_coordinator.dart": {
         "sha256": "6b2f0ccd86f44b0a955ab4ce5cf956e3b5e7fc646df9c87db5124eb2fa67de82",
         "embedded": true
       },
-      "lib/src/demo/document_creation/document_creation_page.dart": {
+      "example/lib/src/demo/document_creation/document_creation_page.dart": {
         "sha256": "fdcaa49a343e9e3b79fbcf91fcc51e5cd7c348d0c3aa43636184aa0475841b05",
         "embedded": true
       },
-      "lib/src/demo/document_creation/document_space_list.dart": {
+      "example/lib/src/demo/document_creation/document_space_list.dart": {
         "sha256": "c92f5a8b8d5bc6b8c16f9dfb434df74e8c13bac0bb36c6fd2df61d861b21d7a8",
         "embedded": true
       },
-      "lib/src/demo/document_host.dart": {
+      "example/lib/src/demo/document_host.dart": {
         "sha256": "a898601eecb5f8579b96e7698d92c3a8e0f0c9702b79988e78106457a09a4eda",
         "embedded": true
       },
-      "packages/cses_document_collab/lib/cses_document_collab.dart": {
+      "lib/cses_document_collab.dart": {
         "sha256": "b5779092a19aee9311babd7facc354594c576d7c74f859b2416a942b544184bd",
         "embedded": true
       },
-      "packages/cses_document_collab/lib/src/editor/collab_mobile_selection_menu.dart": {
+      "lib/src/editor/collab_mobile_selection_menu.dart": {
         "sha256": "0b76d42038a1ffb491c8a07898946a8b7ed9b7d298181002f9685822d0f236cc",
         "embedded": true
       },
-      "packages/cses_document_collab/lib/src/editor/core/editor_command_context.dart": {
+      "lib/src/editor/core/editor_command_context.dart": {
         "sha256": "0979714ffef4c05dd37cb60e39bfb3a7ebda17f0a5012af5420628010fa0f78a",
         "embedded": true
       },
-      "packages/cses_document_collab/lib/src/editor/document_editor_commands.dart": {
+      "lib/src/editor/document_editor_commands.dart": {
         "sha256": "504ea02b4eac46e7f790f16577ef3cda3ccd38d6be7138830d93ee9492bcaa88",
         "embedded": true
       },
-      "packages/cses_document_collab/lib/src/editor/editor_interaction_shell.dart": {
+      "lib/src/editor/editor_interaction_shell.dart": {
         "sha256": "e96a73cd83e9ec0d979537c716bf9dfab4e184347b04b0d0b29865c30234d6ba",
         "embedded": true
       }
@@ -143,9 +143,9 @@
     "skipped": 0,
     "analyze": "No issues found (13 targets)",
     "formatted": [
-      "lib/src/demo/collab_demo_page.dart",
-      "test/collab_demo_page_test.dart",
-      "test/document_host_native_test.dart"
+      "example/lib/src/demo/collab_demo_page.dart",
+      "example/test/collab_demo_page_test.dart",
+      "example/test/document_host_native_test.dart"
     ],
     "formatLineLength": 100,
     "nativeInitialRun": "11 passed / 1 failed: incoming test read obsolete AppFlowy undoStack; evidence journal-merge-native-first.txt",
@@ -164,19 +164,19 @@
     "policy": "保留原始工具输出字节；除此之外暂存diff检查通过。"
   },
   "mergedDartSourceHashes": {
-    "integration_test/document_creation_device_test.dart": "bee2c8da9624be60a9dfee1fc7fcaab7961c97a65af0c46deb05775bddfed160",
-    "lib/src/demo/collab_demo_page.dart": "9ddb3cfaa5da0b14247f96a379aa6b5451fc0c8529dfbaad645c1af67f97cb9f",
-    "lib/src/demo/cses_account_login.dart": "ff3e8dd9b20a26ffdb2df082d2984f7b855d5bcee5c7ccf710699e5357bd9f20",
-    "lib/src/demo/document_creation/cses_document_creation_service.dart": "25715d68ac1879f462439f52295325c2342c84a56bceaaa0fce2a07850b5ae06",
-    "lib/src/demo/document_creation/document_creation_api.dart": "ea94d02c7083b0ab8a39a494886a022f04a172d1d465212a1d27042d3ff42e77",
-    "lib/src/demo/document_creation/document_creation_coordinator.dart": "6b2f0ccd86f44b0a955ab4ce5cf956e3b5e7fc646df9c87db5124eb2fa67de82",
-    "lib/src/demo/document_creation/document_creation_page.dart": "fdcaa49a343e9e3b79fbcf91fcc51e5cd7c348d0c3aa43636184aa0475841b05",
-    "lib/src/demo/document_creation/document_space_list.dart": "c92f5a8b8d5bc6b8c16f9dfb434df74e8c13bac0bb36c6fd2df61d861b21d7a8",
-    "lib/src/demo/document_host.dart": "a898601eecb5f8579b96e7698d92c3a8e0f0c9702b79988e78106457a09a4eda",
-    "test/collab_demo_page_test.dart": "2ddf9134f82dbea8b1e1833ee5d14a6378cddb36d428dd6167deb87e4db4e616",
-    "test/cses_document_creation_service_test.dart": "d80d11d1fccab93ecda877ed86f42adb5c33d6917c7b4eb26ac1e502ee4966df",
-    "test/document_creation_coordinator_test.dart": "227e12329dffda0466007789efe9fd0ae3a7796fdac67cdd07e7bc644a366355",
-    "test/document_host_native_test.dart": "51e04aa99ca325e3f93c0acd7ee0b15640e9598075a487eec45d04ccd05ea57e",
-    "test/document_space_list_test.dart": "8f4baf5b1496a806c6616e6f0688477e36cf66bec6aaf703b43937f03cbf60cb"
+    "example/integration_test/document_creation_device_test.dart": "bee2c8da9624be60a9dfee1fc7fcaab7961c97a65af0c46deb05775bddfed160",
+    "example/lib/src/demo/collab_demo_page.dart": "9ddb3cfaa5da0b14247f96a379aa6b5451fc0c8529dfbaad645c1af67f97cb9f",
+    "example/lib/src/demo/cses_account_login.dart": "ff3e8dd9b20a26ffdb2df082d2984f7b855d5bcee5c7ccf710699e5357bd9f20",
+    "example/lib/src/demo/document_creation/cses_document_creation_service.dart": "25715d68ac1879f462439f52295325c2342c84a56bceaaa0fce2a07850b5ae06",
+    "example/lib/src/demo/document_creation/document_creation_api.dart": "ea94d02c7083b0ab8a39a494886a022f04a172d1d465212a1d27042d3ff42e77",
+    "example/lib/src/demo/document_creation/document_creation_coordinator.dart": "6b2f0ccd86f44b0a955ab4ce5cf956e3b5e7fc646df9c87db5124eb2fa67de82",
+    "example/lib/src/demo/document_creation/document_creation_page.dart": "fdcaa49a343e9e3b79fbcf91fcc51e5cd7c348d0c3aa43636184aa0475841b05",
+    "example/lib/src/demo/document_creation/document_space_list.dart": "c92f5a8b8d5bc6b8c16f9dfb434df74e8c13bac0bb36c6fd2df61d861b21d7a8",
+    "example/lib/src/demo/document_host.dart": "a898601eecb5f8579b96e7698d92c3a8e0f0c9702b79988e78106457a09a4eda",
+    "example/test/collab_demo_page_test.dart": "2ddf9134f82dbea8b1e1833ee5d14a6378cddb36d428dd6167deb87e4db4e616",
+    "example/test/cses_document_creation_service_test.dart": "d80d11d1fccab93ecda877ed86f42adb5c33d6917c7b4eb26ac1e502ee4966df",
+    "example/test/document_creation_coordinator_test.dart": "227e12329dffda0466007789efe9fd0ae3a7796fdac67cdd07e7bc644a366355",
+    "example/test/document_host_native_test.dart": "51e04aa99ca325e3f93c0acd7ee0b15640e9598075a487eec45d04ccd05ea57e",
+    "example/test/document_space_list_test.dart": "8f4baf5b1496a806c6616e6f0688477e36cf66bec6aaf703b43937f03cbf60cb"
   }
 }

@@ -15,11 +15,11 @@
   },
   "removedSymbolReferences": [],
   "sourceSha256": {
-    "packages/cses_document_collab/lib/src/editor/core/editor_configuration.dart": "9201e99f1d47f85ef6209b9cd82e421f7560090a97a51d15d2071bdb34bce30b",
-    "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart": "f26529cee4a87317e84681649ed431997a8814a89796d954803a192b40451d9f",
-    "packages/cses_document_collab/test/collab_controller_snapshot_test.dart": "7f1976a8649a74f5f0e97d9ea31d9f6947afad79b8f9c556b8d86bb9173872ed",
-    "packages/cses_document_collab/test/local_editor_operations_test.dart": "02a91c43584b233a46e00ba8500ff8a9d8803066b5d42377f3f6f3dab71c6ebd",
-    "packages/cses_document_collab/test/shared_font_size_test.dart": "0fab56e525dc51f368f991c378d0265e40cbc64e158a8c2c4839412cbe35c4fd"
+    "lib/src/editor/core/editor_configuration.dart": "9201e99f1d47f85ef6209b9cd82e421f7560090a97a51d15d2071bdb34bce30b",
+    "lib/src/editor/editor_shortcut_toolbar.dart": "f26529cee4a87317e84681649ed431997a8814a89796d954803a192b40451d9f",
+    "test/collab_controller_snapshot_test.dart": "7f1976a8649a74f5f0e97d9ea31d9f6947afad79b8f9c556b8d86bb9173872ed",
+    "test/local_editor_operations_test.dart": "02a91c43584b233a46e00ba8500ff8a9d8803066b5d42377f3f6f3dab71c6ebd",
+    "test/shared_font_size_test.dart": "0fab56e525dc51f368f991c378d0265e40cbc64e158a8c2c4839412cbe35c4fd"
   },
   "verifiedBehavior": [
     "无独立字号弹窗",

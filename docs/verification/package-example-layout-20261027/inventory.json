@@ -1,0 +1,962 @@
+{
+  "originalTrackedFiles": 2938,
+  "identicalBytes": 2710,
+  "missing": [],
+  "coreLibFiles": 189,
+  "allCoreLibFilesIdentical": true,
+  "rustSourceFiles": 75,
+  "allRustSourcesIdentical": true,
+  "changedFiles": [
+    {
+      "old": ".gitattributes",
+      "new": ".gitattributes"
+    },
+    {
+      "old": ".gitignore",
+      "new": ".gitignore"
+    },
+    {
+      "old": "AGENTS.md",
+      "new": "AGENTS.md"
+    },
+    {
+      "old": "README.md",
+      "new": "example/README.md"
+    },
+    {
+      "old": "assets/images/README.md",
+      "new": "example/assets/images/README.md"
+    },
+    {
+      "old": "docs/block-adaptation.md",
+      "new": "docs/block-adaptation.md"
+    },
+    {
+      "old": "docs/collab-package-integration.md",
+      "new": "docs/collab-package-integration.md"
+    },
+    {
+      "old": "docs/mobile-document-creation-plan.md",
+      "new": "docs/mobile-document-creation-plan.md"
+    },
+    {
+      "old": "docs/verification/README.md",
+      "new": "docs/verification/README.md"
+    },
+    {
+      "old": "docs/verification/attachment-card-20261016/attachment-card-20261016.json",
+      "new": "docs/verification/attachment-card-20261016/attachment-card-20261016.json"
+    },
+    {
+      "old": "docs/verification/audio-task-loading-height-20261018/audio-task-loading-height-20261018.json",
+      "new": "docs/verification/audio-task-loading-height-20261018/audio-task-loading-height-20261018.json"
+    },
+    {
+      "old": "docs/verification/block-adaptation-audit-20261027/generate-projection-fixture.mjs",
+      "new": "docs/verification/block-adaptation-audit-20261027/generate-projection-fixture.mjs"
+    },
+    {
+      "old": "docs/verification/block-adaptation-audit-20261027/ordered-heading-validation.json",
+      "new": "docs/verification/block-adaptation-audit-20261027/ordered-heading-validation.json"
+    },
+    {
+      "old": "docs/verification/block-adaptation-audit-20261027/validation.json",
+      "new": "docs/verification/block-adaptation-audit-20261027/validation.json"
+    },
+    {
+      "old": "docs/verification/block-class-audit-20261017/block-class-audit-20261017.json",
+      "new": "docs/verification/block-class-audit-20261017/block-class-audit-20261017.json"
+    },
+    {
+      "old": "docs/verification/blockcraft-json-exchange-20261023/fixes-build-validation.json",
+      "new": "docs/verification/blockcraft-json-exchange-20261023/fixes-build-validation.json"
+    },
+    {
+      "old": "docs/verification/blockcraft-json-exchange-20261023/fixes-validation.json",
+      "new": "docs/verification/blockcraft-json-exchange-20261023/fixes-validation.json"
+    },
+    {
+      "old": "docs/verification/blockcraft-json-exchange-20261023/fixes.md",
+      "new": "docs/verification/blockcraft-json-exchange-20261023/fixes.md"
+    },
+    {
+      "old": "docs/verification/blockcraft-json-exchange-20261023/generate-desktop-fixture.mjs",
+      "new": "docs/verification/blockcraft-json-exchange-20261023/generate-desktop-fixture.mjs"
+    },
+    {
+      "old": "docs/verification/blockcraft-json-exchange-20261023/p1-fixes-build-validation.json",
+      "new": "docs/verification/blockcraft-json-exchange-20261023/p1-fixes-build-validation.json"
+    },
+    {
+      "old": "docs/verification/blockcraft-json-exchange-20261023/p1-fixes-validation.json",
+      "new": "docs/verification/blockcraft-json-exchange-20261023/p1-fixes-validation.json"
+    },
+    {
+      "old": "docs/verification/blockcraft-json-exchange-20261023/p1-fixes.md",
+      "new": "docs/verification/blockcraft-json-exchange-20261023/p1-fixes.md"
+    },
+    {
+      "old": "docs/verification/blockcraft-json-exchange-20261023/report.md",
+      "new": "docs/verification/blockcraft-json-exchange-20261023/report.md"
+    },
+    {
+      "old": "docs/verification/blockcraft-json-exchange-20261023/review-2-validation.json",
+      "new": "docs/verification/blockcraft-json-exchange-20261023/review-2-validation.json"
+    },
+    {
+      "old": "docs/verification/blockcraft-json-exchange-20261023/review-2.md",
+      "new": "docs/verification/blockcraft-json-exchange-20261023/review-2.md"
+    },
+    {
+      "old": "docs/verification/blockcraft-json-exchange-20261023/review-validation.json",
+      "new": "docs/verification/blockcraft-json-exchange-20261023/review-validation.json"
+    },
+    {
+      "old": "docs/verification/blockcraft-json-exchange-20261023/review.md",
+      "new": "docs/verification/blockcraft-json-exchange-20261023/review.md"
+    },
+    {
+      "old": "docs/verification/blockcraft-json-exchange-20261023/validation.json",
+      "new": "docs/verification/blockcraft-json-exchange-20261023/validation.json"
+    },
+    {
+      "old": "docs/verification/card-layout-test-update-20261021/validation.json",
+      "new": "docs/verification/card-layout-test-update-20261021/validation.json"
+    },
+    {
+      "old": "docs/verification/card-tap-actions-20261026/card-lock-layout.md",
+      "new": "docs/verification/card-tap-actions-20261026/card-lock-layout.md"
+    },
+    {
+      "old": "docs/verification/card-tap-actions-20261026/report.md",
+      "new": "docs/verification/card-tap-actions-20261026/report.md"
+    },
+    {
+      "old": "docs/verification/code-block-20261019/code-enter-20261019.json",
+      "new": "docs/verification/code-block-20261019/code-enter-20261019.json"
+    },
+    {
+      "old": "docs/verification/color-emoji-unification-20261016/color-emoji-unification-20261016.json",
+      "new": "docs/verification/color-emoji-unification-20261016/color-emoji-unification-20261016.json"
+    },
+    {
+      "old": "docs/verification/columns-20261026/fix-validation.json",
+      "new": "docs/verification/columns-20261026/fix-validation.json"
+    },
+    {
+      "old": "docs/verification/columns-20261026/review-validation.json",
+      "new": "docs/verification/columns-20261026/review-validation.json"
+    },
+    {
+      "old": "docs/verification/columns-20261026/review.md",
+      "new": "docs/verification/columns-20261026/review.md"
+    },
+    {
+      "old": "docs/verification/columns-20261026/validation.json",
+      "new": "docs/verification/columns-20261026/validation.json"
+    },
+    {
+      "old": "docs/verification/commit-readiness-20261022/remaining-code-review-20261023.json",
+      "new": "docs/verification/commit-readiness-20261022/remaining-code-review-20261023.json"
+    },
+    {
+      "old": "docs/verification/commit-readiness-20261022/remaining-code-review-20261023.md",
+      "new": "docs/verification/commit-readiness-20261022/remaining-code-review-20261023.md"
+    },
+    {
+      "old": "docs/verification/date-card-20261025/commit-validation.json",
+      "new": "docs/verification/date-card-20261025/commit-validation.json"
+    },
+    {
+      "old": "docs/verification/date-card-20261025/fixes-validation.json",
+      "new": "docs/verification/date-card-20261025/fixes-validation.json"
+    },
+    {
+      "old": "docs/verification/date-card-20261025/report.md",
+      "new": "docs/verification/date-card-20261025/report.md"
+    },
+    {
+      "old": "docs/verification/date-card-20261025/review-validation.json",
+      "new": "docs/verification/date-card-20261025/review-validation.json"
+    },
+    {
+      "old": "docs/verification/date-card-20261025/review.md",
+      "new": "docs/verification/date-card-20261025/review.md"
+    },
+    {
+      "old": "docs/verification/date-card-20261025/sticky-validation.json",
+      "new": "docs/verification/date-card-20261025/sticky-validation.json"
+    },
+    {
+      "old": "docs/verification/date-card-20261025/validation.json",
+      "new": "docs/verification/date-card-20261025/validation.json"
+    },
+    {
+      "old": "docs/verification/default-text-color-20261021/default-text-color-20261021.json",
+      "new": "docs/verification/default-text-color-20261021/default-text-color-20261021.json"
+    },
+    {
+      "old": "docs/verification/default-text-color-device-20261021/default-text-color-device-20261021.json",
+      "new": "docs/verification/default-text-color-device-20261021/default-text-color-device-20261021.json"
+    },
+    {
+      "old": "docs/verification/document-cover-drag-20261016/document-cover-drag-20261016.json",
+      "new": "docs/verification/document-cover-drag-20261016/document-cover-drag-20261016.json"
+    },
+    {
+      "old": "docs/verification/document-creation-20261022/document-list-open.json",
+      "new": "docs/verification/document-creation-20261022/document-list-open.json"
+    },
+    {
+      "old": "docs/verification/document-creation-20261022/journal-merge.json",
+      "new": "docs/verification/document-creation-20261022/journal-merge.json"
+    },
+    {
+      "old": "docs/verification/document-creation-20261022/report.md",
+      "new": "docs/verification/document-creation-20261022/report.md"
+    },
+    {
+      "old": "docs/verification/document-creation-20261022/review-fixes.json",
+      "new": "docs/verification/document-creation-20261022/review-fixes.json"
+    },
+    {
+      "old": "docs/verification/document-creation-20261022/review-fixes.md",
+      "new": "docs/verification/document-creation-20261022/review-fixes.md"
+    },
+    {
+      "old": "docs/verification/document-creation-20261022/review.md",
+      "new": "docs/verification/document-creation-20261022/review.md"
+    },
+    {
+      "old": "docs/verification/document-creation-20261022/space-document-list-final-review.json",
+      "new": "docs/verification/document-creation-20261022/space-document-list-final-review.json"
+    },
+    {
+      "old": "docs/verification/document-creation-20261022/space-document-list-p2-fix.json",
+      "new": "docs/verification/document-creation-20261022/space-document-list-p2-fix.json"
+    },
+    {
+      "old": "docs/verification/document-creation-20261022/space-document-list-p2-recheck.md",
+      "new": "docs/verification/document-creation-20261022/space-document-list-p2-recheck.md"
+    },
+    {
+      "old": "docs/verification/document-creation-20261022/space-document-list-retry-fix.json",
+      "new": "docs/verification/document-creation-20261022/space-document-list-retry-fix.json"
+    },
+    {
+      "old": "docs/verification/document-creation-20261022/space-document-list-review.md",
+      "new": "docs/verification/document-creation-20261022/space-document-list-review.md"
+    },
+    {
+      "old": "docs/verification/document-creation-20261022/space-document-list.json",
+      "new": "docs/verification/document-creation-20261022/space-document-list.json"
+    },
+    {
+      "old": "docs/verification/document-creation-20261022/validation.json",
+      "new": "docs/verification/document-creation-20261022/validation.json"
+    },
+    {
+      "old": "docs/verification/document-header-image-cache-20261016/document-header-image-cache-20261016.json",
+      "new": "docs/verification/document-header-image-cache-20261016/document-header-image-cache-20261016.json"
+    },
+    {
+      "old": "docs/verification/editor-add-visibility-20261020/editor-add-visibility-20261020.json",
+      "new": "docs/verification/editor-add-visibility-20261020/editor-add-visibility-20261020.json"
+    },
+    {
+      "old": "docs/verification/editor-add-visibility-device-20261021/editor-add-visibility-device-20261021.json",
+      "new": "docs/verification/editor-add-visibility-device-20261021/editor-add-visibility-device-20261021.json"
+    },
+    {
+      "old": "docs/verification/editor-decoupling-fixes-20261021/source-snapshot.json",
+      "new": "docs/verification/editor-decoupling-fixes-20261021/source-snapshot.json"
+    },
+    {
+      "old": "docs/verification/editor-decoupling-fixes-20261021/validation.json",
+      "new": "docs/verification/editor-decoupling-fixes-20261021/validation.json"
+    },
+    {
+      "old": "docs/verification/editor-decoupling-review-20261021/review.md",
+      "new": "docs/verification/editor-decoupling-review-20261021/review.md"
+    },
+    {
+      "old": "docs/verification/editor-decoupling-review-20261021/source-inventory.json",
+      "new": "docs/verification/editor-decoupling-review-20261021/source-inventory.json"
+    },
+    {
+      "old": "docs/verification/editor-regressions-and-heading-device-20261016/editor-regressions-and-heading-device-20261016.json",
+      "new": "docs/verification/editor-regressions-and-heading-device-20261016/editor-regressions-and-heading-device-20261016.json"
+    },
+    {
+      "old": "docs/verification/editor-review-fixes-device-20261016/editor-review-fixes-device-20261016.json",
+      "new": "docs/verification/editor-review-fixes-device-20261016/editor-review-fixes-device-20261016.json"
+    },
+    {
+      "old": "docs/verification/editor-spacing-20261024/review-validation-20261025.json",
+      "new": "docs/verification/editor-spacing-20261024/review-validation-20261025.json"
+    },
+    {
+      "old": "docs/verification/editor-spacing-20261024/validation.json",
+      "new": "docs/verification/editor-spacing-20261024/validation.json"
+    },
+    {
+      "old": "docs/verification/emoji-picker-20261019/emoji-catalog-20261019.json",
+      "new": "docs/verification/emoji-picker-20261019/emoji-catalog-20261019.json"
+    },
+    {
+      "old": "docs/verification/emoji-picker-20261019/emoji-tab-scroll-android-20261019.json",
+      "new": "docs/verification/emoji-picker-20261019/emoji-tab-scroll-android-20261019.json"
+    },
+    {
+      "old": "docs/verification/heading-level-limit-20261025/p1-fix-validation.json",
+      "new": "docs/verification/heading-level-limit-20261025/p1-fix-validation.json"
+    },
+    {
+      "old": "docs/verification/heading-level-limit-20261025/p1-fixes.md",
+      "new": "docs/verification/heading-level-limit-20261025/p1-fixes.md"
+    },
+    {
+      "old": "docs/verification/heading-level-limit-20261025/report.md",
+      "new": "docs/verification/heading-level-limit-20261025/report.md"
+    },
+    {
+      "old": "docs/verification/heading-level-limit-20261025/review-fixtures.mjs",
+      "new": "docs/verification/heading-level-limit-20261025/review-fixtures.mjs"
+    },
+    {
+      "old": "docs/verification/heading-level-limit-20261025/review.md",
+      "new": "docs/verification/heading-level-limit-20261025/review.md"
+    },
+    {
+      "old": "docs/verification/heading-level-limit-20261025/source-hashes.json",
+      "new": "docs/verification/heading-level-limit-20261025/source-hashes.json"
+    },
+    {
+      "old": "docs/verification/heading-typography-20261016/heading-font-size-diagnosis-20261016.json",
+      "new": "docs/verification/heading-typography-20261016/heading-font-size-diagnosis-20261016.json"
+    },
+    {
+      "old": "docs/verification/heading-typography-20261016/heading-font-size-fix-20261016.json",
+      "new": "docs/verification/heading-typography-20261016/heading-font-size-fix-20261016.json"
+    },
+    {
+      "old": "docs/verification/host-service-migration-20261023/report.md",
+      "new": "docs/verification/host-service-migration-20261023/report.md"
+    },
+    {
+      "old": "docs/verification/host-service-migration-20261023/services.json",
+      "new": "docs/verification/host-service-migration-20261023/services.json"
+    },
+    {
+      "old": "docs/verification/host-service-migration-20261023/source-sha256.json",
+      "new": "docs/verification/host-service-migration-20261023/source-sha256.json"
+    },
+    {
+      "old": "docs/verification/host-service-migration-20261023/validation.json",
+      "new": "docs/verification/host-service-migration-20261023/validation.json"
+    },
+    {
+      "old": "docs/verification/image-block-merge-20261017/image-block-merge-20261017.json",
+      "new": "docs/verification/image-block-merge-20261017/image-block-merge-20261017.json"
+    },
+    {
+      "old": "docs/verification/image-composer-20261020/baseline-comparison.json",
+      "new": "docs/verification/image-composer-20261020/baseline-comparison.json"
+    },
+    {
+      "old": "docs/verification/image-composer-20261024/layering-analysis.md",
+      "new": "docs/verification/image-composer-20261024/layering-analysis.md"
+    },
+    {
+      "old": "docs/verification/image-composer-20261024/migration-before.json",
+      "new": "docs/verification/image-composer-20261024/migration-before.json"
+    },
+    {
+      "old": "docs/verification/image-composer-20261024/migration.md",
+      "new": "docs/verification/image-composer-20261024/migration.md"
+    },
+    {
+      "old": "docs/verification/image-composer-20261024/review-validation.json",
+      "new": "docs/verification/image-composer-20261024/review-validation.json"
+    },
+    {
+      "old": "docs/verification/image-composer-20261024/validation.json",
+      "new": "docs/verification/image-composer-20261024/validation.json"
+    },
+    {
+      "old": "docs/verification/image-svg-20261016/image-svg-20261016.json",
+      "new": "docs/verification/image-svg-20261016/image-svg-20261016.json"
+    },
+    {
+      "old": "docs/verification/image-tap-20261019/image-tap-20261019.json",
+      "new": "docs/verification/image-tap-20261019/image-tap-20261019.json"
+    },
+    {
+      "old": "docs/verification/image-video-block-split-20261017/image-video-block-split-20261017.json",
+      "new": "docs/verification/image-video-block-split-20261017/image-video-block-split-20261017.json"
+    },
+    {
+      "old": "docs/verification/keyboard-toolbar-configuration-20261021/keyboard-toolbar-configuration-20261021.json",
+      "new": "docs/verification/keyboard-toolbar-configuration-20261021/keyboard-toolbar-configuration-20261021.json"
+    },
+    {
+      "old": "docs/verification/media-more-menu-20261016/media-more-menu-20261016.json",
+      "new": "docs/verification/media-more-menu-20261016/media-more-menu-20261016.json"
+    },
+    {
+      "old": "docs/verification/meeting-card-20261015/meeting-card-status-20261015.json",
+      "new": "docs/verification/meeting-card-20261015/meeting-card-status-20261015.json"
+    },
+    {
+      "old": "docs/verification/meeting-task-menu-header-20261017/meeting-task-menu-header-20261017.json",
+      "new": "docs/verification/meeting-task-menu-header-20261017/meeting-task-menu-header-20261017.json"
+    },
+    {
+      "old": "docs/verification/mention-integration-20261015/mention-host-ui-20261015.json",
+      "new": "docs/verification/mention-integration-20261015/mention-host-ui-20261015.json"
+    },
+    {
+      "old": "docs/verification/mermaid-20261016/mermaid-adaptation-20261016.json",
+      "new": "docs/verification/mermaid-20261016/mermaid-adaptation-20261016.json"
+    },
+    {
+      "old": "docs/verification/mermaid-20261017/mermaid-device-20261017.json",
+      "new": "docs/verification/mermaid-20261017/mermaid-device-20261017.json"
+    },
+    {
+      "old": "docs/verification/mermaid-20261017/mermaid-sync-20261017.json",
+      "new": "docs/verification/mermaid-20261017/mermaid-sync-20261017.json"
+    },
+    {
+      "old": "docs/verification/mobile-card-pointer-20261016/mobile-card-pointer-20261016.json",
+      "new": "docs/verification/mobile-card-pointer-20261016/mobile-card-pointer-20261016.json"
+    },
+    {
+      "old": "docs/verification/mobile-selection-menu-20261016/mobile-selection-menu-20261016.json",
+      "new": "docs/verification/mobile-selection-menu-20261016/mobile-selection-menu-20261016.json"
+    },
+    {
+      "old": "docs/verification/modal-components-split-20261020/modal-components-split-20261020.json",
+      "new": "docs/verification/modal-components-split-20261020/modal-components-split-20261020.json"
+    },
+    {
+      "old": "docs/verification/modal-ui-20261017/modal-ui-20261017.json",
+      "new": "docs/verification/modal-ui-20261017/modal-ui-20261017.json"
+    },
+    {
+      "old": "docs/verification/native-bridge-sync-20261022/README.md",
+      "new": "docs/verification/native-bridge-sync-20261022/README.md"
+    },
+    {
+      "old": "docs/verification/offline-all-blocks-device-20261020/offline-all-blocks-device-20261020.json",
+      "new": "docs/verification/offline-all-blocks-device-20261020/offline-all-blocks-device-20261020.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/commit-check.json",
+      "new": "docs/verification/offline-journal-20261022/commit-check.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/date-layout-apk.json",
+      "new": "docs/verification/offline-journal-20261022/date-layout-apk.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/date-layout.md",
+      "new": "docs/verification/offline-journal-20261022/date-layout.md"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/dynamic-fixes-source-apk.json",
+      "new": "docs/verification/offline-journal-20261022/dynamic-fixes-source-apk.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/dynamic-fixes.md",
+      "new": "docs/verification/offline-journal-20261022/dynamic-fixes.md"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/dynamic-review-source-version.json",
+      "new": "docs/verification/offline-journal-20261022/dynamic-review-source-version.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/dynamic-review.md",
+      "new": "docs/verification/offline-journal-20261022/dynamic-review.md"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/entry-renderer-review.md",
+      "new": "docs/verification/offline-journal-20261022/entry-renderer-review.md"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/fix-apk.json",
+      "new": "docs/verification/offline-journal-20261022/fix-apk.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/fix-source-sha256.json",
+      "new": "docs/verification/offline-journal-20261022/fix-source-sha256.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/fixes.md",
+      "new": "docs/verification/offline-journal-20261022/fixes.md"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/host-implementation.md",
+      "new": "docs/verification/offline-journal-20261022/host-implementation.md"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/host-migration-map.json",
+      "new": "docs/verification/offline-journal-20261022/host-migration-map.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/host-source-and-apk.json",
+      "new": "docs/verification/offline-journal-20261022/host-source-and-apk.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/keyboard-toolbar-plan.md",
+      "new": "docs/verification/offline-journal-20261022/keyboard-toolbar-plan.md"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/keyboard-toolbar-source-apk.json",
+      "new": "docs/verification/offline-journal-20261022/keyboard-toolbar-source-apk.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/keyboard-toolbar-source-sha256.json",
+      "new": "docs/verification/offline-journal-20261022/keyboard-toolbar-source-sha256.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/list-alignment-apk.json",
+      "new": "docs/verification/offline-journal-20261022/list-alignment-apk.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/list-conversion-source-apk.json",
+      "new": "docs/verification/offline-journal-20261022/list-conversion-source-apk.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/list-conversion-validation.json",
+      "new": "docs/verification/offline-journal-20261022/list-conversion-validation.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/migration-audit-sources.json",
+      "new": "docs/verification/offline-journal-20261022/migration-audit-sources.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/migration-audit.md",
+      "new": "docs/verification/offline-journal-20261022/migration-audit.md"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/migration-v1-source.json",
+      "new": "docs/verification/offline-journal-20261022/migration-v1-source.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/people-implementation.md",
+      "new": "docs/verification/offline-journal-20261022/people-implementation.md"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/review-version-source-check.json",
+      "new": "docs/verification/offline-journal-20261022/review-version-source-check.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/review.md",
+      "new": "docs/verification/offline-journal-20261022/review.md"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/source-sha256.json",
+      "new": "docs/verification/offline-journal-20261022/source-sha256.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/toolbar-list-review-source-sha256.json",
+      "new": "docs/verification/offline-journal-20261022/toolbar-list-review-source-sha256.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/toolbar-list-review.json",
+      "new": "docs/verification/offline-journal-20261022/toolbar-list-review.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/toolbar-list-review.md",
+      "new": "docs/verification/offline-journal-20261022/toolbar-list-review.md"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/video-analysis-source.json",
+      "new": "docs/verification/offline-journal-20261022/video-analysis-source.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261022/video-plan.md",
+      "new": "docs/verification/offline-journal-20261022/video-plan.md"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261023/blockcraft-export-analysis.json",
+      "new": "docs/verification/offline-journal-20261023/blockcraft-export-analysis.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261023/blockcraft-export-analysis.md",
+      "new": "docs/verification/offline-journal-20261023/blockcraft-export-analysis.md"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261023/commit-scope.json",
+      "new": "docs/verification/offline-journal-20261023/commit-scope.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261023/cover-header.json",
+      "new": "docs/verification/offline-journal-20261023/cover-header.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261023/format-toolbar.json",
+      "new": "docs/verification/offline-journal-20261023/format-toolbar.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261023/format-toolbar.md",
+      "new": "docs/verification/offline-journal-20261023/format-toolbar.md"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261023/json-sample-record.json",
+      "new": "docs/verification/offline-journal-20261023/json-sample-record.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261023/json-submit-analysis-20261023.json",
+      "new": "docs/verification/offline-journal-20261023/json-submit-analysis-20261023.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261023/json-submit-analysis-20261023.md",
+      "new": "docs/verification/offline-journal-20261023/json-submit-analysis-20261023.md"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261023/native-business-mentions-source-sha256.json",
+      "new": "docs/verification/offline-journal-20261023/native-business-mentions-source-sha256.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261023/progressive-heading.json",
+      "new": "docs/verification/offline-journal-20261023/progressive-heading.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261023/shared-editor.json",
+      "new": "docs/verification/offline-journal-20261023/shared-editor.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261023/shared-editor.md",
+      "new": "docs/verification/offline-journal-20261023/shared-editor.md"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261023/source-apk.json",
+      "new": "docs/verification/offline-journal-20261023/source-apk.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261023/source-sha256.json",
+      "new": "docs/verification/offline-journal-20261023/source-sha256.json"
+    },
+    {
+      "old": "docs/verification/offline-journal-20261023/validation.json",
+      "new": "docs/verification/offline-journal-20261023/validation.json"
+    },
+    {
+      "old": "docs/verification/package-lucide-icons-20261017/package-lucide-icons-20261017.json",
+      "new": "docs/verification/package-lucide-icons-20261017/package-lucide-icons-20261017.json"
+    },
+    {
+      "old": "docs/verification/package-review-20261017/package-review-20261017.json",
+      "new": "docs/verification/package-review-20261017/package-review-20261017.json"
+    },
+    {
+      "old": "docs/verification/package-review-20261017/package-review-p1-fixes-20261017.json",
+      "new": "docs/verification/package-review-20261017/package-review-p1-fixes-20261017.json"
+    },
+    {
+      "old": "docs/verification/page-divider-20261018/page-divider-20261018.json",
+      "new": "docs/verification/page-divider-20261018/page-divider-20261018.json"
+    },
+    {
+      "old": "docs/verification/paragraph-layout-spacing-20261024/validation.json",
+      "new": "docs/verification/paragraph-layout-spacing-20261024/validation.json"
+    },
+    {
+      "old": "docs/verification/paragraph-links-20261019/paragraph-links-20261019.json",
+      "new": "docs/verification/paragraph-links-20261019/paragraph-links-20261019.json"
+    },
+    {
+      "old": "docs/verification/paragraph-style-20261016/paragraph-style-0.11.20-20261016.json",
+      "new": "docs/verification/paragraph-style-20261016/paragraph-style-0.11.20-20261016.json"
+    },
+    {
+      "old": "docs/verification/person-card-20261025/validation.json",
+      "new": "docs/verification/person-card-20261025/validation.json"
+    },
+    {
+      "old": "docs/verification/resource-block-split-20261017/resource-block-split-20261017.json",
+      "new": "docs/verification/resource-block-split-20261017/resource-block-split-20261017.json"
+    },
+    {
+      "old": "docs/verification/row-menu-migration-20261020/row-menu-migration-20261020.json",
+      "new": "docs/verification/row-menu-migration-20261020/row-menu-migration-20261020.json"
+    },
+    {
+      "old": "docs/verification/saas-package-compatibility-20261022/report.md",
+      "new": "docs/verification/saas-package-compatibility-20261022/report.md"
+    },
+    {
+      "old": "docs/verification/selection-format-review-fixes-20261016/selection-format-review-fixes-0.11.21-20261016.json",
+      "new": "docs/verification/selection-format-review-fixes-20261016/selection-format-review-fixes-0.11.21-20261016.json"
+    },
+    {
+      "old": "docs/verification/selective-undo-prototype-20261022/commit-check.json",
+      "new": "docs/verification/selective-undo-prototype-20261022/commit-check.json"
+    },
+    {
+      "old": "docs/verification/selective-undo-prototype-20261022/fix-android-artifact.json",
+      "new": "docs/verification/selective-undo-prototype-20261022/fix-android-artifact.json"
+    },
+    {
+      "old": "docs/verification/selective-undo-prototype-20261022/fix-ios-native-artifact.json",
+      "new": "docs/verification/selective-undo-prototype-20261022/fix-ios-native-artifact.json"
+    },
+    {
+      "old": "docs/verification/selective-undo-prototype-20261022/fix-validation.json",
+      "new": "docs/verification/selective-undo-prototype-20261022/fix-validation.json"
+    },
+    {
+      "old": "docs/verification/selective-undo-prototype-20261022/report.md",
+      "new": "docs/verification/selective-undo-prototype-20261022/report.md"
+    },
+    {
+      "old": "docs/verification/selective-undo-prototype-20261022/review-evidence.json",
+      "new": "docs/verification/selective-undo-prototype-20261022/review-evidence.json"
+    },
+    {
+      "old": "docs/verification/selective-undo-prototype-20261022/review-fixes.md",
+      "new": "docs/verification/selective-undo-prototype-20261022/review-fixes.md"
+    },
+    {
+      "old": "docs/verification/selective-undo-prototype-20261022/review.md",
+      "new": "docs/verification/selective-undo-prototype-20261022/review.md"
+    },
+    {
+      "old": "docs/verification/selective-undo-prototype-20261022/rust-checks.json",
+      "new": "docs/verification/selective-undo-prototype-20261022/rust-checks.json"
+    },
+    {
+      "old": "docs/verification/selective-undo-prototype-20261022/stage2-additional-checks.json",
+      "new": "docs/verification/selective-undo-prototype-20261022/stage2-additional-checks.json"
+    },
+    {
+      "old": "docs/verification/selective-undo-prototype-20261022/stage2-rust-checks.json",
+      "new": "docs/verification/selective-undo-prototype-20261022/stage2-rust-checks.json"
+    },
+    {
+      "old": "docs/verification/selective-undo-prototype-20261022/stage2-validation.json",
+      "new": "docs/verification/selective-undo-prototype-20261022/stage2-validation.json"
+    },
+    {
+      "old": "docs/verification/selective-undo-prototype-20261022/stage3-android-artifact.json",
+      "new": "docs/verification/selective-undo-prototype-20261022/stage3-android-artifact.json"
+    },
+    {
+      "old": "docs/verification/selective-undo-prototype-20261022/stage3-validation.json",
+      "new": "docs/verification/selective-undo-prototype-20261022/stage3-validation.json"
+    },
+    {
+      "old": "docs/verification/selective-undo-prototype-20261022/validation.json",
+      "new": "docs/verification/selective-undo-prototype-20261022/validation.json"
+    },
+    {
+      "old": "docs/verification/shared-font-size-20261024/horizontal-before.json",
+      "new": "docs/verification/shared-font-size-20261024/horizontal-before.json"
+    },
+    {
+      "old": "docs/verification/shared-font-size-20261024/horizontal-validation.json",
+      "new": "docs/verification/shared-font-size-20261024/horizontal-validation.json"
+    },
+    {
+      "old": "docs/verification/shared-font-size-20261024/presets-commit-check-20261025.json",
+      "new": "docs/verification/shared-font-size-20261024/presets-commit-check-20261025.json"
+    },
+    {
+      "old": "docs/verification/shared-font-size-20261024/presets-validation-20261025.json",
+      "new": "docs/verification/shared-font-size-20261024/presets-validation-20261025.json"
+    },
+    {
+      "old": "docs/verification/shared-font-size-20261024/reset-before.json",
+      "new": "docs/verification/shared-font-size-20261024/reset-before.json"
+    },
+    {
+      "old": "docs/verification/shared-font-size-20261024/reset-validation.json",
+      "new": "docs/verification/shared-font-size-20261024/reset-validation.json"
+    },
+    {
+      "old": "docs/verification/shared-font-size-20261024/review-validation.json",
+      "new": "docs/verification/shared-font-size-20261024/review-validation.json"
+    },
+    {
+      "old": "docs/verification/shared-font-size-20261024/validation.json",
+      "new": "docs/verification/shared-font-size-20261024/validation.json"
+    },
+    {
+      "old": "docs/verification/shared-media-timeline-20261016/shared-media-timeline-20261016.json",
+      "new": "docs/verification/shared-media-timeline-20261016/shared-media-timeline-20261016.json"
+    },
+    {
+      "old": "docs/verification/switch-locator-verification-20261021/source-snapshot.json",
+      "new": "docs/verification/switch-locator-verification-20261021/source-snapshot.json"
+    },
+    {
+      "old": "docs/verification/table-20261016/table-editing-20261016.json",
+      "new": "docs/verification/table-20261016/table-editing-20261016.json"
+    },
+    {
+      "old": "docs/verification/table-20261016/table-phone-20261016.json",
+      "new": "docs/verification/table-20261016/table-phone-20261016.json"
+    },
+    {
+      "old": "docs/verification/table-adaptation-20261015/table-adaptation-20261015.json",
+      "new": "docs/verification/table-adaptation-20261015/table-adaptation-20261015.json"
+    },
+    {
+      "old": "docs/verification/text-box-20261026/fix-validation.json",
+      "new": "docs/verification/text-box-20261026/fix-validation.json"
+    },
+    {
+      "old": "docs/verification/text-box-20261026/review-validation.json",
+      "new": "docs/verification/text-box-20261026/review-validation.json"
+    },
+    {
+      "old": "docs/verification/text-box-20261026/review.md",
+      "new": "docs/verification/text-box-20261026/review.md"
+    },
+    {
+      "old": "docs/verification/text-box-20261026/validation.json",
+      "new": "docs/verification/text-box-20261026/validation.json"
+    },
+    {
+      "old": "docs/verification/text-paragraph-indent-20261016/text-paragraph-indent-0.11.21-20261016.json",
+      "new": "docs/verification/text-paragraph-indent-20261016/text-paragraph-indent-0.11.21-20261016.json"
+    },
+    {
+      "old": "docs/verification/toolbar-icons-20261017/toolbar-icons-20261017.json",
+      "new": "docs/verification/toolbar-icons-20261017/toolbar-icons-20261017.json"
+    },
+    {
+      "old": "docs/verification/video-card-20261018/video-card-16x9-20261018.json",
+      "new": "docs/verification/video-card-20261018/video-card-16x9-20261018.json"
+    },
+    {
+      "old": "docs/verification/video-progress-20261016/video-progress-20261016.json",
+      "new": "docs/verification/video-progress-20261016/video-progress-20261016.json"
+    },
+    {
+      "old": "docs/verification/weather-card-20261025/bottom-sheet-validation.json",
+      "new": "docs/verification/weather-card-20261025/bottom-sheet-validation.json"
+    },
+    {
+      "old": "docs/verification/weather-card-20261025/commit-validation.json",
+      "new": "docs/verification/weather-card-20261025/commit-validation.json"
+    },
+    {
+      "old": "docs/verification/weather-card-20261025/style-navigation-validation.json",
+      "new": "docs/verification/weather-card-20261025/style-navigation-validation.json"
+    },
+    {
+      "old": "docs/verification/weather-card-20261025/validation.json",
+      "new": "docs/verification/weather-card-20261025/validation.json"
+    },
+    {
+      "old": "integration_test/block_lock_device_test.dart",
+      "new": "example/integration_test/block_lock_device_test.dart"
+    },
+    {
+      "old": "packages/cses_document_collab/.agents/skills/collab-modal-ui/SKILL.md",
+      "new": ".agents/skills/collab-modal-ui/SKILL.md"
+    },
+    {
+      "old": "packages/cses_document_collab/AGENTS.md",
+      "new": "AGENTS.md"
+    },
+    {
+      "old": "packages/cses_document_collab/README.md",
+      "new": "README.md"
+    },
+    {
+      "old": "packages/cses_document_collab/pubspec.yaml",
+      "new": "pubspec.yaml"
+    },
+    {
+      "old": "packages/cses_document_collab/test/blockcraft_json_editing_test.dart",
+      "new": "test/blockcraft_json_editing_test.dart"
+    },
+    {
+      "old": "packages/cses_document_collab/test/text_box_review_test.dart",
+      "new": "test/text_box_review_test.dart"
+    },
+    {
+      "old": "packages/cses_document_collab/tool/verify_portable_package.sh",
+      "new": "tool/verify_portable_package.sh"
+    },
+    {
+      "old": "pubspec.yaml",
+      "new": "example/pubspec.yaml"
+    },
+    {
+      "old": "scripts/build_rust_ios.sh",
+      "new": "example/scripts/build_rust_ios.sh"
+    },
+    {
+      "old": "scripts/build_rust_ios_xcode.sh",
+      "new": "example/scripts/build_rust_ios_xcode.sh"
+    },
+    {
+      "old": "scripts/ios.sh",
+      "new": "example/scripts/ios.sh"
+    },
+    {
+      "old": "test/cses_ws_gateway_integration_test.dart",
+      "new": "example/test/cses_ws_gateway_integration_test.dart"
+    },
+    {
+      "old": "test/daily_guidance/journal_blockcraft_codec_test.dart",
+      "new": "example/test/daily_guidance/journal_blockcraft_codec_test.dart"
+    },
+    {
+      "old": "test/daily_guidance/journal_blockcraft_editing_test.dart",
+      "new": "example/test/daily_guidance/journal_blockcraft_editing_test.dart"
+    },
+    {
+      "old": "test/daily_guidance/journal_blockcraft_integrity_test.dart",
+      "new": "example/test/daily_guidance/journal_blockcraft_integrity_test.dart"
+    },
+    {
+      "old": "test/daily_guidance/local_journal_page_test.dart",
+      "new": "example/test/daily_guidance/local_journal_page_test.dart"
+    }
+  ],
+  "notes": [
+    "Original root and core package AGENTS.md contracts are merged at the root.",
+    "Original host file_picker ^13.3.0 change is preserved under example/pubspec.yaml.",
+    "Original AppFlowy file_picker ^13.3.0 change is preserved.",
+    "Flutter runtime package asset bundle keys are unchanged and are not old filesystem paths.",
+    "The example gateway test now exercises the public Gateway contract; no internal API was exported.",
+    "Historical raw logs, screenshots, hashes and existing verification directory locations are preserved."
+  ],
+  "newEvidenceFiles": [
+    "android-build.txt",
+    "appflowy-analysis.txt",
+    "appflowy-pub-get.txt",
+    "blockcraft-version.json",
+    "changed-files-analysis.txt",
+    "core-analysis.txt",
+    "core-tests.txt",
+    "dart-format.txt",
+    "desktop-bootstrap-interop.txt",
+    "diff-check.txt",
+    "example-analysis-final.txt",
+    "example-analysis.txt",
+    "example-tests.txt",
+    "gateway-format.txt",
+    "gateway-tests.txt",
+    "historical-path-exceptions.json",
+    "inventory.json",
+    "ios-build.txt",
+    "ios-pinned-build.txt",
+    "ios-pinned-resolution.txt",
+    "native-build.txt",
+    "portable-package.txt",
+    "report.md",
+    "rust-check.txt",
+    "rust-format.txt",
+    "rust-tests.txt",
+    "structure-check.json",
+    "toolbar-isolated-test.txt",
+    "validation.json"
+  ]
+}

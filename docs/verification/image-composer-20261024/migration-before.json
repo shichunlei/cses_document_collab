@@ -1,15 +1,15 @@
 {
-  "packages/cses_document_collab/lib/src/image_composer/image_composer_page.dart": "3ce6d20d8a770359f31cd07ca70df4d4d6fd1a6462c8f3bda370897e32cafea9",
-  "packages/cses_document_collab/lib/src/image_composer/show_image_composer.dart": "d40479539200c9945e1d4be47fc4f2178116177656f0cce2325cf5d301a8ab29",
-  "packages/cses_document_collab/lib/src/image_composer/image_composer_controller.dart": "66d3b82cb9cc484b8917266d595dc10fbe94d470209ca6a35d906827f94c1e09",
-  "packages/cses_document_collab/lib/src/image_composer/analysis_options.yaml": "6ecd30631c2f7fcae52f5bc8b50c967de318c66f3040f15357b94d953d365f83",
-  "packages/cses_document_collab/lib/src/model/collab_image_template.dart": "8df506a830fbdcf01d620cee6b761119dfa2ae77616f5d5a51cf6a60fe1247fc",
-  "packages/cses_document_collab/lib/src/editor/local_editor_view.dart": "c89d9684dcdb13f52ebf2380fe5dea638dc094480913f133d09625eafb207dec",
-  "packages/cses_document_collab/lib/cses_document_collab.dart": "ee2f3f82cbd41ff3ecd2d5ac38bcd05b66f4397d27dfe4e2f4a512592714f3fb",
-  "packages/cses_document_collab/test/image_composer_page_test.dart": "559ab243e3790d629860ae5b33506dc730f7c45076ecc6cc967c864344ab677b",
-  "packages/cses_document_collab/test/image_composer_operations_test.dart": "d04d18d8cd766de8a862138352f51db09b9f726b64bf24646f8f4ebf105cc78e",
-  "packages/cses_document_collab/test/image_composer_native_isolation_test.dart": "c08e38b7d01b4e29e2330d0e73109da92242dac5dc84304805977600247d53ac",
-  "packages/cses_document_collab/test/local_editor_input_test.dart": "c763545f1af1eb18a5b8217f7f7c78d9106304812092cd69423776ba9ca2acec",
-  "packages/cses_document_collab/test/offline_all_blocks_test.dart": "91a581f4762cdf083b2b2ca50e52dc8e609fd4a220ff29f0362d07e443dc29a9",
-  "lib/src/demo/collab_demo_page.dart": "ed3551eef51ef1083d9036d2b02a4103eed718c3c75ca701ad8c0ab593934716"
+  "example/lib/src/image_composer/image_composer_page.dart": "3ce6d20d8a770359f31cd07ca70df4d4d6fd1a6462c8f3bda370897e32cafea9",
+  "example/lib/src/image_composer/show_image_composer.dart": "d40479539200c9945e1d4be47fc4f2178116177656f0cce2325cf5d301a8ab29",
+  "example/lib/src/image_composer/image_composer_controller.dart": "66d3b82cb9cc484b8917266d595dc10fbe94d470209ca6a35d906827f94c1e09",
+  "example/lib/src/image_composer/analysis_options.yaml": "6ecd30631c2f7fcae52f5bc8b50c967de318c66f3040f15357b94d953d365f83",
+  "lib/src/model/collab_image_template.dart": "8df506a830fbdcf01d620cee6b761119dfa2ae77616f5d5a51cf6a60fe1247fc",
+  "lib/src/editor/local_editor_view.dart": "c89d9684dcdb13f52ebf2380fe5dea638dc094480913f133d09625eafb207dec",
+  "lib/cses_document_collab.dart": "ee2f3f82cbd41ff3ecd2d5ac38bcd05b66f4397d27dfe4e2f4a512592714f3fb",
+  "test/image_composer_page_test.dart": "559ab243e3790d629860ae5b33506dc730f7c45076ecc6cc967c864344ab677b",
+  "test/image_composer_operations_test.dart": "d04d18d8cd766de8a862138352f51db09b9f726b64bf24646f8f4ebf105cc78e",
+  "test/image_composer_native_isolation_test.dart": "c08e38b7d01b4e29e2330d0e73109da92242dac5dc84304805977600247d53ac",
+  "test/local_editor_input_test.dart": "c763545f1af1eb18a5b8217f7f7c78d9106304812092cd69423776ba9ca2acec",
+  "test/offline_all_blocks_test.dart": "91a581f4762cdf083b2b2ca50e52dc8e609fd4a220ff29f0362d07e443dc29a9",
+  "example/lib/src/demo/collab_demo_page.dart": "ed3551eef51ef1083d9036d2b02a4103eed718c3c75ca701ad8c0ab593934716"
 }

@@ -69,7 +69,7 @@
     },
     "cardTests": {
       "passed": 14,
-      "file": "packages/cses_document_collab/test/collab_meeting_card_test.dart",
+      "file": "test/collab_meeting_card_test.dart",
       "coverage": [
         "五种状态标签/颜色/主按钮及展示不写正文",
         "业务标题/时间/主持人/人数",
@@ -82,7 +82,7 @@
     },
     "hostLoaderTests": {
       "passed": 11,
-      "file": "test/cses_meeting_card_service_test.dart",
+      "file": "example/test/cses_meeting_card_service_test.dart",
       "coverage": [
         "真实Common拦截器/headers与参数",
         "所有服务端状态及未知状态",

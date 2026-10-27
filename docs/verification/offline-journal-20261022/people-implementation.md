@@ -4,7 +4,7 @@
 
 ## 归属与接口
 
-新增宿主文件 `lib/src/daily_guidance/guidance_people.dart`，没有向 `packages/cses_document_collab` 增加业务目录、选人或今日导向 API。
+新增宿主文件 `example/lib/src/daily_guidance/guidance_people.dart`，没有向 `仓库根 package` 增加业务目录、选人或今日导向 API。
 
 - `GuidancePerson` 保存真实人员或部门的稳定 ID、名称快照、类型及可选部门名称；目录树可携带子节点。唯一身份为 `type:id`，同名人员不会被合并，人员与部门可拥有相同原始 ID。提供 JSON 往返转换，拒绝非法类型、身份和子树。
 - `GuidanceDirectory.load()` 是宿主可注入目录端口；生产实现 `CsesGuidanceDirectory` 借用 Common 登录上下文与 HTTP，读取 `/Company/readAllChildren`，参数 `orgId`、`isReadUser: true`，保留真实组织树，不生成假用户。后台解析，按身份去重，异常响应拒绝整次加载；成功缓存只活在同一实例，失败清除缓存以便重试。
@@ -20,9 +20,9 @@
 
 仅针对本模块的手写文件执行：
 
-- `dart format lib/src/daily_guidance/guidance_people.dart test/daily_guidance/guidance_people_test.dart`：通过，最终 0 个文件需要调整。
-- `flutter analyze --no-pub lib/src/daily_guidance/guidance_people.dart test/daily_guidance/guidance_people_test.dart`：No issues found。
-- `flutter test --no-pub test/daily_guidance/guidance_people_test.dart`：11 项通过，[完整日志](people-tests.log)。
+- `dart format example/lib/src/daily_guidance/guidance_people.dart example/test/daily_guidance/guidance_people_test.dart`：通过，最终 0 个文件需要调整。
+- `flutter analyze --no-pub example/lib/src/daily_guidance/guidance_people.dart example/test/daily_guidance/guidance_people_test.dart`：No issues found。
+- `flutter test --no-pub example/test/daily_guidance/guidance_people_test.dart`：11 项通过，[完整日志](people-tests.log)。
 - `git diff --check`：通过。
 
 测试覆盖 JSON、真实 Common HTTP 树解析和认证头、同名/跨类型身份、缓存、失败及非法子树重试、请求期间会话切换、多选和部门整选、跨部门搜索、搜索结果钻取后的真实面包屑、关闭取消、权限撤销与恢复、退场期间会话切换、关闭后的迟到请求，以及大字/键盘约束无布局异常。

@@ -20,8 +20,8 @@
     "total": 22
   },
   "testSourceSha256": {
-    "packages/cses_document_collab/test/blockcraft_json_integrity_test.dart": "41a5cc4cf3d857c063b7866456d2329ac58e42601aee5b08eaf8485e75831f26",
-    "test/daily_guidance/journal_blockcraft_integrity_test.dart": "5bdcad775896f20315b32836682da5baf5a9d80aacd8da90fdcbf8e57193c108"
+    "test/blockcraft_json_integrity_test.dart": "41a5cc4cf3d857c063b7866456d2329ac58e42601aee5b08eaf8485e75831f26",
+    "example/test/daily_guidance/journal_blockcraft_integrity_test.dart": "5bdcad775896f20315b32836682da5baf5a9d80aacd8da90fdcbf8e57193c108"
   },
   "checks": {
     "host": {

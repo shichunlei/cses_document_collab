@@ -7,7 +7,7 @@ import {fileURLToPath} from 'node:url';
 const directory = path.dirname(fileURLToPath(import.meta.url));
 const desktop = process.argv[2];
 const Y = createRequire(path.join(desktop, 'package.json'))('yjs');
-const source = JSON.parse(fs.readFileSync(path.join(directory, '../../../packages/cses_document_collab/test/fixtures/desktop-json-blocks.json')));
+const source = JSON.parse(fs.readFileSync(path.join(directory, '../../../test/fixtures/desktop-json-blocks.json')));
 const kinds = new Set(['paragraph', 'shape', 'word-art', 'object-group', 'placement-layout', 'render-unit', 'task-list', 'mind-map']);
 source.children = source.children.filter(block => kinds.has(block.flavour));
 const doc = new Y.Doc();

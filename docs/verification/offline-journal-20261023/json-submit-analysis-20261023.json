@@ -21,14 +21,14 @@
     }
   },
   "mobileSources": {
-    "packages/cses_document_collab/lib/src/editor/core/document_editor_controller.dart": "0f5003f08cc9c66160a81c170674638e6ee262c902ae68eab00cac88f2c03225",
+    "lib/src/editor/core/document_editor_controller.dart": "0f5003f08cc9c66160a81c170674638e6ee262c902ae68eab00cac88f2c03225",
     "packages/appflowy_editor/lib/src/core/document/document.dart": "e73588878b5442d78a81bd13494b783bf794d9afc98847192c15b439ef5d5c01",
     "packages/appflowy_editor/lib/src/core/document/node.dart": "b86313ec17c3bcb810eab337c30c11ff02a98b17f4840e313f85a9efe475d40a",
-    "lib/src/daily_guidance/journal_draft.dart": "d54b1995d962680f441eb96e7d0d231c73ac96a5b45a5ec392da2359624a581c",
-    "lib/src/daily_guidance/local_journal_controller.dart": "a2767edf9bd8d8fc104c08eee207dd2363c7cc32e4f5a56fba3926d0a4f1069c",
-    "lib/src/daily_guidance/guidance_entries.dart": "8e5ba09b9f5a2a1f346a03e72ad59b96045a8d31e8cd1e996816ffbb3add6c74",
-    "lib/src/daily_guidance/local_journal_page.dart": "1c915f59d27aec0451c8a8611ed863ca48cbd8211bbcb361bd2414da1d2c908d",
-    "packages/cses_document_collab/lib/src/editor/editor_user_mentions.dart": "531c0622462efca36ec941a4d5cb4b026e3bd9d6b1b927710d8fedc998cd77cd"
+    "example/lib/src/daily_guidance/journal_draft.dart": "d54b1995d962680f441eb96e7d0d231c73ac96a5b45a5ec392da2359624a581c",
+    "example/lib/src/daily_guidance/local_journal_controller.dart": "a2767edf9bd8d8fc104c08eee207dd2363c7cc32e4f5a56fba3926d0a4f1069c",
+    "example/lib/src/daily_guidance/guidance_entries.dart": "8e5ba09b9f5a2a1f346a03e72ad59b96045a8d31e8cd1e996816ffbb3add6c74",
+    "example/lib/src/daily_guidance/local_journal_page.dart": "1c915f59d27aec0451c8a8611ed863ca48cbd8211bbcb361bd2414da1d2c908d",
+    "lib/src/editor/editor_user_mentions.dart": "531c0622462efca36ec941a4d5cb4b026e3bd9d6b1b927710d8fedc998cd77cd"
   },
   "desktopSources": {
     "src/app/orientation-host/drawers/results/addDayResultsOrientedDrawer/add-results-oriented.drawer.ts": "4206d51271c888578ed89df24d88d9578e53ffe7d89edf896a96ba139b560352",

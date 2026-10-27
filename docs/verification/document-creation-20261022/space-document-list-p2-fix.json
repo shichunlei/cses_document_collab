@@ -4,8 +4,8 @@
   "status": "fixed",
   "implementation": "capture restored target before awaiting space choices; bind resume target before execution; late results preserve current selection",
   "changed_handmade_dart_files": [
-    "lib/src/demo/document_creation/document_creation_page.dart",
-    "test/document_creation_coordinator_test.dart"
+    "example/lib/src/demo/document_creation/document_creation_page.dart",
+    "example/test/document_creation_coordinator_test.dart"
   ],
   "new_regressions": [
     "completion before successful delayed spaces",
@@ -23,12 +23,12 @@
   "format": "2 handmade files checked, no changes on final pass",
   "git_diff_check": "passed",
   "source_sha256": {
-    "lib/src/demo/document_creation/document_creation_page.dart": "c4613b8e4415527b1366e263bac07ec2ba438424de2a0a94cb6772ae69757cd2",
-    "test/document_creation_coordinator_test.dart": "c98db522c193cf1cac2aaf9a5a0ecd602904ba26d815c86b06b89d89b002eb4e"
+    "example/lib/src/demo/document_creation/document_creation_page.dart": "c4613b8e4415527b1366e263bac07ec2ba438424de2a0a94cb6772ae69757cd2",
+    "example/test/document_creation_coordinator_test.dart": "c98db522c193cf1cac2aaf9a5a0ecd602904ba26d815c86b06b89d89b002eb4e"
   },
   "baseline_source_sha256": {
-    "lib/src/demo/document_creation/document_creation_page.dart": "58482bb240fa396978c69a2b68fde3d117d749d51709812c0b1815ee9ac8fb27",
-    "test/document_creation_coordinator_test.dart": "208d9c77b5b6d35b9dec7b6ec1c24a8d6cc0068ae72172be39e6ead7ae66cea3"
+    "example/lib/src/demo/document_creation/document_creation_page.dart": "58482bb240fa396978c69a2b68fde3d117d749d51709812c0b1815ee9ac8fb27",
+    "example/test/document_creation_coordinator_test.dart": "208d9c77b5b6d35b9dec7b6ec1c24a8d6cc0068ae72172be39e6ead7ae66cea3"
   },
   "android": {
     "build": "debug apk passed",

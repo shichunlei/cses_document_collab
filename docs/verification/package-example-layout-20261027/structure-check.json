@@ -1,0 +1,131 @@
+{
+  "coreDirectoriesPresent": true,
+  "exampleDirectoriesPresent": true,
+  "oldPackageDirectoryAbsent": true,
+  "appflowyRetained": true,
+  "missingOriginalFiles": [],
+  "packageNames": {
+    "pubspec.yaml": "cses_document_collab",
+    "example/pubspec.yaml": "cses_mobile_collab_demo"
+  },
+  "resolvedDependencies": {
+    ".": {
+      "cses_document_collab": {
+        "path": "/System/Volumes/Data/workspace/mobile-collab-demo",
+        "correct": true
+      },
+      "appflowy_editor": {
+        "path": "/System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor",
+        "correct": true
+      }
+    },
+    "example": {
+      "cses_document_collab": {
+        "path": "/System/Volumes/Data/workspace/mobile-collab-demo",
+        "correct": true
+      },
+      "cses_mobile_collab_demo": {
+        "path": "/System/Volumes/Data/workspace/mobile-collab-demo/example",
+        "correct": true
+      },
+      "appflowy_editor": {
+        "path": "/System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor",
+        "correct": true
+      },
+      "cses_common": {
+        "path": "/System/Volumes/Data/workspace/cses/cses.common",
+        "correct": true
+      }
+    }
+  },
+  "coreReverseImports": [],
+  "exampleInternalImports": [],
+  "newBrokenMarkdownLinks": [],
+  "existingUnresolvedMarkdownLinks": [
+    {
+      "source": "docs/verification/editor-decoupling-review-20261021/review.md",
+      "target": "/System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/lib/src/editor/block_component/paragraph_block_component/paragraph_block_component.dart:44"
+    },
+    {
+      "source": "docs/verification/date-card-20261025/review.md",
+      "target": "review-probes.log"
+    },
+    {
+      "source": "docs/verification/date-card-20261025/review.md",
+      "target": "review-analyze.log"
+    },
+    {
+      "source": "docs/verification/date-card-20261025/review.md",
+      "target": "review-existing-tests.log"
+    },
+    {
+      "source": "docs/verification/date-card-20261025/review.md",
+      "target": "review-initial-compile-block.log"
+    },
+    {
+      "source": "docs/verification/date-card-20261025/report.md",
+      "target": "core-tests.log"
+    },
+    {
+      "source": "docs/verification/date-card-20261025/report.md",
+      "target": "lock-epoch-test.log"
+    },
+    {
+      "source": "docs/verification/date-card-20261025/report.md",
+      "target": "related-tests.log"
+    },
+    {
+      "source": "docs/verification/date-card-20261025/report.md",
+      "target": "direct-menu-tests.log"
+    },
+    {
+      "source": "docs/verification/date-card-20261025/report.md",
+      "target": "baseline-toolbar-failure.log"
+    },
+    {
+      "source": "docs/verification/date-card-20261025/report.md",
+      "target": "rust-tests.log"
+    },
+    {
+      "source": "docs/verification/date-card-20261025/report.md",
+      "target": "rust-format.log"
+    },
+    {
+      "source": "docs/verification/date-card-20261025/report.md",
+      "target": "rust-check.log"
+    },
+    {
+      "source": "docs/verification/date-card-20261025/report.md",
+      "target": "native-build.log"
+    },
+    {
+      "source": "docs/verification/date-card-20261025/report.md",
+      "target": "package-analyze.log"
+    },
+    {
+      "source": "docs/verification/date-card-20261025/report.md",
+      "target": "host-analyze.log"
+    },
+    {
+      "source": "docs/verification/date-card-20261025/report.md",
+      "target": "host-tests.log"
+    },
+    {
+      "source": "docs/verification/date-card-20261025/report.md",
+      "target": "android-build.log"
+    },
+    {
+      "source": "docs/verification/editor-decoupling-review-20261021/review.md",
+      "target": "/System/Volumes/Data/workspace/mobile-collab-demo/test/image_composer_operations_test.dart:185",
+      "reason": "Historical source link refers to a file already absent at HEAD before this migration."
+    },
+    {
+      "source": "docs/verification/editor-decoupling-review-20261021/review.md",
+      "target": "/System/Volumes/Data/workspace/mobile-collab-demo/test/image_composer_operations_test.dart:301",
+      "reason": "Historical source link refers to a file already absent at HEAD before this migration."
+    }
+  ],
+  "originalSwiftPinsPreserved": true,
+  "allPassed": true,
+  "renamedFileWhitespaceErrors": []
+}

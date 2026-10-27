@@ -22,10 +22,10 @@
 | 日记源码和相关测试静态分析 | 无问题 | [日志](fix-package-analyze.txt) |
 | 宿主入口、文件存储、测试及设备测试源码分析 | 无问题 | [日志](fix-host-analyze.txt) |
 | 本轮5个Dart文件格式 | 0个待格式化文件 | 完成前格式校验 |
-| Android正常应用调试构建 | 成功，正常`lib/main.dart`入口；四个修复源码均与APK内嵌源码一致 | [日志](fix-android-build.txt)、[APK校验](fix-apk.json) |
+| Android正常应用调试构建 | 成功，正常`example/lib/main.dart`入口；四个修复源码均与APK内嵌源码一致 | [日志](fix-android-build.txt)、[APK校验](fix-apk.json) |
 | 源码及APK快照、差异/链接检查 | 11个实现/测试文件快照已记录；`git diff --check`通过，报告链接完整 | [源码SHA-256](fix-source-sha256.json)、[APK校验](fix-apk.json) |
 
-新增测试位于`packages/cses_document_collab/test/local_journal_regressions_test.dart`，覆盖：
+新增测试位于`test/local_journal_regressions_test.dart`，覆盖：
 
 - 两种实际页面粘贴命令下URL/电话号码/CRLF及CR多行剪贴板，带HTML时仍取纯文本，保存、重开和一次撤销/重做；多段反向选区保留两端粗体/斜体。
 - 最终整篇字符/段落超限、嵌入对象、跨栏目替换不改原文和历史；粘贴失败页面提示；异步读取期间编辑、移动选区或关闭不写入迟到内容。

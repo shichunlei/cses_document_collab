@@ -2,12 +2,12 @@
   "date": "2026-10-17",
   "request": "Merge CollabImageContent and the image block into a single image block/state; preserve existing business and UI.",
   "implementation": {
-    "file": "packages/cses_document_collab/lib/src/editor/collab_image_block.dart",
+    "file": "lib/src/editor/collab_image_block.dart",
     "builder": "CollabImageBlockComponentBuilder",
     "widget": "CollabImageBlock",
     "state": "_CollabImageBlockState",
     "merge": "The block state directly implements buildMedia and owns the previous data URI decode fields/hooks. No intermediate content Widget/State remains.",
-    "removed_file": "packages/cses_document_collab/lib/src/editor/collab_image_content.dart",
+    "removed_file": "lib/src/editor/collab_image_content.dart",
     "preserved": [
       "Shared original media selection/action/configuration wrapper",
       "Legacy AppFlowy image fallback",

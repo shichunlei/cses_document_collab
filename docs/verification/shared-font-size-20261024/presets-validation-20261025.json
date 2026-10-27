@@ -15,9 +15,9 @@
     72
   ],
   "sourceSha256": {
-    "packages/cses_document_collab/lib/src/editor/core/editor_configuration.dart": "2cb3576538ca823cccccdf780cd3a4afc7032bc1d47014236a49adcb1134e7ba",
-    "packages/cses_document_collab/test/shared_font_size_test.dart": "bf9a0dbb1c8d75d80f1ecc0cd83f9e5bc32ab25c80d29c0bae7add98febe2401",
-    "packages/cses_document_collab/test/local_editor_operations_test.dart": "02dec67a6d386c0445869eb94ddebf304b8062bbdbdd2d04e9be58b4fdf730c3"
+    "lib/src/editor/core/editor_configuration.dart": "2cb3576538ca823cccccdf780cd3a4afc7032bc1d47014236a49adcb1134e7ba",
+    "test/shared_font_size_test.dart": "bf9a0dbb1c8d75d80f1ecc0cd83f9e5bc32ab25c80d29c0bae7add98febe2401",
+    "test/local_editor_operations_test.dart": "02dec67a6d386c0445869eb94ddebf304b8062bbdbdd2d04e9be58b4fdf730c3"
   },
   "productionScope": "Only the shared default font-size declaration and its DartDoc were changed relative to the starting workspace.",
   "preExistingConfigurationChangesPreserved": true,

@@ -4,7 +4,7 @@
 
 ## 业务边界与迁移
 
-- 页面、草稿、存储契约、控制器、纸张行线、列表标记和业务命令从`packages/cses_document_collab/lib/src/journal/`迁到宿主`lib/src/daily_guidance/`；原宿主`lib/src/demo/journal/file_journal_store.dart`一并迁入。首页继续保留原独立入口，原离线编辑入口不变。
+- 页面、草稿、存储契约、控制器、纸张行线、列表标记和业务命令从`lib/src/journal/`迁到宿主`example/lib/src/daily_guidance/`；原宿主`example/lib/src/demo/journal/file_journal_store.dart`一并迁入。首页继续保留原独立入口，原离线编辑入口不变。
 - 日记专属导出及包内使用说明已移除。迁移后的宿主只通过`cses_document_collab.dart`使用通用编辑能力，未引入跨包`src/`依赖；宿主补齐AppFlowy、provider和Lucide直接依赖。
 - 包仅增加通用`EditorInteractionShell`、`handleDocumentParagraphEnter`和`applyDocumentBlockShortcut`，复用原选择菜单、快捷栏及输入命令，不认识栏目或业务条目。没有改动本轮之外的原生历史/FRB工作区内容。
 - 纯迁移时保留v1格式、保存位置与原行为，先运行原有50项回归全部通过，见[迁移基线日志](migration-v1-tests.log)、[迁移源码快照](migration-v1-source.json)。之后才升级动态模型；这与最终动态版行为变化分别记录。

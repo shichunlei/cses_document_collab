@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-27",
+  "scope": "Root package/example repository migration, path and dependency documentation fixes, gateway public-contract test adjustment, reviews and verification evidence.",
+  "preparedAgainstHead": "38757450c634c509b16a6301b177f660e645320f",
+  "checks": {
+    "diffCheck": "passed",
+    "unexpectedUntrackedFiles": [],
+    "buildOrPrivateConfigurationArtifacts": [],
+    "latestReview": "review-2.md",
+    "validation": "validation.json",
+    "p2Validation": "p2-fix-validation.json",
+    "rawLogWhitespace": "Staging exposed alignment spaces and final blank lines in original tool output. A directory-scoped .gitattributes rule disables whitespace checks only for this verification directory/*.txt; raw log bytes and code/document checks are preserved."
+  },
+  "preservedUncommittedChanges": [
+    {
+      "file": "packages/appflowy_editor/pubspec.yaml",
+      "change": "Pre-existing file_picker ^13.1.0 -> ^13.3.0; excluded from commit."
+    },
+    {
+      "file": "example/pubspec.yaml",
+      "change": "Pre-existing host file_picker ^13.2.0 -> ^13.3.0; stage the migrated host with the original ^13.2.0 constraint while preserving ^13.3.0 in the worktree."
+    },
+    {
+      "file": "docs/日成果-2026-10-23-完整文档结构.json",
+      "change": "Pre-existing untracked export; excluded from commit."
+    }
+  ],
+  "dependencyNote": "The tested file_picker 13.3.0 satisfies the original ^13.1.0 and ^13.2.0 constraints; this commit does not introduce the unrelated minimum-version changes.",
+  "pushRequested": false,
+  "note": "Readiness snapshot before committing; historical reports preserve their original point-in-time committed/pushed fields."
+}

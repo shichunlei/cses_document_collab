@@ -24,7 +24,7 @@
   "validation": {
     "widget_tests": 51,
     "tests_command": "flutter test --no-pub test/collab_image_svg_test.dart test/collab_image_test.dart test/collab_block_actions_test.dart",
-    "tests_cwd": "packages/cses_document_collab",
+    "tests_cwd": ".",
     "tests_log": "/tmp/svg-image-tests-verified.log",
     "coverage": [
       "显式.svg、大小写SVG后缀与查询参数",
@@ -54,8 +54,8 @@
     "复杂SVG能力受flutter_svg支持范围限制；不提供浏览器脚本或外部资源执行。"
   ],
   "source_sha256": {
-    "packages/cses_document_collab/lib/src/editor/collab_image_content.dart": "87aaa649bd60d16cc0068fc7126196bffcf62b9a4b9225664c596e9e8335d97c",
-    "packages/cses_document_collab/test/collab_image_svg_test.dart": "9782159ffb42f1b2610b0065cbfcfa968e78dfe81513e23553bdf3dba0c41a66",
-    "packages/cses_document_collab/pubspec.yaml": "9e057f19e3b02fd123b147ae0d0c4d7de26827437c9710334476e01de54ccc99"
+    "lib/src/editor/collab_image_content.dart": "87aaa649bd60d16cc0068fc7126196bffcf62b9a4b9225664c596e9e8335d97c",
+    "test/collab_image_svg_test.dart": "9782159ffb42f1b2610b0065cbfcfa968e78dfe81513e23553bdf3dba0c41a66",
+    "pubspec.yaml": "9e057f19e3b02fd123b147ae0d0c4d7de26827437c9710334476e01de54ccc99"
   }
 }

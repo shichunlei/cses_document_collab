@@ -1,0 +1,82 @@
+{
+  "date": "2026-10-27",
+  "status": "migration_complete_with_preexisting_findings",
+  "remote": "https://github.com/shichunlei/cses_document_collab.git",
+  "committed": false,
+  "pushed": false,
+  "checks": {
+    "exampleAnalysis": {
+      "exitCode": 0
+    },
+    "appflowyAnalysis": {
+      "exitCode": 0
+    },
+    "changedCoreFilesAnalysis": {
+      "exitCode": 0
+    },
+    "coreAnalysis": {
+      "exitCode": 1,
+      "errors": 0,
+      "warnings": 0,
+      "preexistingInfos": 2
+    },
+    "coreTests": {
+      "exitCode": 1,
+      "passed": 1922,
+      "skipped": 1,
+      "preexistingFailures": 1
+    },
+    "desktopBootstrapInterop": {
+      "exitCode": 0,
+      "passed": 3,
+      "notes": "Includes the one core-suite test skipped without explicit desktop paths."
+    },
+    "exampleTests": {
+      "exitCode": 0,
+      "passed": 338
+    },
+    "gatewayRetestAfterBoundaryFix": {
+      "exitCode": 0,
+      "passed": 2
+    },
+    "rustFormat": {
+      "exitCode": 0
+    },
+    "rustCheck": {
+      "exitCode": 0
+    },
+    "rustTests": {
+      "exitCode": 0,
+      "passed": 208
+    },
+    "portablePublicHost": {
+      "exitCode": 0,
+      "passed": 2
+    },
+    "androidDebugApk": {
+      "exitCode": 0
+    },
+    "iosSimulatorOriginalSwiftPins": {
+      "exitCode": 0
+    },
+    "originalSwiftPinsPreserved": true
+  },
+  "limitations": [
+    "One previously documented toolbar test failure remains; its source and core implementation were not changed.",
+    "Two previously documented core static-analysis infos remain.",
+    "No physical-device, signing/archive or real-account online collaboration validation."
+  ],
+  "report": "report.md",
+  "reviewP2Resolution": {
+    "status": "all_three_fixed",
+    "date": "2026-10-27",
+    "ids": [
+      "R1",
+      "R2",
+      "R3"
+    ],
+    "report": "p2-fixes.md",
+    "validation": "p2-fix-validation.json",
+    "note": "Original review findings, failed probes, suite results and limitations above are preserved."
+  }
+}

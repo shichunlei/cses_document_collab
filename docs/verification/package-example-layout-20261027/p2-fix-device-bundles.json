@@ -1,0 +1,20 @@
+[
+  {
+    "name": "mobile-card",
+    "command": "flutter build bundle --debug --no-pub --target ../integration_test/mobile_card_pointer_test.dart --asset-dir build/p2-layout-validation/mobile-card",
+    "cwd": "example",
+    "exitCode": 0
+  },
+  {
+    "name": "heading",
+    "command": "flutter build bundle --debug --no-pub --target ../integration_test/heading_typography_test.dart --asset-dir build/p2-layout-validation/heading",
+    "cwd": "example",
+    "exitCode": 0
+  },
+  {
+    "name": "editor-review",
+    "command": "flutter build bundle --debug --no-pub --target ../integration_test/editor_review_fixes_test.dart --asset-dir build/p2-layout-validation/editor-review",
+    "cwd": "example",
+    "exitCode": 0
+  }
+]

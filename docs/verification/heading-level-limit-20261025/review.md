@@ -8,7 +8,7 @@
 
 ## P1：旧标题拆段会被新原生校验拒绝
 
-位置：`packages/cses_document_collab/rust/src/api/paragraph_style.rs:121–122`，关联 `appflowy_block_editor_adapter.dart:1315–1320`、`collab_paragraph_editing.dart:89–110`。
+位置：`rust/src/api/paragraph_style.rs:121–122`，关联 `appflowy_block_editor_adapter.dart:1315–1320`、`collab_paragraph_editing.dart:89–110`。
 
 已有 `props.heading=9` 的正文被投影为 H6，但 `paragraph_style` 包装仍保留原值。段中 Enter 总是保留当前样式；段尾设置 `nextParagraphStyle=same` 也走同一路径。该路径通过 `nextProps = {...props}` 将 9 复制到新段落。新段落进入原生初始属性校验，触发 `INVALID_PARAGRAPH_STYLE`。
 
@@ -18,7 +18,7 @@
 
 ## P1：截断计数器 key 会改变旧列表分组并写回编号
 
-位置：`packages/cses_document_collab/rust/src/api/blockcraft.rs:100`，关联该文件 `update_ordered_counters` 及 `collab_controller.dart:572–575`。
+位置：`rust/src/api/blockcraft.rs:100`，关联该文件 `update_ordered_counters` 及 `collab_controller.dart:572–575`。
 
 `ordered_projection` 在生成 `(depth, heading)` 计数器 key 之前执行 `.min(6)`，使旧的 7 级与 8 级编号组变为同一组。两条相同 depth、分别属于 heading=7/8、各自从 1 起始的列表，当前投影输出零基编号 `[0,1]`，旧规则及桌面均为 `[0,0]`。
 
@@ -30,7 +30,7 @@
 
 ## P2：JSON 导出只限制 paragraph，列表 heading 仍可输出 9
 
-位置：`packages/cses_document_collab/lib/src/editor/blockcraft_json_codec.dart:388–406`。
+位置：`lib/src/editor/blockcraft_json_codec.dart:388–406`。
 
 标题裁剪仅在 `kind == 'paragraph'` 分支执行；后续段落字段遍历又直接跳过 `heading`。导入 `flavour=ordered, props.heading=9` 后直接导出，仍得到 `heading=9`。这与本轮“导出只产生六级范围”的契约不一致，也与新原生类型/属性写入校验形成差异。
 

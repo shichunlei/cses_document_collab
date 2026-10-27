@@ -4,7 +4,7 @@
   "definition": "A mixed block implementation means distinct registered node types routed through one concrete BlockComponentBuilder; shared bases, widgets/state for one block, attribute variants, inline objects and protected placeholders are separate categories.",
   "actual_mixed_groups": [
     {
-      "file": "packages/cses_document_collab/lib/src/editor/collab_table_block.dart",
+      "file": "lib/src/editor/collab_table_block.dart",
       "builder": "CollabTableBlockComponentBuilder",
       "types": [
         "table",
@@ -18,7 +18,7 @@
       "plan": "Retain table host and existing controls/grid; move row and cell branches to their own builders/widgets/files. Share children/empty-body handling and helpers. Preserve node tree, IDs, merge/layout metadata, renderer recursion, focus/selection and callback context."
     },
     {
-      "file": "packages/cses_document_collab/lib/src/editor/collab_web_block.dart",
+      "file": "lib/src/editor/collab_web_block.dart",
       "builder": "CollabWebBlockComponentBuilder",
       "types": [
         "bookmark",
@@ -46,7 +46,7 @@
     },
     {
       "category": "Inline meeting/task/doc mentions",
-      "file": "packages/cses_document_collab/lib/src/editor/collab_inline_entity_mention.dart",
+      "file": "lib/src/editor/collab_inline_entity_mention.dart",
       "decision": "Can optionally split presentation entry classes, but these are inline objects, not registered card blocks. Preserve that only meeting/task can convert to cards; lower priority."
     },
     {
@@ -56,7 +56,7 @@
     },
     {
       "category": "Legacy standalone link",
-      "file": "packages/cses_document_collab/lib/src/editor/collab_embed_block.dart",
+      "file": "lib/src/editor/collab_embed_block.dart",
       "decision": "Only link remains after image/video split. No mixed implementation; optional file/class/enum naming cleanup only."
     },
     {

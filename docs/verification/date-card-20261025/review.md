@@ -7,7 +7,7 @@
 
 ### R1 / P1：极小点线宽度导致UI绘制循环失去实际次数上限
 
-位置：`packages/cses_document_collab/lib/src/ui/modal/collab_date_card_visual.dart:368`、`:380`。
+位置：`lib/src/ui/modal/collab_date_card_visual.dart:368`、`:380`。
 
 导入的日期props允许保留`bw: "1e-320px dotted"`，当前JSON转换和日期投影能够将它传入真实日期画笔。
 画笔只检查宽度有限且大于0，随后以`width * 3`递增点线偏移；正常卡片周长下需要天文数量的迭代。
@@ -21,7 +21,7 @@
 
 ### R2 / P2：重选当前样式会抹掉已有缩放尺寸
 
-位置：`packages/cses_document_collab/lib/src/editor/collab_date_card_settings.dart:127–135`。
+位置：`lib/src/editor/collab_date_card_settings.dart:127–135`。
 
 已保存的台历为`width=336, height=289.504`（桌面默认固定框的2倍）。打开日期设置，滚动到“台历”按钮，点击本来已经选中的台历，再应用，结果变成`168×144.752`。
 共享分段控件会回调当前已选值，`_change()`没有判断实际样式是否变化，就按默认样式尺寸覆盖width/height并持久化，额外产生撤销项。
@@ -31,7 +31,7 @@
 
 ### R3 / P2：字号选择未使用卡片contentScale换算
 
-位置：`packages/cses_document_collab/lib/src/editor/collab_date_card_settings.dart:181–196`。
+位置：`lib/src/editor/collab_date_card_settings.dart:181–196`。
 
 日期字段`fs*`保存未缩放设计像素，桌面面板用`contentScale`换算显示字号，写回时除以倍率。
 手机直接把设计字号作为显示选择，并将所选数字原样写入fs字段。

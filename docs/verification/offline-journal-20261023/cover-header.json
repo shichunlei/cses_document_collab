@@ -2,7 +2,7 @@
   "checkedAt": "2026-10-23T11:15:10.608492+08:00",
   "scope": "宿主日导向本地雪山封面及标题叠层；草稿格式、栏目、输入与业务提交代码保持原实现。",
   "asset": {
-    "path": "assets/images/daily_guidance_mountain.png",
+    "path": "example/assets/images/daily_guidance_mountain.png",
     "sha256": "987d823c026fccc2c15540026e63db049d76aebaee65abd79e669094ace4c0bb",
     "bytes": 2375309,
     "generatedBy": "image_gen",
@@ -52,9 +52,9 @@
     "compatibility": "同版已读技能/MIGRATIONS与受影响实现哈希未变；只改宿主装饰，不改变正式块、数据、选择/菜单、剪贴板、输入/历史或协同协议；原上游差异保持待同步/待验收。"
   },
   "sources": {
-    "lib/src/daily_guidance/local_journal_page.dart": "a56c1a1c996746ac33d4271bee6294bad678d327f2c93fecf859b42c38e71cd3",
+    "example/lib/src/daily_guidance/local_journal_page.dart": "a56c1a1c996746ac33d4271bee6294bad678d327f2c93fecf859b42c38e71cd3",
     "pubspec.yaml": "0e5ade8a3ff5a94924f003d7ef911cd86c15143a36ef3a374306eb74a34aef29",
-    "test/daily_guidance/local_journal_page_test.dart": "a384e96ad3831c330492e37adbd76ed1c78b634e3d3b2664373fce59bf7c393f"
+    "example/test/daily_guidance/local_journal_page_test.dart": "a384e96ad3831c330492e37adbd76ed1c78b634e3d3b2664373fce59bf7c393f"
   },
   "limitations": [
     "未覆盖Android/iOS真机和在线双端",

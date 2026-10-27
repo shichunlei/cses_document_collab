@@ -26,9 +26,9 @@
     "hostTargets": "No issues found"
   },
   "sourceSha256": {
-    "packages/cses_document_collab/lib/src/editor/core/editor_configuration.dart": "9201e99f1d47f85ef6209b9cd82e421f7560090a97a51d15d2071bdb34bce30b",
-    "packages/cses_document_collab/test/shared_font_size_test.dart": "18d58a69f5667b1db5afa78aabcba3f6ec6e3d320ace3d0d6e78a0aa243c1333",
-    "packages/cses_document_collab/test/collab_controller_snapshot_test.dart": "7f1976a8649a74f5f0e97d9ea31d9f6947afad79b8f9c556b8d86bb9173872ed"
+    "lib/src/editor/core/editor_configuration.dart": "9201e99f1d47f85ef6209b9cd82e421f7560090a97a51d15d2071bdb34bce30b",
+    "test/shared_font_size_test.dart": "18d58a69f5667b1db5afa78aabcba3f6ec6e3d320ace3d0d6e78a0aa243c1333",
+    "test/collab_controller_snapshot_test.dart": "7f1976a8649a74f5f0e97d9ea31d9f6947afad79b8f9c556b8d86bb9173872ed"
   },
   "nativeSourceChanged": false,
   "newDeviceOrRealOnlineValidation": false,

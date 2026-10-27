@@ -1,13 +1,13 @@
 # 适用范围与维护边界
 
-1. 本规范适用于整个仓库，包括根项目及 `packages/**` 下的源码、测试、示例、工具脚本和原生构建配置。`packages/cses_document_collab`、`packages/appflowy_editor` 等本地包均须遵循，不因独立包或上游 fork 身份而豁免。
+1. 本规范适用于整个仓库，包括根 package、`example/**` 及 `packages/**` 下的源码、测试、示例、工具脚本和原生构建配置。根包 `cses_document_collab`、`example` 宿主及 `packages/appflowy_editor` 本地包均须遵循，不因独立包或上游 fork 身份而豁免。
 2. 各语言执行对应规则：Dart 执行 DartDoc、Import 和 Flutter 验证要求；Rust、脚本及原生配置执行适用的架构、资源所有权、性能和验证要求。子目录 `AGENTS.md` 可补充局部要求，不得以包级规则免除本规范。
 3. 对历史代码按本次新增或修改的声明及其必要关联范围渐进治理；修改一个声明不要求重写整个文件或模块。不得借文档、格式化、静态检查或上游同步批量修改无关代码，保留其他工作区改动。
 4. 自动生成文件通过源声明、生成配置或模板维护，不手工套用手写代码的 DartDoc、Import 或格式规则；其识别、更新与验证遵循下文生成代码要求。
 
 # 包内 Skill 入口
 
-- 涉及 `packages/cses_document_collab` 的底部弹窗、居中弹窗或下拉/锚点菜单开发时，先读取该包的 [AGENTS.md](packages/cses_document_collab/AGENTS.md) 和 [collab-modal-ui skill](packages/cses_document_collab/.agents/skills/collab-modal-ui/SKILL.md)，再按所涉场景应用其参考文件；无需用户重复提醒。
+- 涉及根包 `cses_document_collab` 的底部弹窗、居中弹窗或下拉/锚点菜单开发时，先读取本文件的“包内开发约定” 和 [collab-modal-ui skill](.agents/skills/collab-modal-ui/SKILL.md)，再按所涉场景应用其参考文件；无需用户重复提醒。
 - 此入口适用于从仓库根目录发起的相关任务，即使包内 skill 未出现在会话技能列表，也按上述路径直接读取。普通页面或无关业务不强制加载；skill 本体仍由包内维护。
 
 # 块适配文档维护
@@ -47,7 +47,7 @@
 # 生成代码与原生实现
 
 1. 不得手工修改 `*.g.dart`、`*.realm.dart`、`*.freezed.dart`、`*.mocks.dart`、FRB 生成的 `frb_generated*.dart`、`frb_generated.rs`、`lib/src/native/api/` 下的生成文件以及生成的本地化文件。以文件生成标记和生成配置识别生成物，不只依据后缀或目录；同目录中的手写文件仍须遵循完整规范。
-2. 应修改源声明、配置或模板，通过仓库记录的生成流程和工具版本更新生成物；本项目 FRB 配置见 `packages/cses_document_collab/flutter_rust_bridge.yaml`，版本及生成入口以包 README 为准。接口、注释或数据结构变化时，同步更新受影响生成物，避免桥接签名或 ABI 不一致。
+2. 应修改源声明、配置或模板，通过仓库记录的生成流程和工具版本更新生成物；本项目 FRB 配置见 `flutter_rust_bridge.yaml`，版本及生成入口以包 README 为准。接口、注释或数据结构变化时，同步更新受影响生成物，避免桥接签名或 ABI 不一致。
 3. Rust、工具脚本及 Android/iOS 构建代码同样遵守模块边界和资源所有权要求；Rust 公共 API 使用对应语言的文档注释。本地协同包不得反向依赖 Demo、宿主全局账号或业务上下文；宿主能力通过公开契约注入。
 4. 上游 fork 的手写修改也执行本规范；同步上游时保留本地兼容补丁、来源信息和许可证，并验证受影响的包及消费者。
 
@@ -80,3 +80,36 @@
 5. 静态检查配置应逐步启用以下行为类规则：`unawaited_futures`、`discarded_futures`、`use_build_context_synchronously`、`cancel_subscriptions`、`close_sinks`。各包和示例已有独立 `analysis_options.yaml`，新增规则须覆盖受影响的包配置或复用一致的共享配置，不只修改根配置。如果暴露大量历史问题，按触达范围渐进治理，不得借单点需求批量修改无关模块。
 6. Rust 修改至少对受影响 crate 执行 `cargo fmt --check`、`cargo check` 和相关测试，避免格式化无关 crate。FRB 源接口变化后重新生成桥接代码、重建受影响原生库，并验证相关 Dart/原生桥接测试；生成和构建命令以所属包 README 为准。
 7. 完成前核对实际修改范围，执行 `git diff --check` 并说明验证结果及限制；不得为通过检查而顺带清理无关工作区改动。
+
+# 包内开发约定
+
+以下约定适用于根包 `cses_document_collab` 自身的源码、测试、工具和原生配置；标明包含示例的条款也适用于 `example/`。宿主业务代码位于 `example/`，AppFlowy fork 位于 `packages/appflowy_editor/`；各目录均继续遵守上方仓库通用规则。
+
+### 职责边界
+
+- 本包只负责核心编辑器与协同同步：文档模型、块与行内对象协议、输入/选区/历史、通用渲染和编辑命令、协同投影、同步及其存储基础设施。
+- 文档头尾、会议、KR、任务等按编辑器类型块或编辑器扩展维护，连同必要的协议、模型、展示和交互保留包内，本轮不拆出。宿主业务服务仍通过公开契约显式注入，不反向引用宿主账号或应用上下文。
+- 业务功能由宿主实现，包括具体功能页面和路由、制图模板与配色目录、业务草稿、产品工作流、账号与业务接口调用。不得因使用编辑器、需要离线或多个页面复用，就将业务功能放回本包。
+- 宿主通过公开编辑器 API、展示配置和必要的注入契约组合能力；本包不得反向引用宿主。协议数据的保留和同步不等于承接其业务处理，具体业务交互应由宿主扩展实现。
+- 迁移宿主功能时一并迁移其模型、默认内容、公开出口、文档和业务测试；通用编辑与同步测试留在包内，不依赖宿主页面作为夹具。历史记录保留原结论；不得把上述编辑器类型块或扩展列为本轮业务拆分项。
+
+### 弹窗与锚点菜单
+
+新增、迁移、还原或修复本包底部弹窗、居中弹窗及下拉/锚点菜单时，先读取并应用 [collab-modal-ui skill](.agents/skills/collab-modal-ui/SKILL.md)，再按所涉场景读取其参考文件。
+
+- 公共展示组件统一放在 `lib/src/ui/modal/`，每个可复用 Widget 独立成文件；其私有 State、Painter 等专属实现可随所属组件维护。`collab_modal.dart` 仅承载三类展示函数及私有锚点定位，不再聚合或转导出组件。调用方精确导入所需文件，保持业务会话、权限、草稿和资源所有权边界。
+- 颜色/表情选择器、缓存图片、卡片外框/标题栏/锁标、媒体进度、公式/绘图/分割线与链接/网页预览等共用展示均归上述目录；编辑器专属块、工具栏服务、选区、权限和事务适配器留在 `editor/`。UI组件不得反向导入 `editor/`；共享模型及生成资源放在 `model/`，生成文件须同步生成入口。
+- 用户最新的明确要求优先于 skill 里的默认产品规则；不要把历史中间方案重新当作目标。
+- 本 skill 存放于包内，包目录是单独工作区时也可使用；无需安装到用户全局目录。显式调用名称为 `$collab-modal-ui`，未被会话技能目录发现时按上面的路径直接读取。
+- 普通页面、网页设计预览和不涉及弹窗的协同/原生逻辑不因本约定强制加载该 skill。
+
+### UI 图标
+
+本包 `lib/` 下手写展示代码的图标统一使用 `lucide_icons_flutter`，选择前核对当前安装版本的声明；保留原语义、状态配色、尺寸与交互。Figma/掘金使用通用类型图标，暂不引入品牌Logo。宿主注入的头像/界面仍由宿主决定，不通过本包反向修改宿主或SDK内部控件；测试夹具不因这条约定强制替换注入图标。
+
+### 列表行与开关行
+
+- 本包全目录（含源码、测试夹具与示例）禁止使用 Flutter `ListTile` 系列组件，包括 `ListTile`、`SwitchListTile`、`CheckboxListTile`、`RadioListTile` 等；不得通过包装、别名或继承间接使用，也不新增相关 SDK 主题配置。
+- 列表行以 `Row` 自定义布局；菜单操作复用 `lib/src/ui/modal/collab_menu_row.dart` 的 `CollabMenuRow`，开关设置复用 `collab_switch_row.dart` 的 `CollabSwitchRow`。继续使用原生 `Switch`、`Checkbox`、`Radio` 等基础控件。
+- `CollabSwitchRow` 仅允许开关本体切换，不提供整行点击或切换回调；点击标题、副标题、图标及空白区域不得触发切换。状态及业务回调由调用方持有。
+- 自定义行须保留禁用态、选中态、危险操作配色、键盘与无障碍语义，并适配窄屏及系统大字；测试通过稳定 Key 或实际行为验证，开关操作定位行内的 `Switch`。

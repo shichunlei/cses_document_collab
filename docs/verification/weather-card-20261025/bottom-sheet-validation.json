@@ -13,8 +13,8 @@
   "platformBuild": "not run this round",
   "physicalDevices": "not tested",
   "sourceSha256": {
-    "packages/cses_document_collab/lib/src/editor/collab_weather_settings.dart": "f1bfcafa32324648abf5e1e5edc878901af7ec480a4f099f478bca88515de5b2",
-    "packages/cses_document_collab/test/weather_bottom_sheet_test.dart": "98cf0e63ed57893a1fcfea990c5403a2f92e28e123ad89115bd6235c585a7021"
+    "lib/src/editor/collab_weather_settings.dart": "f1bfcafa32324648abf5e1e5edc878901af7ec480a4f099f478bca88515de5b2",
+    "test/weather_bottom_sheet_test.dart": "98cf0e63ed57893a1fcfea990c5403a2f92e28e123ad89115bd6235c585a7021"
   },
   "previewSha256": "d72d6733e4bd308578d5bab502d407305f9e2c08a636882930e0f849c7664074"
 }

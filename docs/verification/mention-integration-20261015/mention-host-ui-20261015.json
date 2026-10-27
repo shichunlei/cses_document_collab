@@ -15,9 +15,9 @@
     "failure": "宿主取消返回null；同步/异步异常报告原宿主，失效页面不提示或恢复光标，单编辑器选人防重入"
   },
   "hostImplementation": [
-    "lib/src/demo/mention_avatar.dart",
-    "lib/src/demo/mention_picker.dart",
-    "lib/src/demo/document_host.dart"
+    "example/lib/src/demo/mention_avatar.dart",
+    "example/lib/src/demo/mention_picker.dart",
+    "example/lib/src/demo/document_host.dart"
   ],
   "removedFromPackage": [
     "lib/src/editor/collab_mention_avatar.dart",

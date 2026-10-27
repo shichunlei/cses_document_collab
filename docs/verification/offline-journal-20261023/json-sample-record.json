@@ -41,9 +41,9 @@
     }
   },
   "productionHashes": {
-    "lib/src/daily_guidance/journal_draft.dart": "d54b1995d962680f441eb96e7d0d231c73ac96a5b45a5ec392da2359624a581c",
-    "lib/src/daily_guidance/guidance_entries.dart": "8e5ba09b9f5a2a1f346a03e72ad59b96045a8d31e8cd1e996816ffbb3add6c74",
-    "packages/cses_document_collab/lib/src/editor/editor_user_mentions.dart": "531c0622462efca36ec941a4d5cb4b026e3bd9d6b1b927710d8fedc998cd77cd",
+    "example/lib/src/daily_guidance/journal_draft.dart": "d54b1995d962680f441eb96e7d0d231c73ac96a5b45a5ec392da2359624a581c",
+    "example/lib/src/daily_guidance/guidance_entries.dart": "8e5ba09b9f5a2a1f346a03e72ad59b96045a8d31e8cd1e996816ffbb3add6c74",
+    "lib/src/editor/editor_user_mentions.dart": "531c0622462efca36ec941a4d5cb4b026e3bd9d6b1b927710d8fedc998cd77cd",
     "packages/appflowy_editor/lib/src/core/document/document.dart": "e73588878b5442d78a81bd13494b783bf794d9afc98847192c15b439ef5d5c01",
     "packages/appflowy_editor/lib/src/core/document/node.dart": "b86313ec17c3bcb810eab337c30c11ff02a98b17f4840e313f85a9efe475d40a"
   },

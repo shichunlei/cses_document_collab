@@ -1,0 +1,557 @@
+00:00 +0: loading /System/Volumes/Data/workspace/mobile-collab-demo/example/test/cses_ws_gateway_integration_test.dart
+00:00 +0: missing Common login rejects connection without creating a socket
+[38;5;4m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m│ [CSES-LOG] [JSON] [2026-10-27 16:03:27.780] package:cses_common/runtime/config/config.dart:53[0m
+[38;5;4m│ {[0m
+[38;5;4m│   "applicationId": "app.wehanyu.hanyu_bct",[0m
+[38;5;4m│   "iosAppId": "1509209672",[0m
+[38;5;4m│   "policyUrl": "https://www.jinqidongli.com/policy",[0m
+[38;5;4m│   "userLicenseUrl": "https://www.jinqidongli.com/user-license",[0m
+[38;5;4m│   "appName": "智慧之道",[0m
+[38;5;4m│   "logoUrl": "https://jqdl-image.oss-cn-zhangjiakou.aliyuncs.com/bct.png",[0m
+[38;5;4m│   "jPushAppKey": "315789445ad3577f2bfe2139",[0m
+[38;5;4m│   "wxAppId": "wxf7445f9246590229",[0m
+[38;5;4m│   "universalLink": "https://jinqidongli.com/app"[0m
+[38;5;4m│ }[0m
+[38;5;4m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+00:00 +1: unmodified Common connects, subscribes, joins and exchanges routed JSON
+[38;5;4m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m│ [CSES-LOG] [JSON] [2026-10-27 16:03:27.804] package:cses_common/runtime/config/config.dart:53[0m
+[38;5;4m│ {[0m
+[38;5;4m│   "applicationId": "app.wehanyu.hanyu_bct",[0m
+[38;5;4m│   "iosAppId": "1509209672",[0m
+[38;5;4m│   "policyUrl": "https://www.jinqidongli.com/policy",[0m
+[38;5;4m│   "userLicenseUrl": "https://www.jinqidongli.com/user-license",[0m
+[38;5;4m│   "appName": "智慧之道",[0m
+[38;5;4m│   "logoUrl": "https://jqdl-image.oss-cn-zhangjiakou.aliyuncs.com/bct.png",[0m
+[38;5;4m│   "jPushAppKey": "315789445ad3577f2bfe2139",[0m
+[38;5;4m│   "wxAppId": "wxf7445f9246590229",[0m
+[38;5;4m│   "universalLink": "https://jinqidongli.com/app"[0m
+[38;5;4m│ }[0m
+[38;5;4m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m│ [CSES-LOG] [JSON] [2026-10-27 16:03:27.813] package:cses_common/runtime/config/config.dart:53[0m
+[38;5;4m│ {[0m
+[38;5;4m│   "applicationId": "app.wehanyu.hanyu_bct",[0m
+[38;5;4m│   "iosAppId": "1509209672",[0m
+[38;5;4m│   "policyUrl": "https://www.jinqidongli.com/policy",[0m
+[38;5;4m│   "userLicenseUrl": "https://www.jinqidongli.com/user-license",[0m
+[38;5;4m│   "appName": "智慧之道",[0m
+[38;5;4m│   "logoUrl": "https://jqdl-image.oss-cn-zhangjiakou.aliyuncs.com/bct.png",[0m
+[38;5;4m│   "jPushAppKey": "315789445ad3577f2bfe2139",[0m
+[38;5;4m│   "wxAppId": "wxf7445f9246590229",[0m
+[38;5;4m│   "universalLink": "https://jinqidongli.com/app"[0m
+[38;5;4m│ }[0m
+[38;5;4m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES-LOG] [DEBUG] [2026-10-27 16:03:27.830] package:cses_common/network/http/interceptors/http_interceptor.dart:757[0m
+[38;5;46m│ 🚀 curl 'https://api-pre.jinqidongli.com/User/login' \[0m
+[38;5;46m│   -X 'POST' \[0m
+[38;5;46m│   -H 'content-type: application/json; charset=utf-8' \[0m
+[38;5;46m│   -H 'device: Android' \[0m
+[38;5;46m│   -H 'appType: bct' \[0m
+[38;5;46m│   -H 'appVersion: 1.0.0' \[0m
+[38;5;46m│   -H 'versionCode: 1' \[0m
+[38;5;46m│   -H 'osVersion: unKnow' \[0m
+[38;5;46m│   -H 'deviceId: native-device' \[0m
+[38;5;46m│   -H 'language: zh' \[0m
+[38;5;46m│   -H 'companyId: ' \[0m
+[38;5;46m│   -H 'timeZone: Asia/Shanghai' \[0m
+[38;5;46m│   -H 'envType: pre' \[0m
+[38;5;46m│   -H 'cpuVersion: unKnow' \[0m
+[38;5;46m│   --data-raw '{"userName":"account","password":"password"}'[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+
+╔╣ Request ║ POST 
+║  https://api-pre.jinqidongli.com/User/login
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Headers 
+╟ content-type: application/json; charset=utf-8
+╟ cookieId: null
+╟ device: Android
+╟ appType: bct
+╟ appVersion: 1.0.0
+╟ versionCode: 1
+╟ osVersion: unKnow
+╟ deviceId: native-device
+╟ language: zh
+╟ companyId: 
+╟ timeZone: Asia/Shanghai
+╟ envType: pre
+╟ cpuVersion: unKnow
+╟ contentType: application/json; charset=utf-8
+╟ responseType: ResponseType.json
+╟ followRedirects: true
+╟ connectTimeout: 0:01:00.000000
+╟ receiveTimeout: 0:01:00.000000
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Extras 
+╟ client_probe.http_metric_started_at: 2026-10-27 16:03:27.829017
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Body 
+╟ userName: account
+╟ password: password
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+║ {userName: account, password: password}
+
+╔╣ Response ║ POST ║ Status: 200 null  ║ Time: 30 ms
+║  https://api-pre.jinqidongli.com/User/login
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Headers 
+╟ content-type: [application/json; charset=utf-8]
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+╔ Body
+║
+║    {
+║         "isSuccess": true,
+║         "cookieId": "server-cookie",
+║         "userId": "server-user",
+║         "userName": "server-account",
+║         "companyId": "server-company",
+║         "organizes": [{companyId: server-company, companyName: 测试企业}]
+║         "name": "测试用户",
+║         "site": "jqdl",
+║         "yrsSocket": "",
+║         "pictureDomain": "https://picture.example.test/KEY",
+║         "videoDomain": "https://video.example.test/KEY",
+║         "attachmentDomain": "https://attachment.example.test/KEY",
+║         "webConfig": {websocketHost: ws://127.0.0.1:51336/deployment/ws}
+║    }
+║
+╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [游客或访客] [DEBUG] [2026-10-27 16:03:27.874] package:cses_common/network/http/client/http_manager.dart:168[0m
+[38;5;46m│ 🚀 null[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m│ [CSES-LOG] [JSON] [2026-10-27 16:03:27.881] package:cses_common/runtime/session/user.dart:169[0m
+[38;5;4m│ {[0m
+[38;5;4m│   "userId": null,[0m
+[38;5;4m│   "userName": null,[0m
+[38;5;4m│   "orgId": null,[0m
+[38;5;4m│   "orgName": null,[0m
+[38;5;4m│   "deptId": null,[0m
+[38;5;4m│   "deptName": null,[0m
+[38;5;4m│   "companyId": "server-company",[0m
+[38;5;4m│   "companyName": "测试企业",[0m
+[38;5;4m│   "lastModified": 0,[0m
+[38;5;4m│   "state": 0,[0m
+[38;5;4m│   "companyAliasName": null,[0m
+[38;5;4m│   "companyGuide": null,[0m
+[38;5;4m│   "orgType": "Member",[0m
+[38;5;4m│   "isCourse": false[0m
+[38;5;4m│ }[0m
+[38;5;4m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m│ [Context] [JSON] [2026-10-27 16:03:27.884] package:cses_common/runtime/context/context.dart:227[0m
+[38;5;4m│ {[0m
+[38;5;4m│   "isSuccess": true,[0m
+[38;5;4m│   "cookieId": "server-cookie",[0m
+[38;5;4m│   "userId": "server-user",[0m
+[38;5;4m│   "userName": "server-account",[0m
+[38;5;4m│   "companyId": "server-company",[0m
+[38;5;4m│   "organizes": [[0m
+[38;5;4m│     {[0m
+[38;5;4m│       "companyId": "server-company",[0m
+[38;5;4m│       "companyName": "测试企业"[0m
+[38;5;4m│     }[0m
+[38;5;4m│   ],[0m
+[38;5;4m│   "name": "测试用户",[0m
+[38;5;4m│   "site": "jqdl",[0m
+[38;5;4m│   "yrsSocket": "",[0m
+[38;5;4m│   "pictureDomain": "https://picture.example.test/KEY",[0m
+[38;5;4m│   "videoDomain": "https://video.example.test/KEY",[0m
+[38;5;4m│   "attachmentDomain": "https://attachment.example.test/KEY",[0m
+[38;5;4m│   "webConfig": {[0m
+[38;5;4m│     "websocketHost": "ws://127.0.0.1:51336/deployment/ws"[0m
+[38;5;4m│   },[0m
+[38;5;4m│   "appVersion": "1.0.0",[0m
+[38;5;4m│   "osVersion": "unKnow",[0m
+[38;5;4m│   "deviceId": "native-device",[0m
+[38;5;4m│   "cpuVersion": "unKnow",[0m
+[38;5;4m│   "language": "zh",[0m
+[38;5;4m│   "timeZone": "Asia/Shanghai",[0m
+[38;5;4m│   "orgRole": "Member",[0m
+[38;5;4m│   "sloganDarkLogo": null,[0m
+[38;5;4m│   "sloganLightLogo": null,[0m
+[38;5;4m│   "env": "pre",[0m
+[38;5;4m│   "appType": "bct",[0m
+[38;5;4m│   "deviceType": "Android"[0m
+[38;5;4m│ }[0m
+[38;5;4m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES-LOG] [DEBUG] [2026-10-27 16:03:27.888] package:cses_common/runtime/context/context.dart:229[0m
+[38;5;46m│ 🚀 获取小程序引擎版本信息null,null[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:27.891] package:cses_common/network/websocket/cses_websocket_client.dart:413[0m
+[38;5;46m│ 🚀 📢 注册websocket事件 ====> gateway-integration《------------》 key ====================>Document|doc|editor-one|collabSync[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:27.892] package:cses_common/network/websocket/cses_websocket_client.dart:413[0m
+[38;5;46m│ 🚀 📢 注册websocket事件 ====> gateway-integration《------------》 key ====================>Document|doc|editor-one|collabUpdate[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [WEBSOCKET ENTRY] [DEBUG] [2026-10-27 16:03:27.896] package:cses_common/network/websocket/websocket_init_entry.dart:87[0m
+[38;5;46m│ 🚀 WebSocket init entry: scope=WebSocketInitScope.cses, source=mobile_collab_demo[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:27.903] package:cses_common/network/websocket/cses_websocket_client.dart:85[0m
+[38;5;46m│ 🚀 websocketHost = ws://127.0.0.1:51336/deployment/ws[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:27.903] package:cses_common/network/websocket/base_websocket_client.dart:255[0m
+[38;5;46m│ 🚀 scheme=ws[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:27.904] package:cses_common/network/websocket/base_websocket_client.dart:256[0m
+[38;5;46m│ 🚀 host=127.0.0.1[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:27.904] package:cses_common/network/websocket/base_websocket_client.dart:257[0m
+[38;5;46m│ 🚀 port=51336[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:27.904] package:cses_common/network/websocket/base_websocket_client.dart:258[0m
+[38;5;46m│ 🚀 path=/deployment/ws[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:27.905] package:cses_common/network/websocket/base_websocket_client.dart:259[0m
+[38;5;46m│ 🚀 query=cookieId=server-cookie[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:27.905] package:cses_common/network/websocket/base_websocket_client.dart:260[0m
+[38;5;46m│ 🚀 uri=ws://127.0.0.1:51336/deployment/ws?cookieId=server-cookie[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:27.913] package:cses_common/network/websocket/base_websocket_client.dart:490[0m
+[38;5;46m│ 🚀 WebSocket connection state: Connecting[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:27.941] package:cses_common/network/websocket/base_websocket_client.dart:490[0m
+[38;5;46m│ 🚀 WebSocket connection state: Connected[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:27.942] package:cses_common/network/websocket/cses_websocket_client.dart:105[0m
+[38;5;46m│ 🚀 CSES transport connected, waiting for hello before ready[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m│ [CSES WS原始消息] [JSON] [2026-10-27 16:03:27.946] package:cses_common/network/websocket/cses_websocket_client.dart:159[0m
+[38;5;4m│ {[0m
+[38;5;4m│   "action": "hello",[0m
+[38;5;4m│   "serverName": "loopback"[0m
+[38;5;4m│ }[0m
+[38;5;4m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m│ [CSES WEBSOCKET] [JSON] [2026-10-27 16:03:27.958] package:cses_common/network/websocket/cses_websocket_client.dart:199[0m
+[38;5;4m│ {[0m
+[38;5;4m│   "event": "websocket_envelope_received",[0m
+[38;5;4m│   "client": "cses",[0m
+[38;5;4m│   "direction": "incoming",[0m
+[38;5;4m│   "action": "hello",[0m
+[38;5;4m│   "isHeartbeat": false,[0m
+[38;5;4m│   "isControlMessage": true,[0m
+[38;5;4m│   "hasSubscriptionEnvelope": false,[0m
+[38;5;4m│   "hasTraceContext": false,[0m
+[38;5;4m│   "payloadType": "none"[0m
+[38;5;4m│ }[0m
+[38;5;4m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:27.960] package:cses_common/network/websocket/cses_websocket_client.dart:230[0m
+[38;5;46m│ 🚀 action: hello[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m│ [CSES WEBSOCKET] [INFO] [2026-10-27 16:03:27.961] package:cses_common/network/websocket/cses_websocket_client.dart:282[0m
+[38;5;4m│ 🚀 🤝 CSES websocket hello received: serverName=loopback, serverTime=null[0m
+[38;5;4m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 16:03:27.969] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:58[0m
+[38;5;46m│ 🚀 ❤️ Heartbeat started, interval: 15s[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:27.970] package:cses_common/network/websocket/cses_websocket_client.dart:582[0m
+[38;5;46m│ 🚀 🌐 Restoring global websocket subscription[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:27.976] package:cses_common/network/websocket/cses_websocket_client.dart:491[0m
+[38;5;46m│ 🚀 🔁 No page websocket subscriptions to restore[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m│ [CSES WEBSOCKET] [JSON] [2026-10-27 16:03:27.978] package:cses_common/network/websocket/interceptors/ws_interceptor.dart:235[0m
+[38;5;4m│ {[0m
+[38;5;4m│   "event": "websocket_message_body",[0m
+[38;5;4m│   "direction": "outgoing",[0m
+[38;5;4m│   "action": "subscribe",[0m
+[38;5;4m│   "body": {}[0m
+[38;5;4m│ }[0m
+[38;5;4m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m│ [CSES WEBSOCKET] [JSON] [2026-10-27 16:03:27.979] package:cses_common/network/websocket/interceptors/ws_interceptor.dart:235[0m
+[38;5;4m│ {[0m
+[38;5;4m│   "event": "websocket_message_body",[0m
+[38;5;4m│   "direction": "outgoing",[0m
+[38;5;4m│   "action": "collabJoin",[0m
+[38;5;4m│   "body": {[0m
+[38;5;4m│     "stateVector": "AA=="[0m
+[38;5;4m│   }[0m
+[38;5;4m│ }[0m
+[38;5;4m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m│ [CSES WS原始消息] [JSON] [2026-10-27 16:03:27.982] package:cses_common/network/websocket/cses_websocket_client.dart:159[0m
+[38;5;4m│ {[0m
+[38;5;4m│   "action": "subscribe",[0m
+[38;5;4m│   "subscription": {[0m
+[38;5;4m│     "channel": "Global",[0m
+[38;5;4m│     "topic": "systemNotice",[0m
+[38;5;4m│     "instance": ""[0m
+[38;5;4m│   },[0m
+[38;5;4m│   "body": {}[0m
+[38;5;4m│ }[0m
+[38;5;4m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m│ [CSES WEBSOCKET] [JSON] [2026-10-27 16:03:27.983] package:cses_common/network/websocket/cses_websocket_client.dart:199[0m
+[38;5;4m│ {[0m
+[38;5;4m│   "event": "websocket_envelope_received",[0m
+[38;5;4m│   "client": "cses",[0m
+[38;5;4m│   "direction": "incoming",[0m
+[38;5;4m│   "action": "subscribe",[0m
+[38;5;4m│   "isHeartbeat": false,[0m
+[38;5;4m│   "isControlMessage": true,[0m
+[38;5;4m│   "hasSubscriptionEnvelope": true,[0m
+[38;5;4m│   "hasTraceContext": false,[0m
+[38;5;4m│   "payloadType": "_Map<String, dynamic>",[0m
+[38;5;4m│   "payloadFieldCount": 0,[0m
+[38;5;4m│   "body": {}[0m
+[38;5;4m│ }[0m
+[38;5;4m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:27.984] package:cses_common/network/websocket/cses_websocket_client.dart:230[0m
+[38;5;46m│ 🚀 action: subscribe[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:27.985] package:cses_common/network/websocket/cses_websocket_client.dart:260[0m
+[38;5;46m│ 🚀 🔑 Dispatch key = Global|systemNotice||subscribe[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;3m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;3m│ [CSES WEBSOCKET] [WARN] [2026-10-27 16:03:27.986] package:cses_common/network/websocket/cses_websocket_client.dart:314[0m
+[38;5;3m│ 🚀 ⚠️ No matching key=Global|systemNotice||subscribe in pageId=gateway-integration[0m
+[38;5;3m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m│ [CSES WS原始消息] [JSON] [2026-10-27 16:03:27.987] package:cses_common/network/websocket/cses_websocket_client.dart:159[0m
+[38;5;4m│ {[0m
+[38;5;4m│   "action": "subscribe",[0m
+[38;5;4m│   "subscription": {[0m
+[38;5;4m│     "channel": "Document",[0m
+[38;5;4m│     "topic": "doc",[0m
+[38;5;4m│     "instance": "editor-one"[0m
+[38;5;4m│   },[0m
+[38;5;4m│   "body": {}[0m
+[38;5;4m│ }[0m
+[38;5;4m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m│ [CSES WEBSOCKET] [JSON] [2026-10-27 16:03:27.988] package:cses_common/network/websocket/cses_websocket_client.dart:199[0m
+[38;5;4m│ {[0m
+[38;5;4m│   "event": "websocket_envelope_received",[0m
+[38;5;4m│   "client": "cses",[0m
+[38;5;4m│   "direction": "incoming",[0m
+[38;5;4m│   "action": "subscribe",[0m
+[38;5;4m│   "isHeartbeat": false,[0m
+[38;5;4m│   "isControlMessage": true,[0m
+[38;5;4m│   "hasSubscriptionEnvelope": true,[0m
+[38;5;4m│   "hasTraceContext": false,[0m
+[38;5;4m│   "payloadType": "_Map<String, dynamic>",[0m
+[38;5;4m│   "payloadFieldCount": 0,[0m
+[38;5;4m│   "body": {}[0m
+[38;5;4m│ }[0m
+[38;5;4m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:27.989] package:cses_common/network/websocket/cses_websocket_client.dart:230[0m
+[38;5;46m│ 🚀 action: subscribe[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:27.989] package:cses_common/network/websocket/cses_websocket_client.dart:260[0m
+[38;5;46m│ 🚀 🔑 Dispatch key = Document|doc|editor-one|subscribe[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;3m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;3m│ [CSES WEBSOCKET] [WARN] [2026-10-27 16:03:27.989] package:cses_common/network/websocket/cses_websocket_client.dart:314[0m
+[38;5;3m│ 🚀 ⚠️ No matching key=Document|doc|editor-one|subscribe in pageId=gateway-integration[0m
+[38;5;3m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m│ [CSES WS原始消息] [JSON] [2026-10-27 16:03:27.990] package:cses_common/network/websocket/cses_websocket_client.dart:159[0m
+[38;5;4m│ {[0m
+[38;5;4m│   "action": "collabSync",[0m
+[38;5;4m│   "subscription": {[0m
+[38;5;4m│     "channel": "Document",[0m
+[38;5;4m│     "topic": "doc",[0m
+[38;5;4m│     "instance": "editor-one"[0m
+[38;5;4m│   },[0m
+[38;5;4m│   "body": {[0m
+[38;5;4m│     "data": "AAA=",[0m
+[38;5;4m│     "stateVector": "AA=="[0m
+[38;5;4m│   }[0m
+[38;5;4m│ }[0m
+[38;5;4m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m│ [CSES WEBSOCKET] [JSON] [2026-10-27 16:03:27.991] package:cses_common/network/websocket/cses_websocket_client.dart:199[0m
+[38;5;4m│ {[0m
+[38;5;4m│   "event": "websocket_envelope_received",[0m
+[38;5;4m│   "client": "cses",[0m
+[38;5;4m│   "direction": "incoming",[0m
+[38;5;4m│   "action": "collabSync",[0m
+[38;5;4m│   "isHeartbeat": false,[0m
+[38;5;4m│   "isControlMessage": false,[0m
+[38;5;4m│   "hasSubscriptionEnvelope": true,[0m
+[38;5;4m│   "hasTraceContext": false,[0m
+[38;5;4m│   "payloadType": "_Map<String, dynamic>",[0m
+[38;5;4m│   "payloadFieldCount": 2,[0m
+[38;5;4m│   "body": {[0m
+[38;5;4m│     "data": "AAA=",[0m
+[38;5;4m│     "stateVector": "AA=="[0m
+[38;5;4m│   }[0m
+[38;5;4m│ }[0m
+[38;5;4m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:27.992] package:cses_common/network/websocket/cses_websocket_client.dart:230[0m
+[38;5;46m│ 🚀 action: collabSync[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:27.992] package:cses_common/network/websocket/cses_websocket_client.dart:260[0m
+[38;5;46m│ 🚀 🔑 Dispatch key = Document|doc|editor-one|collabSync[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:27.993] package:cses_common/network/websocket/cses_websocket_client.dart:302[0m
+[38;5;46m│ 🚀 ✅ Found 1 callbacks for pageId=gateway-integration, key=Document|doc|editor-one|collabSync[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m│ [CSES WEBSOCKET] [JSON] [2026-10-27 16:03:27.994] package:cses_common/network/websocket/interceptors/ws_interceptor.dart:235[0m
+[38;5;4m│ {[0m
+[38;5;4m│   "event": "websocket_message_body",[0m
+[38;5;4m│   "direction": "outgoing",[0m
+[38;5;4m│   "action": "collabUpdate",[0m
+[38;5;4m│   "body": {[0m
+[38;5;4m│     "data": "AAA="[0m
+[38;5;4m│   }[0m
+[38;5;4m│ }[0m
+[38;5;4m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:27.996] package:cses_common/network/websocket/cses_websocket_client.dart:85[0m
+[38;5;46m│ 🚀 websocketHost = ws://127.0.0.1:51336/deployment/ws[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:27.996] package:cses_common/network/websocket/cses_websocket_client.dart:85[0m
+[38;5;46m│ 🚀 websocketHost = ws://127.0.0.1:51336/deployment/ws[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m│ [CSES WS原始消息] [JSON] [2026-10-27 16:03:27.998] package:cses_common/network/websocket/cses_websocket_client.dart:159[0m
+[38;5;4m│ {[0m
+[38;5;4m│   "action": "collabUpdate",[0m
+[38;5;4m│   "subscription": {[0m
+[38;5;4m│     "channel": "Document",[0m
+[38;5;4m│     "topic": "doc",[0m
+[38;5;4m│     "instance": "other-editor"[0m
+[38;5;4m│   },[0m
+[38;5;4m│   "body": {[0m
+[38;5;4m│     "data": "AAA="[0m
+[38;5;4m│   }[0m
+[38;5;4m│ }[0m
+[38;5;4m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m│ [CSES WEBSOCKET] [JSON] [2026-10-27 16:03:28.000] package:cses_common/network/websocket/cses_websocket_client.dart:199[0m
+[38;5;4m│ {[0m
+[38;5;4m│   "event": "websocket_envelope_received",[0m
+[38;5;4m│   "client": "cses",[0m
+[38;5;4m│   "direction": "incoming",[0m
+[38;5;4m│   "action": "collabUpdate",[0m
+[38;5;4m│   "isHeartbeat": false,[0m
+[38;5;4m│   "isControlMessage": false,[0m
+[38;5;4m│   "hasSubscriptionEnvelope": true,[0m
+[38;5;4m│   "hasTraceContext": false,[0m
+[38;5;4m│   "payloadType": "_Map<String, dynamic>",[0m
+[38;5;4m│   "payloadFieldCount": 1,[0m
+[38;5;4m│   "body": {[0m
+[38;5;4m│     "data": "AAA="[0m
+[38;5;4m│   }[0m
+[38;5;4m│ }[0m
+[38;5;4m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:28.003] package:cses_common/network/websocket/cses_websocket_client.dart:230[0m
+[38;5;46m│ 🚀 action: collabUpdate[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:28.004] package:cses_common/network/websocket/cses_websocket_client.dart:260[0m
+[38;5;46m│ 🚀 🔑 Dispatch key = Document|doc|other-editor|collabUpdate[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;3m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;3m│ [CSES WEBSOCKET] [WARN] [2026-10-27 16:03:28.005] package:cses_common/network/websocket/cses_websocket_client.dart:314[0m
+[38;5;3m│ 🚀 ⚠️ No matching key=Document|doc|other-editor|collabUpdate in pageId=gateway-integration[0m
+[38;5;3m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m│ [CSES WS原始消息] [JSON] [2026-10-27 16:03:28.006] package:cses_common/network/websocket/cses_websocket_client.dart:159[0m
+[38;5;4m│ {[0m
+[38;5;4m│   "action": "collabUpdate",[0m
+[38;5;4m│   "subscription": {[0m
+[38;5;4m│     "channel": "Document",[0m
+[38;5;4m│     "topic": "doc",[0m
+[38;5;4m│     "instance": "editor-one"[0m
+[38;5;4m│   },[0m
+[38;5;4m│   "body": {[0m
+[38;5;4m│     "data": "AAA="[0m
+[38;5;4m│   }[0m
+[38;5;4m│ }[0m
+[38;5;4m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m│ [CSES WEBSOCKET] [JSON] [2026-10-27 16:03:28.008] package:cses_common/network/websocket/cses_websocket_client.dart:199[0m
+[38;5;4m│ {[0m
+[38;5;4m│   "event": "websocket_envelope_received",[0m
+[38;5;4m│   "client": "cses",[0m
+[38;5;4m│   "direction": "incoming",[0m
+[38;5;4m│   "action": "collabUpdate",[0m
+[38;5;4m│   "isHeartbeat": false,[0m
+[38;5;4m│   "isControlMessage": false,[0m
+[38;5;4m│   "hasSubscriptionEnvelope": true,[0m
+[38;5;4m│   "hasTraceContext": false,[0m
+[38;5;4m│   "payloadType": "_Map<String, dynamic>",[0m
+[38;5;4m│   "payloadFieldCount": 1,[0m
+[38;5;4m│   "body": {[0m
+[38;5;4m│     "data": "AAA="[0m
+[38;5;4m│   }[0m
+[38;5;4m│ }[0m
+[38;5;4m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:28.009] package:cses_common/network/websocket/cses_websocket_client.dart:230[0m
+[38;5;46m│ 🚀 action: collabUpdate[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:28.010] package:cses_common/network/websocket/cses_websocket_client.dart:260[0m
+[38;5;46m│ 🚀 🔑 Dispatch key = Document|doc|editor-one|collabUpdate[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:28.010] package:cses_common/network/websocket/cses_websocket_client.dart:302[0m
+[38;5;46m│ 🚀 ✅ Found 1 callbacks for pageId=gateway-integration, key=Document|doc|editor-one|collabUpdate[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;4m│ [CSES WEBSOCKET] [JSON] [2026-10-27 16:03:28.012] package:cses_common/network/websocket/interceptors/ws_interceptor.dart:235[0m
+[38;5;4m│ {[0m
+[38;5;4m│   "event": "websocket_message_body",[0m
+[38;5;4m│   "direction": "outgoing",[0m
+[38;5;4m│   "action": "unsubscribe",[0m
+[38;5;4m│   "body": {}[0m
+[38;5;4m│ }[0m
+[38;5;4m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:28.013] package:cses_common/network/websocket/cses_websocket_client.dart:441[0m
+[38;5;46m│ 🚀 📢 注销websocket事件 ====> gateway-integration[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET] [DEBUG] [2026-10-27 16:03:28.015] package:cses_common/network/websocket/cses_websocket_client.dart:441[0m
+[38;5;46m│ 🚀 📢 注销websocket事件 ====> gateway-integration[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;3m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;3m│ [CSES WEBSOCKET] [WARN] [2026-10-27 16:03:28.016] package:cses_common/network/websocket/base_websocket_client.dart:901[0m
+[38;5;3m│ 🚀 手动关闭websocket[0m
+[38;5;3m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+[38;5;46m│ [CSES WEBSOCKET HEARTBEAT] [DEBUG] [2026-10-27 16:03:28.017] package:cses_common/network/websocket/controllers/heartbeat_controller.dart:69[0m
+[38;5;46m│ 🚀 💔 Heartbeat stopped[0m
+[38;5;46m└──────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+00:00 +2: All tests passed!

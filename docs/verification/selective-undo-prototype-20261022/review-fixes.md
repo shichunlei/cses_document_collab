@@ -12,7 +12,7 @@
 | R4 / P2：普通投影误触发永久撤权 | 投影和历史只设置 `localTransactionsPaused`，不发出虚假的 editable=false。真实文档能力切换才同步权限；页面自己的预览/导入状态继续有效。 | 真实控制器的选人和会议选择在普通远端变化后仍可返回有效结果；真实撤权再授予也不会恢复旧面板提交资格。既有表格、Mermaid、公式和锁回归继续执行。 |
 | R5 / P2：首次握手跳过编号修复 | 不再由投影伪只读阻断 onSync 的编号修复；无页面宿主在正式根首次可写时同步真实能力。系统修复不进入个人历史。 | 独立 Yjs 缺 order 夹具验证实际页面首次握手及无页面宿主首次握手；预览重握手仍保留缺号且原生状态向量与接收数据一致，不产生本地编号写入。 |
 
-Rust 改动位于 [document_history.rs](../../../packages/cses_document_collab/rust/src/api/document_history.rs) 及两个内部调用点。Flutter 控制器在 [collab_controller.dart](../../../packages/cses_document_collab/lib/src/controller/collab_controller.dart)，投影选择策略在 [AppFlowy 适配器](../../../packages/cses_document_collab/lib/src/editor/appflowy_block_editor_adapter.dart)。没有修改 FRB 公共声明、生成物、依赖或 Yrs 检查点扩展。
+Rust 改动位于 [document_history.rs](../../../rust/src/api/document_history.rs) 及两个内部调用点。Flutter 控制器在 [collab_controller.dart](../../../lib/src/controller/collab_controller.dart)，投影选择策略在 [AppFlowy 适配器](../../../lib/src/editor/appflowy_block_editor_adapter.dart)。没有修改 FRB 公共声明、生成物、依赖或 Yrs 检查点扩展。
 
 ## 输入暂停、权限与资源边界
 
@@ -23,9 +23,9 @@ Rust 改动位于 [document_history.rs](../../../packages/cses_document_collab/r
 - 关闭键盘后的真实页面补充复核还发现选区恢复会重新 `attach/show`，见[修复前最小复现](fix-closed-keyboard-before.dart.txt)与[失败日志](fix-closed-keyboard-before.txt)。暂停期间有效选区只刷新已有连接；没有连接时保留关闭状态，正文和光标仍正常恢复。用户再次主动点击正文后仍可建立输入连接。
 - 原生历史下，回放通过 `withUpdateSelection:false` 延后中间选区通知；未绑定外部历史的独立适配器仍保留原路径历史失效策略。页面预览、锁、目标删除/替换及真实权限撤销的原有保护保留。
 
-新增 **40 项**正式回归：Rust 9 项、协同包 15 项、AppFlowy 16 项，分别见 [Rust 测试](../../../packages/cses_document_collab/rust/src/api/document_history_tests.rs)、[真实 FRB/页面测试](../../../packages/cses_document_collab/test/native_history_review_regression_test.dart)、[输入暂停与关闭测试](../../../packages/appflowy_editor/test/legacy/local_transaction_pause_test.dart)。
+新增 **40 项**正式回归：Rust 9 项、协同包 15 项、AppFlowy 16 项，分别见 [Rust 测试](../../../rust/src/api/document_history_tests.rs)、[真实 FRB/页面测试](../../../test/native_history_review_regression_test.dart)、[输入暂停与关闭测试](../../../packages/appflowy_editor/test/legacy/local_transaction_pause_test.dart)。
 
-编号夹具由随仓库的 [Yjs 生成器](../../../packages/cses_document_collab/tool/generate_native_history_review_fixture.mjs)生成，固定独立 client ID，输入基础夹具、Yjs 版本和字节哈希均记录在 [JSON](../../../packages/cses_document_collab/rust/tests/fixtures/native-history-review.json)，重复生成字节一致。运行回归不依赖临时审查脚本。
+编号夹具由随仓库的 [Yjs 生成器](../../../tool/generate_native_history_review_fixture.mjs)生成，固定独立 client ID，输入基础夹具、Yjs 版本和字节哈希均记录在 [JSON](../../../rust/tests/fixtures/native-history-review.json)，重复生成字节一致。运行回归不依赖临时审查脚本。
 
 ## 最终验证
 

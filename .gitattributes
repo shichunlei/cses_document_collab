@@ -1,2 +1,5 @@
 # 保持上游 Mermaid 发布产物的原始字节，使用 runtime.json 校验，不展示压缩代码文本差异。
-packages/cses_document_collab/assets/mermaid/mermaid.min.js binary
+assets/mermaid/mermaid.min.js binary
+
+# 本轮原始命令日志保留工具输出的对齐空格与结尾空行，源码和文档仍检查空白。
+docs/verification/package-example-layout-20261027/*.txt -whitespace

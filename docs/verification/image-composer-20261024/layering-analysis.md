@@ -6,7 +6,7 @@
 
 ## 结论
 
-当前 `image_composer` 更适合归宿主的功能/业务装配层。建议将页面、路由入口、模板及组合会话迁至宿主 `lib/src/image_composer/`，通用编辑、预览渲染、输入、历史、配置和协同能力继续留在 `cses_document_collab`。如果它仅用于展示编辑器，则放宿主 `demo/` 或包的示例中。
+当前 `image_composer` 更适合归宿主的功能/业务装配层。建议将页面、路由入口、模板及组合会话迁至宿主 `example/lib/src/image_composer/`，通用编辑、预览渲染、输入、历史、配置和协同能力继续留在 `cses_document_collab`。如果它仅用于展示编辑器，则放宿主 `demo/` 或包的示例中。
 
 这不是由目录名或是否联网决定的。共享包可以提供 UI 和本地编辑能力；当前 composer 的主要职责却是决定一个具体功能怎样打开、展示、切换模板和退出，属于对底层能力的使用。其依赖方向目前是干净的：没有直接导入 Demo、宿主账号、业务 HTTP 或日记上下文，宿主服务通过 `CollabHostServices` 显式注入。建议迁出的原因是职责归属，而非已经存在反向依赖。
 
@@ -16,21 +16,21 @@
 
 | 对象 | 当前职责和依据 | 建议归属 |
 |---|---|---|
-| `showCollabImageComposer` | 创建组合控制器、选择默认模板、推入 `MaterialPageRoute`，等待退场后关闭资源；返回 `Future<void>`，不保存正文或返回图片。[源码](../../../lib/src/image_composer/show_image_composer.dart) | 宿主导航与功能入口 |
-| `ImageComposerPage` | 固定“本地编辑器”标题、撤销/重做和预览入口，600 逻辑像素宽度上限、渐变背景/白卡、模板选择器和页面错误提示。[源码](../../../lib/src/image_composer/image_composer_page.dart) | 宿主功能页面 |
-| `ImageComposerController` | 组合 `LocalEditorController`，维护模板索引、独立预览快照及正文/预览的关闭顺序；没有新的编辑或协同协议。[源码](../../../lib/src/image_composer/image_composer_controller.dart) | 随页面迁出的功能会话编排 |
-| `CollabImageTemplate` 与 `collabImageTemplates` | 约束背景色、边距和圆角，并内置“紫光/暖阳/晴空/薄荷/简约”五个模板。仓库内仅 composer 及其测试消费。[源码](../../../lib/src/image_composer/image_composer_template.dart) | 当前一起迁宿主；日后有独立共享场景再提炼通用样式模型 |
-| `LocalEditorView` | `DocumentEditorView` 的薄包装，附加 `image-composer-editor` Key；当前没有导出。[源码](../../../packages/cses_document_collab/lib/src/editor/document_editor_view.dart) | 页面直接组合公开视图即可；若保留包装，随功能迁出 |
+| `showCollabImageComposer` | 创建组合控制器、选择默认模板、推入 `MaterialPageRoute`，等待退场后关闭资源；返回 `Future<void>`，不保存正文或返回图片。[源码](../../../example/lib/src/image_composer/show_image_composer.dart) | 宿主导航与功能入口 |
+| `ImageComposerPage` | 固定“本地编辑器”标题、撤销/重做和预览入口，600 逻辑像素宽度上限、渐变背景/白卡、模板选择器和页面错误提示。[源码](../../../example/lib/src/image_composer/image_composer_page.dart) | 宿主功能页面 |
+| `ImageComposerController` | 组合 `LocalEditorController`，维护模板索引、独立预览快照及正文/预览的关闭顺序；没有新的编辑或协同协议。[源码](../../../example/lib/src/image_composer/image_composer_controller.dart) | 随页面迁出的功能会话编排 |
+| `CollabImageTemplate` 与 `collabImageTemplates` | 约束背景色、边距和圆角，并内置“紫光/暖阳/晴空/薄荷/简约”五个模板。仓库内仅 composer 及其测试消费。[源码](../../../example/lib/src/image_composer/image_composer_template.dart) | 当前一起迁宿主；日后有独立共享场景再提炼通用样式模型 |
+| `LocalEditorView` | `DocumentEditorView` 的薄包装，附加 `image-composer-editor` Key；当前没有导出。[源码](../../../lib/src/editor/document_editor_view.dart) | 页面直接组合公开视图即可；若保留包装，随功能迁出 |
 | `LocalEditorController`、`DocumentEditorController`、`DocumentEditorView`、配置及服务端口 | 提供不依赖该页面的正文事务、输入/历史、能力限制、通用渲染及宿主注入；已经通过包入口公开 | 留共享包 |
 
 名称也已经落后于行为：当前实现不生成 PNG，不做编码/截图导出，关闭不保存正文，实质是本地编辑和模板预览。未来命名应依据产品用途决定；不能仅因 `image_composer` 名称就假定它包含图片合成基础设施。
 
 ## 调用方及迁出可行性
 
-- 仓库生产调用只有宿主 [collab_demo_page.dart](../../../lib/src/demo/collab_demo_page.dart) 的 `_openOfflineImageComposer`。根 `test/`、`integration_test/` 未检出该入口调用；包内另有页面和离线能力测试。仓库搜索不能证明外部消费者不存在。
-- [包公开入口](../../../packages/cses_document_collab/lib/cses_document_collab.dart) 已导出 `LocalEditorController`、`DocumentEditorController`、`EditorCommandContext`、`EditorConfiguration`、`DocumentEditorView` 和 `CollabHostServices`。这些接口足以复现当前组合，不需要宿主导入包的 `src/`。
-- 宿主 [pubspec.yaml](../../../pubspec.yaml) 已直接声明 `cses_document_collab`、`appflowy_editor` 和 `lucide_icons_flutter`。当前没有必须扩展包 API 才能搬迁的硬性缺口；尤其不应仅为搬迁而公开 `LocalEditorView`。
-- 今日导向没有依赖 composer。[LocalJournalController](../../../lib/src/daily_guidance/local_journal_controller.dart) 直接创建公开编辑器会话，[JournalSurface](../../../lib/src/daily_guidance/journal_surface.dart) 用公开视图注入业务外观，[LocalJournalPage](../../../lib/src/daily_guidance/local_journal_page.dart) 组合独立预览。它是现成的同类分层范例；composer 与其并列，不必合并进日记模块。
+- 仓库生产调用只有宿主 [collab_demo_page.dart](../../../example/lib/src/demo/collab_demo_page.dart) 的 `_openOfflineImageComposer`。根 `test/`、`integration_test/` 未检出该入口调用；包内另有页面和离线能力测试。仓库搜索不能证明外部消费者不存在。
+- [包公开入口](../../../lib/cses_document_collab.dart) 已导出 `LocalEditorController`、`DocumentEditorController`、`EditorCommandContext`、`EditorConfiguration`、`DocumentEditorView` 和 `CollabHostServices`。这些接口足以复现当前组合，不需要宿主导入包的 `src/`。
+- 宿主 [pubspec.yaml](../../../example/pubspec.yaml) 已直接声明 `cses_document_collab`、`appflowy_editor` 和 `lucide_icons_flutter`。当前没有必须扩展包 API 才能搬迁的硬性缺口；尤其不应仅为搬迁而公开 `LocalEditorView`。
+- 今日导向没有依赖 composer。[LocalJournalController](../../../example/lib/src/daily_guidance/local_journal_controller.dart) 直接创建公开编辑器会话，[JournalSurface](../../../example/lib/src/daily_guidance/journal_surface.dart) 用公开视图注入业务外观，[LocalJournalPage](../../../example/lib/src/daily_guidance/local_journal_page.dart) 组合独立预览。它是现成的同类分层范例；composer 与其并列，不必合并进日记模块。
 - 当前预览通过 AppFlowy `Document.toJson/fromJson` 深拷贝内存正文，不是桌面 BlockCraft JSON 交换。迁出无需引入日记转换器或日记存储模型。
 
 ## 最小迁移边界（尚未实施）

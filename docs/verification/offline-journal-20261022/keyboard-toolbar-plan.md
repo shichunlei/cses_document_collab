@@ -36,15 +36,15 @@ T  Aa  @  待办  感悟  领航员  都来帮  自检  │ 收起键盘
 
 ## 源码核对依据
 
-- [页面底部旧入口和宿主动作](../../../lib/src/daily_guidance/local_journal_page.dart)：`_actions`、`_pickPeople`、`_section`。
-- [日记能力和对象校验](../../../lib/src/daily_guidance/journal_draft.dart)：`journalConfiguration` 已启用 Todo，未启用原生 mention；`validJournalDelta` 当前只识别旧日记引用。
-- [日记渲染与字符触发](../../../lib/src/daily_guidance/journal_surface.dart)：已注册 Todo；当前装饰器和 @ 快捷链仍走旧引用。
-- [通用外壳](../../../packages/cses_document_collab/lib/src/editor/editor_interaction_shell.dart)：目前没有宿主快捷动作参数。
-- [工具栏](../../../packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart)：已有原生 @，T 菜单已有 Todo 转换；[配置](../../../packages/cses_document_collab/lib/src/editor/core/editor_configuration.dart)尚无 Todo 顶栏标识。
-- [工具栏容器](../../../packages/cses_document_collab/lib/src/editor/stable_mobile_toolbar.dart)：已支持横向滚动和固定右侧收起键盘。
-- [原生对象命令](../../../packages/cses_document_collab/lib/src/model/collab_inline_formula.dart)：`applyCollabInlineCommand` 依赖事务前解析；[控制器](../../../packages/cses_document_collab/lib/src/editor/core/document_editor_controller.dart)当前通过可选 binding 安装解析阶段。
-- [日记复制](../../../lib/src/daily_guidance/guidance_entries.dart)、[输入归一化](../../../lib/src/daily_guidance/journal_input.dart)：需要同时识别新旧引用。
-- [宿主现有提及装配](../../../lib/src/demo/document_host.dart)：已有 `CsesMentionDirectory` 与 `showDemoMentionPicker`，日记应显式注入自己的实例服务。
+- [页面底部旧入口和宿主动作](../../../example/lib/src/daily_guidance/local_journal_page.dart)：`_actions`、`_pickPeople`、`_section`。
+- [日记能力和对象校验](../../../example/lib/src/daily_guidance/journal_draft.dart)：`journalConfiguration` 已启用 Todo，未启用原生 mention；`validJournalDelta` 当前只识别旧日记引用。
+- [日记渲染与字符触发](../../../example/lib/src/daily_guidance/journal_surface.dart)：已注册 Todo；当前装饰器和 @ 快捷链仍走旧引用。
+- [通用外壳](../../../lib/src/editor/editor_interaction_shell.dart)：目前没有宿主快捷动作参数。
+- [工具栏](../../../lib/src/editor/editor_shortcut_toolbar.dart)：已有原生 @，T 菜单已有 Todo 转换；[配置](../../../lib/src/editor/core/editor_configuration.dart)尚无 Todo 顶栏标识。
+- [工具栏容器](../../../lib/src/editor/stable_mobile_toolbar.dart)：已支持横向滚动和固定右侧收起键盘。
+- [原生对象命令](../../../lib/src/model/collab_inline_formula.dart)：`applyCollabInlineCommand` 依赖事务前解析；[控制器](../../../lib/src/editor/core/document_editor_controller.dart)当前通过可选 binding 安装解析阶段。
+- [日记复制](../../../example/lib/src/daily_guidance/guidance_entries.dart)、[输入归一化](../../../example/lib/src/daily_guidance/journal_input.dart)：需要同时识别新旧引用。
+- [宿主现有提及装配](../../../example/lib/src/demo/document_host.dart)：已有 `CsesMentionDirectory` 与 `showDemoMentionPicker`，日记应显式注入自己的实例服务。
 
 ## 实施后验证范围
 

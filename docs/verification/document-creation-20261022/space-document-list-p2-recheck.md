@@ -10,7 +10,7 @@
 
 ## L2 / P2：并发重试的旧失败覆盖新的成功结果
 
-位置：`lib/src/demo/document_creation/document_creation_page.dart:76–103`，关联第211行“重新加载位置”。
+位置：`example/lib/src/demo/document_creation/document_creation_page.dart:76–103`，关联第211行“重新加载位置”。
 
 首次空间加载失败后，重试入口只检查创建任务busy。`_load`开始时没有将位置加载状态设为进行中，也没有在途任务去重或请求代次校验，因此连续点击可以同时发出多个空间请求。
 

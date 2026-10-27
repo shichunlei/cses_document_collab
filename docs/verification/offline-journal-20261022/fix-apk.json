@@ -2,12 +2,12 @@
   "path": "/System/Volumes/Data/workspace/mobile-collab-demo/build/app/outputs/flutter-apk/app-debug.apk",
   "sha256": "f41816cb445e4f73af3ae53cd06d0666927d53688be27959d6d2d10dfc42559e",
   "sizeBytes": 227179948,
-  "normalEntry": "lib/main.dart",
+  "normalEntry": "example/lib/main.dart",
   "embeddedSourcesMatch": {
-    "packages/cses_document_collab/lib/src/journal/local_journal_controller.dart": true,
-    "packages/cses_document_collab/lib/src/journal/journal_editing.dart": true,
-    "packages/cses_document_collab/lib/src/journal/journal_surface.dart": true,
-    "packages/cses_document_collab/lib/src/journal/journal_ruled_content.dart": true
+    "lib/src/journal/local_journal_controller.dart": true,
+    "lib/src/journal/journal_editing.dart": true,
+    "lib/src/journal/journal_surface.dart": true,
+    "lib/src/journal/journal_ruled_content.dart": true
   },
   "installedOnDevice": false
 }

@@ -63,10 +63,10 @@ Common测试保留真实请求封装、账号检查和拦截器，但HTTP响应�
 
 ```bash
 flutter test --no-pub --timeout=90s \
-  test/document_creation_coordinator_test.dart \
-  test/cses_document_creation_service_test.dart \
-  test/collab_demo_page_test.dart \
-  test/cses_document_metadata_service_test.dart
+  example/test/document_creation_coordinator_test.dart \
+  example/test/cses_document_creation_service_test.dart \
+  example/test/collab_demo_page_test.dart \
+  example/test/cses_document_metadata_service_test.dart
 ```
 
 协同包目录（参数使用本机实际路径；Node需18或更新版本）：
@@ -88,7 +88,7 @@ flutter test --no-pub \
 
 ## iOS设备验证的限制
 
-已提供[设备隔离流程测试](../../../integration_test/document_creation_device_test.dart)：使用生产创建页、真实FRB/SQLite、正式控制器和编辑页，仅替换业务HTTP及网关，不登录或修改真实账号。
+已提供[设备隔离流程测试](../../../example/integration_test/document_creation_device_test.dart)：使用生产创建页、真实FRB/SQLite、正式控制器和编辑页，仅替换业务HTTP及网关，不登录或修改真实账号。
 
 本轮尝试在iPhone 16 Pro模拟器运行。首次启动涉及系统数据迁移，随后现有App的SwiftPM依赖解析持续超过十分钟，未进入应用运行阶段。
 停止该次解析后，用`-skipPackageUpdates -onlyUsePackageVersionsFromResolvedFile`复核，仍在90秒有界等待内未完成。
@@ -99,7 +99,7 @@ flutter test --no-pub \
 环境恢复后，在宿主目录重新执行：
 
 ```bash
-flutter test --no-pub integration_test/document_creation_device_test.dart -d IOS_SIMULATOR_ID
+flutter test --no-pub example/integration_test/document_creation_device_test.dart -d IOS_SIMULATOR_ID
 ```
 
 该隔离测试即使通过，也仍不代表真实服务和在线双端验收通过。

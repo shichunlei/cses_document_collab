@@ -3,7 +3,7 @@
   "request": "Only split the existing resource block into audio, attachment and web (including Juejin/Figma), extracting common classes without changing appearance, data or interactions.",
   "implementation": {
     "audio": {
-      "path": "packages/cses_document_collab/lib/src/editor/collab_audio_block.dart",
+      "path": "lib/src/editor/collab_audio_block.dart",
       "builder": "CollabAudioBlockComponentBuilder",
       "types": [
         "audio"
@@ -11,7 +11,7 @@
       "ownership": "Audio player stays local to this file; controller initialization, seek serialization and disposal code moved unchanged."
     },
     "attachment": {
-      "path": "packages/cses_document_collab/lib/src/editor/collab_attachment_block.dart",
+      "path": "lib/src/editor/collab_attachment_block.dart",
       "builder": "CollabAttachmentBlockComponentBuilder",
       "types": [
         "attachment"
@@ -19,7 +19,7 @@
       "ownership": "File badge, MIME/extension fallback, filename and size formatting stay local; no file handles or downloads are allocated by rendering."
     },
     "web": {
-      "path": "packages/cses_document_collab/lib/src/editor/collab_web_block.dart",
+      "path": "lib/src/editor/collab_web_block.dart",
       "builder": "CollabWebBlockComponentBuilder",
       "types": [
         "bookmark",
@@ -30,7 +30,7 @@
       "ownership": "Injected metadata loader remains borrowed; existing CollabLinkPreview / CollabEmbeddedPage keep request/WebView ownership and source keys."
     },
     "base": {
-      "path": "packages/cses_document_collab/lib/src/editor/collab_resource_block_base.dart",
+      "path": "lib/src/editor/collab_resource_block_base.dart",
       "classes": [
         "CollabResourceBlock",
         "CollabResourceBlockState"
@@ -46,11 +46,11 @@
       ]
     },
     "settings": {
-      "path": "packages/cses_document_collab/lib/src/editor/collab_resource_settings.dart",
+      "path": "lib/src/editor/collab_resource_settings.dart",
       "entry": "showCollabResourceSettings",
       "ownership": "Dialog owns and releases field controllers; editor/node snapshots are borrowed; existing type/field validation and remote-conflict checks retained."
     },
-    "removed_dispatcher": "packages/cses_document_collab/lib/src/editor/collab_resource_block.dart",
+    "removed_dispatcher": "lib/src/editor/collab_resource_block.dart",
     "registration": "Formal page and all affected test/device-test harnesses register distinct builders; no compatibility dispatcher, part/part-of files or new global aggregation export."
   },
   "checks": {
@@ -71,13 +71,13 @@
   },
   "validation": {
     "target_tests": {
-      "directory": "packages/cses_document_collab",
+      "directory": ".",
       "command": "flutter test --no-pub test/collab_resource_block_test.dart test/collab_link_actions_test.dart test/collab_block_actions_test.dart",
       "passed": 83,
       "result": "00:19 +83: All tests passed!"
     },
     "full_package_tests": {
-      "directory": "packages/cses_document_collab",
+      "directory": ".",
       "command": "flutter test --no-pub",
       "passed": 1162,
       "failed": 0,

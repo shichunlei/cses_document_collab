@@ -70,7 +70,7 @@
   ],
   "regressions": {
     "new_tests": 15,
-    "test": "packages/cses_document_collab/test/heading_typography_test.dart",
+    "test": "test/heading_typography_test.dart",
     "alignments": [
       "left",
       "center",
@@ -115,8 +115,8 @@
     }
   },
   "oracle": {
-    "generator": "packages/cses_document_collab/tool/generate_heading_typography_oracle.mjs",
-    "fixture": "packages/cses_document_collab/test/fixtures/blockcraft-0.11.21-heading-fonts.json",
+    "generator": "tool/generate_heading_typography_oracle.mjs",
+    "fixture": "test/fixtures/blockcraft-0.11.21-heading-fonts.json",
     "fixture_sha256": "f2195b021361b4b70eedb845600a6754985fca6441a24e9fa5396b923db1d706",
     "generation_command": "node tool/generate_heading_typography_oracle.mjs /path/to/extracted/blockcraft-0.11.21/package",
     "regeneration": "byte-identical",
@@ -124,7 +124,7 @@
   },
   "validation": {
     "package_targeted_tests": {
-      "directory": "packages/cses_document_collab",
+      "directory": ".",
       "passed": 188,
       "failed": 0,
       "files": [

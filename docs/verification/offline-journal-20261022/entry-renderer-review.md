@@ -20,7 +20,7 @@
 
 ## 验证与限制
 
-测试文件：`test/daily_guidance/guidance_entries_layout_test.dart`。
+测试文件：`example/test/daily_guidance/guidance_entries_layout_test.dart`。
 
 - 覆盖六组几何场景：字号 1/2 倍 × 短文、自动换行、140 字长名，每组在真实页面核对四类段落（普通、待办、都来帮、领航员）的编辑及预览。
 - 另有一组真实页面工具栏→组织弹窗→确认/取消→插入→自动保存→预览整合测试；目录注入测试数据，不声明真实网络已通过。

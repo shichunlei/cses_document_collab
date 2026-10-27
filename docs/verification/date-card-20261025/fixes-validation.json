@@ -1,16 +1,16 @@
 {
   "date": "2026-10-25",
   "scope": [
-    "packages/cses_document_collab/lib/src/model/collab_date_card.dart",
-    "packages/cses_document_collab/lib/src/editor/collab_date_card_settings.dart",
-    "packages/cses_document_collab/lib/src/ui/modal/collab_date_card_visual.dart",
-    "packages/cses_document_collab/test/date_card_regression_test.dart"
+    "lib/src/model/collab_date_card.dart",
+    "lib/src/editor/collab_date_card_settings.dart",
+    "lib/src/ui/modal/collab_date_card_visual.dart",
+    "test/date_card_regression_test.dart"
   ],
   "sources": {
-    "packages/cses_document_collab/lib/src/model/collab_date_card.dart": "c030e1b8516b1c891dfbf4875786d38350cb8fe04270dc72b4f809e79158b1c6",
-    "packages/cses_document_collab/lib/src/editor/collab_date_card_settings.dart": "4486c6ccb4f6813ee4ea47f52f27767afb6e93ea7e88a640d5c76d5ba4e12b06",
-    "packages/cses_document_collab/lib/src/ui/modal/collab_date_card_visual.dart": "d6b05c0c5514494fd75d94827d103d7317870abdf5b425f2a15dc84d6e05f68a",
-    "packages/cses_document_collab/test/date_card_regression_test.dart": "78b040d502a84aa8e490c515cbcf4345b74740b1bcac460b9aaabc1362b3af65"
+    "lib/src/model/collab_date_card.dart": "c030e1b8516b1c891dfbf4875786d38350cb8fe04270dc72b4f809e79158b1c6",
+    "lib/src/editor/collab_date_card_settings.dart": "4486c6ccb4f6813ee4ea47f52f27767afb6e93ea7e88a640d5c76d5ba4e12b06",
+    "lib/src/ui/modal/collab_date_card_visual.dart": "d6b05c0c5514494fd75d94827d103d7317870abdf5b425f2a15dc84d6e05f68a",
+    "test/date_card_regression_test.dart": "78b040d502a84aa8e490c515cbcf4345b74740b1bcac460b9aaabc1362b3af65"
   },
   "checks": {
     "originalThreeRegressionsBeforeSheetMigration": {

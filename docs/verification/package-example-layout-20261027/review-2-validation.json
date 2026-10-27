@@ -1,0 +1,27 @@
+{
+  "isolatedCommandsSucceeded": true,
+  "isolatedSuccessLogsMatch": true,
+  "generatorOutputMatches": true,
+  "analysisOutputMatches": true,
+  "coreTestOutputMatches": true,
+  "hostTestOutputMatches": true,
+  "devicePathOccurrences": 13,
+  "allDevicePathsExist": true,
+  "oldDriverPrefixAbsent": true,
+  "bundleExitCodesMatch": true,
+  "compiledBundleArtifactsExist": true,
+  "sourceChangesSinceFix": [],
+  "allHistoricalFindingsRetained": true,
+  "preexistingCoreFailureRetained": true,
+  "preexistingInfosRetained": true,
+  "originalFileCount": 2938,
+  "missingFiles": [],
+  "lostExecutableBits": [],
+  "newFindings": [],
+  "reviewResult": "no_new_findings_within_reviewed_scope",
+  "limitations": [
+    "This pass audits current source/path consistency and prior validation evidence; it does not rerun the full suites or platform builds.",
+    "No physical-device flutter drive interaction or real-account online collaboration validation.",
+    "Previously documented core toolbar failure and two static-analysis infos remain."
+  ]
+}

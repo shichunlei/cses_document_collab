@@ -1,11 +1,11 @@
 {
   "scope": "Native iOS frameworks only; no complete iOS App or physical-device run",
   "libraries": {
-    "packages/cses_document_collab/ios/cses_document_collab/cses_collab_core.xcframework/ios-arm64/cses_collab_core.framework/cses_collab_core": {
+    "ios/cses_document_collab/cses_collab_core.xcframework/ios-arm64/cses_collab_core.framework/cses_collab_core": {
       "size": 13117224,
       "sha256": "d2eca5fdb171b6ca60ca0f964f0ead64802630723cb9efb9e8edc194b70a20e5"
     },
-    "packages/cses_document_collab/ios/cses_document_collab/cses_collab_core.xcframework/ios-arm64_x86_64-simulator/cses_collab_core.framework/cses_collab_core": {
+    "ios/cses_document_collab/cses_collab_core.xcframework/ios-arm64_x86_64-simulator/cses_collab_core.framework/cses_collab_core": {
       "size": 25767808,
       "sha256": "b76f9f896af8a1618a28bf465bf7b37d45cd86baa3da92a71cd389dd2f643797"
     }

@@ -1,40 +1,55 @@
-name: cses_mobile_collab_demo
-description: Demo host for the portable CSES document collaboration package.
+name: cses_document_collab
+description: Portable BlockCraft collaboration editor with Rust/Yrs and SQLite.
+repository: https://github.com/shichunlei/cses_document_collab
+version: 0.1.0
 publish_to: none
-version: 1.0.0+1
 
 environment:
-  sdk: ^3.12.0
+  sdk: '>=3.12.0 <4.0.0'
   flutter: '>=3.44.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  flutter_localizations:
-    sdk: flutter
-  cses_document_collab:
-    path: packages/cses_document_collab
-  cses_common:
-    path: ../cses/cses.common
   appflowy_editor:
     path: packages/appflowy_editor
-  provider: ^6.1.5+1
-  lucide_icons_flutter: ^4.0.1
+  markdown: ^7.3.0
   crypto: ^3.0.7
   dio: ^5.11.1
-  file_picker: ^13.2.0
-  mime: ^2.1.0
-  path: ^1.9.1
-  path_provider: ^2.1.6
+  flutter_rust_bridge: 2.13.0
+  flutter_svg: ^2.3.0
+  flutter_math_fork: ^0.7.4
+  webview_flutter: ^4.14.1
+  metalink: ^2.1.0
+  provider: ^6.1.5+1
+  url_launcher: ^6.3.3
+  video_player: ^2.14.1
+  val_highlight: ^0.1.1
+  cached_network_image: ^3.4.1
+  flutter_cache_manager: ^3.4.5
+  lucide_icons_flutter: ^4.0.1
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  flutter_lints: ^6.0.0
+  path: ^1.9.1
   integration_test:
     sdk: flutter
+  flutter_test:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  http: ^1.6.0
+  file: ^7.0.1
+  webview_flutter_platform_interface: ^2.15.1
+  video_player_platform_interface: ^6.9.0
 
 flutter:
-  uses-material-design: true
   assets:
-    - assets/images/daily_guidance_mountain.png
+    - assets/mermaid/index.html
+    - assets/mermaid/mermaid.min.js
+  plugin:
+    platforms:
+      android:
+        ffiPlugin: true
+      ios:
+        ffiPlugin: true

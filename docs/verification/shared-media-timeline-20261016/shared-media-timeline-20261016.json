@@ -20,7 +20,7 @@
     "widget_tests": {
       "count": 51,
       "result": "passed",
-      "cwd": "packages/cses_document_collab",
+      "cwd": ".",
       "command": "flutter test --no-pub test/collab_resource_block_test.dart test/collab_video_update_test.dart test/collab_block_actions_test.dart",
       "log": "/tmp/shared-media-tests.log",
       "coverage": [
@@ -40,7 +40,7 @@
       "result": "passed",
       "cases": 12,
       "device": "HONOR X70 (MTN-AN00), Android 16",
-      "command": "flutter drive --driver packages/cses_document_collab/test_driver/integration_test.dart --target packages/cses_document_collab/integration_test/mobile_card_pointer_test.dart -d A92G6R5704004108 --no-pub --keep-app-running",
+      "command": "flutter drive --driver example/test_driver/integration_test.dart --target integration_test/mobile_card_pointer_test.dart -d A92G6R5704004108 --no-pub --keep-app-running",
       "log": "/tmp/shared-media-android.log",
       "coverage": "卡片点击后音频/视频进度条真实拖动一次seek、卡片按钮、正文光标/手柄、跨卡片拖选",
       "data_policy": "本地合成文档，无在线业务写入；保留应用运行，不卸载或清数据。"
@@ -48,7 +48,7 @@
     "diff_check": "passed",
     "format": "仅格式化修改文件，恢复非关联区域排版。",
     "normal_demo_restore": {
-      "build": "flutter build apk --debug --no-pub -t lib/main.dart passed",
+      "build": "flutter build apk --debug --no-pub -t example/lib/main.dart passed",
       "entry": "APK contains CsesCollabDemoApp and excludes mobile_card_pointer_test.dart",
       "restore": "adb install -r returned Success; no uninstall or data clearing",
       "build_log": "/tmp/shared-media-demo-build.log",
@@ -70,10 +70,10 @@
     "iOS未复验。"
   ],
   "source_sha256": {
-    "packages/cses_document_collab/lib/src/editor/collab_media_timeline.dart": "7bb1ed34f9326f8a9e3a4ab98cbc05e57f4cb1888c06b3ef16eaba3804044c3c",
-    "packages/cses_document_collab/lib/src/editor/collab_embed_block.dart": "31bec64607867ad6d6c97e39fef39379f93d8758c0d996c309710757d6de0dec",
-    "packages/cses_document_collab/lib/src/editor/collab_resource_block.dart": "7af57c7b4b766d4e8f48b372b77558c4d72f8539350444214a58999b27e3d56a",
-    "packages/cses_document_collab/test/collab_resource_block_test.dart": "9a65869432b6c05d1953b2f970a1c19cccb7c9fc001e4b768bade60e1e673083",
-    "packages/cses_document_collab/integration_test/mobile_card_pointer_test.dart": "4154555e632f441b87ebf9b4feb3e711042e0ec9a8bdbda08778ce791d760eb2"
+    "lib/src/editor/collab_media_timeline.dart": "7bb1ed34f9326f8a9e3a4ab98cbc05e57f4cb1888c06b3ef16eaba3804044c3c",
+    "lib/src/editor/collab_embed_block.dart": "31bec64607867ad6d6c97e39fef39379f93d8758c0d996c309710757d6de0dec",
+    "lib/src/editor/collab_resource_block.dart": "7af57c7b4b766d4e8f48b372b77558c4d72f8539350444214a58999b27e3d56a",
+    "test/collab_resource_block_test.dart": "9a65869432b6c05d1953b2f970a1c19cccb7c9fc001e4b768bade60e1e673083",
+    "integration_test/mobile_card_pointer_test.dart": "4154555e632f441b87ebf9b4feb3e711042e0ec9a8bdbda08778ce791d760eb2"
   }
 }

@@ -42,7 +42,7 @@
       "id": "R1",
       "priority": "P1",
       "status": "unfixed",
-      "file": "packages/cses_document_collab/lib/src/editor/document_editor_view.dart",
+      "file": "lib/src/editor/document_editor_view.dart",
       "line": 403,
       "evidence": "review-probes-output.txt",
       "description": "word-backspace bypasses column boundary guard; right paragraph removed and text persisted into left column (adapter and FRB)"
@@ -51,7 +51,7 @@
       "id": "R2",
       "priority": "P2",
       "status": "unfixed",
-      "file": "packages/cses_document_collab/lib/src/editor/blockcraft_json_codec.dart",
+      "file": "lib/src/editor/blockcraft_json_codec.dart",
       "line": 496,
       "evidence": "review-probes-output.txt",
       "description": "legacy snapshot-columns/column JSON export drops columnWidths/columnCount/columnIndex"
@@ -72,7 +72,7 @@
       "evidence": "review-existing-tests.txt"
     },
     {
-      "command": "cargo test --manifest-path packages/cses_document_collab/rust/Cargo.toml columns_",
+      "command": "cargo test --manifest-path rust/Cargo.toml columns_",
       "passed": 3,
       "failed": 0,
       "evidence": "review-rust-tests.txt"

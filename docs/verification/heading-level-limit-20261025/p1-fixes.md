@@ -36,7 +36,7 @@ Rust 原生接口和 FRB 签名未变化，未修改生成桥接代码；按现�
 
 ## 夹具与复现
 
-新增样本由 `packages/cses_document_collab/tool/generate_legacy_heading_fixtures.mjs` 使用桌面已安装 Yjs 13.6.19 生成，保存于包自身 `rust/tests/fixtures`，不依赖宿主业务或根目录证据。生成清单 `legacy-heading-fixtures.json` 保存每份增量的 SHA-256 和准确服务端状态向量。不会改动桌面依赖、真实文档或账户。
+新增样本由 `tool/generate_legacy_heading_fixtures.mjs` 使用桌面已安装 Yjs 13.6.19 生成，保存于包自身 `rust/tests/fixtures`，不依赖宿主业务或根目录证据。生成清单 `legacy-heading-fixtures.json` 保存每份增量的 SHA-256 和准确服务端状态向量。不会改动桌面依赖、真实文档或账户。
 
 ```sh
 # 在协同包目录，重新生成夹具时显式提供桌面依赖根目录。

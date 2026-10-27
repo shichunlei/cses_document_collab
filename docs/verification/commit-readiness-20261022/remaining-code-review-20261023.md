@@ -8,10 +8,10 @@
 
 | 文件 | 当前行 |
 |---|---:|
-| `lib/src/daily_guidance/local_journal_page.dart` | 50 |
-| `lib/src/daily_guidance/journal_surface.dart` | 54 |
-| `lib/src/demo/document_creation/document_creation_page.dart` | 52 |
-| `lib/src/demo/document_creation/document_space_list.dart` | 48 |
+| `example/lib/src/daily_guidance/local_journal_page.dart` | 50 |
+| `example/lib/src/daily_guidance/journal_surface.dart` | 54 |
+| `example/lib/src/demo/document_creation/document_creation_page.dart` | 52 |
+| `example/lib/src/demo/document_creation/document_space_list.dart` | 48 |
 
 原声明为 `State<具体Widget> createState()`；省略类型后从Flutter父类 `State createState()`推断为 `State<StatefulWidget>`。按原具体类型接收结果的调用不再编译。临时副本的同一[类型探针](remaining-code-review-20261023-probe.dart.txt)在当前四个声明上产生[4个RETURN_OF_INVALID_TYPE](remaining-code-review-20261023-create-state-current.txt)，只恢复HEAD显式签名后分析退出0、无诊断。当前应用仅经Flutter回调使用时未复现运行失败；问题范围为静态API兼容性，建议保留原显式返回类型。探针未加入产品或测试源码。
 

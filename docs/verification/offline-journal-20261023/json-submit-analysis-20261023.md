@@ -18,7 +18,7 @@ final jsonText = jsonEncode(content);
 
 ## 建议的宿主实现
 
-保持`packages/cses_document_collab`只提供通用编辑与协同。在`lib/src/daily_guidance/`增加：
+保持`仓库根 package`只提供通用编辑与协同。在`example/lib/src/daily_guidance/`增加：
 
 - `exportForSubmit()`：基于当前已完成事务生成不可变快照，包含版本、草稿/业务身份、用户所选记录日期与内容修订。先完成中文合成输入，避免最后一字未提交；不能直接读取500毫秒去抖之前的磁盘稿。
 - 业务数据适配器：只提交当前可见栏目，保留显示顺序、列表/格式、@的类型/ID/名称，以及待办/都来帮/领航员的类型/稳定条目ID/完成状态。关闭栏目的恢复备份、内部段落定位标记、栏目版本计数和其他本机状态只保留在草稿，不混入公开提交内容。当前原生用户对象由`EditorUserMention`解释，需保留`cses_inline_mention/cses_mention_id`等身份属性或转换为规范实体；旧`guidance_mention`人员/组织引用也须兼容。不能按`cses_`前缀统一删除，否则会误删真实提及身份。不能使用剪贴板的@姓名纯文本回退作为业务数据，否则实体身份会丢失。

@@ -13,7 +13,7 @@
 
 ## 验证
 
-在packages/cses_document_collab目录执行：
+在仓库根目录执行：
 
 ```sh
 dart format --line-length 120 lib/src/editor/collab_person_card_block.dart lib/src/editor/collab_weather_block.dart lib/src/editor/collab_date_card_block.dart lib/src/ui/modal/collab_person_card_visual.dart lib/src/ui/modal/collab_weather_visual.dart lib/src/ui/modal/collab_date_card_visual.dart test/collab_card_tap_actions_test.dart

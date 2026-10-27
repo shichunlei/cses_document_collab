@@ -10,12 +10,12 @@
 
 | 编号 | 优先级 | 代码位置（仓库相对路径） | 已确认的问题 |
 |---|---|---|---|
-| R1 | P1 | `lib/src/daily_guidance/journal_draft.dart:10` | 导入后的能力配置直接换为EditorConfiguration.document，丢掉原日记类型转换时的业务字段保留合同；标准转换也不保留bc身份/属性/元数据。 |
-| R6 | P1 | `packages/cses_document_collab/lib/src/editor/blockcraft_json_codec.dart:433` | 新任务卡片的引用存于cses_resource，但编码分支未读取task的专属资源模型，导出props为空。 |
-| R5 | P2 | `lib/src/daily_guidance/local_journal_controller.dart:458` | 插入末尾时op.path尚无节点，祖先锁遍历从null开始，整个父容器锁检查被跳过。 |
-| R3 | P2 | `packages/cses_document_collab/lib/src/editor/blockcraft_json_codec.dart:160` | 普通paragraph缺少明确映射，列表退级为段落后仍读取旧bc.flavour，重新导出恢复成todo/bullet/ordered。 |
-| R2 | P2 | `packages/cses_document_collab/lib/src/editor/blockcraft_json_codec.dart:359` | 高亮块前缀及颜色在原生专用字段中更新，但导出仍读取导入时bc.p字段，输出旧值。 |
-| R4 | P2 | `packages/cses_document_collab/lib/src/editor/blockcraft_snapshot_view.dart:68` | 无bc.e但有显式字重时提前返回纯TextSpan，后续人员/实体提及和公式的专用渲染被跳过。 |
+| R1 | P1 | `example/lib/src/daily_guidance/journal_draft.dart:10` | 导入后的能力配置直接换为EditorConfiguration.document，丢掉原日记类型转换时的业务字段保留合同；标准转换也不保留bc身份/属性/元数据。 |
+| R6 | P1 | `lib/src/editor/blockcraft_json_codec.dart:433` | 新任务卡片的引用存于cses_resource，但编码分支未读取task的专属资源模型，导出props为空。 |
+| R5 | P2 | `example/lib/src/daily_guidance/local_journal_controller.dart:458` | 插入末尾时op.path尚无节点，祖先锁遍历从null开始，整个父容器锁检查被跳过。 |
+| R3 | P2 | `lib/src/editor/blockcraft_json_codec.dart:160` | 普通paragraph缺少明确映射，列表退级为段落后仍读取旧bc.flavour，重新导出恢复成todo/bullet/ordered。 |
+| R2 | P2 | `lib/src/editor/blockcraft_json_codec.dart:359` | 高亮块前缀及颜色在原生专用字段中更新，但导出仍读取导入时bc.p字段，输出旧值。 |
+| R4 | P2 | `lib/src/editor/blockcraft_snapshot_view.dart:68` | 无bc.e但有显式字重时提前返回纯TextSpan，后续人员/实体提及和公式的专用渲染被跳过。 |
 
 ## 复现与影响
 
@@ -54,7 +54,7 @@
 - [review-package-probes.dart](review-package-probes.dart)、[review-host-probes.dart](review-host-probes.dart)：探针源代码归档，已从自动测试发现目录移除，避免本轮仅审查把预期失败探针混入正常测试集。
 - 本轮探针目标静态分析、版本和源码指纹见[review-validation.json](review-validation.json)。最初探针误用不存在的Transaction.updateText导致编译失败、诊断print的lint信息均保留在独立日志；不将这些诊断算成功能复现结论。
 
-复跑时将包探针复制到`packages/cses_document_collab/test/blockcraft_commit_review_probe_test.dart`，在该包执行`flutter test --no-pub test/blockcraft_commit_review_probe_test.dart`；宿主探针复制到`test/daily_guidance/blockcraft_commit_review_probe_test.dart`并从根目录执行相应测试。两者按正确行为断言，当前提交应分别失败5项/2项，修复后应转通过。
+复跑时将包探针复制到`test/blockcraft_commit_review_probe_test.dart`，在该包执行`flutter test --no-pub test/blockcraft_commit_review_probe_test.dart`；宿主探针复制到`test/daily_guidance/blockcraft_commit_review_probe_test.dart`并从根目录执行相应测试。两者按正确行为断言，当前提交应分别失败5项/2项，修复后应转通过。
 
 ## 版本与范围
 

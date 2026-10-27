@@ -15,9 +15,9 @@
 | 范围 | 结果与证据 |
 |---|---|
 | 宿主完整目标套件 | **122项通过**，0失败/跳过；包括原93项与新增29项，见[最终日志](dynamic-fixes-host-tests.log) |
-| 新增输入回归 | 9项：真实IME插入/替换、正反选区、基础格式、中文合成、撤销/重做、增量与快照事务及伪造对象拒绝，见[测试](../../../test/daily_guidance/journal_mention_input_test.dart) |
-| 新增剪贴板回归 | 控制器17项、实际页面快捷键3项；覆盖保存重开后往返粘贴、部门与同名身份、多段撤销、写入失败、迟到与瞬时权限/选区变化及容量边界，见[控制器测试](../../../test/daily_guidance/journal_clipboard_test.dart)、[页面测试](../../../test/daily_guidance/journal_clipboard_ui_test.dart) |
-| 协同包目标套件 | **54项通过**：新增委托4项、既有移动菜单27项、本地编辑与配置/命令23项，见[日志](dynamic-fixes-package-tests.log)及[测试](../../../packages/cses_document_collab/test/editor_copy_delegate_test.dart) |
+| 新增输入回归 | 9项：真实IME插入/替换、正反选区、基础格式、中文合成、撤销/重做、增量与快照事务及伪造对象拒绝，见[测试](../../../example/test/daily_guidance/journal_mention_input_test.dart) |
+| 新增剪贴板回归 | 控制器17项、实际页面快捷键3项；覆盖保存重开后往返粘贴、部门与同名身份、多段撤销、写入失败、迟到与瞬时权限/选区变化及容量边界，见[控制器测试](../../../example/test/daily_guidance/journal_clipboard_test.dart)、[页面测试](../../../example/test/daily_guidance/journal_clipboard_ui_test.dart) |
+| 协同包目标套件 | **54项通过**：新增委托4项、既有移动菜单27项、本地编辑与配置/命令23项，见[日志](dynamic-fixes-package-tests.log)及[测试](../../../test/editor_copy_delegate_test.dart) |
 | 静态与边界检查 | [宿主](dynamic-fixes-host-analyze.log)、[协同包](dynamic-fixes-package-analyze.log)目标分析无问题；修改文件已格式化，跨层业务名/旧导出检索与`git diff --check`通过 |
 | Android构建 | [正常入口调试APK](dynamic-fixes-android-build.log)成功；[18个生产文件源码内嵌匹配及APK指纹](dynamic-fixes-source-apk.json)已核对 |
 

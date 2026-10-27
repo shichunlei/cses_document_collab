@@ -8,7 +8,7 @@
 
 ### R1 / P2：原生选人未永久作废中途变化的账号会话
 
-位置：[local_journal_page.dart](../../../lib/src/daily_guidance/local_journal_page.dart)的`_pickMentionUser`，297–301行传入的`canEdit`只反映编辑器权限，303–310行仅在返回时检查当前账号。
+位置：[local_journal_page.dart](../../../example/lib/src/daily_guidance/local_journal_page.dart)的`_pickMentionUser`，297–301行传入的`canEdit`只反映编辑器权限，303–310行仅在返回时检查当前账号。
 
 真实页面探针打开原生选择器后，将`ctx.cookieId`切到另一会话，等待450毫秒，再恢复原cookie并选择已有人员。实际正文由`原文`变为`原文\uFFFC `，且旧编辑器仍可编辑。旧业务选择器每200毫秒检查宿主账号条件并永久锁定失效；原生路径没有等价的账号代次或失效标记，因此切走再切回会让旧请求重新有效。
 
@@ -18,7 +18,7 @@
 
 ### R2 / P2：原生提及姓名在大字模式重复缩放
 
-位置：[editor_user_mentions.dart](../../../packages/cses_document_collab/lib/src/editor/editor_user_mentions.dart)的`decorateEditorUserMention`，126–132行；日记在[guidance_entries.dart](../../../lib/src/daily_guidance/guidance_entries.dart)69行接入它。
+位置：[editor_user_mentions.dart](../../../lib/src/editor/editor_user_mentions.dart)的`decorateEditorUserMention`，126–132行；日记在[guidance_entries.dart](../../../example/lib/src/daily_guidance/guidance_entries.dart)69行接入它。
 
 日记外层`WidgetSpan`随正文缩放，原生姓名内部`Text`又继承系统`TextScaler`。2倍字号时，姓名内部的16像素先放大到32，外层再乘2，实际为原字号4倍；普通正文和旧业务引用只放大2倍。相同单行布局中，普通正文/旧引用高度为64，原生提及高度为80，姓名明显大于邻近正文，横线行距被撑开。旧引用明确使用`TextScaler.noScaling`，新原生分支没有对应处理。
 
@@ -28,7 +28,7 @@
 
 ### R3 / P2：快速连续点击可绕过宿主动作等待互斥
 
-位置：[stable_mobile_toolbar.dart](../../../packages/cses_document_collab/lib/src/editor/stable_mobile_toolbar.dart)217–219行只在重建时把按钮回调置null；267–280行执行时不校验禁用状态，已打开的子菜单也没有等待中的动作保护。
+位置：[stable_mobile_toolbar.dart](../../../lib/src/editor/stable_mobile_toolbar.dart)217–219行只在重建时把按钮回调置null；267–280行执行时不校验禁用状态，已打开的子菜单也没有等待中的动作保护。
 
 使用两个真实`tester.tap`，在下一帧前先点击尚未完成的宿主动作，再点击T。重建后T按钮虽已禁用，子菜单仍然可见；继续真实点击Todo，正文立即变为`todo_list`，宿主Future仍未完成。仅在下一帧禁止顶层按钮，不能保证新API承诺的操作互斥。
 

@@ -1,0 +1,6 @@
+Formatted example/test/daily_guidance/journal_blockcraft_codec_test.dart
+Formatted example/test/daily_guidance/journal_blockcraft_editing_test.dart
+Formatted example/test/daily_guidance/journal_blockcraft_integrity_test.dart
+Formatted example/test/daily_guidance/local_journal_page_test.dart
+Formatted 7 files (4 changed) in 0.08 seconds.
+Formatted 4 files (0 changed) in 0.03 seconds.

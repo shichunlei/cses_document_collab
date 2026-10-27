@@ -92,7 +92,7 @@
     "host_consumer": {
       "passed": 2,
       "failed": 0,
-      "file": "test/collab_demo_page_test.dart",
+      "file": "example/test/collab_demo_page_test.dart",
       "log": "keyboard-toolbar-configuration-20261021/keyboard-toolbar-config-consumer-tests.log"
     },
     "static_analysis": {

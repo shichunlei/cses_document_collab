@@ -23,197 +23,197 @@
     "sharedUiPublicWidgets": [
       {
         "widget": "CollabColorPicker",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/collab_color_picker.dart"
+        "path": "lib/src/ui/modal/collab_color_picker.dart"
       },
       {
         "widget": "CollabMenuRow",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/collab_menu_row.dart"
+        "path": "lib/src/ui/modal/collab_menu_row.dart"
       },
       {
         "widget": "CollabFormulaVisual",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/collab_formula_visual.dart"
+        "path": "lib/src/ui/modal/collab_formula_visual.dart"
       },
       {
         "widget": "CollabCachedImage",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/collab_cached_image.dart"
+        "path": "lib/src/ui/modal/collab_cached_image.dart"
       },
       {
         "widget": "CollabCodeLineNumbers",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/collab_code_line_numbers.dart"
+        "path": "lib/src/ui/modal/collab_code_line_numbers.dart"
       },
       {
         "widget": "CollabBlockLockScope",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/collab_block_lock_scope.dart"
+        "path": "lib/src/ui/modal/collab_block_lock_scope.dart"
       },
       {
         "widget": "CollabModalSegments",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/collab_modal_segments.dart"
+        "path": "lib/src/ui/modal/collab_modal_segments.dart"
       },
       {
         "widget": "CollabCardLockOverlay",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/collab_card_lock_overlay.dart"
+        "path": "lib/src/ui/modal/collab_card_lock_overlay.dart"
       },
       {
         "widget": "EditorMediaSourcePanel",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/editor_media_source_panel.dart"
+        "path": "lib/src/ui/modal/editor_media_source_panel.dart"
       },
       {
         "widget": "CollabCardHeader",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/collab_card_header.dart"
+        "path": "lib/src/ui/modal/collab_card_header.dart"
       },
       {
         "widget": "CollabRowContent",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/collab_row_content.dart"
+        "path": "lib/src/ui/modal/collab_row_content.dart"
       },
       {
         "widget": "CollabEmojiPicker",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/collab_emoji_picker.dart"
+        "path": "lib/src/ui/modal/collab_emoji_picker.dart"
       },
       {
         "widget": "CollabModalHeader",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/collab_modal_header.dart"
+        "path": "lib/src/ui/modal/collab_modal_header.dart"
       },
       {
         "widget": "CollabMenuDensity",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/collab_menu_density.dart"
+        "path": "lib/src/ui/modal/collab_menu_density.dart"
       },
       {
         "widget": "CollabBottomSheet",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/collab_bottom_sheet.dart"
+        "path": "lib/src/ui/modal/collab_bottom_sheet.dart"
       },
       {
         "widget": "CollabLinkPreview",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/collab_link_preview.dart"
+        "path": "lib/src/ui/modal/collab_link_preview.dart"
       },
       {
         "widget": "CollabEmbeddedPage",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/collab_embedded_page.dart"
+        "path": "lib/src/ui/modal/collab_embedded_page.dart"
       },
       {
         "widget": "DocumentCoverGallery",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/document_cover_gallery.dart"
+        "path": "lib/src/ui/modal/document_cover_gallery.dart"
       },
       {
         "widget": "CollabDividerVisual",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/collab_divider_visual.dart"
+        "path": "lib/src/ui/modal/collab_divider_visual.dart"
       },
       {
         "widget": "CollabMediaTimeline",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/collab_media_timeline.dart"
+        "path": "lib/src/ui/modal/collab_media_timeline.dart"
       },
       {
         "widget": "CollabModalTheme",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/collab_modal_theme.dart"
+        "path": "lib/src/ui/modal/collab_modal_theme.dart"
       },
       {
         "widget": "CollabDialog",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/collab_dialog.dart"
+        "path": "lib/src/ui/modal/collab_dialog.dart"
       },
       {
         "widget": "CollabModalField",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/collab_modal_field.dart"
+        "path": "lib/src/ui/modal/collab_modal_field.dart"
       },
       {
         "widget": "CollabTableGrid",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/collab_table_grid.dart"
+        "path": "lib/src/ui/modal/collab_table_grid.dart"
       },
       {
         "widget": "CollabPopover",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/collab_popover.dart"
+        "path": "lib/src/ui/modal/collab_popover.dart"
       },
       {
         "widget": "CollabSwitchRow",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/collab_switch_row.dart"
+        "path": "lib/src/ui/modal/collab_switch_row.dart"
       },
       {
         "widget": "CollabMermaidVisual",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/collab_mermaid_visual.dart"
+        "path": "lib/src/ui/modal/collab_mermaid_visual.dart"
       },
       {
         "widget": "CollabCardFrame",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/collab_card_frame.dart"
+        "path": "lib/src/ui/modal/collab_card_frame.dart"
       },
       {
         "widget": "CollabModalActions",
-        "path": "packages/cses_document_collab/lib/src/ui/modal/collab_modal_actions.dart"
+        "path": "lib/src/ui/modal/collab_modal_actions.dart"
       }
     ],
     "retainedEditorWidgetsAndAdapters": [
       {
         "class": "DocumentFeedbackFooter",
-        "path": "packages/cses_document_collab/lib/src/editor/document_feedback_footer.dart",
+        "path": "lib/src/editor/document_feedback_footer.dart",
         "reason": "业务卡片或文档页面/头部/反馈组合，依赖具体业务数据、控制器或编辑器生命周期。"
       },
       {
         "class": "CollabMobileSelectionMenu",
-        "path": "packages/cses_document_collab/lib/src/editor/collab_mobile_selection_menu.dart",
+        "path": "lib/src/editor/collab_mobile_selection_menu.dart",
         "reason": "编辑器工具栏/输入/选区适配，借用AppFlowy服务并依赖编辑会话。"
       },
       {
         "class": "StableMobileToolbar",
-        "path": "packages/cses_document_collab/lib/src/editor/stable_mobile_toolbar.dart",
+        "path": "lib/src/editor/stable_mobile_toolbar.dart",
         "reason": "编辑器工具栏/输入/选区适配，借用AppFlowy服务并依赖编辑会话。"
       },
       {
         "class": "CollabTaskCardView",
-        "path": "packages/cses_document_collab/lib/src/editor/collab_task_card_view.dart",
+        "path": "lib/src/editor/collab_task_card_view.dart",
         "reason": "业务卡片或文档页面/头部/反馈组合，依赖具体业务数据、控制器或编辑器生命周期。"
       },
       {
         "class": "CollabResourceBlock",
-        "path": "packages/cses_document_collab/lib/src/editor/collab_resource_block_base.dart",
+        "path": "lib/src/editor/collab_resource_block_base.dart",
         "reason": "编辑器专属块、行内对象或资源适配基类，承担输入、选区、共享属性及事务边界。"
       },
       {
         "class": "CollabTableControls",
-        "path": "packages/cses_document_collab/lib/src/editor/collab_table_controls.dart",
+        "path": "lib/src/editor/collab_table_controls.dart",
         "reason": "编辑器工具栏/输入/选区适配，借用AppFlowy服务并依赖编辑会话。"
       },
       {
         "class": "CollaborativeEditorPage",
-        "path": "packages/cses_document_collab/lib/src/editor/collaborative_editor_page.dart",
+        "path": "lib/src/editor/collaborative_editor_page.dart",
         "reason": "业务卡片或文档页面/头部/反馈组合，依赖具体业务数据、控制器或编辑器生命周期。"
       },
       {
         "class": "CollabInlineFormula",
-        "path": "packages/cses_document_collab/lib/src/editor/collab_inline_formula.dart",
+        "path": "lib/src/editor/collab_inline_formula.dart",
         "reason": "编辑器专属块、行内对象或资源适配基类，承担输入、选区、共享属性及事务边界。"
       },
       {
         "class": "CollabInlineMention",
-        "path": "packages/cses_document_collab/lib/src/editor/collab_inline_mention.dart",
+        "path": "lib/src/editor/collab_inline_mention.dart",
         "reason": "编辑器专属块、行内对象或资源适配基类，承担输入、选区、共享属性及事务边界。"
       },
       {
         "class": "EditorShortcutToolbar",
-        "path": "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart",
+        "path": "lib/src/editor/editor_shortcut_toolbar.dart",
         "reason": "编辑器工具栏/输入/选区适配，借用AppFlowy服务并依赖编辑会话。"
       },
       {
         "class": "CollabMediaBlock",
-        "path": "packages/cses_document_collab/lib/src/editor/collab_media_block_base.dart",
+        "path": "lib/src/editor/collab_media_block_base.dart",
         "reason": "编辑器专属块、行内对象或资源适配基类，承担输入、选区、共享属性及事务边界。"
       },
       {
         "class": "DocumentHeader",
-        "path": "packages/cses_document_collab/lib/src/editor/document_header.dart",
+        "path": "lib/src/editor/document_header.dart",
         "reason": "业务卡片或文档页面/头部/反馈组合，依赖具体业务数据、控制器或编辑器生命周期。"
       },
       {
         "class": "CollabBlockMoreButton",
-        "path": "packages/cses_document_collab/lib/src/editor/collab_block_actions.dart",
+        "path": "lib/src/editor/collab_block_actions.dart",
         "reason": "依赖EditorState/Node及锁、权限、操作会话和文档事务的业务适配器，展示复用ui/modal组件。"
       },
       {
         "class": "CollabInlineEntityMention",
-        "path": "packages/cses_document_collab/lib/src/editor/collab_inline_entity_mention.dart",
+        "path": "lib/src/editor/collab_inline_entity_mention.dart",
         "reason": "编辑器专属块、行内对象或资源适配基类，承担输入、选区、共享属性及事务边界。"
       }
     ],
     "privateImplementations": "组件专属State、Painter、RenderObject及私有缓存SVG子视图随所属组件维护，不作为共用入口。新增的跨文件菜单密度与行布局类型仅供包内使用，不从包公开入口导出。"
   },
   "architecture": {
-    "uiDirectory": "packages/cses_document_collab/lib/src/ui/modal",
+    "uiDirectory": "lib/src/ui/modal",
     "moduleFiles": 31,
     "publicWidgets": 29,
     "routeFile": "collab_modal.dart只保留showCollabBottomSheet/showCollabDialog/showCollabPopover和私有锚点布局",

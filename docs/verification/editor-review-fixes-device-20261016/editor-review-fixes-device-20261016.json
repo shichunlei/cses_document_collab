@@ -31,7 +31,7 @@
     "package": "com.cses.cses_mobile_collab_demo"
   },
   "validation": {
-    "driver_command": "flutter drive --driver packages/cses_document_collab/test_driver/integration_test.dart --target packages/cses_document_collab/integration_test/editor_review_fixes_test.dart -d A92G6R5704004108 --no-pub --keep-app-running",
+    "driver_command": "flutter drive --driver example/test_driver/integration_test.dart --target integration_test/editor_review_fixes_test.dart -d A92G6R5704004108 --no-pub --keep-app-running",
     "exit_code": 0,
     "functional_cases_passed": 65,
     "failed": 0,
@@ -103,7 +103,7 @@
     "resumed": true,
     "ordinary_demo_restored": true,
     "screen": "登录页",
-    "explanation": "lib/src/demo/app.dart 的_loggedIn是默认false的内存字段，冷启动回到登录页；未做账号自动登录或登录持久化改造。",
+    "explanation": "example/lib/src/demo/app.dart 的_loggedIn是默认false的内存字段，冷启动回到登录页；未做账号自动登录或登录持久化改造。",
     "online_document_accessed": false
   },
   "evidence": {

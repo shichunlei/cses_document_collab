@@ -2,8 +2,8 @@
   "date": "2026-10-21",
   "change": "协同DocumentEditorView不再用无字色配置覆盖EditorStyle.mobile，恢复原有黑色缺省值；局部文字色、链接色、容器继承色和本地会话配置保持。",
   "scope": [
-    "packages/cses_document_collab/lib/src/editor/document_editor_view.dart",
-    "packages/cses_document_collab/test/document_editor_text_color_test.dart",
+    "lib/src/editor/document_editor_view.dart",
+    "test/document_editor_text_color_test.dart",
     "docs/block-adaptation.md"
   ],
   "blockcraft": {
@@ -37,7 +37,7 @@
       "failed": 0
     },
     "host": {
-      "command": "flutter test --no-pub test/collab_demo_page_test.dart --reporter expanded",
+      "command": "flutter test --no-pub example/test/collab_demo_page_test.dart --reporter expanded",
       "passed": 2,
       "failed": 0
     },

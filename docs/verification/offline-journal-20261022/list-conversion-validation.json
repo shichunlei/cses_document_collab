@@ -1,16 +1,16 @@
 {
   "date": "2026-10-22",
   "baselineProduction": {
-    "packages/cses_document_collab/lib/src/editor/collab_list_editing.dart": "f648e538b8ca2140d83674f1fa7dd490f329115067c64c5fbf43fe253edf9144",
-    "packages/cses_document_collab/lib/src/editor/core/editor_configuration.dart": "f49514a79140257c34fd24d9d99e2a196f33e2ae20889d7d211fb264aee71e8d",
-    "lib/src/daily_guidance/journal_draft.dart": "093b5b4bbca551f6537be9d09af131100628d3d85d0694ac7869714386eee958"
+    "lib/src/editor/collab_list_editing.dart": "f648e538b8ca2140d83674f1fa7dd490f329115067c64c5fbf43fe253edf9144",
+    "lib/src/editor/core/editor_configuration.dart": "f49514a79140257c34fd24d9d99e2a196f33e2ae20889d7d211fb264aee71e8d",
+    "example/lib/src/daily_guidance/journal_draft.dart": "093b5b4bbca551f6537be9d09af131100628d3d85d0694ac7869714386eee958"
   },
   "final": {
-    "packages/cses_document_collab/lib/src/editor/collab_list_editing.dart": "0e543c9eeff95104e6f59f095ad9a4cf71a20841362a13ef713edf80aaef501b",
-    "packages/cses_document_collab/lib/src/editor/core/editor_configuration.dart": "fcef7622d25a11b7161e6bf11742ea04a5c9b59693751bc002bd32947a14bcfb",
-    "lib/src/daily_guidance/journal_draft.dart": "d54b1995d962680f441eb96e7d0d231c73ac96a5b45a5ec392da2359624a581c",
-    "test/daily_guidance/journal_list_conversion_test.dart": "8d81f99146568485537cf72c39e6470a54200295620e83a17c0a5c8f858b7df9",
-    "packages/cses_document_collab/test/custom_container_list_type_test.dart": "ea7ee2415aaa2864641100351f5dfd5ab79f0107ba5d80eb80088b830e78a1cc"
+    "lib/src/editor/collab_list_editing.dart": "0e543c9eeff95104e6f59f095ad9a4cf71a20841362a13ef713edf80aaef501b",
+    "lib/src/editor/core/editor_configuration.dart": "fcef7622d25a11b7161e6bf11742ea04a5c9b59693751bc002bd32947a14bcfb",
+    "example/lib/src/daily_guidance/journal_draft.dart": "d54b1995d962680f441eb96e7d0d231c73ac96a5b45a5ec392da2359624a581c",
+    "example/test/daily_guidance/journal_list_conversion_test.dart": "8d81f99146568485537cf72c39e6470a54200295620e83a17c0a5c8f858b7df9",
+    "test/custom_container_list_type_test.dart": "ea7ee2415aaa2864641100351f5dfd5ab79f0107ba5d80eb80088b830e78a1cc"
   },
   "version": {
     "latest": "0.11.28",

@@ -223,22 +223,22 @@
   },
   "cause": [
     {
-      "file": "packages/cses_document_collab/lib/src/editor/collaborative_editor_page.dart",
+      "file": "lib/src/editor/collaborative_editor_page.dart",
       "line": 499,
       "finding": "Passes before/after to mobileTextSpanDecoratorForAttribute, which returns before and drops after containing the computed heading/paragraph font size."
     },
     {
-      "file": "packages/cses_document_collab/lib/src/editor/collaborative_editor_page.dart",
+      "file": "lib/src/editor/collaborative_editor_page.dart",
       "line": 514,
       "finding": "applyParagraph:false assumes paragraph size survived; operates on the restored body 16 style. Heading bold is still applied."
     },
     {
-      "file": "packages/cses_document_collab/lib/src/editor/collab_paragraph_presentation.dart",
+      "file": "lib/src/editor/collab_paragraph_presentation.dart",
       "line": 160,
       "finding": "Nonempty complete text tree returns empty style to preserve per-run typography; therefore no later semantic heading size is applied. Heading builder is replaced with ParagraphBlockComponentBuilder."
     },
     {
-      "file": "packages/cses_document_collab/lib/src/editor/collab_text_alignment.dart",
+      "file": "lib/src/editor/collab_text_alignment.dart",
       "line": 147,
       "finding": "Distributed alignment separately forces a legacy size array, indexed by one-based level without subtracting 1; final H1/H2/H3 are 28/24/18 and override explicit per-run typography."
     }

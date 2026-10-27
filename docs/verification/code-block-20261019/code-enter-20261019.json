@@ -27,7 +27,7 @@
   ],
   "verification": {
     "new_code_tests": {
-      "file": "packages/cses_document_collab/test/collab_code_enter_test.dart",
+      "file": "test/collab_code_enter_test.dart",
       "passed": 12,
       "input_platform_variants": [
         "Android",

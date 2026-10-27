@@ -27,7 +27,7 @@
     "generatedSha256": "7f70f2cdeff31cf0fc201144b80daf8e486371737402db1b2565eb1f2cfe2794",
     "reproducible": true,
     "licenses": ["MIT", "Unicode-3.0"],
-    "generator": "packages/cses_document_collab/tool/sync_desktop_emoji_catalog.mjs"
+    "generator": "tool/sync_desktop_emoji_catalog.mjs"
   },
   "checks": {
     "flutterTests": {

@@ -22,8 +22,8 @@
       "Rust": "2 storage-failure tests fail before native fix."
     },
     "new_Dart_files": [
-      "packages/cses_document_collab/test/collab_controller_snapshot_test.dart",
-      "packages/cses_document_collab/test/collab_remote_history_test.dart"
+      "test/collab_controller_snapshot_test.dart",
+      "test/collab_remote_history_test.dart"
     ],
     "new_Dart_cases": 10,
     "Dart_scenarios": [

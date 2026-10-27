@@ -7,10 +7,10 @@
     "R3/P2"
   ],
   "sourceSha256": {
-    "packages/cses_document_collab/lib/src/editor/collab_text_box_block.dart": "31f2cef209058f3ff5d80bd03c1e7bef795f069d91e9da8dc083596be27edf79",
-    "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart": "f8dd949d993a0319334a732fc8c69930835da25c6efcf3a3baeea3af7bda5b40",
-    "packages/cses_document_collab/rust/src/api/blockcraft.rs": "0f209ca8cf3c106ba602779c89d997ccdd58167e6ae8585b49870433345e8421",
-    "packages/cses_document_collab/test/text_box_review_test.dart": "66da529eeca39551e2523a9d1f5088c9f9954e35185ccee74a1f972f1ac3414b"
+    "lib/src/editor/collab_text_box_block.dart": "31f2cef209058f3ff5d80bd03c1e7bef795f069d91e9da8dc083596be27edf79",
+    "lib/src/editor/editor_shortcut_toolbar.dart": "f8dd949d993a0319334a732fc8c69930835da25c6efcf3a3baeea3af7bda5b40",
+    "rust/src/api/blockcraft.rs": "0f209ca8cf3c106ba602779c89d997ccdd58167e6ae8585b49870433345e8421",
+    "test/text_box_review_test.dart": "66da529eeca39551e2523a9d1f5088c9f9954e35185ccee74a1f972f1ac3414b"
   },
   "results": {
     "target": {

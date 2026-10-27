@@ -37,8 +37,8 @@
     "不更改FRB签名/公开API/依赖/原生构建配置，未手工修改生成文件；重建宿主动态库验证真实桥接"
   ],
   "fixture": {
-    "generator": "packages/cses_document_collab/tool/generate_page_divider_fixture.mjs",
-    "path": "packages/cses_document_collab/rust/tests/fixtures/blockcraft-page-divider.update",
+    "generator": "tool/generate_page_divider_fixture.mjs",
+    "path": "rust/tests/fixtures/blockcraft-page-divider.update",
     "source": "0.11.21发布产物的PageDividerBlockSchema.createSnapshot；无需加载Angular",
     "sha256": "f657e6b2785d14e63d98c06244108903638f72e3261592d0f088b800bc21f08a",
     "cases": [
@@ -51,7 +51,7 @@
   },
   "validation": {
     "targetRegression": {
-      "command": "在packages/cses_document_collab执行 flutter test --no-pub test/collab_page_divider_test.dart test/page_divider_native_integration_test.dart test/collab_block_delete_test.dart test/collab_block_actions_test.dart test/editor_shortcut_toolbar_test.dart test/appflowy_block_editor_adapter_test.dart --reporter expanded",
+      "command": "在仓库根目录执行 flutter test --no-pub test/collab_page_divider_test.dart test/page_divider_native_integration_test.dart test/collab_block_delete_test.dart test/collab_block_actions_test.dart test/editor_shortcut_toolbar_test.dart test/appflowy_block_editor_adapter_test.dart --reporter expanded",
       "passed": 93
     },
     "newFlutterTests": {
@@ -91,12 +91,12 @@
       "errors": 0,
       "warnings": 0,
       "existingInfo": "test/collab_controller_native_test.dart:186 close_sinks；未触达，保持原状",
-      "command": "flutter analyze --no-pub (packages/cses_document_collab)",
+      "command": "flutter analyze --no-pub (.)",
       "exitCode": 1,
       "interpretation": "One pre-existing info; no errors or warnings. Target files have no issues."
     },
     "packageTests": {
-      "command": "flutter test --no-pub --reporter expanded (packages/cses_document_collab)",
+      "command": "flutter test --no-pub --reporter expanded (.)",
       "passed": 1219,
       "failed": 0,
       "skipped": 0

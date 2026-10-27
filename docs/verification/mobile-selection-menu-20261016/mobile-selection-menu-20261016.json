@@ -60,8 +60,8 @@
       "model": "MTN-AN00 (HONOR X70)",
       "os": "Android 16 / API 36",
       "test_cases": 1,
-      "target": "packages/cses_document_collab/integration_test/mobile_selection_menu_test.dart",
-      "command": "flutter drive --driver packages/cses_document_collab/test_driver/integration_test.dart --target packages/cses_document_collab/integration_test/mobile_selection_menu_test.dart -d ANDROID_DEVICE_ID --no-pub --keep-app-running",
+      "target": "integration_test/mobile_selection_menu_test.dart",
+      "command": "flutter drive --driver example/test_driver/integration_test.dart --target integration_test/mobile_selection_menu_test.dart -d ANDROID_DEVICE_ID --no-pub --keep-app-running",
       "observed": [
         "实际 MobileSelectionServiceWidget",
         "长按松手产生文字选区和菜单",
@@ -89,13 +89,13 @@
     "旧 localDraft 的行内公式兼容范围沿用现有适配表"
   ],
   "sha256": {
-    "packages/cses_document_collab/lib/src/editor/collab_mobile_selection_menu.dart": "73f14c7ada14f5affd8c013bc8d941016f68ea4ea52db10fc0013093952630c9",
-    "packages/cses_document_collab/lib/src/editor/editor_selection_actions.dart": "86459cfe53e0562e283ecec557b84da05cb3dc1d7dc57298901fd2b5b0d5807c",
-    "packages/cses_document_collab/lib/src/model/collab_text_range.dart": "96faf4b1cabf25595d06e5b56c659c2060c9fb48471e2a0d1b5c45c4ab696f5a",
-    "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart": "1df942fa119c2733d0b70bb10cd4429dd1703bf4c76185399955d0af2f0baf60",
-    "packages/cses_document_collab/lib/src/editor/collab_formula_sheet.dart": "d4731eb4680e66c6b318eed2a9f960b6b1dc0cb6a052e8d0c845f1ea73f2887e",
-    "packages/cses_document_collab/lib/src/editor/collaborative_editor_page.dart": "7bf8a40ede6636394c916f39c6b9ee9e74d2c5131f9442021cebbd5b4d8ec537",
-    "packages/cses_document_collab/test/mobile_selection_menu_test.dart": "4123b735ec3e43c929885b28e9b747fb113a340577ba67228053a1a32143c12d",
-    "packages/cses_document_collab/integration_test/mobile_selection_menu_test.dart": "9fea4196d1cbdfadcfb0c3ac870e50582388dc635cae01ddd068028bdb0167bd"
+    "lib/src/editor/collab_mobile_selection_menu.dart": "73f14c7ada14f5affd8c013bc8d941016f68ea4ea52db10fc0013093952630c9",
+    "lib/src/editor/editor_selection_actions.dart": "86459cfe53e0562e283ecec557b84da05cb3dc1d7dc57298901fd2b5b0d5807c",
+    "lib/src/model/collab_text_range.dart": "96faf4b1cabf25595d06e5b56c659c2060c9fb48471e2a0d1b5c45c4ab696f5a",
+    "lib/src/editor/editor_shortcut_toolbar.dart": "1df942fa119c2733d0b70bb10cd4429dd1703bf4c76185399955d0af2f0baf60",
+    "lib/src/editor/collab_formula_sheet.dart": "d4731eb4680e66c6b318eed2a9f960b6b1dc0cb6a052e8d0c845f1ea73f2887e",
+    "lib/src/editor/collaborative_editor_page.dart": "7bf8a40ede6636394c916f39c6b9ee9e74d2c5131f9442021cebbd5b4d8ec537",
+    "test/mobile_selection_menu_test.dart": "4123b735ec3e43c929885b28e9b747fb113a340577ba67228053a1a32143c12d",
+    "integration_test/mobile_selection_menu_test.dart": "9fea4196d1cbdfadcfb0c3ac870e50582388dc635cae01ddd068028bdb0167bd"
   }
 }

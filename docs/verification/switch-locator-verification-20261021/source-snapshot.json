@@ -1,26 +1,26 @@
 [
   {
-    "file": "packages/cses_document_collab/test/collab_block_lock_test.dart",
+    "file": "test/collab_block_lock_test.dart",
     "sha256": "7a97c7f72112db18b78e90e2e6f34a00bf689c10492bf3f7416de7d0c3dd849b"
   },
   {
-    "file": "packages/cses_document_collab/test/collab_divider_panel_test.dart",
+    "file": "test/collab_divider_panel_test.dart",
     "sha256": "0f50a7f0d724158380a21fd6a3e7fc0b259cdc69c2a9cb000024870428148e53"
   },
   {
-    "file": "packages/cses_document_collab/test/collab_formula_test.dart",
+    "file": "test/collab_formula_test.dart",
     "sha256": "8eb1fb673d5c373d1a663e3a6b52313e2e0afb08a845af57d4f65041871cbec2"
   },
   {
-    "file": "packages/cses_document_collab/test/collab_line_lock_layout_test.dart",
+    "file": "test/collab_line_lock_layout_test.dart",
     "sha256": "aeea6bf76ec2fc5106464739df8145b1d559a17ae6c1e5212a655cfc5f7edaff"
   },
   {
-    "file": "packages/cses_document_collab/test/collab_menu_row_test.dart",
+    "file": "test/collab_menu_row_test.dart",
     "sha256": "28a73b05546a98d1575f2156ecaec15512b4474001441fa676c52d726ea9ad2d"
   },
   {
-    "file": "packages/cses_document_collab/test/collab_resource_lock_test.dart",
+    "file": "test/collab_resource_lock_test.dart",
     "sha256": "990e588231b1d83a5dedf8765377d3d3815a431a823d03206930567b55895348"
   }
 ]

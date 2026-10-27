@@ -11,7 +11,7 @@
 
 ## 验证
 
-包目录：`packages/cses_document_collab`。
+包目录：`仓库根 package`。
 
 ```sh
 dart format --line-length 120 lib/src/editor/collab_person_card_block.dart lib/src/editor/collab_weather_block.dart lib/src/editor/collab_date_card_block.dart lib/src/editor/collab_block_actions.dart test/collab_card_tap_actions_test.dart

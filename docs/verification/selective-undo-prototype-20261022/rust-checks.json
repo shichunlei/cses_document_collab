@@ -5,7 +5,7 @@
       "cargo",
       "fmt",
       "--manifest-path",
-      "packages/cses_document_collab/rust/Cargo.toml",
+      "rust/Cargo.toml",
       "--check"
     ],
     "exit_code": 0
@@ -16,7 +16,7 @@
       "cargo",
       "check",
       "--manifest-path",
-      "packages/cses_document_collab/rust/Cargo.toml"
+      "rust/Cargo.toml"
     ],
     "exit_code": 0
   },
@@ -26,7 +26,7 @@
       "cargo",
       "check",
       "--manifest-path",
-      "packages/cses_document_collab/rust/Cargo.toml",
+      "rust/Cargo.toml",
       "--features",
       "history-prototype"
     ],
@@ -38,7 +38,7 @@
       "cargo",
       "test",
       "--manifest-path",
-      "packages/cses_document_collab/rust/Cargo.toml"
+      "rust/Cargo.toml"
     ],
     "exit_code": 0
   },
@@ -48,7 +48,7 @@
       "cargo",
       "build",
       "--manifest-path",
-      "packages/cses_document_collab/rust/Cargo.toml"
+      "rust/Cargo.toml"
     ],
     "exit_code": 0
   }

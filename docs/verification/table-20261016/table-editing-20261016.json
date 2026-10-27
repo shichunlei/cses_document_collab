@@ -33,8 +33,8 @@
     "远端结构/正文变化清除路径历史及选区；等价Delta和纯布局投影保留历史，避免规范化回放清除新建表格历史"
   ],
   "fixtures": [
-    "packages/cses_document_collab/rust/tests/fixtures/blockcraft-table.update",
-    "packages/cses_document_collab/rust/tests/fixtures/blockcraft-table-merged.update"
+    "rust/tests/fixtures/blockcraft-table.update",
+    "rust/tests/fixtures/blockcraft-table-merged.update"
   ],
   "verification": {
     "flutter_package_full": {

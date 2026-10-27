@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-27",
+  "scope": "Repository layout/dependency/path review; no implementation edits.",
+  "findings": [
+    {
+      "id": "R1",
+      "priority": 2,
+      "file": "README.md",
+      "line": 10,
+      "title": "核心开发入口应禁用 example 隐式依赖解析",
+      "evidence": "review-dependency-probe.json"
+    },
+    {
+      "id": "R2",
+      "priority": 2,
+      "file": "README.md",
+      "line": 655,
+      "otherLines": [
+        701,
+        711
+      ],
+      "title": "example 工作目录中的设备测试驱动路径重复 example 前缀"
+    },
+    {
+      "id": "R3",
+      "priority": 2,
+      "file": "docs/collab-package-integration.md",
+      "line": 72,
+      "otherLines": [
+        113
+      ],
+      "title": "宿主测试和图库生成命令仍使用旧工作目录说明"
+    }
+  ],
+  "missingOriginalFiles": 0,
+  "lostExecutableBits": 0,
+  "identicalCoreLibFiles": 189,
+  "identicalRustSourceFiles": 75,
+  "implementationChanged": false,
+  "report": "review.md",
+  "reviewP2Resolution": {
+    "status": "all_three_fixed",
+    "date": "2026-10-27",
+    "ids": [
+      "R1",
+      "R2",
+      "R3"
+    ],
+    "report": "p2-fixes.md",
+    "validation": "p2-fix-validation.json",
+    "note": "Original review findings, failed probes, suite results and limitations above are preserved."
+  }
+}

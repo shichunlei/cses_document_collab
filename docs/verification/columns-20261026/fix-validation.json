@@ -13,10 +13,10 @@
     }
   },
   "source_sha256": {
-    "packages/cses_document_collab/lib/src/editor/collab_block_delete.dart": "8e1c2981d467f0e49dd54b9304c248535e07a7f3c4c077cfc4d9ecb5ef8016d4",
-    "packages/cses_document_collab/lib/src/editor/blockcraft_json_codec.dart": "7153ed925341436b2f1ec54d940af98a19472a113dbafa95bc26189200361792",
-    "packages/cses_document_collab/test/collab_columns_test.dart": "af71742ca0faef0b7a8455a07aa8673fbb6e1d73b9cf2b8027a1889657eb2b6b",
-    "packages/cses_document_collab/test/columns_native_integration_test.dart": "5ccd5f86c0d2510edfc74c4e87a7552e9d91952f03e4b7a839766c09cfd252c0"
+    "lib/src/editor/collab_block_delete.dart": "8e1c2981d467f0e49dd54b9304c248535e07a7f3c4c077cfc4d9ecb5ef8016d4",
+    "lib/src/editor/blockcraft_json_codec.dart": "7153ed925341436b2f1ec54d940af98a19472a113dbafa95bc26189200361792",
+    "test/collab_columns_test.dart": "af71742ca0faef0b7a8455a07aa8673fbb6e1d73b9cf2b8027a1889657eb2b6b",
+    "test/columns_native_integration_test.dart": "5ccd5f86c0d2510edfc74c4e87a7552e9d91952f03e4b7a839766c09cfd252c0"
   },
   "checks": [
     {
@@ -79,8 +79,8 @@
     "sha256": "43f8be5d7f414ba8a5a35be59952c3ceadcbc19c5b4feb7f7e803c3780579384",
     "bytes": 228215925,
     "final_product_source_embedded": {
-      "packages/cses_document_collab/lib/src/editor/collab_block_delete.dart": true,
-      "packages/cses_document_collab/lib/src/editor/blockcraft_json_codec.dart": true
+      "lib/src/editor/collab_block_delete.dart": true,
+      "lib/src/editor/blockcraft_json_codec.dart": true
     }
   },
   "version_evidence": "fix-blockcraft-version.json",

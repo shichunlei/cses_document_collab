@@ -26,31 +26,31 @@
     "debug_apk": "build/app/outputs/flutter-apk/app-debug.apk",
     "sha256": "d8491838aa0a9a790fb0e0644abfb4856f53add6a9d2c38374f781a1be38780c",
     "embedded_sources": {
-      "lib/src/demo/collab_demo_page.dart": true,
-      "lib/src/demo/cses_account_login.dart": true,
-      "lib/src/demo/document_creation/cses_document_creation_service.dart": true,
-      "lib/src/demo/document_creation/document_creation_api.dart": true,
-      "lib/src/demo/document_creation/document_creation_coordinator.dart": true,
-      "lib/src/demo/document_creation/document_creation_page.dart": true,
-      "lib/src/demo/document_creation/document_space_list.dart": true,
-      "lib/src/demo/document_host.dart": true
+      "example/lib/src/demo/collab_demo_page.dart": true,
+      "example/lib/src/demo/cses_account_login.dart": true,
+      "example/lib/src/demo/document_creation/cses_document_creation_service.dart": true,
+      "example/lib/src/demo/document_creation/document_creation_api.dart": true,
+      "example/lib/src/demo/document_creation/document_creation_coordinator.dart": true,
+      "example/lib/src/demo/document_creation/document_creation_page.dart": true,
+      "example/lib/src/demo/document_creation/document_space_list.dart": true,
+      "example/lib/src/demo/document_host.dart": true
     }
   },
   "native_library_sha256": "cce8401814bdcb68568579a700204e7d937ebf02e97a68216e939c1535a4cc32",
   "source_sha256": {
-    "integration_test/document_creation_device_test.dart": "bee2c8da9624be60a9dfee1fc7fcaab7961c97a65af0c46deb05775bddfed160",
-    "lib/src/demo/collab_demo_page.dart": "8aac6d7a6b6a9df53a350dcde7287215180b063ce2ba1f7470f36ea5ff8b5dd7",
-    "lib/src/demo/cses_account_login.dart": "ff3e8dd9b20a26ffdb2df082d2984f7b855d5bcee5c7ccf710699e5357bd9f20",
-    "lib/src/demo/document_creation/cses_document_creation_service.dart": "25715d68ac1879f462439f52295325c2342c84a56bceaaa0fce2a07850b5ae06",
-    "lib/src/demo/document_creation/document_creation_api.dart": "ea94d02c7083b0ab8a39a494886a022f04a172d1d465212a1d27042d3ff42e77",
-    "lib/src/demo/document_creation/document_creation_coordinator.dart": "6b2f0ccd86f44b0a955ab4ce5cf956e3b5e7fc646df9c87db5124eb2fa67de82",
-    "lib/src/demo/document_creation/document_creation_page.dart": "fdcaa49a343e9e3b79fbcf91fcc51e5cd7c348d0c3aa43636184aa0475841b05",
-    "lib/src/demo/document_creation/document_space_list.dart": "c92f5a8b8d5bc6b8c16f9dfb434df74e8c13bac0bb36c6fd2df61d861b21d7a8",
-    "lib/src/demo/document_host.dart": "a898601eecb5f8579b96e7698d92c3a8e0f0c9702b79988e78106457a09a4eda",
-    "test/collab_demo_page_test.dart": "e435f0cd09e762afb496fe991c30767cfbf81ebb133d8be6bfb68c738d9caf76",
-    "test/cses_document_creation_service_test.dart": "d80d11d1fccab93ecda877ed86f42adb5c33d6917c7b4eb26ac1e502ee4966df",
-    "test/document_creation_coordinator_test.dart": "227e12329dffda0466007789efe9fd0ae3a7796fdac67cdd07e7bc644a366355",
-    "test/document_host_native_test.dart": "da75320ff5f29343d9be68fdeaae95e793d85eafa8719980df31999e6972d39a",
-    "test/document_space_list_test.dart": "8f4baf5b1496a806c6616e6f0688477e36cf66bec6aaf703b43937f03cbf60cb"
+    "example/integration_test/document_creation_device_test.dart": "bee2c8da9624be60a9dfee1fc7fcaab7961c97a65af0c46deb05775bddfed160",
+    "example/lib/src/demo/collab_demo_page.dart": "8aac6d7a6b6a9df53a350dcde7287215180b063ce2ba1f7470f36ea5ff8b5dd7",
+    "example/lib/src/demo/cses_account_login.dart": "ff3e8dd9b20a26ffdb2df082d2984f7b855d5bcee5c7ccf710699e5357bd9f20",
+    "example/lib/src/demo/document_creation/cses_document_creation_service.dart": "25715d68ac1879f462439f52295325c2342c84a56bceaaa0fce2a07850b5ae06",
+    "example/lib/src/demo/document_creation/document_creation_api.dart": "ea94d02c7083b0ab8a39a494886a022f04a172d1d465212a1d27042d3ff42e77",
+    "example/lib/src/demo/document_creation/document_creation_coordinator.dart": "6b2f0ccd86f44b0a955ab4ce5cf956e3b5e7fc646df9c87db5124eb2fa67de82",
+    "example/lib/src/demo/document_creation/document_creation_page.dart": "fdcaa49a343e9e3b79fbcf91fcc51e5cd7c348d0c3aa43636184aa0475841b05",
+    "example/lib/src/demo/document_creation/document_space_list.dart": "c92f5a8b8d5bc6b8c16f9dfb434df74e8c13bac0bb36c6fd2df61d861b21d7a8",
+    "example/lib/src/demo/document_host.dart": "a898601eecb5f8579b96e7698d92c3a8e0f0c9702b79988e78106457a09a4eda",
+    "example/test/collab_demo_page_test.dart": "e435f0cd09e762afb496fe991c30767cfbf81ebb133d8be6bfb68c738d9caf76",
+    "example/test/cses_document_creation_service_test.dart": "d80d11d1fccab93ecda877ed86f42adb5c33d6917c7b4eb26ac1e502ee4966df",
+    "example/test/document_creation_coordinator_test.dart": "227e12329dffda0466007789efe9fd0ae3a7796fdac67cdd07e7bc644a366355",
+    "example/test/document_host_native_test.dart": "da75320ff5f29343d9be68fdeaae95e793d85eafa8719980df31999e6972d39a",
+    "example/test/document_space_list_test.dart": "8f4baf5b1496a806c6616e6f0688477e36cf66bec6aaf703b43937f03cbf60cb"
   }
 }

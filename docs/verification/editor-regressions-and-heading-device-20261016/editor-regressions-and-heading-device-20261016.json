@@ -58,7 +58,7 @@
       "test": "test/heading_typography_test.dart"
     },
     "full_package": {
-      "directory": "packages/cses_document_collab",
+      "directory": ".",
       "command": "flutter test --no-pub --reporter expanded",
       "passed": 1072,
       "failed": 0,
@@ -79,7 +79,7 @@
     "physical_resolution": "1200x2640",
     "density_dpi": 520,
     "system_font_scale": 1.0,
-    "command": "flutter drive --driver packages/cses_document_collab/test_driver/integration_test.dart --target packages/cses_document_collab/integration_test/heading_typography_test.dart -d A92G6R5704004108 --no-pub --keep-app-running",
+    "command": "flutter drive --driver example/test_driver/integration_test.dart --target integration_test/heading_typography_test.dart -d A92G6R5704004108 --no-pub --keep-app-running",
     "result": "passed",
     "functional_scenarios": 15,
     "runner_count_including_two_setup_hooks": 17,
@@ -124,11 +124,11 @@
     "normal_apk_update_time": "2026-10-16 17:32:57"
   },
   "source_hashes": {
-    "packages/cses_document_collab/lib/src/editor/appflowy_block_editor_adapter.dart": "e4f92c0b40e5b0f93d427c786c17e6fa4469c2be7dbb4dbff01c830684cc9a32",
-    "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart": "7cb1621b6905808cd17a270879453bce6da85f2267f68d56183c73d2f020a1dd",
-    "packages/cses_document_collab/test/heading_typography_test.dart": "f4758852f4f71f427e6b3feb6bd559304a6637100428d7d994c0d25da6acf608",
-    "packages/cses_document_collab/integration_test/heading_typography_test.dart": "cf1e92b0de02871a0bf456dbbb671369e77dfc04e723cc734150ea9999b3cf42",
-    "packages/cses_document_collab/test/fixtures/heading_typography_oracle.dart": "642e39cf80283778a1b89c1886f144e63f27a3f7abf0f48291b004ee51dfe24c"
+    "lib/src/editor/appflowy_block_editor_adapter.dart": "e4f92c0b40e5b0f93d427c786c17e6fa4469c2be7dbb4dbff01c830684cc9a32",
+    "lib/src/editor/editor_shortcut_toolbar.dart": "7cb1621b6905808cd17a270879453bce6da85f2267f68d56183c73d2f020a1dd",
+    "test/heading_typography_test.dart": "f4758852f4f71f427e6b3feb6bd559304a6637100428d7d994c0d25da6acf608",
+    "integration_test/heading_typography_test.dart": "cf1e92b0de02871a0bf456dbbb671369e77dfc04e723cc734150ea9999b3cf42",
+    "test/fixtures/heading_typography_oracle.dart": "642e39cf80283778a1b89c1886f144e63f27a3f7abf0f48291b004ee51dfe24c"
   },
   "limitations": [
     "iOS device verification and online desktop collaboration/reconnect/persistent ACK not rerun.",

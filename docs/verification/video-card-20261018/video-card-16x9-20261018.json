@@ -24,7 +24,7 @@
   ],
   "validation": {
     "tests": {
-      "command": "cd packages/cses_document_collab && flutter test --no-pub test/collab_video_update_test.dart",
+      "command": "cd . && flutter test --no-pub test/collab_video_update_test.dart",
       "passed": 20,
       "log": "/tmp/video-ratio-tests.log",
       "new_cases": [

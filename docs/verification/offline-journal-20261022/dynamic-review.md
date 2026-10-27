@@ -8,7 +8,7 @@
 
 ### P1：含@内容剪切后无法粘贴，已删除内容会保存
 
-位置：`lib/src/daily_guidance/local_journal_controller.dart:145–149`，与`JournalSurface`保留的标准复制/剪切命令和通用移动菜单组合触发。
+位置：`example/lib/src/daily_guidance/local_journal_controller.dart:145–149`，与`JournalSurface`保留的标准复制/剪切命令和通用移动菜单组合触发。
 
 1. 插入@人员并输入一段说明，选择包含提及的文字后剪切。
 2. 标准`cutCommand`与移动菜单复制的是模型纯文本，即U+FFFC占位符和说明，没有转成可读的@姓名；当前剪贴板实现也不持久化HTML对象协议。
@@ -23,7 +23,7 @@
 
 ### P2：在@右侧输入或选中@替换文字被静默拒绝
 
-位置：`lib/src/daily_guidance/journal_draft.dart:257–260`；根因是新的原子身份属性未在输入属性继承阶段排除。
+位置：`example/lib/src/daily_guidance/journal_draft.dart:257–260`；根因是新的原子身份属性未在输入属性继承阶段排除。
 
 插入@人员后，把光标放在对象右侧、自动空格左侧，输入“新”；或直接选中对象后用中文替换。AppFlowy的`insertText`/`replaceText`沿用邻接或选中对象的`guidance_mention`属性，普通字符也带了实体身份；最终校验正确拒绝这些普通字符，但页面没有归一化输入属性或提示，用户看到输入无效。
 

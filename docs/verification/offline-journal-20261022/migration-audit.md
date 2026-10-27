@@ -4,7 +4,7 @@
 
 ## 职责边界
 
-今日导向的页面、栏目协议、业务行、人员目录、选人、草稿和保存策略由宿主 `lib/src/daily_guidance/` 持有。原日记模块迁出后，宿主只通过 `cses_document_collab.dart` 使用编辑器能力，不导入协同包内部实现。
+今日导向的页面、栏目协议、业务行、人员目录、选人、草稿和保存策略由宿主 `example/lib/src/daily_guidance/` 持有。原日记模块迁出后，宿主只通过 `cses_document_collab.dart` 使用编辑器能力，不导入协同包内部实现。
 
 本轮仅为宿主自定义正文开放三个通用入口：
 

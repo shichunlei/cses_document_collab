@@ -49,10 +49,10 @@
     }
   ],
   "oracle": {
-    "generator": "packages/cses_document_collab/tool/generate_heading_typography_oracle.mjs",
-    "fixture": "packages/cses_document_collab/test/fixtures/blockcraft-0.11.21-heading-fonts.json",
+    "generator": "tool/generate_heading_typography_oracle.mjs",
+    "fixture": "test/fixtures/blockcraft-0.11.21-heading-fonts.json",
     "fixture_sha256": "f9a2f382748a110a6e4c8480e1933ad5fa517302488e08f0f0172b2b6cd14459",
-    "compiled_fixture": "packages/cses_document_collab/test/fixtures/heading_typography_oracle.dart",
+    "compiled_fixture": "test/fixtures/heading_typography_oracle.dart",
     "compiled_fixture_sha256": "deadb8c8967dd2a3c7c9b4a00b6cbac61c131a5778c30baa6cb2480001b1dc91",
     "repeat_generation_identical": true,
     "legacy_configurations": 4,
@@ -61,14 +61,14 @@
   },
   "validation": {
     "targeted": {
-      "directory": "packages/cses_document_collab",
+      "directory": ".",
       "command": "flutter test --no-pub test/paragraph_style_test.dart test/editor_shortcut_toolbar_test.dart test/mobile_selection_menu_test.dart test/heading_typography_test.dart --reporter expanded",
       "passed": 176,
       "failed": 0,
       "new_cases_for_this_fix": 22
     },
     "full_package": {
-      "directory": "packages/cses_document_collab",
+      "directory": ".",
       "command": "flutter test --no-pub --reporter expanded",
       "passed": 1130,
       "failed": 0,
@@ -81,7 +81,7 @@
       "failed": 0
     },
     "native": {
-      "directory": "packages/cses_document_collab/rust",
+      "directory": "rust",
       "command": "cargo fmt --check; cargo check; cargo test --lib",
       "passed": 86,
       "failed": 0,

@@ -32,9 +32,9 @@
     "interaction": "普通菜单保持整行激活；开关只由Switch本体处理，不提供行级onTap，文字/图标/空白不可切换；保留业务回调、Key、菜单顺序、锁代次/权限/快照及事务守卫",
     "accessibility": "菜单统一按钮、禁用及可选selected语义，开关合并文字与开关状态语义，保留键盘激活",
     "rules": [
-      "packages/cses_document_collab/AGENTS.md",
-      "packages/cses_document_collab/.agents/skills/collab-modal-ui/SKILL.md",
-      "packages/cses_document_collab/.agents/skills/collab-modal-ui/references/modal-decisions.md"
+      "AGENTS.md",
+      ".agents/skills/collab-modal-ui/SKILL.md",
+      ".agents/skills/collab-modal-ui/references/modal-decisions.md"
     ],
     "publicExportsChanged": false,
     "dependenciesChanged": false,

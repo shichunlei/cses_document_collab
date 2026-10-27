@@ -19,7 +19,7 @@
 | R5 插入漏检锁 | 独立副本按真实操作顺序预演；插入从实际父节点检查祖先锁，删除检查实际目标及后代。身份冲突修改延迟到完整校验成功后，不污染拒绝的事务参数。 | 文字/末尾插入/删除受锁保护；锁定兄弟前可插入；先删除导致路径移动、同事务先上锁后插入均原子拒绝；失败不改正文或插入节点身份；复制与替换ID不同处理。 |
 | R6 新任务卡片丢引用 | 从当前CollabTaskCard资源读取全部字段；KR同源资源也使用当前载体，保留已有引用和扩展属性。 | 正式任务提及转卡片、taskId/title、JSON编码→原生转换→本地恢复→再次导出，转换撤销重做；桌面实际TaskCardBlockSchema工厂属性核对。 |
 
-正式测试：[包内编辑回归](../../../packages/cses_document_collab/test/blockcraft_json_editing_test.dart)、[宿主回归](../../../test/daily_guidance/journal_blockcraft_editing_test.dart)。旧反例仍在原目录归档，未删改原失败日志。
+正式测试：[包内编辑回归](../../../test/blockcraft_json_editing_test.dart)、[宿主回归](../../../example/test/daily_guidance/journal_blockcraft_editing_test.dart)。旧反例仍在原目录归档，未删改原失败日志。
 
 ## 最终验证
 

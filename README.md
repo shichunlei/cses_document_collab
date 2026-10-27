@@ -1,561 +1,953 @@
-# CSES Mobile Collab Demo
+# cses_document_collab
 
-一个独立运行的 Flutter + Rust/Yrs 离线协同实验。协同核心位于 `packages/cses_document_collab`；根 App 装配登录、Common 主连接、上传与缓存路径。
+仓库根目录是核心 Flutter FFI 插件包；完整 Demo 位于 [example/](example/README.md)，AppFlowy 本地 fork 位于 `packages/appflowy_editor/`。仓库地址为 [shichunlei/cses_document_collab](https://github.com/shichunlei/cses_document_collab)。
 
-本地编辑与模板预览由宿主 `lib/src/image_composer/` 装配，入口为 `showImageComposer`，模板为 `ImageComposerTemplate` / `imageComposerTemplates`。页面仅提供内存编辑与预览，不保存正文或导出图片。共享包提供核心编辑器与协同同步能力，文档头尾、会议、KR、任务等按编辑器类型块或扩展保留包内；制图等应用功能的页面、产品模板和业务流程留在宿主。
+## 开发入口
+
+以下命令从仓库根目录执行；根目录用于核心包开发，应用运行和平台构建在 `example/` 中执行。
+
+```sh
+flutter pub get --no-example
+cargo build --locked --manifest-path rust/Cargo.toml
+flutter analyze --no-pub lib test integration_test test_driver
+FRB_DART_LOAD_EXTERNAL_LIBRARY_NATIVE_LIB_DIR="$PWD/rust/target/debug" flutter test --no-pub test
+
+cd example
+flutter pub get
+flutter run
+# iOS 首次构建需先准备本地 XCFramework：
+scripts/ios.sh build ios --debug --no-codesign
+```
+
+核心开发使用 `--no-example`，避免 Flutter 自动解析完整 Demo 的外部依赖；仅检出本仓库也可解析核心包。运行 Demo 前需准备仓库外的 `cses/cses.common`，其相对位置见 [example/pubspec.yaml](example/pubspec.yaml)，再进入 `example/` 单独运行 `flutter pub get`。Demo 保留 `cses_mobile_collab_demo` 包名、应用标识及缓存目录；核心包不依赖 Common。目录迁移的验证与限制见 [迁移记录](docs/verification/package-example-layout-20261027/report.md)。
+
+职责限定为核心编辑器与协同同步；文档头尾、会议、KR、任务等按编辑器类型块或扩展保留包内。制图等应用功能的页面、路由、模板目录、业务草稿和产品工作流由宿主组合；宿主只通过公开 API 使用编辑器。制图功能现位于宿主 `example/lib/src/image_composer/`，不再由本包提供入口或模板类型。
+
+## BlockCraft JSON 的独立编辑
+
+`BlockCraftJsonCodec.decode(snapshot)`将桌面根快照转换成实际AppFlowy节点树，`encode(document)`读取当前编辑结果重新导出。原生渲染通过`EditorViewConfiguration(blockBuilders: blockCraftSnapshotBuilders)`补充对象/分栏/卡片组件，资源、表格、代码、公式等沿用正式组件。创建者在视图卸载后关闭控制器，不创建WS、SQLite或原生全局文档。
+
+```dart
+import 'package:cses_document_collab/cses_document_collab.dart';
+import 'package:flutter/widgets.dart';
+
+DocumentEditorController openSnapshot(Map<String, dynamic> snapshot) =>
+    DocumentEditorController(
+      document: BlockCraftJsonCodec.decode(snapshot),
+      commandContext: const EditorCommandContext(localOnly: true),
+    );
+
+Widget snapshotBody(DocumentEditorController editor) => DocumentEditorView(
+  editorState: editor.editorState,
+  configuration: EditorViewConfiguration(blockBuilders: blockCraftSnapshotBuilders),
+);
+// final json = BlockCraftJsonCodec.encode(editor.editorState.document);
+// 视图卸载后 await editor.close();
+```
+
+所有已注册类型有显式数据转换，不以原始JSON兜底；未知插件类型整次拒绝。类型/字段转换不表示高级对象效果、动态业务源或独立Vectra图正文已全部实现。边界、测试与示例见[本轮记录](docs/verification/blockcraft-json-exchange-20261023/report.md)。矢量目录使用`node tool/generate_snapshot_presets.mjs /绝对路径/桌面/node_modules`从已核对的公共几何数据重新生成，勿手改`blockcraft_snapshot_presets.g.dart`。
+
+Flutter FFI 插件包，提供正式 BlockCraft 文档的原生编辑、Yrs 差量协同、Awareness、SQLite 恢复及移动端块渲染。Dart >=3.12、Flutter >=3.44；移动端支持 Android（最终宿主至少 API 24）和 iOS 14+。macOS/Linux 原生库仅用于测试，不声明桌面插件支持。
+
+包的源代码与原生构建都在此目录内。包不依赖 demo、cses.saas、cses.common、登录接口或全局账号。依赖方向是宿主 → 本包 → AppFlowy/FRB/Yrs；Gateway 与上传服务由宿主实现。
+
+## 接入
+
+最终 App 的 pubspec 添加本仓库根目录的 path 依赖。当前通过 `packages/appflowy_editor` 引用 AppFlowy 6.2.0 fork，包含 Flutter 3.44 输入适配和撤销修复；其 `diff_match_patch`、`scroll_to_index` 使用 pub.dev 发布版本。移动或复制核心包时须保留该子目录，或由最终宿主通过 dependency_overrides 指向同一 fork。
+
+```yaml
+dependencies:
+  cses_document_collab:
+    path: ../cses_document_collab
+```
+
+宿主代码只 import `package:cses_document_collab/cses_document_collab.dart`。以下函数返回的控制器由调用方持有，路由退出/账号切换前必须 `await controller.close()`：
+
+```dart
+import 'package:cses_document_collab/cses_document_collab.dart';
+import 'package:flutter/material.dart';
+
+Future<CollabController> openDocument({
+  required CsesCollabGateway gateway,
+  required String documentId,
+  required String websocketIdentity,
+  required String companyId,
+  required String userId,
+  required String databasePath,
+  required bool editable,
+}) async {
+  final controller = CollabController.cses(
+    config: CollabDocumentConfig(
+      documentId: documentId,
+      serverIdentity: websocketIdentity,
+      companyId: companyId,
+      userId: userId,
+      databasePath: databasePath,
+      editable: editable,
+    ),
+    gateway: gateway,
+    services: CollabHostServices(
+      onError: (message, error, stack, tag) =>
+          debugPrint('$tag: $message: $error\n$stack'),
+    ),
+  );
+  try {
+    await controller.initialize();
+    return controller;
+  } catch (_) {
+    await controller.close();
+    rethrow;
+  }
+}
+
+Widget editor(CollabController controller) =>
+    CollaborativeEditorPage(collab: controller);
+```
+
+`initialize()` 完成表示原生初始化、本地恢复和文档回调注册结束。`ConnectionStatus.online` 表示客户端完成差量交换；没有服务端保存 ACK，不能显示“已保存到服务器”。编辑页内部安装 AppFlowy 本地化代理；宿主只需标准 Flutter Material/Cupertino 本地化。
+
+## 宿主契约
+
+- Gateway 提供已完成 hello 的连接状态、按 pageId/docId/instance 注册 action 回调、立即发送结果及异步注销。恢复通知必须在恢复 Document subscribe 后发出；文档会话随后 join。离线发送返回 false。物理连接始终由宿主持有。
+- `CollabDocumentConfig` 不含 cookie。`serverIdentity` 使用原完整 WS 地址，企业/用户/docId 与旧缓存保持一致；SQLite 路径由宿主选择。凭证轮换不改变缓存键。根 ID 与缓存键不能混用。
+- Rust 是进程全局单 Doc。第二个独立控制器初始化抛 `COLLAB_DOCUMENT_IN_USE`，先等待旧控制器 close；多个视图可借用一个控制器。
+- `setEditable(false)` 立即禁止本地写入，并串行重建只读会话。只读握手只发送空 V1 update，缓存中的未同步修改仍被保留；恢复授权后向量同步补传。模型只读约束同时生效，服务端仍需逐次鉴权。
+- `resync()` 用于前台恢复，保留终止错误；`retry()` 是用户显式重试。控制器不创建或恢复物理连接。resetLocalCache 只清理当前分区，随后可调用 retry 重新 join。
+- `CollabHostServices` 注入 ID 工厂、错误报告、可选 `CollabMentionDirectory` 和 `EditorMediaUploadService`。没有上传服务时只显示 URL 输入；上传实现持有宿主认证。现有接口使用 Dio CancelToken 表达取消。
+- `localDraft` 是独立模式，保留旧 demo schema 和头部迁移；默认封面由宿主传入。正式模式不经过草稿初始化、不创建业务根/标题/封面。
+- FRB、Rust 原始 API、EditorState 和内部块类型是包内实现，宿主使用公开控制器状态/命令及编辑页。不要从 src 导入。
+
+## 正式空文档准备
+
+宿主先通过业务HTTP创建文档记录，持久化返回的正式docId和稳定的operationId、paragraphId、createdAt，
+等待旧控制器关闭，再调用公开的`DocumentBootstrapper.prepareBlank()`。该方法不创建视图或协同会话，
+短暂取得原生所有权，在同一SQLite事务保存初始V1增量和本地初始化标记，完成后释放准备资源。
+已占用引擎、既有正文或不同初始化身份会拒绝执行。同一操作重试恢复原CRDT身份；同时核对插入向量和删除集合，正文已变化（包括纯删除）时拒绝重新初始化。
+初始事务没有删除，既有只保存initial_vector的本地标记也可直接校验，不改变SQLite结构或FRB接口。
+
+```dart
+import 'package:cses_document_collab/cses_document_collab.dart';
+
+Future<CollabController> openNewDocument({
+  required CollabDocumentConfig config, // 已取得正式docId，账号分区由包计算。
+  required CsesCollabGateway gateway,
+  required String operationId,
+  required String paragraphId,
+  required DateTime createdAt,
+  required Future<void> Function(PreparedDocument) persistInitialSnapshot,
+}) async {
+  final prepared = await DocumentBootstrapper.prepareBlank(
+    config: config, operationId: operationId,
+    paragraphId: paragraphId, createdAt: createdAt,
+  );
+  // 宿主保存{docId: prepared.documentId, blocks: prepared.insertDiffs}并核验业务结果。
+  await persistInitialSnapshot(prepared);
+  final controller = CollabController.cses(config: config, gateway: gateway);
+  try {
+    await controller.initialize(); // 恢复刚才落盘的同一份增量。
+    return controller; // 视图卸载后由调用方await controller.close()。
+  } catch (_) {
+    await controller.close();
+    rethrow;
+  }
+}
+```
+
+`PreparedDocument.snapshotJson`可供宿主创建恢复记录保存，`insertDiffs`每次返回独立的桌面HTTP Insert投影。
+包不调用建档、目录或快照HTTP接口，不读取Common账号。示例之外的完整恢复流程由宿主管理：建档结果不明
+不自动重发，已知docId继续同一文档，快照结果不明先回读核对。Demo实现见根项目`example/lib/src/demo/document_creation/`。
+
+初始化生成root与一个空paragraph；根子序列使用Y.Array，正文使用空Y.Text，不创建业务标题或封面，不进入用户撤销历史。
+普通正式打开和清缓存不触发初始化。本机初始化过的文档检测到不同CRDT来源的远端根时，返回
+`DOCUMENT_BOOTSTRAP_CONFLICT`并停止补传和自动重试，保留本地数据供恢复。HTTP快照与PaaS根来源仍需真实服务联调确认。
+本地准备、HTTP成功、协同ready均不等同服务端正文持久化ACK。
+
+真实FRB/SQLite及桌面数据层互通可在包目录运行（先按下文构建宿主动态库；Node使用18或更新版本）：
+
+```bash
+flutter test --no-pub \
+  --dart-define=BOOTSTRAP_DESKTOP_ROOT=/path/to/cses-client \
+  --dart-define=BOOTSTRAP_PACKAGE_ROOT=/path/to/blockcraft/package \
+  --dart-define=BOOTSTRAP_NODE_EXECUTABLE=/path/to/node \
+  test/document_bootstrapper_native_test.dart test/prepared_document_test.dart
+```
+
+未提供桌面路径时互通项显式标记跳过；普通原生准备/编辑/重开项仍需真实动态库，缺库直接失败。
+该测试不连接真实业务服务，也不替代桌面窗口或手机在线验收。
+
+## 编辑器与同步边界
+
+`DocumentEditorController`独立拥有AppFlowy内存文档、输入继承、选区和本地历史，
+`DocumentEditorView`只借用正文状态，复用原T/Aa/布局/添加与划词菜单。
+独立会话默认空宿主服务，不初始化Rust、SQLite或网关；业务能力由实例上下文注入。
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:cses_mobile_collab_demo/src/image_composer/show_image_composer.dart';
+import 'package:cses_document_collab/cses_document_collab.dart';
 
-Future<void> openLocalEditor(BuildContext context) =>
-    showImageComposer(context: context, initialText: '本地正文');
+final editor = DocumentEditorController();
+final view = DocumentEditorView(editorState: editor.editorState);
+// 将view移出组件树后，由创建方释放：
+// await editor.close();
 ```
 
-桌面块的完整移动端适配进度见 [块适配表](docs/block-adaptation.md)。每完成一个块的适配，都须同步更新该表的状态、支持范围及验证记录。
+`CollabController`继续拥有协同资源，并向独立编辑会话挂载数据适配器。
+本地事务依次执行身份准备、默认格式、模型校验、输入继承及同步发布；远端投影不回送。
+投影隔离只覆盖AppFlowy同步改树阶段，不延长到Future收尾微任务；同步回放后的立即本地输入仍正常发布。
+同步适配器解绑后，外部持有的编辑会话仍可编辑；外部会话由创建方释放。
+既有`CollaborativeEditorPage(collab: ...)`调用方式不变；本地正文通过下节公开API由宿主装配。
+历史裸EditorState/适配器保留原宿主服务解析兼容入口，新的独立会话显式隔离服务。
 
-## 已实现
+## 离线本地编辑与能力配置
 
-- AppFlowy Editor 6.2 块编辑界面和连接状态
-- 独立全屏 `CollaborativeEditorPage`，与 Demo 的连接配置页面解耦
-- `CollaborativeEditorPage` 支持编辑/预览切换；预览时收起键盘和工具栏并禁止文档修改
-- 正式文档业务头部：显示桌面封面、图标（emoji/图片，含 SVG）、标题，封面铺满屏宽，居中叠加更换/移除/调整按钮，图标跨在封面下沿；支持封面“公共图库 / 上传 / 链接”三 Tab（复用桌面20张图库）、移除及位置调整、图标“表情符号 / 上传 / 链接”三 Tab 选择/替换/移除、标题修改；保存复用 Common HTTP 业务接口
-- 基于键盘 Insets 的稳定移动快捷栏，T/Aa/块布局二级菜单展开时不收起键盘
-- 参考移动文档产品的“添加”底部面板，标题菜单支持 H1～H6、两种列表、Todo、引用、高亮块、链接、图片和视频
-- T 菜单从 H1～H3 开始按需逐级展开到 H6，并包含列表、Todo、代码块和引用；三种列表互换保留层级、正文格式及光标/选区
-- Aa 菜单包含加粗、斜体、下划线、删除线、行内代码、文字颜色、上标和下标
-- Aa 行内格式在当前段落内持续生效；再次点击当前格式或切换段落时取消
-- 块布局菜单支持整块背景色、引用块左侧线条颜色（与桌面 `props.backColor` / `props.borderColor` 双向同步，支持清除及撤销），左/中/右/两端/分散对齐和三种列表的 0～6 级缩进；最外层减少缩进转普通段落，保留光标/选区
-- 行内加粗、斜体、下划线、删除线、行内代码、文字颜色、上标和下标使用 Y.Text 原生 attributes 协同
-- Todo 新建、段落/Todo 转换以及勾选状态实时协同
-- 代码块使用白底细边框和浅色标题栏，支持修改名称、搜索选择语言、折叠/展开、复制完整源码和语法高亮；`props.blockName` / `props.lang` / `props.collapse` 与桌面同步并支持逐字段撤销，预览折叠只影响本机，着色不写入 Y.Text
-- 高亮块兼容桌面 `callout` 容器；点击前方表情打开表情弹窗，可更换/移除、自定义表情；点击右侧设置打开独立颜色弹窗，可修改背景色和边框色。文字颜色使用键盘上方 Aa 菜单设置。支持逐项撤销和离线恢复，块内多段正文保持独立编辑和协同
-- AppBar 撤销/重做；远端 transaction 不进入本机 UndoManager
-- AppBar 导入 Markdown（UTF-8、`.md` / `.markdown`、最大 5 MiB），追加到文末并整体撤销；表格转文本行，独立网络图片转图片块，其他图片保留地址，不上传本地资源
-- AppFlowy transaction 与 Rust/Yrs 块级 Schema 适配层：离线草稿沿用 Demo 模型，CSES 文档使用正式 BlockCraft 模型
-- `paragraph`、`heading_1`～`heading_6`、`bulleted_list`、
-  `numbered_list`、`todo_list`、`quote`、`code`、`callout`、`link`、`image`、`video`
-  的类型、文本/URL 和受支持属性同步
-- 链接块可打开系统浏览器，正式图片展示比例尺寸和题注，离线图片复用 AppFlowy 原生渲染；视频支持内嵌播放
-- 光标位于资源块后方文本块的起始位置时，软键盘或硬件键盘退格可删除链接、图片、视频块并保留当前段落
-- 稳定 blockId；AppFlowy 拆分或转换节点后仍保持协同身份
-- `Y.Array` 块顺序、`Y.Map` 块类型、每块独立 `Y.Text`
-- 本地 AppFlowy transaction、远端 transaction 防回环
-- `flutter_rust_bridge` 调用手机端 Rust
-- Rust/Yrs 提供原始 V1 update、状态向量和 Awareness，CSES 适配层使用 Base64 JSON 文本信封
-- Demo 宿主引用 `../cses/cses.common`，复用 Dio HTTP、登录上下文、hello、主连接心跳、重连及精确三级路由
-- `subscribe → collabJoin → collabSync → collabUpdate` 双向差量交换，20 秒主动补偿
-- 本机 Awareness 10 秒提升时钟上报，显示其他编辑器数量；尚未绑定光标和选区
-- 在线协同只使用 CSES 主连接，通过 Common 收发 JSON 协议，不提供独立 WS 传输或本地测试服务
-- `OffsetKind::Utf16`，与 Dart/Yjs 的文本下标一致
-- `gc: false` 对应的 `skip_gc: true`
-- SQLite 增量 Update 日志，应用重启后离线恢复
-- 同一正式测试 docId、不同 instance 的手机间实时同步
-- 旧版 `cses_demo_text` SQLite 数据以零文本复制方式挂载为 paragraph 块
+`LocalEditorController`提供独立内存正文，`DocumentEditorView`提供共用编辑界面。
+宿主创建会话、装配页面和导航，在视图卸载后等待`close()`；无需创建`CollabController`、登录、SQLite或网关，不初始化Rust文档，可与已有协同文档同时使用。
 
-独立离线草稿使用手机 Demo 自有的块 Schema：
+```dart
+import 'package:flutter/material.dart';
+import 'package:cses_document_collab/cses_document_collab.dart';
 
-```text
-cses_mobile_block_order          Y.Array<blockId>
-cses_mobile_block_meta           Y.Map<blockId, blockType>
-cses_mobile_block_checked        Y.Map<blockId, bool>
-cses_mobile_block_align          Y.Map<blockId, left|center|right>
-cses_mobile_block_indent         Y.Map<blockId, 0..6>
-cses_mobile_block_text:<blockId> Y.Text（文本块含行内 attributes；链接/图片/视频块存 URL）
+LocalEditorController createLocalEditor() => LocalEditorController(
+  initialText: '本地正文',
+  configuration: EditorConfiguration(
+    blocks: [EditorBlock.paragraph, EditorBlock.heading, EditorBlock.quote, EditorBlock.table, EditorBlock.formula],
+    headingLevels: {1, 3},
+    inlineFormats: {EditorInlineFormat.bold, EditorInlineFormat.textColor},
+    alignments: {'left', 'center'},
+    nextParagraphStyle: false,
+    keyboardToolbarItems: [
+      EditorKeyboardToolbarItem.table,
+      EditorKeyboardToolbarItem.formula,
+      EditorKeyboardToolbarItem.textStyle,
+    ],
+    maxCharacters: 10000,
+    maxBlocks: 100,
+  ),
+);
+
+Widget localBody(LocalEditorController editor) =>
+    DocumentEditorView(editorState: editor.editorState);
+// 视图卸载后 await editor.close();
 ```
 
-正式文档头部独立于上述正文块。宿主通过 `CollabHostServices.documentMetadata`
-注入 `DocumentMetadataService`，Demo 的 `CsesDocumentMetadataService` 使用
-`cses_common/network/http/client/http_manager.dart` 读取 `/doc/document/view` 和
-`/doc/permission/read`，通过 `/doc/document/modify` 修改名称、icon 或 banner，
-移除图标/封面使用 `/doc/document/icon/remove`、`/doc/document/banner/remove`。
-仅业务接口确认后更新头部；失败保留原值，可重试。正文撤销不撤销头部业务修改。
-图标/封面操作按桌面 owner 角色控制，改名检查实际 owner 身份，仅 `abilities.rename == false` 时禁止（兼容权限字段缺失）；
-预览和宿主只读状态禁止修改。前台恢复、重连及重新打开时获取桌面最新头部。
+`EditorConfiguration`在构造时复制并冻结集合，每个编辑器独立持有，创建后不支持热替换。
+`blocks`是完整启用列表，按配置顺序显示块类型；标题级别仅允许H1~H6的非连续集合；默认配置、添加和类型菜单、命令及写入校验共用六级范围。
+基础paragraph必须保留，保证空文档、回车和删除末块的落点；无效配置在创建资源前拒绝。
+旧标题的拆段与同型续写只将新节点规范到H1~H6，原块原始属性保留。旧列表编号按原始depth+heading分组，超范围旧级别仍保留其协议身份；对外展示投影不作为计数器key，握手修复只处理真实缺失或错误的order。
+默认启用包内已注册的全部27种用户块类型，标题仅支持H1~H6，旧数据中的超范围正级别按H6展示，读取时不主动改写原始数据：正文、标题、引用、三类列表、代码、高亮、表格、分割线、日期卡片、天气卡片、分页符、公式、Mermaid绘图、图片、链接、音视频、附件、网页/Figma/掘金嵌入，以及会议/任务/KR引用。
+表格行/单元格和绘图源码按所属容器隐式启用，不单独出现在添加菜单。
+这表示开放现有移动端实现，不代表41种桌面块已全部适配；仍按根仓库适配表的支持范围使用。
+`EditorConfiguration.text`保留原六类文字块/H1～H4预设；也可通过`blocks`和`inlineFormats`选择更小的功能集合。
 
-离线草稿只包含正文；不再创建或支持 `document_cover`、`document_title`。
-旧私有草稿加载时按原始类型删除这两个头部块并持久化，保留其余正文、格式和顺序；
-该迁移不会把旧 Demo 标题/封面写入正式文档的业务字段，也不会修改正式 blocks。
+字符格式可分别启停加粗、斜体、下划线、删除线、行内代码、字号、颜色、字体/字距/倍率、上下标、链接、行内公式和提及。
+字号菜单及命令使用`fontSizes`，离线与协同默认均开放字号并共用12/14/16/18/20/24/28/32/36/48/64/72像素选项；Aa及展开文字样式面板复用同一横向字号子菜单，固定左侧返回与默认项、数字区滚动；点击默认以一个事务清除`t:px`和旧`s:fontSize`覆盖，继承当前段落或标题的字号，其他格式保持；选择后即时回显并保留菜单，键盘不因进入字号而收起，不再弹出独立字号面板。写入、历史和协同沿用公共命令。宿主显式禁用字号或自定义集合仍按实例配置执行。对齐、下一段样式、行高写入及正文容量分别配置。
+行间距位于“段落布局”，使用`lh`保存1～3倍行高；作用于选中的段落、标题、引用和三类列表，跨段一次修改可独立撤销，跳过代码及非正文块。默认项清除本段覆盖并继承文档行高。字间距位于“Aa→字间距”，使用`t:ls`保存-0.1～0.5em（随有效字号缩放），光标处影响后续输入，选择文字时只修改选区；选择预设或默认同时清除旧`s:letterSpacing`，默认不保存0值。二者复用固定返回/默认与横向预设菜单，保持键盘和选中回显；混合格式不误选默认，撤权后须重新打开。可分别用`lineHeight`和`EditorInlineFormat.letterSpacing`禁用；仅启用行间距时也保留布局入口。今日导向宿主使用同一能力和协议。验证见[间距记录](docs/verification/editor-spacing-20261024/report.md)。
 
-CSES 文档通过 `packages/cses_document_collab/rust/src/api/blockcraft.rs` 直接读写正式共享类型：
+`keyboardToolbarItems`配置内建键盘入口及顺序。收起键盘不参与配置：有内建或宿主自定义入口时自动固定在最右侧，其余入口单行横向滚动。默认使用`EditorKeyboardToolbarItem.defaults`，保留原六个菜单入口及收起按钮；传空列表`[]`隐藏内建入口，没有宿主动作时隐藏整条，不留高度或分隔线。列表构造时冻结，重复项会抛出`ArgumentError`。
+可选原入口：`addBlock`（加号）、`blockType`（T）、`textStyle`（Aa）、`blockLayout`、`image`、`mention`；`todoList`提供原生待办直达按钮，与T菜单共用类型转换，保留正文、格式和选区，已是Todo时不重置勾选状态。
+“更多→常用”可直接放到键盘上：`link`、`video`、`attachment`、`audio`、`bookmark`、`embed`、`juejin`、`figma`、`table`、`callout`、`meeting`、`formula`、`mermaid`、`inlineFormula`、`divider`、`pageDivider`，图片与@用户也可直接配置。
+`spreadsheet`、`multiTable`、`mindMap`保留原常用面板的占位行为，只提示“暂未支持”，不创建正文；能配置展示不代表这些块已适配。
+键盘直达动作与更多面板复用同一目录和插入流程，包括模态隔离、稳定位置、取消/失效拒绝写入和焦点恢复。入口仍与块/格式能力取交集，例如未启用图片块，即使列表包含`image`也不会显示图片按钮。
+旧加号布尔参数已移除；通过包含或省略`EditorKeyboardToolbarItem.addBlock`控制加号。隐藏入口仅改变键盘菜单，不禁止已启用的命令、快捷输入、划词操作或更多面板中的同类动作。
+空格式集隐藏Aa入口；空对齐集隐藏对齐按钮。原工具栏、划词菜单、快捷键、Markdown转换及本地事务校验共同使用配置，直接命令和粘贴同样受约束。
+粘贴保留纯文本，不解析HTML、Markdown或创建链接。默认容量100000个UTF-16单元（不计段落分隔换行）、500个正文节点（含容器结构子块），可由配置调整。
+默认业务端口为空，不继承活动协同文档的账号、上传、会议/任务详情或头像服务。
+如需从本地数据提供业务引用，可显式传入`services: CollabHostServices(...)`，服务由调用方持有；未提供服务时业务选择无法完成、详情仅保留引用快照；不伪造引用或业务数据。
+媒体默认可通过链接添加；未注入上传服务时不显示本地上传入口，嵌套面板也不回退到全局上传服务。
+资源链接的实际加载遵循平台和网络条件，不会因此启动文档协同。
+本地不创建块锁管理器，不提供锁定/解锁菜单，锁属性写入被拒绝；原协同文档的锁服务和协议保持。
 
-```text
-blocks                         Y.Map<blockId, Y.Map>
-  block.id/flavour/nodeType    身份与类型
-  block.props/meta             Y.Map；保留未知字段和审计数据
-  block.children               editable 为 Y.Text；root/block/void 为 Y.Array<blockId>
-bc:revisions / bc:revision-decisions / bc:revision-meta  原样保留的修订数据
+宿主可为独立正文快照创建`DocumentEditorController`，通过`DocumentEditorView(preview: true, editable: false)`关闭输入、选区服务和正文点击，不显示光标、选区、工具栏、更多按钮、锁标或空白输入提示。
+正文与预览会话分别由创建者持有，视图卸载后关闭；原正文和历史不因展示快照而替换。业务模板、预览切换流程、导航、持久化和图片导出由宿主决定。
+`LocalEditorController(configuration: ...)`及`DocumentEditorView`通过公开入口使用，本包不创建业务路由。
+现有协同会话默认`EditorConfiguration.document`兼容预设，完整块及复杂业务端口保持，不受本地配置影响；该预设不能用于本地控制器。
+
+## 宿主自定义编辑表面
+
+宿主业务页面通过公开的`DocumentEditorController`持有编辑会话，可自行配置AppFlowy正文的块、行内对象和样式，再用`EditorInteractionShell`复用划词菜单与快捷栏。借用的正文及滚动控制器由宿主在视图卸载后释放。`handleDocumentParagraphEnter`和`applyDocumentBlockShortcut`提供通用输入/块转换，所有事务仍受宿主设置的保护策略约束。
+
+`EditorCommandContext.copySelection`可选接管移动菜单的复制/剪切，接收调用时捕获的选区与`cut`意图。宿主负责内容序列化、等待剪贴板写入成功后删除，以及正文、选区、权限和关闭的异步失效检查；回调完成后菜单不再重复写入或删除。未配置时沿用原有行为。自定义键盘命令需显式复用同一端口；通用包不解释宿主业务对象。
+
+今日导向页面、草稿模型、本地存储和业务块已迁到宿主`example/lib/src/daily_guidance/`；本包不再导出日记业务API。包仅提供通用编辑与共享数据协同，业务扩展不应反向加入包内。宿主实现与迁移验证见[实施记录](docs/verification/offline-journal-20261022/host-implementation.md)。
+
+自定义正文可通过`EditorInteractionShell.keyboardActions`注入`EditorKeyboardAction`（稳定唯一id、名称、图标、enabled与异步onPressed），按顺序接在内建项后，保留标签与禁用态。工具栏在同一动作执行期间同步拦截其他快捷入口和旧子菜单回调，并关闭禁用子菜单，完成后恢复；宿主负责业务资源、账号/权限/目标失效保护，以及模态退场和输入恢复。原生工具栏不认识感悟或领航员等业务名称。默认空动作不改变其他消费者。
+
+自定义栏目中的扁平列表需在`EditorConfiguration(listConversionContainerTypes: {'host-section'})`显式声明结构父节点类型，才能在有序、无序和Todo之间直接互转。集合复制后冻结，默认空；授权父节点必须没有Delta，所选列表必须为同一父节点下的无子项叶子。该配置不注册自定义块，不绕过宿主事务保护，也不扩大Enter、Backspace或缩进范围；根层与高亮块仍沿用原有支持。宿主负责自己的栏目渲染和边界校验。
+
+自定义渲染器可组合`decorateEditorUserMention`并用`EditorUserMention.read/tryRead`校验或读取原生用户对象；普通文字不得携带对象身份属性。用户WidgetSpan内部不重复继承系统字号，由正文统一缩放姓名及头像。键入@可调用`handleEditorUserMentionTrigger`，显式入口可用`showEditorUserMention`，均借用本实例`EditorCommandContext.services`。宿主业务行可通过`pickEditorMentionUser(context, state)`复用同一人员选择及权限保护（不自动插入），并将`EditorUserMention.createDelta(user)`返回的原生人员对象和空格放入自有原子事务；调用方负责保存、复核目标及恢复键盘。独立正文控制器复用原生对象事务；`localOnly`会话使用可被宿主事务保护直接校验的局部文字增量，支持本地撤销重做，不创建同步连接。
+
+## 图片点击
+
+正式图片块的图片本体点击调用可选的 `CollabHostServices.onImageTap(url)`，完整传递当前原始链接，包括查询签名和片段。宿主负责预览路由及资源，异步回调应在预览关闭后完成；同一图片回调未结束时忽略重复点击。编辑和预览均可用，题注与更多菜单不触发。
+
+```dart
+import 'package:cses_document_collab/cses_document_collab.dart';
+
+CollabHostServices imageServices(Future<void> Function(String url) openPreview) =>
+    CollabHostServices(onImageTap: openPreview);
 ```
 
-正式段落的 `props.heading` 映射手机 H1~H6，旧超范围正级别仅按H6展示，`bullet/ordered/todo/blockquote/code`
-映射列表、待办、引用和代码，图片使用 `props.src`、视频使用 `props.url`。Todo 的 checked 写入数值 0/1，
-正文对齐使用 `textAlign`，图片对齐使用 `align`，缩进使用 `depth`。富文本使用 `a:bold/italic/underline/strike/code/sup/sub`
-与 `s:color/background`，手机 ARGB 颜色写回 CSS。格式只更新发生变化的区间与受支持键，
-已有链接、字体和其他未知行内属性不会被整块清空。新增块沿用正式共享类型，既有块不重建。
+点击图片收起正文键盘，回调结束后不自动恢复正文选区或焦点；之后点击正文仍可继续输入。未配置回调或链接为空时不派发事件，但仍屏蔽图片点击的正文焦点。事件不改写协同正文或撤销记录。当前图片/宿主仍有效时，回调异常经 `onError` 报告并显示失败提示；卸载、换源或换会话后的迟到失败忽略。data/blob地址原样交给宿主，由宿主判断是否支持预览；包不提供默认图片预览页面。
 
-远端更新先在探测 Doc 验证根身份和块字段类型，再进入权威 Doc/SQLite。
-未知 flavour 和未适配结构显示一个空的只读占位块，文案为“未适配的块（不可编辑）”；
-不展开未知容器的后代，原始共享内容、属性和父子关系保留；其他已识别块仍可编辑、撤销及同步。
-未知块不会触发整篇只读；AppFlowy 与 Rust 都拒绝修改、转换或删除占位块，含占位的父容器也不能整体删除，避免丢失未知内容。
-未适配的正文行内对象仅保护所在段落；锁定块、修订记录、未知顶层根及图片题注等既有约束继续限制整篇编辑。普通正文已支持行内公式和用户、会议、任务、文档四类提及，范围见下文及适配表。
-结构重复/循环、缺失子块等情况同样限制编辑。正式正文缺少根时等待初始化，
-不自动创建根、封面或标题；业务界面空白不代表 Yjs 文档无结构。
-只读约束同时在页面输入和 Rust 写事务前检查。手机专属独立链接块没有隐式正式对应，相关操作会被拒绝并恢复 UI。
+## 原生构建与测试
 
-## CSES 接入与资源所有权
+### 共用表情目录
 
-```text
-Demo 登录（Common HTTP → User/ctx）→ DemoDocumentHost → cses_document_collab 公共入口
-             ├─ CsesDemoHost → 使用 Common 当前认证的唯一主连接
-             ├─ CommonCsesCollabGateway → 包的 Gateway 契约
-             ├─ CsesEditorMediaUploadService → 宿主 OSS/文件登记
-             └─ CollabController → AppFlowy 投影 ↔ Rust/Yrs ↔ SQLite
+文档图标和高亮块复用`CollabEmojiPicker`与手机底部弹窗，包含桌面同源八类1812个默认表情、1350个肤色序列、中英文/拼音/首字母搜索和进程内最近12项。搜索和底部Tab固定，中间始终为一个完整分类列表：点击Tab平滑定位标题，手动滚动同步选中并自动展示对应Tab，“全部”定位顶部当前/最近区域。搜索时展示结果，点击分类退出搜索并定位。既有Unicode、组合表情及自定义前缀保留，不在打开时迁移。
+
+目录缓存按列数、查询、肤色、当前项和最近项失效，固定行高随标题文字缩放调整，列表仅挂载可见行。滚动联动只比较八个分类偏移并更新Tab，不重建整个选择器；两屏以内直接滚动300毫秒，远距离淡出90毫秒后在透明状态定位到目标附近，再滑入300毫秒并淡入180毫秒，避免连续创建/回收整段目录。新点击或用户拖动可接管，关闭后旧动画结果失效，过渡期间不提交表情。每格借用父级Material绘制墨水反馈，保留选中边框、长按名称提示、键盘激活及无障碍语义；独立使用需提供Material祖先。
+
+表情列表与Tab真机性能回归从 `example/` 目录运行，使用性能构建及随系统出帧的`benchmarkLive`策略，分别记录首次分类浏览、连续双向甩动、重复Tab定位/动画接管、Tab横滑。测试使用实际公共底部路由与选择器、本地保存回调；不进入账号或在线文档，完成性能采集后才转换截图表面。输出为`build/emoji-device/performance.json`及真机PNG，可用`COLLAB_EMOJI_DEVICE_OUTPUT_DIR`指定目录：
+
+```sh
+flutter drive --profile --no-dds \
+  --driver ../test_driver/emoji_performance.dart \
+  --target ../integration_test/emoji_scroll_test.dart \
+  -d ANDROID_DEVICE_ID --no-pub --keep-app-running
 ```
 
-完整接入契约、资源释放顺序和迁入 SaaS 的步骤见 [协同包接入文档](docs/collab-package-integration.md)；独立包的公共 API 与构建说明见 [包 README](packages/cses_document_collab/README.md)。包不引用 demo、SaaS、Common 或全局登录上下文。
+必须保留`--keep-app-running`；完成后重新构建普通Demo，并用`adb install -r`覆盖恢复，避免设备停留在测试入口或清除应用数据。帧耗时按实际刷新率评估，不用默认测试出帧节奏或调试构建推断流畅度。
 
-- Android 宿主通过 `com.yundiz/common` 提供设备 ID、CPU 型号及 CPU 信息，复用 CSES Android 的设备处理器契约，使 Common 的 `ctx.updateDeviceInfo()` 可完整初始化；CPU 信息读取失败时使用系统兜底。
-- Demo 按 SaaS 账号密码流程先初始化 Common 的 PRE 配置、偏好和设备信息，再通过 `HttpManager` 的共享 Dio 请求 `/User/login`；公共 header 和异常映射均由 Common 提供。首页仅启动主 WebSocket 连接，不自动选择文档，不保存密码或登录账户快照。
-- 登录成功后由 `CsesAccountLogin` 将完整响应交给 `User().resolveContext(value)`，统一解析身份、企业、权限、媒体站点、域名和 WebSocket 地址，校验通过后才进入首页。企业选择复用 Common 的组织排序和上次企业偏好；Demo 不再保留响应副本、手动推导企业或覆盖连接地址。页面已销毁的迟到响应不注入上下文；解析/校验失败清理本次用户态，留在登录页重试。
-- 登录成功直接通知页面切换，账号与展示名读取 Common 的 `User`，不传递独立会话对象。`DemoDocumentHost` 选择旧 SQLite 路径，在创建控制器时直接使用 `ctx.websocketHost`、`User().companyId`、`User().userId` 和展示名构造 `CollabDocumentConfig`，再注入 Gateway、ID、日志和媒体上传；不再次解析登录或请求 `/User/auth`。包直接打开正式模型，不先打开草稿；离线预览和测试显式设置 `localDraft: true`。
-- 文档 ID、服务端、企业、用户和数据库路径只在 `CollabDocumentConfig` 中形成不可变快照；缓存键由协同包统一计算，宿主不保存 Cookie 副本或重复维护缓存算法。切换身份须关闭旧控制器后重新创建。
-- WebSocket 地址和默认协议以 Common 解析结果为准。若与历史 Demo 的默认地址不同，按现有地址/企业/用户/文档缓存键进入对应分区，旧缓存仍保留。
-- `DemoDocumentHost.initialize()` 完成表示账号服务、创建记录恢复及主连接启动已调度，不打开文档；从“文档列表”点击条目后才核验访问权限、恢复缓存并进入编辑页，返回后保留列表位置。新建也在列表页完成并从该页进入编辑器；文档控制器的 `initialize()` 完成表示本地恢复和回调注册完成；协同 ready/online 只表示客户端差量交换，不是服务端落库回执。
-- 页面借用控制器；退出账号先等待包的 close，再由 Demo 宿主关闭主连接，并通过 Common 清理用户态，保留应用级设备信息。即使本地文档初始化失败，退出也会清理已登录身份。返回连接面板仍复用同一控制器。
-- Rust 是单文档引擎，包对第二控制器明确拒绝；新文档必须等待旧控制器关闭。
-- 包使用宿主编辑授权和模型只读条件。只读握手不补传缓存中的本地变更，恢复授权后再同步。正式部署仍需服务端文档/租户鉴权。
-- 权限、文档不存在、非法 schema 停止自动重试；重连和主动补偿维持原协议。上行单次 1 MiB，下行正文 32 MiB，向量/Awareness 64 KiB。
-- Common 适配器保留既有 onlyListen 与手动 subscribe 实验边界；同步发送异常可能进入 Common 队列。join/leave/Awareness 的失败重放仍需真实环境验证。
-- Common WS 地址不能带既有 query；其 URI 日志可能包含凭证，不能共享原始连接日志。
+独立排除测试绑定开销时，同一入口可使用`flutter run --profile --no-dds --no-pub --dart-define=EMOJI_MANUAL_PERF=true --target ../integration_test/emoji_scroll_test.dart -d ANDROID_DEVICE_ID`。此模式使用普通`WidgetsFlutterBinding`和系统触摸，`ext.emoji.frames`只向本地VM服务提供最多20000帧的构建/栅格耗时（微秒），传`reset=true`清空；不初始化账号或读取文档，退出进程释放全部采样状态。测量后仍需覆盖恢复普通Demo。
 
-## 运行
+数据与桌面实际使用的`@cses/ui 4.35.6`中`CsEmojiPickerComponent`同源：`@ctrl/ngx-emoji-mart 9.2.0`（Unicode 14目录），以及组件随包提供的CLDR release-48中文名称、拼音和搜索别名。生成文件不可手改，更新时在包目录运行：
 
-首次构建移动端 Rust 库时安装目标工具链（源码已在包目录中）：
+```sh
+node tool/sync_desktop_emoji_catalog.mjs /path/to/cses-client
+```
+
+同步工具校验分类/身份/肤色映射并记录源文件SHA-256，同时维护[许可与来源](third_party/emoji/README.md)；选择器将MIT和Unicode完整许可注册到Flutter许可页。目录无需网络或图片包，具体字形由系统字体提供。最近记录和肤色不跨进程持久化，不提供双人混合肤色编辑器。
+
+### 构建与回归
+
+Android 通过本包 android/Cargokit 构建 rust。插件及宿主需使用 compileSdk 36 或更高版本，最终宿主的最低运行版本仍为 API 24。安装对应 Rust Android targets 和 NDK 后，从最终 App 执行 Flutter build。原生库名仍是 cses_collab_core。
+
+iOS 使用 `ios/cses_document_collab/Package.swift` 的本地动态 XCFramework。在 Flutter/Xcode 解析 SPM 之前执行：
 
 ```bash
-rustup target add \
-  aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios \
-  aarch64-linux-android armv7-linux-androideabi \
-  i686-linux-android x86_64-linux-android
+/path/to/cses_document_collab/tool/build_rust_ios.sh debug
+# Archive 前使用 release；生成物不进入 Git。
 ```
 
-安装依赖并启动 Flutter：
+原生依赖由 Cargo.lock 固定，libc 显式固定 0.2.186 以兼容 backtrace 在 iOS 上使用的 dyld 声明。
+
+所需 targets 为 aarch64-apple-ios、aarch64-apple-ios-sim、x86_64-apple-ios。构建工具以包位置为根，不依赖调用方 cwd。CocoaPods podspec 也随包保留，当前 demo 验证 SPM；CocoaPods 单独标为未验证。
+
+本仓库 Demo 的 Runner 构建阶段会自动执行 `example/scripts/build_rust_ios_xcode.sh`，增量构建本包
+并刷新 SwiftPM 已处理的 framework；IDE 完整启动 iOS 无需手动重建。其他 SPM 宿主需自行
+配置对应构建集成。首次解析缺失的 XCFramework 前仍需先运行上述包内初始化脚本；
+热重载/热重启不能替换已加载的原生库，Rust 修改后须停止并重新启动调试。
+
+仓库已通过 `packages/appflowy_editor` 引用同一 AppFlowy fork；仅独立复制核心包且未保留该子目录时，才需由最终宿主配置 override。以下命令从仓库根目录执行，核心依赖解析不连带解析 example：
 
 ```bash
-flutter pub get
-flutter devices
-flutter run -d <android-device-id>
-# iOS 先生成 SPM 所需的 Rust XCFramework
-scripts/ios.sh run -d <ios-device-id>
-```
-
-启动后进入用户名、密码登录页，使用 PRE 环境的真实账号登录；不预填账号密码，
-不再手动填写 userId、cookieId、companyId 或 WS 地址。登录成功后首页只启动主连接；
-通过“文档列表”选择文档，或在列表右上角新建后进入编辑页，返回时回到原列表。
-首页可重新连接或退出登录，选定文档后可清理其本机缓存。
-会话只驻留内存，重启后重新登录；SQLite 正文缓存仍按地址/企业/用户/文档隔离并保留。
-
-首页另有“离线本地编辑 → 开始离线编辑”入口，文档加载中或连接失败时仍可打开。
-文字编辑能力由包内实例配置选择；模板预览隐藏编辑装饰，本地不提供块锁和图片导出。
-正文仅保留在本次会话内，不写入协同文档、服务端或相册；返回首页后可从文档列表进入协同编辑。
-
-两台设备分别登录各自账号，deviceId 自动读取本机标识，测试文档 ID 相同。
-instance 自动生成，同一次文档宿主挂载期间保持稳定，重新配置连接时产生新实例。
-界面出现 `bidirectional-sync-ready` 后再确认双端编辑；握手超时要核对会话和服务端协议部署，
-底层 Socket 打开或收到 hello 不代表文档会话成功。
-
-宿主 Flutter 最低版本为 **3.44.9**，Dart 最低版本为 **3.12.0**；`cses_document_collab` 支持 Flutter 3.44.0 起。
-依赖按 Flutter 3.44.9 验证，锁定版本见 `pubspec.lock`。Flutter SDK 固定的依赖与工作区插件的
-主版本约束继续由依赖解析器管理。`cses_document_collab` 使用 ffi 2.2.0、ffigen 21.0.0；
-ffigen 22/23 的传递依赖要求 meta >=1.19，与该 Flutter SDK 固定的 meta 1.18 不兼容。
-FRB 的 Dart 库、Rust 库和代码生成器统一为 2.13.0。修改 Rust API 后使用
-`flutter_rust_bridge_codegen` 2.13.0 执行 `flutter_rust_bridge_codegen generate`，再重建原生库。
-iOS 最低版本为 14.0。宿主只使用 SPM，不需要 CocoaPods；`packages/cses_document_collab/ios` 提供 SPM 接入。
-使用 Flutter 3.44.9 默认启用的 SPM 支持，无需额外配置开关。
-Flutter 生成的 `FlutterGeneratedPluginSwiftPackage` 管理插件，Rust 插件通过
-`packages/cses_document_collab/ios/cses_document_collab/Package.swift` 引用本地动态 XCFramework。
-
-使用统一入口构建或启动 iOS，确保先更新 Rust 库，再解析 SPM 依赖：
-从旧 Pods 工程首次切换时先执行一次 `flutter clean`，避免链接到旧的同名 framework 缓存。
-
-```bash
-scripts/ios.sh build ios --debug --no-codesign
-scripts/ios.sh run -d <ios-device-id>
-# Release / Archive
-scripts/ios.sh build ipa --release
-```
-
-脚本用 Cargo 增量构建真机 arm64、模拟器 arm64/x86_64，并生成 XCFramework。
-Rust 二进制和 `ios/Flutter/ephemeral/` 都不提交；干净检出后必须先通过上述入口生成二进制。
-首次使用 Xcode 前先执行 `scripts/build_rust_ios.sh debug`，再执行
-`flutter build ios --debug --config-only` 并打开 `ios/Runner.xcworkspace`。
-之后 IDE 的完整 iOS 构建会自动执行 Runner 的 `Build Rust iOS Library` 阶段：
-Debug 使用 Rust dev，Profile/Release 使用 release，真机和模拟器均受支持。
-该阶段也覆盖 VS Code、Android Studio 的 Flutter 启动和直接 `flutter run/build`；
-Cargo 增量编译后刷新 SwiftPM 已处理的 framework，Rust 构建失败会中止应用构建。
-IDE 启动的 Xcode 无需继承交互终端 PATH；构建脚本会补充标准 Rustup/Homebrew 路径。
-全新检出的首次 SwiftPM 解析仍需要上述初始化入口，因为解析发生在 Runner 构建阶段之前。
-iPhone 首次运行需要在 Xcode 中配置开发者签名。
-
-`cses_document_collab` 保留 `.podspec` 和 Cargokit 构建脚本，供其他使用 CocoaPods 的宿主接入；
-本宿主不提供 CocoaPods 回退配置。
-当前 Android 构建输出位于 `build/app/outputs/flutter-apk/app-debug.apk`。
-Rust 或 FRB 桥接声明变化后必须停止运行并完整重新构建安装；热重载/热重启不能替换已加载的原生库。
-
-若打开文档出现 `Content hash on Dart side ... is different from Rust side ...`，
-说明应用加载的 Rust 库与当前 Dart 桥接代码不匹配。先停止当前调试会话；iOS 使用
-`scripts/ios.sh run -d <ios-device-id>` 重建原生库并重新安装启动，Android 完整执行
-`flutter run -d <android-device-id>`。只执行热重启、依赖解析或单独生成 FRB 代码不能更新
-手机进程中的原生库。包内原生测试另需执行
-`cargo build --locked --manifest-path packages/cses_document_collab/rust/Cargo.toml`。
-从仓库根目录执行使用默认加载器的原生测试时，通过
-`FRB_DART_LOAD_EXTERNAL_LIBRARY_NATIVE_LIB_DIR="$PWD/packages/cses_document_collab/rust/target/debug" flutter test <测试路径>`
-指向该动态库；包内显式指定动态库路径的测试无需此环境变量。
-保留 FRB 的内容哈希检查，不通过跳过检查或手工修改生成文件规避版本不一致。
-
-建议按以下顺序验收当前块级阶段：
-
-1. 手机 A 输入中文、Emoji 和多段 paragraph，手机 B 应实时出现；
-2. 独立离线草稿检查只含正文；正式文档核对桌面封面、表情、名称，修改/移除后重开桌面确认，并验证只读、失败重试与前台刷新；
-3. 光标进入正文后，确认键盘上方出现 `＋ / T / Aa / 块布局 / 图片 / @`
-   快捷栏；
-4. 选中文字后点击 `Aa`，验证粗体、斜体、下划线、删除线、行内代码和文字颜色会同步；
-5. 点击 `T`，验证 H1～H6 的逐级展开，并确认不显示超出 H6 的标题、有序/无序列表、Todo、代码块和引用块；点击 `Aa` 验证上标和下标；Todo 勾选后手机 B 应同步状态；
-6. 点击块布局，验证对齐方式与列表缩进在手机 B 同步；
-7. 点击 `＋`，验证 H1～H6、两种列表、Todo、引用、链接、图片和视频块同步；
-8. 插入链接/图片/视频时填写完整的 HTTP(S) URL；资源块后应自动定位到空正文并弹回键盘；
-9. 光标停在资源块后方段落的第 0 位时按退格，资源块应删除、当前段落与键盘应保留，并同步到另一台手机；
-10. 空块会原位转换；当前块已有正文时，会在其后插入所选的新块；
-11. 点击顶部撤销/重做，操作结果应继续同步到另一台手机；
-12. 两台手机在不同块同时输入，最终块顺序、类型、文本和样式应一致；
-13. 两台手机在同一块同时输入，Yrs 应合并双方文本；
-14. 手机 A 断网后继续新增块、输入、设置格式或勾选 Todo，恢复后应收敛；
-15. 杀掉并重启任一客户端，应先从 SQLite 恢复，再与服务器补齐。
-16. 未知块和未适配容器显示不可编辑占位，其他已识别块仍可编辑；未适配的行内对象、锁或修订保持整篇只读，原始内容和父子关系不变；
-17. 拒绝的块操作应恢复 UI；支持的编辑应保留原 blockId、props/meta 未知键、链接与字体属性；
-18. 正式文档重连与新打开应使用 blocks 根，不能补传旧 Demo 缓存；同块并发文本和不同格式应收敛。
-
-## 验证
-
-根 App 测试覆盖登录、旧缓存身份、Demo 页面与 Common 本机 WebSocket 联调：
-
-```bash
-flutter test test
-flutter analyze --no-pub
-```
-
-包内测试从包目录执行；先按包 README 配置同一 AppFlowy fork，再构建原生库：
-
-```bash
-cd packages/cses_document_collab
-flutter pub get
+flutter pub get --no-example
+flutter_rust_bridge_codegen generate # 使用 2.13.0
 cargo build --manifest-path rust/Cargo.toml
 cargo test --manifest-path rust/Cargo.toml
-flutter test --no-pub
+FRB_DART_LOAD_EXTERNAL_LIBRARY_NATIVE_LIB_DIR="$PWD/rust/target/debug" flutter test --no-pub test
+flutter analyze --no-pub lib test integration_test test_driver
 ```
 
-异地引用验证：`packages/cses_document_collab/tool/verify_portable_package.sh packages/appflowy_editor`。
+原生回归需要真实宿主动态库。`collab_controller_native_test.dart` 对缺库直接失败，避免将跳过测试当作验证。异地引用门禁会复制本包到临时目录，由另一个 Flutter 宿主只通过公开入口加载 native Doc、呈现只读编辑页并验证 SQLite 重开：
 
-## 与 CSES 桌面端的边界
+```bash
+tool/verify_portable_package.sh packages/appflowy_editor
+```
 
-当前 Demo 使用正式 BlockCraft 的 blocks 根、嵌套块 Map 和原生 Y.Text，支持普通顶层正文及高亮容器内正文双向编辑。
-`rust/tests/fixtures/` 保存由 Yjs 13.6.19 编码的脱敏 V1 样本，覆盖富文本、未知 props/meta、
-未知容器、行内对象和锁。生成器 `generate.cjs` 接受已安装的 yjs 包路径，避免依赖 Rust 自己生成的样本自证兼容。
-原生桥接测试验证业务根 ID 与缓存键分离、编辑以及 SQLite 恢复；旧样本测试缺库时显式跳过；新增控制器抽包门禁缺库直接失败，运行前需先 cargo build。
+包保留已有块支持范围、未知数据保护和模型只读规则。正式正文（含代码块）出现未适配行内对象时，仅将所在段落投影为不可编辑占位，完整保留原始Y.Text与属性；其他已适配块继续编辑，含占位的父容器不可连带删除。未知类型仍保持保护，用户、会议、任务、文档四类提及的普通正文支持另见下文，锁、修订和图片题注等既有只读保护仍生效。上传、私有资源鉴权、业务元数据、服务端保存及租户权限由宿主/服务端提供，真实环境联调须单独验收。
 
-正式头部已接入文档业务名称、图标和封面接口及对应权限；正文 `/doc/document/edit` 的 dirty-block 快照、评论和完整正文业务权限仍未接入。
-Awareness 展示用户和在线数，尚未对齐桌面光标/选区契约；不能用 ready 或 SyncStatus 声称业务落库成功。
-普通及合并表格已支持新建、行列增删、矩形范围合并/拆分、列宽设置、横向滚动和正文编辑/撤销/协同；不完整或超限表格与其他未适配复杂布局仍保留为占位，具体范围见[适配表](docs/block-adaptation.md)。其他已识别块仍可编辑；未适配的行内对象、锁与修订继续整篇只读，后续按对应语义适配。
+## 共用编辑视图与场景配置
 
-当前同步顶层块的类型、顺序、文本/URL、Todo 勾选、对齐和视觉缩进，以及 bold、italic、underline、
-strikethrough、inline-code、textColor、backgroundColor、superscript、subscript 行内属性。当前缩进保持扁平块
-Schema，仅表现为列表/Todo 的视觉层级，不会生成 AppFlowy 子节点。链接、图片和视频 URL 使用各块现有
-bridge 的 text 字段传递；正式图片写入 props.src、视频写入 props.url；图片使用 block 类型，children 为题注 ID 数组，
-视频沿用 void 与空 Y.Array；离线 Demo 的
-链接/图片/视频使用私有 Y.Text 载荷。正式链接形式采用带 `a:link` 的段落，通过href片段投影同步，不新增独立link flavour。
-语义嵌套列表、Awareness 光标与选区暂时不会同步；表格已支持新建及行列/合并/列宽操作，拖拽式多格选区和表格复制粘贴仍待接入；
-其他未适配入口仍显示“后续阶段”提示，不会插入 Rust Schema 无法保存的节点。
+离线正文、协同正文及宿主功能页面统一使用`DocumentEditorView`；菜单、字符装饰、快捷键、剪贴板、选区及预览规则由同一实现维护，不按在线状态另建分支。`EditorConfiguration`声明块、格式、标题级别、工具栏入口和嵌套能力；`EditorViewConfiguration`注入宿主皮肤、结构渲染和业务动作。业务模型/事务保护、草稿存储和协同绑定分别由宿主会话持有，视图只借用正文。
 
-### 列表键盘交互、正式有序编号与块转换
+标题菜单默认均逐级展示H1～H3→H4→H5→H6，重新打开按当前标题恢复，进入普通段落重置；非连续级别会跳到下一已启用项。确有需要时可显式设置`progressiveHeadingMenu: false`直接展开，不能再依赖编辑器种类隐式改变菜单。`structuralIndentation: false`关闭原生嵌套缩进；显式授权的文字/列表平面缩进仍走同一命令。
 
-- 正式 `ordered` 的 `props.order` 为零基序号，0/1/2 分别显示 1/2/3；手机不依赖桌面
-  只处理本地结构操作的自动编号插件。Rust 在本地正文/根顺序事务内同时维护编号，再持久化及广播。
-- 编号按当前桌面 `OrderedBlockPlugin` 的兄弟扫描规则计算：同层段落不打断编号，返回较浅层
-  清除深层计数器；`ordered` 的 `heading` 构成标题边界，正整数 `start` 重开对应计数器。
-  缩进仍是扁平块的 `depth`，不是 AppFlowy 嵌套节点。原有 start/ms/continuePrevious 和未知属性保留。
-- `collab_list_editing.dart` 在标准字符快捷键之前接管扁平有序/无序/Todo 列表 Enter，软键盘与硬件键盘
-  复用同一入口。有正文时通过 AppFlowy 原有文字拆分能力新增同类型同级项，继承 depth、对齐和
-  行内格式，不复制原项身份、起始编号或派生投影；有序项的新序号由 Rust 计算。空项 Enter 只退出
-  一个 depth，最外层空项再 Enter 转为普通段落；退级后输入文字，下一次 Enter 仍新增同级项。
-  判断依据是当前正文和层级，不记录连续按键次数。Shift+Enter、范围选区和真正嵌套节点
-  继续交给标准输入链。显式 ms 保持桌面行为，默认标记样式随层级变化。
-- Enter 空项与 Backspace 行首共用 `outdentCollabListAtStart`：每次只降一个 depth，最外层
-  转普通段落，保留正文、行内格式、对齐和选区路径偏移 0；退级保持 Todo 勾选。
-  Backspace 有正文/空项均支持，只接管折叠光标的列表项正文开头，不按屏幕换行位置判断。
-  真正嵌套节点、行内文字删除和范围删除继续使用标准输入链；每次退级/转换独立可撤销。
-- 工具栏通过同文件的 `changeCollabListIndent` 操作点击时的当前选区，不保存菜单 build 时的
-  选区快照。增加缩进对每项加一级、保留显式起点；减少沿用父级接续规则，0 级项转段落。
-  有序编号由 Rust 按目标层级重算，Todo 勾选、正文、格式、对齐以及项内光标偏移保持。
-  支持正反向范围和块选区；整个选区一个事务/一个撤销步骤，保留选区路径、偏移、方向和类型。
-  增加时任一项到达 6 级则整体禁用；选区含非列表、真实子节点或无效位置也整体禁用，不部分执行。
-  范围内部分项目转段落后，该混合选区的缩进按钮禁用，可重新选择剩余列表继续操作。
-- T 类型菜单通过同文件 `changeCollabListType` 对点击时的当前选区执行有序/无序/Todo 互换。
-  各项保留 depth、完整 Delta、对齐和光标/选区方向、偏移、类型；支持正反向范围及块选区。
-  同类型项目不替换，也不重置编号或勾选；全部同类型不产生历史或增量。进入 Todo 默认未勾选，
-  离开 Todo 清理勾选；进入有序列表按上文同层计数器续号，无前项时从 1 开始。只读、销毁、
-  无效位置、真实嵌套和列表/非列表混选不部分执行。整个选区一个事务/一个撤销步骤。
-  菜单执行期间拒绝重复提交，异步完成只刷新仍挂载且持有相同编辑器的菜单。
-  `＋` 的非空块后插入新块与空块原位转换语义独立，继续沿用现有行为。
-- 类型切换只清理源类型专有的 order/start/continuePrevious/ms/heading 与 checked/created，
-  未知 props/meta 和共享正文扩展继续克隆。正常切换移除内存旧编号投影；撤销恢复有序类型时
-  保留历史编号投影，由 Rust 在新身份替换中初始化 start/continuePrevious、heading 和样式。
-  编号原始 JSON 先在写事务前按白名单验证，保留 missing/null/0/自定义起点区别；order 不从历史
-  写回，统一按现结构重算。默认历史样式写入 null，阻止插入阶段误继承上文 ms；正常新转入
-  有序项仍走桌面插入时的样式继承规则。既有同类型快照继续只读，显式编号命令入口保持独立。
-  撤销/重做沿用身份链，恢复原勾选与编号；正向再次切回原类型不复活旧完成状态或起点。
-- 键盘退级与工具栏共用层级事务。深度变化只原位更新所需属性，逆操作不恢复旧正文、勾选、
-  对齐或只读编号投影；结构转换仅替换改变类型的项目，使用既有身份链。每组删除/插入净块数为 0，
-  其他项目路径保持，原生确认继续原位回写，以维持焦点、输入连接和批量选择。
-- `collab_block_delete.dart` 的 `collabBlockBackspaceCommand` 与 `CollabBlockBackspaceInterceptor`
-  共用优先级：列表退级 → 容器边界保护 → 前置资源删除 → 标准退格。列表之前的段落、标题、
-  图片/视频不会在退级时被合并或删除。IME 只将移除 AppFlowy 行首占位符后位置 0 的折叠删除
-  作为退级，前向删字与候选词删除不接管。硬件同步命令由独立异步异常边界等待事务并上报。
-  移动工具栏拥有拦截器，在首帧服务挂载后注册；编辑器更换时注销旧服务再注册，退出时注销，
-  不关闭借用的键盘服务或外部 EditorState。属性确认原位回写，保持焦点与输入连接。
-- 有序项退级若存在正数 start，深度与既有「继续编号」命令在一个事务提交，接续目标父层
-  计数器；Undo 精确恢复原始起点，连续退级可逐步撤销。逆操作只保存涉及的属性，避免
-  覆盖正文和原生派生编号。无序/待办项仅修改层级，不提交有序编号命令；三种列表退到最外层后
-  转段落均使用既有身份替换链。无需扩展 Rust 桥接协议或 `cses.common` WebSocket。
-- Todo 有正文时回车新增未勾选的同级待办项，不复制原项完成状态；原项勾选保持不变。
-  空项逐级退级只改 depth，保留当前勾选。最外层转段落后不再展示待办状态，Undo/Redo
-  通过现有类型转换及属性历史恢复待办类型、层级与勾选；原生 checked 沿用既有同步协议。
-- Demo 引用本地 `packages/appflowy_editor`：UndoManager 重做通过 `ApplyOptions.isRedo`
-  标记历史回放，每个重做命令独立进入撤销栈且保留其余重做记录；普通新编辑清空重做栈，
-  即使此前已撤销所有命令也同样处理。远端投影不记录历史；定时封存不能合并重做边界。
-  列表回归覆盖已有其他历史时的连续重做、跨封存时间后的逐步撤销，以及撤销后新输入。
-- `collab_ordered.dart` 是不可变投影，`collab_ordered_marker.dart` 通过现有
-  `NumberedListBlockComponentBuilder.iconBuilder` 扩展点展示 Rust 编号及桌面 ms 预设。
-  AppFlowy 自带编号仅扫描相邻节点，格式化方法为私有，无法表达跨段落续号和正式标题计数；
-  因此只替换标记绘制，输入、选区、IME 和列表布局继续由原组件负责。
-- 正式列表在可编辑状态下点击序号可选择「继续编号」「重新编号」。继续编号写入
-  `start: 0, continuePrevious: true`，沿用上方同层级/同标题计数器，没有前项时从 1 开始；
-  重新编号写入 `start: 1, continuePrevious: false`，从当前项开始递增，保留后方显式起点。
-  自定义起点（如 5）也可改成 1。普通段落不打断续号；其他缩进/标题边界遵循同一算法。
-- 编号设置通过独立 AppFlowy 属性事务进入 Undo/Redo，与只读派生 order/ms 投影分开。
-  桥接的 `numbering` 只保存原始 start/continuePrevious JSON，精确保留缺失、null、0 和
-  自定义起点；仅该属性的本地 UpdateOperation 生成一次性 `numberingEdit`，普通文字、
-  格式、排序、远端投影不会携带写入命令。Rust 在任何写入前限制命令键及目标类型，
-  在同一 Yrs 事务中写设置及后续 order，再走既有 SQLite 和 CSES WS V1 增量链路。
-- 菜单按稳定块 ID 提交，Undo/Redo 在同步 before 阶段按稳定 ID 重定位编号操作；
-  远端重排不会把编号写到历史路径上的另一项。目标被删除/转为其他类型时取消，
-  预览、只读和已销毁编辑器不执行。离线私有草稿没有正式编号投影，不展示该菜单。
-  编号操作保留块身份、正文、行内格式、ms 和其他原生属性，`cses.common` 无需扩展。
-- 可编辑状态下，完整 `collabSync` 应用后检测并补齐缺失/过期 order；该修复纳入向量补传，
-  不另发重复正文消息。普通远端增量只读取/投影，避免对尚未完整到达的列表提前写回。
-  用户预览、锁定、未知结构或其他只读条件下不自动修复；后续可编辑握手时重试。
-- 跨 flavour 转换（如 paragraph→ordered）创建新 ID，并携带仅在本地桥接使用的 replacesId。
-  Rust 前置校验来源唯一且不再保留于根列表，深拷贝原生共享类型及扩展属性后替换根 children，
-  使桌面观察到旧组件删除和新组件插入。正文/排序及 paragraph 的标题级别变化保持原身份。
-  原位 flavour 转换会被拒绝，不允许只改类型字段而留下旧桌面组件。
-- AppFlowy 撤销/重做通过当前文档内的身份链替换最新原生块，保留扩展数据；远端投影不进入
-  本地历史。切换文档或清缓存时清除身份链及 Undo/Redo，防止上一文档的操作写入新文档。
-- 原生编号确认及远端属性投影在根块 ID、类型、顺序一致时原位更新，包括无 Delta 的图片、
-  视频和链接。不能因文档包含媒体就删除再插入全文，否则远端路径变换会让 Enter
-  后的光标越出文档并断开输入。实际结构变化仍走结构事务；属性回写不进入撤销或广播。
-  图片按当前节点读取 URL/布局/题注；视频独立保存已加载源，以控制器身份守卫迟到初始化，
-  换源和页面退出释放所属播放器。回归覆盖列表行首/行中/行尾 Enter、空项退出、连续输入、
-  Undo/Redo、Android 输入连接和中文续输，以及媒体原位属性更新与视频加载中退出。
-- 旧版本已产生的漏号列表在可编辑握手后补齐编号；桌面若仍挂载旧段落组件，需要重新打开文档一次。
-  桥接模型变动后必须完整重编译并安装原生库，不能仅 Hot Restart。
-- 脱敏测试覆盖三个连续项目、中间删除、段落续号、缩进、标题边界、显式起始值、预设继承、
-  替换来源校验、撤销重做、未知属性和 SQLite 恢复。`verify-ordered.cjs` 使用已安装桌面包的
-  实际计数及标记函数回读 FRB 输出，并检查旧身份删除与父 children 结构事件。
-  真机验收应补充列表前后插入/重排、快速撤销重做、两端同时编辑和断线后重连。
-  编号菜单测试还覆盖中途重启、跨段落接续、自定义起点恢复、原始 null/缺失、旧投影不覆盖
-  设置、重复命令、非法命令原子拒绝、远端重排后的 Undo/Redo、目标删除及只读拦截。
-  `ordered_numbering_native_test.dart` 使用真实 FRB 和临时 SQLite 验证完整命令/历史链路。
-  有序/无序/Todo 列表共用多级 Enter 回归，覆盖 depth 0～6、行首/中/尾富文本拆分与对齐、
-  连续退级与输入后新增同级项、逐步撤销/重做、真实 Rust 增量及 SQLite 恢复；
-  有序项额外覆盖自定义起点撤销及原生编号；Todo 覆盖勾选/未勾选项拆分、退级与历史恢复，
-  原生桥接和 SQLite 恢复检查 checked 不丢失。Android IME 回归三种列表逐级退出到普通段落，
-  检查光标和输入连接。真机还应验证中文候选词提交、快速连续回车和两端同时修改层级。
-  Backspace 回归覆盖三种列表 depth 0～6、有正文/空项、相邻标题/媒体、候选词/前向删除
-  拦截边界、真正嵌套节点、Todo 勾选/未勾选及完整 Undo/Redo。软键盘与硬件键盘均验证
-  逐级退出后中文续输；真实 FRB 检查原生编号、自定义起点恢复、V1 增量和 SQLite 持久化。
-  真机还应补充快速连续退格、输入法切换、双端同时退级，以及预览切换后再次进入编辑。
-  工具栏回归额外覆盖项内光标、空项、0～6 级上下界、混合三种列表的正反向批量操作、
-  原生起点/编号恢复和一次点击一次 V1 更新；真实输入连接验证中文续输及批量转换后的选区/焦点。
-  类型互换回归覆盖六种方向、重复点击、0～6 级、有正文/空项、富文本、正反向混合选区、
-  Undo/Redo、原生格式/编号/勾选及 SQLite 恢复；两个正式 Yrs 副本检查 V1 增量收敛，
-  编号历史同时覆盖 missing/null/0/自定义起点与非法设置拒绝。真机建议覆盖快速切换、
-  候选词提交后立即切换、与桌面同时编辑，以及断线重连后的状态一致性。
-  深度历史还检查不会覆盖远端新正文、勾选和格式。真机应补充快速连点、跨图片选区禁用、
-  多端同时调整层级和中途重连。
-  设置 `CSES_BLOCKCRAFT_NUMBERING_INTEROP_OUTPUT` 可导出脱敏命令结果，并作为
-  `verify-ordered.cjs` 的可选第 4 个参数回读；脚本复用桌面实际计数/格式化代码检查编号结果。
+```dart
+import 'package:flutter/material.dart';
+import 'package:cses_document_collab/cses_document_collab.dart';
 
-### 正式图片块
+final controller = LocalEditorController(configuration: EditorConfiguration(
+  blocks: [EditorBlock.paragraph, EditorBlock.heading, EditorBlock.todoList],
+  headingLevels: {1, 2, 3, 4, 5, 6},
+  paragraphLayout: true,
+  structuralIndentation: false,
+));
+final view = DocumentEditorView(
+  editorState: controller.editorState,
+  configuration: EditorViewConfiguration(
+    style: (context, style) => style.copyWith(cursorColor: Colors.brown),
+  ),
+);
+// 视图移除后 await controller.close()。
+```
 
-- 当前安装包的 `ImageBlockSchema` 是 `nodeType: block`，子块为 `caption`（editable/Y.Text）；
-  兼容已有 void 空图片，但新图片使用正式 block 类型。题注在 bridge 的 image.captions 中传递，
-  不加入根级块顺序，替换图片 URL 或修改正文不会重建题注。
-- `wr` 为正文宽度百分比，`ar` 为宽高比；比例宽度优先于旧 `width/height` 像素尺寸。
-  缺省显示 100% 和 4:3，旧尺寸超过手机宽度时等比例缩小。屏幕布局计算不写入 Yrs；
-  原 rotation 参与显示，普通编辑保持旋转、旧尺寸和未知 props/meta 不变。
-- `collab_image.dart` 提供不可变布局投影；`collab_image_content.dart` 复用既有资源块选区外壳，
-  渲染 HTTP(S)、data URI、空图片和其他端 blob 上传占位。data URI 在后台解码，迟到结果不回写已销毁视图。
-  URL/尺寸/题注变化均纳入投影相等判断，不能缓存旧 URL 的 Image Widget。
-- 图片下方“编辑图片”可修改链接、宽度百分比、宽高比、对齐与题注，并可删除图片。
-  `collab_image_editor.dart` 通过单次 AppFlowy 事务提交，Rust 只更新改变的共享字段。
-  表单保存基准投影；远端移动后按 blockId 找当前节点，未改字段采用最新值，同字段冲突拒绝覆盖。
-  弹窗 State 拥有输入控制器，关闭过渡结束后释放；只读时不显示入口，命令与 Rust 同时校验。
-- 题注提供纯文本显示/输入；原 Y.Text 的富文本和未知行内属性保留，文字修改使用 UTF-16 差量，
-  不清空重放格式。图片删除时一并移除其已支持的题注；含未知子块的图片整体显示不可编辑占位，保留原始子树；锁定题注和内嵌对象继续触发整篇只读。
-- 图片添加使用底部“链接 / 本地上传”面板，系统文件选择支持 PNG/JPG/GIF/WebP（60MB），通过 CSES OSS 上传并登记文件后插入稳定 URL；相册专用入口和拍照尚未接入。
-- 回归样本 `blockcraft-image.update` 使用 Yjs 13 编码当前图片结构，覆盖未知属性和富文本题注；
-  `collab_image_test.dart` 覆盖布局、表单、只读与竞态，原生集成测试覆盖 FRB/SQLite。
-  真机应补充桌面替换 URL、只改尺寸、并发题注、断网恢复及上传中 blob→正式 URL 的验收。
+宿主可通过`blockBuilders`接收视图新建的私有渲染器并增加自己的结构块，不能复用跨文档可变builder；额外结构数据仍需宿主的事务和恢复校验。`characterShortcuts`只处理业务特例，未处理的输入交给通用链；`keyboardActions`追加业务菜单，不复制内建操作。仅更换展示配置会保留正文、滚动和撤销历史；借用控制器由创建者释放。实现和验证见[统一核心记录](docs/verification/offline-journal-20261023/shared-editor.md)。
 
-## 编辑页面移植
+## 人员提及端口
 
-宿主只依赖 `cses_document_collab` 的公开入口，传入正式 docId、企业/用户/服务端缓存身份、数据库路径、Gateway 与授权。编辑页为 `CollaborativeEditorPage(collab: controller)`。Binding/页面宿主负责等待 initialize/close，包负责 native 初始化和本地化。
+人员头像和选择器由宿主创建，协同包不提供默认头像组件、图片URL规则或人员搜索界面。通过公开入口配置：
 
-后续迁入 SaaS 的具体配置与示例见 [接入文档](docs/collab-package-integration.md)。包目录可以整目录移动，当前 AppFlowy fork 仍需由最终 App 解析。
+- `mentionAvatarBuilder(context, {userId, name, size, avatarUrl})`：返回宿主头像Widget。`size`为逻辑像素边长；正文的`avatarUrl`为null，人员选择器自行使用宿主人员资料URL。协同包只约束尺寸并排除重复无障碍描述。未配置时只显示姓名，无头像间距或图片请求。
+- `pickMentionUser(context, {keyword, canEdit})`：宿主打开单选界面，等待界面完全退场后返回`CollabMentionUser`；取消返回null，异常由编辑器报告。`canEdit`是本次调用期间借用的只读权限信号，不得释放或保留；false后禁止确认。宿主负责搜索、鉴权、界面/监听/定时器的创建与释放。未配置时输入@作为普通文字，工具栏提示宿主未提供选择器。
+- 用户提及点击仅调用`onMentionTap`，传递类型、ID、原始姓名与完整只读属性；不提供人员资料/复制/删除面板。未注入点击回调时不响应，不暂停正文输入。人员目录由宿主选择器/详情页持有，`CollabHostServices.mentionDirectory`已移除；宿主仍可复用公开的`CollabMentionDirectory`数据契约。
 
-## 非生产能力
+```dart
+import 'package:flutter/material.dart';
+import 'package:cses_document_collab/cses_document_collab.dart';
 
-当前 Demo 只接入 CSES WS。本机回环测试验证 Common 的连接、路由与协同协议，
-不证明真实环境已发布协议或已完成登录鉴权与持久化联调；需要使用有效测试账号和文档单独验收。
-当前服务端协同 WS 的文档权限校验边界以对接文档为准，不能从 ACCESS_DENIED 错误码推断已具备隔离。
+// 用宿主自己的头像和人员路由替换示例内容。
+final services = CollabHostServices(
+  mentionAvatarBuilder: (context, {required userId, required name,
+    required size, avatarUrl}) => CircleAvatar(
+      radius: size / 2, child: const Icon(Icons.person)),
+  pickMentionUser: (context, {required keyword, required canEdit}) async {
+    final route = MaterialPageRoute<CollabMentionUser>(builder: (context) =>
+      Scaffold(body: Center(child: TextButton(
+        onPressed: () => Navigator.pop(context, canEdit.value
+          ? const CollabMentionUser(id: 'u1', name: '张三') : null),
+        child: const Text('张三'),
+      ))));
+    final selected = await Navigator.of(context).push(route);
+    await route.completed;
+    return selected;
+  },
+);
+```
 
-部分 CSES 环境下发 `ws://` 地址，Demo 为兼容这些环境保留 Android cleartext 和 iOS ATS 配置。
-接入业务环境时必须使用 `wss://`，并移除
-`android:usesCleartextTraffic="true"` 与 `NSAllowsArbitraryLoads`。
+输入@、键盘工具栏及更多面板统一调用宿主选人端口。协同包保存稳定块位置，暂停正文输入，等待结果后校验权限、会话、页面与原内容，拒绝重复调用和迟到/失效结果；权限一旦撤销，本次结果即作废，重新授权需重新选人。取消或失败保留正文；有效完成后恢复光标/键盘。宿主必须校验账号/企业，不能复用旧会话缓存。正文只同步人员显示名/ID及原有提及属性，头像URL、搜索和部门/职位属于本地资料。
 
-## 建议补充的真实环境验收
+Demo在`example/lib/src/demo/mention_avatar.dart`实现公共头像地址、圆形裁切和失败首字，在`mention_picker.dart`实现搜索/去抖/列表/重试，`document_host.dart`注入两个回调。其他宿主可完全替换这些UI而无需依赖Demo。迁移时请显式配置`pickMentionUser`与`mentionAvatarBuilder`，旧`mentionDirectory`构造参数须移除，目录改由宿主的选人回调捕获；点击详情使用`onMentionTap`。
 
-- 两台手机加入同一正式文档，应保留已有根和正文，不插入 Demo 头部；只有空 root 时，
-  首次编辑产生正式 paragraph，完全缺少 root 时只读等待业务初始化。
-- cookie 过期、deviceId 不匹配、正式 docId 不存在；断网编辑后重连、前后台切换及重复连接。
-- 切换账号/企业/文档时缓存不串用；同步中退出不产生迟到投影；重复进入退出无残留订阅。
-- Common 同步发送异常导致队列重放时，旧 join/leave/Awareness 对当前会话的影响。
-- 超过 1 MiB 的补传不能切原始字节；非法共享类型或混合模型缓存应在修改权威 Doc 前拒绝。
-- 未知块和未适配容器显示不可编辑占位，其他已识别块继续编辑；未适配的行内对象、锁和修订保持整篇只读。
-- 双端重启恢复、中文/Emoji/格式/块顺序收敛，以及真正的服务端持久化结果。
+代码块/图片题注、未知实体与localDraft保持原保护范围；同步任务参与人业务副作用尚未提供端口。历史Android头像与桌面联调见根仓库`docs/verification/user-mention-20261014/user-mention-20261014.json`；本次UI迁移尚未重做真机/桌面联调。
+
+## 会议、任务和文档提及（普通正文）
+
+正式 `{mention: name}` 配合 `mentionType=meeting/task/doc` 和稳定 `mentionId`（兼容历史 `d:` 前缀），在段落、标题、列表、引用及高亮正文中显示类型图标+名称，不附加@，不再降级为只读占位。每个对象仍占一个UTF-16位置；普通文字、用户头像和公式可混排。点击先打开操作面板，明确选择“打开会议/任务/文档详情”才调用`onMentionTap`；未注入时详情禁用。仅会议/任务另提供“切换为卡片视图”，文档库提及没有卡片形式；三类均可删除提及，预览禁止转换与删除；独立撤销/重做恢复原始实体属性。姓名最长20000 UTF-16单元，ID最长512 UTF-8字节，非用户实体属性JSON最大65536字节。
+
+原始编号、状态、文档类型、任务扩展等属性完整保留，嵌套对象的JSON排序稳定；属性快照仅供删除后恢复，普通编辑不回放陈旧业务状态。远端类型、身份、属性或同段正文变化使过期操作失效。新增搜索仍是人员入口，尚无会议/任务/文档提及搜索选择器或业务实体修改；业务详情导航由宿主实现；这三类提及保持部分支持，会议/任务引用卡片另为部分支持。代码块和图片题注、未知实体与localDraft继续遵循保护边界。验证与真机联调记录见仓库 `docs/block-adaptation.md`。
 
 
-### 桌面高亮块（callout）
+## 宿主统一提及点击回调
 
-- 使用桌面正式 `flavour=callout` / `nodeType=block`；容器的 `children` 仍为 Y.Array 子块 ID，正文仍在各子块自己的 Y.Text 中，不将多段正文展平到根节点。
-- 移动端投影用 `parentId` 表达高亮块父子关系。表情、背景色、边框色、文字颜色分别映射 `props.prefix` / `backColor` / `borderColor` / `color`；普通正文编辑保留容器的未知属性、元数据及原生行内格式。
-- 添加面板中的“高亮块”创建带 `📢` 和空段落的容器。点击前方表情打开表情弹窗，支持常用表情、自定义输入及移除表情，选择或应用后自动关闭；点击右侧设置按钮打开独立颜色弹窗，支持背景色和边框色选择/清除，修改后保持打开，便于连续调整。文字颜色通过键盘上方 Aa 菜单设置；桌面已有的容器文字颜色在正文没有显式行内文字颜色时继承显示。
-- 外观设置每次只修改一个字段；Undo/Redo 按稳定容器 ID 定位，远端重排后也不会撤销到其他块或恢复过时正文。子段落 Enter 留在容器内，首段行首退格保护容器边界。预览及模型只读时不提供修改入口。
-- Rust 在写入前验证父节点与前序结构，拒绝无效父节点/循环；高亮块内未适配的块显示不可编辑占位，其他子块继续编辑；未适配的行内对象或锁继续触发整篇只读保护。含占位的容器不能整体删除，其他容器删除时移除已投影的后代。
-- 验证：`collab_callout_block_test.dart` 覆盖渲染、颜色/表情设置、逐项撤销、远端更新与重排、插入与键盘边界；`callout_native_integration_test.dart` 验证真实 FRB 和 SQLite；Rust 使用 Yjs 13 生成的 `blockcraft-callout.update` 验证共享结构、未知属性及并发收敛。
+通过公开入口的 `CollabHostServices.onMentionTap` 接管用户、会议、任务、文档点击。参数 `CollabMentionTap` 包含 `type`（`CollabMentionType.user/meeting/task/doc`）、`id`、`name` 和 `attributes`。名称是共享正文原名，空名称仍为空；属性来自Y.Text，保留历史d:键、格式及未知扩展，不从人员/实体详情接口拼装，不包含移动编辑器的cses私有属性。所有嵌套Map/List均深复制且只读，宿主可独立保留事件。`mention.toJson()`返回`type/id/name/attributes`，其中`type`为`user/meeting/task/doc`字符串，可直接`jsonEncode(mention)`；每次返回独立顶层Map，内部属性沿用只读快照。
 
+用户提及仅在配置回调时响应点击，编辑包不提供用户资料面板；未配置时不处理点击，也不暂停输入或恢复光标。会议/任务/文档始终先打开操作面板，“打开详情”才调用宿主；未配置回调时该操作禁用。预览也可通过打开详情导航，切换卡片和删除禁用。任务卡片的详情按钮复用该回调，attributes为已投影的taskId/title引用props。支持同步或异步处理；导航应返回直到详情退场完成的Future。回调期间暂停正文输入并忽略同编辑器的重复点击，完成后仅向仍有效的原页面恢复焦点。同步/异步异常向原宿主onError报告并在有效页面提示，不补开默认面板；已关闭或被新会话替代的编辑器不恢复键盘。宿主仍负责业务鉴权、跨账号异步失效、路由和外部资源生命周期。
 
-### 视频兼容与统一占位
+下面的函数返回可注入控制器的services，navigatorKey由宿主持有并传给MaterialApp；将示例builder替换为四类业务详情即可：
 
-- 桌面视频使用 `props.url` / `sourceType`，图片仍用 `props.src`。兼容旧移动端视频的 `src`，但显式 `url` 始终优先；修改视频地址和新建视频写入正式 `url`，不清理未知字段。
-- HTTP(S) 视频资源使用原生播放器；空地址、blob 上传中地址、嵌入代码或未知来源保留原始数据，显示“未适配的块（不可编辑）”卡片，不影响其他块编辑。
-- 编辑器组件校验失败也使用同一占位卡片，不再显示英文 `placeholder`。支持的视频加载中或播放失败仍使用视频自身的状态提示。
-- `blockcraft-video.update` 使用 Yjs 生成真实桌面视频结构；回归覆盖地址读写、旧字段兼容、不支持形式的原数据保留及 SQLite 恢复。
+```dart
+import 'package:flutter/material.dart';
+import 'package:cses_document_collab/cses_document_collab.dart';
 
+CollabHostServices mentionServices(GlobalKey<NavigatorState> navigatorKey) =>
+    CollabHostServices(onMentionTap: (mention) async {
+      final navigator = navigatorKey.currentState;
+      if (navigator == null) return;
+      final route = MaterialPageRoute<void>(builder: (_) => Scaffold(
+        appBar: AppBar(title: Text(mention.name)),
+        body: SelectableText('${mention.type.name}: ${mention.id}'),
+      ));
+      await navigator.push(route);
+      await route.completed;
+    });
+```
 
-### 六类资源块
+四类原始属性JSON均限制为65536字节；正式投影完整传递，未就绪或损坏的属性拒绝派发并报告失败，不制造原始属性。新插入用户的身份快照立即可用；原有手工用户投影可不带快照展示，但配置回调后须等待真实属性就绪才能派发；未配置回调不报属性缺失。编辑包不内置用户业务路由或资料面板。用户引用仍可用正文选区删除并撤销/重做。
 
-- 正式 `attachment` / `audio` / `bookmark` / `embed` / `juejin-embed` / `figma-embed` 使用桌面 `void` + `props.url` + 空 Y.Array。`CollabResource` 仅投影已建模属性，原始扩展 props/meta 始终保留；显式字段补丁经白名单校验后进入同一 Yrs 事务，不重放旧属性或旧 URL。
-- 附件显示名称和大小，可交浏览器打开/下载；音频使用独占播放器播放、暂停及拖动进度，换源和退出释放控制器；网页、掘金和 Figma 资源支持“切换视图”：嵌入使用 WebView，卡片使用 `metalink ^2.1.0` 原生预览，链接使用带 `a:link` 的正式段落。三种形式六向互转，每次为独立可撤销事务；整段链接点击可切回卡片或嵌入，混排正文不作整块转换。支持加载状态、失败重试和外部打开。已保存的自定义标题/摘要/配图优先，提取结果仅本地展示，不自动写回协同正文。
-- “添加”提供六类独立入口。资源卡片设置支持链接、名称/标题/摘要或嵌入宽度/宽高比；卡片高度随内容变化；每个字段独立撤销，历史按稳定 blockId 定位，远端改动同字段时提示重开设置。预览隐藏修改/删除入口，保留播放和浏览。
-- 空地址、上传中的 blob、不支持的来源或品牌链接保持统一只读占位，其他块继续编辑。应用内下载管理、桌面预览服务及原始 HTML 嵌入暂未接入；私有站点或元数据缺失时保留原始链接；详细范围见 `docs/block-adaptation.md`。
-- `blockcraft-resources.update` 是 Yjs 生成的六类真实共享结构。测试覆盖原生字段保留、显式补丁与并发合并、SQLite/FRB 恢复、属性撤销、音频换源释放以及原生卡片元数据提取/换链/失败重试与过期响应隔离。
-### 移动端资源添加底部面板
-
-- 图片、视频、音频、附件和封面统一使用底部面板，分“链接”和“本地上传”两个 Tab；网页卡片、网页嵌入、Figma 和掘金等链接型内容使用相同的底部链接面板。
-- 本地上传通过系统文件选择器单选；图片上限 60MB、音频 50MB、视频/附件 100MB。展示选中文件和上传进度，失败可重试，关闭面板取消请求；链接与文件 Tab 切换保留输入。
-- 使用已有 CSES 登录态获取 OSS 凭证，上传后登记文件；用户原文件不重命名、不删除。仅上传和登记成功后才创建协同块，使用稳定 HTTP(S) URL，附件和音频保留名称/大小，附件另保留 MIME 类型。
-- 打开面板前独立保存光标/选区与稳定块 ID，面板期间正文失焦并暂停输入连接和快捷键；资源插入仍按原块位置定位，高亮容器内保持父子关系。确认后将光标移至资源后的正文，取消后恢复原选区、方向及待输入样式，均等关闭动画结束再恢复键盘；两层面板全部关闭前不恢复正文焦点。原块被远端删除、文档只读或账号切换时不插入。
-- `editor_media_source_sheet_test.dart` 覆盖来源切换、取消/失败重试/只读竞态、大小限制、元数据及窄屏键盘布局；图片、视频、音频、附件已完成 Android 真机 OSS 上传、文件登记及服务端文档回读验证，音频还验证了播放/暂停/拖动与恢复后完整播放；封面的真实上传仍需单独验证，详见 [OSS 联调记录](docs/oss-upload-integration.md)。
-- `editor_modal_focus_test.dart` 使用真实 AppFlowy 键盘服务验证面板与正文焦点隔离、取消恢复、协同重排/删除及上传期间的插入锚点。
-
-- 2026-10-14 联调修复：资源插入明确分配新协同块 ID，避免替换空段落被识别为旧块转换，导致附件名称/类型/大小未初始化；回归覆盖新建身份及元数据。
-
-### 桌面分割线（divider）
-
-- 对齐 `@ccc/blockcraft` 0.11.14 的 `flavour=divider` / `nodeType=void`：空 Y.Array 子项，外观全部存于 props，不使用 Y.Text 或资源 URL。移动端通过既有桥接属性载体传递白名单属性与显式补丁，桥接签名保持稳定。
-- 支持 10 种线型、5 种贴纸胶带和 6 种花边。点击分割线打开持续编辑的底部面板，线型/花边可选择或清除线色，贴纸胶带保留自身图案且隐藏线色设置；可设置短/中/长/通栏、细/常规/粗及透明度（10%～100%）。旧 `size` 的长度/粗细回落与桌面一致；读取不会自动改写旧属性。
-- 面板标题、预览和样式页切换固定，下方设置独立滚动，切换页回到顶部；页名完整单行。预览槽固定76逻辑像素，容纳最粗图案并居中显示，切换粗细不移动下方控件。清除与预设颜色使用一致的色块及选中逻辑，重复选择不新增历史，面板内权限变化即时禁用。
-- “更多 → 分割线”按保存位置在根或高亮容器内插入。空正文被新分割线和后置段落替换；非空正文保留。删除按钮或后置正文行首退格删除分割线，插入/删除和单字段外观调整可独立撤销。历史操作按稳定块 ID 重定位；预览与只读禁止修改，面板退出后恢复原正文选区。
-- 远端未知 props/meta 和历史文字装订属性原样保留；历史文字装订暂不提供编辑。未知样式展示实线但不覆盖原值；线色提供常用颜色，其他合法 CSS 原色仍可展示。尚未进行本次 Android/iOS 真机验收。
-- `collab_divider_test.dart` 覆盖旧属性、逐字段撤销、远端重排、嵌套插入、退格、只读与面板焦点；`divider_native_integration_test.dart` 验证真实 FRB 与 SQLite 重开。Rust 的 `blockcraft-divider.update` 是 Yjs 13 生成的正式样本，覆盖全部样式与扩展字段、非法补丁原子拒绝和双端收敛。
-- `tool/sync_divider_artwork.py <@ccc/blockcraft 包路径>` 从桌面主题提取 SVG 遮罩及胶带渐变，生成 `collab_divider_artwork.dart`；来源信息随生成文件保留，不手工修改。更新桌面主题时重新运行并核对视觉效果。
+用户点击面板移除、缺省不响应及统一回调兼容验证见根仓库`docs/verification/mention-integration-20261015/mention-user-tap-only-20261015.json`。
 
 
-### 桌面公式（formula）
+## 会议引用卡片
 
-- 对齐桌面 `flavour=formula` / `nodeType=void` / 空 Y.Array，LaTeX 只存于 `props.latex`；不生成 Y.Text、src 或 url。复用既有属性桥接与单字段补丁，未知 props/meta 保留，缺失、null、空字符串可精确撤销。
-- 原生 Flutter 渲染分式、根式、矩阵等数学表达式；长公式横向滚动，空公式显示添加提示。解析失败保留并显示原文，不在读取时改写公式。渲染依赖 `flutter_math_fork ^0.7.4`，支持的 TeX 子集与桌面 KaTeX 不完全一致。
-- 点击公式打开底部 LaTeX 输入与实时预览，保存才提交，取消恢复原正文选区。远端原文变化时要求重新加载；权限撤销或目标删除立即禁用提交。
-- “更多 → 公式”输入并保存后按稳定正文位置插入，支持根与高亮容器。空段落替换为独立公式和后置段落，非空段落保留；删除入口和后置段落行首退格、插入与内容修改可独立撤销/重做。最后一个容器子块删除后留下空段落。
-- 编辑上限为 20000 UTF-16 单元，原文不自动添加美元符号或修剪。普通正文行内公式已支持，见下节；其他未知行内对象、代码块或图片题注中的公式仍会触发只读保护。Android 16/HONOR X70 已验证既有空公式编辑、分式/根式预览、保存后正文渲染与撤销恢复；移除行内对象后更多入口新建公式、原正文保留及后置段落光标/键盘恢复也已真机验证；删除/撤销/重做、远端冲突重新加载及真实桌面双向同步也已验证（桌面操作与观察由用户确认）：新增被桌面收到，桌面529→625回传手机，最终删除被桌面收到；原公式保留。见[联调证据](docs/verification/formula-sync-20261014/formula-sync-20261014.json)。重连恢复、服务器持久化ACK及iOS待验证。验证包含公式与相关 Flutter 81 项回归、真实 FRB/SQLite 恢复、Rust 64 项测试及 Android 调试构建。
+正式 `meeting` 是无正文、无子块的引用卡片，保留 `props.meetingId/title/number`。
+移动端先使用共享标题和编号，空标题显示“未命名会议”。可通过宿主`loadMeetingCard`加载本地会议详情，展示状态、开始时间（设备本地时区）、主持人和参与人数；业务标题/编号可覆盖本地展示，但不写回共享props。
+“更多→会议”调用宿主注入的 `pickMeetingReference` 选择/创建会议引用；未注入时隐藏新增入口。包不提供会议输入表单或业务创建逻辑；卡片右上更多菜单提供“删除卡片”和“在下方插入”；删除仅移除本文档引用，业务会议不受影响。卡片不再显示“编辑引用”入口。
+插入按稳定正文位置定位，支持根/高亮容器、空段替换与非空段后插入、撤销/重做。
+引用修改工具保留逐字段补丁和版本校验；卡片删除按稳定块ID和展示时属性校验，远端变化或撤权拒绝过期删除。删除父容器最后一项时补空段落，支持独立撤销/重做；预览/只读隐藏编辑操作入口。
+ID不可为空且最多512 UTF-8字节，标题最多2000、编号最多256 UTF-16单元；超限、缺身份或非void结构仍作为受保护占位保留。
+非删除操作保留原始未知属性；删除后的撤销仅恢复已投影的引用字段，不保证恢复未知扩展或meta。
 
-### 桌面行内公式（latex embed）
+宿主通过`CollabHostServices.onMeetingCardTap`处理“加入会议／查看会议”按钮；只有该按钮派发回调，标题、状态、卡片背景和留白均不派发。预览也允许主按钮操作，删除仅移除引用，不触发详情事件。
 
-- 正式正文的 `Y.Text` 对象 `{latex: string}` 投影为一个UTF-16位置，通过新增的 `CollabTextSegment.inlineLatex` 同步；写回保留真正的对象和未知原生格式。普通U+FFFC文字与相同的连续公式分别识别；emoji仍占两个UTF-16位置。FRB按2.13.0生成，宿主、Android与iOS原生库已重建。
-- 支持段落/标题、列表、引用及高亮容器正文的原生行内显示。“添加 → 行内公式”按保存选区插入或替换同块选区，公式后恢复光标/键盘；点击公式编辑与实时预览，保存才写入，空原文或删除按钮移除一个对象，支持独立撤销/重做。长公式可横向滚动，空对象显示TeX，无法解析时显示原文。
-- 按稳定块ID处理重排；目标源码被远端修改要求重新加载，所在段落文字变化要求关闭重开，过期历史拒绝覆盖远端内容。新建/修改最多20000 UTF-16单元，TeX子集受渲染器限制；代码块、图片题注、未知行内对象及旧localDraft协议尚不支持。
-- 包全量668项、宿主24项、Rust66项和真实FRB/SQLite恢复通过。Android 16/HONOR X70实际验证分式新增、公式后普通输入、点击改根式、编辑/预览显示、删除与撤销/重做，测试内容已清理。修复渲染器根式intrinsic零宽度后，增加尺寸断言并真机复验。见[验收记录](docs/verification/inline-formula-20261014/inline-formula-20261014.json)。实际桌面行内双向界面联调、重连/服务器持久化ACK与iOS界面仍待验证。
+状态配色与桌面一致：`NotStarted`未开始为蓝色、`InProgress`进行中为绿色、`Pause`已暂停为橙色，`Completed`已结束和`Canceled`已取消为灰色。已结束/已取消显示“查看会议”，其他状态显示“加入会议”；真实入会/查看逻辑由宿主回调负责。删除引用为底部左侧中性色次要按钮，主操作在右侧；窄屏/大字空间不足时分行，避免两个操作重叠。
+这是独立会议卡片的端口，与正文`onMentionTap`分开；参数是会议ID及当前展示的业务标题/编号（详情未提供时沿用共享引用）。
+未配置回调时禁用主按钮，编辑模式仍可删除引用。宿主持有路由、认证与业务资源，并返回直到详情退场完成的Future；点击关闭正文键盘并暂停输入，完成或失败后均不恢复原正文焦点、不自动弹键盘，只有用户重新选择正文才进入输入。回调期间禁用同一卡片导航和删除；失败上报原宿主，失效会话不提示。
 
-## @用户（普通正文）
+```dart
+import 'package:cses_document_collab/cses_document_collab.dart';
 
-- 段落/标题、列表、引用和高亮正文支持真实 `Y.Text` 用户对象 `{mention: name}`，身份保存为 `mentionId` 与 `mentionType: user`，兼容历史 `d:` 前缀。一个对象占一个UTF-16位置，普通U+FFFC、emoji、重名/连续相同用户和行内公式分别保留；未知原生格式不回写为移动端私有属性。
-- 输入 `@`、键盘工具栏及更多面板均可搜索并选择当前企业人员。插入替换原同块选区并追加空格；输入触发后取消保留普通@，取消面板恢复原选区。弹窗隔离正文输入，按稳定块身份跟随重排，正文/选中内容变化或权限撤销时拒绝提交。
-- 头像及人员选择器均由宿主通过`CollabHostServices.mentionAvatarBuilder/pickMentionUser`注入，协同包不创建头像或搜索选择界面；未注入头像时只显示姓名，未注入选人时不打开选择界面。Demo宿主为正文提及及人员选择列表按 `https://face.jinqidongli.com/{userid}/{userid}.jpg` 加载圆形头像。路径段按ID编码，不附加认证信息；加载中/失败显示姓名首字，保持布局。头像URL仅用于本地展示，不进入Y.Text。
-- 用户卡片点击仅通知宿主`onMentionTap`，由宿主处理人员详情；无回调不响应。协同包不再提供用户资料/复制/删除面板。正文选区删除和独立撤销/重做保留，预览禁止修改正文。
-- 人员目录由宿主的选择器/详情页持有，不再注入协同包；可复用公开`CollabMentionDirectory`契约。Demo使用Common同源 `/Company/readAllChildren`，账号/企业/cookie在请求前后核对。组织解析和搜索在后台执行，成功缓存仅属于当前宿主实例，失败可重试，面板忽略过期/关闭请求。
-- 行内适配按“部分支持”记录，正文块仍为10/8/1/22（41）。未接入拼音/首字母搜索及对象剪贴板；普通待办可保存提及，但同步任务待办的“添加参与人”业务副作用尚未接入。代码块、图片题注、未知实体提及、旧localDraft继续保护；会议/任务/文档普通正文提及见下文。显示名最多20000 UTF-16单元，用户ID最多512 UTF-8字节；Android16/HONOR X70真实搜索、插入、删除/撤销/重做及头像版复验通过；手机收到桌面新增声波/测试员1及普通文字，用户确认桌面收到手机新增和最终删除测试员。测试数据已清理；桌面操作/观察由用户完成。iOS真机、断线恢复和服务器持久化ACK尚未验证，见[验收记录](docs/verification/user-mention-20261014/user-mention-20261014.json)。
+CollabHostServices meetingServices(
+  CollabMeetingCardLoader loadMeetingCard,
+  Future<void> Function(String meetingId) openMeeting,
+) => CollabHostServices(
+  loadMeetingCard: loadMeetingCard,
+  onMeetingCardTap: (meetingId, title, number) async {
+    await openMeeting(meetingId);
+  },
+);
+// 将返回的services注入宿主持有的CollabController，关闭时await controller.close()。
+```
 
-验证：编辑包682项（头像前基线679项）、宿主27项、Rust69项测试通过；头像/提及13项回归及包内静态分析再次通过。两项目静态分析、Rust格式/check、手写Dart格式及diff检查通过。FRB由2.13.0生成，宿主原生库和iOS三架构库已重建，Android调试APK与iOS模拟器构建通过。完整范围见[适配表](docs/block-adaptation.md)。
+`loadMeetingCard(meetingId)`返回`Future<CollabMeetingCardData?>`，`state`使用公开`CollabMeetingCardState`；可用`fromValue`映射服务端原始状态。宿主拥有认证/HTTP，包不释放它们。仅在卡片挂载、会议ID或宿主变化、手动失败重试时读取详情；加入/查看按钮只调用宿主回调，执行前后均不额外请求详情，同一卡片重建复用请求，换ID/会话或销毁后忽略迟到结果，不把业务状态写入协同文档。
+
+未配置加载器时保留共享引用并显示“状态未知”；明确返回null表示会议不存在，`Delete`表示已删除，二者均禁用主按钮。未知状态不伪造未开始；加载中或失败也禁用主按钮，失败显示重试并向原宿主报告。Demo通过`example/lib/src/service/cses_meeting_card_service.dart`及Common的`POST /meeting/getDetail`加载详情，前后校验账号、企业和会话。
+
+新增引用的宿主端口如下，宿主页面自行处理会议搜索/创建及认证，返回引用值并等待退场；取消返回null。`canEdit`仅在本次调用期间借用，false后不得确认，不保留或释放它。包拒绝撤权、关闭、会话替换与插入位置失效的迟到结果。
+
+```dart
+import 'package:cses_document_collab/cses_document_collab.dart';
+
+final services = CollabHostServices(
+  pickMeetingReference: (context, {required canEdit}) async {
+    // 在这里等待宿主会议选择或创建页面，成功后返回真实业务身份。
+    // 本示例取消；业务创建请求必须在宿主完成，包只插入引用。
+    return null;
+  },
+);
+```
+
+Demo实现在根项目`example/lib/src/demo/meeting_reference_picker.dart`，只填写已有引用，不创建业务会议；通过公开包入口使用`CollabMeetingReference`，不传EditorState或包内类型。
+
+当前为部分支持：没有会议搜索选择器或详情实时推送订阅；状态按上述时机重新读取。主按钮仅派发宿主回调，Demo当前回调只记录事件，不实际入会或打开业务详情；纪要/回放或收集KR也未内置。
+引用编辑不创建或修改业务会议，会议KR列表仍未适配；Android/iOS真机与实际桌面双端待验收。
+Rust内部映射复用现有属性桥接载体，没有FRB签名/ABI变化，不需要重新生成桥接文件。
+
+历史整卡点击、直接删除与键盘抑制验证见`docs/verification/meeting-card-20261015/meeting-card-actions-20261015.json`；状态配色与主按钮验证见根仓库`docs/verification/meeting-card-20261015/meeting-card-status-20261015.json`。当前删除入口统一到右上更多菜单，最新菜单回归见适配表。
+
+主按钮仅回调宿主、执行前后不新增详情请求的后续验证见`docs/verification/meeting-card-20261015/meeting-card-callback-only-20261015.json`。
 
 
-### 会议、任务、文档提及
+## 提及操作与卡片视图
 
-正文已按 `mentionType` 区分用户、会议、任务、文档。后三类显示类型图标和名称，点击显示打开详情及删除操作，只有会议/任务另提供切换卡片；删除提及支持独立撤销/重做，实体本身不被修改。原始状态、编号、文档类型和任务扩展属性参与完整历史恢复；普通文字编辑不会覆盖远端更新的业务元数据。仍未接入后三类的搜索选择器；业务详情由宿主onMentionTap处理，实际支持范围及验证依据见 [块适配清单](docs/block-adaptation.md)。
+用户提及保持头像+姓名并直接通知宿主。其他三类点击先显示底部操作面板：打开详情、删除提及；只有会议和任务额外提供“切换为卡片视图”。关闭面板不派发事件；只有打开详情调用`onMentionTap`，携带该原子的原始属性。切换、删除均只处理文档引用，不调用详情接口或宿主点击回调。面板期间暂停正文输入，等待退场动画后执行；操作前复核稳定身份、原子属性、正文及宿主会话，预览禁用转换/删除。
 
-本轮验证：编辑包693项、宿主27项、Rust72项及两项目静态分析通过；Android已安装到HONOR手机，三类实体提及删除/撤销恢复与桌面双向同步通过，原始属性完整保留，见[四类提及验收记录](docs/verification/entity-mention-20261015/entity-mention-20261015.json)。
+会议/任务转换使用桌面正式`meeting`/`task` void块。原段落保留前文，卡片插在它后面，后文拆成新段落，富文本、相邻提及和公式继续保留。支持根与高亮容器内普通正文；空前文仍保留原块，与桌面一致。转换是一项独立撤销记录，撤销/重做跟随稳定源块位置；远端修改前文、卡片或拆出后文后旧转换历史整体拒绝，避免覆盖协同内容。会议引用标题沿用2000 UTF-16上限，超限转换被拒绝，原提及仍保留；任务标题上限20000。转换不复制提及业务状态到卡片，保留身份与标题；撤销恢复原提及完整属性。
 
+任务卡片按下方详情端口展示业务快照或共享标题，右上展开图标调用`onMentionTap(type=task,id=taskId,name=title,attributes={taskId,title})`，删除位于右上更多菜单，仅移除引用，支持撤销/重做和后置段落行首退格。未知原生任务props保留；删除卡片后撤销仅恢复已投影字段，不能保证未知props/meta。损坏引用/非void结构继续受保护。会议卡片沿用状态加载与`onMeetingCardTap`主按钮，转换本身不调用任何点击回调；详情加载仍仅由卡片展示生命周期触发。
 
-### 宿主统一点击回调
+文档库提及始终保留图标+名称的行内形式，不提供卡片/链接视图切换，也不创建局部卡片状态。打开详情仍调用宿主，删除与撤销保留原始dc_t/ac_t及未知属性；仅打开面板或详情不修改共享内容或新增历史。会议和任务是唯一支持提及转卡片的实体类型。
 
-`CollabHostServices(onMentionTap: (mention) async { ... })` 可接管四类提及的详情跳转；公开参数为 `CollabMentionTap`，包含 `type/id/name/attributes`，其中type为 `CollabMentionType.user/meeting/task/doc`，原始属性及其嵌套集合为独立只读快照。回调应等待详情关闭再完成；预览也可跳转，重复点击被隔离，异常统一报告。用户提及未注入时不响应；其他三类点击先打开操作面板，只有“打开详情”调用回调，未注入时详情禁用；切换卡片与删除不派发。包本身不内置业务页面。接入和路由示例见[协同包说明](packages/cses_document_collab/README.md#宿主统一提及点击回调)。本轮原始属性、异步/会话关闭及平台构建验证见[回调验收记录](docs/verification/mention-integration-20261015/mention-tap-callback-20261015.json)。
-
-头像与人员选择器的宿主注入、生命周期契约和迁移示例见[协同包说明](packages/cses_document_collab/README.md#人员提及端口)。
-
-用户提及已移除内置资料面板与`mentionDirectory`服务参数；点击只通知宿主。验证见[用户点击回调记录](docs/verification/mention-integration-20261015/mention-user-tap-only-20261015.json)。
-
-### 会议状态卡片
-
-会议详情由宿主`loadMeetingCard`提供，Demo复用Common的`/meeting/getDetail`。未开始蓝色、进行中绿色、暂停橙色、结束/取消灰色；结束或取消显示“查看会议”，其余显示“加入会议”。仅主按钮触发`onMeetingCardTap`，执行前后不额外请求详情；标题/背景/留白不派发事件，回调结束不自动弹正文键盘。删除引用放在底部作为独立次要操作，预览隐藏，窄屏大字可分行。状态、时间、主持人与人数不写入协同文档；失败可重试，迟到结果隔离，暂不订阅实时状态推送，真实入会/业务详情仍由宿主负责。
-
-接入示例见[协同包说明](packages/cses_document_collab/README.md#会议引用卡片)，验证与预览见[状态卡片记录](docs/verification/meeting-card-20261015/meeting-card-status-20261015.json)。
+本轮验证与限制见根仓库`docs/verification/entity-mention-20261015/entity-mention-card-actions-20261015.json`；尚未进行真机安装与真实桌面同步验收。
 
 
-会议/任务/文档提及均有“打开详情”操作，只有会议、任务提供“切换为卡片视图”。会议、任务转为桌面正式卡片块，前后文字拆分保留，支持撤销/重做；任务卡片详情复用onMentionTap，会议卡片主按钮继续使用onMeetingCardTap。文档库提及仅保留行内图标和名称，没有卡片形式，不提供手机局部卡片或视图切换。只有打开详情触发宿主回调；转换与删除均不触发。任务卡片为部分支持，正文块当前统计10/10/1/20（41）；范围和验证见[适配表](docs/block-adaptation.md)与[提及卡片操作说明](packages/cses_document_collab/README.md#提及操作与卡片视图)。
+## 任务卡片详情与布局
+
+正式task引用的共享字段仍只有taskId/title。通过可选的`CollabHostServices.loadTaskCard`提供`CollabTaskCardData`本地展示快照，包不直接请求业务接口，不将详情写入Y.Text或共享props。
+
+卡片按桌面样式使用白底细边：左上任务图标和优先级，右上负责人头像及展开/更多图标，中间标题和只读状态、起止时间，下方以分割线展示进度，再显示空间/项目/工作项路径和附件/子任务数。色板与桌面一致；标题预留两行，路径单行省略，起止时间各预留一行；窄屏长日期单行省略，行高随文字缩放增长。计数大于999时显示999+，语义保留原值。
+
+`leaders`复用`CollabMentionUser`与宿主`mentionAvatarBuilder`，最多展示3位及其余人数；包不创建默认头像或请求图片，无头像构建器时隐藏头像组。时间按设备本地时区显示MM-dd HH:mm；progress为0～100百分数，已知0%仍在轨道起点显示圆点，null只显示灰色轨道。未提供标签、时间、路径或计数时隐藏对应信息并保留行槽留白，不伪造“一般/待开始/0”。加载使用同一行槽的静态骨架，失败/不存在反馈也复用统计槽，不推动后续正文。
+
+只有右上展开图标调用`onMentionTap`，传type=task、共享taskId/title及原始投影引用props；卡片背景、标题、标签、路径和统计不触发导航，状态仅展示。业务详情标题只覆盖本地外观，回调name仍为共享标题。打开详情成功/失败均不额外调用加载器，完成后不恢复正文键盘。编辑时更多菜单提供“删除卡片”，只删除文档引用；预览隐藏更多菜单但保留详情入口。菜单捕获打开时的引用属性与宿主，远端改换引用、撤权或换会话后旧菜单不能删除新引用。
+
+```dart
+import 'package:cses_document_collab/cses_document_collab.dart';
+
+final services = CollabHostServices(
+  loadTaskCard: (taskId) async => CollabTaskCardData(
+    taskId: taskId, title: '测试状态111–111',
+    priority: const CollabTaskCardTag(name: '一般', color: '#59B463'),
+    status: const CollabTaskCardTag(name: '待开始', color: '#E6E6E6'),
+    progress: 0, fileCount: 0, subTaskCount: 0,
+  ),
+  onMentionTap: (mention) async {
+    // 使用mention.id和type打开宿主页面，并等待页面完全退场。
+  },
+);
+// 将services注入宿主持有的CollabController；关闭时await controller.close()。
+```
+
+加载器只在卡片挂载、任务ID/宿主变化或失败手动重试时执行；普通重建和详情回调复用当前快照。返回null表示任务不存在，data.deleted=true表示删除，异常显示重试并报告原宿主；加载中、失败、缺失/删除禁用详情，仍允许移除引用。换ID/宿主、关闭组件后迟到响应或错误被忽略，包不取消或关闭宿主持有的网络资源。
+
+Demo的`CsesTaskCardService`复用Common POST `/taskManage/task/detail`，参数`{queryType:'detail',tableName:'task_v3',id}`，解析item中的priority/status/leaders[].user、startTime/endTime毫秒、progress、space/project/workItem及fileCount/subCount。请求前后检查账号、企业及会话；进度沿用桌面归一规则，限制0～100并保留两位小数。无详情端口只显示共享引用，不做隐藏的默认网络请求。尚无实时详情推送、任务状态流转编辑或内置业务路由，仍为部分支持。
+
+验证与预览见根仓库`docs/verification/task-card-20261015/task-card-layout-20261015.json`。HONOR X70/Android16已安装并完成PRE真实任务卡片展示、编辑/预览详情回调、键盘抑制和删除/撤销/重做；最终任务引用及其他正文恢复，但删除撤销会重建审计meta并补默认depth=0。详情由Demo Toast确认，实际业务路由、本轮真实桌面同步联调和iOS未验收，见`docs/verification/task-card-20261015/task-card-phone-20261015.json`。
 
 
-任务卡片现按桌面截图展示优先级、状态、负责人、起止时间、进度及路径/附件/子任务统计，白底细边布局支持窄屏大字。数据经宿主`loadTaskCard`注入，Demo复用Common task_v3详情；头像继续由宿主构建。右上展开图标只派发`onMentionTap`，不额外刷新数据；删除位于更多菜单，预览隐藏删除。业务详情不写协同正文，任务卡片仍为部分支持，统计10/10/1/20（41）不变。见[任务卡片说明](packages/cses_document_collab/README.md#任务卡片详情与布局)与[验证记录](docs/verification/task-card-20261015/task-card-layout-20261015.json)。 HONOR X70/Android16已完成PRE真实任务展示、详情回调、键盘与删除历史复验；审计恢复限制及截图见[真机记录](docs/verification/task-card-20261015/task-card-phone-20261015.json)。
+## Markdown 文件导入
+
+宿主向 `CollaborativeEditorPage(collab: controller, pickMarkdown: pickMarkdown)` 注入 `Future<String?> Function()` 文件选择器。返回已校验的 UTF-8 文本，取消返回 null，失败抛异常；不注入时隐藏导入入口。Demo 使用系统单文件选择器，只接受 `.md` / `.markdown`，上限 5 MiB，文件读取和解析在后台执行。
+
+编辑页右上角“导入 Markdown”说明范围后选择文件，内容以独立事务追加到文末，可整体撤销/重做，并沿现有协同及 SQLite 持久化链路发布。选择/解析期间禁止重复导入和正文输入；权限收回、控制器替换或退出页面后丢弃迟到结果。
+
+支持段落、H1～H6、加粗/斜体/删除线/行内代码/链接、两种列表、待办、0～6级列表缩进、引用、围栏代码及语言、分割线、独立 HTTP(S) 图片。每个有序列表保留起始编号。表格按行转为带 ` | ` 分隔的富文本；行内图片及非 HTTP(S) 图片保留 Markdown 地址文字，不读取或上传本地资源。HTML 按文本保留，公式语法按普通文本保留；不增加表格、HTML或公式导入能力。超过六级的列表缩进按六级显示。
+
+Android 真机验收（2026-10-15）：HONOR X70/Android16 从系统下载目录选择 `.md` 后成功追加15块；整批撤销/重做、说明页取消与系统选择器取消通过。实际手机 SQLite/WAL 回读核对原34块的ID、顺序和所检查投影保持，最终清理测试块且在线。见根仓库[验收记录](docs/verification/markdown-import-phone-20261015/markdown-import-phone-20261015.json)；iOS、服务器持久化ACK和实际桌面双端观察尚未验收。
+
+## 文末点赞与全文评论
+
+在 `CollabHostServices` 设置 `showDocumentFeedback: true` 显示整个文末区域，默认false。编辑、预览和只读正文均可显示，业务权限由宿主判断。启用后，头部及正文的最小高度为当前编辑视口的一屏（不包含点赞和评论），短文档首屏不显示互动区，上滑后才出现。长文档保持按需渲染；滚到文末时评论按钮下方仅留20个逻辑像素，系统安全区由页面另行保留。区域随正文滚动，不属于协同块，不参与撤销或同步。
+
+```dart
+import 'package:cses_document_collab/cses_document_collab.dart';
+
+final controller = CollabController.localDraft(
+  databasePath: '/host/updates.sqlite',
+  services: CollabHostServices(
+    showDocumentFeedback: true,
+    loadDocumentFeedback: (documentId) async => CollabDocumentFeedback(
+      likes: CollabDocumentLikes(isLiked: true, members: [
+        const CollabDocumentLikeMember(userId: 'u1', name: '张三'),
+      ]),
+      commentCount: 3,
+    ), // 替换为宿主读取接口。
+    onDocumentLike: (documentId, likes) async {
+      // likes.members为只读成员列表，likes.isLiked为点击前当前用户状态。
+      // 调用点赞/取消接口，返回服务端确认后的CollabDocumentLikes。
+      return null; // 取消或无变更时保留原状态。
+    },
+    onDocumentComment: (documentId, commentCount) async {
+      // 打开宿主全文评论页面并等待关闭，返回最新评论数量。
+      return commentCount;
+    },
+  ),
+);
+final page = CollaborativeEditorPage(collab: controller);
+// 路由退出后由宿主 await controller.close()。
+```
+
+`loadDocumentFeedback(documentId)`提供初始成员、用户点赞状态和评论数量；不配置时初始为未点赞、空成员、0条评论。加载失败显示重试并禁用业务按钮，避免用未知状态发起点赞。宿主可通过`controller.feedback.refresh()`刷新数据；进行中的读写串行，不允许旧读取覆盖新写入。
+
+`onDocumentLike(documentId, likes)`返回`CollabDocumentLikes?`，其中包含完整成员列表与当前用户状态。已点赞显示黄色实心按钮、“你已赞”和成员头像，再次点击由宿主处理取消点赞。成员头像复用`mentionAvatarBuilder`并传入成员`avatarUrl`；未提供构建器时显示姓名首字，不发起默认图片请求。成员列表由宿主保证身份唯一和排序，编辑器复制为不可修改快照。文末最多展示前10位成员头像，超出显示剩余人数；回调始终传递完整列表。
+
+`onDocumentComment(documentId, commentCount)`返回`int?`，正数显示“评论全文（数量）”，0显示“评论全文…”。两个回调可同步或异步返回，null表示取消/不更新；失败和负评论数保留原值并报告重试提示。未配置回调时对应按钮禁用。点击先关闭正文键盘，等待期间禁用整个区域；状态和防重复操作由文档控制器持有，切换编辑/预览或滚动重建不会重置。关闭时忽略迟到结果并等待已发出的宿主操作，不自动恢复正文键盘。
+
+点赞、评论、认证、成员资料和持久化均由宿主负责；包不创建评论输入框。开关在控制器创建时注入，变更配置需重建控制器。Demo提供内存点赞/取消演示及评论数量回传，尚未接入业务持久化接口。旧的单参数void回调须迁移至上述双参数、返回结果的签名。
+
+## 移动端划词菜单
+
+`CollaborativeEditorPage` 为 Android/iOS 挂载 `CollabMobileSelectionMenu`，与正文共用页面持有的滚动控制器；浮栏在长按或拖选结束后显示，滚动及选区变化由 AppFlowy 浮栏管理，不依赖键盘工具栏。编辑时提供复制、剪切、纯文本粘贴、全选、格式、链接及转行内公式；只读仅复制与全选。剪切等待剪贴板写入成功才删除，粘贴用单个事务保留前后正文及格式。
+
+格式入口复用 `editor_shortcut_toolbar.dart` 的 T、Aa、布局控件，允许连续格式调整。文字链接仅修改 `href`（正式协同映射为 `a:link`），可预填共同链接、修改和移除，保留其余格式；支持完整 http(s)、mailto、tel 地址。公式入口预填选中文字并预览，确认后复用 `insertCollabInlineFormula` 原子替换和独立历史；取消不改正文，撤销恢复原文及格式。
+
+`CollabTextRange` 保存块身份、父身份、正文与格式快照，整组重排可重定位；文字/格式变化、目标删除、权限撤销或页面退出后拒绝迟到写入。格式面板允许自身的格式变化，正文变化后禁用操作。同级跨段文字可格式化，链接/公式仅同段普通文字；跨容器/跨单元格、代码、题注和未知占位不开放本菜单。任务、会议、划词评论、背景图形及富文本剪贴板不在第一阶段。
+
+回归覆盖见 `test/mobile_selection_menu_test.dart`。真实 Android 手势用本包 `integration_test/mobile_selection_menu_test.dart`；从 `example/` 运行 `flutter drive`，配合 `--driver ../test_driver/integration_test.dart` 和 `--target ../integration_test/mobile_selection_menu_test.dart`，并使用 `--keep-app-running` 保留既有应用数据；测试不登录、不访问在线文档。
+
+## 普通及合并表格
+
+正式 `table → table-row → table-cell → 正文块` 保留独立身份和共享类型。更多→表格直接在稳定正文位置后插入2×2表格，不弹出行列选择；窄表默认与正文左边缘对齐，编辑和预览一致，超宽时仍可横向滚动；顶部列操作条及左侧行操作条默认隐藏，点击表格后显示，点击外部收起；操作条选中整列/整行，蓝色高亮并打开浮动插入/删除菜单；插入再选择上下/左右方向。拖动列条右缘预览宽度，松手一次保存。每格右上角更多面板仅保留合并范围、合并和拆分；增删行列及列宽不在此处重复提供。跨越新增/删除位置的合并范围同步扩缩，删除主格所在行/列时将主格移动到存活覆盖区域。合并按行序移动非空正文到左上格，其他逻辑格仍以 `display=none` 保留；拆分后正文留在左上格，空格补空段落，与桌面契约一致。
+
+网格支持横向滚动与跨行/跨列自然高度布局，长正文自动增高。列宽可设置48～480逻辑像素，拖动预览不产生协同更新，松手为单个可撤销事务；旧尺寸只在显示时回落，不自动回写。最多100行、50列且总格数不超过500，最后一行/列不能删除；不开放表格内嵌套新建。操作为独立可撤销事务；删除子树保留原共享节点并以内部meta标记归档，恢复时保留未知props/meta及删除期间到达的最新正文。普通快照不回放未触碰的布局属性。
+
+面板期间暂停正文输入，完全退场后再按稳定ID、内容指纹和权限提交。远端变更或权限曾撤销即使旧面板失效，重新打开后继续操作；关闭时成对解绑借用监听。远端结构或单元格正文变化清除本地路径历史与选区，布局更新保留组件和光标；同步投影完成不会覆盖宿主刚撤销的权限。含未知占位的表格结构操作整体拒绝，列宽可独立设置；不完整/交叠/悬空隐藏或超限网格整体只读占位，原数据保留且不影响其他已适配正文。
+
+尚无拖拽式多格选区、行列剪切复制粘贴或Markdown表格导入；Markdown仍按文本行保留。Android真机已验证新建、行列操作、合并拆分、拖动列宽及历史；iOS真机、真实桌面双向、两端同时修改行列结构的冲突场景及服务器持久化ACK尚待验收。完整验证记录见根仓库适配表及 `docs/verification/table-20261016/table-editing-20261016.json`。
+
+## 网页资源的三种视图
+
+卡片与嵌入头部只显示一个更多按钮，浏览器打开、复制链接、修改、删除、在下方插入和视图切换集中在同一操作面板。只读时保留打开/复制，隐藏编辑操作；修改和删除执行前重新校验当前块、权限及宿主会话。
+
+网页、掘金和Figma资源可在嵌入、卡片、链接之间互转：分别使用桌面 `embed`（兼容旧品牌flavour）、`bookmark` 和 `paragraph` 的 `a:link`。嵌入使用WebView，卡片使用metalink；整段单一HTTP(S)链接点击可打开操作面板切回，混排正文不整块转换。每次转换独立撤销/重做，并检查稳定身份、过期URL和权限；未知原生props/meta通过既有替换身份链保留。
+
+FRB片段新增可空href字段，已按2.13.0重新生成；升级时须完整重建原生库和宿主，不能只热重载Dart。Android构建与目标回归见适配表；真实网站、桌面双端及iOS真机仍需验收。
 
 
-## 宿主今日导向
+## 手机端卡片触摸回归
 
-独立页面位于`lib/src/daily_guidance/`，演示首页保留原入口；与原离线编辑页分别维护。页面、栏目、业务条目、组织选人、草稿与服务规则均归宿主，协同包只提供通用编辑能力。
+无正文节点不应由整卡矩形生成文字光标手柄。AppFlowy手机选择服务按是否有正文Delta统一处理：普通卡片单击不生成折叠光标手柄；正文光标或范围手柄拖动经过卡片时，沿用手势识别器并将非正文端点收窄为块边缘锚点，避免中断跨块拖选或遮挡卡片按钮。正文端点的光标矩形及拖动逻辑保持原样。
 
-新草稿仅有今日记录，感悟/自检点击添加后显示；关闭保留正文，可恢复、撤销和重做。键盘上方统一排列T、Aa、原生@、Todo待办及感悟/领航员/都来帮/自检四个宿主动作，单行横向滚动，收起键盘固定最右，页面下方不再重复显示入口。原生@通过编辑器单选真实企业用户，键入@与工具栏共用流程；Todo复用原生列表，不选人。都来帮/领航员复用编辑器原生@人员选择器，单选人员后另起可写业务行，使用原生人员提及格式且不提供组织选择；业务行回车后继续普通正文。旧草稿中的自定义人员/部门引用和旧业务待办继续读取。编辑与预览使用同一纸张和渲染组件，原生提及支持保存重开、可读姓名复制及本地撤销重做；预览隐藏编辑菜单。
+设备用例位于 `integration_test/mobile_card_pointer_test.dart`，从 `example/` 目录运行：
 
-含`@`内容复制或剪切时展开为可读的`@姓名`纯文本，粘贴后作为普通文字，不携带人员/部门身份。剪贴板写入失败，或等待期间正文、选区、编辑权限发生变化时保留源内容；普通文字不会继承邻接提及的身份属性，支持中文合成、选中替换和撤销重做。修复验证见[引用输入与剪贴板](docs/verification/offline-journal-20261022/dynamic-fixes.md)。
+```bash
+flutter drive \
+  --driver ../test_driver/integration_test.dart \
+  --target ../integration_test/mobile_card_pointer_test.dart \
+  -d ANDROID_DEVICE_ID --no-pub --keep-app-running
+```
 
-自动保存仍写入应用私有`local-journals/<原账号哈希>.json`，不更换账号算法或覆盖其他分区。v2兼容读取原v1三栏草稿，保留身份、日期、文字及格式；空可选栏目的内容放入关闭区，非空栏目仍显示。首次升级写盘前保留原始`.json.v1.bak`，保存失败保留正式旧稿并显示重试；损坏或未知版本不会自动重置。当前仍为每账号一份草稿。
+用例强制检查Android平台和真实MobileSelectionServiceWidget。覆盖会议、任务、网页、网页嵌入、掘金、Figma、附件、音频、图片、视频的真实点击及控件命中；正文光标拖动、长按选词、左右范围手柄及跨卡片拖动另有回归。业务回调、WebView/播放器使用本地替身，图片使用data URI，不登录、不读取在线文档或发出资源请求；键盘服务关闭以固定触摸坐标，测试目标是选择/手柄/按钮命中，不替代真实业务、播放器或输入法验收。直接以macOS的mobile样式运行不能替代此设备测试。
 
-Todo和自定义业务条目保存在本地草稿；原生列表的勾选及旧业务待办圆环均表示本地完成状态。真实业务派单、通知与状态流转尚未接入，附件/语音、完整视频封面与分享属于后续阶段。历史实现见[宿主迁移记录](docs/verification/offline-journal-20261022/host-implementation.md)。
+命令必须保留`--keep-app-running`，避免flutter drive默认在结束后卸载同包名应用并清理本地数据。完成后重新构建普通Demo APK并以`adb install -r`覆盖恢复，避免设备停留在测试入口。2026-10-16首次回归遗漏该参数，已发生本地应用数据清理，需要重新登录；测试未访问在线文档，修复不涉及正文数据格式。
 
-同一日记栏目中的无序、有序和Todo列表可直接互相切换，无需先转普通段落；正文、富文本、光标与撤销重做保持。Todo快捷按钮也支持从已有列表直接转换，重复点击已勾选Todo不重置勾选。范围及验证见[列表互转修复](docs/verification/offline-journal-20261022/list-conversion-fix.md)。
+## 媒体卡片的更多菜单
+
+SVG图片使用flutter_svg绘制：带`.svg`后缀的远端图片复用CachedNetworkImageProvider的共享文件缓存，URL查询参数保留；无后缀SVG在位图解码失败后只读取已缓存文件并后台识别，不重复下载。data:image/svg+xml使用后台解码的字节渲染。加载/解析失败沿用图片占位，换源忽略旧结果；不改变尺寸、旋转、题注与编辑操作。复杂SVG能力以flutter_svg支持范围为准。
+
+正式图片块的HTTP(S)图片使用 `cached_network_image: ^3.4.1` 展示，保留加载/失败占位及contain适配，按URL区分视图以处理同节点换源。默认缓存由组件库管理，图片块不释放全局缓存管理器；位图data URI仍在后台解码后用Image.memory展示，其他端blob上传保持占位。正文图片、文档头图及图片型icon共用`CollabCachedImage`：位图走CachedNetworkImage，SVG从同一缓存管理器读取后矢量渲染，无后缀SVG仅读取已有缓存进行失败回退；不创建或释放第二个全局缓存管理器。封面保留cover裁切与y位置；“调整封面位置”在固定预览区域内直接上下拖动图片，移除滑条，实时预览，保存才写入位置，取消保留原位置；图片型icon保留48px尺寸、原色及失败占位，Emoji保持文字渲染。头像、图库缩略图和网页缩略图不在本轮范围。
+
+图片“编辑图片”弹窗仅设置链接、尺寸和对齐，只提供取消和保存；题注与删除均从卡片的更多菜单进入。无题注显示“添加题注”，已有题注显示“编辑题注”，打开只含题注输入的独立表单；取消或空保存不创建空题注，图片布局设置不会修改已有题注。
+
+音频初始化时保留最终的播放按钮、时间行和轨道槽，在同一轨道位置显示不确定加载动画；未就绪显示--:--并禁用播放/拖动，完成后恢复可拖动进度条，缓冲也在同一位置加载，卡片高度保持。音视频的播放/暂停按钮直接显示在播放器上，音视频共用`CollabMediaTimeline`进度条，统一细轨道、圆滑块及当前/总时长；音频使用浅色卡片配色，视频进度条叠放在画面内底部。拖动预览目标时间，松手跳转一次。未知时长不允许跳转，进度只在局部更新，换源/退出等待已有跳转完成再释放控制器。音频、视频、图片和附件的管理操作统一收进一个“更多操作”按钮，各块已有的外部打开/下载、编辑、删除和下方插入从菜单进入。预览模式下仍可直接播放/暂停，音视频和附件的菜单仅保留打开，不显示编辑、删除和插入；图片预览隐藏更多按钮。菜单退场后才执行操作，期间权限变化或资源属性更新会使旧操作失效，重排后按稳定块ID定位。
+
+本次按钮归并的验证范围见根仓库 `docs/verification/media-more-menu-20261016/media-more-menu-20261016.json`。
+
+
+### 默认文字颜色真机回归
+
+`integration_test/document_text_color_test.dart`复用共用正文颜色回归，在Android实际视口核对编辑/预览、左对齐/分散对齐的最终字符颜色。覆盖默认黑色、局部红/蓝/白色、链接色和高亮块颜色继承，并确认正文JSON不变且没有同步回送。显式白字使用深色字符背景方便截图辨认；测试正文仅存在内存中，不登录或访问已有文档。
+
+从 `example/` 目录运行，`TEXT_COLOR_SCREENSHOTS`可指定截图目录：
+
+```bash
+TEXT_COLOR_SCREENSHOTS=build/document-text-color-screenshots flutter drive --driver ../test_driver/document_text_color_driver.dart --target ../integration_test/document_text_color_test.dart -d ANDROID_DEVICE_ID --no-pub --keep-app-running
+```
+
+必须保留`--keep-app-running`，结束后用普通Demo APK执行`adb install -r`覆盖恢复，保留用户数据。截图和结果见[2026-10-21验收记录](docs/verification/default-text-color-device-20261021/default-text-color-device-20261021.json)。页面背景及根字色同步不属于本次验收。
+
+### 普通文本段Tab缩进（BlockCraft 0.11.21）
+
+普通段落、H1~H6和引用读取桌面`props.depth`，每级增加32逻辑像素的左侧布局偏移，并减少相同排版宽度；字号不改变。布局按钮与硬件Tab/Shift+Tab写同一字段级事务，保留文字、标题级别和选区；使用稳定块身份支持远端重排后的撤销。新增缩进最多8级，首目标不能超过前一兄弟深度+1，多选任一项达8级则整次增加不写入；旧的超深数据原样展示，可逐级减少。
+
+代码Tab和表格键盘导航保留各自规则。列表沿用已有独立0～6级操作，普通文本与列表混选、跨父容器范围不开放这次文本缩进命令，未把它们标成通用8级Tab已完成。验证覆盖`test/paragraph_indent_test.dart`、完整页面字号/布局回归，以及真实FRB/SQLite的8级保存与历史。下方设备命令同时验证普通段落、标题、引用的0/1/2级位置与剩余宽度。
+
+### 标题字号与分散对齐回归（BlockCraft 0.11.21）
+
+标题与分散对齐共用段落/行内字号规则。`test/heading_typography_test.dart` 直接核对完整页面 `RenderParagraph` 的逐字符最终字号，覆盖五种对齐、段落depth偏移及剩余宽度、真实换行、混排链接、空标题和编辑/预览切换。期望数据从发布包生成，同时输出 JSON 与供真机编译的 Dart 常量，不读取手机上的宿主文件路径：
+
+```bash
+node tool/generate_heading_typography_oracle.mjs /path/to/extracted/blockcraft-0.11.21/package
+```
+
+上面的生成命令在仓库根目录执行；下面的设备回归从 `example/` 执行：
+
+```bash
+flutter drive --driver ../test_driver/integration_test.dart --target ../integration_test/heading_typography_test.dart -d ANDROID_DEVICE_ID --no-pub --keep-app-running
+```
+
+设备用例保留真机实际视口并检查移动选区服务；使用临时测试正文，不登录或访问正式文档。运行后按上文约定重新构建普通 Demo，并以 `adb install -r` 覆盖恢复，保留既有应用数据。代码块不附加段落专用历史标记；弹窗退出恢复选区时只临时抑制划词浮栏，归还原选区附加信息，后续用户划词仍可显示菜单。
+
+### 三项格式修复与划词真机验证
+
+`integration_test/editor_review_fixes_test.dart` 在Android设备运行发布字号对照与划词回归，另通过真实页面输入连接验证远端清除/替换默认格式后的实际输入和撤销。包含本地类型转换后继续格式化、远端变化保护，以及长按菜单、文字链接、选中文字转行内公式。使用隔离测试正文，不初始化账号或原生协同数据库；IME及触摸事件由测试注入，不替代人工输入法验收。
+
+从 `example/` 目录执行：
+
+```bash
+flutter drive --driver ../test_driver/integration_test.dart --target ../integration_test/editor_review_fixes_test.dart -d ANDROID_DEVICE_ID --no-pub --keep-app-running
+```
+
+安装前可在应用停止后保留私有数据备份与文件校验值；验证后重新构建普通Demo，以`adb install -r`覆盖安装，禁止卸载或清数据。核对已有偏好与协同SQLite文件未丢失或改变，再启动正常入口；Flutter调试内核、资源时间戳与安装标记不属于用户数据。执行结果与设备范围见[真机验证记录](docs/verification/editor-review-fixes-device-20261016/editor-review-fixes-device-20261016.json)。
+
+### BlockCraft 0.11.20 段落默认格式与下一段
+
+正文段落/标题、三类列表和引用支持 `textDefaults` 与 `nextParagraphStyle`。空段落 Aa 格式、整段格式和删空后的共同格式与正文同事务保存；字体/字号/字距随输入往返，链接和业务身份不会成为段落默认值。布局面板可选择下一段按默认规则、延续样式或回正文；段中保留样式，段尾标题/引用默认回正文并清理字符及布局覆盖。Undo/Redo 同时恢复本地输入格式，空段落重开后继续使用共享默认格式。
+
+0.11.21 后续核对补齐三处边界：远端清除/替换空段默认格式会清除本机继承的旧字样、字号、字体、颜色和字距，本地明确选择的输入格式仍优先，主动导航后重新继承；划词格式面板接续自身类型转换与列表退回正文后的稳定选区，远端改字、改类型、删除或撤权仍使旧选区失效；旧CSS字号按发布版去首尾空白、不区分单位大小写，并统一像素/倍率范围、精度及新旧属性优先级。
+
+回归包含远端默认值更新后的实际输入与撤销、连续类型转换后继续格式化，以及发布函数生成的旧字号对照数据；完整页面在五种对齐和编辑/预览切换中检查最终渲染字号。验证结果与未覆盖范围见[修复记录](docs/verification/selection-format-review-fixes-20261016/selection-format-review-fixes-0.11.21-20261016.json)。
+
+对应发布产物的对照数据可在仓库根目录重新生成：
+
+```bash
+node tool/generate_paragraph_oracle.mjs /path/to/extracted/blockcraft-0.11.20/package
+```
+
+本轮包含真实 FRB/SQLite 与 Android 集成验证；Android IME 事件由测试连接注入。字体依平台回退，完整字体/段间距设置、0.11.20 的通用 8 级 Tab 规则、iOS 和在线桌面互操作仍待补齐，详见仓库 `docs/block-adaptation.md`。
+
+### 附件卡片布局
+
+附件使用浅底边框卡片，左侧显示按文件类型配色的图标，右侧突出文件名（最多两行）和类型/大小。文件名缺失时使用链接中的文件名，仍为空时显示“未命名附件”；大小按B、KB、MB、GB、TB显示，0字节显示0 B，缺失或无效大小显示“大小未知”。窄屏和大字号下允许元信息换行，空间极窄时图标与信息上下排列。打开、修改、删除和下方插入仍统一在更多菜单中，不改共享属性。
+
+## 内容块锁定
+
+正式文档通过公共更多面板加锁/解锁，锁定内容仍可查看、选择与复制，其他未锁块可继续编辑。锁使用桌面同源`meta.lock`用户ID及可选`lockKind: template`，由整棵原生块图派生祖先继承与子树保护；正文、属性、结构和历史事务整体预检，包含隐藏题注或表格子块。菜单/编辑草稿在锁变化后失效，即使随后解锁也不能提交旧草稿。锁切换使用独立原生命令先写SQLite再推进Doc与同步，不进入正文撤销栈。
+
+普通锁本人可解锁，其他用户及模板锁需要宿主同步授权；缺省拒绝额外授权。Demo按桌面同源文档角色`role >= 800`授权，业务角色由宿主加载并持有。普通锁显示锁标，模板锁与继承锁不重复装饰；公共卡片锁在右上角外沿独立绘制，正文仍保持圆角裁切。
+
+```dart
+import 'package:cses_document_collab/cses_document_collab.dart';
+
+CollabHostServices lockServices(Map<String, int> rolesByDocument) =>
+    CollabHostServices(
+      canUnlockBlock: (lock) => (rolesByDocument[lock.documentId] ?? 0) >= 800,
+    );
+
+Future<void> lockBlock(CollabController controller, String blockId) async {
+  await controller.setBlockLocked(blockId, true);
+  assert(controller.blockLock(blockId).locked);
+}
+```
+
+调用方提供当前会话的可信角色映射并维护账号/文档隔离；控制器借用授权函数，不释放宿主资源。接口Future完成表示本机落盘、投影与提交待发送增量，不代表服务端ACK。此策略与桌面一样由可信客户端执行，原始远端增量仍会应用；不替代服务端权限。快照写入对跨锁节点的重排采取保守拒绝，完整拖拽及富文本剪贴板另行适配。Android与实际发布桌面增量/SQLite交换已验证，在线手机到桌面窗口观察、iOS、同时并发及服务端ACK仍待验收；详见仓库`docs/verification/block-lock-corner-20261019/block-lock-20261019.json`。
+
+## 分页符
+
+正式文档支持根级 `page-divider` 无正文块，连续流展示为虚线与“分页符”标记；添加面板提供插入，根级非空块在其后插入、空段落原位替换，并创建后置空段落。范围选区和嵌套位置拒绝插入，不向上寻找根。直接点击整条分页符弹出操作菜单，提供“在下方插入”和“删除分页符”，不显示右侧三个点；后置正文行首退格同样可以删除，删除末块补空段落；插入与删除均支持独立撤销/重做。只读保留标记并隐藏修改入口，打开面板期间撤权或目标删除时拒绝过期动作。
+
+桌面Schema为rootOnly，旧文档中的嵌套分页符、带非法子块或正文的分页符保持只读占位，原数据不迁移。正常块的未知props/meta在其他正文编辑时保留；删除撤销只恢复已投影数据，未投影扩展与审计字段恢复仍待适配。本阶段不提供纸张分页排版、打印/PDF导出或完整分页符剪贴板。Android/iOS与在线桌面联调另行验收，验证范围见根仓库`docs/verification/page-divider-20261018/page-divider-20261018.json`。
+
+发布Schema夹具可从包目录重新生成：
+
+```sh
+node tool/generate_page_divider_fixture.mjs /path/to/blockcraft-0.11.21/package /path/to/cses-client
+cargo build --manifest-path rust/Cargo.toml
+flutter test --no-pub test/collab_page_divider_test.dart test/page_divider_native_integration_test.dart
+```
+
+## 日期卡片（date-card）
+
+默认“添加块→常用”可插入日期卡片；也可在`EditorConfiguration.keyboardToolbarItems`中加入
+`EditorKeyboardToolbarItem.dateCard`设置键盘直达入口，块能力由`EditorBlock.dateCard`控制。
+新建定格当前本地日期（YYYY-MM-DDTHH:mm），以后打开、修改样式或同步不会更新日期。
+日期值与行内日期、宿主日记日期分别存储。
+
+更多菜单的“日期设置”使用公共底部弹窗，标题下居中预览吸顶，左右按钮循环切换12种
+样式，名称显示在预览下方；预览与名称不随设置滚动。取消/应用固定底部，其余格式、
+字体、字号和边框按约束分行并独立滚动。取消或下滑关闭不写入，应用只提交变化字段并
+形成一个撤销步骤；重选或切回原样式/格式保留作者尺寸，实际切换样式才重置固定框，
+格式变化保留原宽度。字号按内容倍率回显并换算为设计字号保存；未知边框仅展示为无外框，
+保留原值且点线绘制有次数上限。锁、撤权、目标替换或远端变化使旧草稿失效。
+公共菜单继续提供授权加解锁、段落链接、下方插入、整块删除，后置正文行首退格可删除卡片。
+
+正式协同支持根级和已适配高亮容器中的void节点，保留未知共享props/meta；JSON导入后
+也使用同一个原生渲染器。字体使用系统可用字体回落；手机外观没有完全复刻桌面CSS装饰，
+复杂容器、浮动定位/缩放/动画、旧固定框迁移及真机/真实在线双端验证仍见仓库适配表。
+测试夹具由发布版0.11.30的Schema/样式声明生成，不修改桌面依赖或桥接签名：
+
+```sh
+node tool/generate_date_card_fixture.mjs /path/to/blockcraft-package /path/to/cses-client
+cargo build --manifest-path rust/Cargo.toml
+flutter test --no-pub test/collab_date_card_test.dart test/date_card_native_integration_test.dart
+```
+
+## 天气卡片（weather）
+
+通过“添加块→常用→天气卡片”插入，或配置`EditorKeyboardToolbarItem.weather`直达；
+能力由`EditorBlock.weather`控制。根和已适配高亮容器使用正式void节点，不写正文URL。
+更多菜单提供天气设置、公共锁/链接/下方插入和整块删除，后置正文行首退格可删除。
+
+宿主通过公开`CollabHostServices.loadWeather`注入`CollabWeatherLoader`；未配置时仅显示已保存
+的`frozen`，不创建默认网络请求。查询接收固定`date`或null实时、`refresh`绕过缓存意图及
+`cancelled`失效检测。宿主持有认证、定位、请求和缓存；不得返回虚构天气。Demo以独立Dio
+连接与桌面同源的IP粗定位/Open-Meteo，定位失败显示北京回落，天气失败保留旧值并提示重试。
+新建入口查询成功后将日期与天气作为一次插入；离线失败仍可插入诚实占位。
+
+天气设置使用公共底部弹窗，同日期设置的居中固定预览、左右箭头循环切换7种布局，样式名称位于预览下方；短视口/键盘压缩预览。标题与取消/应用固定，其他设置独立滚动。
+7种布局、6种色调、文字/强调/内部线/背景/外框颜色、透明底色、图标原色/单色、高低温和
+边框设置先在草稿预览，取消或下滑关闭不写入，应用一次提交改动字段。切换其他样式采用默认固定框，切回原样式恢复作者尺寸及字段缺省状态；无变化应用正常关闭且不新增历史；
+切换色调清除逐项颜色覆盖。时间锚点支持实时与固定日；切换固定日查询成功后原子保存。
+已有固定`frozen`直接展示，显式刷新替换并可撤销；实时天气只在本地展示。
+缺失定格值的旧卡片自动查询暂不落盘，须手动刷新；尚未接入桌面的无Undo初始化事务。
+
+正式投影、字段补丁、JSON及SQLite保留未知共享数据，异常void子树继续占位保护。
+旧本地`snapshot-weather`保留只读展示和属性导出，新导入使用正式天气节点。
+外观用原生布局和Lucide近似实现，窄屏按固定设计框缩小，卡片内字不随系统字号放大。
+自由布局、组合、动画、完整对象剪贴板、第三方实网及真机/真实在线双端验收仍见根适配表。
+
+```dart
+import 'package:cses_document_collab/cses_document_collab.dart';
+final services = CollabHostServices(loadWeather: ({date, required refresh, required cancelled}) async {
+  // 在这里调用宿主真实数据源；查询失败抛错，cancelled()后不交付迟到值。
+  throw StateError('请接入真实天气查询');
+});
+```
+
+发布Schema夹具与验证入口：
+
+```sh
+node tool/generate_weather_fixture.mjs /path/to/blockcraft-package /path/to/cses-client
+cargo build --manifest-path rust/Cargo.toml
+flutter test --no-pub test/collab_weather_test.dart test/weather_native_integration_test.dart
+```
+
+## Mermaid代码绘图
+
+正式文档支持`mermaid`容器与唯一`mermaid-textarea`源码子块；更多插入面板提供“代码绘图”，点击“编辑源码”打开草稿与实时预览。支持根/高亮内插入、更多菜单下方插入与删除、独立撤销/重做、草稿冲突重载及只读/删除保护；取消不写入。源码最多100000 UTF-16单元，写入正式Y.Text，真实FRB与SQLite恢复沿用既有接口，未增加桥接字段。
+
+离线绘图资源位于`assets/mermaid`，MIT许可证随包保留。运行时固定Mermaid11.13.0，版本/哈希见`runtime.json`；更新使用`node tool/sync_mermaid_runtime.mjs /path/to/cses-client`，版本变化须先审查。运行时不使用CDN或外部绘图服务，禁止图表链接、脚本和外部图片；语法错误保留源码及上一张有效图。源码变化去抖，旧渲染及销毁后的回调失效。测试样本可使用`tool/generate_mermaid_fixture.mjs`从0.11.21发布Schema重生成，浏览器验证使用`tool/verify_mermaid_preview.mjs`。
+
+源码面板提供五类“类型”和“模板”：时序、流程、类图、思维导图、时间线，采用桌面发布源码；类型在草稿开头插入语法前缀，模板替换草稿全文。正文与面板均支持仅文本/仅预览/文本与预览，组合视图在手机上下排列；正文源码只读显示，点击编辑源码打开完整编辑面板。新建面板默认组合视图；取消不写入，保存将源码与主动选择的mode作为一个可撤销事务提交。正文切换视图是独立可撤销事务。
+
+共享mode沿用`props.mode=text/graph/default`，由现有CollabResource单字段补丁承载，没有新增FRB签名。缺失/null/未知mode仅在展示时回落为组合视图，普通源码编辑不归一化；旧调用未指定插入视图时仍默认graph。远端mode变化也会使打开的草稿冲突并清除过期历史；重新加载同时更新源码和模式。2026-10-17已完成真实桌面与Android现有时序图三种mode的双向在线联调，共6项通过；最终恢复原text模式，完整源码Delta/属性及树结构保持，仅绘图修改时间更新，见根仓库`docs/verification/mermaid-20261017/mermaid-view-sync-20261017.json`。不代表真实断网、同时并发、iOS或服务端持久化ACK通过。
+
+本阶段仍部分支持：不提供可视化节点/标签编辑、全屏缩放、SVG导出或Markdown导入。未绑定外部原生历史的编辑器中，远端源码/格式/mode或含绘图文档的结构变化清空路径历史与选区；普通非结构正文属性更新保持历史。`CollabController` 的原生历史模式保留个人历史，由最新投影后的相对书签决定恢复或清除选区。删除撤销恢复投影内容/身份和有效mode，不保证未投影属性、未知/非法模式或审计数据恢复。异常结构保持整棵占位。完整验证见根仓库`docs/verification/mermaid-20261017/mermaid-options-20261017.json`及`docs/block-adaptation.md`。
+
+## 会议 KR 列表
+
+正式 `kr-list` 只保存会议引用，列表通过可选 `CollabHostServices.kr` 查询端口加载。宿主实现 `CollabKrService.loadTopics(meetingId)` 和 `loadMore(meetingId, topicId, offset)`，负责认证、会议权限及请求资源；未配置时显示提示，不请求业务接口。Demo使用桌面同源的已完成KR主题和每页十条结果，真实接口仍需联调验收。
+
+```dart
+import 'package:cses_document_collab/cses_document_collab.dart';
+
+CollabHostServices krServices(CollabKrService service) =>
+    CollabHostServices(kr: service);
+```
+
+会议卡片更多菜单提供“收集 KR”，在其后插入列表引用；列表可分页、重试及转为未勾选待办。转换有完整作者身份时插入用户提及，否则仅插入KR文字。引用与待办支持独立撤销重做，业务KR不随引用删除。加载结果、分页及作者头像不写入共享文档，换会议/宿主、卸载后迟到结果失效；端口由宿主持有，编辑器不释放它。实时刷新、会议标题、长列表虚拟化、专用富文本剪贴板/导出、iOS及在线双端仍待同步或验收。
+
+KR前三名图标可由宿主一次提供三个Widget；未配置时显示金银铜色加粗数字1/2/3，不加载图片，第四名起保持普通数字。图标显示在20×20逻辑像素内，外部资源由宿主负责。
+
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:cses_document_collab/cses_document_collab.dart';
+
+const rankServices = CollabHostServices(krRankIcons: (
+  first: Text('🥇'), second: Text('🥈'), third: Text('🥉'),
+));
+```
+
+## Rust 历史与 Flutter 撤销/重做
+
+`CollabController` 初始化真实原生文档后，自动将 AppFlowy 的撤销/重做按钮和快捷键委托给 Rust。远端正文投影不清空当前用户的原生历史；本地新增编辑清空 redo，远端或系统写入不进入个人历史。正式文档和 SQLite 本地草稿共用这一入口；纯内存 `LocalEditorController` 保留原来的本地历史，不依赖原生协同。
+
+```dart
+import 'package:cses_document_collab/cses_document_collab.dart';
+
+Future<void> editDraft(String databasePath) async {
+  final controller = CollabController.localDraft(databasePath: databasePath);
+  try {
+    await controller.initialize();
+    // 展示 CollaborativeEditorPage(collab: controller) 后，按钮和快捷键自动接入。
+    if (controller.canUndo) await controller.undo();
+    if (controller.canRedo) await controller.redo();
+  } finally {
+    // 实际页面须先退出，再关闭其借用的控制器。
+    await controller.close();
+  }
+}
+```
+
+FRB 使用 2.13.0 重新生成桥接；原有块快照适配、协同会话及 V1 update 格式继续复用。Rust 正式引擎使用随包隔离的 Yrs 0.27.4 路径依赖 `rust/vendor/yrs-history`，增加独立候选检查点和只读相对位置解析；上游原生撤销、编码和网络算法不变，来源及改动见该目录的 `UPSTREAM.json`、`LOCAL_CHANGES.md`。
+
+每个 AppFlowy 事务对应一个原生历史组，最多保留 200 组，不跨事务按时间合并。历史仅限当前打开会话；重启恢复 SQLite 正文，不恢复个人撤销栈。Undo/Redo 在候选 Doc 执行，重新检查宿主编辑权限、锁及受影响子树、结构和表格规则；SQLite 写入及 COMMIT 成功后才替换权威正文/历史，再投影到 Flutter。拒绝或落盘失败保留原正文和栈，可解除限制后重试。待删除子树含远端贡献时拒绝冲突，避免间接删除他人内容。
+
+选区随原生 StackItem 保存稳定块 ID 和 UTF-16 相对位置；逆向范围保留方向。正文完成最新投影后用当前路径恢复，支持远端插字与重排；端点被删除时清除选区。书签仅用于个人会话，不写入共享正文、网络或数据库。历史和投影期间暂缓输入，不切入预览或主动关闭键盘。此阶段没有实现跨事务 IME 合组、专门的视口滚动/键盘唤起、整块/表格多单元格范围恢复，或跨启动历史。
+
+暂缓本地事务使用 `EditorState.localTransactionsPaused`，与 `editable` 的权限/预览状态分开；只读页面仍可接收权威投影。原生模式不发布表格/绘图回放过程中的旧路径选区，最终一次恢复相对选区，保持已有输入连接；用户已收起的键盘保持关闭。普通远端正文更新不触发选人、会议或编辑草稿的永久撤权；真实权限撤销、目标变化和关闭仍按原有契约作废迟到结果。异步输入还核对权限/投影与输入连接代次，主动收起键盘后不继续处理旧连接的等待回调。
+
+空草稿段落的文字根在订阅历史前注册；若原生检测到正文有变化却没有捕获历史组，会在落盘前拒绝，保留权威正文与历史。表格删除保护使用可见一侧的内容指纹，支持删行、删列和整表的反复撤销/重做，同时继续拒绝删除含远端新增贡献的子树。完整握手后的自动编号修复只在可编辑且非预览时执行，不进入个人历史。
+
+在包目录验证：
+
+```sh
+cargo test --manifest-path rust/Cargo.toml --features history-prototype
+cargo build --manifest-path rust/Cargo.toml
+flutter test --no-pub test/native_history_editor_test.dart test/collab_native_selection_test.dart test/native_history_review_regression_test.dart
+```
+
+独立 Rust 原型仍以 `history-prototype` feature 供实验/回归使用，不是 Flutter 的指令实现。其 root/callout 结构命令限制与正式引擎完整适配范围分开；原型不要与运行中的正式引擎共用实验数据库。当前审查修复与验证见[5项修复记录](docs/verification/selective-undo-prototype-20261022/review-fixes.md)，接入实现见[第三阶段](docs/verification/selective-undo-prototype-20261022/frb-editor-history.md)，此前行为见[第二阶段](docs/verification/selective-undo-prototype-20261022/structure-format-locks.md)和[第一阶段](docs/verification/selective-undo-prototype-20261022/report.md)。
+
+## 人员卡片（person-card）
+
+正式无正文人员块支持添加菜单、`EditorKeyboardToolbarItem.personCard` 直达、三种原生样式、头像/部门/字号/颜色/边框设置、锁、删除、字段历史和 JSON 往返。`person` 为桌面定格资料 JSON 字符串；新建明确保存 `sc:1`，读取旧卡片不自动刷新人员。
+
+宿主可通过公开入口注入新建资料，账号和网络由宿主持有：
+
+```dart
+import 'package:cses_document_collab/cses_document_collab.dart';
+
+final services = CollabHostServices(
+  loadPersonCardCreator: () => const CollabPersonCardData(
+    name: '张三', pinyin: 'ZHANG SAN', description: '研发部 / 工程师',
+  ),
+);
+// 将services注入由宿主持有的CollabController；仅新插入时调用。
+```
+
+未配置或返回 null 时保留“文档创建人”占位；既有文档需要原创建人时由宿主端口解析，不能假定当前账号就是原创建人。自由定位、八向缩放、模板物化和设备/真实在线验收仍待完成，详见[实施与验证](docs/verification/person-card-20261025/report.md)。
+
+
+### 多栏布局与单列容器
+
+`columns`/`column`已接入正式协同树、JSON与默认编辑器。添加面板“多栏布局”新建两列；宿主可通过`EditorBlock.columns`启用分栏，列子块随父能力授权，键盘直达使用`EditorKeyboardToolbarItem.columns`。
+
+手机按比例展示真实列内正文，窄屏横向滚动。组菜单提供添加列、均分、转为上下排列；列菜单提供右侧插入、左右移动、加宽和删除（包含该列内容）。最多8列；删至单列时展开剩余正文，布局和结构各使用一次事务与独立历史。列内普通文字与列表保留原输入链，锁定/只读及过期菜单禁止修改。
+
+当前比例调整为菜单动作，触摸拖宽/整列拖动、桌面跨列范围输入与剪贴板完整语义仍待同步；设备、iOS及真实在线双端待验收，详见[分栏实施记录](docs/verification/columns-20261026/report.md)。旧`snapshot-columns`/`snapshot-column`本地树保留原显示及JSON布局字段，不自动改写数据。普通与按词退格在列首共用边界/列表保护，段内继续使用原生按词删除；[两项审查修复与验证](docs/verification/columns-20261026/fixes.md)。
+
+```bash
+cargo build --manifest-path rust/Cargo.toml
+flutter test --no-pub test/collab_columns_test.dart test/columns_native_integration_test.dart
+```

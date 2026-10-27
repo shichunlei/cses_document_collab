@@ -12,8 +12,8 @@
 
 | 编号 | 优先级 | 位置 | 问题 |
 |---|---|---|---|
-| RR1 | P1 | `packages/cses_document_collab/lib/src/editor/blockcraft_json_codec.dart:486` | 文字块有Delta时编码只处理行内内容，忽略真实子块；硬件Tab仍可创建该结构，宿主预检也允许通过。 |
-| RR2 | P1 | `packages/cses_document_collab/lib/src/editor/collab_paragraph_editing.dart:123` | 空标题回车转正文的替换分支只生成段落样式字段，未沿用宿主业务字段、bc身份与元数据；R1修复仅覆盖菜单/快捷转换链。 |
+| RR1 | P1 | `lib/src/editor/blockcraft_json_codec.dart:486` | 文字块有Delta时编码只处理行内内容，忽略真实子块；硬件Tab仍可创建该结构，宿主预检也允许通过。 |
+| RR2 | P1 | `lib/src/editor/collab_paragraph_editing.dart:123` | 空标题回车转正文的替换分支只生成段落样式字段，未沿用宿主业务字段、bc身份与元数据；R1修复仅覆盖菜单/快捷转换链。 |
 
 ## RR1：缩进后的待办及勾选状态从导出中消失
 
@@ -43,7 +43,7 @@
 - 共享包Tab探针1项失败，正确行为断言为导出仍含todo；前置断言已确认真实命令回退、节点类型与checked=true。
 - 两份探针静态分析无问题；已按宿主/包各自格式要求格式化。`git diff --check`通过。
 - [宿主探针源](review-2-host-probes.dart)、[包探针源](review-2-package-probes.dart)已归档并从自动测试目录移除，避免审查把预期失败测试混入正式回归。
-- 复跑：将宿主源复制为`test/daily_guidance/blockcraft_review_2_probe_test.dart`，在根执行`flutter test --no-pub test/daily_guidance/blockcraft_review_2_probe_test.dart test/daily_guidance/journal_blockcraft_editing_test.dart`；将包源复制为`packages/cses_document_collab/test/blockcraft_review_2_probe_test.dart`，在该包执行`flutter test --no-pub test/blockcraft_review_2_probe_test.dart`。宿主探针会在同主题目录重新生成两份反例JSON。
+- 复跑：将宿主源复制为`test/daily_guidance/blockcraft_review_2_probe_test.dart`，在根执行`flutter test --no-pub test/daily_guidance/blockcraft_review_2_probe_test.dart example/test/daily_guidance/journal_blockcraft_editing_test.dart`；将包源复制为`test/blockcraft_review_2_probe_test.dart`，在该包执行`flutter test --no-pub test/blockcraft_review_2_probe_test.dart`。宿主探针会在同主题目录重新生成两份反例JSON。
 - 首次包探针缺少KeyEventResult的正确导入，编译失败保留为[诊断日志](review-2-package-initial-compile.txt)；已修正后复跑，不把编译失败当功能证据。首次宿主探针直接比较整个导出包含updatedAt差异，修正为比较children后复制容器测试通过；原诊断[保留](review-2-host-probes.txt)，不将其算作缺陷。
 - 本轮不重跑全包、构建、桌面模型或设备；前轮全量和构建结果保留在[修复记录](fixes.md)，不据此声明新反例通过。
 

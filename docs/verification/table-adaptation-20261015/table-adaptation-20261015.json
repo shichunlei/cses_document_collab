@@ -12,7 +12,7 @@
     ],
     "source": "/System/Volumes/Data/workspace/cses-client/node_modules/@ccc/blockcraft/fesm2022/ccc-blockcraft.mjs"
   },
-  "fixture": "packages/cses_document_collab/rust/tests/fixtures/blockcraft-table.update",
+  "fixture": "rust/tests/fixtures/blockcraft-table.update",
   "implemented": [
     "稳定父子身份与四层共享结构",
     "横向滚动、列宽/行高只读显示、单元格背景与垂直对齐",

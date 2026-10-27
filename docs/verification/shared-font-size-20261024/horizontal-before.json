@@ -1,5 +1,5 @@
 {
-  "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart": "db1adf5cc4f998539598eab8c185da58a8bbec71f39261135177e39a7abfb534",
-  "packages/cses_document_collab/test/shared_font_size_test.dart": "18d58a69f5667b1db5afa78aabcba3f6ec6e3d320ace3d0d6e78a0aa243c1333",
-  "packages/cses_document_collab/test/local_editor_operations_test.dart": "d04d18d8cd766de8a862138352f51db09b9f726b64bf24646f8f4ebf105cc78e"
+  "lib/src/editor/editor_shortcut_toolbar.dart": "db1adf5cc4f998539598eab8c185da58a8bbec71f39261135177e39a7abfb534",
+  "test/shared_font_size_test.dart": "18d58a69f5667b1db5afa78aabcba3f6ec6e3d320ace3d0d6e78a0aa243c1333",
+  "test/local_editor_operations_test.dart": "d04d18d8cd766de8a862138352f51db09b9f726b64bf24646f8f4ebf105cc78e"
 }

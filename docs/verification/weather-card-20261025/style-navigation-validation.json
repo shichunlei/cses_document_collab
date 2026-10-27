@@ -12,10 +12,10 @@
   "oldStyleButtonReferences": "none in affected sources/tests",
   "links": "passed",
   "sourceSha256": {
-    "packages/cses_document_collab/lib/src/editor/collab_weather_settings.dart": "456601690d3b73551f4af84f7acfdb235a931d23b5862f5b46f94cd6c42d6c18",
-    "packages/cses_document_collab/lib/src/ui/modal/collab_weather_visual.dart": "8977cabd2cec15261f74bde6e9791ce0b84e7795b175452ad5fd635aa76b256e",
-    "packages/cses_document_collab/test/collab_weather_test.dart": "45d79a2ddf7e2e8f614083e0489a6024770a377375b3ce7628f3ba54dee6f327",
-    "packages/cses_document_collab/test/weather_bottom_sheet_test.dart": "ef19868b28800164ca6eea167af11beb3a054370955b5fb5190debeb6bef1fea"
+    "lib/src/editor/collab_weather_settings.dart": "456601690d3b73551f4af84f7acfdb235a931d23b5862f5b46f94cd6c42d6c18",
+    "lib/src/ui/modal/collab_weather_visual.dart": "8977cabd2cec15261f74bde6e9791ce0b84e7795b175452ad5fd635aa76b256e",
+    "test/collab_weather_test.dart": "45d79a2ddf7e2e8f614083e0489a6024770a377375b3ce7628f3ba54dee6f327",
+    "test/weather_bottom_sheet_test.dart": "ef19868b28800164ca6eea167af11beb3a054370955b5fb5190debeb6bef1fea"
   },
   "previewSha256": "e44cee5fccc42691a29abc7307415935f0dd1028f1e30724af1999dc7e3001a0",
   "platformBuild": "not run this round",

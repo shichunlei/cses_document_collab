@@ -70,7 +70,7 @@
       "screenshot": "mermaid-preview-20261016.png"
     },
     "android": {
-      "command": "flutter drive --driver packages/cses_document_collab/test_driver/integration_test.dart --target packages/cses_document_collab/integration_test/mermaid_test.dart -d A92G6R5704004108 --no-pub --keep-app-running",
+      "command": "flutter drive --driver example/test_driver/integration_test.dart --target integration_test/mermaid_test.dart -d A92G6R5704004108 --no-pub --keep-app-running",
       "result": "passed",
       "device": "HONOR X70 / MTN-AN00 / Android16",
       "functional_cases": 14,
@@ -80,7 +80,7 @@
       "scope": "13个模型/真实页面场景；1个真实Android WebView场景内验证七种图表、语法失败保留有效图和空源码清图。页面用本地适配器，不代表Android在线FRB协同联调。"
     },
     "ios_native": {
-      "command": "packages/cses_document_collab/tool/build_rust_ios.sh debug",
+      "command": "tool/build_rust_ios.sh debug",
       "result": "passed",
       "targets": [
         "aarch64-apple-ios",
@@ -101,7 +101,7 @@
       "duration": "72.5s",
       "sha256": "9462338ef65c0470e66353f54e600b98cb1b253e35a60dc4147450b76fdfca8c",
       "installed": true,
-      "target": "lib/main.dart"
+      "target": "example/lib/main.dart"
     }
   },
   "data_preservation": {
@@ -109,7 +109,7 @@
     "changed_after_device_tests": [],
     "baseline_manifest_sha256": "f8669f10590013ec2f94b34ecc357cf84c80b62b04a08ce5875ad92e15aa2645",
     "excluded": "安装产生的profileInstalled、app_flutter代码快照和资源时间戳，不属于用户数据。",
-    "normal_demo_restore": "passed: rebuilt ordinary lib/main.dart APK, adb install -r, launched MainActivity; no uninstall/data clear",
+    "normal_demo_restore": "passed: rebuilt ordinary example/lib/main.dart APK, adb install -r, launched MainActivity; no uninstall/data clear",
     "changed_after_install": [],
     "changed_after_normal_launch": []
   },

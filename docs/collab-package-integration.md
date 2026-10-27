@@ -1,6 +1,6 @@
 # 协同包接入与迁移
 
-当前实现：`packages/cses_document_collab` 是独立 Flutter FFI 插件包；根项目是使用其公开 API 的 Demo 宿主。包可以整体移入 `cses.saas/packages/cses_document_collab` 或独立仓库。业务路由和 Common 主连接由未来宿主装配。
+当前实现：仓库根目录是 `cses_document_collab` Flutter FFI 插件包，`example/` 是使用其公开 API 的 Demo 宿主，`packages/appflowy_editor/` 是本地 fork。业务路由和 Common 主连接由宿主装配。迁入其他仓库时，须同时保留 AppFlowy 子目录或调整最终宿主的 fork 依赖。
 
 ## 引用链与边界
 
@@ -18,7 +18,7 @@ flowchart TD
   Common --> Server[Document/docId/instance]
 ```
 
-包不读取 `ctx`、`User`、`Config`，不发起 HTTP 登录，不创建/关闭物理 WebSocket，不选择宿主缓存目录。移动后包内无需修改业务 import 或原生库源码路径。包内无引用 demo/Common/SaaS 的 import；AppFlowy fork 通过同级 `../appflowy_editor` 引用，其 `diff_match_patch`、`scroll_to_index` 直接使用 pub.dev 发布版本。内部 `cses_mobile_*` 常量是旧草稿的持久化格式，必须保留兼容。
+包不读取 `ctx`、`User`、`Config`，不发起 HTTP 登录，不创建/关闭物理 WebSocket，不选择宿主缓存目录。包内无引用 demo/Common/SaaS 的 import；AppFlowy fork 通过 `packages/appflowy_editor` 引用，其 `diff_match_patch`、`scroll_to_index` 直接使用 pub.dev 发布版本。内部 `cses_mobile_*` 常量是旧草稿的持久化格式，必须保留兼容。
 
 宿主提供：
 
@@ -58,9 +58,9 @@ Demo SQLite 路径仍为应用支持目录下 `cses_mobile_collab_demo/updates.s
 ## 平移到 SaaS
 
 1. 整目录移动/引用本包，在 `cses.saas/pubspec.yaml` 添加 path 或固定版本依赖。
-2. 将本项目 `packages/` 中的 appflowy_editor 一并迁移并保留同级目录结构，解析同一 AppFlowy 6.2.0 fork；diff_match_patch、scroll_to_index 由 pub.dev 解析，无需迁移本地包。若单独移动协同包，在最终 App（例如 cses.jqdl）的 dependency_overrides 指向可用的 fork。库层的 override 不代替最终 App 的 override。
+2. 保留核心包内的 `packages/appflowy_editor/` 子目录，解析同一 AppFlowy 6.2.0 fork；diff_match_patch、scroll_to_index 由 pub.dev 解析，无需迁移本地包。若单独移动协同包而不保留该子目录，在最终 App（例如 cses.jqdl）的 dependency_overrides 指向可用的 fork。库层的 override 不代替最终 App 的 override。
 3. 在文档模块注册编辑路由与 Binding，从一次路由快照取得正式 docId、企业/用户/服务端身份和数据库路径。
-4. 复用当前 Common 连接实现 Gateway；适配器参考本 Demo 的 `lib/src/demo/common_cses_collab_gateway.dart`，只拥有文档注册。配置 host services 使异常继续进入统一日志，并可注入现有上传实现。
+4. 复用当前 Common 连接实现 Gateway；适配器参考本 Demo 的 `example/lib/src/demo/common_cses_collab_gateway.dart`，只拥有文档注册。配置 host services 使异常继续进入统一日志，并可注入现有上传实现。
 5. 确认正文编辑权限契约后创建 CollabDocumentConfig。当前移动端 modify 字段表示元数据修改；服务端编辑策略仍需明确 allowEdit 与 allowRename 的关系，不能仅按角色或 companyId 推断正文授权。
 6. 由 Binding/页面宿主创建控制器，完成 initialize 后显示 CollaborativeEditorPage。权限变化调用 setEditable；企业/账号/docId 变化先等待 close，再创建新控制器。
 7. iOS 最终 App 构建前调用包内 tool/build_rust_ios.sh；Android 通过插件传递依赖和 Cargokit 构建。不得将 demo 的宽松网络安全配置作为包配置。
@@ -69,7 +69,23 @@ Demo SQLite 路径仍为应用支持目录下 `cses_mobile_collab_demo/updates.s
 
 原 rust_builder 的 Android、iOS 和 Cargokit 已合并入本包；Dart 插件名称为 cses_document_collab，原生库名称仍为 cses_collab_core。SPM 产品名、podspec、Cargo 路径与 FRB 输出配置已按新目录同步。桥接代码使用 FRB 2.13.0 生成；Cargo.lock 随包固定原生依赖。iOS XCFramework、构建输出、临时 package overrides 均不提交。
 
-验证入口：根目录 `flutter test test` 覆盖认证与 Common 回环；包目录 `cargo build/cargo test/flutter test` 覆盖编辑、Schema 和真实 FRB；`tool/verify_portable_package.sh /path/to/appflowy_editor` 复制包至无关目录，再从另一个宿主仅通过公开入口加载、渲染与重开 SQLite。iOS/Android 从实际 Demo App 构建，验证传递依赖打包。
+核心编辑、Schema 和真实 FRB 测试从仓库根 package 执行；`--no-example` 使核心开发无需先准备 Demo 的外部 Common 仓库：
+
+```sh
+flutter pub get --no-example
+cargo build --locked --manifest-path rust/Cargo.toml
+FRB_DART_LOAD_EXTERNAL_LIBRARY_NATIVE_LIB_DIR="$PWD/rust/target/debug" flutter test --no-pub test
+```
+
+认证与 Common 回环等宿主测试从 `example/` 执行。先按 `example/pubspec.yaml` 的相对位置准备 Common，再从仓库根目录进入：
+
+```sh
+cd example
+flutter pub get
+FRB_DART_LOAD_EXTERNAL_LIBRARY_NATIVE_LIB_DIR="$PWD/../rust/target/debug" flutter test --no-pub test
+```
+
+从仓库根目录运行 `tool/verify_portable_package.sh /path/to/appflowy_editor` 可复制包至无关目录，再从另一个宿主仅通过公开入口加载、渲染与重开 SQLite。iOS/Android 从 example App 构建，验证传递依赖打包。
 
 2026-10-14 当前宿主直接注入文档配置的验证：根宿主 16 项测试、相关静态检查和 Android debug 构建通过。缓存兼容测试固定迁移前的真实键，不再比较两套缓存计算实现；主连接地址校验由登录边界验证 Common 当前上下文。Android 16 真机登录后实际文档配置与 Common 身份/地址一致；图片和视频通过系统选择器上传、文件登记、OSS 哈希回读、服务端独立空向量回读及一秒视频播放验收。详见 [OSS 联调记录](oss-upload-integration.md)。
 
@@ -110,7 +126,11 @@ Demo 的实现使用 Common `HttpManager`，不创建新的 HTTP 客户端；鉴
 
 正式头部封面不使用页面外边距，直接使用 AppFlowy header 的全部宽度；正文根块使用 `EditorStyle.padding` 保留 20px 左右留白，本地草稿仍保留顶部留白。封面内的更换、移除、调整位置操作居中显示；图标为 48px，32px 覆盖在封面内，16px 露在下方，左侧与标题及正文一致。预览隐藏操作，移除封面后图标进入普通头部布局。
 
-桌面公共图库来自 `cses-client/packages/docs/src/document-content/metadata/components/doc-image-picker.catalog.ts` 中的 `DOC_BANNER_IMAGE_GROUPS` 静态常量：太空8张、油画8张、创意4张，共20张，无图库查询接口。每条物料含 id、label、previewUrl、url；缩略图使用 `https://tc-cdn.flowus.cn/cover/...` 并带缩放质量参数，选择后提交的是 `https://picture.jinqidongli.com/6552dcfe82f0120e04563fc6/...png`。`DocImagePickerComponent.selectLibraryImage` 发出 `{type: 'url', url: item.url}`，`DocAddBannerDialogComponent` 转成 banner，`DocHeadMetaComponent.modifyBanner` 将 y 重置为0后用已有业务接口保存。移动端已接入同一静态清单，包内 `lib/src/model/document_cover_catalog.dart` 由桌面文件生成，保留分组、顺序、id、名称、缩略图和原图 URL。使用 `python3 packages/cses_document_collab/tool/sync_document_cover_catalog.py ../cses-client/packages/docs/src/document-content/metadata/components/doc-image-picker.catalog.ts`（在宿主根目录执行）可重新同步，格式或重复ID异常时拒绝生成。无需新增图库查询接口；包运行时不依赖桌面源码。
+桌面公共图库来自 `cses-client/packages/docs/src/document-content/metadata/components/doc-image-picker.catalog.ts` 中的 `DOC_BANNER_IMAGE_GROUPS` 静态常量：太空8张、油画8张、创意4张，共20张，无图库查询接口。每条物料含 id、label、previewUrl、url；缩略图使用 `https://tc-cdn.flowus.cn/cover/...` 并带缩放质量参数，选择后提交的是 `https://picture.jinqidongli.com/6552dcfe82f0120e04563fc6/...png`。`DocImagePickerComponent.selectLibraryImage` 发出 `{type: 'url', url: item.url}`，`DocAddBannerDialogComponent` 转成 banner，`DocHeadMetaComponent.modifyBanner` 将 y 重置为0后用已有业务接口保存。移动端已接入同一静态清单，包内 `lib/src/model/document_cover_catalog.dart` 由桌面文件生成，保留分组、顺序、id、名称、缩略图和原图 URL。以下命令从仓库根 package 执行；`tool/` 和桌面项目路径均相对仓库根目录解析。格式或重复 ID 异常时拒绝生成，无需新增图库查询接口；包运行时不依赖桌面源码。
+
+```sh
+python3 tool/sync_document_cover_catalog.py ../cses-client/packages/docs/src/document-content/metadata/components/doc-image-picker.catalog.ts
+```
 
 2026-10-14 封面布局回归覆盖全宽、图片内居中控制、图标跨下沿、标题/正文留白、320px窄屏与1.5倍文字、无封面/直接移除和预览；实际页面坐标与旧正文行距验证通过。
 

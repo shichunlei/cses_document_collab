@@ -104,8 +104,8 @@
     "symptom": "从表格单元格菜单回到正文再切换预览后，系统键盘仍显示，模板选择条因viewInsets被隐藏",
     "change": "源编辑视图卸载完成后显式等待TextInput.hide，保留页面/会话失效检查；未改变原协同编辑器",
     "files": [
-      "packages/cses_document_collab/lib/src/image_composer/image_composer_page.dart",
-      "packages/cses_document_collab/test/image_composer_page_test.dart"
+      "example/lib/src/image_composer/image_composer_page.dart",
+      "test/image_composer_page_test.dart"
     ],
     "retested_on_device": true
   },

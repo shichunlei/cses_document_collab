@@ -18,7 +18,7 @@
     "consumer": {
       "passed": 2,
       "failed": 0,
-      "file": "test/collab_demo_page_test.dart",
+      "file": "example/test/collab_demo_page_test.dart",
       "log": "/tmp/editor-add-visibility-consumer-tests.log"
     },
     "static_analysis": "包内6项目标范围与宿主2项目标范围均No issues found",

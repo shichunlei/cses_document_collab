@@ -46,26 +46,26 @@
     "path": "build/app/outputs/flutter-apk/app-debug.apk",
     "sha256": "d966cd982afa433816bc5f230b9d6291e846a0fd6c33e0afd1c87e59920521f0",
     "embedded_current_dart_sources": {
-      "lib/src/demo/document_creation/cses_document_creation_service.dart": true,
-      "lib/src/demo/document_creation/document_creation_operation.dart": true,
-      "lib/src/demo/document_creation/document_creation_coordinator.dart": true,
-      "lib/src/demo/document_creation/document_creation_page.dart": true,
-      "lib/src/demo/document_host.dart": true,
-      "lib/src/demo/collab_demo_page.dart": true
+      "example/lib/src/demo/document_creation/cses_document_creation_service.dart": true,
+      "example/lib/src/demo/document_creation/document_creation_operation.dart": true,
+      "example/lib/src/demo/document_creation/document_creation_coordinator.dart": true,
+      "example/lib/src/demo/document_creation/document_creation_page.dart": true,
+      "example/lib/src/demo/document_host.dart": true,
+      "example/lib/src/demo/collab_demo_page.dart": true
     },
     "device_run": false
   },
   "source_sha256": {
-    "lib/src/demo/document_creation/cses_document_creation_service.dart": "f19d7106b8700f405427aa3f665243e82522ca44e76f00902be695a64d256691",
-    "lib/src/demo/document_creation/document_creation_operation.dart": "911bced1be5e145cf0340d39248245d3102d092e8cdd01c37cb1033fd26c6ca5",
-    "lib/src/demo/document_creation/document_creation_coordinator.dart": "b95d51ae7d0587158df078dcc76b8120170aa00b68d36e078e15ebf1f8918cba",
-    "lib/src/demo/document_creation/document_creation_page.dart": "699915ca54be673a50574d9a615131a1e1236dc23312ca8ca0d34001b16541d9",
-    "lib/src/demo/document_host.dart": "0cd2e80104d671631993b895d8eb429e6243719e9fa2b8b0f2b662001917275b",
-    "lib/src/demo/collab_demo_page.dart": "6d5eb1f1eb84dbbeb4f318fe58d0edf79ead483544ca71a2301b7c0f977398e7",
-    "packages/cses_document_collab/rust/src/api/document_bootstrap.rs": "a7da1a572f56ae208c480ba16620e0b7c01e335b8dbf3ac4c3a92339b16a9f42",
-    "test/document_creation_coordinator_test.dart": "904185d42a9391b4d8235ff54411eb3f65a0f156c3202a5ba3863a938490e017",
-    "test/cses_document_creation_service_test.dart": "3f40ed3a313c424c2c7d21e30b523b1dd8b55ae0cf548f462996f46811ae0c55",
-    "test/document_host_native_test.dart": "eb2115043ab505587d4349b1a29b1ebf647e355faff8d2ae38c62c7ae8b83a6b"
+    "example/lib/src/demo/document_creation/cses_document_creation_service.dart": "f19d7106b8700f405427aa3f665243e82522ca44e76f00902be695a64d256691",
+    "example/lib/src/demo/document_creation/document_creation_operation.dart": "911bced1be5e145cf0340d39248245d3102d092e8cdd01c37cb1033fd26c6ca5",
+    "example/lib/src/demo/document_creation/document_creation_coordinator.dart": "b95d51ae7d0587158df078dcc76b8120170aa00b68d36e078e15ebf1f8918cba",
+    "example/lib/src/demo/document_creation/document_creation_page.dart": "699915ca54be673a50574d9a615131a1e1236dc23312ca8ca0d34001b16541d9",
+    "example/lib/src/demo/document_host.dart": "0cd2e80104d671631993b895d8eb429e6243719e9fa2b8b0f2b662001917275b",
+    "example/lib/src/demo/collab_demo_page.dart": "6d5eb1f1eb84dbbeb4f318fe58d0edf79ead483544ca71a2301b7c0f977398e7",
+    "rust/src/api/document_bootstrap.rs": "a7da1a572f56ae208c480ba16620e0b7c01e335b8dbf3ac4c3a92339b16a9f42",
+    "example/test/document_creation_coordinator_test.dart": "904185d42a9391b4d8235ff54411eb3f65a0f156c3202a5ba3863a938490e017",
+    "example/test/cses_document_creation_service_test.dart": "3f40ed3a313c424c2c7d21e30b523b1dd8b55ae0cf548f462996f46811ae0c55",
+    "example/test/document_host_native_test.dart": "eb2115043ab505587d4349b1a29b1ebf647e355faff8d2ae38c62c7ae8b83a6b"
   },
   "not_verified": [
     "real business HTTP creation",

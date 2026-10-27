@@ -21,7 +21,7 @@
     "webview": "com.google.android.webview 138.0.7204.179"
   },
   "validation": {
-    "command": "flutter drive --driver packages/cses_document_collab/test_driver/integration_test.dart --target packages/cses_document_collab/integration_test/mermaid_test.dart -d A92G6R5704004108 --no-pub --keep-app-running",
+    "command": "flutter drive --driver example/test_driver/integration_test.dart --target integration_test/mermaid_test.dart -d A92G6R5704004108 --no-pub --keep-app-running",
     "result": "passed",
     "functional_cases": 14,
     "runner_total_including_hooks": 16,
@@ -61,7 +61,7 @@
     ],
     "baseline_manifest_sha256": "f8669f10590013ec2f94b34ecc357cf84c80b62b04a08ce5875ad92e15aa2645",
     "excluded": "测试/安装产生的profileInstalled及app_flutter代码快照和资源时间戳",
-    "normal_demo_restore": "passed: rebuilt ordinary lib/main.dart APK, installed with adb install -r and launched MainActivity; no uninstall or data clear",
+    "normal_demo_restore": "passed: rebuilt ordinary example/lib/main.dart APK, installed with adb install -r and launched MainActivity; no uninstall or data clear",
     "business_files_checked": 6,
     "business_files_changed": [],
     "changed_after_normal_launch": [

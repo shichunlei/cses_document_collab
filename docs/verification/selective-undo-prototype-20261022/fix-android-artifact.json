@@ -38,37 +38,37 @@
       "sha256": "6c1c5591dc87e89490fdecc8414e7b989de3160c7e617d8347b49cb60c37bd25",
       "embeddedExactSource": true
     },
-    "packages/cses_document_collab/lib/src/controller/collab_controller.dart": {
+    "lib/src/controller/collab_controller.dart": {
       "sha256": "b3abe38f1e1383471b454f0d01275a07133770c34b3930e626de3d225118a328",
       "embeddedExactSource": true
     },
-    "packages/cses_document_collab/lib/src/editor/appflowy_block_editor_adapter.dart": {
+    "lib/src/editor/appflowy_block_editor_adapter.dart": {
       "sha256": "3eab82ff3f7fca3e3669ce2c920010b240818aadc7e7860fbee908c2851f3c44",
       "embeddedExactSource": true
     },
-    "packages/cses_document_collab/lib/src/editor/collab_native_selection.dart": {
+    "lib/src/editor/collab_native_selection.dart": {
       "sha256": "efb311c0b65b0f5c2816ffc4c31ce5c1fee3512891ac05107ad1a88a8b8d03d2",
       "embeddedExactSource": true
     },
-    "packages/cses_document_collab/lib/src/editor/collaborative_editor_page.dart": {
+    "lib/src/editor/collaborative_editor_page.dart": {
       "sha256": "d368a6c44fd5ec68ca72706b9a6ff44f0f97242b6fbfb96238fbb5d2122a15c7",
       "embeddedExactSource": true
     },
-    "packages/cses_document_collab/lib/src/native/api/collab/history.dart": {
+    "lib/src/native/api/collab/history.dart": {
       "sha256": "ce3eaab792807ad63613986da030812d12942983d79d50d6c827c851413064f9",
       "embeddedExactSource": true
     },
-    "packages/cses_document_collab/lib/src/native/frb_generated.dart": {
+    "lib/src/native/frb_generated.dart": {
       "sha256": "3dcb2dd5fabc8e5d0c4b3c2120374f8e40d23e0877462ff012682f29c7484959",
       "embeddedExactSource": true
     },
-    "packages/cses_document_collab/lib/src/native/frb_generated.io.dart": {
+    "lib/src/native/frb_generated.io.dart": {
       "sha256": "58ae6b24413b4f9148a39a108ff0d3a6b4a0b2544ad7110eeb917a3dbc572408",
       "embeddedExactSource": true
     }
   },
   "excludedConditionalSource": {
-    "packages/cses_document_collab/lib/src/native/frb_generated.web.dart": "Android uses IO; this source is excluded from the APK"
+    "lib/src/native/frb_generated.web.dart": "Android uses IO; this source is excluded from the APK"
   },
   "nativeLibraries": {
     "lib/arm64-v8a/libcses_collab_core.so": {

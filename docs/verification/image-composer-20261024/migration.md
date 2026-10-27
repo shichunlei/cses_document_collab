@@ -6,14 +6,14 @@
 
 | 原包内内容 | 当前宿主实现或处理 |
 |---|---|
-| `src/image_composer/image_composer_controller.dart` | [宿主功能控制器](../../../lib/src/image_composer/image_composer_controller.dart)，仅通过公开包API组合本地编辑和预览 |
-| `src/image_composer/image_composer_page.dart` | [宿主页面](../../../lib/src/image_composer/image_composer_page.dart)，保留标题、工具栏、模板、布局、预览及键盘行为 |
-| `src/image_composer/show_image_composer.dart` / `showCollabImageComposer` | [宿主路由入口](../../../lib/src/image_composer/show_image_composer.dart) / `showImageComposer` |
-| `src/model/collab_image_template.dart` / `CollabImageTemplate` / `collabImageTemplates` | [宿主模板](../../../lib/src/image_composer/image_composer_template.dart) / `ImageComposerTemplate` / `imageComposerTemplates`，仍为原五种本地模板 |
+| `src/image_composer/image_composer_controller.dart` | [宿主功能控制器](../../../example/lib/src/image_composer/image_composer_controller.dart)，仅通过公开包API组合本地编辑和预览 |
+| `src/image_composer/image_composer_page.dart` | [宿主页面](../../../example/lib/src/image_composer/image_composer_page.dart)，保留标题、工具栏、模板、布局、预览及键盘行为 |
+| `src/image_composer/show_image_composer.dart` / `showCollabImageComposer` | [宿主路由入口](../../../example/lib/src/image_composer/show_image_composer.dart) / `showImageComposer` |
+| `src/model/collab_image_template.dart` / `CollabImageTemplate` / `collabImageTemplates` | [宿主模板](../../../example/lib/src/image_composer/image_composer_template.dart) / `ImageComposerTemplate` / `imageComposerTemplates`，仍为原五种本地模板 |
 | `src/editor/local_editor_view.dart` | 删除专属于制图的薄包装；页面和输入测试直接组合公开`DocumentEditorView` |
-| `test/image_composer_page_test.dart` | [宿主页面测试](../../../test/image_composer/image_composer_page_test.dart)，通过公开行为验证，不再导入包内锁服务 |
-| `test/image_composer_operations_test.dart` | 保留包内通用测试，改名[local_editor_operations_test.dart](../../../packages/cses_document_collab/test/local_editor_operations_test.dart) |
-| `test/image_composer_native_isolation_test.dart` | 改名[local_editor_native_isolation_test.dart](../../../packages/cses_document_collab/test/local_editor_native_isolation_test.dart)，改用通用控制器创建本地正文与只读快照 |
+| `test/image_composer_page_test.dart` | [宿主页面测试](../../../example/test/image_composer/image_composer_page_test.dart)，通过公开行为验证，不再导入包内锁服务 |
+| `test/image_composer_operations_test.dart` | 保留包内通用测试，改名[local_editor_operations_test.dart](../../../test/local_editor_operations_test.dart) |
+| `test/image_composer_native_isolation_test.dart` | 改名[local_editor_native_isolation_test.dart](../../../test/local_editor_native_isolation_test.dart)，改用通用控制器创建本地正文与只读快照 |
 
 移除了包的制图入口及模板导出、制图专属分析配置，同步Demo调用、当前README和包内职责规范。宿主已有直接依赖，无需新增依赖或改锁文件。没有为搬迁增加包公开出口，也没有让包反向依赖宿主。
 
@@ -48,4 +48,4 @@
 - `CollaborativeEditorPage`继续装配`DocumentHeader`及`DocumentFeedbackFooter`；`CollabController`继续持有既有元数据和反馈控制器，不改变文档头尾的功能与归属。
 - 会议、任务、KR及其必要模型、展示、操作和协议兼容继续在包内维护，现有加载与宿主能力注入契约保持。
 
-本轮迁移限定为`image_composer`这一独立应用功能。上述块与扩展没有代码改动，既有编辑与协同职责保持；宿主服务继续通过公开契约显式注入。此边界已同步至[包内规范](../../../packages/cses_document_collab/AGENTS.md)。
+本轮迁移限定为`image_composer`这一独立应用功能。上述块与扩展没有代码改动，既有编辑与协同职责保持；宿主服务继续通过公开契约显式注入。此边界已同步至[包内规范](../../../AGENTS.md)。

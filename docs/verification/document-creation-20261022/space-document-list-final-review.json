@@ -13,16 +13,16 @@
     "skipped": 0
   },
   "source_sha256": {
-    "lib/src/demo/document_creation/cses_document_creation_service.dart": "1748ee131ffdb5848bcf1ca3a3342ae2f587924062f38e49f73f8115a9010326",
-    "lib/src/demo/document_creation/document_creation_page.dart": "421defbc0388adfbab740412d226aa9bb45f6a5b6a015396fded57520b233eef",
-    "lib/src/demo/document_creation/document_list_page.dart": "53c88c5442e1aafcb9637b1ab612bbb253c6bad76411b6b60e06b63b83426d3d",
-    "lib/src/demo/document_creation/document_space_list.dart": "3bdec2e55ad682ac252da71c31bf8af8a2c56fc104c8e1fab393f9979adba0fe",
-    "lib/src/demo/document_host.dart": "9259cd8a0ab69cbf6aa5591f54eabbbaa527ddd6a8d735c8a1256d57557d6be3",
-    "lib/src/demo/collab_demo_page.dart": "14d3e101dbeade9520f14c77fb066a01d748a77687cc05b3c19c3fa7be5cc7f6",
-    "test/document_creation_coordinator_test.dart": "5ce6e09fe45c4c3e67cbde9cc418e2fbfa6c9c666d45b920a0867d3a0c718134",
-    "test/cses_document_creation_service_test.dart": "00cdbf48f8fdd37d1c573d941b4e9d7014f542243947b650cb9db4733d5bdfc0",
-    "test/document_space_list_test.dart": "7e06cd8e9bf83c1c2676b72e5af8fe0b9c62141e00fd56f5c36d386d8549cc56",
-    "integration_test/document_creation_device_test.dart": "6cbfb074cd5c7d56195c3f162b3689fb3a892dc42abab8c37da0486c440f4b78"
+    "example/lib/src/demo/document_creation/cses_document_creation_service.dart": "1748ee131ffdb5848bcf1ca3a3342ae2f587924062f38e49f73f8115a9010326",
+    "example/lib/src/demo/document_creation/document_creation_page.dart": "421defbc0388adfbab740412d226aa9bb45f6a5b6a015396fded57520b233eef",
+    "example/lib/src/demo/document_creation/document_list_page.dart": "53c88c5442e1aafcb9637b1ab612bbb253c6bad76411b6b60e06b63b83426d3d",
+    "example/lib/src/demo/document_creation/document_space_list.dart": "3bdec2e55ad682ac252da71c31bf8af8a2c56fc104c8e1fab393f9979adba0fe",
+    "example/lib/src/demo/document_host.dart": "9259cd8a0ab69cbf6aa5591f54eabbbaa527ddd6a8d735c8a1256d57557d6be3",
+    "example/lib/src/demo/collab_demo_page.dart": "14d3e101dbeade9520f14c77fb066a01d748a77687cc05b3c19c3fa7be5cc7f6",
+    "example/test/document_creation_coordinator_test.dart": "5ce6e09fe45c4c3e67cbde9cc418e2fbfa6c9c666d45b920a0867d3a0c718134",
+    "example/test/cses_document_creation_service_test.dart": "00cdbf48f8fdd37d1c573d941b4e9d7014f542243947b650cb9db4733d5bdfc0",
+    "example/test/document_space_list_test.dart": "7e06cd8e9bf83c1c2676b72e5af8fe0b9c62141e00fd56f5c36d386d8549cc56",
+    "example/integration_test/document_creation_device_test.dart": "6cbfb074cd5c7d56195c3f162b3689fb3a892dc42abab8c37da0486c440f4b78"
   },
   "source_snapshot_matches_previous_validation": true,
   "reused_validation": "same-source target analysis, format and Android debug build from retry-fix record",

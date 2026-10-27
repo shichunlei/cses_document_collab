@@ -1,37 +1,37 @@
 [
   {
-    "from": "lib/src/demo/document_creation/cses_document_creation_service.dart",
-    "to": "lib/src/service/cses_document_creation_service.dart",
+    "from": "example/lib/src/demo/document_creation/cses_document_creation_service.dart",
+    "to": "example/lib/src/service/cses_document_creation_service.dart",
     "business_body_unchanged": true,
     "sha256": "23d17fa9a3da8d3dc70b0aa5cf116d6da4fbf8e3f3282a2cbe9a8145337b1985"
   },
   {
-    "from": "lib/src/demo/cses_document_metadata_service.dart",
-    "to": "lib/src/service/cses_document_metadata_service.dart",
+    "from": "example/lib/src/demo/cses_document_metadata_service.dart",
+    "to": "example/lib/src/service/cses_document_metadata_service.dart",
     "business_body_unchanged": true,
     "sha256": "14ed12c355e7a5b3c10576edd5fc733ad365f6c1073a91c49f5acb55d33d6e55"
   },
   {
-    "from": "lib/src/demo/cses_editor_media_upload_service.dart",
-    "to": "lib/src/service/cses_editor_media_upload_service.dart",
+    "from": "example/lib/src/demo/cses_editor_media_upload_service.dart",
+    "to": "example/lib/src/service/cses_editor_media_upload_service.dart",
     "business_body_unchanged": true,
     "sha256": "b7dbcd5e661ae90c107758065824716c6ff15cde74e8ab00c2c24dfcc885fe87"
   },
   {
-    "from": "lib/src/demo/cses_kr_service.dart",
-    "to": "lib/src/service/cses_kr_service.dart",
+    "from": "example/lib/src/demo/cses_kr_service.dart",
+    "to": "example/lib/src/service/cses_kr_service.dart",
     "business_body_unchanged": true,
     "sha256": "fa7d4500b1265388767f79b72e8a3c9d47911980f14eab9a1c08ee37f5131bd6"
   },
   {
-    "from": "lib/src/demo/cses_meeting_card_service.dart",
-    "to": "lib/src/service/cses_meeting_card_service.dart",
+    "from": "example/lib/src/demo/cses_meeting_card_service.dart",
+    "to": "example/lib/src/service/cses_meeting_card_service.dart",
     "business_body_unchanged": true,
     "sha256": "34c824ae755c4156641ecb90fb018e5d1732713e0813912f5e8ede443e334402"
   },
   {
-    "from": "lib/src/demo/cses_task_card_service.dart",
-    "to": "lib/src/service/cses_task_card_service.dart",
+    "from": "example/lib/src/demo/cses_task_card_service.dart",
+    "to": "example/lib/src/service/cses_task_card_service.dart",
     "business_body_unchanged": true,
     "sha256": "703b592793f1f293dc122c7e19f7d76c2b139e7d7dd058ced6a11548ef1131f1"
   }

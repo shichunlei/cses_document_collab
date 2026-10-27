@@ -1,0 +1,17 @@
+{
+  "hasSiblingCommon": false,
+  "commands": [
+    {
+      "name": "independent-pub",
+      "command": "flutter pub get --offline --no-example",
+      "cwd": "isolated package root without sibling Common",
+      "exitCode": 0
+    },
+    {
+      "name": "cover-generator",
+      "command": "python3 tool/sync_document_cover_catalog.py ../cses-client/packages/docs/src/document-content/metadata/components/doc-image-picker.catalog.ts",
+      "cwd": "isolated package root without sibling Common",
+      "exitCode": 0
+    }
+  ]
+}

@@ -14,7 +14,7 @@
     "widget_tests": {
       "passed": 43,
       "command": "flutter test --no-pub test/collab_resource_block_test.dart test/collab_block_actions_test.dart",
-      "cwd": "packages/cses_document_collab",
+      "cwd": ".",
       "log": "/tmp/attachment-redesign-tests-final.log",
       "coverage": [
         "PDF/表格/压缩/未知类型图标与标签、MIME回落、0B/KB/GB大小",
@@ -53,8 +53,8 @@
     "既有附件上传/下载管理及桌面双向验收范围不扩大；不修改其他工作区功能。"
   ],
   "source_sha256": {
-    "packages/cses_document_collab/lib/src/editor/collab_resource_block.dart": "7c40590b1c8bbbbb89f68527cdbb0df1a30d406b1da5022b74dc55a5e6a3b3a6",
-    "packages/cses_document_collab/test/collab_resource_block_test.dart": "cf00a23f5e8d975fb9a8064cee2e64b94d00b4aaa647f539b896538451d35280",
+    "lib/src/editor/collab_resource_block.dart": "7c40590b1c8bbbbb89f68527cdbb0df1a30d406b1da5022b74dc55a5e6a3b3a6",
+    "test/collab_resource_block_test.dart": "cf00a23f5e8d975fb9a8064cee2e64b94d00b4aaa647f539b896538451d35280",
     "docs/verification/attachment-card-20261016/attachment-card-20261016.png": "56a008dc112ea5b1332df4fa93429baf67c44935eec7b8035a779ad63eaa66c0"
   }
 }

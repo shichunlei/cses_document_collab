@@ -13,9 +13,9 @@
       "icon": "LucideIcons.listTodo"
     },
     "source_files": [
-      "packages/cses_document_collab/lib/src/editor/collab_block_actions.dart",
-      "packages/cses_document_collab/lib/src/editor/collab_meeting_block.dart",
-      "packages/cses_document_collab/lib/src/editor/collab_task_card_block.dart"
+      "lib/src/editor/collab_block_actions.dart",
+      "lib/src/editor/collab_meeting_block.dart",
+      "lib/src/editor/collab_task_card_block.dart"
     ]
   },
   "validation": {

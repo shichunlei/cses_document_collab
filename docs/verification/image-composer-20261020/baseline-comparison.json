@@ -1,7 +1,7 @@
 {
   "date": "2026-10-20",
   "baseline_commit": "f2ef41631fd21ae33924c5524230a8bc2c0bdea8",
-  "method": "git archive HEAD packages/cses_document_collab to isolated directory; absolute package roots, same AppFlowy/dependencies/native test dylib",
+  "method": "git archive HEAD . to isolated directory; absolute package roots, same AppFlowy/dependencies/native test dylib",
   "worktree_full_run": {
     "passed": 1457,
     "failed": 43,

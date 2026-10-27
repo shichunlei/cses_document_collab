@@ -29,7 +29,7 @@
 其他上游版本差异继续沿用适配表的待同步清单，本轮不声明全版本兼容。
 
 正式Yjs与JSON夹具来自发布版Schema工厂和样式声明，生成入口为
-[generate_date_card_fixture.mjs](../../../packages/cses_document_collab/tool/generate_date_card_fixture.mjs)。
+[generate_date_card_fixture.mjs](../../../tool/generate_date_card_fixture.mjs)。
 固定Yjs clientID和顺序用于重现，夹具包含12样式、嵌套卡片、异常子树及未知属性/元数据。
 
 ## 验证结果

@@ -5,7 +5,7 @@
       "cargo",
       "fmt",
       "--manifest-path",
-      "packages/cses_document_collab/rust/vendor/yrs-history/Cargo.toml",
+      "rust/vendor/yrs-history/Cargo.toml",
       "--check"
     ],
     "exit_code": 1
@@ -30,8 +30,8 @@
       "--config",
       "skip_children=true",
       "--check",
-      "packages/cses_document_collab/rust/vendor/yrs-history/src/lib.rs",
-      "packages/cses_document_collab/rust/vendor/yrs-history/src/history_checkpoint.rs"
+      "rust/vendor/yrs-history/src/lib.rs",
+      "rust/vendor/yrs-history/src/history_checkpoint.rs"
     ],
     "exit_code": 0
   },
@@ -41,7 +41,7 @@
       "cargo",
       "tree",
       "--manifest-path",
-      "packages/cses_document_collab/rust/Cargo.toml",
+      "rust/Cargo.toml",
       "--edges",
       "normal",
       "--depth",

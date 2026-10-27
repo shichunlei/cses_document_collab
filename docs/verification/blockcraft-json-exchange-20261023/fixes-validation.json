@@ -25,7 +25,7 @@
       "passed": 1698,
       "skippedInitially": 1,
       "log": "fixes-package-all-tests.txt",
-      "command": "flutter test --no-pub --dart-define=GENERATE_BLOCKCRAFT_EXAMPLES=true (packages/cses_document_collab)"
+      "command": "flutter test --no-pub --dart-define=GENERATE_BLOCKCRAFT_EXAMPLES=true (.)"
     },
     "desktopNative": {
       "passed": 3,

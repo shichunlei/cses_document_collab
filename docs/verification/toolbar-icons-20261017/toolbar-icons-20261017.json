@@ -3,10 +3,10 @@
   "request": "截图中键盘工具栏及类型、文字样式、对齐展开栏统一使用lucide_icons_flutter图标",
   "scope": {
     "source": [
-      "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart",
-      "packages/cses_document_collab/lib/src/editor/stable_mobile_toolbar.dart"
+      "lib/src/editor/editor_shortcut_toolbar.dart",
+      "lib/src/editor/stable_mobile_toolbar.dart"
     ],
-    "test": "packages/cses_document_collab/test/editor_shortcut_toolbar_test.dart",
+    "test": "test/editor_shortcut_toolbar_test.dart",
     "library": "复用已安装lucide_icons_flutter 4.0.0，不变更依赖",
     "main_row": {
       "添加": "circlePlus",

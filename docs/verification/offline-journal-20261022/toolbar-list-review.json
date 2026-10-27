@@ -8,7 +8,7 @@
       "id": "R1",
       "priority": 2,
       "topic": "intervening account session not permanently revoked",
-      "file": "lib/src/daily_guidance/local_journal_page.dart",
+      "file": "example/lib/src/daily_guidance/local_journal_page.dart",
       "lines": [
         297,
         301
@@ -19,7 +19,7 @@
       "id": "R2",
       "priority": 2,
       "topic": "native user label scales twice inside journal WidgetSpan",
-      "file": "packages/cses_document_collab/lib/src/editor/editor_user_mentions.dart",
+      "file": "lib/src/editor/editor_user_mentions.dart",
       "lines": [
         126,
         132
@@ -30,7 +30,7 @@
       "id": "R3",
       "priority": 2,
       "topic": "same-frame taps bypass pending host action exclusion",
-      "file": "packages/cses_document_collab/lib/src/editor/stable_mobile_toolbar.dart",
+      "file": "lib/src/editor/stable_mobile_toolbar.dart",
       "lines": [
         217,
         219

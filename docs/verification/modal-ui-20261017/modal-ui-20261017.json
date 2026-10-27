@@ -33,7 +33,7 @@
       "列表编号",
       "表格行列"
     ],
-    "shared_source": "packages/cses_document_collab/lib/src/ui/modal/collab_modal.dart",
+    "shared_source": "lib/src/ui/modal/collab_modal.dart",
     "shared_contracts": [
       "showCollabBottomSheet<T>",
       "CollabBottomSheet",

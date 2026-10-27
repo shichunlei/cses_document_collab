@@ -3,17 +3,17 @@
   "request": "Split image/video card block implementations without changing business behavior or UI.",
   "implementation": {
     "image": {
-      "file": "packages/cses_document_collab/lib/src/editor/collab_image_block.dart",
+      "file": "lib/src/editor/collab_image_block.dart",
       "builder": "CollabImageBlockComponentBuilder",
       "preserved": "CollabImageContent, image projection, dimensions, captions, menus, cached/SVG/data-URI handling and legacy AppFlowy image fallback remain unchanged."
     },
     "video": {
-      "file": "packages/cses_document_collab/lib/src/editor/collab_video_block.dart",
+      "file": "lib/src/editor/collab_video_block.dart",
       "builder": "CollabVideoBlockComponentBuilder",
       "ownership": "Video state alone owns the controller and pending-seek map; original source replacement, stale-initialize checks, play/pause, seek-before-dispose ordering and failure behavior are retained."
     },
     "common": {
-      "file": "packages/cses_document_collab/lib/src/editor/collab_media_block_base.dart",
+      "file": "lib/src/editor/collab_media_block_base.dart",
       "classes": [
         "CollabMediaBlock",
         "CollabMediaBlockState"
@@ -21,18 +21,18 @@
       "preserved": "Original Padding/Stack wrapper, menu placement/Material, block/cursor/selection modes, coordinate calculations, configuration and action wrapper. Does not adopt the separate resource-card UI shell."
     },
     "legacy_link": {
-      "file": "packages/cses_document_collab/lib/src/editor/collab_embed_block.dart",
+      "file": "lib/src/editor/collab_embed_block.dart",
       "preserved": "Original independent-link factory/call signature, link enum value, card method, menu and external-opening behavior retained. Image/video enum members and dispatch branches removed after migrating every caller."
     },
     "migrated_callers": [
-      "packages/cses_document_collab/integration_test/mobile_card_pointer_test.dart",
-      "packages/cses_document_collab/test/collab_list_enter_focus_test.dart",
-      "packages/cses_document_collab/test/collab_list_backspace_focus_test.dart",
-      "packages/cses_document_collab/test/collab_list_toolbar_focus_test.dart",
-      "packages/cses_document_collab/test/collab_video_update_test.dart",
-      "packages/cses_document_collab/test/collab_block_actions_test.dart",
-      "packages/cses_document_collab/test/editor_modal_focus_test.dart",
-      "packages/cses_document_collab/lib/src/editor/collaborative_editor_page.dart"
+      "integration_test/mobile_card_pointer_test.dart",
+      "test/collab_list_enter_focus_test.dart",
+      "test/collab_list_backspace_focus_test.dart",
+      "test/collab_list_toolbar_focus_test.dart",
+      "test/collab_video_update_test.dart",
+      "test/collab_block_actions_test.dart",
+      "test/editor_modal_focus_test.dart",
+      "lib/src/editor/collaborative_editor_page.dart"
     ],
     "outside_scope": [
       "Shared schema/flavours and resource fields",

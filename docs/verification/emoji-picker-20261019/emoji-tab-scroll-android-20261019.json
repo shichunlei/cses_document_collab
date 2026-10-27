@@ -138,7 +138,7 @@
     "excludedInstallationMarker": "files/profileInstalled",
     "markerSource": "androidx.profileinstaller 1.4.0 ProfileVerifier.class",
     "restoreInstall": "adb install -r",
-    "normalTarget": "lib/main.dart",
+    "normalTarget": "example/lib/main.dart",
     "normalApplicationRestored": true
   }
 }

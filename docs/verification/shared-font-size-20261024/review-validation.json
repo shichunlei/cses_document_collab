@@ -4,12 +4,12 @@
   "findings": [],
   "productOrTestSourceModifiedByReview": false,
   "reviewedSourceSha256": {
-    "packages/cses_document_collab/lib/src/editor/core/editor_configuration.dart": "9201e99f1d47f85ef6209b9cd82e421f7560090a97a51d15d2071bdb34bce30b",
-    "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart": "8d17661c30d47db3bb73238dc256443005d7393c163a869253dd57600c0f9a9d",
-    "packages/cses_document_collab/test/collab_controller_snapshot_test.dart": "e0d0343607b042170f847df03a948e83a94cc727ad26dbe959a82b72cb22f422",
-    "packages/cses_document_collab/test/local_editor_operations_test.dart": "02a91c43584b233a46e00ba8500ff8a9d8803066b5d42377f3f6f3dab71c6ebd",
-    "packages/cses_document_collab/test/shared_font_size_test.dart": "1ea96d1b1933fe7df25a2a72f1ada8e8a9a9ad1bc9e08ed0294fde5c271abb91",
-    "packages/cses_document_collab/test/paragraph_layout_spacing_test.dart": "1acf932dbdbf9905ebe8a2a6a0114f327c8cb88fed093a8917a7bb833fd4e884"
+    "lib/src/editor/core/editor_configuration.dart": "9201e99f1d47f85ef6209b9cd82e421f7560090a97a51d15d2071bdb34bce30b",
+    "lib/src/editor/editor_shortcut_toolbar.dart": "8d17661c30d47db3bb73238dc256443005d7393c163a869253dd57600c0f9a9d",
+    "test/collab_controller_snapshot_test.dart": "e0d0343607b042170f847df03a948e83a94cc727ad26dbe959a82b72cb22f422",
+    "test/local_editor_operations_test.dart": "02a91c43584b233a46e00ba8500ff8a9d8803066b5d42377f3f6f3dab71c6ebd",
+    "test/shared_font_size_test.dart": "1ea96d1b1933fe7df25a2a72f1ada8e8a9a9ad1bc9e08ed0294fde5c271abb91",
+    "test/paragraph_layout_spacing_test.dart": "1acf932dbdbf9905ebe8a2a6a0114f327c8cb88fed093a8917a7bb833fd4e884"
   },
   "existingEvidence": {
     "fontPackage": 203,

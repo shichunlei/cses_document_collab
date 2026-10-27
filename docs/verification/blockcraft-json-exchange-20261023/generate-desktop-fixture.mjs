@@ -27,6 +27,6 @@ for(const b of blocks){
 }
 for(const [flavour,props] of [['task',{taskId:'task-demo',title:'示例任务'}],['task-list',{itemsJson:JSON.stringify([{id:'t1',title:'清单任务',checked:true}])}],['meeting',{meetingId:'meeting-demo'}],['kr-list',{meetingId:'meeting-demo'}],['mind-map',{data:{data:{text:'中心主题'},children:[{data:{text:'分支一'}}]}}]])blocks.push({id:'',flavour,nodeType:'void',props,meta:{},children:[]});
 const root=bc.RootBlockSchema.createSnapshot('fixture-root',blocks);normalize(root);
-fs.mkdirSync('packages/cses_document_collab/test/fixtures',{recursive:true});
-fs.writeFileSync('packages/cses_document_collab/test/fixtures/desktop-json-blocks.json',JSON.stringify(root,null,2)+'\n');
+fs.mkdirSync('test/fixtures',{recursive:true});
+fs.writeFileSync('test/fixtures/desktop-json-blocks.json',JSON.stringify(root,null,2)+'\n');
 console.log(JSON.stringify({errors,types:blocks.map(b=>b.flavour),nodes:seq}));

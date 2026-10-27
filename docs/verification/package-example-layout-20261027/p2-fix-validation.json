@@ -1,0 +1,160 @@
+{
+  "date": "2026-10-27",
+  "status": "all_three_p2_fixed",
+  "findings": {
+    "R1": {
+      "status": "fixed",
+      "priority": 2,
+      "report": "p2-fixes.md"
+    },
+    "R2": {
+      "status": "fixed",
+      "priority": 2,
+      "report": "p2-fixes.md"
+    },
+    "R3": {
+      "status": "fixed",
+      "priority": 2,
+      "report": "p2-fixes.md"
+    }
+  },
+  "checks": {
+    "independentPubAndGenerator": {
+      "hasSiblingCommon": false,
+      "commands": [
+        {
+          "name": "independent-pub",
+          "command": "flutter pub get --offline --no-example",
+          "cwd": "isolated package root without sibling Common",
+          "exitCode": 0
+        },
+        {
+          "name": "cover-generator",
+          "command": "python3 tool/sync_document_cover_catalog.py ../cses-client/packages/docs/src/document-content/metadata/components/doc-image-picker.catalog.ts",
+          "cwd": "isolated package root without sibling Common",
+          "exitCode": 0
+        }
+      ]
+    },
+    "devicePathOccurrences": 13,
+    "allDevicePathsExist": true,
+    "deviceEntryAnalysis": {
+      "exitCode": 0,
+      "files": 4
+    },
+    "deviceBundles": [
+      {
+        "name": "mobile-card",
+        "command": "flutter build bundle --debug --no-pub --target ../integration_test/mobile_card_pointer_test.dart --asset-dir build/p2-layout-validation/mobile-card",
+        "cwd": "example",
+        "exitCode": 0,
+        "kernelExists": true,
+        "assetManifestExists": true
+      },
+      {
+        "name": "heading",
+        "command": "flutter build bundle --debug --no-pub --target ../integration_test/heading_typography_test.dart --asset-dir build/p2-layout-validation/heading",
+        "cwd": "example",
+        "exitCode": 0,
+        "kernelExists": true,
+        "assetManifestExists": true
+      },
+      {
+        "name": "editor-review",
+        "command": "flutter build bundle --debug --no-pub --target ../integration_test/editor_review_fixes_test.dart --asset-dir build/p2-layout-validation/editor-review",
+        "cwd": "example",
+        "exitCode": 0,
+        "kernelExists": true,
+        "assetManifestExists": true
+      }
+    ],
+    "coreNativeTests": {
+      "exitCode": 0,
+      "passed": 2
+    },
+    "examplePubGet": {
+      "exitCode": 0,
+      "cwd": "example"
+    },
+    "exampleAuthAndCommonTests": {
+      "exitCode": 0,
+      "passed": 11,
+      "files": [
+        "test/cses_account_login_test.dart",
+        "test/cses_ws_gateway_integration_test.dart"
+      ]
+    },
+    "changedShellBlocks": [
+      {
+        "file": "README.md",
+        "block": 1,
+        "exitCode": 0,
+        "error": ""
+      },
+      {
+        "file": "README.md",
+        "block": 6,
+        "exitCode": 0,
+        "error": ""
+      },
+      {
+        "file": "README.md",
+        "block": 8,
+        "exitCode": 0,
+        "error": ""
+      },
+      {
+        "file": "README.md",
+        "block": 10,
+        "exitCode": 0,
+        "error": ""
+      },
+      {
+        "file": "README.md",
+        "block": 11,
+        "exitCode": 0,
+        "error": ""
+      },
+      {
+        "file": "README.md",
+        "block": 12,
+        "exitCode": 0,
+        "error": ""
+      },
+      {
+        "file": "example/README.md",
+        "block": 6,
+        "exitCode": 0,
+        "error": ""
+      },
+      {
+        "file": "docs/collab-package-integration.md",
+        "block": 1,
+        "exitCode": 0,
+        "error": ""
+      },
+      {
+        "file": "docs/collab-package-integration.md",
+        "block": 2,
+        "exitCode": 0,
+        "error": ""
+      },
+      {
+        "file": "docs/collab-package-integration.md",
+        "block": 3,
+        "exitCode": 0,
+        "error": ""
+      }
+    ],
+    "linkErrors": [],
+    "sourceChanges": [],
+    "allPassed": true
+  },
+  "committed": false,
+  "pushed": false,
+  "limitations": [
+    "No flutter drive execution or physical-device interaction; verified paths, static analysis and three Flutter bundle compilations.",
+    "No full-suite rerun or platform APK/iOS build in this docs-only follow-up.",
+    "Preexisting core toolbar failure and static infos remain recorded."
+  ]
+}

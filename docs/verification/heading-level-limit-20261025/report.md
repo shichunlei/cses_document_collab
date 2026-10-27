@@ -46,7 +46,7 @@
 
 ## 复现
 
-在 `packages/cses_document_collab/rust`：
+在 `rust`：
 
 ```sh
 cargo fmt --check
@@ -55,7 +55,7 @@ cargo test --offline
 cargo build --offline
 ```
 
-在 `packages/cses_document_collab`：
+在 `仓库根 package`：
 
 ```sh
 flutter test --no-pub test/heading_level_limits_test.dart test/editor_configuration_test.dart test/editor_toolbar_configuration_test.dart test/editor_shortcut_toolbar_test.dart test/appflowy_block_editor_adapter_test.dart test/heading_typography_test.dart test/blockcraft_json_editing_test.dart test/blockcraft_json_integrity_test.dart
@@ -71,7 +71,7 @@ flutter test --no-pub test/new/block_component/heading_block_component test/plug
 在仓库根目录：
 
 ```sh
-flutter test --no-pub test/daily_guidance/journal_blockcraft_editing_test.dart test/daily_guidance/journal_blockcraft_codec_test.dart test/daily_guidance/journal_blockcraft_integrity_test.dart test/image_composer/image_composer_page_test.dart test/daily_guidance/journal_format_toolbar_test.dart
+flutter test --no-pub example/test/daily_guidance/journal_blockcraft_editing_test.dart example/test/daily_guidance/journal_blockcraft_codec_test.dart example/test/daily_guidance/journal_blockcraft_integrity_test.dart example/test/image_composer/image_composer_page_test.dart example/test/daily_guidance/journal_format_toolbar_test.dart
 ```
 
 本轮没有执行完整 Android/iOS App 构建、物理设备或真实在线桌面双向验收。42 种块及 13 已适配/28 部分支持/1 结构支持/0 未适配的统计保持；本轮只收敛标题范围，不把版本核对或部分数据兼容视为全链路兼容完成。

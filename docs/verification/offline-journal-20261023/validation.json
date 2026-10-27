@@ -47,12 +47,12 @@
     "Historical IME composition replacement issue remains out of this fix scope."
   ],
   "sourceHashes": {
-    "lib/src/daily_guidance/local_journal_page.dart": "db5f3d632f7427d69a99139cc8c63d6778680e6bba26f1c6e95709416b2badf5",
-    "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart": "87db8be2a5d734dd7b9aa1a94f2f840ce66e2f3ab78087845c204f547a360e55",
-    "packages/cses_document_collab/lib/src/editor/stable_mobile_toolbar.dart": "b1874a44a96b67258cb5865e0e11a336362625a710926eee345cb7f39b0f9fbd",
-    "packages/cses_document_collab/lib/src/editor/editor_user_mentions.dart": "25fe0d369e7ef62acae91fcb5a3bc24134e307aff6e4d621b5c0157b17eb83fa",
-    "test/daily_guidance/journal_keyboard_toolbar_test.dart": "33573c6b5c40a49d20b1d49818f2008b56005fc098f7d48b885aef33a6d968bb",
-    "test/daily_guidance/journal_native_mentions_test.dart": "9fd1063ebafd036b740456eab25143b07e831d40391aa71f2735a6f5180adb89",
-    "packages/cses_document_collab/test/editor_keyboard_actions_test.dart": "ad2522643efede8b75f63810ecac0935dcd13e091812b00c58f49da3e9c47a49"
+    "example/lib/src/daily_guidance/local_journal_page.dart": "db5f3d632f7427d69a99139cc8c63d6778680e6bba26f1c6e95709416b2badf5",
+    "lib/src/editor/editor_shortcut_toolbar.dart": "87db8be2a5d734dd7b9aa1a94f2f840ce66e2f3ab78087845c204f547a360e55",
+    "lib/src/editor/stable_mobile_toolbar.dart": "b1874a44a96b67258cb5865e0e11a336362625a710926eee345cb7f39b0f9fbd",
+    "lib/src/editor/editor_user_mentions.dart": "25fe0d369e7ef62acae91fcb5a3bc24134e307aff6e4d621b5c0157b17eb83fa",
+    "example/test/daily_guidance/journal_keyboard_toolbar_test.dart": "33573c6b5c40a49d20b1d49818f2008b56005fc098f7d48b885aef33a6d968bb",
+    "example/test/daily_guidance/journal_native_mentions_test.dart": "9fd1063ebafd036b740456eab25143b07e831d40391aa71f2735a6f5180adb89",
+    "test/editor_keyboard_actions_test.dart": "ad2522643efede8b75f63810ecac0935dcd13e091812b00c58f49da3e9c47a49"
   }
 }

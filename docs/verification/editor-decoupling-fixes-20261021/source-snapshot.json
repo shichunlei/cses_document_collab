@@ -1,26 +1,26 @@
 [
   {
-    "file": "packages/cses_document_collab/lib/src/controller/collab_controller.dart",
+    "file": "lib/src/controller/collab_controller.dart",
     "sha256": "39ac32ba2ab70e46b792d92449986e4ada49fe9a5d9551563fca3f3a37798e4b"
   },
   {
-    "file": "packages/cses_document_collab/lib/src/editor/local_editor_controller.dart",
+    "file": "lib/src/editor/local_editor_controller.dart",
     "sha256": "1d3ff2d184a8587ae0429a6d7d86118cbb3df05fdd0a0a8a94e2c0bbd97d1e23"
   },
   {
-    "file": "packages/cses_document_collab/lib/src/editor/collab_code_editing.dart",
+    "file": "lib/src/editor/collab_code_editing.dart",
     "sha256": "ef17848144b7258e5c2fe8eb970c614e7cfa5587f0c454abba16ba98fa2dcba7"
   },
   {
-    "file": "packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart",
+    "file": "test/collab_controller_lifecycle_native_test.dart",
     "sha256": "e0b00841cf3f03c727afddfb9ce741c5fd93f46ebd39ec7c922d4006f5e3ac51"
   },
   {
-    "file": "packages/cses_document_collab/test/local_editor_command_regression_test.dart",
+    "file": "test/local_editor_command_regression_test.dart",
     "sha256": "5413c20152ebc38f9faa2373a6a7096e575be00993e60897fd13016ab14345a6"
   },
   {
-    "file": "packages/cses_document_collab/test/image_composer_operations_test.dart",
+    "file": "test/image_composer_operations_test.dart",
     "sha256": "d04d18d8cd766de8a862138352f51db09b9f726b64bf24646f8f4ebf105cc78e"
   },
   {

@@ -10,7 +10,7 @@
 
 ### R1 / P1：框内未知行内对象阻断整篇文档的快照提交
 
-位置：`packages/cses_document_collab/rust/src/api/blockcraft.rs:381–387`。
+位置：`rust/src/api/blockcraft.rs:381–387`。
 
 正式文本框允许的paragraph子块若包含未来插件的行内对象，投影会按既有恢复规则将该段落保留为`unsupported`，父框仍投影为`text-box`。新增`validate_columns`却不允许这个未变动的占位子块；每次全快照提交都返回`INVALID_TEXT_BOX`，即使用户仅修改框外的合法段落。
 
@@ -20,7 +20,7 @@
 
 ### R2 / P2：实际添加面板绕过文本框子块白名单
 
-位置：新增限制`packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart:1653`；未覆盖的调用链为`_AddBlockSheet._applyAndClose`→`applyBlockShortcut`。
+位置：新增限制`lib/src/editor/editor_shortcut_toolbar.dart:1653`；未覆盖的调用链为`_AddBlockSheet._applyAndClose`→`applyBlockShortcut`。
 
 本次只给T类型菜单的`applyEditorBlockStyle`增加父级限制，实际“添加→代码块”仍走没有同样校验的`applyBlockShortcut`。在文本框正文末尾操作会成功插入code子块，使树变成`paragraph, code`，整框随即因构建器校验失败回退为不支持内容。空段落也会被直接转换为不允许的类型。
 
@@ -28,7 +28,7 @@
 
 ### R3 / P2：纯预览继承编辑时的框内滚动位置
 
-位置：`packages/cses_document_collab/lib/src/editor/collab_text_box_block.dart:126–130`。
+位置：`lib/src/editor/collab_text_box_block.dart:126–130`。
 
 编辑与预览共用同一个`PageStorageKey('text-box-scroll-$id')`。长文本固定框在编辑时滚动到250逻辑像素后切换preview，内部offset仍为250；预览同时使用NeverScrollableScrollPhysics且整篇IgnorePointer，用户看不到首屏正文，也无法滚回顶部。桌面固定框的只读裁切应从起点展示，预览结果不应随此前编辑滚动而变化。
 

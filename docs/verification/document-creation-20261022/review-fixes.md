@@ -54,15 +54,15 @@ Rust变更仅在私有实现，未改变FRB签名或ABI，无需重新生成桥�
 宿主关联测试（本机原生库须先构建）：
 
 ```bash
-cargo build --manifest-path packages/cses_document_collab/rust/Cargo.toml
-FRB_DART_LOAD_EXTERNAL_LIBRARY_NATIVE_LIB_DIR="$PWD/packages/cses_document_collab/rust/target/debug" \
+cargo build --manifest-path rust/Cargo.toml
+FRB_DART_LOAD_EXTERNAL_LIBRARY_NATIVE_LIB_DIR="$PWD/rust/target/debug" \
   flutter test --no-pub --timeout=90s \
-  test/document_creation_coordinator_test.dart \
-  test/cses_document_creation_service_test.dart \
-  test/document_host_native_test.dart \
-  test/collab_demo_page_test.dart \
-  test/cses_document_metadata_service_test.dart \
-  test/cses_account_login_test.dart
+  example/test/document_creation_coordinator_test.dart \
+  example/test/cses_document_creation_service_test.dart \
+  example/test/document_host_native_test.dart \
+  example/test/collab_demo_page_test.dart \
+  example/test/cses_document_metadata_service_test.dart \
+  example/test/cses_account_login_test.dart
 ```
 
 协同包真实原生及互通测试沿用[实施报告](report.md)的命令，必须显式提供Node18以上路径；本轮使用Node24、桌面安装Yjs及完整性已核对的BlockCraft0.11.27发布产物。

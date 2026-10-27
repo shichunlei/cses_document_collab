@@ -8,7 +8,7 @@
 
 ## 交付边界
 
-新增 `packages/cses_document_collab/rust/src/history_prototype.rs` 与独立测试文件，通过 `cfg(test)` 或显式 `history-prototype` feature 编译。默认 Flutter/Cargokit 构建不包含该模块。模块在 `crate::api` 之外，没有新增 FRB 接口、修改生成文件或切换现有编辑入口。
+新增 `rust/src/history_prototype.rs` 与独立测试文件，通过 `cfg(test)` 或显式 `history-prototype` feature 编译。默认 Flutter/Cargokit 构建不包含该模块。模块在 `crate::api` 之外，没有新增 FRB 接口、修改生成文件或切换现有编辑入口。
 
 原型使用真实 Yrs（Cargo.lock 实际 0.27.4；声明兼容范围 0.27.3）及 rusqlite，操作正式 `blocks[id].children: Y.Text`。支持本地 UTF-16 文字替换、选择性 undo/redo、远端 V1 增量及 SQLite 内容恢复。本地 origin 进入当前会话历史，远端与缓存 origin 不进入历史、不清空 redo；每次替换是一组，新本地修改清空 redo，空操作不清空。
 
@@ -46,7 +46,7 @@ Rust 命令与退出码见 [rust-checks.json](rust-checks.json)，最终手写�
 
 新增回归包含：远端前缀/片段中间插字、其他块变化保留本地历史；本地删除撤销保留远端插字；远端删除文字或整块后不误复活；远端更新保留 redo、自身回声不重复捕获；连续删除与多轮 undo/redo；远端加粗后整段删除与恢复时逐字符格式相等；删除型增量落盘；乱序依赖落盘与重开；未知 props/meta 保留；UTF-16 emoji 与非法范围；无效增量；数据库文档分区；本地/远端/undo/redo 各自 INSERT 和 COMMIT 失败共八项；真实数据库占用。另有四个固定种子共 400 步双端混合操作，每步检查双方文字相等且远端插入的字符计数不丢失。
 
-Flutter 目标命令在 `packages/cses_document_collab` 中执行：
+Flutter 目标命令在 `仓库根 package` 中执行：
 
 ```sh
 flutter test --no-pub --reporter expanded \

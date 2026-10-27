@@ -188,62 +188,62 @@
     "raw_log": "/tmp/decoupling-fixes-package-full.jsonl",
     "new_regressions": [
       {
-        "file": "/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_command_regression_test.dart",
+        "file": "/System/Volumes/Data/workspace/mobile-collab-demo/test/local_editor_command_regression_test.dart",
         "test": "disabled alignment must not disable heading conversion",
         "result": "success"
       },
       {
-        "file": "/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_command_regression_test.dart",
+        "file": "/System/Volumes/Data/workspace/mobile-collab-demo/test/local_editor_command_regression_test.dart",
         "test": "pasting multiline text in code must preserve a single code block",
         "result": "success"
       },
       {
-        "file": "/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_command_regression_test.dart",
+        "file": "/System/Volumes/Data/workspace/mobile-collab-demo/test/local_editor_command_regression_test.dart",
         "test": "code paste preserves identity, suffix, metadata and history; reverse=false",
         "result": "success"
       },
       {
-        "file": "/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_command_regression_test.dart",
+        "file": "/System/Volumes/Data/workspace/mobile-collab-demo/test/local_editor_command_regression_test.dart",
         "test": "code paste preserves identity, suffix, metadata and history; reverse=true",
         "result": "success"
       },
       {
-        "file": "/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_command_regression_test.dart",
+        "file": "/System/Volumes/Data/workspace/mobile-collab-demo/test/local_editor_command_regression_test.dart",
         "test": "code paste rejects capacity before mutation and ignores readonly input",
         "result": "success"
       },
       {
-        "file": "/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_command_regression_test.dart",
+        "file": "/System/Volumes/Data/workspace/mobile-collab-demo/test/local_editor_command_regression_test.dart",
         "test": "converting a container must not discard its child content",
         "result": "success"
       },
       {
-        "file": "/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_command_regression_test.dart",
+        "file": "/System/Volumes/Data/workspace/mobile-collab-demo/test/local_editor_command_regression_test.dart",
         "test": "conversion preserves callout descendants and mixed ranges",
         "result": "success"
       },
       {
-        "file": "/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_command_regression_test.dart",
+        "file": "/System/Volumes/Data/workspace/mobile-collab-demo/test/local_editor_command_regression_test.dart",
         "test": "conversion preserves paragraph descendants and mixed ranges",
         "result": "success"
       },
       {
-        "file": "/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/local_editor_command_regression_test.dart",
+        "file": "/System/Volumes/Data/workspace/mobile-collab-demo/test/local_editor_command_regression_test.dart",
         "test": "conversion cannot synthesize structural blocks from text",
         "result": "success"
       },
       {
-        "file": "/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart",
+        "file": "/System/Volumes/Data/workspace/mobile-collab-demo/test/collab_controller_lifecycle_native_test.dart",
         "test": "failed controller retry must not send the next owner document",
         "result": "success"
       },
       {
-        "file": "/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart",
+        "file": "/System/Volumes/Data/workspace/mobile-collab-demo/test/collab_controller_lifecycle_native_test.dart",
         "test": "permission registration failure must not poison transitions or cleanup",
         "result": "success"
       },
       {
-        "file": "/System/Volumes/Data/workspace/mobile-collab-demo/packages/cses_document_collab/test/collab_controller_lifecycle_native_test.dart",
+        "file": "/System/Volumes/Data/workspace/mobile-collab-demo/test/collab_controller_lifecycle_native_test.dart",
         "test": "close waits for pending registration and stale callbacks cannot mutate the next owner",
         "result": "success"
       }

@@ -1,11 +1,11 @@
 {
-  "packages/cses_document_collab/lib/src/journal/local_journal_controller.dart": "62465cb8e8ff22d5c651fe77f93f8a5b7c9e3a31da5725a14486f67257e3953b",
-  "packages/cses_document_collab/lib/src/journal/journal_ruled_content.dart": "87a0d97dd115aa6e5b5a75b81506e17c95b78ddf29e034859abf968893d0d58e",
-  "packages/cses_document_collab/lib/src/journal/local_journal_page.dart": "f47700f312315478eadd9855d60579f45fbba0ae572835de544e033c4b993eb4",
-  "packages/cses_document_collab/lib/src/journal/journal_store.dart": "a404d7ad1b03c0e8195b9ed6b86df8679c5229fbe4545c543b99899947f35101",
-  "packages/cses_document_collab/lib/src/journal/journal_draft.dart": "ddb0c5a9a493ce9fbbd362538fde0cb2dcdd77d935d3de792a307ee01de548e0",
-  "packages/cses_document_collab/lib/src/journal/journal_surface.dart": "f806ffd84c5634a8a23bb5310a1efde12e21c6cc1122c491ea1e3f21f4554a53",
-  "lib/src/demo/journal/file_journal_store.dart": "7f63c41b602ca71347195d47674eef33b69cd189f4077a31aa32554c65e9cba4",
-  "lib/src/demo/collab_demo_page.dart": "acb6786002653f1c08ce76da04938a8cd5c806c449d3116c101b01156fc5a41b",
-  "packages/cses_document_collab/lib/cses_document_collab.dart": "ba486f6474630da27a06720633fd019dd04c46a45ad78ba08cbaaaec1d117141"
+  "lib/src/journal/local_journal_controller.dart": "62465cb8e8ff22d5c651fe77f93f8a5b7c9e3a31da5725a14486f67257e3953b",
+  "lib/src/journal/journal_ruled_content.dart": "87a0d97dd115aa6e5b5a75b81506e17c95b78ddf29e034859abf968893d0d58e",
+  "lib/src/journal/local_journal_page.dart": "f47700f312315478eadd9855d60579f45fbba0ae572835de544e033c4b993eb4",
+  "lib/src/journal/journal_store.dart": "a404d7ad1b03c0e8195b9ed6b86df8679c5229fbe4545c543b99899947f35101",
+  "lib/src/journal/journal_draft.dart": "ddb0c5a9a493ce9fbbd362538fde0cb2dcdd77d935d3de792a307ee01de548e0",
+  "lib/src/journal/journal_surface.dart": "f806ffd84c5634a8a23bb5310a1efde12e21c6cc1122c491ea1e3f21f4554a53",
+  "example/lib/src/demo/journal/file_journal_store.dart": "7f63c41b602ca71347195d47674eef33b69cd189f4077a31aa32554c65e9cba4",
+  "example/lib/src/demo/collab_demo_page.dart": "acb6786002653f1c08ce76da04938a8cd5c806c449d3116c101b01156fc5a41b",
+  "lib/cses_document_collab.dart": "ba486f6474630da27a06720633fd019dd04c46a45ad78ba08cbaaaec1d117141"
 }

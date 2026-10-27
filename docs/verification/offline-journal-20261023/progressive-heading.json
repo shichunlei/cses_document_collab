@@ -23,18 +23,18 @@
     }
   },
   "sources": {
-    "lib/src/daily_guidance/journal_draft.dart": "d0907f6b25c2ec449f96823c8335fab7b3fab137ec112c9c3614f9ee05964c8c",
-    "packages/cses_document_collab/lib/src/editor/core/editor_configuration.dart": "e2761d25c73f76bb3d690dd8d3be5bbb81d9796f631ced1b03ccf34219e98300",
-    "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart": "4afc94a398b347c7c4c81f67aaa3a94e8d7682c07dbb6204a64835ba2dc00c4c",
-    "packages/cses_document_collab/test/editor_configuration_test.dart": "02e71b9096eed56ad8216f969730cc79f70a607cd11ca0b38da3dbd05164f88e",
-    "test/daily_guidance/journal_format_toolbar_test.dart": "8079cd3924daaf6474b6c8127ece0f75e4060e9fcb9ec4917d766fe6f837d547"
+    "example/lib/src/daily_guidance/journal_draft.dart": "d0907f6b25c2ec449f96823c8335fab7b3fab137ec112c9c3614f9ee05964c8c",
+    "lib/src/editor/core/editor_configuration.dart": "e2761d25c73f76bb3d690dd8d3be5bbb81d9796f631ced1b03ccf34219e98300",
+    "lib/src/editor/editor_shortcut_toolbar.dart": "4afc94a398b347c7c4c81f67aaa3a94e8d7682c07dbb6204a64835ba2dc00c4c",
+    "test/editor_configuration_test.dart": "02e71b9096eed56ad8216f969730cc79f70a607cd11ca0b38da3dbd05164f88e",
+    "example/test/daily_guidance/journal_format_toolbar_test.dart": "8079cd3924daaf6474b6c8127ece0f75e4060e9fcb9ec4917d766fe6f837d547"
   },
   "android": {
     "apkSha256": "1b6a05707338ccfbea0e320494bbef3d1ddbb958f2c733d626649e429f31f866",
     "currentSourcesEmbedded": {
-      "lib/src/daily_guidance/journal_draft.dart": true,
-      "packages/cses_document_collab/lib/src/editor/core/editor_configuration.dart": true,
-      "packages/cses_document_collab/lib/src/editor/editor_shortcut_toolbar.dart": true
+      "example/lib/src/daily_guidance/journal_draft.dart": true,
+      "lib/src/editor/core/editor_configuration.dart": true,
+      "lib/src/editor/editor_shortcut_toolbar.dart": true
     },
     "deviceInstalled": false
   },
