@@ -30,7 +30,24 @@ class CollaborativeEditorPage extends StatefulWidget {
   /// 借用 [collab] 展示文档；[key] 控制组件身份与状态复用。
   /// [pickMarkdown] 由宿主选择并读取 UTF-8 Markdown；取消返回 null，失败抛出异常。
   /// null 隐藏导入入口；页面不关闭宿主控制器，导入内容追加至文末。
-  const CollaborativeEditorPage({super.key, required this.collab, this.pickMarkdown});
+  /// [actionsBuilder] 在 AppBar 尾部构造宿主业务入口，null 不追加按钮。
+  /// [actionsBuilder] 只构建视图，不得发起请求或创建长期资源；导航与权限由宿主回调持有。
+  /// [showDiagnostics] 默认 true，业务宿主设为 false 隐藏文档 ID、协议事件和原始错误文本。
+  const CollaborativeEditorPage({
+    super.key,
+    required this.collab,
+    this.pickMarkdown,
+    this.actionsBuilder,
+    this.showDiagnostics = true,
+  });
+
+  /// 是否展示文档 ID、协议事件和原始同步错误，默认 true 供独立调试宿主使用。
+  /// 业务 App 可设为 false，只保留用户可理解的连接状态和失败说明，不影响日志或同步。
+  final bool showDiagnostics;
+
+  /// 可选宿主 AppBar 操作构造器，默认无额外操作；编辑和预览模式均显示。
+  /// 构建上下文仅在同步构建期间借用，宿主负责回调生命周期与业务权限。
+  final List<Widget> Function(BuildContext context)? actionsBuilder;
 
   /// 可选宿主文件选择器；宿主持有文件资源，返回前应限制文件大小并校验编码。
   final Future<String?> Function()? pickMarkdown;
@@ -292,6 +309,7 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
                     label: Text(_previewOnly ? '编辑' : '预览'),
                   ),
                 ),
+                ...?widget.actionsBuilder?.call(context),
                 const SizedBox(width: 4),
               ],
             ),
@@ -304,8 +322,11 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
                     status: collab.status,
                     documentId: collab.documentId,
                     protocolEvent: collab.lastProtocolEvent,
+                    showDiagnostics: widget.showDiagnostics,
+                    editable: collab.canEdit,
                   ),
-                  if (collab.error != null) _EditorErrorBanner(message: collab.error!),
+                  if (collab.error != null)
+                    _EditorErrorBanner(message: widget.showDiagnostics ? collab.error! : '文档同步暂不可用，请稍后重试或使用网页版'),
                   if (collab.readOnlyReason != null) _EditorErrorBanner(message: '只读：${collab.readOnlyReason}'),
                   Expanded(
                     child: Stack(
@@ -320,7 +341,7 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
                         if (!collab.initialized)
                           const Align(
                             alignment: Alignment.topCenter,
-                            child: Padding(padding: EdgeInsets.all(24), child: Text('正在从 Rust/Yrs 加载本地文档……')),
+                            child: Padding(padding: EdgeInsets.all(24), child: Text('正在加载本地文档……')),
                           ),
                       ],
                     ),
@@ -359,11 +380,21 @@ class _CollaborativeEditorPageState extends State<CollaborativeEditorPage> {
 }
 
 class _EditorConnectionBar extends StatelessWidget {
-  const _EditorConnectionBar({required this.status, required this.documentId, required this.protocolEvent});
+  /// 展示 [status]；[documentId]、[protocolEvent] 仅在 [showDiagnostics] 时回显，
+  /// [editable] 决定离线时能否提示本地可编辑，不推断服务端持久化状态。
+  const _EditorConnectionBar({
+    required this.status,
+    required this.documentId,
+    required this.protocolEvent,
+    required this.showDiagnostics,
+    required this.editable,
+  });
 
   final ConnectionStatus status;
   final String documentId;
   final String protocolEvent;
+  final bool showDiagnostics;
+  final bool editable;
 
   /// 在借用 [context] 中用状态颜色、Lucide圆形和原协议事件回显连接状态。
   @override
@@ -372,7 +403,7 @@ class _EditorConnectionBar extends StatelessWidget {
       ConnectionStatus.starting => ('初始化', Colors.blueGrey),
       ConnectionStatus.connecting => ('连接中', Colors.orange),
       ConnectionStatus.online => ('在线', Colors.green),
-      ConnectionStatus.offline => ('离线可编辑', Colors.blueGrey),
+      ConnectionStatus.offline => (editable ? '离线可编辑' : '离线', Colors.blueGrey),
       ConnectionStatus.error => ('异常', Colors.red),
     };
     return Container(
@@ -388,18 +419,19 @@ class _EditorConnectionBar extends StatelessWidget {
           Icon(LucideIcons.circle, size: 9, color: color),
           const SizedBox(width: 7),
           Text(label, style: Theme.of(context).textTheme.labelMedium),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              '$documentId · $protocolEvent',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.end,
-              style: Theme.of(
-                context,
-              ).textTheme.labelSmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+          if (showDiagnostics) const SizedBox(width: 12),
+          if (showDiagnostics)
+            Expanded(
+              child: Text(
+                '$documentId · $protocolEvent',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.end,
+                style: Theme.of(
+                  context,
+                ).textTheme.labelSmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+              ),
             ),
-          ),
         ],
       ),
     );

@@ -112,6 +112,8 @@ Widget editor(CollabController controller) =>
 
 ## 宿主契约
 
+`CollaborativeEditorPage.actionsBuilder` 可在编辑页 AppBar 尾部追加宿主业务入口（例如更多菜单、打开网页详情）。构造器只同步构建 Widget；账号、权限、导航及操作中的异步资源由宿主管理。默认不追加入口，编辑和预览均会构建，不改变控制器所有权。业务宿主可设置 `showDiagnostics:false` 隐藏文档ID、协议事件与原始错误，只保留连接状态和用户失败说明；默认 true 保留调试宿主行为。
+
 - Gateway 提供已完成 hello 的连接状态、按 pageId/docId/instance 注册 action 回调、立即发送结果及异步注销。恢复通知必须在恢复 Document subscribe 后发出；文档会话随后 join。离线发送返回 false。物理连接始终由宿主持有。
 - `CollabDocumentConfig` 不含 cookie。`serverIdentity` 使用原完整 WS 地址，企业/用户/docId 与旧缓存保持一致；SQLite 路径由宿主选择。凭证轮换不改变缓存键。根 ID 与缓存键不能混用。
 - Rust 是进程全局单 Doc。第二个独立控制器初始化抛 `COLLAB_DOCUMENT_IN_USE`，先等待旧控制器 close；多个视图可借用一个控制器。

@@ -29,6 +29,43 @@ void main() {
         );
   });
 
+  testWidgets(
+    'host AppBar actions work in editing and preview without owning controller',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(320, 720));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      final collab = _ReadyCollabController();
+      addTearDown(collab.dispose);
+      var clicks = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: CollaborativeEditorPage(
+            collab: collab,
+            showDiagnostics: false,
+            actionsBuilder: (_) => [
+              IconButton(
+                tooltip: 'host-webview',
+                onPressed: () => clicks++,
+                icon: const Icon(Icons.open_in_browser),
+              ),
+            ],
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+      await tester.tap(find.byTooltip('host-webview'));
+      await tester.tap(find.byKey(const ValueKey('editor-mode-toggle')));
+      await tester.pumpAndSettle();
+      expect(find.byTooltip('host-webview'), findsOneWidget);
+      await tester.tap(find.byTooltip('host-webview'));
+      expect(clicks, 2);
+      expect(find.textContaining('demo-room'), findsNothing);
+      await tester.pumpWidget(const SizedBox.shrink());
+      expect(collab.hasPageListeners, isFalse);
+    },
+  );
+
   testWidgets('host feedback flag controls scrolling footer in both modes', (
     tester,
   ) async {
