@@ -1,0 +1,361 @@
+00:00 +0: loading /System/Volumes/Data/workspace/cses_document_collab/test/appflowy_block_editor_adapter_test.dart
+00:00 +0: /System/Volumes/Data/workspace/cses_document_collab/test/appflowy_block_editor_adapter_test.dart: opaque placeholders survive adjacent edits and remote replay
+00:00 +1: /System/Volumes/Data/workspace/cses_document_collab/test/appflowy_block_editor_adapter_test.dart: range deleting a callout containing a placeholder is rejected atomically
+00:00 +2: /System/Volumes/Data/workspace/cses_document_collab/test/appflowy_block_editor_adapter_test.dart: both justified alignments survive remote replay and local text edits
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/test/appflowy_block_editor_adapter_test.dart: remote block colors update in place and survive text editing
+00:00 +4: /System/Volumes/Data/workspace/cses_document_collab/test/appflowy_block_editor_adapter_test.dart: list conversion and undo publish distinct replacement identities
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/test/appflowy_block_editor_adapter_test.dart: list conversion recovers source when the formatter drops custom attributes
+00:00 +6: /System/Volumes/Data/workspace/cses_document_collab/test/appflowy_block_editor_adapter_test.dart: publishes a local block transaction once with a stable id
+00:00 +7: /System/Volumes/Data/workspace/cses_document_collab/test/appflowy_block_editor_adapter_test.dart: remote block text patches do not echo as local transactions
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/test/appflowy_block_editor_adapter_test.dart: maps heading, list, quote and code nodes to supported block types
+00:00 +9: /System/Volumes/Data/workspace/cses_document_collab/test/appflowy_block_editor_adapter_test.dart: round-trips collaborative link, image and video URLs
+00:00 +10: /System/Volumes/Data/workspace/cses_document_collab/test/appflowy_block_editor_adapter_test.dart: publishes an inserted link and its trailing paragraph locally
+00:00 +11: /System/Volumes/Data/workspace/cses_document_collab/test/appflowy_block_editor_adapter_test.dart: round-trips H6, block layout and script attributes
+00:00 +12: /System/Volumes/Data/workspace/cses_document_collab/test/appflowy_block_editor_adapter_test.dart: remote list layout patches the existing node without echo
+00:00 +13: /System/Volumes/Data/workspace/cses_document_collab/test/appflowy_block_editor_adapter_test.dart: new nodes with copied ids are assigned unique block ids
+00:00 +14: /System/Volumes/Data/workspace/cses_document_collab/test/appflowy_block_editor_adapter_test.dart: block type conversion keeps the collaborative block id
+00:00 +15: /System/Volumes/Data/workspace/cses_document_collab/test/appflowy_block_editor_adapter_test.dart: remote replacement preserves UTF-16 text content
+00:00 +16: /System/Volumes/Data/workspace/cses_document_collab/test/appflowy_block_editor_adapter_test.dart: publishes supported inline styles as rich-text segments
+00:00 +17: /System/Volumes/Data/workspace/cses_document_collab/test/appflowy_block_editor_adapter_test.dart: applies remote rich text and todo checked state without echo
+00:00 +18: /System/Volumes/Data/workspace/cses_document_collab/test/appflowy_block_editor_adapter_test.dart: an empty canonical document keeps one editable local paragraph
+00:03 +19: /System/Volumes/Data/workspace/cses_document_collab/test/native_history_editor_test.dart: (setUpAll)
+00:03 +19: /System/Volumes/Data/workspace/cses_document_collab/test/native_history_editor_test.dart: legacy persisted draft uses native undo and reopens without personal history
+00:03 +20: /System/Volumes/Data/workspace/cses_document_collab/test/native_history_editor_test.dart: page undo and redo buttons use native history without entering preview
+00:05 +21: /System/Volumes/Data/workspace/cses_document_collab/test/native_history_editor_test.dart: remote deletion clears the selected endpoint instead of reusing its old path
+00:05 +22: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:05 +22: /System/Volumes/Data/workspace/cses_document_collab/test/native_history_editor_test.dart: transport exception after commit still projects accepted native history
+DocCollab: 历史更新已落盘但即时发送失败: Bad state: test transport failure
+#0      _Gateway.send (file:///System/Volumes/Data/workspace/cses_document_collab/test/native_history_editor_test.dart:404:52)
+#1      CsesDocCollaborationSession.sendLocalUpdate (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:240:18)
+#2      CollabController._performNativeHistory (package:cses_document_collab/src/controller/collab_controller.dart:364:19)
+<asynchronous suspension>
+#3      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#4      main.<anonymous closure> (file:///System/Volumes/Data/workspace/cses_document_collab/test/native_history_editor_test.dart:123:7)
+<asynchronous suspension>
+#5      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#6      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#7      Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:05 +23: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:05 +24: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:05 +25: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:05 +26: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:05 +26: /System/Volumes/Data/workspace/cses_document_collab/test/native_history_editor_test.dart: lock and host revocation keep native history until editing is allowed
+DocCollab: 原生撤销/重做被拒绝: READ_ONLY_BLOCK: p1
+#0      SimpleDecoder.decode (package:flutter_rust_bridge/src/codec/base.dart:34:9)
+#1      SseCodec._decode (package:flutter_rust_bridge/src/codec/sse.dart:45:55)
+#2      SseCodec.decodeWireSyncType (package:flutter_rust_bridge/src/codec/sse.dart:40:7)
+#3      BaseHandler.executeSync (package:flutter_rust_bridge/src/main_components/handler.dart:35:25)
+#4      RustLibApiImpl.crateApiCollabHistoryUndoDocument (package:cses_document_collab/src/native/frb_generated.dart:948:20)
+#5      undoDocument (package:cses_document_collab/src/native/api/collab/history.dart:48:6)
+#6      CollabController._performNativeHistory (package:cses_document_collab/src/controller/collab_controller.dart:357:28)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///System/Volumes/Data/workspace/cses_document_collab/test/native_history_editor_test.dart:205:7)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#11     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:05 +27: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +27: /System/Volumes/Data/workspace/cses_document_collab/test/native_history_editor_test.dart: real SQLite write failure leaves UI/history and permits retry
+DocCollab: 原生撤销/重做被拒绝: cannot persist Yjs update: history failure
+#0      SimpleDecoder.decode (package:flutter_rust_bridge/src/codec/base.dart:34:9)
+#1      SseCodec._decode (package:flutter_rust_bridge/src/codec/sse.dart:45:55)
+#2      SseCodec.decodeWireSyncType (package:flutter_rust_bridge/src/codec/sse.dart:40:7)
+#3      BaseHandler.executeSync (package:flutter_rust_bridge/src/main_components/handler.dart:35:25)
+#4      RustLibApiImpl.crateApiCollabHistoryUndoDocument (package:cses_document_collab/src/native/frb_generated.dart:948:20)
+#5      undoDocument (package:cses_document_collab/src/native/api/collab/history.dart:48:6)
+#6      CollabController._performNativeHistory (package:cses_document_collab/src/controller/collab_controller.dart:357:28)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///System/Volumes/Data/workspace/cses_document_collab/test/native_history_editor_test.dart:252:13)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#11     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+DocCollab: 原生撤销/重做被拒绝: cannot persist Yjs update: history failure
+#0      SimpleDecoder.decode (package:flutter_rust_bridge/src/codec/base.dart:34:9)
+#1      SseCodec._decode (package:flutter_rust_bridge/src/codec/sse.dart:45:55)
+#2      SseCodec.decodeWireSyncType (package:flutter_rust_bridge/src/codec/sse.dart:40:7)
+#3      BaseHandler.executeSync (package:flutter_rust_bridge/src/main_components/handler.dart:35:25)
+#4      RustLibApiImpl.crateApiCollabHistoryRedoDocument (package:cses_document_collab/src/native/frb_generated.dart:822:20)
+#5      redoDocument (package:cses_document_collab/src/native/api/collab/history.dart:55:6)
+#6      CollabController._performNativeHistory (package:cses_document_collab/src/controller/collab_controller.dart:356:28)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///System/Volumes/Data/workspace/cses_document_collab/test/native_history_editor_test.dart:250:13)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#11     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:06 +28: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +29: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +30: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +31: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +32: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +33: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +33: /System/Volumes/Data/workspace/cses_document_collab/test/native_history_editor_test.dart: real SQLite COMMIT failure leaves UI/history and permits retry
+DocCollab: 原生撤销/重做被拒绝: cannot persist Yjs update: FOREIGN KEY constraint failed
+#0      SimpleDecoder.decode (package:flutter_rust_bridge/src/codec/base.dart:34:9)
+#1      SseCodec._decode (package:flutter_rust_bridge/src/codec/sse.dart:45:55)
+#2      SseCodec.decodeWireSyncType (package:flutter_rust_bridge/src/codec/sse.dart:40:7)
+#3      BaseHandler.executeSync (package:flutter_rust_bridge/src/main_components/handler.dart:35:25)
+#4      RustLibApiImpl.crateApiCollabHistoryUndoDocument (package:cses_document_collab/src/native/frb_generated.dart:948:20)
+#5      undoDocument (package:cses_document_collab/src/native/api/collab/history.dart:48:6)
+#6      CollabController._performNativeHistory (package:cses_document_collab/src/controller/collab_controller.dart:357:28)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///System/Volumes/Data/workspace/cses_document_collab/test/native_history_editor_test.dart:252:13)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#11     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:06 +34: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +35: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +35: /System/Volumes/Data/workspace/cses_document_collab/test/native_history_editor_test.dart: real SQLite COMMIT failure leaves UI/history and permits retry
+DocCollab: 原生撤销/重做被拒绝: cannot persist Yjs update: FOREIGN KEY constraint failed
+#0      SimpleDecoder.decode (package:flutter_rust_bridge/src/codec/base.dart:34:9)
+#1      SseCodec._decode (package:flutter_rust_bridge/src/codec/sse.dart:45:55)
+#2      SseCodec.decodeWireSyncType (package:flutter_rust_bridge/src/codec/sse.dart:40:7)
+#3      BaseHandler.executeSync (package:flutter_rust_bridge/src/main_components/handler.dart:35:25)
+#4      RustLibApiImpl.crateApiCollabHistoryRedoDocument (package:cses_document_collab/src/native/frb_generated.dart:822:20)
+#5      redoDocument (package:cses_document_collab/src/native/api/collab/history.dart:55:6)
+#6      CollabController._performNativeHistory (package:cses_document_collab/src/controller/collab_controller.dart:356:28)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///System/Volumes/Data/workspace/cses_document_collab/test/native_history_editor_test.dart:250:13)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#11     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:06 +36: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +37: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +38: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +39: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +40: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +41: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +42: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +43: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +44: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +45: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +46: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +47: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +48: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +49: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +50: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +51: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +52: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +53: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +54: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +55: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +56: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +57: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +58: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +59: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +60: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +61: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +62: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +63: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +64: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +65: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +66: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +67: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +68: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +69: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +70: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +71: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +72: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +73: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +74: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +75: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:06 +76: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:07 +77: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.android)
+00:07 +78: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_enter_test.dart: numbered_list empty depth 4 exits one level without inserting a node
+00:07 +79: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_enter_test.dart: numbered_list empty depth 4 exits one level without inserting a node
+00:07 +80: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +81: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +82: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +83: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +84: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +85: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +86: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +87: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +88: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +89: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +90: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +91: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +92: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +93: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +94: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +95: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +96: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +97: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +98: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +99: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +100: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +101: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +102: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +103: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +104: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +105: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +106: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +107: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +108: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +109: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +110: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +111: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +112: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +113: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +114: /System/Volumes/Data/workspace/cses_document_collab/test/local_editor_input_test.dart: local mobile input connection accepts Chinese, styles and newline (variant: TargetPlatform.iOS)
+00:07 +115: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Shift Enter defers to soft line break handling
+00:07 +116: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Shift Enter defers to soft line break handling
+00:07 +117: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_indent_test.dart: todo_list depth=5 delta=-1 keeps mid-item caret and history
+00:07 +118: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 0 preserves depth 0 and splits formatted text
+00:07 +119: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 0 preserves depth 0 and splits formatted text
+00:07 +120: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_indent_test.dart: todo_list depth=6 delta=-1 keeps mid-item caret and history
+00:07 +121: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 3 preserves depth 0 and splits formatted text
+00:07 +122: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_indent_test.dart: todo_list depth=6 delta=1 keeps mid-item caret and history
+00:07 +123: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 7 preserves depth 0 and splits formatted text
+00:07 +124: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_indent_test.dart: todo_list empty item increases then outdents to paragraph with one-step undo
+00:07 +125: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 0 preserves depth 1 and splits formatted text
+00:07 +126: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_indent_test.dart: todo_list depth history does not restore remote text, checked or formatting
+00:07 +127: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 3 preserves depth 1 and splits formatted text
+00:07 +128: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_indent_test.dart: mixed list range reverse=false type=SelectionType.inline is one atomic history item
+00:07 +129: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 7 preserves depth 1 and splits formatted text
+00:07 +130: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_indent_test.dart: mixed list range reverse=false type=SelectionType.block is one atomic history item
+00:07 +131: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 0 preserves depth 2 and splits formatted text
+00:07 +132: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_indent_test.dart: mixed list range reverse=true type=SelectionType.inline is one atomic history item
+00:07 +133: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_indent_test.dart: mixed list range reverse=true type=SelectionType.inline is one atomic history item
+00:07 +134: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 7 preserves depth 2 and splits formatted text
+00:07 +135: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_indent_test.dart: mixed list range reverse=true type=SelectionType.block is one atomic history item
+00:07 +136: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 0 preserves depth 3 and splits formatted text
+00:07 +137: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_indent_test.dart: batch increase changes all three list types and a single undo restores all
+00:07 +138: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 3 preserves depth 3 and splits formatted text
+00:07 +139: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 3 preserves depth 3 and splits formatted text
+00:07 +140: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 7 preserves depth 3 and splits formatted text
+00:07 +141: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 0 preserves depth 4 and splits formatted text
+00:07 +142: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 3 preserves depth 4 and splits formatted text
+00:07 +143: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 7 preserves depth 4 and splits formatted text
+00:07 +144: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: (setUpAll)
+00:07 +145: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: (setUpAll)
+00:07 +146: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: (setUpAll)
+00:07 +147: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: (setUpAll)
+00:07 +147: /System/Volumes/Data/workspace/cses_document_collab/test/collab_list_enter_test.dart: bulleted_list Enter at 0 preserves depth 6 and splits formatted text
+00:07 +148: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +149: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +150: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +151: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +152: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +153: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +154: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +155: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +156: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +157: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +158: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +159: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +160: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +161: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +162: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +163: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +164: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +165: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +166: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +167: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +168: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +169: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +170: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +171: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +172: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +173: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +174: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +175: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +176: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +177: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +178: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +179: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +180: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +181: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +182: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +183: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +184: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +185: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +186: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +187: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +188: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +189: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +190: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +191: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +192: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +193: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:07 +194: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host AppBar actions work in editing and preview without owning controller
+00:08 +195: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: host feedback flag controls scrolling footer in both modes
+00:09 +196: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import success respects transaction and lifecycle
+00:11 +197: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import cancel respects transaction and lifecycle
+00:12 +198: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import invalid respects transaction and lifecycle
+MarkdownImport: Markdown 导入失败: FormatException: Markdown 文件为空
+#0      decodeMarkdownImport (package:cses_document_collab/src/editor/markdown_import.dart:20:30)
+#1      compute.<anonymous closure> (package:flutter/src/foundation/_isolates_io.dart:23:20)
+#2      _RemoteRunner._run (dart:isolate:1116:47)
+#3      _RemoteRunner._remoteExecute (dart:isolate:1110:12)
+#4      _delayEntrypointInvocation.<anonymous closure> (dart:isolate-patch/isolate_patch.dart:316:17)
+#5      _RawReceivePort._handleMessage (dart:isolate-patch/isolate_patch.dart:192:12)
+
+00:14 +199: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import revoked respects transaction and lifecycle
+00:15 +200: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: Markdown import closed respects transaction and lifecycle
+00:15 +201: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: unrenderable video  uses the unified placeholder
+00:15 +202: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: unrenderable video blob:desktop-only uses the unified placeholder
+00:15 +203: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: unrenderable video file:///desktop/video.mp4 uses the unified placeholder
+00:15 +204: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: unrenderable video null uses the unified placeholder
+00:15 +205: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: unknown blocks stay opaque while surrounding text remains editable
+00:16 +206: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: desktop quote background and border render in edit and preview
+00:16 +207: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: alignment switches keep the live paragraph caret and text
+00:16 +208: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: paragraph renders justify and preserves selection in preview
+00:16 +209: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: heading_2 renders justify and preserves selection in preview
+00:16 +210: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: quote renders justify and preserves selection in preview
+00:16 +211: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: bulleted_list renders justify and preserves selection in preview
+00:17 +212: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: numbered_list renders justify and preserves selection in preview
+00:17 +213: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: todo_list renders justify and preserves selection in preview
+00:17 +214: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: paragraph renders distributed and preserves selection in preview
+00:17 +215: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: heading_2 renders distributed and preserves selection in preview
+00:17 +216: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: quote renders distributed and preserves selection in preview
+00:17 +217: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: bulleted_list renders distributed and preserves selection in preview
+00:17 +218: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: numbered_list renders distributed and preserves selection in preview
+00:18 +219: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: todo_list renders distributed and preserves selection in preview
+00:18 +220: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: paragraph rows stay compact in edit and preview
+00:18 +221: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: numbered_list rows stay compact in edit and preview
+00:18 +222: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: bulleted_list rows stay compact in edit and preview
+00:18 +223: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: todo_list rows stay compact in edit and preview
+00:19 +224: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: formal cover fills page width; centered controls overlay image and icon crosses its bottom
+00:19 +225: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: standalone page owns the full-screen editor UI
+00:19 +226: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: remote read-only capability disables all editing and preserves preview choice
+00:19 +227: /System/Volumes/Data/workspace/cses_document_collab/test/collaborative_editor_page_test.dart: (tearDownAll)
+00:19 +227: All tests passed!

@@ -1,0 +1,22 @@
+{
+  "git_url": "https://github.com/shichunlei/appflowy-editor.git",
+  "ref": "9e7593134457eac9193a61ee4023a75de55fcc68",
+  "checks": {
+    "root": {
+      "installed_path": "/Users/cses-1/.pub-cache/git/appflowy-editor-9e7593134457eac9193a61ee4023a75de55fcc68",
+      "tracked_files_compared": 864,
+      "differences": [
+        ".gitignore"
+      ],
+      "runtime_and_manifest_match": true
+    },
+    "example": {
+      "installed_path": "/Users/cses-1/.pub-cache/git/appflowy-editor-9e7593134457eac9193a61ee4023a75de55fcc68",
+      "tracked_files_compared": 864,
+      "differences": [
+        ".gitignore"
+      ],
+      "runtime_and_manifest_match": true
+    }
+  }
+}

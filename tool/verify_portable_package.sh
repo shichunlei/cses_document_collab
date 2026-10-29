@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
 # Copy this package into an unrelated directory, build its native library and
-# exercise the public API from a separate Flutter host. Pass the patched editor.
+# exercise the public API from a separate Flutter host using its Git dependencies.
 set -euo pipefail
 PACKAGE_ROOT=$(cd "$(dirname "$0")/.." && pwd -P)
-EDITOR_ROOT=$(cd "${1:?Usage: verify_portable_package.sh /path/to/appflowy_editor}" && pwd -P)
 VERIFY_ROOT=$(mktemp -d "${TMPDIR:-/tmp}/cses-collab-portable.XXXXXX")
 trap 'rm -rf "$VERIFY_ROOT"' EXIT
 mkdir -p "$VERIFY_ROOT/package" "$VERIFY_ROOT/host/test"
 rsync -a --exclude=.dart_tool --exclude=build --exclude=target \
-  --exclude=.git --exclude=/example --exclude=/packages --exclude=/docs \
+  --exclude=.git --exclude=/example --exclude=/docs \
   --exclude='*.xcframework' --exclude=pubspec_overrides.yaml --exclude=pubspec.lock \
   "$PACKAGE_ROOT/" "$VERIFY_ROOT/package/"
 cat > "$VERIFY_ROOT/host/pubspec.yaml" <<YAML
@@ -24,9 +23,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-dependency_overrides:
-  appflowy_editor:
-    path: $EDITOR_ROOT
 YAML
 cat > "$VERIFY_ROOT/host/test/public_api_test.dart" <<'DART'
 import 'dart:async';

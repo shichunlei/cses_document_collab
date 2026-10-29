@@ -1,0 +1,22 @@
+[
+  {
+    "document": "docs/verification/offline-journal-20261023/blockcraft-export-analysis.md",
+    "previous_target": "../../../packages/appflowy_editor/lib/src/editor/block_component/rich_text/appflowy_rich_text_keys.dart",
+    "target": "https://github.com/shichunlei/appflowy-editor/blob/9e7593134457eac9193a61ee4023a75de55fcc68/lib/src/editor/block_component/rich_text/appflowy_rich_text_keys.dart"
+  },
+  {
+    "document": "docs/verification/offline-journal-20261023/blockcraft-export-analysis.md",
+    "previous_target": "../../../packages/appflowy_editor/lib/src/core/document/node.dart",
+    "target": "https://github.com/shichunlei/appflowy-editor/blob/9e7593134457eac9193a61ee4023a75de55fcc68/lib/src/core/document/node.dart"
+  },
+  {
+    "document": "docs/verification/editor-decoupling-review-20261021/review.md",
+    "previous_target": "/System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/lib/src/editor/block_component/paragraph_block_component/paragraph_block_component.dart:44",
+    "target": "https://github.com/shichunlei/appflowy-editor/blob/9e7593134457eac9193a61ee4023a75de55fcc68/lib/src/editor/block_component/paragraph_block_component/paragraph_block_component.dart#L44"
+  },
+  {
+    "document": "docs/verification/selective-undo-prototype-20261022/review-fixes.md",
+    "previous_target": "../../../packages/appflowy_editor/test/legacy/local_transaction_pause_test.dart",
+    "target": "https://github.com/shichunlei/appflowy-editor/blob/9e7593134457eac9193a61ee4023a75de55fcc68/test/legacy/local_transaction_pause_test.dart"
+  }
+]

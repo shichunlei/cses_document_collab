@@ -76,7 +76,7 @@
 
 ### R6 · P2：底层段落工厂清空继承的 RTL 方向
 
-定位：[paragraphNode](/System/Volumes/Data/workspace/mobile-collab-demo/packages/appflowy_editor/lib/src/editor/block_component/paragraph_block_component/paragraph_block_component.dart:44)。
+定位：[paragraphNode](https://github.com/shichunlei/appflowy-editor/blob/9e7593134457eac9193a61ee4023a75de55fcc68/lib/src/editor/block_component/paragraph_block_component/paragraph_block_component.dart#L44)。
 
 构造 attributes 时先展开调用方 attributes，再无条件写入可选 textDirection；未显式传该参数时，用 null 覆盖了已提供的方向。`insertNewLine` 恰好通过 attributes 传递旧段落方向，因此 RTL 段落换行后丢失方向。
 

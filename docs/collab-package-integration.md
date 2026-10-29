@@ -1,6 +1,6 @@
 # 协同包接入与迁移
 
-当前实现：仓库根目录是 `cses_document_collab` Flutter FFI 插件包，`example/` 是使用其公开 API 的 Demo 宿主，`packages/appflowy_editor/` 是本地 fork。业务路由和 Common 主连接由宿主装配。迁入其他仓库时，须同时保留 AppFlowy 子目录或调整最终宿主的 fork 依赖。
+当前实现：仓库根目录是 `cses_document_collab` Flutter FFI 插件包，`example/` 是使用其公开 API 的 Demo 宿主，AppFlowy Editor 由固定提交的 Git fork 提供。业务路由和 Common 主连接由宿主装配。迁入其他仓库时无需携带 AppFlowy 源码子目录，使用相同 Git 来源与提交即可。
 
 ## 引用链与边界
 
@@ -18,7 +18,7 @@ flowchart TD
   Common --> Server[Document/docId/instance]
 ```
 
-包不读取 `ctx`、`User`、`Config`，不发起 HTTP 登录，不创建/关闭物理 WebSocket，不选择宿主缓存目录。包内无引用 demo/Common/SaaS 的 import；AppFlowy fork 通过 `packages/appflowy_editor` 引用，其 `diff_match_patch`、`scroll_to_index` 直接使用 pub.dev 发布版本。内部 `cses_mobile_*` 常量是旧草稿的持久化格式，必须保留兼容。
+包不读取 `ctx`、`User`、`Config`，不发起 HTTP 登录，不创建/关闭物理 WebSocket，不选择宿主缓存目录。包内无引用 demo/Common/SaaS 的 import；AppFlowy fork 通过 `https://github.com/shichunlei/appflowy-editor.git` 引用，ref 固定为 `9e7593134457eac9193a61ee4023a75de55fcc68`，其 `diff_match_patch`、`scroll_to_index` 直接使用 pub.dev 发布版本。内部 `cses_mobile_*` 常量是旧草稿的持久化格式，必须保留兼容。
 
 宿主提供：
 
@@ -58,7 +58,7 @@ Demo SQLite 路径仍为应用支持目录下 `cses_mobile_collab_demo/updates.s
 ## 平移到 SaaS
 
 1. 整目录移动/引用本包，在 `cses.saas/pubspec.yaml` 添加 path 或固定版本依赖。
-2. 保留核心包内的 `packages/appflowy_editor/` 子目录，解析同一 AppFlowy 6.2.0 fork；diff_match_patch、scroll_to_index 由 pub.dev 解析，无需迁移本地包。若单独移动协同包而不保留该子目录，在最终 App（例如 cses.jqdl）的 dependency_overrides 指向可用的 fork。库层的 override 不代替最终 App 的 override。
+2. 核心包直接解析固定提交的 AppFlowy 6.2.0 Git fork，无需复制编辑器目录或使用 dependency_overrides。直接使用 AppFlowy API 的宿主应在自身 dependencies 中声明相同 URL 与 ref；diff_match_patch、scroll_to_index 仍由 pub.dev 解析。
 3. 在文档模块注册编辑路由与 Binding，从一次路由快照取得正式 docId、企业/用户/服务端身份和数据库路径。
 4. 复用当前 Common 连接实现 Gateway；适配器参考本 Demo 的 `example/lib/src/demo/common_cses_collab_gateway.dart`，只拥有文档注册。配置 host services 使异常继续进入统一日志，并可注入现有上传实现。
 5. 确认正文编辑权限契约后创建 CollabDocumentConfig。当前移动端 modify 字段表示元数据修改；服务端编辑策略仍需明确 allowEdit 与 allowRename 的关系，不能仅按角色或 companyId 推断正文授权。

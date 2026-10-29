@@ -1,6 +1,6 @@
 # cses_document_collab
 
-仓库根目录是核心 Flutter FFI 插件包；完整 Demo 位于 [example/](example/README.md)，AppFlowy 本地 fork 位于 `packages/appflowy_editor/`。仓库地址为 [shichunlei/cses_document_collab](https://github.com/shichunlei/cses_document_collab)。
+仓库根目录是核心 Flutter FFI 插件包；完整 Demo 位于 [example/](example/README.md)，AppFlowy Editor 通过 [Git fork](https://github.com/shichunlei/appflowy-editor) 引入。仓库地址为 [shichunlei/cses_document_collab](https://github.com/shichunlei/cses_document_collab)。
 
 ## 开发入口
 
@@ -57,7 +57,7 @@ SQLite 和历史不随在线身份轮换而重建。服务端 INVALID_REQUEST �
 
 ## 接入
 
-最终 App 的 pubspec 添加本仓库根目录的 path 依赖。当前通过 `packages/appflowy_editor` 引用 AppFlowy 6.2.0 fork，包含 Flutter 3.44 输入适配和撤销修复；其 `diff_match_patch`、`scroll_to_index` 使用 pub.dev 发布版本。移动或复制核心包时须保留该子目录，或由最终宿主通过 dependency_overrides 指向同一 fork。
+最终 App 的 pubspec 添加本仓库根目录的 path 依赖。AppFlowy 6.2.0 fork 通过 `https://github.com/shichunlei/appflowy-editor.git` 引入，固定提交 `9e7593134457eac9193a61ee4023a75de55fcc68`，包含 Flutter 3.44 输入适配和撤销修复；其 `diff_match_patch`、`scroll_to_index` 使用 pub.dev 发布版本。移动或复制核心包时无需携带编辑器源码子目录；直接使用 AppFlowy API 的宿主应声明相同 Git URL 与 ref，保持依赖来源一致。
 
 ```yaml
 dependencies:
@@ -344,7 +344,7 @@ iOS 使用 `ios/cses_document_collab/Package.swift` 的本地动态 XCFramework�
 配置对应构建集成。首次解析缺失的 XCFramework 前仍需先运行上述包内初始化脚本；
 热重载/热重启不能替换已加载的原生库，Rust 修改后须停止并重新启动调试。
 
-仓库已通过 `packages/appflowy_editor` 引用同一 AppFlowy fork；仅独立复制核心包且未保留该子目录时，才需由最终宿主配置 override。以下命令从仓库根目录执行，核心依赖解析不连带解析 example：
+仓库通过固定提交的 Git 依赖引用 AppFlowy fork，独立复制核心包也可直接解析，不再依赖本地编辑器目录或宿主 override。以下命令从仓库根目录执行，核心依赖解析不连带解析 example：
 
 ```bash
 flutter pub get --no-example
@@ -358,7 +358,7 @@ flutter analyze --no-pub lib test integration_test test_driver
 原生回归需要真实宿主动态库。`collab_controller_native_test.dart` 对缺库直接失败，避免将跳过测试当作验证。异地引用门禁会复制本包到临时目录，由另一个 Flutter 宿主只通过公开入口加载 native Doc、呈现只读编辑页并验证 SQLite 重开：
 
 ```bash
-tool/verify_portable_package.sh packages/appflowy_editor
+tool/verify_portable_package.sh
 ```
 
 包保留已有块支持范围、未知数据保护和模型只读规则。正式正文（含代码块）出现未适配行内对象时，仅将所在段落投影为不可编辑占位，完整保留原始Y.Text与属性；其他已适配块继续编辑，含占位的父容器不可连带删除。未知类型仍保持保护，用户、会议、任务、文档四类提及的普通正文支持另见下文，锁、修订和图片题注等既有只读保护仍生效。上传、私有资源鉴权、业务元数据、服务端保存及租户权限由宿主/服务端提供，真实环境联调须单独验收。

@@ -190,6 +190,8 @@
 
 ### 包级审查、兼容性与提交核查
 
+- [appflowy-git-dependency-20261029](appflowy-git-dependency-20261029/)（[AppFlowy Git 依赖迁移、本地副本移除与异地宿主验证](appflowy-git-dependency-20261029/report.md)）
+
 - [package-example-layout-20261027](package-example-layout-20261027/)（[根 package / example 结构迁移与验证](package-example-layout-20261027/report.md)；[结构迁移审查与三项入口问题](package-example-layout-20261027/review.md)；[三项 P2 修复与命令验证](package-example-layout-20261027/p2-fixes.md)；[修复后再次审查](package-example-layout-20261027/review-2.md)）
 
 - [native-bridge-sync-20261022](native-bridge-sync-20261022)

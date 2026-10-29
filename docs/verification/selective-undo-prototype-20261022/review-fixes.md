@@ -23,7 +23,7 @@ Rust 改动位于 [document_history.rs](../../../rust/src/api/document_history.r
 - 关闭键盘后的真实页面补充复核还发现选区恢复会重新 `attach/show`，见[修复前最小复现](fix-closed-keyboard-before.dart.txt)与[失败日志](fix-closed-keyboard-before.txt)。暂停期间有效选区只刷新已有连接；没有连接时保留关闭状态，正文和光标仍正常恢复。用户再次主动点击正文后仍可建立输入连接。
 - 原生历史下，回放通过 `withUpdateSelection:false` 延后中间选区通知；未绑定外部历史的独立适配器仍保留原路径历史失效策略。页面预览、锁、目标删除/替换及真实权限撤销的原有保护保留。
 
-新增 **40 项**正式回归：Rust 9 项、协同包 15 项、AppFlowy 16 项，分别见 [Rust 测试](../../../rust/src/api/document_history_tests.rs)、[真实 FRB/页面测试](../../../test/native_history_review_regression_test.dart)、[输入暂停与关闭测试](../../../packages/appflowy_editor/test/legacy/local_transaction_pause_test.dart)。
+新增 **40 项**正式回归：Rust 9 项、协同包 15 项、AppFlowy 16 项，分别见 [Rust 测试](../../../rust/src/api/document_history_tests.rs)、[真实 FRB/页面测试](../../../test/native_history_review_regression_test.dart)、[输入暂停与关闭测试](https://github.com/shichunlei/appflowy-editor/blob/9e7593134457eac9193a61ee4023a75de55fcc68/test/legacy/local_transaction_pause_test.dart)。
 
 编号夹具由随仓库的 [Yjs 生成器](../../../tool/generate_native_history_review_fixture.mjs)生成，固定独立 client ID，输入基础夹具、Yjs 版本和字节哈希均记录在 [JSON](../../../rust/tests/fixtures/native-history-review.json)，重复生成字节一致。运行回归不依赖临时审查脚本。
 

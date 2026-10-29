@@ -1,6 +1,6 @@
 # 适用范围与维护边界
 
-1. 本规范适用于整个仓库，包括根 package、`example/**` 及 `packages/**` 下的源码、测试、示例、工具脚本和原生构建配置。根包 `cses_document_collab`、`example` 宿主及 `packages/appflowy_editor` 本地包均须遵循，不因独立包或上游 fork 身份而豁免。
+1. 本规范适用于整个仓库，包括根 package、`example/**` 及 `packages/**` 下的源码、测试、示例、工具脚本和原生构建配置。根包 `cses_document_collab`、`example` 宿主及仓库内其他本地包均须遵循，不因独立包或上游 fork 身份而豁免。
 2. 各语言执行对应规则：Dart 执行 DartDoc、Import 和 Flutter 验证要求；Rust、脚本及原生配置执行适用的架构、资源所有权、性能和验证要求。子目录 `AGENTS.md` 可补充局部要求，不得以包级规则免除本规范。
 3. 对历史代码按本次新增或修改的声明及其必要关联范围渐进治理；修改一个声明不要求重写整个文件或模块。不得借文档、格式化、静态检查或上游同步批量修改无关代码，保留其他工作区改动。
 4. 自动生成文件通过源声明、生成配置或模板维护，不手工套用手写代码的 DartDoc、Import 或格式规则；其识别、更新与验证遵循下文生成代码要求。
@@ -83,7 +83,7 @@
 
 # 包内开发约定
 
-以下约定适用于根包 `cses_document_collab` 自身的源码、测试、工具和原生配置；标明包含示例的条款也适用于 `example/`。宿主业务代码位于 `example/`，AppFlowy fork 位于 `packages/appflowy_editor/`；各目录均继续遵守上方仓库通用规则。
+以下约定适用于根包 `cses_document_collab` 自身的源码、测试、工具和原生配置；标明包含示例的条款也适用于 `example/`。宿主业务代码位于 `example/`，AppFlowy fork 通过 `https://github.com/shichunlei/appflowy-editor.git` 的固定提交引入；仓库内各目录均继续遵守上方通用规则，不直接修改依赖缓存。
 
 ### 职责边界
 

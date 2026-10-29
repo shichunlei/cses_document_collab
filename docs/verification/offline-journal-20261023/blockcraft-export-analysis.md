@@ -102,7 +102,7 @@ AppFlowy `Node.toJson()` 不包含 node.id，`Node.fromJson()` 重新分配 ID�
 源路径与指纹见[本轮核对](blockcraft-export-analysis.json)。关键代码：
 
 - [草稿和配置](../../../example/lib/src/daily_guidance/journal_draft.dart)、[业务引用/行](../../../example/lib/src/daily_guidance/guidance_entries.dart)、[编号绘制](../../../example/lib/src/daily_guidance/journal_list_markers.dart)、[界面默认样式](../../../example/lib/src/daily_guidance/journal_surface.dart)。
-- [AppFlowy字符键](../../../packages/appflowy_editor/lib/src/editor/block_component/rich_text/appflowy_rich_text_keys.dart)、[Node序列化](../../../packages/appflowy_editor/lib/src/core/document/node.dart)。
+- [AppFlowy字符键](https://github.com/shichunlei/appflowy-editor/blob/9e7593134457eac9193a61ee4023a75de55fcc68/lib/src/editor/block_component/rich_text/appflowy_rich_text_keys.dart)、[Node序列化](https://github.com/shichunlei/appflowy-editor/blob/9e7593134457eac9193a61ee4023a75de55fcc68/lib/src/core/document/node.dart)。
 - [公开人员读取](../../../lib/src/editor/editor_user_mentions.dart)、[段落属性](../../../lib/src/model/collab_paragraph_style.dart)、[已有正式格式映射](../../../rust/src/api/collab.rs)、[正式颜色转换](../../../rust/src/api/blockcraft.rs)。
 - [桌面人员对象转换](../../../../cses-client/packages/docs/src/editor/reference-interactions/mention/mention-embed.converter.ts)、[点击分派](../../../../cses-client/packages/docs/src/editor/reference-interactions/mention/index.ts)。
 

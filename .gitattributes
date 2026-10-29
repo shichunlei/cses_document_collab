@@ -5,3 +5,4 @@ assets/mermaid/mermaid.min.js binary
 docs/verification/package-example-layout-20261027/*.txt -whitespace
 docs/verification/saas-presence-recovery-20261028/*.txt -whitespace
 docs/verification/document-types-20261028/*.log -whitespace
+docs/verification/appflowy-git-dependency-20261029/*.txt -whitespace

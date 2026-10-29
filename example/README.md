@@ -16,7 +16,7 @@ flutter build apk --debug
 scripts/ios.sh build ios --debug --no-codesign
 ```
 
-核心包通过 `path: ..` 引入，AppFlowy fork 通过 `../packages/appflowy_editor` 引入。Common 继续由宿主引用，当前路径为 `../../cses/cses.common`；其他目录布局需相应调整该 path。应用包名、Android applicationId、iOS bundle identifier 和缓存命名保持既有值。
+核心包通过 `path: ..` 引入，AppFlowy fork 通过 `https://github.com/shichunlei/appflowy-editor.git` 引入，URL 与固定提交和核心包保持一致，无需本地编辑器子目录。Common 继续由宿主引用，当前路径为 `../../cses/cses.common`；其他目录布局需相应调整该 path。应用包名、Android applicationId、iOS bundle identifier 和缓存命名保持既有值。
 
 本地编辑与模板预览由宿主 `example/lib/src/image_composer/` 装配，入口为 `showImageComposer`，模板为 `ImageComposerTemplate` / `imageComposerTemplates`。页面仅提供内存编辑与预览，不保存正文或导出图片。共享包提供核心编辑器与协同同步能力，文档头尾、会议、KR、任务等按编辑器类型块或扩展保留包内；制图等应用功能的页面、产品模板和业务流程留在宿主。
 
@@ -273,7 +273,7 @@ cargo test --manifest-path rust/Cargo.toml
 FRB_DART_LOAD_EXTERNAL_LIBRARY_NATIVE_LIB_DIR="$PWD/rust/target/debug" flutter test --no-pub test
 ```
 
-异地引用验证：从仓库根目录运行 `tool/verify_portable_package.sh packages/appflowy_editor`。
+异地引用验证：从仓库根目录运行 `tool/verify_portable_package.sh`。
 
 ## 与 CSES 桌面端的边界
 
@@ -348,7 +348,7 @@ bridge 的 text 字段传递；正式图片写入 props.src、视频写入 props
 - Todo 有正文时回车新增未勾选的同级待办项，不复制原项完成状态；原项勾选保持不变。
   空项逐级退级只改 depth，保留当前勾选。最外层转段落后不再展示待办状态，Undo/Redo
   通过现有类型转换及属性历史恢复待办类型、层级与勾选；原生 checked 沿用既有同步协议。
-- Demo 引用本地 `packages/appflowy_editor`：UndoManager 重做通过 `ApplyOptions.isRedo`
+- Demo 引用 Git AppFlowy fork：UndoManager 重做通过 `ApplyOptions.isRedo`
   标记历史回放，每个重做命令独立进入撤销栈且保留其余重做记录；普通新编辑清空重做栈，
   即使此前已撤销所有命令也同样处理。远端投影不记录历史；定时封存不能合并重做边界。
   列表回归覆盖已有其他历史时的连续重做、跨封存时间后的逐步撤销，以及撤销后新输入。
