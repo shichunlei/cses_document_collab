@@ -1,0 +1,32 @@
+00:00 +0: loading /System/Volumes/Data/workspace/cses_document_collab/test/document_metadata_controller_test.dart
+00:00 +0: conflict reload preserves write outcome (write=true, read=true)
+00:00 +1: conflict reload preserves write outcome (write=true, read=false)
+00:00 +2: conflict reload preserves write outcome (write=false, read=true)
+00:00 +2 -1: conflict reload preserves write outcome (write=false, read=true) [E]
+  Expected: '头部保存失败，请重试'
+    Actual: <null>
+     Which: not an <Instance of 'String'>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/document_metadata_controller_test.dart 79:11   main.<fn>
+  
+00:00 +2 -1: conflict reload preserves write outcome (write=false, read=false)
+00:00 +2 -2: conflict reload preserves write outcome (write=false, read=false) [E]
+  Expected: '头部保存失败，请重试'
+    Actual: '头部加载失败，请重试'
+     Which: is different.
+            Expected: 头部保存失败，请重试
+              Actual: 头部加载失败，请重试
+                        ^
+             Differ at offset 2
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/document_metadata_controller_test.dart 79:11   main.<fn>
+  
+00:00 +2 -2: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/cses_document_collab/test/document_metadata_controller_test.dart: conflict reload preserves write outcome (write=false, read=false)
+  /System/Volumes/Data/workspace/cses_document_collab/test/document_metadata_controller_test.dart: conflict reload preserves write outcome (write=false, read=true)

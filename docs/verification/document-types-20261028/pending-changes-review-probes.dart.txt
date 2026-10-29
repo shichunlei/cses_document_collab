@@ -1,0 +1,77 @@
+import 'dart:async';
+import 'package:cses_document_collab/cses_document_collab.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+class Service implements DocumentMetadataService {
+  Future<DocumentMetadata> Function() read = () async => snapshot('initial');
+  Future<void> Function() write = () async {};
+  @override
+  Future<DocumentMetadata> load(String id) => read();
+  @override
+  Future<void> update(String id, DocumentMetadataPatch patch) => write();
+}
+DocumentMetadata snapshot(String name) => DocumentMetadata(
+  id: 'doc', name: name, canRename: true, canChangeAppearance: true);
+DocumentMetadataController controller(Service service) => DocumentMetadataController(
+  documentId: 'doc', service: service, canEdit: () => true,
+  services: CollabHostServices(onError: (_, _, _, _) {}));
+
+void main() {
+  test('failed read must not replay old WS patch over a newer retry snapshot', () async {
+    final service = Service();
+    final c = controller(service);
+    final pending = Completer<DocumentMetadata>();
+    service.read = () => pending.future;
+    final read = c.refresh();
+    c.applyRemotePatch('doc', const DocumentMetadataPatch.rename('earlier WS'));
+    pending.completeError(StateError('offline'));
+    await read;
+    service.read = () async => snapshot('newer HTTP');
+    await c.refresh();
+    final actual = c.value!.name;
+    await c.close();
+    expect(actual, 'newer HTTP');
+  });
+  test('icon write must reconcile a conflicting remote patch before ACK', () async {
+    final service = Service();
+    final c = controller(service);
+    await c.refresh();
+    final pending = Completer<void>();
+    service.write = () => pending.future;
+    service.read = () async => DocumentMetadata(id: 'doc', name: 'initial',
+      icon: {'value': 'remote final'}, canRename: true, canChangeAppearance: true);
+    final write = c.save(const DocumentMetadataPatch.icon({'value': 'local'}));
+    c.applyRemotePatch('doc', const DocumentMetadataPatch.icon({'value': 'remote final'}));
+    pending.complete();
+    await write;
+    final actual = c.value!.icon!['value'];
+    await c.close();
+    expect(actual, 'remote final');
+  });
+  test('close must await a second write started during conflict reconciliation', () async {
+    final service = Service();
+    final c = controller(service);
+    await c.refresh();
+    final firstAck = Completer<void>();
+    final reread = Completer<DocumentMetadata>();
+    service.write = () => firstAck.future;
+    service.read = () => reread.future;
+    final first = c.save(const DocumentMetadataPatch.rename('first'));
+    c.applyRemotePatch('doc', const DocumentMetadataPatch.rename('remote'));
+    firstAck.complete();
+    for (var i=0;i<5;i++) { await Future<void>.delayed(Duration.zero); }
+    final secondAck = Completer<void>();
+    service.write = () => secondAck.future;
+    final second = c.save(const DocumentMetadataPatch.rename('second'));
+    reread.complete(snapshot('remote'));
+    await first;
+    var closed = false;
+    final closing = c.close().then((_) => closed = true);
+    await Future<void>.delayed(Duration.zero);
+    final closedBeforeAck = closed;
+    secondAck.complete();
+    await second;
+    await closing;
+    expect(closedBeforeAck, isFalse);
+  });
+}

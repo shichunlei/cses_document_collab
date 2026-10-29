@@ -1,0 +1,10 @@
+00:00 +0: loading /tmp/cses_save_error_recheck_test.dart
+00:00 +0: failure remains visible throughout pending reload and remote events (readFails=false)
+00:00 +1: close waits failed-write reload and ignores late result (readFails=false)
+00:00 +2: failure remains visible throughout pending reload and remote events (readFails=true)
+00:00 +3: close waits failed-write reload and ignores late result (readFails=true)
+00:00 +4: failed write waits invalidated old read without losing its error
+00:00 +5: failure completion listener can start next write without losing close tracking
+00:00 +6: appearance write failure retains error after remote removal (icon=true)
+00:00 +7: appearance write failure retains error after remote removal (icon=false)
+00:00 +8: All tests passed!

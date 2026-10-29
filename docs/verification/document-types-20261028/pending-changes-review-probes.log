@@ -1,0 +1,44 @@
+00:00 +0: loading /tmp/cses_pending_review_test.dart
+00:00 +0: failed read must not replay old WS patch over a newer retry snapshot
+00:00 +0 -1: failed read must not replay old WS patch over a newer retry snapshot [E]
+  Expected: 'newer HTTP'
+    Actual: 'earlier WS'
+     Which: is different.
+            Expected: newer HTTP ...
+              Actual: earlier WS ...
+                      ^
+             Differ at offset 0
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  /tmp/cses_pending_review_test.dart 33:5             main.<fn>
+  
+00:00 +0 -1: icon write must reconcile a conflicting remote patch before ACK
+00:00 +0 -2: icon write must reconcile a conflicting remote patch before ACK [E]
+  Expected: 'remote final'
+    Actual: 'local'
+     Which: is different.
+            Expected: remote fin ...
+              Actual: local
+                      ^
+             Differ at offset 0
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  /tmp/cses_pending_review_test.dart 49:5             main.<fn>
+  
+00:00 +0 -2: close must await a second write started during conflict reconciliation
+00:00 +0 -3: close must await a second write started during conflict reconciliation [E]
+  Expected: false
+    Actual: <true>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  /tmp/cses_pending_review_test.dart 75:5             main.<fn>
+  
+00:00 +0 -3: Some tests failed.
+
+Failing tests:
+  /tmp/cses_pending_review_test.dart: close must await a second write started during conflict reconciliation
+  /tmp/cses_pending_review_test.dart: failed read must not replay old WS patch over a newer retry snapshot
+  /tmp/cses_pending_review_test.dart: icon write must reconcile a conflicting remote patch before ACK

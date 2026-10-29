@@ -124,7 +124,10 @@ class _DocumentHeaderState extends State<DocumentHeader> {
           } else {
             patch = await _sheet<DocumentMetadataPatch>(
               context,
-              _TitleSheet(value: current.name),
+              _TitleSheet(
+                value: current.name,
+                isCurrent: () => controller.value?.name == current.name,
+              ),
             );
           }
           if (patch == null || !allowed()) return null;
@@ -133,7 +136,10 @@ class _DocumentHeaderState extends State<DocumentHeader> {
       );
       if (patch != null && allowed()) {
         // 弹窗退场后先恢复正文输入；业务 ACK 等待不占用正文焦点。
-        await controller.save(patch);
+        await controller.save(
+          patch,
+          expectedName: field == 'name' ? current.name : null,
+        );
         if (mounted && controller.error != null) {
           ScaffoldMessenger.of(
             context,
@@ -436,11 +442,14 @@ Widget _documentIcon(Map<String, dynamic> icon) {
 
 /// 拥有标题输入与表单校验的底部面板，输出业务命令，不直接保存或编辑正文。
 class _TitleSheet extends StatefulWidget {
-  /// 用借用的当前名称 [value] 初始化独立输入；不发业务请求。
-  const _TitleSheet({required this.value});
+  /// 用当前名称 [value] 初始化独立草稿；[isCurrent]提交时核对远端名称未变。
+  const _TitleSheet({required this.value, required this.isCurrent});
 
   /// 当前业务名称；输入副本由本面板的状态持有。
   final String value;
+
+  /// 草稿基准仍是权威名称才允许提交；冲突时保留输入并展示表单错误。
+  final bool Function() isCurrent;
 
   /// 创建拥有输入控制器的面板状态，退场时释放。
   @override
@@ -491,8 +500,11 @@ class _TitleSheetState extends State<_TitleSheet> {
           autofocus: true,
           maxLength: 100,
           decoration: const InputDecoration(),
-          validator: (value) =>
-              value == null || value.trim().isEmpty ? '请输入内容' : null,
+          validator: (value) => !widget.isCurrent()
+              ? '文档名称已由其他端修改，请取消后重新打开'
+              : value == null || value.trim().isEmpty
+              ? '请输入内容'
+              : null,
           onFieldSubmitted: (_) => _submit(),
         ),
       ),

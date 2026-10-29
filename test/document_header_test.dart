@@ -1016,6 +1016,45 @@ void main() {
     },
   );
 
+  testWidgets('failed rename still shows snackbar after conflict reload', (
+    tester,
+  ) async {
+    service.banner = null;
+    await mount(tester);
+    final pending = service.pending = Completer<void>();
+    addTearDown(() {
+      if (!pending.isCompleted) pending.complete();
+    });
+    await tester.tap(find.byKey(const ValueKey('document-title-edit')));
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.byKey(const ValueKey('document-title-input')),
+      '本地草稿',
+    );
+    await tester.tap(find.byKey(const ValueKey('document-header-submit')));
+    for (var i = 0; i < 15; i++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    expect(controller.saving, isTrue);
+    service.name = '远端权威名称';
+    controller.applyRemotePatch(
+      'doc',
+      const DocumentMetadataPatch.rename('远端权威名称'),
+    );
+    pending.completeError(StateError('write rejected'));
+    await tester.pumpAndSettle();
+    expect(controller.value!.name, '远端权威名称');
+    expect(controller.error, '头部保存失败，请重试');
+    expect(
+      find.descendant(
+        of: find.byType(SnackBar),
+        matching: find.text('头部保存失败，请重试'),
+      ),
+      findsOneWidget,
+    );
+    expect(adapter.blocks.single.text, '原始正文');
+  });
+
   testWidgets(
     'permission loss during an open title sheet prevents submission',
     (tester) async {

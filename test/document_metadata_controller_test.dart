@@ -56,6 +56,242 @@ void main() {
     );
   });
   tearDown(() => controller.close());
+  for (final writeSucceeds in [true, false]) {
+    for (final readSucceeds in [true, false]) {
+      test(
+        'conflict reload preserves write outcome (write=$writeSucceeds, read=$readSucceeds)',
+        () async {
+          await controller.refresh();
+          final ack = Completer<void>();
+          service.write = () => ack.future;
+          service.read = () async {
+            if (!readSucceeds) throw StateError('reload offline');
+            return metadata(name: '权威名称');
+          };
+          final saving = controller.save(
+            const DocumentMetadataPatch.rename('本地草稿'),
+          );
+          controller.applyRemotePatch(
+            'doc',
+            const DocumentMetadataPatch.rename('远端名称'),
+          );
+          if (writeSucceeds) {
+            ack.complete();
+          } else {
+            ack.completeError(StateError('write rejected'));
+          }
+          expect(await saving, writeSucceeds);
+          expect(
+            controller.error,
+            !writeSucceeds
+                ? '头部保存失败，请重试'
+                : readSucceeds
+                ? isNull
+                : '头部加载失败，请重试',
+          );
+          expect(controller.value!.name, readSucceeds ? '权威名称' : '远端名称');
+          expect(controller.saving, isFalse);
+          expect(controller.loading, isFalse);
+          expect(service.loads, 2);
+          service.read = () async => metadata(name: '重试读取');
+          await controller.refresh();
+          expect(controller.error, isNull);
+        },
+      );
+    }
+  }
+  for (final initialLoad in [true, false]) {
+    test(
+      'failed read drops buffered patches before retry (initial=$initialLoad)',
+      () async {
+        if (!initialLoad) await controller.refresh();
+        final pending = Completer<DocumentMetadata>();
+        service.read = () => pending.future;
+        final reading = controller.refresh();
+        controller.applyRemotePatch(
+          'doc',
+          const DocumentMetadataPatch.rename('旧推送'),
+        );
+        controller.applyRemotePatch(
+          'doc',
+          const DocumentMetadataPatch.icon(null),
+        );
+        controller.applyRemotePatch(
+          'doc',
+          const DocumentMetadataPatch.banner(null),
+        );
+        pending.completeError(StateError('offline'));
+        await reading;
+        service.read = () async => metadata(name: '更新的HTTP');
+        await controller.refresh();
+        expect(controller.value!.name, '更新的HTTP');
+        expect(controller.value!.icon, isNotNull);
+        expect(controller.value!.banner, isNotNull);
+      },
+    );
+  }
+  for (final icon in [true, false]) {
+    for (final remove in [true, false]) {
+      test(
+        'appearance conflict reloads after ACK (icon=$icon, remove=$remove)',
+        () async {
+          await controller.refresh();
+          final ack = Completer<void>();
+          service.write = () => ack.future;
+          service.read = () async => metadata(name: '权威快照');
+          final saving = controller.save(
+            icon
+                ? const DocumentMetadataPatch.icon({'value': '本地'})
+                : const DocumentMetadataPatch.banner({'url': 'local'}),
+          );
+          controller.applyRemotePatch(
+            'doc',
+            icon
+                ? DocumentMetadataPatch.icon(remove ? null : {'value': '远端'})
+                : DocumentMetadataPatch.banner(
+                    remove ? null : {'url': 'remote'},
+                  ),
+          );
+          ack.complete();
+          expect(await saving, isTrue);
+          expect(controller.value!.name, '权威快照');
+          expect(controller.value!.icon!['value'], '😘');
+          expect(controller.value!.banner!['y'], 30);
+          expect(service.loads, 2);
+        },
+      );
+    }
+  }
+  test(
+    'conflict read holds save lock and close waits for its response',
+    () async {
+      await controller.refresh();
+      final ack = Completer<void>();
+      final readStarted = Completer<void>();
+      final reread = Completer<DocumentMetadata>();
+      service.write = () => ack.future;
+      service.read = () {
+        readStarted.complete();
+        return reread.future;
+      };
+      final saving = controller.save(const DocumentMetadataPatch.rename('本地'));
+      controller.applyRemotePatch(
+        'doc',
+        const DocumentMetadataPatch.rename('远端'),
+      );
+      ack.complete();
+      await readStarted.future;
+      expect(controller.saving, isTrue);
+      expect(
+        await controller.save(const DocumentMetadataPatch.rename('第二次')),
+        isFalse,
+      );
+      expect(service.patches, hasLength(1));
+      var closed = false;
+      final closing = controller.close().then((_) => closed = true);
+      await Future<void>.delayed(Duration.zero);
+      expect(closed, isFalse);
+      reread.complete(metadata(name: '迟到快照'));
+      expect(await saving, isFalse);
+      await closing;
+      expect(controller.value!.name, '远端');
+    },
+  );
+  test('completion listener cannot lose tracking of the next write', () async {
+    await controller.refresh();
+    final secondAck = Completer<void>();
+    Future<bool>? second;
+    var started = false;
+
+    /// 在首轮结束通知中提交下一轮，验证任务清理不会覆盖新写入的所有权。
+    void onChanged() {
+      if (!controller.saving && !started) {
+        started = true;
+        service.write = () => secondAck.future;
+        second = controller.save(const DocumentMetadataPatch.rename('第二次'));
+      }
+    }
+
+    controller.addListener(onChanged);
+    await controller.save(const DocumentMetadataPatch.rename('第一次'));
+    controller.removeListener(onChanged);
+    var closed = false;
+    final closing = controller.close().then((_) => closed = true);
+    await Future<void>.delayed(Duration.zero);
+    expect(closed, isFalse);
+    secondAck.complete();
+    expect(await second!, isFalse);
+    await closing;
+  });
+  test(
+    'remote patch wins over an older read without writing or granting permission',
+    () async {
+      await controller.refresh();
+      final pending = Completer<DocumentMetadata>();
+      service.read = () => pending.future;
+      final reading = controller.refresh();
+      controller.applyRemotePatch(
+        'doc',
+        const DocumentMetadataPatch.rename('远端新名'),
+      );
+      pending.complete(metadata(name: '旧HTTP标题'));
+      await reading;
+      expect(controller.value!.name, '远端新名');
+      expect(service.patches, isEmpty);
+      editable = false;
+      controller.applyRemotePatch(
+        'doc',
+        const DocumentMetadataPatch.rename('只读也更新'),
+      );
+      expect(controller.value!.name, '只读也更新');
+      controller.applyRemotePatch(
+        'other',
+        const DocumentMetadataPatch.rename('另一文档'),
+      );
+      expect(controller.value!.name, '只读也更新');
+    },
+  );
+  test(
+    'remote patch received during first load is replayed and close ignores updates',
+    () async {
+      final pending = Completer<DocumentMetadata>();
+      service.read = () => pending.future;
+      final reading = controller.refresh();
+      controller.applyRemotePatch(
+        'doc',
+        const DocumentMetadataPatch.rename('首载期间改名'),
+      );
+      pending.complete(metadata());
+      await reading;
+      expect(controller.value!.name, '首载期间改名');
+      await controller.close();
+      controller.applyRemotePatch(
+        'doc',
+        const DocumentMetadataPatch.rename('关闭后'),
+      );
+      expect(controller.value!.name, '首载期间改名');
+    },
+  );
+  test(
+    'remote rename during write triggers one authoritative read after ACK',
+    () async {
+      await controller.refresh();
+      final pending = Completer<void>();
+      service.write = () => pending.future;
+      service.read = () async => metadata(name: '服务端最终名');
+      final saving = controller.save(
+        const DocumentMetadataPatch.rename('本地提交'),
+      );
+      controller.applyRemotePatch(
+        'doc',
+        const DocumentMetadataPatch.rename('并发远端'),
+      );
+      pending.complete();
+      expect(await saving, isTrue);
+      expect(controller.value!.name, '服务端最终名');
+      expect(service.loads, 2);
+    },
+  );
   test(
     'ACK updates only selected field; failure retains old value and permits retry',
     () async {

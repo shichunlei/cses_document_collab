@@ -1,0 +1,162 @@
+import 'dart:async';
+import 'package:cses_document_collab/cses_document_collab.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+DocumentMetadata snapshot(String name) => DocumentMetadata(id: 'doc', name: name,
+  icon: {'value': 'original'}, banner: {'url': 'original'},
+  canRename: true, canChangeAppearance: true);
+class Service implements DocumentMetadataService {
+  Future<DocumentMetadata> Function() read = () async => snapshot('initial');
+  Future<void> Function() write = () async {};
+  int loads = 0;
+  int writes = 0;
+  @override
+  Future<DocumentMetadata> load(String id) { loads++; return read(); }
+  @override
+  Future<void> update(String id, DocumentMetadataPatch patch) { writes++; return write(); }
+}
+Future<void> flush() async {
+  for (var i = 0; i < 6; i++) { await Future<void>.delayed(Duration.zero); }
+}
+void main() {
+  late Service service;
+  late DocumentMetadataController c;
+  setUp(() { service = Service(); c = DocumentMetadataController(documentId: 'doc',
+    service: service, canEdit: () => true,
+    services: CollabHostServices(onError: (_, _, _, _) {})); });
+  tearDown(() => c.close());
+  for (final readFails in [false, true]) {
+    test('failure remains visible throughout pending reload and remote events (readFails=$readFails)', () async {
+      await c.refresh();
+      final ack = Completer<void>();
+      final reread = Completer<DocumentMetadata>();
+      final started = Completer<void>();
+      service.write = () => ack.future;
+      service.read = () { started.complete(); return reread.future; };
+      final save = c.save(const DocumentMetadataPatch.rename('local'));
+      c.applyRemotePatch('doc', const DocumentMetadataPatch.rename('remote'));
+      final errors = <String?>[];
+      void observe() { errors.add(c.error); }
+      c.addListener(observe);
+      ack.completeError(StateError('write failed'));
+      await started.future;
+      expect(c.error, '头部保存失败，请重试');
+      expect(c.saving, isTrue);
+      await c.refresh();
+      expect(service.loads, 2);
+      expect(c.error, '头部保存失败，请重试');
+      expect(await c.save(const DocumentMetadataPatch.icon(null)), isFalse);
+      expect(service.writes, 1);
+      c.applyRemotePatch('doc', const DocumentMetadataPatch.rename('newest WS'));
+      c.applyRemotePatch('doc', const DocumentMetadataPatch.icon(null));
+      if (readFails) { reread.completeError(StateError('reload failed')); }
+      else { reread.complete(snapshot('older HTTP')); }
+      expect(await save, isFalse);
+      expect(c.value!.name, 'newest WS');
+      expect(c.value!.icon, isNull);
+      expect(errors, isNotEmpty);
+      expect(errors, everyElement('头部保存失败，请重试'));
+      c.removeListener(observe);
+      service.write = () async {};
+      expect(await c.save(const DocumentMetadataPatch.rename('next save')), isTrue);
+      expect(c.error, isNull);
+      expect(c.value!.name, 'next save');
+    });
+    test('close waits failed-write reload and ignores late result (readFails=$readFails)', () async {
+      await c.refresh();
+      final ack = Completer<void>();
+      final reread = Completer<DocumentMetadata>();
+      final started = Completer<void>();
+      service.write = () => ack.future;
+      service.read = () { started.complete(); return reread.future; };
+      final save = c.save(const DocumentMetadataPatch.rename('local'));
+      c.applyRemotePatch('doc', const DocumentMetadataPatch.rename('remote'));
+      ack.completeError(StateError('write failed'));
+      await started.future;
+      var notifications = 0;
+      c.addListener(() => notifications++);
+      var closed = false;
+      final closing = c.close().then((_) => closed = true);
+      await flush();
+      expect(closed, isFalse);
+      c.applyRemotePatch('doc', const DocumentMetadataPatch.rename('after close'));
+      if (readFails) { reread.completeError(StateError('late read failure')); }
+      else { reread.complete(snapshot('late HTTP')); }
+      expect(await save, isFalse);
+      await closing;
+      expect(c.value!.name, 'remote');
+      expect(c.error, '头部保存失败，请重试');
+      expect(notifications, 0);
+    });
+  }
+  test('failed write waits invalidated old read without losing its error', () async {
+    await c.refresh();
+    final old = Completer<DocumentMetadata>();
+    service.read = () => old.future;
+    final reading = c.refresh();
+    final ack = Completer<void>();
+    service.write = () => ack.future;
+    final save = c.save(const DocumentMetadataPatch.rename('local'));
+    c.applyRemotePatch('doc', const DocumentMetadataPatch.rename('remote'));
+    ack.completeError(StateError('write failed'));
+    await flush();
+    expect(c.error, '头部保存失败，请重试');
+    expect(c.saving, isTrue);
+    expect(service.loads, 2);
+    service.read = () async => snapshot('authoritative');
+    old.completeError(StateError('stale read failed'));
+    await reading;
+    expect(await save, isFalse);
+    expect(c.error, '头部保存失败，请重试');
+    expect(c.value!.name, 'authoritative');
+    expect(service.loads, 3);
+  });
+  test('failure completion listener can start next write without losing close tracking', () async {
+    await c.refresh();
+    final ack = Completer<void>();
+    service.write = () => ack.future;
+    service.read = () async => snapshot('remote');
+    final first = c.save(const DocumentMetadataPatch.rename('local'));
+    c.applyRemotePatch('doc', const DocumentMetadataPatch.rename('remote'));
+    final secondAck = Completer<void>();
+    Future<bool>? second;
+    var launched = false;
+    void observe() {
+      if (!c.saving && !launched) {
+        launched = true;
+        service.write = () => secondAck.future;
+        second = c.save(const DocumentMetadataPatch.rename('next'));
+      }
+    }
+    c.addListener(observe);
+    ack.completeError(StateError('write failed'));
+    expect(await first, isFalse);
+    c.removeListener(observe);
+    expect(launched, isTrue);
+    expect(c.error, isNull);
+    var closed = false;
+    final closing = c.close().then((_) => closed = true);
+    await flush();
+    expect(closed, isFalse);
+    secondAck.complete();
+    expect(await second!, isFalse);
+    await closing;
+  });
+  for (final icon in [true, false]) {
+    test('appearance write failure retains error after remote removal (icon=$icon)', () async {
+      await c.refresh();
+      final ack = Completer<void>();
+      service.write = () => ack.future;
+      final save = c.save(icon
+        ? const DocumentMetadataPatch.icon({'value': 'local'})
+        : const DocumentMetadataPatch.banner({'url': 'local'}));
+      c.applyRemotePatch('doc', icon
+        ? const DocumentMetadataPatch.icon(null)
+        : const DocumentMetadataPatch.banner(null));
+      ack.completeError(StateError('write failed'));
+      expect(await save, isFalse);
+      expect(c.error, '头部保存失败，请重试');
+      expect(service.loads, 2);
+    });
+  }
+}

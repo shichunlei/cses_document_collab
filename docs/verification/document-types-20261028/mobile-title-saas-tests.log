@@ -1,0 +1,38 @@
+Waiting for another flutter command to release the startup lock...
+package:xbr_plugin_record has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:flutter_floating has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:loading_animation_widget has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:vulcan has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:cses_common has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:flutter_easyrefresh_strong has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:ai_barcode_scanner has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+00:00 +0: loading /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_collab_metadata_adapter_test.dart
+00:00 +0: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_collab_metadata_adapter_test.dart: 头部仅恢复封面及图标明确字段，元数据读取不承担正文初始化
+00:00 +1: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_collab_metadata_adapter_test.dart: 图标写入只传type/value，未知键不进入业务修改
+00:00 +2: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_collab_metadata_adapter_test.dart: 封面写入只传四个明确字段，未知键不进入业务修改
+00:00 +3: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_collab_metadata_adapter_test.dart: 显式移除图标/封面在写前复核权限，写动作不隐式重试
+00:00 +4: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_collab_metadata_adapter_test.dart: 撤权即时通知宿主，访问拒绝不沿用旧头部能力
+00:00 +5: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_collab_metadata_adapter_test.dart: 只读角色不能调用图标写接口；文档 ID 不匹配不发请求
+00:00 +6: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_collab_metadata_adapter_test.dart: 账号变化后的迟到响应不发布元数据或权限快照
+00:00 +7: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_editor_application_service_test.dart: 详情不丢弃文档类型及未知meta，非文本不能进入原生正文
+00:00 +8: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_editor_application_service_test.dart: 已标记外部编辑器的text也不能进入原生正文
+00:00 +9: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_editor_application_service_test.dart: 图标只读type/value，忽略未知键及非字符串键，保留空值与校验合同
+00:00 +10: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_editor_application_service_test.dart: 正文编辑读取访问、详情和真实 allowEdit，不消费 modify
+00:00 +11: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_editor_application_service_test.dart: 访问拒绝不读取详情、不触碰缓存或 SDK
+00:00 +12: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_editor_application_service_test.dart: 阈值读取异常报告原失败并保持可阅读、不可编辑
+00:00 +13: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_editor_application_service_test.dart: 错误文档的详情不能装配当前控制器
+00:00 +14: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_editor_application_service_test.dart: 图标封面 null 使用专用移除，空对象仍作为修改命令
+00:00 +15: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_editor_application_service_test.dart: 写拒绝保留业务消息且不重试
+00:00 +16: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_editor_application_service_test.dart: 详情封面只输出明确字段并保留数值转换和空值合同
+00:01 +17: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_collab_host_test.dart: 未知、缺失和非文本类型均不会创建原生正文控制器
+00:01 +18: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_collab_host_test.dart: 初始化期间头部独立读取撤权，迟到初始化不能发布编辑器
+00:01 +19: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_collab_host_test.dart: 后开的文档等待旧文档关闭，不并行占用原生引擎
+00:01 +20: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_collab_host_test.dart: 详情请求未返回时关闭会等待，迟到结果不能创建控制器
+00:01 +21: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_collab_host_test.dart: 业务写入在途时会话清理不提前完成，关闭后不接受新任务
+00:01 +22: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_collab_host_test.dart: 权限刷新撤销访问后隐藏并关闭缓存正文，不关闭其他资源
+00:01 +23: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_collab_host_test.dart: 正文阈值改变只切换编辑能力，仍接收并恢复协同
+00:01 +24: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_collab_host_test.dart: 初始化原生资源期间关闭不会发布迟到控制器，重复关闭幂等
+00:01 +25: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_collab_gateway_test.dart: 等待路由监听安装，空 subscribe 使用即时发送策略
+00:01 +26: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_collab_gateway_test.dart: 离线或未登记不发送；退出不重新订阅；重复注销不触碰其他页面
+00:01 +27: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_collab_gateway_test.dart: 旧登记的迟到异常不能移除同名新登记
+00:01 +28: All tests passed!

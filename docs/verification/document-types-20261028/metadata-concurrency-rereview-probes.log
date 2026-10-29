@@ -1,0 +1,24 @@
+00:00 +0: loading /tmp/cses_metadata_recheck_test.dart
+00:00 +0: failed update with concurrent remote rename must retain visible save error
+00:00 +0 -1: failed update with concurrent remote rename must retain visible save error [E]
+  Expected: not null
+    Actual: <null>
+  DocumentHeader displays failures only through controller.error
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  /tmp/cses_metadata_recheck_test.dart 34:5           main.<fn>
+  
+00:00 +0 -1: old read and conflict reload stay serialized and replay patches during reload
+00:00 +1 -1: failed conflict reload releases lock and permits later writes
+00:00 +2 -1: no conflict reload for identical or different field patch: icon
+00:00 +3 -1: no conflict reload for identical or different field patch: banner
+00:00 +4 -1: no conflict reload for identical or different field patch: remove-icon
+00:00 +5 -1: no conflict reload for identical or different field patch: remove-banner
+00:00 +6 -1: no conflict reload for identical or different field patch: name
+00:00 +7 -1: no conflict reload for identical or different field patch: different
+00:00 +8 -1: close during old-read wait skips new reload and waits pending work
+00:00 +9 -1: Some tests failed.
+
+Failing tests:
+  /tmp/cses_metadata_recheck_test.dart: failed update with concurrent remote rename must retain visible save error

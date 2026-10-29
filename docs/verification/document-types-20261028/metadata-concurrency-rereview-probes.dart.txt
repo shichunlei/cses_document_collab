@@ -1,0 +1,124 @@
+import 'dart:async';
+import 'package:cses_document_collab/cses_document_collab.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+DocumentMetadata snapshot(String name) => DocumentMetadata(id: 'doc', name: name,
+  icon: {'value': 'original'}, banner: {'url': 'original'},
+  canRename: true, canChangeAppearance: true);
+class Service implements DocumentMetadataService {
+  Future<DocumentMetadata> Function() read = () async => snapshot('initial');
+  Future<void> Function() write = () async {};
+  int loads = 0;
+  @override
+  Future<DocumentMetadata> load(String id) { loads++; return read(); }
+  @override
+  Future<void> update(String id, DocumentMetadataPatch patch) => write();
+}
+void main() {
+  late Service service;
+  late DocumentMetadataController c;
+  setUp(() { service = Service(); c = DocumentMetadataController(documentId: 'doc',
+    service: service, canEdit: () => true,
+    services: CollabHostServices(onError: (_, _, _, _) {})); });
+  tearDown(() => c.close());
+  test('failed update with concurrent remote rename must retain visible save error', () async {
+    await c.refresh();
+    final ack = Completer<void>();
+    service.write = () => ack.future;
+    service.read = () async => snapshot('remote');
+    final save = c.save(const DocumentMetadataPatch.rename('local'));
+    c.applyRemotePatch('doc', const DocumentMetadataPatch.rename('remote'));
+    ack.completeError(StateError('permission denied'));
+    expect(await save, isFalse);
+    expect(c.value!.name, 'remote');
+    expect(c.error, isNotNull, reason: 'DocumentHeader displays failures only through controller.error');
+  });
+  test('old read and conflict reload stay serialized and replay patches during reload', () async {
+    await c.refresh();
+    final old = Completer<DocumentMetadata>();
+    service.read = () => old.future;
+    final reading = c.refresh();
+    final ack = Completer<void>();
+    final newer = Completer<DocumentMetadata>();
+    final reloadStarted = Completer<void>();
+    service.write = () => ack.future;
+    service.read = () { reloadStarted.complete(); return newer.future; };
+    final save = c.save(const DocumentMetadataPatch.rename('local'));
+    c.applyRemotePatch('doc', const DocumentMetadataPatch.rename('remote'));
+    ack.complete();
+    await Future<void>.delayed(Duration.zero);
+    expect(service.loads, 2);
+    expect(c.saving, isTrue);
+    old.complete(snapshot('stale'));
+    await reading;
+    await reloadStarted.future;
+    c.applyRemotePatch('doc', const DocumentMetadataPatch.rename('latest WS'));
+    c.applyRemotePatch('doc', const DocumentMetadataPatch.icon(null));
+    newer.complete(snapshot('reload'));
+    expect(await save, isTrue);
+    expect(c.value!.name, 'latest WS');
+    expect(c.value!.icon, isNull);
+    expect(c.saving, isFalse);
+  });
+  test('failed conflict reload releases lock and permits later writes', () async {
+    await c.refresh();
+    final ack = Completer<void>();
+    service.write = () => ack.future;
+    service.read = () async => throw StateError('offline');
+    final save = c.save(const DocumentMetadataPatch.rename('local'));
+    c.applyRemotePatch('doc', const DocumentMetadataPatch.rename('remote'));
+    ack.complete();
+    expect(await save, isTrue);
+    expect(c.saving, isFalse);
+    expect(c.loading, isFalse);
+    expect(c.value!.name, 'remote');
+    expect(c.error, isNotNull);
+    service.write = () async {};
+    expect(await c.save(const DocumentMetadataPatch.rename('retry')), isTrue);
+    expect(c.value!.name, 'retry');
+    expect(c.error, isNull);
+  });
+  for (final field in ['icon', 'banner', 'remove-icon', 'remove-banner', 'name', 'different']) {
+    test('no conflict reload for identical or different field patch: $field', () async {
+      await c.refresh();
+      final ack = Completer<void>();
+      service.write = () => ack.future;
+      final patch = switch (field) {
+        'icon' => DocumentMetadataPatch.icon({'value': 'same'}),
+        'banner' => DocumentMetadataPatch.banner({'url': 'same'}),
+        'remove-icon' => const DocumentMetadataPatch.icon(null),
+        'remove-banner' => const DocumentMetadataPatch.banner(null),
+        _ => const DocumentMetadataPatch.rename('same'),
+      };
+      final save = c.save(patch);
+      c.applyRemotePatch('doc', field == 'different'
+        ? const DocumentMetadataPatch.icon(null) : patch);
+      ack.complete();
+      expect(await save, isTrue);
+      expect(service.loads, 1);
+      if (field == 'different') expect(c.value!.icon, isNull);
+    });
+  }
+  test('close during old-read wait skips new reload and waits pending work', () async {
+    await c.refresh();
+    final old = Completer<DocumentMetadata>();
+    service.read = () => old.future;
+    final reading = c.refresh();
+    final ack = Completer<void>();
+    service.write = () => ack.future;
+    final save = c.save(const DocumentMetadataPatch.rename('local'));
+    c.applyRemotePatch('doc', const DocumentMetadataPatch.rename('remote'));
+    ack.complete();
+    await Future<void>.delayed(Duration.zero);
+    var closed = false;
+    final closing = c.close().then((_) => closed = true);
+    await Future<void>.delayed(Duration.zero);
+    expect(closed, isFalse);
+    old.complete(snapshot('stale'));
+    await reading;
+    expect(await save, isFalse);
+    await closing;
+    expect(service.loads, 2);
+    expect(c.value!.name, 'remote');
+  });
+}

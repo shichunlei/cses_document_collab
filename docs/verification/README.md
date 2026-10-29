@@ -17,9 +17,21 @@
 
 ### 文档创建与文档信息
 
-- [document-types-20261028](document-types-20261028)（[桌面文档类型、历史兼容值与当前入口核对](document-types-20261028/report.md)；[移动端逐类型支持范围](document-types-20261028/mobile-support.md)；[解析与打开分流实施验证](document-types-20261028/implementation.md)；[列表实体字段补齐](document-types-20261028/list-fields.md)；[精简搜索结果核对](document-types-20261028/search-fields.md)；[行为实体合并](document-types-20261028/behavior-merge.md)；[公共行为统一解析](document-types-20261028/behavior-common.md)；[行为实体仅五字段](document-types-20261028/behavior-five-fields.md)；[封面实体仅明确字段](document-types-20261028/banner-fields.md)；[图标实体仅明确字段](document-types-20261028/icon-fields.md)；[其余实体明确字段检查](document-types-20261028/entities-explicit.md)）
+- [未提交代码审查：元数据并发的三项 P2](document-types-20261028/pending-changes-review.md)（隔离探针复现，产品代码未修改）。
+- [元数据并发三项 P2 修复与回归](document-types-20261028/metadata-concurrency-fixes.md)（逐读取补丁、外观冲突补读和写入任务关闭顺序）。
+- [元数据并发修复复审](document-types-20261028/metadata-concurrency-rereview.md)（原三项已解决，补充发现保存失败提示被冲突补读清除的遗漏 P2）。
+- [冲突补读保留保存失败提示](document-types-20261028/metadata-save-error-fix-20261029.md)（2026-10-29 修复复审遗漏，保留写入/补读结果区别及用户失败提示）。
+- [保存失败提示修复复审](document-types-20261028/metadata-save-error-rereview-20261029.md)（失败提示、远端事件、再次保存与关闭顺序复核）。
+
+- 手机文档名称同步：[复用主WS补齐首页与详情的方案](document-types-20261028/mobile-title-sync-plan.md)（参考SaaS会议/投票订阅模式；仅方案，尚未实施）。
 
 - [saas-presence-recovery-20261028](saas-presence-recovery-20261028)（[在线身份冲突修复、失败回归与 SaaS 真机创建恢复证据](saas-presence-recovery-20261028/validation.json)）
+
+- 手机文档名称：[改名保存、实时接收缺口与列表同步核查](document-types-20261028/mobile-title-sync.md)（沿用 document-types-20261028 分类；现有定向测试67项通过，未做在线双端验收）。
+
+- 桌面文档名称：[保存接口、消息推送与页面/列表同步核对](document-types-20261028/title-sync.md)（沿用 document-types-20261028 分类；现有定向测试60项通过，未做在线双端验收）。
+
+- [document-types-20261028](document-types-20261028)（[桌面文档类型、历史兼容值与当前入口核对](document-types-20261028/report.md)；[移动端逐类型支持范围](document-types-20261028/mobile-support.md)；[解析与打开分流实施验证](document-types-20261028/implementation.md)；[列表实体字段补齐](document-types-20261028/list-fields.md)；[精简搜索结果核对](document-types-20261028/search-fields.md)；[行为实体合并](document-types-20261028/behavior-merge.md)；[公共行为统一解析](document-types-20261028/behavior-common.md)；[行为实体仅五字段](document-types-20261028/behavior-five-fields.md)；[封面实体仅明确字段](document-types-20261028/banner-fields.md)；[图标实体仅明确字段](document-types-20261028/icon-fields.md)；[其余实体明确字段检查](document-types-20261028/entities-explicit.md)）
 
 - [document-json-export-20261023](document-json-export-20261023)（[桌面文档 JSON 格式分析与示例](document-json-export-20261023/report.md)）
 
