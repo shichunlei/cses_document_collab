@@ -12,7 +12,7 @@ buildscript {
     dependencies {
         // Keep this aligned with the host app's Android Gradle Plugin so SDK
         // metadata is parsed by the same version in both projects.
-        classpath 'com.android.tools.build:gradle:8.11.1'
+        classpath 'com.android.tools.build:gradle:8.13.2'
     }
 }
 

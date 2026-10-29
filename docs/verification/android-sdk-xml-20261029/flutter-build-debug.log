@@ -1,0 +1,19 @@
+Running Gradle task 'assembleDebug'...
+Resolving dependencies...
+Downloading packages...
+  crypto 3.0.7 (3.0.8 available)
+  http_parser 4.0.2 (4.1.2 available)
+  petitparser 7.0.2 (7.1.0 available)
+  web 1.1.1 (1.1.2 available)
+Got dependencies!
+4 packages have newer versions incompatible with dependency constraints.
+Try `dart pub outdated` for more information.
+Compiling bin/build_tool_runner.dart to kernel file bin/build_tool_runner.dill.
+INFO: Precompiled binaries are disabled
+INFO: Building cses_collab_core for armv7-linux-androideabi
+INFO: Building cses_collab_core for aarch64-linux-android
+INFO: Building cses_collab_core for x86_64-linux-android
+INFO: Building cses_collab_core for i686-linux-android
+INFO: Building cses_collab_core for x86_64-linux-android
+Running Gradle task 'assembleDebug'...                             66.0s
+✓ Built build/app/outputs/flutter-apk/app-debug.apk

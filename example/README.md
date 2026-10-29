@@ -183,6 +183,20 @@ instance 自动生成，同一次文档宿主挂载期间保持稳定，重新�
 界面出现 `bidirectional-sync-ready` 后再确认双端编辑；握手超时要核对会话和服务端协议部署，
 底层 Socket 打开或收到 hello 不代表文档会话成功。
 
+### Android SDK XML 版本警告
+
+`SDK processing ... only understands SDK XML versions up to 3 ... version 4`
+表示读取 SDK 元数据的 Android 工具版本过旧。当前宿主和核心插件统一使用
+Android Gradle Plugin **8.13.2**，宿主 Gradle wrapper 为 **8.14.5**，编译 API 为 **36**。
+其他宿主接入时也需使用兼容的构建工具；AGP 8.13 要求 Gradle 至少 8.13、JDK 至少 17，
+见 [Android 官方兼容表](https://developer.android.com/build/releases/agp-8-13-0-release-notes)。
+
+排查时先用 `flutter doctor -v` 确认实际 SDK 和 Java 路径，再在 Android Studio 的
+SDK Manager 中更新同一路径下的 Android SDK Command-line Tools。优先从 `example/`
+运行 `flutter build apk --debug`，由 Flutter 选择已配置的 JDK；直接运行 Gradle 时须显式
+选择兼容的 JDK（本项目使用 Java 17 验证），避免 PATH 中的其他 Java 版本干扰。
+不要修改 SDK 的 `package.xml` 或隐藏警告；历史日志保留原有警告作为当时的证据。
+
 宿主 Flutter 最低版本为 **3.44.9**，Dart 最低版本为 **3.12.0**；`cses_document_collab` 支持 Flutter 3.44.0 起。
 依赖按 Flutter 3.44.9 验证，锁定版本见 `pubspec.lock`。Flutter SDK 固定的依赖与工作区插件的
 主版本约束继续由依赖解析器管理。`cses_document_collab` 使用 ffi 2.2.0、ffigen 21.0.0；
