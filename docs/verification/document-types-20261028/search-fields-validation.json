@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-28",
+  "response_fields": 12,
+  "missing_entity_fields": [],
+  "new_regressions": 3,
+  "related_tests_passed": 65,
+  "analysis": "2 files: no issues",
+  "runtime_implementation_changed": false,
+  "not_verified": [
+    "physical device",
+    "live HTTP server",
+    "full app build"
+  ]
+}

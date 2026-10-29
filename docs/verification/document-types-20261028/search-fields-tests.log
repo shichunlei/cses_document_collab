@@ -1,0 +1,74 @@
+package:xbr_plugin_record has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:flutter_floating has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:loading_animation_widget has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:vulcan has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:cses_common has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:flutter_easyrefresh_strong has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:ai_barcode_scanner has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+00:00 +0: loading /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_list_fields_test.dart
+00:00 +0: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_list_fields_test.dart: 列表保留顶层统计、节点类型、更新人与空封面
+00:00 +1: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_list_fields_test.dart: 目录保留顶层统计、节点类型、更新人与空封面
+00:00 +2: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_list_fields_test.dart: 搜索保留顶层统计、节点类型、更新人与空封面
+00:00 +3: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_list_fields_test.dart: 真实精简搜索结构的全部字段均解析，缺少列表附加字段不伪造值
+00:00 +4: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_list_fields_test.dart: 精简搜索结果序列化明确保留原字段和既有缺省合同
+00:00 +5: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_list_fields_test.dart: 搜索文档与文件夹形态独立解析，显式null和数字转换保持原合同
+00:00 +6: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_list_fields_test.dart: 完整列表输出键与嵌套协议精确匹配，个人状态和聚合统计相互独立
+00:00 +7: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_list_fields_test.dart: 缺失/null/空封面和统计按明确语义解析，数字转int且未知统计保留
+00:00 +8: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_list_fields_test.dart: 目录树转换和重命名保留完整列表数据及浏览时间
+00:00 +9: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 正式文档路由保留创建恢复检查，并在正文前接入类型分流
+00:00 +10: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: base保留未知类型与完整meta，缺失/null不伪造text
+00:00 +11: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: detail保留未知类型与完整meta，缺失/null不伪造text
+00:00 +12: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: list保留未知类型与完整meta，缺失/null不伪造text
+00:00 +13: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: folder保留未知类型与完整meta，缺失/null不伪造text
+00:00 +14: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: search保留未知类型与完整meta，缺失/null不伪造text
+00:00 +15: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 目录树转换与局部复制继续保留文档类型和meta
+00:00 +16: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 只有明确text且没有其他编辑器或附件声明时允许文本入口
+00:00 +17: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 附件及七种历史文件类型分流资源入口；旧text附件不进入正文
+00:00 +18: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 无类型的列表/深链以详情为准；跨环境或ID冲突在请求前拒绝
+00:00 +19: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 详情读取期间会话变化拒绝结果，不能把旧账号文件交给新账号
+00:00 +20: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +21: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +22: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +23: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +24: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +25: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +26: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +27: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +28: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +29: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +30: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +31: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +32: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +33: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +34: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +35: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +36: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +37: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +38: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +39: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +40: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +41: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +42: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +43: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +44: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +45: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +46: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +47: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +48: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +49: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +50: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +51: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +52: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +53: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +54: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +55: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +56: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +57: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +58: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +59: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +60: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 未支持类型不调用正文构建器；真实打开路径展示说明
+00:01 +61: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 附件自动分流一次且可再次打开，永不挂载文本正文
+00:01 +62: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 复用页面切换类型时先卸载旧正文，迟到详情不恢复旧文本入口
+00:01 +63: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 明确text通过公共入口才挂载原正文页面
+00:01 +64: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_type_routing_test.dart: 页面退出后迟到附件不会打开；缺失类型也不会挂载正文
+00:01 +65: All tests passed!

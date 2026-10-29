@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-28",
+  "tests": 62,
+  "analysis": "6 files: no issues",
+  "before_fix": "3 regression tests failed",
+  "fields": [
+    "nodeType",
+    "updater",
+    "behavior.comment",
+    "banner"
+  ],
+  "preserved": [
+    "documentType",
+    "meta",
+    "read independent of localUser.behavior.read",
+    "nested member parsing",
+    "folder copy openedAt"
+  ],
+  "not_verified": [
+    "physical device",
+    "live server",
+    "full app build"
+  ]
+}

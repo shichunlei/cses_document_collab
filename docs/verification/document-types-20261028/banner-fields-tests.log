@@ -1,0 +1,74 @@
+package:xbr_plugin_record has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:flutter_floating has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:loading_animation_widget has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:vulcan has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:cses_common has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:flutter_easyrefresh_strong has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:ai_barcode_scanner has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+00:00 +0: loading /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart
+00:00 +0: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 创建文档请求 普通文档完整原样发送三个字段
+00:00 +1: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 创建文档请求 空名称与空间根目标完整原样发送三个字段
+00:00 +2: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 创建文档请求 空白与显式非默认类型完整原样发送三个字段
+00:00 +3: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 创建文档请求 显式 null完整原样发送三个字段
+00:00 +4: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 创建文档请求 空字符串完整原样发送三个字段
+00:00 +5: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 创建文档请求 省略参数不会填充默认名称、目标或类型
+00:00 +6: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 创建文档响应 业务失败保留 message 且不丢弃 result
+00:00 +7: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 创建文档响应 缺少 message 时保留 error
+00:00 +8: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 创建文档响应 成功响应缺少或显式为空的 ID 不从其他字段猜测
+00:00 +9: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 创建文档响应 空响应或缺少明确成功标志保留执行结果未知，不伪造未执行拒绝
+00:00 +10: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 创建文档响应 HTTP 异常原样传播且不重试
+00:00 +11: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 创建文档响应 不兼容的 ID 类型由解析异常向上传播
+00:00 +12: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 文档外观 名称图标封面显式转为精确 JSON Map
+00:00 +13: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 文档外观 重命名调用保持兼容，null 外观字段不发送
+00:00 +14: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 文档外观 空外观对象仍走 modify，不转换成移除命令
+00:00 +15: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 文档外观 封面与图标独立移除只发送 id=doc
+00:00 +16: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 文档外观 封面与图标独立移除只发送 id=
+00:00 +17: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 文档外观 封面与图标独立移除只发送 id=null
+00:00 +18: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 文档外观 封面缺失、null、数值转换及精确输出
+00:00 +19: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 块数据模型及编辑 完整块保留嵌套 Delta、扩展字段、数值、显式 null 及精确键集合
+00:00 +20: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 块数据模型及编辑 缺失字段、显式 null 与空集合分别保留
+00:00 +21: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 块数据模型及编辑 原始及输出集合变更不会污染已构建块
+00:00 +22: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 块数据模型及编辑 畸形类型与非 JSON 内容不被忽略
+00:00 +23: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 块数据模型及编辑 编辑显式序列化每个块且保留顺序与同 ID 重复动作
+00:00 +24: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 块数据模型及编辑 编辑业务 result false 不得当作正文初始化已接受
+00:00 +25: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 块数据模型及编辑 编辑保留 null/空列表且不生成块或默认动作
+00:00 +26: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 平铺块读取 recursive=false 原样发送并保留平铺键和子块 ID
+00:00 +27: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 平铺块读取 recursive=true 原样发送并保留平铺键和子块 ID
+00:00 +28: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 平铺块读取 默认只读取直接子块，不伪造根块或追加请求
+00:00 +29: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 平铺块读取 成功空集合与失败响应区分
+00:00 +30: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 平铺块读取 畸形成功响应或块数据抛错，不逐条忽略
+00:00 +31: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 平铺块读取 读取 HTTP 异常原样传播，不追加重试或补读
+00:00 +32: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: modify 保留业务失败与 error 回退
+00:00 +33: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: modify 原样传播 HTTP 异常且不重试
+00:00 +34: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: banner/remove 保留业务失败与 error 回退
+00:00 +35: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: banner/remove 原样传播 HTTP 异常且不重试
+00:00 +36: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: icon/remove 保留业务失败与 error 回退
+00:00 +37: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: icon/remove 原样传播 HTTP 异常且不重试
+00:00 +38: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: edit 保留业务失败与 error 回退
+00:00 +39: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: edit 原样传播 HTTP 异常且不重试
+00:04 +40: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_list_fields_test.dart: 列表保留顶层统计、节点类型、更新人与空封面
+00:04 +41: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_list_fields_test.dart: 目录保留顶层统计、节点类型、更新人与空封面
+00:04 +42: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_list_fields_test.dart: 搜索保留顶层统计、节点类型、更新人与空封面
+00:04 +43: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_list_fields_test.dart: 真实精简搜索结构的全部字段均解析，缺少列表附加字段不伪造值
+00:04 +44: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_list_fields_test.dart: 精简搜索结果序列化明确保留原字段和既有缺省合同
+00:04 +45: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_list_fields_test.dart: 搜索文档与文件夹形态独立解析，显式null和数字转换保持原合同
+00:04 +46: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_list_fields_test.dart: 完整列表输出键与嵌套协议精确匹配，个人状态和聚合统计相互独立
+00:04 +47: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_list_fields_test.dart: 缺失/null/空封面和统计按明确语义解析，数字转int且未知统计键忽略
+00:04 +48: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_list_fields_test.dart: 目录树转换和重命名保留完整列表数据及浏览时间
+00:05 +49: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_editor_application_service_test.dart: 详情不丢弃文档类型及未知meta，非文本不能进入原生正文
+00:05 +50: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_editor_application_service_test.dart: 已标记外部编辑器的text也不能进入原生正文
+00:05 +51: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_editor_application_service_test.dart: 图标兼容入口继续忽略非字符串扩展键，并保留合法扩展
+00:05 +52: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_editor_application_service_test.dart: 正文编辑读取访问、详情和真实 allowEdit，不消费 modify
+00:05 +53: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_editor_application_service_test.dart: 访问拒绝不读取详情、不触碰缓存或 SDK
+00:05 +54: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_editor_application_service_test.dart: 阈值读取异常报告原失败并保持可阅读、不可编辑
+00:05 +55: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_editor_application_service_test.dart: 错误文档的详情不能装配当前控制器
+00:05 +56: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_editor_application_service_test.dart: 图标封面 null 使用专用移除，空对象仍作为修改命令
+00:05 +57: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_editor_application_service_test.dart: 写拒绝保留业务消息且不重试
+00:05 +58: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_editor_application_service_test.dart: 详情封面只输出明确字段并保留数值转换和空值合同
+00:05 +59: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_collab_metadata_adapter_test.dart: 头部恢复封面明确字段及图标扩展，元数据读取不承担正文初始化
+00:05 +60: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_collab_metadata_adapter_test.dart: 封面写入只传四个明确字段，未知键不进入业务修改
+00:05 +61: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_collab_metadata_adapter_test.dart: 显式移除图标/封面在写前复核权限，写动作不隐式重试
+00:05 +62: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_collab_metadata_adapter_test.dart: 撤权即时通知宿主，访问拒绝不沿用旧头部能力
+00:05 +63: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_collab_metadata_adapter_test.dart: 只读角色不能调用图标写接口；文档 ID 不匹配不发请求
+00:05 +64: /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_collab_metadata_adapter_test.dart: 账号变化后的迟到响应不发布元数据或权限快照
+00:06 +65: All tests passed!

@@ -27,11 +27,28 @@ void main() {
     service = CsesDocumentCreationService();
   });
   tearDown(() => harness.uninstall());
+  test('非文本详情在释放当前文档和创建正文引擎前被拒绝', () async {
+    harness.respond = (_) => jsonResponse({
+      'isSuccess': true,
+      'id': 'existing-doc',
+      'documentType': 'sheets',
+      'meta': {'url': 'https://example.test/sheet'},
+    });
+    await expectLater(
+      service.verifyDocumentToOpen('existing-doc'),
+      throwsA(isA<DocumentCreationRejected>()),
+    );
+    expect(harness.requests.single.path, '/doc/document/view');
+  });
   test(
     'existing document preflight uses authorized view and rejects missing or foreign ids',
     () async {
-      harness.respond = (_) =>
-          jsonResponse({'isSuccess': true, 'id': 'existing-doc', 'name': '文档'});
+      harness.respond = (_) => jsonResponse({
+        'isSuccess': true,
+        'id': 'existing-doc',
+        'name': '文档',
+        'documentType': 'text',
+      });
       await service.verifyDocumentToOpen('existing-doc');
       expect(harness.requests.single.path, '/doc/document/view');
       expect(harness.requests.single.data, {'id': 'existing-doc'});
@@ -48,6 +65,85 @@ void main() {
       expect(harness.requests.every((request) => request.path == '/doc/document/view'), isTrue);
     },
   );
+  test('预检以详情为准，所有非文本和缺失类型均拒绝，meta不被忽略', () async {
+    for (final type in [
+      null,
+      '',
+      'inspiration',
+      'attachment',
+      'sheets',
+      'mindmap',
+      'whiteboard',
+      'ppt',
+      'image',
+      'video',
+      'audio',
+      'pdf',
+      'excel',
+      'word',
+      'other',
+      'future',
+    ]) {
+      harness.respond = (_) => jsonResponse({
+        'isSuccess': true,
+        'id': 'existing-doc',
+        'documentType': type,
+        'meta': {'url': 'https://example.test/file'},
+      });
+      await expectLater(
+        service.verifyDocumentToOpen('existing-doc'),
+        throwsA(isA<DocumentCreationRejected>()),
+        reason: '$type',
+      );
+    }
+    for (final meta in [
+      {'editor': 'vectra-yjs', 'mode': 'mindmap'},
+      {'attachmentType': 'pdf'},
+    ]) {
+      harness.respond = (_) => jsonResponse({
+        'isSuccess': true,
+        'id': 'existing-doc',
+        'documentType': 'text',
+        'meta': meta,
+      });
+      await expectLater(
+        service.verifyDocumentToOpen('existing-doc'),
+        throwsA(isA<DocumentCreationRejected>()),
+      );
+    }
+    expect(harness.requests.every((r) => r.path == '/doc/document/view'), isTrue);
+  });
+  test('列表保留类型和未知meta；缺失和非法属性不被解释成文本', () {
+    final source = <String, dynamic>{
+      'editor': 'vectra-yjs',
+      'mode': 'mindmap',
+      'schemaVersion': 1,
+      'extra': {
+        'nested': [1, null, true],
+      },
+    };
+    final item = DocumentListEntry.fromJson({
+      'id': 'doc',
+      'documentType': 'whiteboard',
+      'meta': source,
+    });
+    expect(item.documentType, 'whiteboard');
+    expect(item.meta, source);
+    source['late'] = true;
+    expect(item.meta!.containsKey('late'), isFalse);
+    expect(() => item.meta!['write'] = true, throwsUnsupportedError);
+    expect(item.canOpenText, isFalse);
+    expect(DocumentListEntry.fromJson({'id': 'old'}).canOpenText, isFalse);
+    expect(
+      DocumentListEntry.fromJson({'id': 'text', 'documentType': 'text', 'meta': {}}).canOpenText,
+      isTrue,
+    );
+    expect(
+      () => DocumentListEntry.fromJson({'id': 'doc', 'documentType': 1}),
+      throwsFormatException,
+    );
+    expect(() => DocumentListEntry.fromJson({'id': 'doc', 'meta': []}), throwsFormatException);
+  });
   test(
     'space documents use parent id and totalCount pagination without requiring hasMore',
     () async {

@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-28",
+  "entity": "DocBehaviorEntity",
+  "removed_entity": "DocNodeBehaviorEntity",
+  "target_tests": 69,
+  "analysis": "9 files: no issues",
+  "module_run": {
+    "passed": 182,
+    "failed": 1,
+    "failure": "pagination scrollUntilVisible: Too many elements"
+  },
+  "pagination_isolated_recheck": {
+    "passed": 3,
+    "failed": 0,
+    "source_modified_by_this_task": false
+  },
+  "legacy_runtime_references": 0,
+  "staged_changes_modified_by_this_task": false,
+  "not_verified": [
+    "physical device",
+    "live service",
+    "full application build"
+  ]
+}

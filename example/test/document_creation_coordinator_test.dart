@@ -86,6 +86,23 @@ void main() {
     },
   );
 
+  test('复用当前文档也先核对详情；类型拒绝不释放当前控制器', () async {
+    await coordinator.restore();
+    api.openFailure = const DocumentCreationRejected('不支持此文档类型');
+    expect(
+      await coordinator.openExistingDocument('existing-doc', reuseCurrentDocument: true),
+      isNull,
+    );
+    expect(api.openedDocuments, ['existing-doc']);
+    expect(actions, isEmpty);
+    expect(coordinator.error, '不支持此文档类型');
+    api.openFailure = null;
+    expect(
+      await coordinator.openExistingDocument('existing-doc', reuseCurrentDocument: true),
+      'existing-doc',
+    );
+    expect(actions, isEmpty);
+  });
   test('existing document access rejection preserves current document and allows retry', () async {
     await coordinator.restore();
     api.openFailure = const DocumentCreationRejected('文档已删除或无权访问');

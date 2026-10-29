@@ -1,0 +1,22 @@
+package:xbr_plugin_record has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:flutter_floating has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:loading_animation_widget has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:vulcan has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:cses_common has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:flutter_easyrefresh_strong has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:ai_barcode_scanner has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+00:00 +0: loading /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart
+00:00 +0: 块数据模型及编辑 块只保留明确顶层字段，未知输入不会进入读写数据
+00:00 +0 -1: 块数据模型及编辑 块只保留明确顶层字段，未知输入不会进入读写数据 [E]
+  Expected: {'id': 'p', 'text': null}
+    Actual: {'id': 'p', 'text': null, 'plugin': {'enabled': true}, 'futureField': 7}
+     Which: has different length and has extra map key 'plugin'
+  
+  package:matcher                                          expect
+  package:flutter_test/src/widget_tester.dart 473:18       expect
+  test/modules/doc/document_api_use_cases_test.dart 214:7  main.<fn>.<fn>
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/document_api_use_cases_test.dart: 块数据模型及编辑 块只保留明确顶层字段，未知输入不会进入读写数据

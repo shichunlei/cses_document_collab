@@ -1,0 +1,59 @@
+{
+  "date": "2026-10-28",
+  "audited_entity_files": [
+    "doc_banner.dart",
+    "doc_behavior.dart",
+    "doc_block.dart",
+    "doc_collaborator.dart",
+    "doc_comment.dart",
+    "doc_folder.dart",
+    "doc_folder_path.dart",
+    "doc_info.dart",
+    "doc_list.dart",
+    "doc_local_behavior.dart",
+    "doc_permission.dart",
+    "doc_permission_settings.dart",
+    "doc_search_result.dart",
+    "doc_share_record.dart",
+    "doc_space.dart",
+    "doc_tag.dart"
+  ],
+  "extra_fields_remnants": [],
+  "raw_source_caches": [],
+  "changed_equivalent_cache": "DocBlockEntity._source removed",
+  "block_fields": [
+    "id",
+    "flavour",
+    "nodeType",
+    "props",
+    "meta",
+    "text",
+    "content",
+    "children",
+    "parentId",
+    "mode"
+  ],
+  "declared_json_payloads_preserved": [
+    "DocBlockEntity.props/meta/content",
+    "DocEntity.meta",
+    "DocPermissionSettingsEntity.fields"
+  ],
+  "partial_update_missing_vs_null_preserved": true,
+  "tests_passed": 100,
+  "analysis": "entity directory and affected consumers: no issues",
+  "blockcraft": {
+    "latest": "pending",
+    "query_failure": "ENOTFOUND",
+    "desktop_declaration": "0.11.31",
+    "yarn": "0.11.31",
+    "installed": "0.11.17",
+    "pnpm_legacy": "0.2.78",
+    "upgraded": false
+  },
+  "staged_changes_modified_by_this_task": false,
+  "not_verified": [
+    "physical device",
+    "live service",
+    "full application build"
+  ]
+}

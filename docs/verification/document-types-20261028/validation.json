@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-28",
+  "scope": "SaaS host and collab example document type parsing/open routing",
+  "tests": {
+    "saas_module": 154,
+    "saas_final_type_routing_suite": 16,
+    "saas_unique": 155,
+    "demo_target": 70
+  },
+  "analysis": {
+    "saas_changed_files": "16 files: no issues",
+    "saas_final_page_reuse": "2 files: no issues",
+    "demo": "6 files: no issues",
+    "module_extra": "1 unrelated unnecessary_import info in unmodified doc_engine_retry_test.dart"
+  },
+  "blockcraft": {
+    "latest": "pending",
+    "query_failure": "ENOTFOUND",
+    "desktop_declaration": "0.11.31",
+    "yarn": "0.11.31",
+    "installed": "0.11.17",
+    "pnpm_legacy": "0.2.78",
+    "upgraded": false
+  },
+  "not_verified": [
+    "physical device",
+    "full application build",
+    "live business and desktop collaboration",
+    "system viewing support for every attachment format"
+  ]
+}

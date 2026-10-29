@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-28",
+  "entity": "DocBehaviorEntity",
+  "fields": [
+    "read",
+    "liked",
+    "subscribe",
+    "favorite",
+    "comment"
+  ],
+  "unknown_fields": "ignored",
+  "defaults": {
+    "read": false,
+    "liked": false,
+    "subscribe": false,
+    "favorite": false,
+    "comment": 0
+  },
+  "target_tests_passed": 69,
+  "analysis": "3 files: no issues",
+  "removed": [
+    "_extraFields",
+    "_knownKeys",
+    "extension collection and output spread",
+    "private JSON constructor"
+  ],
+  "staged_changes_modified_by_this_task": false
+}

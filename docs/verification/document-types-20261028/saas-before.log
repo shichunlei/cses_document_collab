@@ -1,0 +1,41 @@
+package:xbr_plugin_record has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:flutter_floating has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:loading_animation_widget has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:vulcan has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:cses_common has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:flutter_easyrefresh_strong has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:ai_barcode_scanner has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+00:00 +0: loading /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_editor_application_service_test.dart
+00:00 +0: 详情不丢弃文档类型及未知meta，非文本不能进入原生正文
+00:00 +0 -1: 详情不丢弃文档类型及未知meta，非文本不能进入原生正文 [E]
+  Expected: 'whiteboard'
+    Actual: <null>
+     Which: not an <Instance of 'String'>
+  
+  package:matcher                                                               expect
+  package:flutter_test/src/widget_tester.dart 473:18                            expect
+  test/modules/doc/collaboration/doc_editor_application_service_test.dart 17:5  main.<fn>
+  
+00:00 +0 -1: 已标记外部编辑器的text也不能进入原生正文
+00:00 +0 -2: 已标记外部编辑器的text也不能进入原生正文 [E]
+  Expected: throws <Instance of 'DocEditorRejected'>
+    Actual: <Instance of 'Future<DocEditorSnapshot>'>
+     Which: emitted <Instance of 'DocEditorSnapshot'>
+  
+  package:matcher                                                                expectLater
+  package:flutter_test/src/widget_tester.dart 507:8                              expectLater
+  test/modules/doc/collaboration/doc_editor_application_service_test.dart 29:11  main.<fn>
+  
+00:00 +0 -2: 图标兼容入口继续忽略非字符串扩展键，并保留合法扩展
+00:00 +1 -2: 正文编辑读取访问、详情和真实 allowEdit，不消费 modify
+00:00 +2 -2: 访问拒绝不读取详情、不触碰缓存或 SDK
+00:00 +3 -2: 阈值读取异常报告原失败并保持可阅读、不可编辑
+00:00 +4 -2: 错误文档的详情不能装配当前控制器
+00:00 +5 -2: 图标封面 null 使用专用移除，空对象仍作为修改命令
+00:00 +6 -2: 写拒绝保留业务消息且不重试
+00:00 +7 -2: 详情封面显式恢复数值，未知字段与精确输出键保留
+00:00 +8 -2: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_editor_application_service_test.dart: 已标记外部编辑器的text也不能进入原生正文
+  /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_editor_application_service_test.dart: 详情不丢弃文档类型及未知meta，非文本不能进入原生正文

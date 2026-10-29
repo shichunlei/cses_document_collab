@@ -150,7 +150,7 @@ final class DocumentCreationCoordinator extends ChangeNotifier {
   /// 普通打开[documentId]并返回同一ID；忙碌、失败或关闭时返回null。
   /// 先核验访问，再释放旧文档、打开正式控制器。沿用同一操作锁和账号检查，
   /// 不建档、不准备正文，也不改变已有创建恢复记录；失败由error展示。
-  /// [reuseCurrentDocument]仅供宿主确认同一控制器已初始化时设true，保留其历史且不重新访问HTTP。
+  /// [reuseCurrentDocument]仅供宿主确认同一控制器已初始化时设true，保留其历史；仍重新读取详情核验类型与访问。
   /// 复用仍核对账号并占用操作锁，同时清除上次打开失败的提示。
   Future<String?> openExistingDocument(String documentId, {bool reuseCurrentDocument = false}) {
     if (busy) return Future<String?>.value();
@@ -160,9 +160,9 @@ final class DocumentCreationCoordinator extends ChangeNotifier {
         if (documentId.trim().isEmpty || documentId.length > 128) {
           throw const FormatException('请选择有效文档');
         }
-        if (reuseCurrentDocument) return documentId;
         await _api.verifyDocumentToOpen(documentId);
         _ensureActive();
+        if (reuseCurrentDocument) return documentId;
         await _closeDocument();
         _ensureActive();
         await _openDocument(documentId);

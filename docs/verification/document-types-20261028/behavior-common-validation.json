@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-28",
+  "parser": "DocBehaviorEntity.fromJson",
+  "defaults": {
+    "read": false,
+    "liked": false,
+    "subscribe": false,
+    "favorite": false,
+    "comment": 0
+  },
+  "context_modes": false,
+  "serialization": "all five fields plus unknown extensions",
+  "tests_passed": 69,
+  "analysis": "8 files: no issues",
+  "first_run": {
+    "passed": 68,
+    "failed": 1,
+    "reason": "search exact-map assertion missing current inherited description:null"
+  },
+  "staged_changes_modified_by_this_task": false,
+  "not_verified": [
+    "physical device",
+    "full application build",
+    "live service"
+  ]
+}

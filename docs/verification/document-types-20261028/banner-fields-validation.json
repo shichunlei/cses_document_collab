@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-28",
+  "entity": "DocBannerEntity",
+  "fields": [
+    "title",
+    "url",
+    "x",
+    "y"
+  ],
+  "unknown_fields": "ignored",
+  "null_semantics": "missing/null values remain null; serialization omits null fields",
+  "tests_passed": 65,
+  "analysis": "5 files: no issues",
+  "removed": [
+    "_extraFields",
+    "unknown field collection and freezing",
+    "serialization spread",
+    "private JSON constructor"
+  ],
+  "staged_changes_modified_by_this_task": false,
+  "not_verified": [
+    "physical device",
+    "live business service",
+    "full application build"
+  ]
+}

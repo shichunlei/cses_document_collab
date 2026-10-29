@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-28",
+  "entity": "DocIconEntity",
+  "fields": [
+    "type",
+    "value"
+  ],
+  "unknown_fields": "ignored",
+  "serialization": "type/value only, explicit null preserved",
+  "tests_passed": 66,
+  "analysis": "4 files: no issues",
+  "staged_changes_modified_by_this_task": false,
+  "not_verified": [
+    "physical device",
+    "live business service",
+    "full application build"
+  ]
+}

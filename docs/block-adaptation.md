@@ -3,6 +3,7 @@
 2026-10-27旧有序列表导出修复：按用户规则，heading=7/8/9导出移除标题样式，保留普通有序列表类型/编号/富文本；1～6保留H1～H6。实时heading更新/清除不被旧归档恢复，导出不修改源文档；此前P2关闭，普通paragraph兼容和42及13/28/1/0保持。验证见[修复记录](verification/block-adaptation-audit-20261027/ordered-heading-export.md)。
 
 2026-10-27完整性核查：42种仍按13已适配/28部分支持/1结构支持统计；“0未适配”仅指JSON内容转换覆盖。正式协同仍未接入8种：`shape`、`shape-text`、`word-art`、`object-group`、`placement-layout`、`render-unit`、`task-list`、`mind-map`。已适配块也有桌面功能及验收缺口，不能认定全部完善。默认EditorBlock目录已为30项。120项目标回归、11项真实FRB/SQLite通过；独立探针确认正式占位边界，并复现旧有列表heading超范围JSON导出P2（期望6/实际9），尚未修复。最新0.11.31，桌面声明/Yarn0.11.30、安装0.11.21；本轮没有升级或新增设备/真实在线验收。见[完整核查报告](verification/block-adaptation-audit-20261027/report.md)与[逐块矩阵](verification/block-adaptation-audit-20261027/block-matrix.json)。
+
 2026-10-27文本框三项修复：R1保留不可变占位并恢复框外提交/原生历史/重开，R2共用父容器校验并隐藏非法添加项，R3预览从顶部展示、编辑滚动位置独立保存。专项28、关联378、宿主39及Rust208项通过，目标分析与Android构建通过；仍部分支持，42及13/28/1/0保持，最后核对2026-10-27，见[修复与回归](verification/text-box-20261026/fixes.md)。
 
 2026-10-27文本框审查：确认1项P1（未知行内对象导致框外正文也无法提交）和2项P2（添加代码绕过子块限制、预览继承编辑滚动且不可回顶）；仅补审查与反例，未修产品代码。既有13项通过，新增5项1通过/4失败覆盖3缺陷；部分支持、42及13/28/1/0保持，最后核对2026-10-27，见[审查报告](verification/text-box-20261026/review.md)。
@@ -406,6 +407,17 @@ PNG宽256～2160像素，单边高度8192像素/总计1200万像素。超限提�
 5. 每次 BlockCraft 任务先查询上游 `latest` 并核对桌面声明、锁定和安装版，读取对应版本技能、迁移说明及受影响实现；桌面升级时同步推进移动端兼容和必要验证，记录旧版→新版、能力差异及未覆盖范围。
 
 ## BlockCraft 版本跟踪
+
+
+
+
+2026-10-28SaaS实体明确字段审查：配置仓库latest查询ENOTFOUND，最新稳定版待核对；声明/Yarn0.11.31、安装0.11.17、历史pnpm0.2.78保持。读取安装版及留存.31随包L0/数据说明/MIGRATIONS，核对SaaS块DTO/请求/原生映射，仅过滤未声明顶层键；props/meta/content和缺失/显式null语义保留。100项关联回归含真实原生协议和SQLite通过，实体目录及消费者分析无问题，见[实体检查](verification/document-types-20261028/entities-explicit.md)。未改共享Schema/桥接/桌面依赖，42及13/28/1/0保持，既有上游差异继续待同步，未新增真机/真实在线验收。
+
+2026-10-28移动端文档类型解析与打开分流：本轮配置仓库latest查询ENOTFOUND，最新稳定版待核对；声明/Yarn0.11.31、安装0.11.17、历史pnpm0.2.78保持。结合已读两版随包技能/MIGRATIONS与app指南，仅在SaaS/Demo宿主补齐类型/meta及安全分流：明确text才可进入正文、SaaS有效附件走资源、其他/未知/缺失类型提示拒绝，原生直达和Demo复用同样预检。SaaS文档模块154项（含真实FRB/SQLite）及追加页面复用回归通过（155个不同测试）、Demo70项目标测试通过；目标静态检查及格式/diff检查见[实施验证](verification/document-types-20261028/implementation.md)。未改共享正文Schema/桥接/桌面依赖，42及13/28/1/0保持，未新增真机/完整App/真实在线验收，其他差异待同步。
+
+2026-10-28移动端逐类型核对：重新查询配置仓库latest仍ENOTFOUND，最新稳定版待核对；声明/Yarn0.11.31、安装0.11.17、历史pnpm0.2.78保持，未升级。结合已读两版随包技能/MIGRATIONS及app指南，静态核对Demo、SaaS当前原生接入、列表模型与双详情入口：文本为主要原生编辑范围，其他六类未形成独立类型完整链路；正文媒体/表格、JSON渲染及宿主今日导向不等于对应独立文档支持。42及13/28/1/0保持，未新增运行时/设备/在线验收，既有差异待同步，见[逐类型范围](verification/document-types-20261028/mobile-support.md)。
+
+2026-10-28桌面文档类型核对：桌面配置仓库latest查询首次ENOTFOUND，提升网络权限后ECONNRESET，最新稳定版待核对；桌面声明/Yarn0.11.31、安装0.11.17、历史pnpm0.2.78，未升级。读取安装版和本机留存0.11.31发布包的随包L0/MIGRATIONS，核对宿主DocumentType、新建菜单、附件分类与打开路由。业务主类型7种，另7个历史兼容值；缓存版本不作为实时latest依据。本轮仅静态分析，移动端42及13/28/1/0不变，未新增功能或设备/在线验收，既有上游差异继续待同步；见[核对记录](verification/document-types-20261028/report.md)。
 
 2026-10-27 Demo Gateway 新接口核对：桌面声明/Yarn锁定0.11.31、实际安装0.11.17，历史pnpm0.2.78。通过桌面配置仓库查询latest失败（ENOTFOUND），最新稳定版待核对；已读取安装包和本机留存0.11.31发布包的随包技能、数据模型说明、MIGRATIONS以及本次受影响的移动端握手/退出实现。仅调整Common传输适配，不升级桌面或修改Schema/块能力，42及13/28/1/0保持；回环协议、原生恢复等验证范围见[Demo Gateway记录](verification/native-doc-integration-20261027/example-gateway.md)，设备和真实业务服务未新增验收。
 
@@ -910,3 +922,11 @@ PNG宽256～2160像素，单边高度8192像素/总计1200万像素。超限提�
 | 2026-10-13 | 附件、音频、网页卡片/嵌入、掘金和 Figma 接入展示、属性事务、插入/删除、历史及协同，标为部分支持。 | 六类桌面 Schema、Yjs 样本、Rust 并发/SQLite、Dart 撤销及播放器/WebView 生命周期与 FRB 回归通过。 | 功能缺口见对应清单；真实资源上传与设备验收留待后续。 |
 | 2026-10-13 | 视频地址修正为 `props.url`；未知来源及渲染失败统一只读占位，状态调整为部分支持。 | 桌面 Schema、Yjs 样本、Rust 原始数据保留、播放器及 FRB 回归通过。 | blob、嵌入代码及未知来源不支持。 |
 | 2026-10-13 | 建立 41 种桌面块清单；未知块只读占位并保留内容/子树，其他已识别块可编辑。 | 桌面注册与正式类型映射核对、高亮块提交 b804409 及页面/Rust/SQLite/FRB 回归通过。 | 占位不计适配完成；含占位父容器禁止整体删除。 |
+
+
+## SaaS 空白文档初始化协议核验（2026-10-28）
+
+- 通过桌面配置仓库核对 latest=0.11.31；桌面根依赖和 Yarn 锁定 0.11.31，当前实际安装 0.11.17，docs 子包声明 ^0.11.0-alpha。发布包临时下载核对，未改桌面依赖。
+- 阅读发布版随包 ai-skills/SKILL.md、MIGRATIONS.md 及 RootBlockSchema、ParagraphBlockSchema、native2YBlock；初始 root 是 Y.Map，children 是 Y.Array，editable paragraph 的 children 是 Y.Text，时间元数据和稳定 ID 由同一次原生初始化产生。
+- document_bootstrapper_native_test.dart 使用真实 FRB/SQLite，显式提供桌面 Yjs 与发布版包路径；3 项通过，包含首次空正文与重入、活跃控制器拒绝准备、桌面读取手机初始根并编辑回传。SaaS 另以生产 Repository 验证 SDK insertDiffs → DocBlockEntity → HTTP 精确 Map 及完整正文核对。
+- 核验只覆盖空白初始化协议，不改变块适配统计。部署服务的正文授权、在线首次协同、断网重连和服务端持久化 ACK 仍需真实账号/目录联调；online 不等于落库确认。

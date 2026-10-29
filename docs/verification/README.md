@@ -17,6 +17,8 @@
 
 ### 文档创建与文档信息
 
+- [document-types-20261028](document-types-20261028)（[桌面文档类型、历史兼容值与当前入口核对](document-types-20261028/report.md)；[移动端逐类型支持范围](document-types-20261028/mobile-support.md)；[解析与打开分流实施验证](document-types-20261028/implementation.md)；[列表实体字段补齐](document-types-20261028/list-fields.md)；[精简搜索结果核对](document-types-20261028/search-fields.md)；[行为实体合并](document-types-20261028/behavior-merge.md)；[公共行为统一解析](document-types-20261028/behavior-common.md)；[行为实体仅五字段](document-types-20261028/behavior-five-fields.md)；[封面实体仅明确字段](document-types-20261028/banner-fields.md)；[图标实体仅明确字段](document-types-20261028/icon-fields.md)；[其余实体明确字段检查](document-types-20261028/entities-explicit.md)）
+
 - [saas-presence-recovery-20261028](saas-presence-recovery-20261028)（[在线身份冲突修复、失败回归与 SaaS 真机创建恢复证据](saas-presence-recovery-20261028/validation.json)）
 
 - [document-json-export-20261023](document-json-export-20261023)（[桌面文档 JSON 格式分析与示例](document-json-export-20261023/report.md)）

@@ -9,10 +9,12 @@ import 'document_creation_operation.dart';
 /// ```
 final class DocumentListEntry {
   /// 解析服务端[value]；ID必填，空标题按桌面语义展示为无标题文档。
-  /// 时间字段为可选epoch毫秒；非法字段抛FormatException，不伪造列表记录。
+  /// 时间字段为可选epoch毫秒；documentType/meta保留原协议，非法字段抛FormatException。
   DocumentListEntry.fromJson(Map<String, dynamic> value)
     : id = _requiredId(value['id']),
       name = _name(value['name']),
+      documentType = _documentType(value['documentType']),
+      meta = _meta(value['meta']),
       ownerName = value['owner'] is Map && value['owner']['name'] is String
           ? value['owner']['name'] as String
           : null,
@@ -24,6 +26,21 @@ final class DocumentListEntry {
   /// 原始名称，允许空字符串。
   final String name;
 
+  /// 服务端原始文档类型；缺失/未知值不会默认为 text。
+  final String? documentType;
+
+  /// 文档扩展协议，顶层复制且不可修改；嵌套 JSON 作为只读值借用。
+  final Map<String, dynamic>? meta;
+
+  /// Demo 目前只承接明确的文本正文；外部编辑器和附件元数据优先阻止误开。
+  bool get canOpenText =>
+      documentType == 'text' && meta?['editor'] == null && meta?['attachmentType'] == null;
+
+  /// 未支持类型的固定说明；该字符串不表示已读取或验证正文。
+  String get unsupportedMessage => documentType == null || documentType!.isEmpty
+      ? '文档缺少类型信息，暂时无法打开，请刷新后重试'
+      : '此类文档暂不支持在此编辑器打开，请在桌面端打开';
+
   /// 所有者名称；服务端未返回时为null，不自行读取人员信息。
   final String? ownerName;
 
@@ -32,6 +49,21 @@ final class DocumentListEntry {
 
   /// 可展示标题；空白名称使用统一的无标题提示。
   String get displayName => name.trim().isEmpty ? '无标题文档' : name;
+
+  /// 读取[value]原始类型；null保留未知状态，非字符串拒绝解析。
+  static String? _documentType(Object? value) {
+    if (value == null || value is String) return value as String?;
+    throw const FormatException('文档类型格式错误');
+  }
+
+  /// 读取[value]可空meta，保留未知字段；非法外壳拒绝解析，不降级为文本。
+  static Map<String, dynamic>? _meta(Object? value) {
+    if (value == null) return null;
+    if (value is! Map || value.keys.any((key) => key is! String)) {
+      throw const FormatException('文档扩展属性格式错误');
+    }
+    return Map<String, dynamic>.unmodifiable(value.cast<String, dynamic>());
+  }
 
   /// 验证[value]为非空服务端ID，拒绝不完整记录。
   static String _requiredId(Object? value) {
