@@ -1,0 +1,12 @@
+{"event": "checkpoint:intentSaved", "operationId": "6ae18f6d91d82dd068c0e5dc", "documentId": null, "stage": "intentSaved", "status": null}
+{"event": "checkpoint:createSending", "operationId": "6ae18f6d91d82dd068c0e5dc", "documentId": null, "stage": "createSending", "status": null}
+{"event": "beforeCreate", "operationId": "6ae18f6d91d82dd068c0e5dc", "documentId": null, "stage": "createSending", "status": null}
+{"event": "afterCreate", "operationId": "6ae18f6d91d82dd068c0e5dc", "documentId": "6ae18f6d816cf9517d5b8fbd", "stage": "createSending", "status": null}
+{"event": "checkpoint:shellCreated", "operationId": "6ae18f6d91d82dd068c0e5dc", "documentId": "6ae18f6d816cf9517d5b8fbd", "stage": "shellCreated", "status": null}
+{"event": "checkpoint:bodyPrepared", "operationId": "6ae18f6d91d82dd068c0e5dc", "documentId": "6ae18f6d816cf9517d5b8fbd", "stage": "bodyPrepared", "status": null}
+{"event": "loaded", "operationId": "6ae18f6d91d82dd068c0e5dc", "documentId": "6ae18f6d816cf9517d5b8fbd", "stage": "bodyPrepared", "status": null}
+{"event": "checkpoint:snapshotSending", "operationId": "6ae18f6d91d82dd068c0e5dc", "documentId": "6ae18f6d816cf9517d5b8fbd", "stage": "snapshotSending", "status": null}
+{"event": "beforeInitialWrite", "operationId": "6ae18f6d91d82dd068c0e5dc", "documentId": "6ae18f6d816cf9517d5b8fbd", "stage": "snapshotSending", "status": null}
+{"event": "afterInitialWrite", "operationId": "6ae18f6d91d82dd068c0e5dc", "documentId": "6ae18f6d816cf9517d5b8fbd", "stage": "snapshotSending", "status": null}
+{"event": "checkpoint:awaitingFirstSync", "operationId": "6ae18f6d91d82dd068c0e5dc", "documentId": "6ae18f6d816cf9517d5b8fbd", "stage": "awaitingFirstSync", "status": null}
+{"event": "checkpoint:completed", "operationId": "6ae18f6d91d82dd068c0e5dc", "documentId": "6ae18f6d816cf9517d5b8fbd", "stage": "completed", "status": null}

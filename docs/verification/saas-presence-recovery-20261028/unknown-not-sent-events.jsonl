@@ -1,0 +1,6 @@
+{"event": "checkpoint:intentSaved", "operationId": "6ae18e30a47c884eb2eb2689", "documentId": null, "stage": "intentSaved", "status": null}
+{"event": "checkpoint:createSending", "operationId": "6ae18e30a47c884eb2eb2689", "documentId": null, "stage": "createSending", "status": null}
+{"event": "beforeCreate", "operationId": "6ae18e30a47c884eb2eb2689", "documentId": null, "stage": "createSending", "status": null}
+{"event": "loaded", "operationId": "6ae18e30a47c884eb2eb2689", "documentId": null, "stage": "createSending", "status": null}
+{"event": "checkpoint:createUnknown", "operationId": "6ae18e30a47c884eb2eb2689", "documentId": null, "stage": "createUnknown", "status": null}
+{"event": "checkpoint:reviewed", "operationId": "6ae18e30a47c884eb2eb2689", "documentId": null, "stage": "reviewed", "status": null}

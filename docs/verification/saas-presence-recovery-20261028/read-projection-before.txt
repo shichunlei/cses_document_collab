@@ -1,0 +1,33 @@
+package:xbr_plugin_record has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:flutter_floating has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:loading_animation_widget has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:vulcan has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:cses_common has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:flutter_easyrefresh_strong has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+package:ai_barcode_scanner has `uses-material-design: true` set but the primary pubspec contains `uses-material-design: false`. If the application needs material icons, then `uses-material-design`  must be set to true.
+00:00 +0: loading /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_creation_body_read_projection_test.dart
+00:00 +0: 真实读接口不返回 nodeType/parentId 并补全空集合，原初始正文仍匹配
+00:00 +0 -1: 真实读接口不返回 nodeType/parentId 并补全空集合，原初始正文仍匹配 [E]
+  Expected: DocInitialBodyStatus:<DocInitialBodyStatus.matching>
+    Actual: DocInitialBodyStatus:<DocInitialBodyStatus.different>
+  
+  package:matcher                                                                  expect
+  package:flutter_test/src/widget_tester.dart 473:18                               expect
+  test/modules/doc/collaboration/doc_creation_body_read_projection_test.dart 26:5  main.<fn>
+  
+00:00 +0 -1: 真实读协议仍拒绝父块明确错误，不能将其他端修改当成原初始正文
+00:00 +1 -1: 真实读协议仍拒绝节点类别明确错误，不能将其他端修改当成原初始正文
+00:00 +2 -1: 真实读协议仍拒绝类型不同，不能将其他端修改当成原初始正文
+00:00 +3 -1: 真实读协议仍拒绝正文变化，不能将其他端修改当成原初始正文
+00:00 +4 -1: 真实读协议仍拒绝行内变化，不能将其他端修改当成原初始正文
+00:00 +5 -1: 真实读协议仍拒绝属性变化，不能将其他端修改当成原初始正文
+00:00 +6 -1: 真实读协议仍拒绝元数据变化，不能将其他端修改当成原初始正文
+00:00 +7 -1: 真实读协议仍拒绝多余节点，不能将其他端修改当成原初始正文
+00:00 +8 -1: 真实读协议仍拒绝缺少节点，不能将其他端修改当成原初始正文
+00:00 +9 -1: 真实读协议仍拒绝丢失根引用，不能将其他端修改当成原初始正文
+00:00 +10 -1: 真实读协议仍拒绝重复子引用，不能将其他端修改当成原初始正文
+00:00 +11 -1: 真实读协议仍拒绝循环引用，不能将其他端修改当成原初始正文
+00:00 +12 -1: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/cses/cses.saas/test/modules/doc/collaboration/doc_creation_body_read_projection_test.dart: 真实读接口不返回 nodeType/parentId 并补全空集合，原初始正文仍匹配

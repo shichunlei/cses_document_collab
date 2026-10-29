@@ -39,7 +39,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.13.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 182732725;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1316793556;
 
 // Section: executor
 
@@ -174,6 +174,35 @@ fn wire__crate__api__collab__history__apply_history_snapshot_impl(
                     api_before_selection,
                     api_after_selection,
                 )?;
+                std::result::Result::Ok(output_ok)
+            })())
+        },
+    )
+}
+fn wire__crate__api__collab__begin_awareness_session_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "begin_awareness_session",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            transform_result_sse::<_, String>((move || {
+                let output_ok = crate::api::collab::begin_awareness_session()?;
                 std::result::Result::Ok(output_ok)
             })())
         },
@@ -1423,8 +1452,8 @@ fn pde_ffi_dispatcher_primary_impl(
 ) {
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
-        8 => wire__crate__api__collab__collab_image_default_impl(port, ptr, rust_vec_len, data_len),
-        19 => wire__crate__api__init__init_app_impl(port, ptr, rust_vec_len, data_len),
+        9 => wire__crate__api__collab__collab_image_default_impl(port, ptr, rust_vec_len, data_len),
+        20 => wire__crate__api__init__init_app_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -1445,43 +1474,44 @@ fn pde_ffi_dispatcher_sync_impl(
             rust_vec_len,
             data_len,
         ),
-        5 => wire__crate__api__collab__history__bookmark_document_selection_impl(
+        5 => wire__crate__api__collab__begin_awareness_session_impl(ptr, rust_vec_len, data_len),
+        6 => wire__crate__api__collab__history__bookmark_document_selection_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        6 => wire__crate__api__collab__clear_remote_awareness_impl(ptr, rust_vec_len, data_len),
-        7 => wire__crate__api__collab__close_document_impl(ptr, rust_vec_len, data_len),
-        9 => wire__crate__api__collab__history__configure_document_history_impl(
+        7 => wire__crate__api__collab__clear_remote_awareness_impl(ptr, rust_vec_len, data_len),
+        8 => wire__crate__api__collab__close_document_impl(ptr, rust_vec_len, data_len),
+        10 => wire__crate__api__collab__history__configure_document_history_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        10 => wire__crate__api__collab__create_sync_step1_impl(ptr, rust_vec_len, data_len),
-        11 => wire__crate__api__collab__current_block_locks_impl(ptr, rust_vec_len, data_len),
-        12 => wire__crate__api__collab__current_blocks_impl(ptr, rust_vec_len, data_len),
-        13 => wire__crate__api__collab__history__document_history_state_impl(
+        11 => wire__crate__api__collab__create_sync_step1_impl(ptr, rust_vec_len, data_len),
+        12 => wire__crate__api__collab__current_block_locks_impl(ptr, rust_vec_len, data_len),
+        13 => wire__crate__api__collab__current_blocks_impl(ptr, rust_vec_len, data_len),
+        14 => wire__crate__api__collab__history__document_history_state_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        14 => wire__crate__api__collab__document_read_only_reason_impl(ptr, rust_vec_len, data_len),
-        15 => wire__crate__api__collab__encode_document_diff_impl(ptr, rust_vec_len, data_len),
-        16 => wire__crate__api__collab__encode_local_awareness_impl(ptr, rust_vec_len, data_len),
-        17 => wire__crate__api__collab__encode_state_vector_impl(ptr, rust_vec_len, data_len),
-        18 => wire__crate__api__collab__handle_wire_message_impl(ptr, rust_vec_len, data_len),
-        20 => wire__crate__api__collab__open_cses_document_impl(ptr, rust_vec_len, data_len),
-        21 => wire__crate__api__collab__open_document_impl(ptr, rust_vec_len, data_len),
-        22 => wire__crate__api__collab__prepare_cses_document_impl(ptr, rust_vec_len, data_len),
-        23 => wire__crate__api__collab__history__redo_document_impl(ptr, rust_vec_len, data_len),
-        24 => wire__crate__api__collab__reset_local_document_impl(ptr, rust_vec_len, data_len),
-        25 => wire__crate__api__collab__history__resolve_document_selection_impl(
+        15 => wire__crate__api__collab__document_read_only_reason_impl(ptr, rust_vec_len, data_len),
+        16 => wire__crate__api__collab__encode_document_diff_impl(ptr, rust_vec_len, data_len),
+        17 => wire__crate__api__collab__encode_local_awareness_impl(ptr, rust_vec_len, data_len),
+        18 => wire__crate__api__collab__encode_state_vector_impl(ptr, rust_vec_len, data_len),
+        19 => wire__crate__api__collab__handle_wire_message_impl(ptr, rust_vec_len, data_len),
+        21 => wire__crate__api__collab__open_cses_document_impl(ptr, rust_vec_len, data_len),
+        22 => wire__crate__api__collab__open_document_impl(ptr, rust_vec_len, data_len),
+        23 => wire__crate__api__collab__prepare_cses_document_impl(ptr, rust_vec_len, data_len),
+        24 => wire__crate__api__collab__history__redo_document_impl(ptr, rust_vec_len, data_len),
+        25 => wire__crate__api__collab__reset_local_document_impl(ptr, rust_vec_len, data_len),
+        26 => wire__crate__api__collab__history__resolve_document_selection_impl(
             ptr,
             rust_vec_len,
             data_len,
         ),
-        26 => wire__crate__api__collab__set_block_lock_impl(ptr, rust_vec_len, data_len),
-        27 => wire__crate__api__collab__history__undo_document_impl(ptr, rust_vec_len, data_len),
+        27 => wire__crate__api__collab__set_block_lock_impl(ptr, rust_vec_len, data_len),
+        28 => wire__crate__api__collab__history__undo_document_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }

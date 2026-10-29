@@ -1,0 +1,9 @@
+00:00 +0: loading /System/Volumes/Data/workspace/cses_document_collab/example/test/common_cses_collab_gateway_test.dart
+00:00 +0: multiple ready listeners do not duplicate Common subscriptions
+00:00 +1: ready recovers subscribe before join; local unregister prevents later recovery
+00:00 +2: offline and synchronous send failure never enqueue document commands
+00:00 +3: online registration awaits subscribe; explicit unsubscribe is not duplicated
+00:00 +4: pending registration cancellation does not resurrect or remove a reopened page
+00:00 +5: gateway does not send or unregister another adapter ownership
+00:00 +6: native document sends edits, merges offline changes and replays to a read-only controller
+00:00 +7: All tests passed!

@@ -1,0 +1,148 @@
+00:00 +0: loading /System/Volumes/Data/workspace/cses_document_collab/test/collab_presence_identity_native_test.dart
+00:00 +0: /System/Volumes/Data/workspace/cses_document_collab/test/collab_presence_identity_native_test.dart: (setUpAll)
+00:00 +0: /System/Volumes/Data/workspace/cses_document_collab/test/collab_presence_identity_native_test.dart: old presence ownership cannot reject permission session replacement
+00:00 +1: /System/Volumes/Data/workspace/cses_document_collab/test/collab_presence_identity_native_test.dart: old presence ownership cannot reject physical reconnect
+00:00 +2: /System/Volumes/Data/workspace/cses_document_collab/test/collab_presence_identity_native_test.dart: old presence ownership cannot reject new hello without a disconnected notification
+00:00 +3: /System/Volumes/Data/workspace/cses_document_collab/test/collab_presence_identity_native_test.dart: old presence ownership cannot reject explicit retry after terminal error and new hello
+00:00 +4: /System/Volumes/Data/workspace/cses_document_collab/test/collab_presence_identity_native_test.dart: (tearDownAll)
+00:00 +4: /System/Volumes/Data/workspace/cses_document_collab/test/collab_controller_lifecycle_native_test.dart: (setUpAll)
+00:00 +4: /System/Volumes/Data/workspace/cses_document_collab/test/collab_controller_lifecycle_native_test.dart: failed controller retry must not send the next owner document
+DocCollab: 编辑器操作失败: Bad state: fixture registration failure
+#0      _ProbeGateway.register (file:///System/Volumes/Data/workspace/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:254:28)
+<asynchronous suspension>
+#1      CsesDocCollaborationSession.start (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:208:5)
+<asynchronous suspension>
+#2      CollabController._startSession (package:cses_document_collab/src/controller/collab_controller.dart:613:7)
+<asynchronous suspension>
+#3      CollabController._initialize (package:cses_document_collab/src/controller/collab_controller.dart:440:9)
+<asynchronous suspension>
+#4      CollabController._initializeRecoverably (package:cses_document_collab/src/controller/collab_controller.dart:414:7)
+<asynchronous suspension>
+#5      Throws._matchFuture (package:matcher/src/expect/throws_matcher.dart:103:19)
+<asynchronous suspension>
+#6      _expect.<anonymous closure> (package:matcher/src/expect/expect.dart:153:17)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      expectLater.<anonymous closure> (package:flutter_test/src/widget_tester.dart:508:19)
+<asynchronous suspension>
+#9      main.<anonymous closure> (file:///System/Volumes/Data/workspace/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:41:7)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#11     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#12     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+DocCollab: 编辑器操作失败: Bad state: COLLAB_DOCUMENT_IN_USE: 请先等待当前文档关闭
+#0      CollabRuntime.acquire (package:cses_document_collab/src/native/collab_runtime.dart:24:7)
+#1      CollabController._initialize (package:cses_document_collab/src/controller/collab_controller.dart:431:21)
+#2      CollabController._initializeRecoverably (package:cses_document_collab/src/controller/collab_controller.dart:414:13)
+#3      CollabController.initialize (package:cses_document_collab/src/controller/collab_controller.dart:408:36)
+#4      CollabController.retry (package:cses_document_collab/src/controller/collab_controller.dart:507:13)
+<asynchronous suspension>
+#5      Throws._matchFuture (package:matcher/src/expect/throws_matcher.dart:103:19)
+<asynchronous suspension>
+#6      _expect.<anonymous closure> (package:matcher/src/expect/expect.dart:153:17)
+<asynchronous suspension>
+#7      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#8      expectLater.<anonymous closure> (package:flutter_test/src/widget_tester.dart:508:19)
+<asynchronous suspension>
+#9      main.<anonymous closure> (file:///System/Volumes/Data/workspace/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:50:7)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#11     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#12     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:00 +5: /System/Volumes/Data/workspace/cses_document_collab/test/collab_controller_lifecycle_native_test.dart: permission registration failure must not poison transitions or cleanup
+DocCollab: 编辑器操作失败: Bad state: fixture registration failure
+#0      _ProbeGateway.register (file:///System/Volumes/Data/workspace/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:254:28)
+<asynchronous suspension>
+#1      CsesDocCollaborationSession.start (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:208:5)
+<asynchronous suspension>
+#2      CollabController._startSession (package:cses_document_collab/src/controller/collab_controller.dart:613:7)
+<asynchronous suspension>
+#3      CollabController.setEditable.<anonymous closure> (package:cses_document_collab/src/controller/collab_controller.dart:486:57)
+<asynchronous suspension>
+#4      Throws._matchFuture (package:matcher/src/expect/throws_matcher.dart:103:19)
+<asynchronous suspension>
+#5      _expect.<anonymous closure> (package:matcher/src/expect/expect.dart:153:17)
+<asynchronous suspension>
+#6      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)
+<asynchronous suspension>
+#7      expectLater.<anonymous closure> (package:flutter_test/src/widget_tester.dart:508:19)
+<asynchronous suspension>
+#8      main.<anonymous closure> (file:///System/Volumes/Data/workspace/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:123:9)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#10     Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#11     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:00 +6: /System/Volumes/Data/workspace/cses_document_collab/test/collab_controller_lifecycle_native_test.dart: close waits for pending registration and stale callbacks cannot mutate the next owner
+DocCollab: 文档协同处理失败: Bad state: COLLAB_SESSION_STALE
+#0      CollabController._requireCurrentSession (package:cses_document_collab/src/controller/collab_controller.dart:636:38)
+#1      CollabController._startSession.<anonymous closure> (package:cses_document_collab/src/controller/collab_controller.dart:564:9)
+#2      CsesDocCollaborationSession._beginSync (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:295:36)
+#3      CsesDocCollaborationSession.start (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:226:30)
+<asynchronous suspension>
+#4      CollabController._startSession (package:cses_document_collab/src/controller/collab_controller.dart:613:7)
+<asynchronous suspension>
+#5      CollabController._initialize (package:cses_document_collab/src/controller/collab_controller.dart:440:9)
+<asynchronous suspension>
+#6      CollabController._initializeRecoverably (package:cses_document_collab/src/controller/collab_controller.dart:414:7)
+<asynchronous suspension>
+#7      main.<anonymous closure> (file:///System/Volumes/Data/workspace/cses_document_collab/test/collab_controller_lifecycle_native_test.dart:181:9)
+<asynchronous suspension>
+#8      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#9      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#10     Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:00 +7: /System/Volumes/Data/workspace/cses_document_collab/test/collab_controller_lifecycle_native_test.dart: (tearDownAll)
+00:00 +7: /System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart: subscribe precedes join; sync status never completes handshake
+00:00 +8: /System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart: applies server update before calculating unframed reverse diff
+00:00 +9: /System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart: remote updates apply without echo; local edits only send while ready
+00:00 +10: /System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart: terminal document errors survive reconnect and foreground recovery
+00:00 +11: /System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart: bootstrap root conflict stops supplement and automatic reconnect
+DocCollab: 文档协同处理失败: Bad state: DOCUMENT_BOOTSTRAP_CONFLICT: independent root
+#0      main.<anonymous closure>.<anonymous closure> (file:///System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart:189:13)
+#1      CsesDocCollaborationSession._handle (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:330:30)
+#2      CsesDocCollaborationSession.start.<anonymous closure> (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:213:33)
+#3      _Gateway.receive (file:///System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart:62:26)
+#4      main.<anonymous closure> (file:///System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart:197:15)
+<asynchronous suspension>
+#5      Declarer.test.<anonymous closure>.<anonymous closure> (package:test_api/src/backend/declarer.dart:253:15)
+<asynchronous suspension>
+#6      Declarer.test.<anonymous closure> (package:test_api/src/backend/declarer.dart:250:11)
+<asynchronous suspension>
+#7      Invoker._waitForOutstandingCallbacks.<anonymous closure> (package:test_api/src/backend/invoker.dart:318:9)
+<asynchronous suspension>
+
+00:00 +12: /System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart: collabClose retries join with a bounded retry count
+00:00 +13: /System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart: online disposal sends awareness removal, leave, unsubscribe once
+00:00 +14: /System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart: offline disposal sends no stale exit commands
+00:00 +15: /System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart: upstream larger than 1 MiB stops without byte slicing
+00:00 +16: /System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart: downstream sync may exceed upstream limit
+00:00 +17: /System/Volumes/Data/workspace/cses_document_collab/test/cses_doc_collaboration_session_test.dart: send failure leaves ready without claiming delivery or save
+00:00 +18: /System/Volumes/Data/workspace/cses_document_collab/test/document_metadata_controller_test.dart: ACK updates only selected field; failure retains old value and permits retry
+00:00 +19: /System/Volumes/Data/workspace/cses_document_collab/test/document_metadata_controller_test.dart: host and business permissions both gate commands and blank titles are rejected
+00:00 +20: /System/Volumes/Data/workspace/cses_document_collab/test/document_metadata_controller_test.dart: stale refresh cannot overwrite later ACK; refresh remains retryable
+00:00 +21: /System/Volumes/Data/workspace/cses_document_collab/test/document_metadata_controller_test.dart: close waits for active write and ignores late response
+00:00 +22: /System/Volumes/Data/workspace/cses_document_collab/test/document_metadata_controller_test.dart: failed load shows retry state and mismatched identity is rejected
+00:00 +23: /System/Volumes/Data/workspace/cses_document_collab/test/collab_remote_history_test.dart: text invalidates unsafe undo without overwriting remote content
+00:01 +24: /System/Volumes/Data/workspace/cses_document_collab/test/collab_remote_history_test.dart: reorder invalidates unsafe undo without overwriting remote content
+00:01 +25: /System/Volumes/Data/workspace/cses_document_collab/test/collab_remote_history_test.dart: format invalidates unsafe undo without overwriting remote content
+00:01 +26: /System/Volumes/Data/workspace/cses_document_collab/test/collab_remote_history_test.dart: remote text invalidates old redo while allowing new local history
+00:01 +27: /System/Volumes/Data/workspace/cses_document_collab/test/collab_remote_history_test.dart: stable field history survives reorder after unsafe text entry is removed
+00:01 +28: /System/Volumes/Data/workspace/cses_document_collab/test/collab_remote_history_test.dart: equivalent authoritative snapshot preserves ordinary local undo
+00:01 +29: All tests passed!

@@ -1,0 +1,9 @@
+{
+  "window": "2026-10-28 >=14:40 device retained logcat; final normal-build two-end test and reopen",
+  "line_count": 105224,
+  "rejection_diagnostic_count": 0,
+  "invalid_request_count": 0,
+  "collab_error_frame_count": 0,
+  "test_document_line_count": 1901,
+  "raw_log_retained": false
+}

@@ -200,6 +200,7 @@ struct CollabEngine {
     document_id: String,
     database_path: String,
     doc: Doc,
+    /// 临时在线状态使用独立 Doc；其 clientId 随协同归属更换，不参与正文历史或 SQLite。
     awareness: Awareness,
     block_order: ArrayRef,
     block_meta: MapRef,
@@ -265,7 +266,7 @@ impl CollabEngine {
             history_input: None,
             document_id,
             database_path,
-            awareness: Awareness::new(doc.clone()),
+            awareness: Awareness::new(Doc::new()),
             doc,
             block_order,
             block_meta,
@@ -1764,7 +1765,19 @@ pub fn apply_document_update(bytes: Vec<u8>) -> Result<WireMessageResult, String
     with_engine_mut(|engine| engine.apply_cses_update(bytes))
 }
 
-/// 提高本机 Awareness 时钟并编码本 clientID 的在线或删除状态。
+/// 为新的逻辑会话或物理连接建立独立在线身份，不改变正文 Doc、历史或 SQLite。
+///
+/// 调用方必须先停止旧会话上报；同连接内的重同步不调用此函数。
+/// 新会话使用新快照恢复远端在线状态，旧会话回调由 Dart 所有权边界拒绝。
+#[flutter_rust_bridge::frb(sync)]
+pub fn begin_awareness_session() -> Result<(), String> {
+    with_engine_mut(|engine| {
+        engine.awareness = Awareness::new(Doc::new());
+        Ok(())
+    })
+}
+
+/// 提高本机 Awareness 时钟并编码本在线会话 clientID 的在线或删除状态。
 ///
 /// `user_id` 与 `user_name` 仅作展示，不是授权凭据；`present` 为 false 时发送标准 null。
 /// 只选择自身 clientID 编码，不把已收到的远端状态再次上行。
@@ -1784,7 +1797,7 @@ pub fn encode_local_awareness(
         }
         engine
             .awareness
-            .update_with_clients([engine.doc.client_id()])
+            .update_with_clients([engine.awareness.client_id()])
             .map(|update| update.encode_v1())
             .map_err(|error| error.to_string())
     })
@@ -1804,7 +1817,7 @@ pub fn apply_awareness_update(bytes: Vec<u8>) -> Result<u32, String> {
         Ok(engine
             .awareness
             .iter()
-            .filter(|(id, state)| *id != engine.doc.client_id() && state.data.is_some())
+            .filter(|(id, state)| *id != engine.awareness.client_id() && state.data.is_some())
             .count() as u32)
     })
 }
@@ -1816,7 +1829,7 @@ pub fn clear_remote_awareness() -> Result<(), String> {
         let remote = engine
             .awareness
             .iter()
-            .filter_map(|(id, _)| (id != engine.doc.client_id()).then_some(id))
+            .filter_map(|(id, _)| (id != engine.awareness.client_id()).then_some(id))
             .collect::<Vec<_>>();
         for id in remote {
             engine.awareness.remove_state(id);
@@ -2240,6 +2253,19 @@ mod tests {
         )
         .unwrap();
         assert_eq!(removed.clients[&local_id].json.as_ref(), "null");
+        let body_before = encode_document_diff(vec![0]).unwrap();
+        let body_client = with_engine_mut(|engine| Ok(engine.doc.client_id())).unwrap();
+        begin_awareness_session().unwrap();
+        let restarted = AwarenessUpdate::decode_v1(
+            &encode_local_awareness("u".into(), "User".into(), true).unwrap(),
+        )
+        .unwrap();
+        assert_ne!(*restarted.clients.keys().next().unwrap(), local_id);
+        assert_eq!(encode_document_diff(vec![0]).unwrap(), body_before);
+        assert_eq!(
+            with_engine_mut(|engine| Ok(engine.doc.client_id())).unwrap(),
+            body_client
+        );
         close_document();
     }
 

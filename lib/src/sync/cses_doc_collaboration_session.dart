@@ -25,6 +25,35 @@ typedef CsesAwarenessFactory = Uint8List Function(bool present);
 typedef CsesSessionStateHandler =
     void Function(CsesCollabState state, String event, String? error);
 
+/// 服务端拒绝协议请求的脱敏证据；不包含正文、用户资料或认证配置。
+final class CsesCollaborationRejected implements Exception {
+  /// [documentId]、[instanceId] 为被拒绝的路由；[presenceEpoch] 是本逻辑会话内
+  /// 在线身份代次，0 表示尚未开始握手，随后从 1 计数；[code] 为稳定错误码，不含远端自由文本。
+  const CsesCollaborationRejected(
+    this.documentId,
+    this.instanceId,
+    this.presenceEpoch,
+    this.code,
+  );
+
+  /// 固定正式文档 ID。
+  final String documentId;
+
+  /// 固定逻辑协同实例 ID。
+  final String instanceId;
+
+  /// 首次握手或物理重连对应的在线身份代次。
+  final int presenceEpoch;
+
+  /// 服务端协议错误码。
+  final String code;
+
+  /// 输出定位所需的路由和代次；不包含消息正文或服务端自由文本。
+  @override
+  String toString() =>
+      'CsesCollaborationRejected(code=$code, document=$documentId, instance=$instanceId, presenceEpoch=$presenceEpoch)';
+}
+
 /// 在共享 PaaS 主连接上管理一个 Document/docId/instance 的 Yrs 协同会话。
 ///
 /// 本对象只拥有自己的监听、状态与定时器，不关闭主连接或业务 Doc。断线时保留 Yrs 状态，
@@ -53,6 +82,8 @@ final class CsesDocCollaborationSession {
   /// [onSync] 同步应用差量并返回补传内容；[onUpdate] 仅应用远端正文；
   /// [onStateChanged] 由宿主展示状态及失败。[awarenessFactory]/[onAwareness] 同时提供时
   /// 启用在线成员同步，[onDisconnected] 负责清除远端显示，不销毁业务 Doc。
+  /// [onAwarenessSessionStarted] 在首次握手及物理重连前建立独立在线身份；
+  /// 同连接周期补偿、手动重同步及瞬时请求重试不重置它，回调失败停止当前握手。
   /// [syncTimeout] 单轮默认 15 秒；[resyncInterval] 默认 20 秒；[awarenessInterval]
   /// 默认 10 秒，必须低于服务端 30 秒超时。[retryBaseDelay] 为有界退避基数，
   /// [maxRetries] 为 0–10，默认 3 次；[onStateChanged] 和其他回调不得销毁外部共享连接。
@@ -67,6 +98,7 @@ final class CsesDocCollaborationSession {
     this.awarenessFactory,
     this.onAwareness,
     this.onDisconnected,
+    this.onAwarenessSessionStarted,
     this.syncTimeout = const Duration(seconds: 15),
     this.resyncInterval = const Duration(seconds: 20),
     this.awarenessInterval = const Duration(seconds: 10),
@@ -120,6 +152,9 @@ final class CsesDocCollaborationSession {
   /// 断线时清除远端在线显示的业务回调。
   final void Function()? onDisconnected;
 
+  /// 新协同归属的在线身份初始化回调，不拥有或更换正文 Doc。
+  final void Function()? onAwarenessSessionStarted;
+
   /// 一轮握手超时，覆盖服务端房间释放等待及网络耗时。
   final Duration syncTimeout;
 
@@ -145,6 +180,12 @@ final class CsesDocCollaborationSession {
   bool _disposed = false;
   bool _waitingSync = false;
   bool _terminal = false;
+
+  /// 首次挂载及物理断开使在线归属失效；下次握手前只重建一次。
+  bool _presenceNeedsReset = true;
+
+  /// 协议在线身份代次，仅作错误关联，不参与页面生命周期或正文版本比较。
+  int _presenceEpoch = 0;
   int _retryCount = 0;
   CsesCollabState _state = CsesCollabState.offline;
   Future<void>? _disposeFuture;
@@ -222,13 +263,21 @@ final class CsesDocCollaborationSession {
   void _onConnectionChanged(bool connected) {
     if (_disposed || !_registered) return;
     if (!connected) {
+      _presenceNeedsReset = true;
       _cancelRound();
       _stopMaintenance();
       onDisconnected?.call();
       if (!_terminal) _emit(CsesCollabState.offline, 'socket-offline');
-    } else if (!_terminal) {
-      _retryCount = 0;
-      _beginSync(join: true);
+    } else {
+      // ready 表示新的 hello/物理连接归属；即使宿主遗漏离线通知也必须取消旧握手。
+      // Gateway 按连接代次去重，同连接主动补偿直接调用 resync，不经过本入口。
+      _presenceNeedsReset = true;
+      _cancelRound();
+      _stopMaintenance();
+      if (!_terminal) {
+        _retryCount = 0;
+        _beginSync(join: true);
+      }
     }
   }
 
@@ -242,6 +291,11 @@ final class CsesDocCollaborationSession {
     _retryTimer?.cancel();
     _retryTimer = null;
     try {
+      if (_presenceNeedsReset) {
+        onAwarenessSessionStarted?.call();
+        _presenceEpoch++;
+        _presenceNeedsReset = false;
+      }
       final vector = stateVectorFactory();
       if (vector.isEmpty || vector.length > 64 * 1024) {
         _fail('INVALID_STATE_VECTOR', '状态向量为空或超过 64 KiB', retry: false);
@@ -307,6 +361,19 @@ final class CsesDocCollaborationSession {
           _fail('ROOM_CLOSED', '协同房间已关闭，正在重新加入', retry: true);
         case 'collabError':
           final code = body['code'];
+          if (code == 'INVALID_REQUEST') {
+            CollabDiagnostics.report(
+              '协同请求被服务端拒绝',
+              error: CsesCollaborationRejected(
+                documentId,
+                instanceId,
+                _presenceEpoch,
+                'INVALID_REQUEST',
+              ),
+              stackTrace: StackTrace.current,
+              tag: 'DocCollab',
+            );
+          }
           final retry = code == 'INTERNAL_ERROR';
           _fail(code is String ? code : 'UNKNOWN_ERROR', switch (code) {
             'DOCUMENT_NOT_FOUND' => '测试文档不存在，请先通过业务流程创建正式文档',

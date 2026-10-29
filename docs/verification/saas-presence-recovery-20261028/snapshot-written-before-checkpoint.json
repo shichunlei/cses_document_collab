@@ -1,0 +1,11 @@
+{
+  "operationId": "6ae190ba038b2572b04ae8ac",
+  "documentId": "6ae190ba2c5dcaf9646b350f",
+  "stage": "snapshotSending",
+  "paragraphId": "6ae190ba038b2572b04ae8ad",
+  "bodyHash": "cbb8fa7ce2d114b62fa9c7bba17328e8dd3599681a2ba3d93bb0b4dae75b4a96",
+  "blockIds": [
+    "6ae190ba2c5dcaf9646b350f",
+    "6ae190ba038b2572b04ae8ad"
+  ]
+}

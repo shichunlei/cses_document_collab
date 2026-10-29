@@ -1,0 +1,14 @@
+{"event": "checkpoint:intentSaved", "operationId": "6ae190ba038b2572b04ae8ac", "documentId": null, "stage": "intentSaved", "status": null}
+{"event": "checkpoint:createSending", "operationId": "6ae190ba038b2572b04ae8ac", "documentId": null, "stage": "createSending", "status": null}
+{"event": "beforeCreate", "operationId": "6ae190ba038b2572b04ae8ac", "documentId": null, "stage": "createSending", "status": null}
+{"event": "afterCreate", "operationId": "6ae190ba038b2572b04ae8ac", "documentId": "6ae190ba2c5dcaf9646b350f", "stage": "createSending", "status": null}
+{"event": "checkpoint:shellCreated", "operationId": "6ae190ba038b2572b04ae8ac", "documentId": "6ae190ba2c5dcaf9646b350f", "stage": "shellCreated", "status": null}
+{"event": "checkpoint:bodyPrepared", "operationId": "6ae190ba038b2572b04ae8ac", "documentId": "6ae190ba2c5dcaf9646b350f", "stage": "bodyPrepared", "status": null}
+{"event": "checkpoint:snapshotSending", "operationId": "6ae190ba038b2572b04ae8ac", "documentId": "6ae190ba2c5dcaf9646b350f", "stage": "snapshotSending", "status": null}
+{"event": "beforeInitialWrite", "operationId": "6ae190ba038b2572b04ae8ac", "documentId": "6ae190ba2c5dcaf9646b350f", "stage": "snapshotSending", "status": null}
+{"event": "afterInitialWrite", "operationId": "6ae190ba038b2572b04ae8ac", "documentId": "6ae190ba2c5dcaf9646b350f", "stage": "snapshotSending", "status": null}
+{"event": "loaded", "operationId": "6ae190ba038b2572b04ae8ac", "documentId": "6ae190ba2c5dcaf9646b350f", "stage": "snapshotSending", "status": null}
+{"event": "beforeReadInitial", "operationId": "6ae190ba038b2572b04ae8ac", "documentId": "6ae190ba2c5dcaf9646b350f", "stage": "snapshotSending", "status": null}
+{"event": "afterReadInitial", "operationId": "6ae190ba038b2572b04ae8ac", "documentId": "6ae190ba2c5dcaf9646b350f", "stage": "snapshotSending", "status": "different"}
+{"event": "checkpoint:conflict", "operationId": "6ae190ba038b2572b04ae8ac", "documentId": "6ae190ba2c5dcaf9646b350f", "stage": "conflict", "status": null}
+{"event": "checkpoint:reviewed", "operationId": "6ae190ba038b2572b04ae8ac", "documentId": "6ae190ba2c5dcaf9646b350f", "stage": "reviewed", "status": null}

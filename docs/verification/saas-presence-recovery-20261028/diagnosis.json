@@ -1,0 +1,131 @@
+{
+  "date": "2026-10-28",
+  "status": "diagnosed_plan_pending_approval",
+  "environment": "pre",
+  "documentId": "6ae17c802c5dcaf9646b1034",
+  "timeline": [
+    {
+      "time": "12:40:01.383",
+      "event": "outgoing collabAwareness",
+      "clientId": 3612886132,
+      "clock": 13,
+      "state": "active"
+    },
+    {
+      "time": "12:40:08.517",
+      "event": "outgoing collabAwareness after session replacement",
+      "clientId": 3612886132,
+      "clock": 14,
+      "state": "active"
+    },
+    {
+      "time": "12:40:08.520",
+      "event": "incoming old active awareness on new instance",
+      "instanceId": "6ae17ca8ce363d21f641b335",
+      "clientId": 3612886132,
+      "clock": 13,
+      "state": "active"
+    },
+    {
+      "time": "12:40:08.539",
+      "event": "incoming collabError",
+      "instanceId": "6ae17ca8ce363d21f641b335",
+      "code": "INVALID_REQUEST"
+    },
+    {
+      "time": "12:40:09.096",
+      "event": "incoming collabError on next replacement",
+      "instanceId": "6ae17ca9ce363d21f641b348",
+      "code": "INVALID_REQUEST"
+    },
+    {
+      "time": "12:40:34.172",
+      "event": "title modify request",
+      "path": "/doc/document/modify"
+    },
+    {
+      "time": "12:40:34.302",
+      "event": "title modify response",
+      "isSuccess": true
+    }
+  ],
+  "correction": "The synchronization failure preceded the first title save by about 26 seconds. The title write succeeded. The prior UI observation established temporal adjacency only, not causality.",
+  "confirmed_defect": "New collaboration session instances reuse the document-owned Awareness clientId. An active state still owned by a previous instance/connection is rejected by ownership validation.",
+  "validator_replay": {
+    "implementation": "Locally cached server dependency org.x9.cloud:vectra:2.5.9 Awareness.apply",
+    "input": "Captured outgoing Awareness frames with clocks 13 and 14; different logical owners",
+    "with_previous_owner_active": "CollaborationException: 协同请求参数错误",
+    "after_previous_owner_removed": "same new frame accepted",
+    "exit_code": 0,
+    "limitation": "This reproduces the ownership conflict in the local server validator; deployed backend stack trace and the reason old ownership outlived the reconnect were not retrieved."
+  },
+  "proposed_fix": [
+    "Give transient local Awareness identity its own session/connection lifecycle, independent from body CRDT identity and persisted content. Reuse Yrs Awareness encoding.",
+    "Rotate presence identity on logical session replacement or physical connection replacement; keep it stable during same-connection periodic resync and body history.",
+    "Preserve permission checks and local upload restrictions during access revalidation; serialize resource release and reject stale callbacks.",
+    "Record sanitized protocol error code, document/session routing and lifecycle trigger without credentials or content; retain terminal error semantics."
+  ],
+  "device_validation_plan": [
+    {
+      "case": "create_result_unknown",
+      "injection": "Use the existing backend port in a pre-only debug harness; real create succeeds but response is withheld from the creation coordinator, then force-stop. Also exercise a write that was not sent.",
+      "assertions": [
+        "createSending restores as createUnknown",
+        "no automatic duplicate POST",
+        "target review uses original target",
+        "manual review completion never silently initializes an unidentified document"
+      ]
+    },
+    {
+      "case": "prepared_body_interrupted",
+      "injection": "Pause after shellCreated/bodyPrepared is durably saved, then force-stop.",
+      "assertions": [
+        "same operation/document/paragraph identities",
+        "same bootstrap body",
+        "resume without new shell or duplicate initial blocks"
+      ]
+    },
+    {
+      "case": "initial_snapshot_response_unknown",
+      "injection": "Let real initial write complete but withhold response; force-stop with snapshotSending persisted.",
+      "assertions": [
+        "resume reads full tree",
+        "matching advances",
+        "missing waits without reinsert",
+        "different becomes conflict without overwrite"
+      ]
+    },
+    {
+      "case": "first_sync_interrupted",
+      "injection": "Interrupt at awaitingFirstSync, restart and restore connection.",
+      "assertions": [
+        "no premature completed checkpoint",
+        "same document recovers",
+        "desktop and mobile converge after reopening"
+      ]
+    }
+  ],
+  "code_changed": false,
+  "versions": {
+    "desktop_declared": "0.11.31",
+    "desktop_yarn_locked": "0.11.31",
+    "desktop_installed": "0.11.17",
+    "upstream_latest": "unverified_this_run",
+    "registry_query_failure": "ECONNRESET from configured package registry"
+  },
+  "verification": {
+    "existing_targeted_tests": 37,
+    "result": "all_passed",
+    "files": [
+      "doc_collab_metadata_adapter_test.dart",
+      "doc_collab_host_test.dart",
+      "doc_creation_service_test.dart"
+    ],
+    "gap": "Existing tests do not model active server Awareness ownership across logical/physical session replacement. New failing regressions belong to the approved implementation step."
+  },
+  "scope_notes": [
+    "No phone network settings were changed in this diagnosis.",
+    "Existing staged and unstaged workspace changes were left untouched.",
+    "No product code or formal regression test was added before approval."
+  ]
+}

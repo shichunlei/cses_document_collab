@@ -1,0 +1,14 @@
+{"event": "checkpoint:intentSaved", "operationId": "6ae1955cc822bab721358f70", "documentId": null, "stage": "intentSaved", "status": null}
+{"event": "checkpoint:createSending", "operationId": "6ae1955cc822bab721358f70", "documentId": null, "stage": "createSending", "status": null}
+{"event": "beforeCreate", "operationId": "6ae1955cc822bab721358f70", "documentId": null, "stage": "createSending", "status": null}
+{"event": "afterCreate", "operationId": "6ae1955cc822bab721358f70", "documentId": "6ae1955cbc2701ed9ddd5072", "stage": "createSending", "status": null}
+{"event": "checkpoint:shellCreated", "operationId": "6ae1955cc822bab721358f70", "documentId": "6ae1955cbc2701ed9ddd5072", "stage": "shellCreated", "status": null}
+{"event": "checkpoint:bodyPrepared", "operationId": "6ae1955cc822bab721358f70", "documentId": "6ae1955cbc2701ed9ddd5072", "stage": "bodyPrepared", "status": null}
+{"event": "checkpoint:snapshotSending", "operationId": "6ae1955cc822bab721358f70", "documentId": "6ae1955cbc2701ed9ddd5072", "stage": "snapshotSending", "status": null}
+{"event": "beforeInitialWrite", "operationId": "6ae1955cc822bab721358f70", "documentId": "6ae1955cbc2701ed9ddd5072", "stage": "snapshotSending", "status": null}
+{"event": "afterInitialWrite", "operationId": "6ae1955cc822bab721358f70", "documentId": "6ae1955cbc2701ed9ddd5072", "stage": "snapshotSending", "status": null}
+{"event": "loaded", "operationId": "6ae1955cc822bab721358f70", "documentId": "6ae1955cbc2701ed9ddd5072", "stage": "snapshotSending", "status": null}
+{"event": "beforeReadInitial", "operationId": "6ae1955cc822bab721358f70", "documentId": "6ae1955cbc2701ed9ddd5072", "stage": "snapshotSending", "status": null}
+{"event": "afterReadInitial", "operationId": "6ae1955cc822bab721358f70", "documentId": "6ae1955cbc2701ed9ddd5072", "stage": "snapshotSending", "status": "matching"}
+{"event": "checkpoint:awaitingFirstSync", "operationId": "6ae1955cc822bab721358f70", "documentId": "6ae1955cbc2701ed9ddd5072", "stage": "awaitingFirstSync", "status": null}
+{"event": "checkpoint:completed", "operationId": "6ae1955cc822bab721358f70", "documentId": "6ae1955cbc2701ed9ddd5072", "stage": "completed", "status": null}

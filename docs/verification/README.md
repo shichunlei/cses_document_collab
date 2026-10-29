@@ -17,6 +17,8 @@
 
 ### 文档创建与文档信息
 
+- [saas-presence-recovery-20261028](saas-presence-recovery-20261028)（[在线身份冲突修复、失败回归与 SaaS 真机创建恢复证据](saas-presence-recovery-20261028/validation.json)）
+
 - [document-json-export-20261023](document-json-export-20261023)（[桌面文档 JSON 格式分析与示例](document-json-export-20261023/report.md)）
 
 - [host-service-migration-20261023](host-service-migration-20261023)（[宿主服务目录迁移收尾](host-service-migration-20261023/report.md)）

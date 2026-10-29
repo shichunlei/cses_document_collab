@@ -169,10 +169,8 @@ fn engine_history_retains_awareness_and_native_handles_after_many_swaps() {
         engine.replay_history(true, selection("p", 2)).unwrap();
     }
     assert_eq!(engine.awareness.client_id(), client);
-    assert_eq!(
-        engine.awareness.doc().transact().snapshot(),
-        engine.doc.transact().snapshot()
-    );
+    // 在线 Doc 不承载正文；正文历史回放不能改写其身份、时钟或资料。
+    assert_ne!(engine.awareness.client_id(), engine.doc.client_id());
     assert_eq!(
         engine.awareness.local_state::<serde_json::Value>().unwrap()["user"],
         "owner"

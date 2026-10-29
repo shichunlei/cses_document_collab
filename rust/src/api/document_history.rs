@@ -285,12 +285,12 @@ impl CollabEngine {
         Ok(())
     }
 
-    /// Rebind every native handle and Awareness's Doc while preserving clients,
-    /// clocks and presence; no old branch handle escapes the engine lock.
+    /// Rebind body handles after history staging; transient Awareness owns an
+    /// independent Doc, so body undo/redo must preserve its client, clocks and state.
+    /// No old body branch handle escapes the engine lock.
     fn install_history(&mut self, doc: Doc, manager: UndoManager<Meta>) {
         self.history.as_mut().unwrap().manager = manager;
         self.doc = doc;
-        *self.awareness.doc_mut() = self.doc.clone();
         self.block_order = self.doc.get_or_insert_array(BLOCK_ORDER_NAME);
         self.block_meta = self.doc.get_or_insert_map(BLOCK_META_NAME);
         self.block_checked = self.doc.get_or_insert_map(BLOCK_CHECKED_NAME);

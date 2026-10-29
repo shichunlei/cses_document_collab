@@ -1,0 +1,12 @@
+{"event": "checkpoint:intentSaved", "operationId": "6ae1960bf33cc861dc3f7721", "documentId": null, "stage": "intentSaved", "status": null}
+{"event": "checkpoint:createSending", "operationId": "6ae1960bf33cc861dc3f7721", "documentId": null, "stage": "createSending", "status": null}
+{"event": "beforeCreate", "operationId": "6ae1960bf33cc861dc3f7721", "documentId": null, "stage": "createSending", "status": null}
+{"event": "afterCreate", "operationId": "6ae1960bf33cc861dc3f7721", "documentId": "6ae1960b5a7a6ece6e1cbb08", "stage": "createSending", "status": null}
+{"event": "checkpoint:shellCreated", "operationId": "6ae1960bf33cc861dc3f7721", "documentId": "6ae1960b5a7a6ece6e1cbb08", "stage": "shellCreated", "status": null}
+{"event": "checkpoint:bodyPrepared", "operationId": "6ae1960bf33cc861dc3f7721", "documentId": "6ae1960b5a7a6ece6e1cbb08", "stage": "bodyPrepared", "status": null}
+{"event": "checkpoint:snapshotSending", "operationId": "6ae1960bf33cc861dc3f7721", "documentId": "6ae1960b5a7a6ece6e1cbb08", "stage": "snapshotSending", "status": null}
+{"event": "beforeInitialWrite", "operationId": "6ae1960bf33cc861dc3f7721", "documentId": "6ae1960b5a7a6ece6e1cbb08", "stage": "snapshotSending", "status": null}
+{"event": "afterInitialWrite", "operationId": "6ae1960bf33cc861dc3f7721", "documentId": "6ae1960b5a7a6ece6e1cbb08", "stage": "snapshotSending", "status": null}
+{"event": "checkpoint:awaitingFirstSync", "operationId": "6ae1960bf33cc861dc3f7721", "documentId": "6ae1960b5a7a6ece6e1cbb08", "stage": "awaitingFirstSync", "status": null}
+{"event": "loaded", "operationId": "6ae1960bf33cc861dc3f7721", "documentId": "6ae1960b5a7a6ece6e1cbb08", "stage": "awaitingFirstSync", "status": null}
+{"event": "checkpoint:completed", "operationId": "6ae1960bf33cc861dc3f7721", "documentId": "6ae1960b5a7a6ece6e1cbb08", "stage": "completed", "status": null}

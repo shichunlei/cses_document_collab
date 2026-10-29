@@ -33,9 +33,12 @@ final class CommonCsesCollabGateway implements CsesCollabGateway {
 
   /// 转发Common的hello-ready/离线事件；发布ready前Common已尝试恢复平台订阅。
   /// 多个监听者不会重复发送subscribe；发送失败时由即时发送前置返回false，协同会话有界重试。
+  /// 按 ready 与连接代次组合去重，不能丢弃缺少中间离线通知的新连接 ready。
   @override
-  Stream<bool> get connectionStates =>
-      WebSocketInitEntry.watch(scope: WebSocketInitScope.cses).map((event) => event.current.isConnected).distinct();
+  Stream<bool> get connectionStates => WebSocketInitEntry.watch(scope: WebSocketInitScope.cses)
+      .map((event) => (ready: event.current.isConnected, generation: csesWebSocketClient.connectionGeneration))
+      .distinct()
+      .map((state) => state.ready);
 
   /// 等待[pageId]的[documentId]/[instanceId]路由与[callbacks]安装，首次订阅正文为空Map。
   /// 离线也可完成本地登记；Common在hello-ready后恢复订阅，发送失败不入队。

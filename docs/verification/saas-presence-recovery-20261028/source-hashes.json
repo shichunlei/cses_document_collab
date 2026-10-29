@@ -1,0 +1,107 @@
+[
+  {
+    "repository": "cses_document_collab",
+    "path": "lib/src/controller/collab_controller.dart",
+    "sha256": "5a998e2ee9d058a41e2bf249c3f7f95398da46b5a5f13e57db96d036cce12296"
+  },
+  {
+    "repository": "cses_document_collab",
+    "path": "lib/src/sync/cses_doc_collaboration_session.dart",
+    "sha256": "d913f81f17e9d64bd6bec90244752518f3c824136394f10b4f5e4ec9acc02a70"
+  },
+  {
+    "repository": "cses_document_collab",
+    "path": "lib/src/sync/cses_collab_gateway.dart",
+    "sha256": "f1baa69f5798710a5dbca346d6d59afbadf55af9f0e9fa481267cf90c86d5cd0"
+  },
+  {
+    "repository": "cses_document_collab",
+    "path": "example/lib/src/demo/common_cses_collab_gateway.dart",
+    "sha256": "f31cf3e4b863d57fb30b57db3c995cc9f306c7c47baa70fc153927a697e67107"
+  },
+  {
+    "repository": "cses_document_collab",
+    "path": "lib/src/native/api/collab.dart",
+    "sha256": "8535d3fb8d4b697b8d525926f130eec98b494f9997ae3cd3cc8258809751dc43"
+  },
+  {
+    "repository": "cses_document_collab",
+    "path": "lib/src/native/frb_generated.dart",
+    "sha256": "456f59e07a6f56e323d5635f31bf5e5a1ea71c8e844458050075ab8692ab8a02"
+  },
+  {
+    "repository": "cses_document_collab",
+    "path": "rust/src/api/collab.rs",
+    "sha256": "adab58e045e9b2df3e72ccfe1d3082fb9b08e9d8b3943cd6242eeccaa3cfa847"
+  },
+  {
+    "repository": "cses_document_collab",
+    "path": "rust/src/api/document_history.rs",
+    "sha256": "9204d2f079c85f4e10563c94b89af18c8cb5272c085f7fbb947b0df7357a3b61"
+  },
+  {
+    "repository": "cses_document_collab",
+    "path": "rust/src/api/document_history_tests.rs",
+    "sha256": "f3bfab21abe1bf7e544dc9a20545957cf511c48d3cb68c701e9d704bbb1704df"
+  },
+  {
+    "repository": "cses_document_collab",
+    "path": "rust/src/frb_generated.rs",
+    "sha256": "9660675a02075b9cdfaa4197c5115c2444ba4ed875d7351e1857eacc8929af19"
+  },
+  {
+    "repository": "cses_document_collab",
+    "path": "test/collab_presence_identity_native_test.dart",
+    "sha256": "ba9aeab8147e779ebef7d7dd57b74790c7132b40ffbccaad487788c735325735"
+  },
+  {
+    "repository": "cses.saas",
+    "path": "lib/modules/doc/infrastructure/collaboration/doc_collab_gateway.dart",
+    "sha256": "fd86f9582ccafda966a9649035a85f5f3dcbb64420a90d465d307523edb330bb"
+  },
+  {
+    "repository": "cses.saas",
+    "path": "lib/modules/doc/infrastructure/collaboration/doc_creation_sqlite_store.dart",
+    "sha256": "618530f6bc13c4fa2f423ff48b322891d3d6b6748310e18f434d1217b76151e5"
+  },
+  {
+    "repository": "cses.saas",
+    "path": "lib/modules/doc/infrastructure/collaboration/doc_creation_backend.dart",
+    "sha256": "4ec8f2fae52bfac6154d90b4bba674a2be3b1028f11e46d9988eb1ec3d81ad3a"
+  },
+  {
+    "repository": "cses.saas",
+    "path": "lib/modules/doc/infrastructure/collaboration/doc_creation_recovery_probe.dart",
+    "sha256": "8294bf4907200324ab4381c8ba822b9c1ec9f90a5026461e51f46db6bf96b771"
+  },
+  {
+    "repository": "cses.saas",
+    "path": "lib/modules/doc/presentation/creation/composition.dart",
+    "sha256": "1e4c9377da8811de9204d45c7aae6fee8950cf109a1d67c81a56331c2dea2089"
+  },
+  {
+    "repository": "cses.saas",
+    "path": "lib/modules/doc/CLAUDE.md",
+    "sha256": "6cd0ed0a76ecd387ba951b03304858ae26921caf9171760bcf74de463e2f0511"
+  },
+  {
+    "repository": "cses.saas",
+    "path": "test/modules/doc/collaboration/doc_creation_recovery_probe_test.dart",
+    "sha256": "2dd364961efcc4e21398146910a6a7914289d2d6652146740b1fad8a4e7ed852"
+  },
+  {
+    "repository": "cses.saas",
+    "path": "test/modules/doc/collaboration/doc_creation_protocol_native_test.dart",
+    "sha256": "637a28afa3cf7f560aaaba7f2925fb7def45dd025d0e7cd93ef49da56da29fa1"
+  },
+  {
+    "repository": "cses.saas",
+    "path": "test/modules/doc/collaboration/doc_creation_body_read_projection_test.dart",
+    "sha256": "330aafc1bdc139f29164a1a0510e46c3e9c3437fd9a4523a28859b394087e372"
+  },
+  {
+    "repository": "cses.saas",
+    "path": "test/modules/doc/collaboration/fixtures/initial_body_server_read.json",
+    "sha256": "65977bc7149f59b608a6e92da18a433c7303259b9e597eaa9001822087e7e8ba"
+  }
+]

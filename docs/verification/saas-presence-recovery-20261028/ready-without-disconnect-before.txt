@@ -1,0 +1,97 @@
+00:00 +0: loading /System/Volumes/Data/workspace/cses_document_collab/test/collab_presence_identity_native_test.dart
+00:00 +0: (setUpAll)
+00:00 +0: old presence ownership cannot reject permission session replacement
+00:00 +1: old presence ownership cannot reject physical reconnect
+00:00 +2: old presence ownership cannot reject new hello without a disconnected notification
+00:00 +2 -1: old presence ownership cannot reject new hello without a disconnected notification [E]
+  文档协同处理失败: 协同请求被服务端拒绝: CsesCollaborationRejected(code=INVALID_REQUEST, document=fixture-doc, instance=c1e27c24994c1ffdde44ef25, presenceEpoch=1)
+  #0      CsesDocCollaborationSession._handle (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:366:38)
+  #1      CsesDocCollaborationSession.start.<anonymous closure> (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:217:34)
+  #2      _OwnershipGateway.send.<anonymous closure> (file:///System/Volumes/Data/workspace/cses_document_collab/test/collab_presence_identity_native_test.dart:220:43)
+  #3      StackZoneSpecification._run (package:stack_trace/src/stack_zone_specification.dart:207:15)
+  #4      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:48)
+  #5      _rootRun (dart:async/zone_root.dart:27:47)
+  #6      _CustomZone.run (dart:async/zone.dart:726:19)
+  #7      _CustomZone.runGuarded (dart:async/zone.dart:625:7)
+  #8      _CustomZone.bindCallbackGuarded.<anonymous closure> (dart:async/zone.dart:666:23)
+  #9      StackZoneSpecification._run (package:stack_trace/src/stack_zone_specification.dart:207:15)
+  #10     StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:48)
+  #11     _rootRun (dart:async/zone_root.dart:35:13)
+  #12     _CustomZone.run (dart:async/zone.dart:726:19)
+  #13     _CustomZone.runGuarded (dart:async/zone.dart:625:7)
+  #14     _CustomZone.bindCallbackGuarded.<anonymous closure> (dart:async/zone.dart:666:23)
+  #15     _microtaskLoop (dart:async/schedule_microtask.dart:40:35)
+  #16     _startMicrotaskLoop (dart:async/schedule_microtask.dart:49:5)
+  
+  #0      fail (package:matcher/src/expect/expect.dart:187:31)
+  #1      main.<anonymous closure>.<anonymous closure> (file:///System/Volumes/Data/workspace/cses_document_collab/test/collab_presence_identity_native_test.dart:48:17)
+  #2      CollabHostServices.report (package:cses_document_collab/src/model/collab_host_services.dart:193:13)
+  #3      CollabDiagnostics.report (package:cses_document_collab/src/native/collab_runtime.dart:63:32)
+  #4      CsesDocCollaborationSession._handle (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:358:31)
+  #5      CsesDocCollaborationSession.start.<anonymous closure> (package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart:217:34)
+  #6      _OwnershipGateway.send.<anonymous closure> (file:///System/Volumes/Data/workspace/cses_document_collab/test/collab_presence_identity_native_test.dart:220:43)
+  #7      StackZoneSpecification._run (package:stack_trace/src/stack_zone_specification.dart:207:15)
+  #8      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:48)
+  #9      _rootRun (dart:async/zone_root.dart:27:47)
+  #10     _CustomZone.run (dart:async/zone.dart:726:19)
+  #11     _CustomZone.runGuarded (dart:async/zone.dart:625:7)
+  #12     _CustomZone.bindCallbackGuarded.<anonymous closure> (dart:async/zone.dart:666:23)
+  #13     StackZoneSpecification._run (package:stack_trace/src/stack_zone_specification.dart:207:15)
+  #14     StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:48)
+  #15     _rootRun (dart:async/zone_root.dart:35:13)
+  #16     _CustomZone.run (dart:async/zone.dart:726:19)
+  #17     _CustomZone.runGuarded (dart:async/zone.dart:625:7)
+  #18     _CustomZone.bindCallbackGuarded.<anonymous closure> (dart:async/zone.dart:666:23)
+  #19     _microtaskLoop (dart:async/schedule_microtask.dart:40:35)
+  #20     _startMicrotaskLoop (dart:async/schedule_microtask.dart:49:5)
+  
+  package:matcher                                                                   fail
+  test/collab_presence_identity_native_test.dart 48:17                              main.<fn>.<fn>
+  package:cses_document_collab/src/model/collab_host_services.dart 193:13           CollabHostServices.report
+  package:cses_document_collab/src/native/collab_runtime.dart 63:32                 CollabDiagnostics.report
+  package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart 416:23  CsesDocCollaborationSession._exception
+  package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart 380:7   CsesDocCollaborationSession._handle
+  package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart 217:34  CsesDocCollaborationSession.start.<fn>
+  test/collab_presence_identity_native_test.dart 220:43                             _OwnershipGateway.send.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                                        scheduleMicrotask
+  test/collab_presence_identity_native_test.dart 219:9                              _OwnershipGateway.send
+  package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart 471:20  CsesDocCollaborationSession._publishAwareness
+  package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart 345:11  CsesDocCollaborationSession._handle
+  package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart 213:33  CsesDocCollaborationSession.start.<fn>
+  test/collab_presence_identity_native_test.dart 206:40                             _OwnershipGateway.send.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                                        scheduleMicrotask
+  test/collab_presence_identity_native_test.dart 205:7                              _OwnershipGateway.send
+  package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart 300:20  CsesDocCollaborationSession._beginSync
+  package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart 273:7   CsesDocCollaborationSession._onConnectionChanged
+  dart:async                                                                        _BroadcastStreamController.add
+  test/collab_presence_identity_native_test.dart 67:28                              main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                                        _StreamImpl.listen
+  package:cses_document_collab/src/sync/cses_doc_collaboration_session.dart 205:56  CsesDocCollaborationSession.start
+  package:cses_document_collab/src/controller/collab_controller.dart 613:21         CollabController._startSession
+  package:cses_document_collab/src/controller/collab_controller.dart 440:15         CollabController._initialize
+  ===== asynchronous gap ===========================
+  dart:async                                                                        _CustomZone.registerUnaryCallback
+  package:cses_document_collab/src/controller/collab_controller.dart 432:7          CollabController._initialize
+  package:cses_document_collab/src/controller/collab_controller.dart 414:13         CollabController._initializeRecoverably
+  package:cses_document_collab/src/controller/collab_controller.dart 408:36         CollabController.initialize
+  test/collab_presence_identity_native_test.dart 52:28                              main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                                        _CustomZone.registerUnaryCallback
+  test/collab_presence_identity_native_test.dart 28:27                              main.<fn>
+  
+  Expected: empty
+    Actual: [1457935772]
+  A new server owner must not reuse a still-active presence clientId
+  
+  package:matcher                                       expect
+  package:flutter_test/src/widget_tester.dart 473:18    expect
+  test/collab_presence_identity_native_test.dart 75:11  main.<fn>
+  
+00:00 +2 -1: (tearDownAll)
+00:00 +2 -1: Some tests failed.
+
+Failing tests:
+  /System/Volumes/Data/workspace/cses_document_collab/test/collab_presence_identity_native_test.dart: old presence ownership cannot reject new hello without a disconnected notification

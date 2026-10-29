@@ -1,0 +1,33 @@
+{
+  "isSuccess": true,
+  "serverName": "cses-server-1",
+  "6ae190ba2c5dcaf9646b350f": {
+    "children": [
+      "6ae190ba038b2572b04ae8ad"
+    ],
+    "content": [],
+    "editedAt": 0,
+    "flavour": "root",
+    "id": "6ae190ba2c5dcaf9646b350f",
+    "meta": {
+      "createdTime": 1793167546624.0,
+      "lastModified": {
+        "time": 1793167546624.0,
+        "user": null
+      }
+    },
+    "props": {}
+  },
+  "6ae190ba038b2572b04ae8ad": {
+    "children": [],
+    "content": [],
+    "editedAt": 1793167702861,
+    "flavour": "paragraph",
+    "id": "6ae190ba038b2572b04ae8ad",
+    "meta": {},
+    "props": {
+      "depth": 0
+    },
+    "text": ""
+  }
+}

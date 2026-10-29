@@ -1,0 +1,19 @@
+{
+  "surface": "CSES-pre macOS native app, CUA accessibility observation",
+  "route": "cses://localhost/#/main/docs/document/6ae1960b5a7a6ece6e1cbb08",
+  "title": "RECOVERY-DUAL-20261028",
+  "status_text": "云端已同步",
+  "body_paragraphs": [
+    "M1-RECOVERY-20261028",
+    "D1-RECOVERY-20261028",
+    "M2-LIVE-RECOVERY-20261028",
+    "D2-WHILE-PHONE-OFFLINE-20261028",
+    "M3-OFFLINE-RECOVERY-20261028"
+  ],
+  "actions": [
+    "close only test document tab",
+    "refresh document home",
+    "open same test document"
+  ],
+  "observed_at": "2026-10-28T15:17:27.479634+08:00"
+}

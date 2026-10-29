@@ -83,7 +83,14 @@ Uint8List encodeDocumentDiff({required List<int> stateVector}) => RustLib
 WireMessageResult applyDocumentUpdate({required List<int> bytes}) =>
     RustLib.instance.api.crateApiCollabApplyDocumentUpdate(bytes: bytes);
 
-/// 提高本机 Awareness 时钟并编码本 clientID 的在线或删除状态。
+/// 为新的逻辑会话或物理连接建立独立在线身份，不改变正文 Doc、历史或 SQLite。
+///
+/// 调用方必须先停止旧会话上报；同连接内的重同步不调用此函数。
+/// 新会话使用新快照恢复远端在线状态，旧会话回调由 Dart 所有权边界拒绝。
+void beginAwarenessSession() =>
+    RustLib.instance.api.crateApiCollabBeginAwarenessSession();
+
+/// 提高本机 Awareness 时钟并编码本在线会话 clientID 的在线或删除状态。
 ///
 /// `user_id` 与 `user_name` 仅作展示，不是授权凭据；`present` 为 false 时发送标准 null。
 /// 只选择自身 clientID 编码，不把已收到的远端状态再次上行。

@@ -1,0 +1,11 @@
+{
+  "operationId": "6ae1960bf33cc861dc3f7721",
+  "documentId": "6ae1960b5a7a6ece6e1cbb08",
+  "stage": "awaitingFirstSync",
+  "paragraphId": "6ae1960bf33cc861dc3f7722",
+  "bodyHash": "8dc1f3f1d6ef3f24370c56195aaeb489fba68423d5117784e405feb404c16fbd",
+  "blockIds": [
+    "6ae1960b5a7a6ece6e1cbb08",
+    "6ae1960bf33cc861dc3f7722"
+  ]
+}

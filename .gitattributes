@@ -3,3 +3,4 @@ assets/mermaid/mermaid.min.js binary
 
 # 本轮原始命令日志保留工具输出的对齐空格与结尾空行，源码和文档仍检查空白。
 docs/verification/package-example-layout-20261027/*.txt -whitespace
+docs/verification/saas-presence-recovery-20261028/*.txt -whitespace

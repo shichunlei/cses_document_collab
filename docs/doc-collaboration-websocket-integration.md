@@ -97,6 +97,11 @@ url.searchParams.set('companyId', currentCompanyId);
 
 `Y.Doc.clientID` 由 Yjs 生成，是 CRDT/Awareness 标识，与用户 ID、deviceId、instance 均不同。多个视图共享同一个 Y.Doc 时，应共享一个协同会话并由业务层管理引用计数，避免多个 instance 争用同一 Awareness clientID。
 
+移动原生 SDK 将临时 Awareness 放在独立 Yrs Doc 中：新逻辑实例及物理连接恢复时调用
+`beginAwarenessSession` 轮换在线身份；同连接周期同步、重试及正文历史回放不轮换。正文 Doc 保留
+原身份与持久化增量。这样旧实例退出、物理断开或跨节点在线状态清理延迟时，新归属不会争用旧 clientID。
+会话的旧回调仍须通过所属控制器/引擎所有权校验，不能仅依靠更换在线身份隔离文档。
+
 ## 平台订阅和协同握手
 
 ### 订阅顺序

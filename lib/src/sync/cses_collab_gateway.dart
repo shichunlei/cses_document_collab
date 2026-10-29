@@ -4,6 +4,8 @@ abstract interface class CsesCollabGateway {
   bool get isConnected;
 
   /// 平台订阅发送后的 ready/离线变化；消费者负责取消订阅。
+  /// 每个新物理连接的 hello-ready 必须发布 true，即使未观察到中间的 false；
+  /// 同连接重复 ready 应在端口按连接代次去重，不能只对 bool 使用 distinct。
   Stream<bool> get connectionStates;
 
   /// 登记 [pageId] 的 [documentId]/[instanceId] 路由与 [callbacks]。

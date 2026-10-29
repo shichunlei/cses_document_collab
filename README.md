@@ -49,6 +49,10 @@ Widget snapshotBody(DocumentEditorController editor) => DocumentEditorView(
 
 Flutter FFI 插件包，提供正式 BlockCraft 文档的原生编辑、Yrs 差量协同、Awareness、SQLite 恢复及移动端块渲染。Dart >=3.12、Flutter >=3.44；移动端支持 Android（最终宿主至少 API 24）和 iOS 14+。macOS/Linux 原生库仅用于测试，不声明桌面插件支持。
 
+在线状态由独立的 Yrs Awareness Doc 持有，不借用正文 clientId。逻辑会话更换和物理重连前重建在线身份，
+同连接重同步、正文编辑和历史回放保持该身份稳定；退出清理延迟不影响新会话身份。正文 Doc、离线增量、
+SQLite 和历史不随在线身份轮换而重建。服务端 INVALID_REQUEST 继续停止自动重试，并通过宿主诊断端口报告脱敏路由和在线代次。
+
 包的源代码与原生构建都在此目录内。包不依赖 demo、cses.saas、cses.common、登录接口或全局账号。依赖方向是宿主 → 本包 → AppFlowy/FRB/Yrs；Gateway 与上传服务由宿主实现。
 
 ## 接入

@@ -560,6 +560,10 @@ class CollabController extends ChangeNotifier {
       gateway: _gateway,
       documentId: config.documentId,
       instanceId: _services.newId(),
+      onAwarenessSessionStarted: () {
+        _requireCurrentSession(session);
+        rust.beginAwarenessSession();
+      },
       stateVectorFactory: () {
         _requireCurrentSession(session);
         return rust.encodeStateVector();

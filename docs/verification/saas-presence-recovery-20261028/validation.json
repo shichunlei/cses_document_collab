@@ -1,0 +1,251 @@
+{
+  "status": "completed",
+  "date": "2026-10-28",
+  "fix": "Transient Awareness Doc and identity rotate on logical session replacement or physical reconnect; same-connection resync and body history preserve identity.",
+  "regression_before": {
+    "failed": 2,
+    "cases": [
+      "permission session replacement",
+      "physical reconnect"
+    ]
+  },
+  "checks": {
+    "rust_all": 208,
+    "sdk_targeted": 29,
+    "saas_collaboration": 132,
+    "sdk_analysis": "No issues found",
+    "probe_analysis": "No issues found",
+    "example_gateway": 7,
+    "saas_analysis": "No issues found",
+    "example_analysis": "No issues found",
+    "dart_format": "13 files checked, 0 changes",
+    "cargo_fmt": "passed",
+    "git_diff_check_sdk": "passed",
+    "git_diff_check_saas_task_scope": "passed",
+    "git_diff_check_saas_whole_workspace": "Earlier passed; final check reported trailing whitespace in concurrently modified unrelated lib/global/actions.dart:170. File left untouched.",
+    "task_scope_source_trailing_whitespace": "passed, including untracked task files"
+  },
+  "device_cases": {
+    "unknown-not-sent": {
+      "status": "passed-unknown-no-repost-reviewed",
+      "injection": {
+        "event": "beforeCreate",
+        "operationId": "6ae18e30a47c884eb2eb2689",
+        "documentId": null,
+        "stage": "createSending",
+        "status": null,
+        "run": "UNKNOWN-NOT-SENT-20261028"
+      },
+      "counts": {
+        "checkpoint:intentSaved": 1,
+        "checkpoint:createSending": 1,
+        "beforeCreate": 1,
+        "loaded": 1,
+        "checkpoint:createUnknown": 1,
+        "checkpoint:reviewed": 1
+      }
+    },
+    "unknown-created": {
+      "status": "passed-real-create-once-no-repost-reviewed",
+      "injection": {
+        "event": "afterCreate",
+        "operationId": "6ae18ecdd4f5f725b6ee7bcb",
+        "documentId": "6ae18ecd816cf9517d5b8e52",
+        "stage": "createSending",
+        "status": null,
+        "run": "UNKNOWN-CREATED-20261028"
+      },
+      "counts": {
+        "checkpoint:intentSaved": 1,
+        "checkpoint:createSending": 1,
+        "beforeCreate": 1,
+        "afterCreate": 1,
+        "loaded": 1,
+        "checkpoint:createUnknown": 1,
+        "checkpoint:reviewed": 1
+      }
+    },
+    "body-prepared": {
+      "status": "passed-same-document-body-and-paragraph-completed",
+      "injection": {
+        "event": "checkpoint:bodyPrepared",
+        "operationId": "6ae18f6d91d82dd068c0e5dc",
+        "documentId": "6ae18f6d816cf9517d5b8fbd",
+        "stage": "bodyPrepared",
+        "status": null,
+        "run": "BODY-PREPARED-20261028"
+      },
+      "counts": {
+        "checkpoint:intentSaved": 1,
+        "checkpoint:createSending": 1,
+        "beforeCreate": 1,
+        "afterCreate": 1,
+        "checkpoint:shellCreated": 1,
+        "checkpoint:bodyPrepared": 1,
+        "loaded": 1,
+        "checkpoint:snapshotSending": 1,
+        "beforeInitialWrite": 1,
+        "afterInitialWrite": 1,
+        "checkpoint:awaitingFirstSync": 1,
+        "checkpoint:completed": 1
+      }
+    },
+    "snapshot-written-before-projection-fix": {
+      "status": "historical-conflict-fixed-and-retested",
+      "injection": {
+        "event": "afterInitialWrite",
+        "operationId": "6ae190ba038b2572b04ae8ac",
+        "documentId": "6ae190ba2c5dcaf9646b350f",
+        "stage": "snapshotSending",
+        "status": null,
+        "run": "SNAPSHOT-WRITTEN-20261028"
+      },
+      "counts": {
+        "checkpoint:intentSaved": 1,
+        "checkpoint:createSending": 1,
+        "beforeCreate": 1,
+        "afterCreate": 1,
+        "checkpoint:shellCreated": 1,
+        "checkpoint:bodyPrepared": 1,
+        "checkpoint:snapshotSending": 1,
+        "beforeInitialWrite": 1,
+        "afterInitialWrite": 1,
+        "loaded": 1,
+        "beforeReadInitial": 1,
+        "afterReadInitial": 1,
+        "checkpoint:conflict": 1,
+        "checkpoint:reviewed": 1
+      },
+      "resolved_by": "snapshot-written-fixed"
+    },
+    "snapshot-written-fixed": {
+      "status": "passed-readback-matching-completed-no-repeat-insert",
+      "injection": {
+        "event": "afterInitialWrite",
+        "operationId": "6ae1955cc822bab721358f70",
+        "documentId": "6ae1955cbc2701ed9ddd5072",
+        "stage": "snapshotSending",
+        "status": null,
+        "run": "SNAPSHOT-WRITTEN-FIXED-20261028"
+      },
+      "counts": {
+        "checkpoint:intentSaved": 1,
+        "checkpoint:createSending": 1,
+        "beforeCreate": 1,
+        "afterCreate": 1,
+        "checkpoint:shellCreated": 1,
+        "checkpoint:bodyPrepared": 1,
+        "checkpoint:snapshotSending": 1,
+        "beforeInitialWrite": 1,
+        "afterInitialWrite": 1,
+        "loaded": 1,
+        "beforeReadInitial": 1,
+        "afterReadInitial": 1,
+        "checkpoint:awaitingFirstSync": 1,
+        "checkpoint:completed": 1
+      }
+    },
+    "first-sync-interrupted": {
+      "status": "passed-no-premature-completion-same-document-recovered",
+      "injection": {
+        "event": "checkpoint:awaitingFirstSync",
+        "operationId": "6ae1960bf33cc861dc3f7721",
+        "documentId": "6ae1960b5a7a6ece6e1cbb08",
+        "stage": "awaitingFirstSync",
+        "status": null,
+        "run": "FIRST-SYNC-INTERRUPTED-20261028"
+      },
+      "counts": {
+        "checkpoint:intentSaved": 1,
+        "checkpoint:createSending": 1,
+        "beforeCreate": 1,
+        "afterCreate": 1,
+        "checkpoint:shellCreated": 1,
+        "checkpoint:bodyPrepared": 1,
+        "checkpoint:snapshotSending": 1,
+        "beforeInitialWrite": 1,
+        "afterInitialWrite": 1,
+        "checkpoint:awaitingFirstSync": 1,
+        "loaded": 1,
+        "checkpoint:completed": 1
+      }
+    },
+    "normal-build-two-end": {
+      "status": "passed",
+      "documentId": "6ae1960b5a7a6ece6e1cbb08",
+      "title": "RECOVERY-DUAL-20261028",
+      "phone_to_desktop_live": "M2-LIVE-RECOVERY-20261028",
+      "desktop_to_phone_live": "D1-RECOVERY-20261028",
+      "offline_concurrent_edit": {
+        "phone_offline_status": "离线可编辑",
+        "phone_offline_marker": "M3-OFFLINE-RECOVERY-20261028",
+        "desktop_while_phone_offline_marker": "D2-WHILE-PHONE-OFFLINE-20261028",
+        "before_reconnect": "Each endpoint lacked the other endpoint offline-period marker",
+        "after_reconnect": "Both online; all five paragraphs present in same order"
+      },
+      "final_body_paragraphs": [
+        "M1-RECOVERY-20261028",
+        "D1-RECOVERY-20261028",
+        "M2-LIVE-RECOVERY-20261028",
+        "D2-WHILE-PHONE-OFFLINE-20261028",
+        "M3-OFFLINE-RECOVERY-20261028"
+      ],
+      "phone_force_stop_restart": "passed; same document, all five paragraphs in original WebView and native editor",
+      "desktop_close_refresh_reopen": "passed; same document ID and all five paragraphs",
+      "original_webview_entry": "retained and verified",
+      "log_summary": "normal-build-log-summary.json",
+      "checkpoint": "normal-build-final-checkpoint.json"
+    }
+  },
+  "limits": [
+    "No database commit ACK is inferred from online/ready.",
+    "Live initial-write-unknown validation exercised matching readback. Truly missing or concurrently modified server bodies were not fault-injected on-device; protocol comparison negative cases and service tests cover those branches.",
+    "The ownership conflict was reproduced in local server Awareness validation; the deployed server old-owner cleanup delay cause was not retrieved.",
+    "The normal phone build is Debug pre with the probe disabled; Release packaging was not run."
+  ],
+  "cleanup": {
+    "phone_network_changed_for_offline_test": true,
+    "original_network": {
+      "wifi_on": "1",
+      "mobile_data": "1"
+    },
+    "final_network": {
+      "wifi_on": "1",
+      "mobile_data": "1"
+    },
+    "network_restored": true,
+    "probe_control_and_event_files_removed": true,
+    "normal_probe_disabled_build_installed": true,
+    "test_documents_retained": true,
+    "raw_diagnosis_log_deleted": true,
+    "business_documents_modified_by_this_task": false,
+    "commit_or_stage_performed_by_this_task": false,
+    "preexisting_staged_and_unstaged_changes_preserved": true
+  },
+  "version_note": "Configured registry query ECONNRESET; desktop declared/locked 0.11.33 at final recheck, installed 0.11.17. Workspace declaration advanced concurrently; no desktop dependency files were modified by this task.",
+  "completed_at": "2026-10-28T15:17:30.159158+08:00",
+  "additional_failing_regressions": [
+    {
+      "case": "ready event without intermediate disconnect",
+      "evidence": "ready-without-disconnect-before.txt"
+    },
+    {
+      "case": "terminal rejection then physical ready and explicit retry",
+      "evidence": "terminal-retry-before.txt"
+    },
+    {
+      "case": "real legacy read projection differs from initial write shape",
+      "evidence": "read-projection-before.txt",
+      "negative_tamper_cases": 12
+    }
+  ],
+  "installed_build": {
+    "package": "app.wehanyu.hanyu_bct",
+    "version": "2.3.6+23006",
+    "device": "V2353A Android 34, USB ADB",
+    "mode": "debug pre, CSES_DOC_RECOVERY_PROBE=false",
+    "apk_sha256": "204db206eecfd632ab19c3349972afa7a11dea8ccdf7bca4deb6c3243f69bf06",
+    "probe_files_after_reopen": [],
+    "login_retained": true
+  }
+}

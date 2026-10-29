@@ -422,6 +422,7 @@ PNG宽256～2160像素，单边高度8192像素/总计1200万像素。超限提�
 
 | 日期 | 上游 `latest` | 桌面声明 / 锁定 / 安装 | 移动端核对与变化 | 验证及待同步项 |
 |---|---|---|---|---|
+| 2026-10-28（SaaS 在线身份与创建恢复） | 配置仓库实时查询 ECONNRESET，latest 待核对；不以缓存代替 | 声明/Yarn0.11.33；实际安装0.11.17；本任务未升级 | 沿用已核对版本的随包技能和协议；仅调整在线身份与正文 Doc 的生命周期隔离及宿主恢复边界，不改块 Schema/字段/转换。保持42种块原支持状态。 | [失败回归、原生历史与真机证据](verification/saas-presence-recovery-20261028/validation.json)；最新发布差异和未覆盖块能力仍待核对，不据此宣称全版本兼容。 |
 | 2026-10-27（根包/example迁移） | 配置仓库实时latest=0.11.31；发布归档SHA1匹配dist | 声明/Yarn0.11.30；本次实际安装0.11.17；未升级 | 读取安装版与latest随包技能/L0/MIGRATIONS，核对发布产物和移动端公开入口；仅调整工程及夹具路径，模型、Schema、属性和桥接生成代码字节不变 | [迁移记录](verification/package-example-layout-20261027/report.md)、[版本指纹](verification/package-example-layout-20261027/blockcraft-version.json)；各项实际验证见记录。既有42种块支持范围和版本差异待办保留，不声明新增块能力或桌面全版本兼容 |
 | 2026-10-27（旧列表heading导出） | 新缓存实时latest仍0.11.31；dist SHA1与本轮发布包一致 | 声明/Yarn0.11.30；安装0.11.21；历史pnpm0.2.78；未升级 | 复核技能/迁移及ordered属性契约，按用户规则仅调整JSON导出：1～6保留H1～H6，7～9普通正文，保留列表结构与编号；实时更新/清除优先，源树不变 | [修复验证](verification/block-adaptation-audit-20261027/ordered-heading-export.md)；包内76项关联回归通过，宿主和分析见记录；P2关闭，未扩大设备/真实在线或全版本验收，42及13/28/1/0保持 |
 | 2026-10-27（完整性核查） | 新临时缓存实时latest=0.11.31；发布产物SHA1匹配dist | 声明/Yarn0.11.30；安装0.11.21；历史pnpm0.2.78；未升级 | 核对注册42种、随包技能/迁移、关键Schema与正式/JSON双路径；正式路径缺8种，默认目录30项；修正旧历史总述及统计歧义 | [报告](verification/block-adaptation-audit-20261027/report.md)、[版本指纹/差异](verification/block-adaptation-audit-20261027/blockcraft-version.json)；120目标/11真实FRB通过，审计探针1通过/1失败，复现列表heading导出P2；.30→.31艺术字/拖动选区/高亮几何，以及.21→latest内容组合/动画/图片gap等差异未全量同步；无新增设备/真实在线验收 |
