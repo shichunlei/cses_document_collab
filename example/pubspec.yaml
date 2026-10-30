@@ -39,4 +39,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - .env.json
     - assets/images/daily_guidance_mountain.png

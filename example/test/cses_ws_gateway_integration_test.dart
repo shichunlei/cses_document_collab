@@ -99,7 +99,7 @@ void main() {
       );
       await const CsesAccountLogin().login('account', 'password');
       expect(ctx.websocketHost, 'ws://127.0.0.1:${server.port}/deployment/ws');
-      expect(Config().baseUrl, 'https://api-pre.jinqidongli.com');
+      expect(Config().baseUrl, 'https://api.example.test');
       expect(ctx.site, 'jqdl');
       expect(ctx.pictureDomain, 'https://picture.example.test/KEY');
       expect(ctx.videoDomain, 'https://video.example.test/KEY');

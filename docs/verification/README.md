@@ -155,6 +155,8 @@
 
 ### 上传与宿主集成
 
+- [demo-env-20261030](demo-env-20261030/)（[默认账号密码与宿主地址改用 env](demo-env-20261030/report.md)；[启动时直接读取 .env.json](demo-env-20261030/runtime-loading.md)；[首次验证结果](demo-env-20261030/validation.json)；[最终提交核对与44项回归](demo-env-20261030/commit-check.md)）
+
 - [native-doc-integration-20261027](native-doc-integration-20261027)（[Common前置能力验证](native-doc-integration-20261027/common.md)；[Demo Gateway切换与验证](native-doc-integration-20261027/example-gateway.md)）
 
 - [attachment-picker-upload-20261014](attachment-picker-upload-20261014)

@@ -6,6 +6,7 @@ import 'package:cses_common/runtime/context/context.dart';
 import 'package:cses_common/runtime/preferences/sp_util.dart';
 import 'package:cses_common/runtime/session/user.dart';
 import 'package:cses_mobile_collab_demo/src/demo/cses_account_login.dart';
+import 'package:cses_mobile_collab_demo/src/demo/demo_environment.dart';
 import 'package:cses_mobile_collab_demo/src/demo/cses_demo_host.dart';
 import 'package:cses_mobile_collab_demo/src/demo/document_host.dart';
 import 'package:dio/dio.dart';
@@ -30,10 +31,7 @@ void main() {
       Config().baseUrl = 'https://stale.test';
       await const CsesAccountLogin().login(' account ', ' password ');
       final request = harness.requests.single;
-      expect(
-        request.uri.toString(),
-        'https://api-pre.jinqidongli.com/User/login',
-      );
+      expect(request.uri.toString(), 'https://api.example.test/User/login');
       expect(request.method, 'POST');
       expect(request.data, {'userName': 'account', 'password': ' password '});
       expect(request.headers, containsPair('deviceId', 'native-device'));
@@ -169,7 +167,7 @@ void main() {
       expect(User().companyId, 'remembered');
       expect(User().currentCompany?.companyId, 'remembered');
       expect(ctx.websocketHost, Config().webSocket);
-      expect(ctx.websocketHost, 'ws://ws-pre.jinqidongli.com/ws');
+      expect(DemoEnvironment.websocketUrl, ctx.websocketHost);
     },
   );
 

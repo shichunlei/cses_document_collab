@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-30",
+  "scope": "启动时从 .env.json asset 直接读取，移除构建参数依赖",
+  "analyze": [
+    "12 个源码与测试目标静态分析无问题",
+    "单独补查 cses_person_card_creator_test.dart 无问题"
+  ],
+  "command": "cd example && flutter test --no-pub test/demo_environment_test.dart test/cses_account_login_test.dart test/cses_login_page_test.dart test/cses_ws_gateway_integration_test.dart test/cses_meeting_card_service_test.dart test/cses_document_metadata_service_test.dart test/mention_avatar_test.dart test/cses_person_card_creator_test.dart",
+  "result": "00:14 +41: All tests passed!",
+  "bundle": {
+    "command": "cd example && flutter build bundle --debug --no-pub",
+    "exit_code": 0,
+    "asset_exists": true,
+    "asset_matches_local_config": true
+  },
+  "checks": [
+    "手写目标文件 dart format 完成",
+    "git check-ignore example/.env.json 确认忽略",
+    "当前源码、测试及运行文档中无 String.fromEnvironment / dart-define-from-file 残留",
+    "git diff --check 通过"
+  ],
+  "initial_failures": [
+    "静态分析报告测试辅助文件重复 dart:typed_data import，移除后通过",
+    "首次回归 40 项通过、人员卡片创建者测试因未加载配置失败；为独立测试补齐合成资源加载，重跑 41 项全部通过"
+  ],
+  "limits": [
+    "未执行真实服务登录或 OSS 上传",
+    "未执行真机或平台原生构建；build bundle 仅验证 Dart 编译与资源打包"
+  ]
+}

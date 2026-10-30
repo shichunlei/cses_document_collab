@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-30",
+  "scope": "Demo 默认凭证与宿主地址改为构建 env",
+  "format": "已对全部修改的手写 Dart 文件运行 dart format；源码沿用 120 行宽，保留无关布局",
+  "analyze": {
+    "command": "cd example && flutter analyze --no-pub <6 个源码文件与 8 个测试文件>",
+    "result": "No issues found! (14 items)"
+  },
+  "configured_tests": {
+    "command": "cd example && flutter test --no-pub --dart-define-from-file=config/test.env.json --dart-define=CSES_DEFAULT_USERNAME=fixture-account --dart-define=CSES_DEFAULT_PASSWORD=fixture-password test/demo_environment_test.dart test/cses_account_login_test.dart test/cses_login_page_test.dart test/cses_ws_gateway_integration_test.dart test/cses_meeting_card_service_test.dart test/cses_document_metadata_service_test.dart test/mention_avatar_test.dart test/cses_person_card_creator_test.dart",
+    "result": "00:27 +39: All tests passed!"
+  },
+  "missing_env_tests": {
+    "command": "cd example && flutter test --no-pub test/demo_environment_test.dart",
+    "result": "00:00 +2: All tests passed!"
+  },
+  "git_ignore": "git check-ignore example/.env.json 确认本地配置被忽略",
+  "limitations": [
+    "未执行真实服务登录、真机 UI 或平台构建",
+    "未验证真实 OSS 上传；本次上传变化仅为上传前校验 CDN 后缀及稳定 URL 拼接"
+  ],
+  "initial_attempt": "首次定向命令误包含不存在的 cses_editor_media_upload_service_test.dart，37 项通过但整体失败；删除错误目标并加入环境边界测试后重新执行，39 项通过。"
+}

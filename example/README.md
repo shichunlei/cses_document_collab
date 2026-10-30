@@ -9,11 +9,34 @@
 ```sh
 cd example                 # 从仓库根目录进入
 flutter pub get
+cp .env.example.json .env.json # 首次配置后填写本机环境值
 flutter run
 # Android 构建
 flutter build apk --debug
 # iOS 构建：先准备 Rust XCFramework，再构建应用
 scripts/ios.sh build ios --debug --no-codesign
+```
+
+### 环境配置
+
+账号、密码和宿主服务地址在应用启动时从 `.env.json` 读取，无需额外启动参数。该文件通过 Flutter assets 随应用打包，已被 Git 忽略；仓库仅提供空值模板 `.env.example.json`。首次运行、CI 构建前都需创建并填写此文件。修改配置后重新执行 `flutter run` 或构建以更新资源；hot reload 不重新加载配置。JSON 必须是字符串值的对象，损坏时显示配置错误并停止进入登录页。
+
+| 变量 | 用途 |
+| --- | --- |
+| `CSES_ENV` | Common header、账号缓存及内置主连接回退的环境标识，默认 `pre`；可选 prod/qa3/qa/pre/dev/debug |
+| `CSES_DEFAULT_USERNAME` / `CSES_DEFAULT_PASSWORD` | 可选登录预填值；未配置时留空，可手动输入 |
+| `CSES_API_URL` | 必填 HTTP(S) origin，支持端口，不含路径、查询或凭证 |
+| `CSES_DOCUMENT_URL` | 必填文档站点 HTTP(S) origin，用于生成段落链接 |
+| `CSES_MEDIA_DOMAIN` | 上传 CDN 后缀，生成 `https://<bucket>.<domain>/<key>`；缺少时上传前报错 |
+
+头像地址由 Common 的 `ctx.faceUri` 解析。WebSocket 地址直接读取 Common 的 `ctx.websocketHost`，在登录上下文解析后可用；服务端未提供 `webConfig` 时沿用 Common 的环境回退配置。登录完成后仍校验地址协议和凭证/查询边界。
+
+缺少必填项时登录页显示对应变量名，API 不回退到 Common 内置地址，账号密码缺省留空。配置不会写入偏好存储，但 `.env.json` 会作为明文资源进入应用产物，发布构建应将默认账号和密码留空。第三方天气服务和公共封面素材 URL 沿用各自固定资源协议，不作为登录服务环境配置。
+
+宿主测试自动从 `config/test.env.json` 加载合成配置，不读取本机 `.env.json` 内容：
+
+```bash
+flutter test
 ```
 
 核心包通过 `path: ..` 引入，AppFlowy fork 通过 `https://github.com/shichunlei/appflowy-editor.git` 引入，URL 与固定提交和核心包保持一致，无需本地编辑器子目录。Common 继续由宿主引用，当前路径为 `../../cses/cses.common`；其他目录布局需相应调整该 path。应用包名、Android applicationId、iOS bundle identifier 和缓存命名保持既有值。
@@ -131,7 +154,7 @@ Demo 登录（Common HTTP → User/ctx）→ DemoDocumentHost → cses_document_
 完整接入契约、资源释放顺序和迁入 SaaS 的步骤见 [协同包接入文档](../docs/collab-package-integration.md)；独立包的公共 API 与构建说明见 [包 README](../README.md)。包不引用 demo、SaaS、Common 或全局登录上下文。
 
 - Android 宿主通过 `com.yundiz/common` 提供设备 ID、CPU 型号及 CPU 信息，复用 CSES Android 的设备处理器契约，使 Common 的 `ctx.updateDeviceInfo()` 可完整初始化；CPU 信息读取失败时使用系统兜底。
-- Demo 按 SaaS 账号密码流程先初始化 Common 的 PRE 配置、偏好和设备信息，再通过 `HttpManager` 的共享 Dio 请求 `/User/login`；公共 header 和异常映射均由 Common 提供。首页仅启动主 WebSocket 连接，不自动选择文档，不保存密码或登录账户快照。
+- Demo 按 SaaS 账号密码流程先初始化 Common 的 env 配置、偏好和设备信息，再通过 `HttpManager` 的共享 Dio 请求 `/User/login`；公共 header 和异常映射均由 Common 提供。首页仅启动主 WebSocket 连接，不自动选择文档，不保存密码或登录账户快照。
 - 登录成功后由 `CsesAccountLogin` 将完整响应交给 `User().resolveContext(value)`，统一解析身份、企业、权限、媒体站点、域名和 WebSocket 地址，校验通过后才进入首页。企业选择复用 Common 的组织排序和上次企业偏好；Demo 不再保留响应副本、手动推导企业或覆盖连接地址。页面已销毁的迟到响应不注入上下文；解析/校验失败清理本次用户态，留在登录页重试。
 - 登录成功直接通知页面切换，账号与展示名读取 Common 的 `User`，不传递独立会话对象。`DemoDocumentHost` 选择旧 SQLite 路径，在创建控制器时直接使用 `ctx.websocketHost`、`User().companyId`、`User().userId` 和展示名构造 `CollabDocumentConfig`，再注入 Gateway、ID、日志和媒体上传；不再次解析登录或请求 `/User/auth`。包直接打开正式模型，不先打开草稿；离线预览和测试显式设置 `localDraft: true`。
 - `CommonCsesCollabGateway` 使用 Common 的 `registerListenersAsync`/`unregisterListenersAsync`，登记选择 `immediateOnly: true`；平台订阅与恢复统一由 Common 持有，状态流仅转发连接事件。发送使用 `trySendWithPage`，离线或同步失败不入队；退出命令不补订阅，会话负责发送 leave/unsubscribe，Gateway 只等待本地注销，不关闭主连接。适配器不读取 Common 的公开锁。
@@ -168,7 +191,7 @@ flutter run -d <android-device-id>
 scripts/ios.sh run -d <ios-device-id>
 ```
 
-启动后进入用户名、密码登录页，使用 PRE 环境的真实账号登录；不预填账号密码，
+启动后进入用户名、密码登录页，使用配置环境的账号登录；账号密码可从 env 预填，缺省留空，
 不再手动填写 userId、cookieId、companyId 或 WS 地址。登录成功后首页只启动主连接；
 通过“文档列表”选择文档，或在列表右上角新建后进入编辑页，返回时回到原列表。
 首页可重新连接或退出登录，选定文档后可清理其本机缓存。
@@ -543,7 +566,7 @@ bridge 的 text 字段传递；正式图片写入 props.src、视频写入 props
 
 - 段落/标题、列表、引用和高亮正文支持真实 `Y.Text` 用户对象 `{mention: name}`，身份保存为 `mentionId` 与 `mentionType: user`，兼容历史 `d:` 前缀。一个对象占一个UTF-16位置，普通U+FFFC、emoji、重名/连续相同用户和行内公式分别保留；未知原生格式不回写为移动端私有属性。
 - 输入 `@`、键盘工具栏及更多面板均可搜索并选择当前企业人员。插入替换原同块选区并追加空格；输入触发后取消保留普通@，取消面板恢复原选区。弹窗隔离正文输入，按稳定块身份跟随重排，正文/选中内容变化或权限撤销时拒绝提交。
-- 头像及人员选择器均由宿主通过`CollabHostServices.mentionAvatarBuilder/pickMentionUser`注入，协同包不创建头像或搜索选择界面；未注入头像时只显示姓名，未注入选人时不打开选择界面。Demo宿主为正文提及及人员选择列表按 `https://face.jinqidongli.com/{userid}/{userid}.jpg` 加载圆形头像。路径段按ID编码，不附加认证信息；加载中/失败显示姓名首字，保持布局。头像URL仅用于本地展示，不进入Y.Text。
+- 头像及人员选择器均由宿主通过`CollabHostServices.mentionAvatarBuilder/pickMentionUser`注入，协同包不创建头像或搜索选择界面；未注入头像时只显示姓名，未注入选人时不打开选择界面。Demo宿主为正文提及及人员选择列表通过 Common 的 `ctx.faceUri` 解析圆形头像地址，沿用其默认头像、直接 URL 与时间戳规则；加载中/失败显示姓名首字，保持布局。头像URL仅用于本地展示，不进入Y.Text。
 - 用户卡片点击仅通知宿主`onMentionTap`，由宿主处理人员详情；无回调不响应。协同包不再提供用户资料/复制/删除面板。正文选区删除和独立撤销/重做保留，预览禁止修改正文。
 - 人员目录由宿主的选择器/详情页持有，不再注入协同包；可复用公开`CollabMentionDirectory`契约。Demo使用Common同源 `/Company/readAllChildren`，账号/企业/cookie在请求前后核对。组织解析和搜索在后台执行，成功缓存仅属于当前宿主实例，失败可重试，面板忽略过期/关闭请求。
 - 行内适配按“部分支持”记录，正文块仍为10/8/1/22（41）。未接入拼音/首字母搜索及对象剪贴板；普通待办可保存提及，但同步任务待办的“添加参与人”业务副作用尚未接入。代码块、图片题注、未知实体提及、旧localDraft继续保护；会议/任务/文档普通正文提及见下文。显示名最多20000 UTF-16单元，用户ID最多512 UTF-8字节；Android16/HONOR X70真实搜索、插入、删除/撤销/重做及头像版复验通过；手机收到桌面新增声波/测试员1及普通文字，用户确认桌面收到手机新增和最终删除测试员。测试数据已清理；桌面操作/观察由用户完成。iOS真机、断线恢复和服务器持久化ACK尚未验证，见[验收记录](../docs/verification/user-mention-20261014/user-mention-20261014.json)。

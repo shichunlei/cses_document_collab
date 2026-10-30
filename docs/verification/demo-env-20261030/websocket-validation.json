@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-30",
+  "scope": "websocketUrl 代理 ctx.websocketHost，并校正登录前后的配置与校验时序",
+  "format": "dart format 已运行于目标源码与两个修改测试文件",
+  "analyze": {
+    "command": "cd example && flutter analyze --no-pub lib/src/demo/demo_environment.dart lib/src/demo/cses_account_login.dart lib/src/demo/cses_demo_host.dart test/demo_environment_test.dart test/cses_account_login_test.dart test/cses_ws_gateway_integration_test.dart test/cses_login_page_test.dart",
+    "result": "No issues found! (7 items)"
+  },
+  "tests": {
+    "command": "cd example && flutter test --no-pub test/demo_environment_test.dart test/cses_account_login_test.dart test/cses_ws_gateway_integration_test.dart test/cses_login_page_test.dart",
+    "result": "00:07 +17: All tests passed!"
+  },
+  "checks": [
+    "当前 example 源码、测试、配置模板、测试配置与 README 不再包含 CSES_WEBSOCKET_URL 或 websocketUrl!",
+    "git diff --check 通过"
+  ],
+  "limits": [
+    "未执行真实服务登录、真机协同或平台构建",
+    "旧头像实现相关测试未在本轮运行，历史 41 项结论不代表当前 Common 头像实现"
+  ]
+}

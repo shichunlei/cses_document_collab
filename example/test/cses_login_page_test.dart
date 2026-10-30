@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'support/common_login_harness.dart';
 
-/// 验证预填测试账号后的表单校验、单次提交和登录请求生命周期。
+/// 验证 env 预填账号后的表单校验、单次提交和登录请求生命周期。
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late CommonLoginHarness harness;
@@ -29,7 +29,10 @@ void main() {
       expect(find.text('userId'), findsNothing);
       for (final field in ['login-username', 'login-password']) {
         final input = find.byKey(ValueKey(field));
-        expect(tester.widget<TextFormField>(input).controller!.text, '111');
+        expect(
+          tester.widget<TextFormField>(input).controller!.text,
+          field == 'login-username' ? 'fixture-account' : 'fixture-password',
+        );
         await tester.enterText(input, '');
       }
       await tester.tap(find.byKey(const ValueKey('login-submit')));

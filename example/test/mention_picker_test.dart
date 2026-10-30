@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cses_common/runtime/context/context.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';
 import 'package:cses_mobile_collab_demo/src/demo/mention_avatar.dart';
 import 'package:cses_mobile_collab_demo/src/demo/mention_picker.dart';
@@ -8,6 +9,10 @@ import 'package:flutter_test/flutter_test.dart';
 
 /// 宿主人员选择器的搜索、头像、异步竞态、权限及路由资源释放。
 void main() {
+  setUp(() {
+    ctx.faceDomain = 'https://face.example.test';
+    ctx.timestamp = DateTime.fromMillisecondsSinceEpoch(1234);
+  });
   testWidgets(
     'host picker searches initial keyword and returns selected user after transition',
     (tester) async {
