@@ -1,17 +1,15 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:cses_mobile_collab_demo/src/service/cses_person_card_creator.dart';
-import 'package:cses_mobile_collab_demo/src/service/cses_weather_service.dart';
 import 'package:cses_common/core/collections/objectid.dart';
 import 'package:cses_common/flutter/feedback/toast_util.dart';
 import 'package:cses_common/observability/api/log.dart';
-import 'package:cses_common/runtime/config/config.dart';
 import 'package:cses_common/runtime/context/context.dart';
 import 'package:cses_common/runtime/session/user.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';
 import 'package:cses_mobile_collab_demo/src/demo/common_cses_collab_gateway.dart';
 import 'package:cses_mobile_collab_demo/src/demo/cses_demo_host.dart';
+import 'package:cses_mobile_collab_demo/src/demo/demo_environment.dart';
 import 'package:cses_mobile_collab_demo/src/demo/document_creation/document_creation_coordinator.dart';
 import 'package:cses_mobile_collab_demo/src/demo/document_creation/document_creation_operation.dart';
 import 'package:cses_mobile_collab_demo/src/demo/document_creation/document_creation_store.dart';
@@ -21,7 +19,9 @@ import 'package:cses_mobile_collab_demo/src/service/cses_document_metadata_servi
 import 'package:cses_mobile_collab_demo/src/service/cses_editor_media_upload_service.dart';
 import 'package:cses_mobile_collab_demo/src/service/cses_kr_service.dart';
 import 'package:cses_mobile_collab_demo/src/service/cses_meeting_card_service.dart';
+import 'package:cses_mobile_collab_demo/src/service/cses_person_card_creator.dart';
 import 'package:cses_mobile_collab_demo/src/service/cses_task_card_service.dart';
+import 'package:cses_mobile_collab_demo/src/service/cses_weather_service.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -106,8 +106,7 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
     final controller = _controller;
     return coordinator.openExistingDocument(
       documentId,
-      reuseCurrentDocument:
-          controller != null && controller.documentId == documentId && controller.initialized,
+      reuseCurrentDocument: controller != null && controller.documentId == documentId && controller.initialized,
     );
   }
 
@@ -145,12 +144,10 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
         canUnlockBlock: metadata?.canUnlockBlock,
         buildParagraphLink: localDraft
             ? null
-            : (documentId, blockId) => Uri(
-                scheme: 'http',
-                host: Config().envType.docHost ?? (throw StateError('当前环境未配置文档域名')),
-                pathSegments: ['doc', documentId],
-                queryParameters: {'blockId': blockId},
-              ).toString(),
+            : (documentId, blockId) => DemoEnvironment.origin(
+                DemoEnvironment.documentUrl,
+                'CSES_DOCUMENT_URL',
+              ).replace(pathSegments: ['doc', documentId], queryParameters: {'blockId': blockId}).toString(),
         showDocumentFeedback: true,
         onDocumentLike: (documentId, likes) {
           final user = User();
@@ -176,12 +173,8 @@ class DemoDocumentHost extends ChangeNotifier with WidgetsBindingObserver {
         mentionAvatarBuilder: buildDemoMentionAvatar,
         pickMentionUser: mentionDirectory == null
             ? null
-            : (context, {required keyword, required canEdit}) => showDemoMentionPicker(
-                context,
-                directory: mentionDirectory,
-                keyword: keyword,
-                canEdit: canEdit,
-              ),
+            : (context, {required keyword, required canEdit}) =>
+                  showDemoMentionPicker(context, directory: mentionDirectory, keyword: keyword, canEdit: canEdit),
         pickMeetingReference: showDemoMeetingReferencePicker,
         loadMeetingCard: localDraft ? null : CsesMeetingCardService().load,
         loadTaskCard: localDraft ? null : CsesTaskCardService().load,

@@ -8,6 +8,7 @@ import 'package:cses_common/storage/oss/factory/oss_client_factory.dart';
 import 'package:cses_common/storage/oss/models/request_option.dart';
 import 'package:cses_document_collab/cses_document_collab.dart'
     show EditorLocalFile, EditorMediaSource, EditorMediaUploadService, validateEditorMediaFile;
+import 'package:cses_mobile_collab_demo/src/demo/demo_environment.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:mime/mime.dart';
@@ -64,7 +65,8 @@ class CsesEditorMediaUploadService implements EditorMediaUploadService {
 
   /// 上传借用的 [file] 至资源 [kind] 对应OSS桶并登记；[cancelToken] 由调用方创建和取消。
   /// [onProgress] 报告0～1进度；Future仅在会话未变化且文件登记完成后返回稳定URL。
-  /// 文件变化、账号变化、取消或网络失败向调用方抛出；服务不关闭Common客户端。
+  /// CDN 后缀必须由 env 配置；文件变化、账号变化、配置无效、取消或网络失败向调用方抛出。
+  /// 服务不关闭 Common 客户端。
   @override
   Future<EditorMediaSource> upload(
     EditorLocalFile file,
@@ -74,6 +76,7 @@ class CsesEditorMediaUploadService implements EditorMediaUploadService {
   }) async {
     final error = validateEditorMediaFile(kind, file);
     if (error != null) throw FormatException(error);
+    final mediaDomain = DemoEnvironment.requireMediaDomain();
     final userId = User().userId;
     final cookie = ctx.cookieId;
     final company = User().companyId;
@@ -133,6 +136,6 @@ class CsesEditorMediaUploadService implements EditorMediaUploadService {
     if (!registered.isSuccess) throw const FormatException('文件保存失败，请重试');
     checkSession();
     // Match Common's bucket CDN contract; never persist a short-lived signed URL.
-    return EditorMediaSource(Uri.https('$bucket.jinqidongli.com', '/$key').toString(), file: file);
+    return EditorMediaSource(Uri.https('$bucket.$mediaDomain', '/$key').toString(), file: file);
   }
 }

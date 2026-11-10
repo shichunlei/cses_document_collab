@@ -55,7 +55,7 @@ void main() {
         expect(request.data, {'meetingId': 'meeting-fixture'});
         expect(request.headers['cookieId'], 'server-cookie');
         expect(request.headers['companyId'], 'server-company');
-        expect(request.uri.host, 'api-pre.jinqidongli.com');
+        expect(request.uri.host, 'api.example.test');
       },
     );
   }

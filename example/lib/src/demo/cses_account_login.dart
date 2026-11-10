@@ -1,8 +1,7 @@
 import 'package:cses_common/network/http/client/http_manager.dart';
-import 'package:cses_common/runtime/config/config.dart';
-import 'package:cses_common/runtime/config/env_type.dart';
 import 'package:cses_common/runtime/context/context.dart';
 import 'package:cses_common/runtime/session/user.dart';
+import 'package:cses_mobile_collab_demo/src/demo/demo_environment.dart';
 
 /// 可向用户显示的登录失败；不包含请求体或原始凭证。
 final class CsesLoginFailure implements Exception {
@@ -33,7 +32,8 @@ class CsesAccountLogin {
   /// 使用 [userName]、[password] 登录，用户名去空白，密码保持原样。
   ///
   /// [isActive] 在异步边界判断发起页面是否仍有效，省略时始终有效；取消或业务失败
-  /// 抛出 [CsesLoginFailure]。配置和设备信息必须先于 HttpManager 首次访问初始化。
+  /// 或 env 服务配置无效时抛出 [CsesLoginFailure]。配置和设备信息必须先于
+  /// HttpManager 首次访问初始化。
   /// 应用启动时须先初始化 Common 偏好存储，再开放登录入口。
   /// Future 成功返回时 User/ctx 已完整解析并通过文档连接校验；解析或校验失败会
   /// 清理本次注入的身份，防止页面重试沿用半完成的会话。
@@ -41,7 +41,11 @@ class CsesAccountLogin {
     if (userName.trim().isEmpty || password.isEmpty) {
       throw const CsesLoginFailure('请输入用户名和密码');
     }
-    await Config().loadFromAsset(EnvType.pre, 'bct');
+    try {
+      await DemoEnvironment.configureCommon();
+    } on FormatException catch (error) {
+      throw CsesLoginFailure(error.message);
+    }
     await ctx.updateDeviceInfo();
     _checkActive(isActive);
     if (ctx.deviceId == null || ctx.deviceId!.trim().isEmpty) {

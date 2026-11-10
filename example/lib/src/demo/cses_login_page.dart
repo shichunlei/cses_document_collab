@@ -1,7 +1,8 @@
+import 'package:cses_mobile_collab_demo/src/demo/demo_environment.dart';
 import 'package:cses_mobile_collab_demo/src/demo/cses_account_login.dart';
 import 'package:flutter/material.dart';
 
-/// PRE 测试环境登录入口，用户名和密码初始预填为 `111`，可在提交前修改。
+/// 环境配置登录入口；用户名和密码从 env 预填，未配置时留空，可在提交前修改。
 /// Common 上下文就绪后通知页面切换，不持久化输入，登录成功时清空密码。
 ///
 /// ```dart
@@ -31,11 +32,11 @@ class CsesLoginPage extends StatefulWidget {
 class _CsesLoginPageState extends State<CsesLoginPage> {
   final _form = GlobalKey<FormState>();
 
-  /// 页面持有的用户名输入，初始为测试值，销毁页面时释放。
-  final _userName = TextEditingController()..text = "111";
+  /// 页面持有的用户名输入，初始来自 env，销毁页面时释放。
+  final _userName = TextEditingController(text: DemoEnvironment.username);
 
-  /// 页面持有的密码输入，初始为测试值，登录成功时清空、销毁时释放。
-  final _password = TextEditingController()..text = "111";
+  /// 页面持有的密码输入，初始来自 env，登录成功时清空、销毁时释放。
+  final _password = TextEditingController(text: DemoEnvironment.password);
   bool _busy = false;
   bool _obscure = true;
   String? _error;
@@ -72,6 +73,7 @@ class _CsesLoginPageState extends State<CsesLoginPage> {
     super.dispose();
   }
 
+  /// 在 [context] 中构建登录表单，显示当前配置的环境标识。
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -148,7 +150,11 @@ class _CsesLoginPageState extends State<CsesLoginPage> {
                         ),
                       ),
                       const SizedBox(height: 24),
-                      Text('PRE 测试环境', textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall),
+                      Text(
+                        DemoEnvironment.environment,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
                     ],
                   ),
                 ),

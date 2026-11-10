@@ -64,3 +64,9 @@ app.*.map.json
 /docs/verification/offline-journal-20261022/device-host-preview.png
 /docs/verification/offline-journal-20261022/device-host-preview.xml
 /docs/verification/offline-journal-20261022/android-final-screen.png
+
+# Local environment values (only blank templates and synthetic test config are tracked).
+.env
+.env.*
+!.env.example
+!.env.example.json

@@ -14,6 +14,7 @@ FRB_DART_LOAD_EXTERNAL_LIBRARY_NATIVE_LIB_DIR="$PWD/rust/target/debug" flutter t
 
 cd example
 flutter pub get
+cp .env.example.json .env.json # 首次填写本机配置，详见 example/README.md
 flutter run
 # iOS 首次构建需先准备本地 XCFramework：
 scripts/ios.sh build ios --debug --no-codesign

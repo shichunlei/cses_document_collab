@@ -12,6 +12,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'test_environment_bundle.dart';
+
 /// 仅替换 Common Dio 的传输和原生通道，保留真实配置、header、错误映射与上下文解析。
 class CommonLoginHarness implements HttpClientAdapter {
   /// 创建无网络传输的测试边界，默认返回 [success]。
@@ -32,6 +34,7 @@ class CommonLoginHarness implements HttpClientAdapter {
 
   /// 初始化偏好与原生通道，然后安装测试传输；由每项测试的 setUp 等待。
   Future<void> install() async {
+    await loadTestEnvironment();
     final messenger =
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
     messenger.setMockMethodCallHandler(

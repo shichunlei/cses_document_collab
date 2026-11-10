@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-30",
+  "analyze": {
+    "command": "cd example && flutter analyze --no-pub lib/main.dart lib/src/demo/demo_environment.dart lib/src/demo/cses_account_login.dart lib/src/demo/cses_login_page.dart lib/src/demo/document_host.dart lib/src/demo/mention_avatar.dart lib/src/service/cses_editor_media_upload_service.dart test/demo_environment_test.dart test/cses_account_login_test.dart test/cses_document_metadata_service_test.dart test/cses_login_page_test.dart test/cses_meeting_card_service_test.dart test/cses_person_card_creator_test.dart test/cses_ws_gateway_integration_test.dart test/mention_avatar_test.dart test/mention_picker_test.dart test/support/common_login_harness.dart test/support/test_environment_bundle.dart",
+    "result": "No issues found! (18 items)"
+  },
+  "tests": {
+    "command": "cd example && flutter test --no-pub test/demo_environment_test.dart test/cses_account_login_test.dart test/cses_login_page_test.dart test/cses_ws_gateway_integration_test.dart test/cses_meeting_card_service_test.dart test/cses_document_metadata_service_test.dart test/mention_avatar_test.dart test/cses_person_card_creator_test.dart test/mention_picker_test.dart",
+    "result": "00:16 +44: All tests passed!"
+  },
+  "checks": [
+    "目标手写文件 dart format 已完成",
+    "git diff --check 通过",
+    "git check-ignore example/.env.json 确认本机配置被忽略",
+    "当前源码、测试、配置和运行文档中旧 env 头像与 WebSocket 变量及 dart-define 读取方式无残留"
+  ],
+  "limits": [
+    "未执行真实服务登录或 OSS 上传",
+    "未执行平台原生构建或真机协同验收"
+  ]
+}
