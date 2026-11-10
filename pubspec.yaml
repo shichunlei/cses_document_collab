@@ -26,7 +26,7 @@ dependencies:
   val_highlight: ^0.1.1
   cached_network_image: ^3.4.1
   flutter_cache_manager: ^3.4.5
-  lucide_icons_flutter: ^4.0.1
+  lucide_icons_flutter: ^4.0.3
 
 dev_dependencies:
   path: ^1.9.1
