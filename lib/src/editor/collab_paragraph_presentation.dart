@@ -1,4 +1,4 @@
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/editor/collab_paragraph_indent.dart';
 import 'package:cses_document_collab/src/editor/collab_paragraph_text_style.dart';
 import 'package:cses_document_collab/src/model/collab_paragraph_style.dart';

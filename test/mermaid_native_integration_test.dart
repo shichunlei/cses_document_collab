@@ -8,7 +8,7 @@ import 'package:cses_document_collab/src/native/api/collab.dart' as native;
 import 'package:cses_document_collab/src/native/frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'dart:convert';
 
 /// 真实桥接和SQLite验证；缺少原生库直接失败，不将跳过计为通过。

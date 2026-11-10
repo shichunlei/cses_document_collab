@@ -1,4 +1,4 @@
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';
 import 'package:flutter/foundation.dart';
 
@@ -12,7 +12,7 @@ import 'guidance_entries.dart';
 /// 会同步替换借用事务的增量和逆增量，不修改正文、选区或历史；重复调用无额外效果。
 ///
 /// ```dart
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_mobile_collab_demo/src/daily_guidance/journal_input.dart';
 /// final state = EditorState.blank(withInitialText: true);
 /// state.transactionGuard = (transaction) {

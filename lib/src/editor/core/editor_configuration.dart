@@ -1,4 +1,4 @@
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 
 /// 包内已注册的可编辑块目录；结构子块由所属容器隐式启用，场景可选择子集。
 enum EditorBlock {

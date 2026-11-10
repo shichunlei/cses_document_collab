@@ -1,4 +1,4 @@
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'package:cses_document_collab/src/editor/collab_date_card_settings.dart';
@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 /// 为正式 date-card 注册可选中的无正文组件；点击整卡打开设置、锁定与整块删除操作。
 /// ```dart
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/src/editor/collab_date_card_block.dart';
 /// final state = EditorState.blank(); // 页面关闭时由创建方 dispose。
 /// final editor = AppFlowyEditor(editorState: state, blockComponentBuilders: {

@@ -1,4 +1,4 @@
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 
 /// 将 [attributes] 注册为IME可延续/切分的字符格式；重复注册幂等。
 /// 仅扩充AppFlowy的格式目录，不创建编辑器或原生资源。

@@ -1,4 +1,4 @@
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:cses_document_collab/src/model/collab_ordered.dart';
@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 /// 有序编号仍由 Rust 按 depth 计算，不复制前项的协同身份、起点或派生编号；新待办项未勾选。
 ///
 /// ```dart
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/src/editor/collab_list_editing.dart';
 /// final state = EditorState.blank(); // 宿主负责 state.dispose()。
 /// final editor = AppFlowyEditor(editorState: state, characterShortcutEvents: [

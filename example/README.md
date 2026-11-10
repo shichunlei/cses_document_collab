@@ -16,7 +16,7 @@ flutter build apk --debug
 scripts/ios.sh build ios --debug --no-codesign
 ```
 
-核心包通过 `path: ..` 引入，AppFlowy fork 通过 `https://github.com/shichunlei/appflowy-editor.git` 引入，URL 与固定提交和核心包保持一致，无需本地编辑器子目录。Common 继续由宿主引用，当前路径为 `../../cses/cses.common`；其他目录布局需相应调整该 path。应用包名、Android applicationId、iOS bundle identifier 和缓存命名保持既有值。
+核心包通过 `path: ..` 引入，AppFlowy fork 与核心包一样使用 pub.dev 上的 `applowy_editor_fork: ^6.2.1`。Common 继续由宿主引用，当前路径为 `../../cses/cses.common`；其他目录布局需相应调整该 path。应用包名、Android applicationId、iOS bundle identifier 和缓存命名保持既有值。
 
 本地编辑与模板预览由宿主 `example/lib/src/image_composer/` 装配，入口为 `showImageComposer`，模板为 `ImageComposerTemplate` / `imageComposerTemplates`。页面仅提供内存编辑与预览，不保存正文或导出图片。共享包提供核心编辑器与协同同步能力，文档头尾、会议、KR、任务等按编辑器类型块或扩展保留包内；制图等应用功能的页面、产品模板和业务流程留在宿主。
 

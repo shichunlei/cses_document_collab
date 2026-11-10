@@ -1,4 +1,4 @@
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/editor/collab_formula_sheet.dart';
 import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 /// 借用编辑器和节点，不创建连接、控制器或持续监听；预览模式只展示。
 /// ```dart
 /// import 'package:flutter/material.dart';
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/src/editor/collab_inline_formula.dart';
 /// final node = paragraphNode();
 /// final formula = CollabInlineFormula(node: node, offset: 0,

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_list_editing.dart';
 import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
@@ -25,7 +25,7 @@ import 'package:flutter/services.dart';
 /// 借用 EditorState，无额外监听或资源；软键盘通过同规则的拦截器处理。
 ///
 /// ```dart
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/src/editor/collab_block_delete.dart';
 /// final state = EditorState.blank(); // 宿主负责 dispose。
 /// final editor = AppFlowyEditor(editorState: state, commandShortcutEvents: [
@@ -62,7 +62,7 @@ final collabBlockBackspaceCommand = CommandShortcutEvent(
 /// 不拥有编辑器或键盘服务；创建方在服务挂载后注册，换 EditorState/退出时注销。
 ///
 /// ```dart
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/src/editor/collab_block_delete.dart';
 /// final state = EditorState.blank();
 /// // 将 state 交给 AppFlowyEditor；在首帧服务挂载后注册。

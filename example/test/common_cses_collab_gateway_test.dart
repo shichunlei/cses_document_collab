@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_common/cses_common_network.dart';
 import 'package:cses_common/cses_common_runtime.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';

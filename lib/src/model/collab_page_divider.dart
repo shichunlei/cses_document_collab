@@ -1,4 +1,4 @@
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 
 /// 桌面无正文、无子块且仅限 root 直属子级的手动分页符 flavour。
 const collabPageDividerType = 'page-divider';

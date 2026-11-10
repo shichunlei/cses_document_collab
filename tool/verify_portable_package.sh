@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copy this package into an unrelated directory, build its native library and
-# exercise the public API from a separate Flutter host using its Git dependencies.
+# exercise the public API from a separate Flutter host using its published dependencies.
 set -euo pipefail
 PACKAGE_ROOT=$(cd "$(dirname "$0")/.." && pwd -P)
 VERIFY_ROOT=$(mktemp -d "${TMPDIR:-/tmp}/cses-collab-portable.XXXXXX")

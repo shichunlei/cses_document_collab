@@ -18,7 +18,7 @@ flowchart TD
   Common --> Server[Document/docId/instance]
 ```
 
-包不读取 `ctx`、`User`、`Config`，不发起 HTTP 登录，不创建/关闭物理 WebSocket，不选择宿主缓存目录。包内无引用 demo/Common/SaaS 的 import；AppFlowy fork 通过 `https://github.com/shichunlei/appflowy-editor.git` 引用，ref 固定为 `9e7593134457eac9193a61ee4023a75de55fcc68`，其 `diff_match_patch`、`scroll_to_index` 直接使用 pub.dev 发布版本。内部 `cses_mobile_*` 常量是旧草稿的持久化格式，必须保留兼容。
+包不读取 `ctx`、`User`、`Config`，不发起 HTTP 登录，不创建/关闭物理 WebSocket，不选择宿主缓存目录。包内无引用 demo/Common/SaaS 的 import；AppFlowy fork 通过 pub.dev 的 `applowy_editor_fork: ^6.2.1` 引入。内部 `cses_mobile_*` 常量是旧草稿的持久化格式，必须保留兼容。
 
 宿主提供：
 
@@ -85,7 +85,7 @@ flutter pub get
 FRB_DART_LOAD_EXTERNAL_LIBRARY_NATIVE_LIB_DIR="$PWD/../rust/target/debug" flutter test --no-pub test
 ```
 
-从仓库根目录运行 `tool/verify_portable_package.sh /path/to/appflowy_editor` 可复制包至无关目录，再从另一个宿主仅通过公开入口加载、渲染与重开 SQLite。iOS/Android 从 example App 构建，验证传递依赖打包。
+从仓库根目录运行 `tool/verify_portable_package.sh` 可复制包至无关目录，再从另一个宿主仅通过公开入口加载、渲染与重开 SQLite。iOS/Android 从 example App 构建，验证传递依赖打包。
 
 2026-10-14 当前宿主直接注入文档配置的验证：根宿主 16 项测试、相关静态检查和 Android debug 构建通过。缓存兼容测试固定迁移前的真实键，不再比较两套缓存计算实现；主连接地址校验由登录边界验证 Common 当前上下文。Android 16 真机登录后实际文档配置与 Common 身份/地址一致；图片和视频通过系统选择器上传、文件登记、OSS 哈希回读、服务端独立空向量回读及一秒视频播放验收。详见 [OSS 联调记录](oss-upload-integration.md)。
 

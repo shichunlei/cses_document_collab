@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
 import 'package:cses_document_collab/src/model/collab_meeting.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
@@ -9,7 +9,7 @@ import 'package:cses_document_collab/src/model/collab_user_mention.dart';
 
 /// 实体原子操作的稳定身份，连同原始属性检测远端变化；不持有编辑器资源。
 /// ```dart
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/src/model/collab_entity_mention.dart';
 /// final state = EditorState.blank();
 /// final target = CollabEntityMentionTarget.capture(state.document.first!, 0);

@@ -1,4 +1,4 @@
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/editor/collab_paragraph_editing.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 
@@ -10,7 +10,7 @@ import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 /// 宿主应先处理自己的结构边界，再调用本入口。
 ///
 /// ```dart
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/cses_document_collab.dart';
 /// final enter = CharacterShortcutEvent(
 ///   key: 'host-paragraph-enter',
@@ -34,7 +34,7 @@ Future<bool> handleDocumentParagraphEnter(EditorState state) =>
 /// 正文变更和撤销记录仍须通过宿主设置的事务保护，异常向调用边界传播。
 ///
 /// ```dart
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/cses_document_collab.dart';
 /// final document = DocumentEditorController();
 /// await applyDocumentBlockShortcut(

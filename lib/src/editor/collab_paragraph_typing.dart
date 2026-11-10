@@ -1,9 +1,9 @@
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/model/collab_paragraph_style.dart';
 
 /// 跟踪文档内输入格式，区分连续输入与光标导航；借用编辑器，创建者负责 dispose。
 /// ```dart
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/src/editor/collab_paragraph_typing.dart';
 /// final state = EditorState.blank();
 /// final typing = CollabParagraphTyping(state);

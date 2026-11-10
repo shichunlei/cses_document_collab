@@ -1,4 +1,4 @@
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:flutter/material.dart';
 
 /// 在 [context] 下使用借用的 [editor] 渲染 [node] 的正文子树。

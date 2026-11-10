@@ -2,7 +2,7 @@ import 'package:cses_document_collab/src/ui/modal/collab_date_card_visual.dart';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

@@ -1,4 +1,4 @@
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart'
     show csesBlockBackgroundColorAttribute;
 
@@ -7,7 +7,7 @@ import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.da
 /// 不复制文字、列表状态或段落样式，目标转换器须按其类型显式设置这些字段。
 ///
 /// ```dart
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/src/editor/editor_block_conversion.dart';
 /// final source = paragraphNode(attributes: {'entry': 'demo'});
 /// final attrs = preservedEditorBlockAttributes(source, preservedAttributes: {'entry'});

@@ -1,4 +1,4 @@
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
@@ -47,7 +47,7 @@ CollabEditorBlock _snapshot(Node node) => CollabEditorBlock(
 /// Future 在单次 AppFlowy 事务完成后结束；事务由适配器发布给 Rust，不直接发送 WS。
 /// 两份投影必须是同一 ID 的正式图片，且 image 非 null，否则抛出 ArgumentError。
 /// ```dart
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 /// import 'package:cses_document_collab/src/editor/collab_image_editor.dart';
 /// Future<bool> saveImage(EditorState editorState,
@@ -138,7 +138,7 @@ Future<bool> deleteCollabImage(EditorState editorState, String blockId) async {
 /// 输入控制器由弹窗 State 持有并在退出过渡结束后释放。远端删除、只读或字段冲突时提示并放弃旧输入。
 /// 预期冲突不记录异常；其他失败由此唯一边界记录原始 error/stackTrace 并提示。
 /// ```dart
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/src/editor/collab_image_editor.dart';
 /// import 'package:flutter/widgets.dart';
 /// Future<void> editCaption(BuildContext context, EditorState editor, Node image) =>

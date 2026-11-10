@@ -1,4 +1,4 @@
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/model/collab_table.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_menu_row.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_modal.dart';
@@ -15,7 +15,7 @@ import 'editor_shortcut_toolbar.dart';
 ///
 /// 表格与编辑器由调用方持有，控件仅持有可失效的本地选区和列宽草稿。
 /// ```dart
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/src/editor/collab_table_controls.dart';
 /// import 'package:flutter/widgets.dart';
 /// Widget buildTable(EditorState editor, Node node) => CollabTableControls(

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/editor/collab_code_editing.dart';
 import 'package:cses_document_collab/src/editor/core/document_editor_controller.dart';
 import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';

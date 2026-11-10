@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:cses_mobile_collab_demo/src/service/cses_person_card_creator.dart';
 import 'package:cses_mobile_collab_demo/src/service/cses_weather_service.dart';
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_common/runtime/context/context.dart';
 import 'package:cses_common/runtime/session/user.dart';
 import 'package:cses_document_collab/cses_document_collab.dart';

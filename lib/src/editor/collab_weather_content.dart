@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:cses_document_collab/src/model/collab_weather.dart';
@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 /// 天气查询与卡片的会话边界；借用编辑器、节点及宿主查询资源。
 /// ```dart
 /// import 'package:cses_document_collab/src/editor/collab_weather_content.dart';
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:flutter/widgets.dart';
 /// Widget weather(EditorState editor, Node node) => CollabWeatherContent(
 ///   editor: editor, node: node, id: node.id,

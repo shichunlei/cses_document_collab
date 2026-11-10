@@ -1,4 +1,4 @@
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 /// 创建方须先[dispose]再释放编辑器；关闭后旧菜单和迟到复制提示失效。
 ///
 /// ```dart
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/src/editor/collab_paragraph_links.dart';
 /// final editor = EditorState.blank();
 /// final links = CollabParagraphLinks(editor: editor, documentId: 'doc-1',

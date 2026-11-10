@@ -11,10 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  appflowy_editor:
-    git:
-      url: https://github.com/shichunlei/appflowy-editor.git
-      ref: 9e7593134457eac9193a61ee4023a75de55fcc68
+  applowy_editor_fork: ^6.2.1
   markdown: ^7.3.0
   crypto: ^3.0.7
   dio: ^5.11.1

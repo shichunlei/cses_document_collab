@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/editor/document_feedback_footer.dart';
 import 'package:cses_document_collab/src/controller/document_feedback_controller.dart';
 import 'package:cses_document_collab/src/model/collab_document_feedback.dart';

@@ -1,13 +1,13 @@
 import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'dart:convert';
 
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
 
 /// 划词操作的稳定块身份及正文快照，不持有编辑器或节点资源。
 /// 弹窗期间允许整组选区重排，正文变化、跨单元格或删除时拒绝旧操作。
 /// ```dart
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/src/model/collab_text_range.dart';
 /// final state = EditorState.blank();
 /// final range = CollabTextRange.capture(state);

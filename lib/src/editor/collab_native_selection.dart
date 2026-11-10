@@ -1,4 +1,4 @@
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/native/api/collab/history.dart' as native;
 
 /// Convert borrowed [selection] in [state] to stable block IDs under [idAttribute].

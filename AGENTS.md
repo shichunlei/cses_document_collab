@@ -40,7 +40,7 @@
 # Import 与依赖入口
 
 1. Dart SDK 使用 `dart:` import；引用包内 `lib/` 文件时，跨目录使用当前包名的 `package:` 全路径，禁止跨目录相对 import；同目录引用可使用相对路径。该规则同样适用于包内测试和示例对 `lib/` 源码的引用。`test/`、`tool/` 等非 `lib/` 目录中的辅助文件不属于包的库入口，可在所属测试或工具范围内使用相对路径互相引用，但不得借此跨包访问实现或绕过公开入口。
-2. 跨包调用必须通过目标包声明的公开入口，例如 `package:cses_document_collab/cses_document_collab.dart`、`package:appflowy_editor/appflowy_editor.dart`。宿主、其他包及其示例和测试不得直接导入目标包的 `lib/src/` 内部实现；本包测试可通过本包 `package:` 路径访问本包内部实现。各调用方的直接依赖须在所属 `pubspec.yaml` 声明，不依赖偶然可用的传递依赖。
+2. 跨包调用必须通过目标包声明的公开入口，例如 `package:cses_document_collab/cses_document_collab.dart`、`package:applowy_editor_fork/applowy_editor_fork.dart`。宿主、其他包及其示例和测试不得直接导入目标包的 `lib/src/` 内部实现；本包测试可通过本包 `package:` 路径访问本包内部实现。各调用方的直接依赖须在所属 `pubspec.yaml` 声明，不依赖偶然可用的传递依赖。
 3. 包或模块内部使用精确 import，不为方便从自身公开聚合入口反向引入。新增或修改的代码不得新增覆盖无关模块的全局聚合入口；存量模块的该类 import 数量不得增加，触碰相关依赖时按实际使用逐步收窄。
 4. 包的公开入口与全局聚合入口区别对待，现有 `lib/<package_name>.dart` 可维护稳定的包级 API。跨模块调用通过目标模块明确的公开入口；只有模块确需暴露稳定 API 时才新增模块级入口，其位置遵循现有 `lib/src/` 或其他实际目录结构，不强制改为 `lib/modules/<feature>/index.dart`。导出范围须与公开契约一致，不为绕过边界暴露内部实现。
 
@@ -83,7 +83,7 @@
 
 # 包内开发约定
 
-以下约定适用于根包 `cses_document_collab` 自身的源码、测试、工具和原生配置；标明包含示例的条款也适用于 `example/`。宿主业务代码位于 `example/`，AppFlowy fork 通过 `https://github.com/shichunlei/appflowy-editor.git` 的固定提交引入；仓库内各目录均继续遵守上方通用规则，不直接修改依赖缓存。
+以下约定适用于根包 `cses_document_collab` 自身的源码、测试、工具和原生配置；标明包含示例的条款也适用于 `example/`。宿主业务代码位于 `example/`，AppFlowy fork 通过 pub.dev 的 `applowy_editor_fork: ^6.2.1` 引入；仓库内各目录均继续遵守上方通用规则，不直接修改依赖缓存。
 
 ### 职责边界
 

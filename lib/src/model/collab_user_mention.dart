@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
 
 /// 内存投影的用户及三类实体显示名；仅 U+FFFC 带此属性时恢复 mention 对象。
@@ -74,7 +74,7 @@ abstract interface class CollabMentionDirectory {
 /// 保存稳定用户身份与文字，拒绝迟到操作另一位用户。
 /// ```dart
 /// import 'package:cses_document_collab/src/model/collab_user_mention.dart';
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// final state = EditorState.blank();
 /// final target = CollabUserMentionTarget.capture(state.document.first!, 0);
 /// state.dispose();

@@ -1,11 +1,11 @@
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:flutter/services.dart';
 
 /// 代码块的普通回车入口，置于标准字符快捷键之前，软/硬键盘共用。
 /// 借用编辑器并在原节点内换行，不持有资源；Shift 交给既有输入处理。
 /// ```dart
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/src/editor/collab_code_editing.dart';
 /// final state = EditorState.blank(); // 宿主负责 state.dispose()。
 /// final editor = AppFlowyEditor(editorState: state,
@@ -59,7 +59,7 @@ Future<bool> handleCollabCodeEnter(EditorState state) async {
 /// 保留节点身份和全部代码属性，光标落在插入文本末尾，空文本可删除所选内容。
 ///
 /// ```dart
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/src/editor/collab_code_editing.dart';
 /// final state = EditorState(document: Document(root: pageNode(children: [
 ///   Node(type: 'code', attributes: {blockComponentDelta: Delta().toJson()}),

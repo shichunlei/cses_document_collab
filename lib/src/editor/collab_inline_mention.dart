@@ -1,4 +1,4 @@
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,7 +11,7 @@ import 'collab_mention_tap_handler.dart';
 /// 借用节点与编辑器，不拥有连接；头像由宿主构建，未注入仅显示姓名，不写正文。
 /// ```dart
 /// import 'package:flutter/material.dart';
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/src/editor/collab_inline_mention.dart';
 /// final mention = CollabInlineMention(node: paragraphNode(), offset: 0,
 ///   name: '张三', userId: 'u1', style: const TextStyle(fontSize: 16));

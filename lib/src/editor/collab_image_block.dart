@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:math' as math;
 
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart' show csesEmbedUrlAttribute;
 import 'package:cses_document_collab/src/editor/collab_block_actions.dart';
 import 'package:cses_document_collab/src/editor/collab_image_editor.dart';
@@ -53,7 +53,7 @@ class CollabImageBlockComponentBuilder extends BlockComponentBuilder {
 /// 完整图片块，借用编辑器并持有原图片解码状态、布局和菜单。
 /// 图片必须带有正式图片投影；借用的编辑器须完成样式初始化，编辑器和节点仍由页面持有。
 /// ```dart
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/src/editor/collab_image_block.dart';
 /// import 'package:flutter/widgets.dart';
 /// import 'package:provider/provider.dart';

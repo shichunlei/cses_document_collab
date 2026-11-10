@@ -1,4 +1,4 @@
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:cses_document_collab/src/model/collab_ordered.dart';
@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 /// 复用 AppFlowy 列表组件的 iconBuilder 扩展点，按 Rust 投影绘制正式编号。
 ///
 /// ```dart
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/src/editor/collab_ordered_marker.dart';
 /// final builder = NumberedListBlockComponentBuilder(iconBuilder: buildCollabOrderedMarker);
 /// ```

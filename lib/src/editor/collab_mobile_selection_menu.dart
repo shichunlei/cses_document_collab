@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:cses_document_collab/src/editor/editor_selection_actions.dart';
@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 /// 编辑模式提供剪贴板、格式、文字链接和公式转换，只读仅复制与全选；不依赖键盘显示。
 /// ```dart
 /// import 'package:flutter/material.dart';
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/src/editor/collab_mobile_selection_menu.dart';
 /// final state = EditorState.blank();
 /// final scroll = EditorScrollController(editorState: state);

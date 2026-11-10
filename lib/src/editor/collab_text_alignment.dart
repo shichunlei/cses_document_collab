@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
 import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 import 'package:cses_document_collab/src/editor/collab_ordered_marker.dart';
@@ -20,7 +20,7 @@ TextAlign collabTextAlign(Node node) =>
 /// 宿主通过公开排版入口取得包装器，不接管正文资源。
 ///
 /// ```dart
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/cses_document_collab.dart';
 /// final builder = configureEditorTextBlock(
 ///   ParagraphBlockComponentBuilder(), ParagraphBlockKeys.type);

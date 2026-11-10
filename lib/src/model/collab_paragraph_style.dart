@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';
 
@@ -509,7 +509,7 @@ Future<bool> setCollabNextParagraphStyle(
 /// 无有效目标、只读、销毁或非法值返回false；Future完成表示事务完成，失败向调用方传播。
 ///
 /// ```dart
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/src/model/collab_paragraph_style.dart';
 /// final state = EditorState.blank();
 /// state.selection = Selection.collapsed(Position(path: [0]));

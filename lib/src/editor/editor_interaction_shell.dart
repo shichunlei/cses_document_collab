@@ -1,4 +1,4 @@
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/editor/collab_mobile_selection_menu.dart';
 import 'package:cses_document_collab/src/editor/editor_shortcut_toolbar.dart';
 import 'package:cses_document_collab/src/model/editor_keyboard_action.dart';
@@ -10,7 +10,7 @@ import 'package:flutter/widgets.dart';
 /// 预览时传入 `enabled: false`，并由正文自身关闭输入和选区服务。
 ///
 /// ```dart
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/cses_document_collab.dart';
 /// final document = DocumentEditorController();
 /// final scroll = EditorScrollController(editorState: document.editorState);

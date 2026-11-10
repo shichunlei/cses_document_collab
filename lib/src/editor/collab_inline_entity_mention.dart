@@ -1,4 +1,4 @@
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:cses_document_collab/src/model/collab_entity_mention.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_bottom_sheet.dart';
@@ -15,7 +15,7 @@ import 'collab_mention_tap_handler.dart';
 /// 点击打开操作面板，打开详情才通知宿主；会议/任务可转卡片，三类均可删除引用，不修改实体业务数据。
 /// ```dart
 /// import 'package:flutter/material.dart';
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/src/editor/collab_inline_entity_mention.dart';
 /// final chip = CollabInlineEntityMention(node: paragraphNode(), offset: 0,
 ///   name: '周会', entityType: 'meeting', style: const TextStyle(fontSize: 16));

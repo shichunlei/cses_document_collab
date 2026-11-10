@@ -16,10 +16,7 @@ dependencies:
     path: ..
   cses_common:
     path: ../../cses/cses.common
-  appflowy_editor:
-    git:
-      url: https://github.com/shichunlei/appflowy-editor.git
-      ref: 9e7593134457eac9193a61ee4023a75de55fcc68
+  applowy_editor_fork: ^6.2.1
   provider: ^6.1.5+1
   lucide_icons_flutter: ^4.0.1
   crypto: ^3.0.7

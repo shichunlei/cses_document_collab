@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:math' as math;
 
-import 'package:appflowy_editor/appflowy_editor.dart' hide Path;
+import 'package:applowy_editor_fork/applowy_editor_fork.dart' hide Path;
 import 'package:cses_document_collab/src/editor/blockcraft_json_codec.dart';
 import 'package:cses_document_collab/src/editor/blockcraft_snapshot_presets.g.dart';
 import 'package:cses_document_collab/src/model/collab_block_colors.dart';

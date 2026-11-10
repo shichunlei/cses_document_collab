@@ -1,6 +1,6 @@
 # cses_document_collab
 
-仓库根目录是核心 Flutter FFI 插件包；完整 Demo 位于 [example/](example/README.md)，AppFlowy Editor 通过 [Git fork](https://github.com/shichunlei/appflowy-editor) 引入。仓库地址为 [shichunlei/cses_document_collab](https://github.com/shichunlei/cses_document_collab)。
+仓库根目录是核心 Flutter FFI 插件包；完整 Demo 位于 [example/](example/README.md)，AppFlowy Editor 通过 pub.dev 上的 [applowy_editor_fork](https://pub.dev/packages/applowy_editor_fork) 引入。仓库地址为 [shichunlei/cses_document_collab](https://github.com/shichunlei/cses_document_collab)。
 
 ## 开发入口
 
@@ -57,7 +57,7 @@ SQLite 和历史不随在线身份轮换而重建。服务端 INVALID_REQUEST �
 
 ## 接入
 
-最终 App 的 pubspec 添加本仓库根目录的 path 依赖。AppFlowy 6.2.0 fork 通过 `https://github.com/shichunlei/appflowy-editor.git` 引入，固定提交 `9e7593134457eac9193a61ee4023a75de55fcc68`，包含 Flutter 3.44 输入适配和撤销修复；其 `diff_match_patch`、`scroll_to_index` 使用 pub.dev 发布版本。移动或复制核心包时无需携带编辑器源码子目录；直接使用 AppFlowy API 的宿主应声明相同 Git URL 与 ref，保持依赖来源一致。
+最终 App 的 pubspec 添加本仓库根目录的 path 依赖。核心包通过 pub.dev 引入 `applowy_editor_fork: ^6.2.1`，包含 Flutter 3.44 输入适配、撤销修复及带页脚列表的滚动修复。直接使用 AppFlowy API 的宿主应声明同一依赖，并通过 `package:applowy_editor_fork/applowy_editor_fork.dart` 导入。
 
 ```yaml
 dependencies:

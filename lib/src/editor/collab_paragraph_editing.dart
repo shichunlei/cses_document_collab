@@ -1,4 +1,4 @@
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/editor/collab_list_editing.dart';
 import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 import 'package:cses_document_collab/src/editor/editor_block_conversion.dart';
@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 
 /// 段落族共用的软/硬键盘回车入口，应置于标准快捷键之前；不拥有编辑器。
 /// ```dart
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/src/editor/collab_paragraph_editing.dart';
 /// final state = EditorState.blank(); // 宿主负责 dispose。
 /// final editor = AppFlowyEditor(editorState: state,

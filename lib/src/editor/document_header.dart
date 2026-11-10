@@ -1,4 +1,4 @@
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/controller/document_metadata_controller.dart';
 import 'package:cses_document_collab/src/editor/editor_media_source_sheet.dart';
 import 'package:cses_document_collab/src/model/document_metadata.dart';
@@ -19,7 +19,7 @@ import 'editor_shortcut_toolbar.dart';
 /// 构建/显示不拥有网络客户端或控制器，销毁由宿主负责。
 ///
 /// ```dart
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/src/controller/document_metadata_controller.dart';
 /// import 'package:cses_document_collab/src/editor/document_header.dart';
 /// DocumentHeader makeHeader(DocumentMetadataController metadata, EditorState editor) =>

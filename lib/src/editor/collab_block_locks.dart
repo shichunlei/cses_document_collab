@@ -1,11 +1,11 @@
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/model/collab_block_lock.dart';
 import 'package:flutter/foundation.dart';
 
 /// 一个编辑器的块权限投影及打开中的弹窗租约；创建方负责dispose。
 ///
 /// ```dart
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/src/editor/collab_block_locks.dart';
 /// final editor = EditorState.blank();
 /// final locks = CollabBlockLocks(editor: editor, userId: 'u1',

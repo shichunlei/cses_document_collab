@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:appflowy_editor/appflowy_editor.dart';
+import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 import 'package:cses_document_collab/src/model/collab_formula.dart';
 import 'package:cses_document_collab/src/editor/core/editor_command_context.dart';
 
@@ -16,7 +16,7 @@ const collabInlineFormulaCommandAttribute = 'cses_inline_formula_command';
 /// 保存行内公式的稳定块身份、单字符位置和打开时的定位文本。
 /// 段落文字变化后拒绝陈旧位置；仅公式原文变化时可重新加载。
 /// ```dart
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
 /// final state = EditorState.blank();
 /// final node = state.document.first!;
@@ -149,7 +149,7 @@ Future<bool> changeCollabInlineFormula(
 /// [historyBeforeSelection]和[historyAfterSelection]可为模态期间的本地历史保存源选区及落点；
 /// 默认沿用当前选区，均不在本次提交中恢复实时焦点。
 /// ```dart
-/// import 'package:appflowy_editor/appflowy_editor.dart';
+/// import 'package:applowy_editor_fork/applowy_editor_fork.dart';
 /// import 'package:cses_document_collab/src/editor/appflowy_block_editor_adapter.dart';
 /// import 'package:cses_document_collab/src/model/collab_inline_formula.dart';
 /// Future<void> replaceAtom() async {
