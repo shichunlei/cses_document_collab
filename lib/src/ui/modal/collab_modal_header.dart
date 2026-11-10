@@ -1,5 +1,4 @@
 import 'package:cses_document_collab/src/ui/modal/collab_modal_colors.dart';
-import 'package:cses_document_collab/src/ui/modal/collab_type_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
@@ -56,7 +55,13 @@ class CollabModalHeader extends StatelessWidget {
       padding: compact ? const EdgeInsets.fromLTRB(16, 4, 16, 6) : const EdgeInsets.fromLTRB(20, 14, 20, 16),
       child: Row(
         children: [
-          CollabTypeIcon(icon: icon),
+          Container(
+            width: 38,
+            height: 38,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(color: c.soft, borderRadius: BorderRadius.circular(12)),
+            child: Icon(icon, color: c.accent, size: 19),
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(

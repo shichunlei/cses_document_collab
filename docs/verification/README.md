@@ -139,7 +139,6 @@
 
 ### 图片、音视频与附件
 
-- [音频卡片与底部弹窗图标统一](audio-card-icon-20261110/report.md)
 - [attachment-card-20261016](attachment-card-20261016)
 - [audio-task-loading-height-20261018](audio-task-loading-height-20261018)
 - [image-block-merge-20261017](image-block-merge-20261017)

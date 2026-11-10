@@ -9,7 +9,6 @@ import 'package:cses_document_collab/src/model/collab_resource.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_card_frame.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_card_header.dart';
 import 'package:cses_document_collab/src/ui/modal/collab_media_timeline.dart';
-import 'package:cses_document_collab/src/ui/modal/collab_type_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:provider/provider.dart';
@@ -57,7 +56,7 @@ class _AudioBlockState extends CollabResourceBlockState<_AudioBlock> {
   @override
   String get resourceLabel => '音频';
 
-  /// 在借用 [context] 中展示带波形图标的标题栏与播放区；换源按 URL 重建播放器。
+  /// 在借用[context]中展示名称标题栏与独立播放内容区；换源按URL重建播放器。
   @override
   Widget buildResourceCard(BuildContext context) => _AudioPlayer(
     key: ValueKey('audio:$url'),
@@ -66,12 +65,8 @@ class _AudioBlockState extends CollabResourceBlockState<_AudioBlock> {
       surfaceKey: bodyKey,
       margin: const EdgeInsets.symmetric(vertical: 6),
       header: CollabCardHeader(
-        leading: const CollabTypeIcon(icon: LucideIcons.audioLines),
-        title: Text(
-          resource.string('name').isNotEmpty
-              ? resource.string('name')
-              : resourceLabel,
-        ),
+        leading: const Icon(LucideIcons.music2),
+        title: Text(resource.string('name').isNotEmpty ? resource.string('name') : resourceLabel),
         readOnly: !editor.editable,
         more: buildResourceMore(openLabel: '在浏览器打开'),
       ),
